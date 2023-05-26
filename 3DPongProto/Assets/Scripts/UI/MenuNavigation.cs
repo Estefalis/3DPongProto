@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace ThreeDeePongProto.UI
+namespace ThreeDeePongProto.Menu.Navigation
 {
     public class MenuNavigation : MonoBehaviour
     {
@@ -101,15 +101,6 @@ namespace ThreeDeePongProto.UI
                     m_alphaButtons[i].image.color = tempAlpha05;
                 }
             }
-        }
-
-        public void QuitGame()
-        {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
         }
     }
 }

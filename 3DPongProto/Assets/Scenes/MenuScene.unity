@@ -1941,7 +1941,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 100341414}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 975557204}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Menu.Actions.MenuActions, Assembly-CSharp
+        m_MethodName: StartLocalGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &100341414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5374,18 +5386,6 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 799055222}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.UI.MenuNavigation, Assembly-CSharp
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -12659,6 +12659,7 @@ GameObject:
   - component: {fileID: 975557200}
   - component: {fileID: 975557199}
   - component: {fileID: 975557203}
+  - component: {fileID: 975557204}
   m_Layer: 5
   m_Name: MenuCanvas
   m_TagString: Untagged
@@ -12682,7 +12683,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 63
 --- !u!114 &975557200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12797,6 +12798,19 @@ MonoBehaviour:
   - {fileID: 71896493}
   - {fileID: 1483969755}
   - {fileID: 286295090}
+--- !u!114 &975557204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 975557198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7296dca01bc7b40459970cc2a31aab34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_loadNextScene: LocalGameScene
 --- !u!1 &990917784
 GameObject:
   m_ObjectHideFlags: 0
@@ -16774,8 +16788,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 975557203}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.UI.MenuNavigation, Assembly-CSharp
+      - m_Target: {fileID: 975557204}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Menu.Actions.MenuActions, Assembly-CSharp
         m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
@@ -19534,18 +19548,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.UI.MenuNavigation, Assembly-CSharp
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &1633779089
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20191,6 +20193,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1655417376}
   m_CullTransparentMesh: 1
+--- !u!1 &1655706969
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1655706971}
+  - component: {fileID: 1655706970}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1655706970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1655706969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4dfdbae8d3538449a9e1837dd917bff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1655706971
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1655706969}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1658738389
 GameObject:
   m_ObjectHideFlags: 0
@@ -24072,18 +24118,6 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 1605107464}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.UI.MenuNavigation, Assembly-CSharp
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
