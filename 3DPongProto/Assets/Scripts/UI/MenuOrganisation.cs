@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using ThreeDeePongProto.Player.Movement;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -8,6 +11,7 @@ namespace ThreeDeePongProto.Menu.Actions
 {
     public class MenuOrganisation : MonoBehaviour
     {
+        private PlayerInputActions m_menuActions;
         [SerializeField] private string m_loadWinScene;
         [SerializeField] private string m_loadMenuScene;
         [SerializeField] private EventSystem m_eventSystem;
@@ -35,7 +39,40 @@ namespace ThreeDeePongProto.Menu.Actions
         [SerializeField] private Transform[] m_subPageTransforms;
         #endregion
 
+        private void OnEnable()
+        {
+            m_menuActions = UserInputManager.m_playerInputActions;
+            m_menuActions?.Enable();
+            m_menuActions.PlayerActions.ToggleGameMenu.performed += EnableNavigation;
+        }
+
+        private void OnDisable()
+        {
+            m_menuActions?.Disable();
+            m_menuActions.PlayerActions.ToggleGameMenu.performed -= EnableNavigation;
+        }
+
         private void Awake()
+        {
+            SetUIElements();
+        }
+
+        private void EnableNavigation(InputAction.CallbackContext _callbackContext)
+        {
+            if (!m_firstElement.gameObject.activeInHierarchy && !GameManager.Instance.GameIsPaused)
+            {
+                m_firstElement.gameObject.SetActive(true);
+            }
+        }
+
+        public void ResumeGame()
+        {
+            ResetPauseAndTimescale();
+            //UserInputManager.ResetPauseAndTimescale();
+            m_firstElement.gameObject.SetActive(false);
+        }
+
+        private void SetUIElements()
         {
             SetFirstElement(m_firstElement);
 
@@ -45,54 +82,25 @@ namespace ThreeDeePongProto.Menu.Actions
             SetSelectedElement(m_firstElement);
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                if (GameManager.Instance.GameIsPaused)
-                {
-                    ResumeGame();
-                }
-                else
-                {
-                    PauseGame();
-                }
-            }
-        }
-
-        public void ResumeGame()
-        {
-            m_firstElement.gameObject.SetActive(false);
-            ResetFirstElement();
-            ResetPauseAndTimescale();
-        }
-
         private void ResetPauseAndTimescale()
         {
             Time.timeScale = 1f;
             GameManager.Instance.GameIsPaused = false;
         }
 
-        private void PauseGame()
-        {
-            SetFirstElement(m_firstElement);
-            m_firstElement.gameObject.SetActive(true);
-            SetSelectedElement(m_firstElement);
-            Time.timeScale = 0f;
-            GameManager.Instance.GameIsPaused = true;
-        }
-
         public void RestartLevel()
         {
-            ResetPauseAndTimescale();
+            UserInputManager.ResetPauseAndTimescale();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
         public void ReturnToMainScene()
         {
-            ResetPauseAndTimescale();
-            if (GameManager.Instance.EGameModi == EGameModi.LocalPC)
-                SceneManager.LoadScene(m_loadMenuScene);
+            UserInputManager.ResetPauseAndTimescale();
+
+            if (m_loadMenuScene != null || m_loadMenuScene != string.Empty)
+                if (GameManager.Instance.EGameModi == EGameModi.LocalPC)
+                    SceneManager.LoadScene(m_loadMenuScene);
             //TODO: Also disconnect from Network in Online-Seasons.
         }
 

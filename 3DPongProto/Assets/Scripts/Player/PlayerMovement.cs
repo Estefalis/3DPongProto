@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace ThreeDeePongProto.Player.Movement
 {
@@ -15,10 +17,12 @@ namespace ThreeDeePongProto.Player.Movement
 
         private void OnEnable()
         {
-            m_playerMovement = new PlayerInputActions();
+            //m_playerMovement = new PlayerInputActions();
+            m_playerMovement = UserInputManager.m_playerInputActions;
             m_playerMovement.PlayerActions.Enable();
             //m_playerMovement.PlayerActions.SideMovement.performed += SideMovement;
             //m_playerMovement.PlayerActions.SideMovement.canceled += StopSideMovement;
+            m_playerMovement.PlayerActions.ToggleGameMenu.performed += ToggleMenu;
         }
 
         private void OnDisable()
@@ -26,6 +30,7 @@ namespace ThreeDeePongProto.Player.Movement
             m_playerMovement.PlayerActions.Disable();
             //m_playerMovement.PlayerActions.SideMovement.performed -= SideMovement;
             //m_playerMovement.PlayerActions.SideMovement.canceled -= StopSideMovement;
+            m_playerMovement.PlayerActions.ToggleGameMenu.performed -= ToggleMenu;
         }
 
         private void Awake()
@@ -63,5 +68,19 @@ namespace ThreeDeePongProto.Player.Movement
         //{
         //    m_movement = Vector2.zero;
         //}
+        private void ToggleMenu(InputAction.CallbackContext _callbackContext)
+        {
+            if (!GameManager.Instance.GameIsPaused && UserInputManager.m_playerInputActions.PlayerActions.enabled)
+            {
+                PauseTimescale();
+                UserInputManager.ToggleActionMaps(UserInputManager.m_playerInputActions.UI);
+            }
+        }
+
+        private void PauseTimescale()
+        {
+            Time.timeScale = 0f;
+            GameManager.Instance.GameIsPaused = true;
+        }
     }
 }

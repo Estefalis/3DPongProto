@@ -33,7 +33,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "GameMenu",
+                    "name": "ToggleGameMenu",
                     "type": "Button",
                     "id": "10c55572-7a33-47de-aec8-fe3fe0adbad2",
                     "expectedControlType": "Button",
@@ -94,7 +94,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "GameMenu",
+                    "action": "ToggleGameMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -105,7 +105,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "GameMenu",
+                    "action": "ToggleGameMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -289,6 +289,15 @@
                     "type": "PassThrough",
                     "id": "3a705899-d2a2-4222-a9e0-8ba2f8684c60",
                     "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ToggleGameMenu",
+                    "type": "Button",
+                    "id": "5afb6f62-4bc8-4391-8b61-e5c2f08385a7",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -710,6 +719,28 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "51c713a3-8ce8-451d-938b-47551117b8c5",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleGameMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "43089c8d-3fac-4a0c-8761-d114c9d7f8a3",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleGameMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -57,7 +57,7 @@ namespace ThreeDeePongProto.Player.Movement
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""GameMenu"",
+                    ""name"": ""ToggleGameMenu"",
                     ""type"": ""Button"",
                     ""id"": ""10c55572-7a33-47de-aec8-fe3fe0adbad2"",
                     ""expectedControlType"": ""Button"",
@@ -118,7 +118,7 @@ namespace ThreeDeePongProto.Player.Movement
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""GameMenu"",
+                    ""action"": ""ToggleGameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -129,7 +129,7 @@ namespace ThreeDeePongProto.Player.Movement
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""GameMenu"",
+                    ""action"": ""ToggleGameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -313,6 +313,15 @@ namespace ThreeDeePongProto.Player.Movement
                     ""type"": ""PassThrough"",
                     ""id"": ""3a705899-d2a2-4222-a9e0-8ba2f8684c60"",
                     ""expectedControlType"": ""Quaternion"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleGameMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""5afb6f62-4bc8-4391-8b61-e5c2f08385a7"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -736,6 +745,28 @@ namespace ThreeDeePongProto.Player.Movement
                     ""action"": ""TrackedDeviceOrientation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""51c713a3-8ce8-451d-938b-47551117b8c5"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleGameMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""43089c8d-3fac-4a0c-8761-d114c9d7f8a3"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleGameMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -747,7 +778,7 @@ namespace ThreeDeePongProto.Player.Movement
             m_PlayerActions_SideMovement = m_PlayerActions.FindAction("SideMovement", throwIfNotFound: true);
             m_PlayerActions_TurnMovement = m_PlayerActions.FindAction("TurnMovement", throwIfNotFound: true);
             m_PlayerActions_Zoom = m_PlayerActions.FindAction("Zoom", throwIfNotFound: true);
-            m_PlayerActions_GameMenu = m_PlayerActions.FindAction("GameMenu", throwIfNotFound: true);
+            m_PlayerActions_ToggleGameMenu = m_PlayerActions.FindAction("ToggleGameMenu", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -760,6 +791,7 @@ namespace ThreeDeePongProto.Player.Movement
             m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
             m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
             m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+            m_UI_ToggleGameMenu = m_UI.FindAction("ToggleGameMenu", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -824,7 +856,7 @@ namespace ThreeDeePongProto.Player.Movement
         private readonly InputAction m_PlayerActions_SideMovement;
         private readonly InputAction m_PlayerActions_TurnMovement;
         private readonly InputAction m_PlayerActions_Zoom;
-        private readonly InputAction m_PlayerActions_GameMenu;
+        private readonly InputAction m_PlayerActions_ToggleGameMenu;
         public struct PlayerActionsActions
         {
             private @PlayerInputActions m_Wrapper;
@@ -832,7 +864,7 @@ namespace ThreeDeePongProto.Player.Movement
             public InputAction @SideMovement => m_Wrapper.m_PlayerActions_SideMovement;
             public InputAction @TurnMovement => m_Wrapper.m_PlayerActions_TurnMovement;
             public InputAction @Zoom => m_Wrapper.m_PlayerActions_Zoom;
-            public InputAction @GameMenu => m_Wrapper.m_PlayerActions_GameMenu;
+            public InputAction @ToggleGameMenu => m_Wrapper.m_PlayerActions_ToggleGameMenu;
             public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -851,9 +883,9 @@ namespace ThreeDeePongProto.Player.Movement
                 @Zoom.started += instance.OnZoom;
                 @Zoom.performed += instance.OnZoom;
                 @Zoom.canceled += instance.OnZoom;
-                @GameMenu.started += instance.OnGameMenu;
-                @GameMenu.performed += instance.OnGameMenu;
-                @GameMenu.canceled += instance.OnGameMenu;
+                @ToggleGameMenu.started += instance.OnToggleGameMenu;
+                @ToggleGameMenu.performed += instance.OnToggleGameMenu;
+                @ToggleGameMenu.canceled += instance.OnToggleGameMenu;
             }
 
             private void UnregisterCallbacks(IPlayerActionsActions instance)
@@ -867,9 +899,9 @@ namespace ThreeDeePongProto.Player.Movement
                 @Zoom.started -= instance.OnZoom;
                 @Zoom.performed -= instance.OnZoom;
                 @Zoom.canceled -= instance.OnZoom;
-                @GameMenu.started -= instance.OnGameMenu;
-                @GameMenu.performed -= instance.OnGameMenu;
-                @GameMenu.canceled -= instance.OnGameMenu;
+                @ToggleGameMenu.started -= instance.OnToggleGameMenu;
+                @ToggleGameMenu.performed -= instance.OnToggleGameMenu;
+                @ToggleGameMenu.canceled -= instance.OnToggleGameMenu;
             }
 
             public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -901,6 +933,7 @@ namespace ThreeDeePongProto.Player.Movement
         private readonly InputAction m_UI_RightClick;
         private readonly InputAction m_UI_TrackedDevicePosition;
         private readonly InputAction m_UI_TrackedDeviceOrientation;
+        private readonly InputAction m_UI_ToggleGameMenu;
         public struct UIActions
         {
             private @PlayerInputActions m_Wrapper;
@@ -915,6 +948,7 @@ namespace ThreeDeePongProto.Player.Movement
             public InputAction @RightClick => m_Wrapper.m_UI_RightClick;
             public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
             public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
+            public InputAction @ToggleGameMenu => m_Wrapper.m_UI_ToggleGameMenu;
             public InputActionMap Get() { return m_Wrapper.m_UI; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -954,6 +988,9 @@ namespace ThreeDeePongProto.Player.Movement
                 @TrackedDeviceOrientation.started += instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.performed += instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.canceled += instance.OnTrackedDeviceOrientation;
+                @ToggleGameMenu.started += instance.OnToggleGameMenu;
+                @ToggleGameMenu.performed += instance.OnToggleGameMenu;
+                @ToggleGameMenu.canceled += instance.OnToggleGameMenu;
             }
 
             private void UnregisterCallbacks(IUIActions instance)
@@ -988,6 +1025,9 @@ namespace ThreeDeePongProto.Player.Movement
                 @TrackedDeviceOrientation.started -= instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.performed -= instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.canceled -= instance.OnTrackedDeviceOrientation;
+                @ToggleGameMenu.started -= instance.OnToggleGameMenu;
+                @ToggleGameMenu.performed -= instance.OnToggleGameMenu;
+                @ToggleGameMenu.canceled -= instance.OnToggleGameMenu;
             }
 
             public void RemoveCallbacks(IUIActions instance)
@@ -1010,7 +1050,7 @@ namespace ThreeDeePongProto.Player.Movement
             void OnSideMovement(InputAction.CallbackContext context);
             void OnTurnMovement(InputAction.CallbackContext context);
             void OnZoom(InputAction.CallbackContext context);
-            void OnGameMenu(InputAction.CallbackContext context);
+            void OnToggleGameMenu(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {
@@ -1024,6 +1064,7 @@ namespace ThreeDeePongProto.Player.Movement
             void OnRightClick(InputAction.CallbackContext context);
             void OnTrackedDevicePosition(InputAction.CallbackContext context);
             void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+            void OnToggleGameMenu(InputAction.CallbackContext context);
         }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace ThreeDeePongProto.Menu.Actions
 {
-    public class MainMenuActions : MonoBehaviour
+    public class MainMenuButtonActions : MonoBehaviour
     {
         [SerializeField] private string m_loadNextScene;
         [SerializeField] private Button[] m_modiButtons;
