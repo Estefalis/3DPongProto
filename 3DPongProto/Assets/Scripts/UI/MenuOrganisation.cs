@@ -1,26 +1,27 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace ThreeDeePongProto.Menu.Navigation
+namespace ThreeDeePongProto.Menu.Actions
 {
-    public class MenuNavigation : MonoBehaviour
+    public class MenuOrganisation : MonoBehaviour
     {
+        [SerializeField] private string m_loadWinScene;
+        [SerializeField] private string m_loadMenuScene;
         [SerializeField] private EventSystem m_eventSystem;
 
         #region Select First Elements by using the EventSystem.
         // The stack of active (Transform-)elements for menu-navigation needs to have a Start-Transform to prevent an error. It gets set active in 'Awake()'.
         [Header("Select First Elements")]
-        Stack<Transform> m_activeElement = new Stack<Transform>();
-        [SerializeField] Transform m_firstElement;
+        [SerializeField] private Transform m_firstElement;
+        private Stack<Transform> m_activeElement = new Stack<Transform>();
 
         //Key-/Value-Pair component-arrays to set the selected GameObject for menu navigation with a dictionary.
         [SerializeField] private Transform[] m_keyTransform;
         [SerializeField] private GameObject[] m_valueGameObject;
-        Dictionary<Transform, GameObject> m_selectedElement = new Dictionary<Transform, GameObject>();
-
+        private Dictionary<Transform, GameObject> m_selectedElement = new Dictionary<Transform, GameObject>();
         #endregion
 
         #region Alpha-Buttons and SubPages.
@@ -36,12 +37,72 @@ namespace ThreeDeePongProto.Menu.Navigation
 
         private void Awake()
         {
-            m_activeElement.Push(m_firstElement);
+            SetFirstElement(m_firstElement);
 
             for (int i = 0; i < m_keyTransform.Length; i++)
                 m_selectedElement.Add(m_keyTransform[i], m_valueGameObject[i]);
 
             SetSelectedElement(m_firstElement);
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (GameManager.Instance.GameIsPaused)
+                {
+                    ResumeGame();
+                }
+                else
+                {
+                    PauseGame();
+                }
+            }
+        }
+
+        public void ResumeGame()
+        {
+            m_firstElement.gameObject.SetActive(false);
+            ResetFirstElement();
+            ResetPauseAndTimescale();
+        }
+
+        private void ResetPauseAndTimescale()
+        {
+            Time.timeScale = 1f;
+            GameManager.Instance.GameIsPaused = false;
+        }
+
+        private void PauseGame()
+        {
+            SetFirstElement(m_firstElement);
+            m_firstElement.gameObject.SetActive(true);
+            SetSelectedElement(m_firstElement);
+            Time.timeScale = 0f;
+            GameManager.Instance.GameIsPaused = true;
+        }
+
+        public void RestartLevel()
+        {
+            ResetPauseAndTimescale();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        public void ReturnToMainScene()
+        {
+            ResetPauseAndTimescale();
+            if (GameManager.Instance.EGameModi == EGameModi.LocalPC)
+                SceneManager.LoadScene(m_loadMenuScene);
+            //TODO: Also disconnect from Network in Online-Seasons.
+        }
+
+        public void QuitGame()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
         }
 
         #region Methods to (de-)activate Menu-Transforms with a stack and to set the active Element in each UI-Window.
@@ -66,17 +127,30 @@ namespace ThreeDeePongProto.Menu.Navigation
 
             SetSelectedElement(previousElement);
         }
-        #endregion
 
         /// <summary>
         /// The Transform gets used as the 'Key' to find the correct 'Value' in the dictionary.
         /// </summary>
         /// <param name="_activeTransform"></param>
-        private void SetSelectedElement(Transform _activeTransform)
+        protected void SetSelectedElement(Transform _activeTransform)
         {
             GameObject selectElement = m_selectedElement[_activeTransform];
             m_eventSystem.SetSelectedGameObject(selectElement);
         }
+
+        protected void SetFirstElement(Transform _firstElement)
+        {
+            m_activeElement.Push(_firstElement);
+            if (SceneManager.GetActiveScene().name == m_loadMenuScene)
+                _firstElement.gameObject.SetActive(true);
+        }
+
+        protected void ResetFirstElement()
+        {
+            m_activeElement.Clear();
+            m_activeElement.Push(m_firstElement);
+        }
+        #endregion
 
         /// <summary>
         /// Each Button pressed sets the visibly activated/deactivated Button and enables/disables the corresponding Settings-SubPage.

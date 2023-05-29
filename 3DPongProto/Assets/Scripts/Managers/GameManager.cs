@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum EGameModi
@@ -11,5 +9,8 @@ public enum EGameModi
 
 public class GameManager : GenericSingleton<GameManager>
 {
-    public EGameModi EGameModi { get; set; }
+    public EGameModi EGameModi { get => eGame; set => eGame = value; }
+    [SerializeField] private EGameModi eGame;
+    public bool GameIsPaused { get => m_gameIsPaused; set { m_gameIsPaused = value; } }
+    [SerializeField] private bool m_gameIsPaused;
 }
