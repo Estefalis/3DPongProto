@@ -5,10 +5,10 @@ using UnityEngine;
 [ExecuteAlways]
 public class LightingCircle : MonoBehaviour
 {
-    [SerializeField] Light m_directionalLight;
-    [SerializeField] LightingConditions m_lightingConditions;
-    [SerializeField, Range(0, 24)] float m_timeOfDay;
-    [SerializeField] float m_adjustDayLength;
+    [SerializeField] private Light m_directionalLight;
+    [SerializeField] private LightingConditions m_lightingConditions;
+    [SerializeField, Range(0, 24)] private float m_timeOfDay;
+    [SerializeField, Min(0.1f)] private float m_adjustDayLength;
 
     private void OnValidate()
     {

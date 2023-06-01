@@ -1,6 +1,5 @@
 using System;
 using ThreeDeePongProto.Player.Movement;
-using ThreeDeePongProto.Menu.Actions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
