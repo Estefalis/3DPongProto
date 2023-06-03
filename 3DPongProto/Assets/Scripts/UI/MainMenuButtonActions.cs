@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-namespace ThreeDeePongProto.Menu.Actions
+namespace ThreeDeePongProto.UI
 {
     public class MainMenuButtonActions : MonoBehaviour
     {
@@ -15,19 +15,19 @@ namespace ThreeDeePongProto.Menu.Actions
             {
                 if (_sender == m_modiButtons[0])
                 {
-                    GameManager.Instance.EGameModi = EGameModi.LocalPC;
+                    GameManager.Instance.EGameConnectionModi = EGameModi.LocalPC;
                 }
                 else if (_sender == m_modiButtons[1])
                 {
-                    GameManager.Instance.EGameModi = EGameModi.LAN;
+                    GameManager.Instance.EGameConnectionModi = EGameModi.LAN;
                 }
                 else if (_sender == m_modiButtons[2])
                 {
-                    GameManager.Instance.EGameModi = EGameModi.Internet;
+                    GameManager.Instance.EGameConnectionModi = EGameModi.Internet;
                 }
             }
 #if UNITY_EDITOR
-            Debug.Log("Meldung für Spiel-Modus: " + GameManager.Instance.EGameModi);
+            Debug.Log("Meldung für Spiel-Modus: " + GameManager.Instance.EGameConnectionModi);
 #endif
         }
 

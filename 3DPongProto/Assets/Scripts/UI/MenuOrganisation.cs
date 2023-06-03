@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using ThreeDeePongProto.Player.Movement;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
+using ThreeDeePongProto.Player.Input;
 
-namespace ThreeDeePongProto.Menu.Actions
+namespace ThreeDeePongProto.UI
 {
     public class MenuOrganisation : MonoBehaviour
     {
@@ -99,7 +99,7 @@ namespace ThreeDeePongProto.Menu.Actions
             UserInputManager.ResetPauseAndTimescale();
 
             if (m_loadMenuScene != null || m_loadMenuScene != string.Empty)
-                if (GameManager.Instance.EGameModi == EGameModi.LocalPC)
+                if (GameManager.Instance.EGameConnectionModi == EGameModi.LocalPC)
                     SceneManager.LoadScene(m_loadMenuScene);
             //TODO: Also disconnect from Network in Online-Seasons.
         }

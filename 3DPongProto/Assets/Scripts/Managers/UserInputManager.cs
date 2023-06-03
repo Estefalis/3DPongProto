@@ -1,8 +1,8 @@
 using System;
-using ThreeDeePongProto.Player.Movement;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
+using ThreeDeePongProto.Player.Input;
 
 public class UserInputManager : MonoBehaviour
 {
@@ -18,10 +18,6 @@ public class UserInputManager : MonoBehaviour
         {
             m_playerInputActions = new PlayerInputActions();
         }
-    }
-
-    private void Start()
-    {
         //int sceneIndex = SceneManager.GetActiveScene().buildIndex;
         string sceneName = SceneManager.GetActiveScene().name;
 

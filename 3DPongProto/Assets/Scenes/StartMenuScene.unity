@@ -8923,7 +8923,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1303007594}
-  - component: {fileID: 1303007593}
+  - component: {fileID: 1303007595}
   m_Layer: 0
   m_Name: UserInputManager
   m_TagString: Untagged
@@ -8931,18 +8931,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1303007593
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1303007592}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd81c5f1a66210a4e88940c96120be22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1303007594
 Transform:
   m_ObjectHideFlags: 0
@@ -8958,6 +8946,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1303007595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1303007592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd81c5f1a66210a4e88940c96120be22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1305672962
 GameObject:
   m_ObjectHideFlags: 0
@@ -11629,7 +11629,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4dfdbae8d3538449a9e1837dd917bff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eGame: 0
+  eGameConnectionMode: 0
+  m_eCameraMode: 0
   m_gameIsPaused: 0
 --- !u!4 &1655706971
 Transform:
@@ -14509,7 +14510,7 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 1633779088}
-    m_SelectOnDown: {fileID: 395195819}
+    m_SelectOnDown: {fileID: 29016503}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1

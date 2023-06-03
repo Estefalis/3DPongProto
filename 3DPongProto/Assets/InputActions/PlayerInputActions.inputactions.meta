@@ -11,4 +11,4 @@ ScriptedImporter:
   generateWrapperCode: 1
   wrapperCodePath: 
   wrapperClassName: 
-  wrapperCodeNamespace: ThreeDeePongProto.Player.Movement
+  wrapperCodeNamespace: ThreeDeePongProto.Player.Input

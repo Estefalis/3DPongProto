@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace ThreeDeePongProto.Player.Movement
+namespace ThreeDeePongProto.Player.Input
 {
     public class PlayerMovement : MonoBehaviour
     {
