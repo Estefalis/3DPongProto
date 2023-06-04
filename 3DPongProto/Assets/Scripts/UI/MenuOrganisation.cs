@@ -39,7 +39,10 @@ namespace ThreeDeePongProto.UI
         [SerializeField] private Transform[] m_subPageTransforms;
         #endregion
 
-        private void OnEnable()
+        /// <summary>
+        /// PlayerMovement and UIControls need to be moved into 'Start()' and the PlayerInputActions of the UserInputManager into 'Awake()', to prevent Exceptions.
+        /// </summary>
+        private void Start()
         {
             m_menuActions = UserInputManager.m_playerInputActions;
             m_menuActions?.Enable();

@@ -2,14 +2,15 @@ using UnityEngine;
 
 public enum EGameModi
 {
-    LocalPC,
+    LocalPC = default,
     LAN,
     Internet
 }
 
 public enum ECameraModi
 {
-    TwoHorizontal = default,
+    SingleCam = default,
+    TwoHorizontal,
     TwoVertical,
     FourSplit
 }

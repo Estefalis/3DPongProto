@@ -14,7 +14,10 @@ namespace ThreeDeePongProto.Player.Input
 
         private Vector3 m_movement;
 
-        private void OnEnable()
+        /// <summary>
+        /// PlayerMovement and UIControls need to be moved into 'Start()' and the PlayerInputActions of the UserInputManager into 'Awake()', to prevent Exceptions.
+        /// </summary>
+        private void Start()
         {
             //m_playerMovement = new PlayerInputActions();
             m_playerMovement = UserInputManager.m_playerInputActions;

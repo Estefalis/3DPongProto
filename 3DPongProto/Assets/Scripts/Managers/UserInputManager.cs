@@ -12,12 +12,23 @@ public class UserInputManager : MonoBehaviour
     //ActionEvent to switch between ActionMaps within the new InputActionAsset.
     public static event Action<InputActionMap> m_changeActiveActionMap;
 
-    private void OnEnable()
+    /// <summary>
+    /// PlayerMovement and UIControls need to be moved into 'Start()' and the PlayerInputActions of the UserInputManager into 'Awake()', to prevent Exceptions.
+    /// </summary>
+    private void Awake()
     {
         if (m_playerInputActions == null)
         {
             m_playerInputActions = new PlayerInputActions();
         }
+    }
+
+    private void OnEnable()
+    {
+        //if (m_playerInputActions == null)
+        //{
+        //    m_playerInputActions = new PlayerInputActions();
+        //}
         //int sceneIndex = SceneManager.GetActiveScene().buildIndex;
         string sceneName = SceneManager.GetActiveScene().name;
 
