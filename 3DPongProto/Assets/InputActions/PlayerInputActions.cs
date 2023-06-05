@@ -49,12 +49,12 @@ namespace ThreeDeePongProto.Player.Input
                 },
                 {
                     ""name"": ""Zoom"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Value"",
                     ""id"": ""4d87abec-b5b1-491c-8e08-6723d51b35fa"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""ToggleGameMenu"",
@@ -149,7 +149,7 @@ namespace ThreeDeePongProto.Player.Input
                     ""id"": ""3cc02747-30e6-430c-9acc-5fdac92953f6"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""ScaleVector2"",
                     ""groups"": """",
                     ""action"": ""Zoom"",
                     ""isComposite"": true,

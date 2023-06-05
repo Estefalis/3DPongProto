@@ -1,8 +1,10 @@
 using UnityEngine;
 
+//FullCamWindow: Width 536.4 - Height 302.
+
 namespace ThreeDeePongProto.CameraSetup
 {
-    public class CamViewSetup : MonoBehaviour
+    public class CameraWindowRect : MonoBehaviour
     {
         //[SerializeField] private ECameraModi m_setCameraMode;
 
@@ -15,11 +17,6 @@ namespace ThreeDeePongProto.CameraSetup
         [SerializeField] private float m_halfHeightHor, m_fullHeightVer;
 
         private Rect m_resetRect;
-
-        //FullCamWindow: Width 536.4 - Height 302.
-        //Default CameraTransform SingleCam - Position: X0, Y3, Z31, Rotation X-3.5f, Y0/180, Z0, Scale X1, Y1, Z1.
-        //Default CameraTransform TwoHorizontal - Position: X0, Y3, Z31, Rotation X-3.5f, Y0/180, Z0, Scale X1, Y1, Z1.
-        //Default CameraTransform TwoVertical - Position: X0, Y4, Z36, Rotation X-10f, Y0/180, Z0, Scale X1, Y1, Z1.
 
         private void OnEnable()
         {
