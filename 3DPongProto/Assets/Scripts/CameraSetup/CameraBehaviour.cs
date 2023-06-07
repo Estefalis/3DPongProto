@@ -1,4 +1,5 @@
 using ThreeDeePongProto.Player.Input;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,7 +10,7 @@ using UnityEngine.InputSystem;
 
 namespace ThreeDeePongProto.CameraSetup
 {
-    public class CameraZoom : MonoBehaviour
+    public class CameraBehaviour : MonoBehaviour
     {
         private PlayerInputActions m_cameraInputActions;
 
@@ -19,7 +20,8 @@ namespace ThreeDeePongProto.CameraSetup
         [SerializeField] private float m_maximalHeight;
 
         [Header("Smooth Following")]
-        [Range(1, 10)]
+        [SerializeField] private bool m_enableOffset;
+        [Range(1f, 20.0f)]
         [SerializeField] private float m_smoothfactor;
 
         [Header("Camera-Zoom")]
@@ -53,10 +55,22 @@ namespace ThreeDeePongProto.CameraSetup
             m_cameraInputActions.PlayerActions.Zoom.performed -= Zooming;
         }
 
+        private void Update()
+        {
+            if (!m_enableOffset)
+            {
+                FollowDirectly();
+            }
+        }
+
         private void FixedUpdate()
         {
             UpdateCameraPosition();
-            FollowWithOffset();
+
+            if (m_enableOffset)
+            {
+                FollowWithOffset();
+            }
         }
 
         private void UpdateCameraPosition()
@@ -67,10 +81,16 @@ namespace ThreeDeePongProto.CameraSetup
             m_cameraTransform.localPosition = Vector3.Lerp(m_cameraTransform.localPosition, zoomTarget, Time.fixedDeltaTime * m_zoomDampening);
         }
 
+        private void FollowDirectly()
+        {
+            Vector3 desiredPosition = new Vector3(m_playerRBTransform.position.x, m_cameraTransform.localPosition.y, m_cameraTransform.localPosition.z);
+            m_cameraTransform.position = desiredPosition;
+        }
+
         private void FollowWithOffset()
         {
             Vector3 desiredPosition = m_playerRBTransform.position + m_differenceVector;
-            Vector3 smoothedFollowing = Vector3.Lerp(m_cameraTransform.position, desiredPosition, m_smoothfactor * Time.fixedDeltaTime);
+            Vector3 smoothedFollowing = Vector3.Lerp(m_cameraTransform.position, desiredPosition, m_smoothfactor * Time.deltaTime);
             m_cameraTransform.position = smoothedFollowing;
         }
 

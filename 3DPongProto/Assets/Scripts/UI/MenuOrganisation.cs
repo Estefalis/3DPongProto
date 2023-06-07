@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using ThreeDeePongProto.Player.Input;
+using ThreeDeePongProto.Managers;
 
 namespace ThreeDeePongProto.UI
 {

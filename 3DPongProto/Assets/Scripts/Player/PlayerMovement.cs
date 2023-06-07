@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ThreeDeePongProto.Managers;
 
 namespace ThreeDeePongProto.Player.Input
 {

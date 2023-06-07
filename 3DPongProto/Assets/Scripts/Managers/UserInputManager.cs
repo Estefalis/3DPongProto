@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using ThreeDeePongProto.Player.Input;
+using ThreeDeePongProto.Managers;
 
 public class UserInputManager : MonoBehaviour
 {
