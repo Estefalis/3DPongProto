@@ -1,3 +1,4 @@
+using UnityEditor.ProBuilder;
 using UnityEngine;
 
 public enum EGameModi
@@ -27,5 +28,13 @@ namespace ThreeDeePongProto.Managers
 
         public bool GameIsPaused { get => m_gameIsPaused; set { m_gameIsPaused = value; } }
         [SerializeField] private bool m_gameIsPaused;
+
+        public float MaxFieldWidth { get => m_maxFieldWidth; private set => m_maxFieldWidth = value; }
+        [SerializeField] private float m_maxFieldWidth = 10.75f;
+
+        public void SetFieldWidth(float _fieldWidth)
+        {
+            m_maxFieldWidth = _fieldWidth;
+        }
     }
 }

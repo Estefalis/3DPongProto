@@ -1,3 +1,4 @@
+using ThreeDeePongProto.Managers;
 using ThreeDeePongProto.Player.Input;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -29,6 +30,7 @@ namespace ThreeDeePongProto.CameraSetup
         [SerializeField] private float m_zoomStep;
         [SerializeField] private float m_zoomDampening;
 
+        private float m_maxFieldWidth, m_maxSideMovement;
         private Transform m_cameraTransform;
         private Vector3 m_differenceVector;
 
@@ -44,6 +46,10 @@ namespace ThreeDeePongProto.CameraSetup
 
         private void Start()
         {
+            m_maxFieldWidth = GameManager.Instance.MaxFieldWidth;
+            //TODO: Calculation of the set FieldWidth adjusted by the PlayerPaddle-Width at runtime!!!
+            m_maxSideMovement = m_maxFieldWidth;
+
             m_cameraInputActions = UserInputManager.m_playerInputActions;
             m_cameraInputActions.Enable();
             m_cameraInputActions.PlayerActions.Zoom.performed += Zooming;
@@ -83,7 +89,8 @@ namespace ThreeDeePongProto.CameraSetup
 
         private void FollowDirectly()
         {
-            Vector3 desiredPosition = new Vector3(m_playerRBTransform.position.x, m_cameraTransform.localPosition.y, m_cameraTransform.localPosition.z);
+            //m_cameraTransform.position.z MUST NOT be localPosition, or the Camera2-Position flickers between + and - Z-Values.
+            Vector3 desiredPosition = new Vector3(Mathf.Clamp(m_playerRBTransform.position.x, -m_maxSideMovement, m_maxSideMovement), m_cameraTransform.position.y, m_cameraTransform.position.z);
             m_cameraTransform.position = desiredPosition;
         }
 

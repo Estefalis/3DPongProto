@@ -11,15 +11,28 @@ namespace ThreeDeePongProto.Player.Input
         [SerializeField] private Rigidbody m_rigidbody;
         //[SerializeField] private readonly string m_horizontAxis = "Horizontal";
         [SerializeField] private float m_movementSpeed;
-        [SerializeField] private float m_maxMoveRange;
-
+        
+        private float m_maxFieldWidth, m_maxSideMovement;
         private Vector3 m_movement;
+
+        private void Awake()
+        {
+            if (m_rigidbody is null)
+                m_rigidbody = GetComponentInChildren<Rigidbody>();
+        }
 
         /// <summary>
         /// PlayerMovement and UIControls need to be moved into 'Start()' and the PlayerInputActions of the UserInputManager into 'Awake()', to prevent Exceptions.
         /// </summary>
         private void Start()
         {
+            m_maxFieldWidth = GameManager.Instance.MaxFieldWidth;
+            //TODO: Calculation of the set FieldWidth adjusted by the PlayerPaddle-Width at runtime!!!
+            //Pro Builder Shape Script UND der BoxCollider muessen zusammen angepasst werden!!!
+            //Feldbreite 10.75f - Paddlebreite 3,5 - Paddleweite = 10.75f
+            //Feldbreite 10.75f - Paddlebreite 3 - Paddleweite = 11f
+            m_maxSideMovement = m_maxFieldWidth;
+
             //m_playerMovement = new PlayerInputActions();
             m_playerMovement = UserInputManager.m_playerInputActions;
             m_playerMovement.PlayerActions.Enable();
@@ -36,17 +49,11 @@ namespace ThreeDeePongProto.Player.Input
             m_playerMovement.PlayerActions.ToggleGameMenu.performed -= ToggleMenu;
         }
 
-        private void Awake()
-        {
-            if (m_rigidbody is null)
-                m_rigidbody = GetComponentInChildren<Rigidbody>();
-        }
-
         private void Update()
         {
             //m_movement = new Vector3(Input.GetAxis(m_horizontAxis), 0, 0);
 
-            m_rigidbody.transform.position = new Vector3(Mathf.Clamp(m_rigidbody.transform.position.x, -m_maxMoveRange, m_maxMoveRange),
+            m_rigidbody.transform.position = new Vector3(Mathf.Clamp(m_rigidbody.transform.position.x, -m_maxSideMovement, m_maxSideMovement),
                     m_rigidbody.transform.position.y, m_rigidbody.transform.position.z);
         }
 
