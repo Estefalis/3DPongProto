@@ -77,7 +77,7 @@ namespace ThreeDeePongProto.CameraSetup
 
         private void GetMaxSideMovement()
         {
-            m_maxSideMovement = GameManager.Instance.MaxFieldWidth * 0.5f - GameManager.Instance.WidthAdjustment * 0.5f;
+            m_maxSideMovement = GameManager.Instance.MaxFieldWidth * 0.5f - m_playerRb.transform.localScale.x * 0.5f;
         }
 
         private void UpdateCameraPosition()
