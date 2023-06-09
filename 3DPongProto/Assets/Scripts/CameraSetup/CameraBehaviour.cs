@@ -1,13 +1,7 @@
 using ThreeDeePongProto.Managers;
 using ThreeDeePongProto.Player.Input;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-//Inspired by OneWheelStudio.
-//Default CameraTransform SingleCam - Position: X0, Y3, Z31, Rotation X-3.5f, Y0/180, Z0, Scale X1, Y1, Z1.
-//Default CameraTransform TwoHorizontal - Position: X0, Y3, Z31, Rotation X-3.5f, Y0/180, Z0, Scale X1, Y1, Z1.
-//Default CameraTransform TwoVertical - Position: X0, Y4, Z36, Rotation X-10f, Y0/180, Z0, Scale X1, Y1, Z1.
 
 namespace ThreeDeePongProto.CameraSetup
 {
@@ -16,7 +10,7 @@ namespace ThreeDeePongProto.CameraSetup
         private PlayerInputActions m_cameraInputActions;
 
         [Header("Camera-Positions")]
-        [SerializeField] private Transform m_playerRBTransform;
+        [SerializeField] private Rigidbody m_playerRb;
         [SerializeField] private float m_lowestHeight;
         [SerializeField] private float m_maximalHeight;
 
@@ -30,7 +24,7 @@ namespace ThreeDeePongProto.CameraSetup
         [SerializeField] private float m_zoomStep;
         [SerializeField] private float m_zoomDampening;
 
-        private float m_maxFieldWidth, m_maxSideMovement;
+        private float m_maxSideMovement;
         private Transform m_cameraTransform;
         private Vector3 m_differenceVector;
 
@@ -38,17 +32,19 @@ namespace ThreeDeePongProto.CameraSetup
 
         private void OnEnable()
         {
+            if (m_playerRb == null)
+                m_playerRb = GetComponent<Rigidbody>();
+
             m_cameraTransform = this.GetComponentInChildren<Camera>().transform;
             m_currentHeight = m_cameraTransform.localPosition.y;
-            //Position for LookAtTarget, if wanted.
-            m_differenceVector = m_cameraTransform.position - m_playerRBTransform.position;
+            //Add Position for LookAtTarget here, if wanted.
+            //Saved vector to keep the playercamera-startposition.
+            m_differenceVector = m_cameraTransform.position - m_playerRb.transform.position;
         }
 
         private void Start()
         {
-            m_maxFieldWidth = GameManager.Instance.MaxFieldWidth;
-            //TODO: Calculation of the set FieldWidth adjusted by the PlayerPaddle-Width at runtime!!!
-            m_maxSideMovement = m_maxFieldWidth;
+            GetMaxSideMovement();
 
             m_cameraInputActions = UserInputManager.m_playerInputActions;
             m_cameraInputActions.Enable();
@@ -79,6 +75,11 @@ namespace ThreeDeePongProto.CameraSetup
             }
         }
 
+        private void GetMaxSideMovement()
+        {
+            m_maxSideMovement = GameManager.Instance.MaxFieldWidth * 0.5f - GameManager.Instance.WidthAdjustment * 0.5f;
+        }
+
         private void UpdateCameraPosition()
         {
             Vector3 zoomTarget = new Vector3(m_cameraTransform.localPosition.x, m_currentHeight, m_cameraTransform.localPosition.z);
@@ -90,13 +91,17 @@ namespace ThreeDeePongProto.CameraSetup
         private void FollowDirectly()
         {
             //m_cameraTransform.position.z MUST NOT be localPosition, or the Camera2-Position flickers between + and - Z-Values.
-            Vector3 desiredPosition = new Vector3(Mathf.Clamp(m_playerRBTransform.position.x, -m_maxSideMovement, m_maxSideMovement), m_cameraTransform.position.y, m_cameraTransform.position.z);
+            Vector3 desiredPosition = new Vector3(Mathf.Clamp(m_playerRb.position.x, 
+                -m_maxSideMovement + (GameManager.Instance.WidthAdjustment * 0.5f), 
+                m_maxSideMovement - (GameManager.Instance.WidthAdjustment * 0.5f)), 
+                m_cameraTransform.position.y, m_cameraTransform.position.z);
+
             m_cameraTransform.position = desiredPosition;
         }
 
         private void FollowWithOffset()
         {
-            Vector3 desiredPosition = m_playerRBTransform.position + m_differenceVector;
+            Vector3 desiredPosition = m_playerRb.position + m_differenceVector;
             Vector3 smoothedFollowing = Vector3.Lerp(m_cameraTransform.position, desiredPosition, m_smoothfactor * Time.deltaTime);
             m_cameraTransform.position = smoothedFollowing;
         }
@@ -105,7 +110,6 @@ namespace ThreeDeePongProto.CameraSetup
         {
             //m_zoomDirection = _callbackContext.ReadValue<Vector2>();
             float zoomValue = -_callbackContext.ReadValue<Vector2>().y * m_zoomSpeed;
-            ;
 
             if (Mathf.Abs(zoomValue) > 0.1f)
             {

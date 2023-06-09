@@ -72,7 +72,7 @@ public class UserInputManager : MonoBehaviour
         m_changeActiveActionMap?.Invoke(_actionMap);
         _actionMap.Enable();
 #if UNITY_EDITOR
-        Debug.Log(_actionMap.name);
+        Debug.Log($"UserInputManager: {_actionMap.name} loaded.");
 #endif
     }
     #endregion

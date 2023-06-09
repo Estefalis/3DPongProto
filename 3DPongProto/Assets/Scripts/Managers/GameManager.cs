@@ -1,4 +1,3 @@
-using UnityEditor.ProBuilder;
 using UnityEngine;
 
 public enum EGameModi
@@ -30,11 +29,20 @@ namespace ThreeDeePongProto.Managers
         [SerializeField] private bool m_gameIsPaused;
 
         public float MaxFieldWidth { get => m_maxFieldWidth; private set => m_maxFieldWidth = value; }
-        [SerializeField] private float m_maxFieldWidth = 10.75f;
+        private float m_maxFieldWidth = 25.0f;  //Current Default until the FieldWidth gets set by SettingsOptions.
+
+        public float WidthAdjustment { get => m_widthAdjustment; private set => m_widthAdjustment = value; }
+        private float m_widthAdjustment;
 
         public void SetFieldWidth(float _fieldWidth)
         {
             m_maxFieldWidth = _fieldWidth;
+        }
+
+        public void SetPaddleAdjustAmount(float _amount)
+        {
+            m_widthAdjustment += _amount;
+            Debug.Log("GameManager received the PaddleWidthAdjustmentAmount: " + WidthAdjustment);
         }
     }
 }

@@ -5,7 +5,7 @@ public class BallMovement : MonoBehaviour
 {
     [SerializeField] private Rigidbody m_rigidbody;
 
-    [SerializeField] private float m_impulseForce = 10f;
+    //[SerializeField] private float m_impulseForce = 10f;
 
     private Vector3 m_ballPopPosition;
     /*TODO:

@@ -9,16 +9,21 @@ namespace ThreeDeePongProto.Player.Input
         private PlayerInputActions m_playerMovement;
 
         [SerializeField] private Rigidbody m_rigidbody;
-        //[SerializeField] private readonly string m_horizontAxis = "Horizontal";
-        [SerializeField] private float m_movementSpeed;
-        
-        private float m_maxFieldWidth, m_maxSideMovement;
+        [SerializeField] private float m_movementSpeed, m_startWidthAdjustment;
+        [SerializeField] private Vector3 m_localPaddleScale;
+
+        private float m_maxSideMovement;
         private Vector3 m_movement;
 
         private void Awake()
         {
-            if (m_rigidbody is null)
+            GameManager.Instance.SetPaddleAdjustAmount(m_startWidthAdjustment);
+
+            if (m_rigidbody == null)
+            {
                 m_rigidbody = GetComponentInChildren<Rigidbody>();
+                ClampPaddleMoverange();
+            }
         }
 
         /// <summary>
@@ -26,12 +31,7 @@ namespace ThreeDeePongProto.Player.Input
         /// </summary>
         private void Start()
         {
-            m_maxFieldWidth = GameManager.Instance.MaxFieldWidth;
-            //TODO: Calculation of the set FieldWidth adjusted by the PlayerPaddle-Width at runtime!!!
-            //Pro Builder Shape Script UND der BoxCollider muessen zusammen angepasst werden!!!
-            //Feldbreite 10.75f - Paddlebreite 3,5 - Paddleweite = 10.75f
-            //Feldbreite 10.75f - Paddlebreite 3 - Paddleweite = 11f
-            m_maxSideMovement = m_maxFieldWidth;
+            //GetMaxSideMovement();
 
             //m_playerMovement = new PlayerInputActions();
             m_playerMovement = UserInputManager.m_playerInputActions;
@@ -54,7 +54,21 @@ namespace ThreeDeePongProto.Player.Input
             //m_movement = new Vector3(Input.GetAxis(m_horizontAxis), 0, 0);
 
             m_rigidbody.transform.position = new Vector3(Mathf.Clamp(m_rigidbody.transform.position.x, -m_maxSideMovement, m_maxSideMovement),
-                    m_rigidbody.transform.position.y, m_rigidbody.transform.position.z);
+                m_rigidbody.transform.position.y, m_rigidbody.transform.position.z);
+
+            //TODO: MUST be removed after testing is completed!!!___
+            if (Keyboard.current.wKey.wasPressedThisFrame)
+            {
+                GameManager.Instance.SetPaddleAdjustAmount(0.5f);
+                ClampPaddleMoverange();
+            }
+
+            if (Keyboard.current.wKey.wasReleasedThisFrame)
+            {
+                GameManager.Instance.SetPaddleAdjustAmount(-0.5f);
+                ClampPaddleMoverange();
+            }
+            //______________________________________________________
         }
 
         private void FixedUpdate()
@@ -63,6 +77,18 @@ namespace ThreeDeePongProto.Player.Input
             //m_rigidbody.MovePosition(m_rigidbody.transform.position + (m_movement * m_movementSpeed * Time.fixedDeltaTime));
             m_rigidbody.MovePosition(m_rigidbody.transform.position + (new Vector3(m_playerMovement.PlayerActions.SideMovement.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMovement.ReadValue<Vector2>().y) * m_movementSpeed * Time.fixedDeltaTime));
         }
+
+        public void ClampPaddleMoverange()
+        {
+
+            m_rigidbody.transform.localScale = new Vector3(m_localPaddleScale.x + GameManager.Instance.WidthAdjustment, m_localPaddleScale.y, m_localPaddleScale.z);
+
+            m_maxSideMovement = GameManager.Instance.MaxFieldWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
+        }
+
+        //private void GetMaxSideMovement()
+        //{
+        //}
 
         //private void MovePlayer(Vector3 _moveDirection)
         //{
@@ -78,6 +104,7 @@ namespace ThreeDeePongProto.Player.Input
         //{
         //    m_movement = Vector2.zero;
         //}
+
         private void ToggleMenu(InputAction.CallbackContext _callbackContext)
         {
             if (!GameManager.Instance.GameIsPaused && UserInputManager.m_playerInputActions.PlayerActions.enabled)
