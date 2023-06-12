@@ -42,7 +42,9 @@ namespace ThreeDeePongProto.Managers
         public void SetPaddleAdjustAmount(float _amount)
         {
             m_widthAdjustment += _amount;
+#if UNITY_EDITOR
             Debug.Log("GameManager received the PaddleWidthAdjustmentAmount: " + WidthAdjustment);
+#endif
         }
     }
 }

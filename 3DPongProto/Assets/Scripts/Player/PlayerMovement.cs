@@ -10,10 +10,11 @@ namespace ThreeDeePongProto.Player.Input
 
         [SerializeField] private Rigidbody m_rigidbody;
         [SerializeField] private float m_movementSpeed, m_startWidthAdjustment;
+        [SerializeField] private float m_rotationSpeed, m_maxRotationAngle;
         [SerializeField] private Vector3 m_localPaddleScale;
 
         private float m_maxSideMovement;
-        private Vector3 m_movement;
+        private Vector3 m_axisRotation;
 
         private void Awake()
         {
@@ -22,7 +23,7 @@ namespace ThreeDeePongProto.Player.Input
             if (m_rigidbody == null)
             {
                 m_rigidbody = GetComponentInChildren<Rigidbody>();
-                ClampPaddleMoverange();
+                ClampMoveRange();
             }
         }
 
@@ -31,79 +32,71 @@ namespace ThreeDeePongProto.Player.Input
         /// </summary>
         private void Start()
         {
-            //GetMaxSideMovement();
-
-            //m_playerMovement = new PlayerInputActions();
             m_playerMovement = UserInputManager.m_playerInputActions;
             m_playerMovement.PlayerActions.Enable();
-            //m_playerMovement.PlayerActions.SideMovement.performed += SideMovement;
-            //m_playerMovement.PlayerActions.SideMovement.canceled += StopSideMovement;
             m_playerMovement.PlayerActions.ToggleGameMenu.performed += ToggleMenu;
         }
 
         private void OnDisable()
         {
             m_playerMovement.PlayerActions.Disable();
-            //m_playerMovement.PlayerActions.SideMovement.performed -= SideMovement;
-            //m_playerMovement.PlayerActions.SideMovement.canceled -= StopSideMovement;
             m_playerMovement.PlayerActions.ToggleGameMenu.performed -= ToggleMenu;
         }
 
         private void Update()
         {
-            //m_movement = new Vector3(Input.GetAxis(m_horizontAxis), 0, 0);
-
-            m_rigidbody.transform.position = new Vector3(Mathf.Clamp(m_rigidbody.transform.position.x, -m_maxSideMovement, m_maxSideMovement),
-                m_rigidbody.transform.position.y, m_rigidbody.transform.position.z);
+            m_axisRotation = new Vector3(0, m_playerMovement.PlayerActions.TurnMovement.ReadValue<Vector2>().x, 0);
 
             //TODO: MUST be removed after testing is completed!!!___
             if (Keyboard.current.wKey.wasPressedThisFrame)
             {
                 GameManager.Instance.SetPaddleAdjustAmount(0.5f);
-                ClampPaddleMoverange();
             }
 
             if (Keyboard.current.wKey.wasReleasedThisFrame)
             {
                 GameManager.Instance.SetPaddleAdjustAmount(-0.5f);
-                ClampPaddleMoverange();
             }
             //______________________________________________________
+
+            ClampMoveRange();
+            ClampRotationAngle();
         }
 
         private void FixedUpdate()
         {
-            //MovePlayer(m_movement);
-            //m_rigidbody.MovePosition(m_rigidbody.transform.position + (m_movement * m_movementSpeed * Time.fixedDeltaTime));
-            m_rigidbody.MovePosition(m_rigidbody.transform.position + (new Vector3(m_playerMovement.PlayerActions.SideMovement.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMovement.ReadValue<Vector2>().y) * m_movementSpeed * Time.fixedDeltaTime));
+            MovePlayer();
+            TurnPlayer();
         }
 
-        public void ClampPaddleMoverange()
+        public void ClampMoveRange()
         {
+            m_rigidbody.transform.position = new Vector3(Mathf.Clamp(m_rigidbody.transform.position.x, -m_maxSideMovement, m_maxSideMovement),
+                m_rigidbody.transform.position.y, m_rigidbody.transform.position.z);
 
             m_rigidbody.transform.localScale = new Vector3(m_localPaddleScale.x + GameManager.Instance.WidthAdjustment, m_localPaddleScale.y, m_localPaddleScale.z);
 
             m_maxSideMovement = GameManager.Instance.MaxFieldWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
         }
 
-        //private void GetMaxSideMovement()
-        //{
-        //}
+        private void ClampRotationAngle()
+        {
+            Quaternion rotation = Quaternion.LookRotation(m_rigidbody.transform.forward, Vector3.up);
+            rotation.ToAngleAxis(out float angle, out Vector3 axis);
+            angle = Mathf.Clamp(angle, -m_maxRotationAngle, m_maxRotationAngle);
+            m_rigidbody.transform.rotation = Quaternion.AngleAxis(angle, axis);
+        }
 
-        //private void MovePlayer(Vector3 _moveDirection)
-        //{
-        //    m_rigidbody.MovePosition(m_rigidbody.transform.position + (_moveDirection * m_movementSpeed * Time.fixedDeltaTime));
-        //}
+        private void MovePlayer()
+        {
+            m_rigidbody.MovePosition(m_rigidbody.transform.position + (new Vector3(m_playerMovement.PlayerActions.SideMovement.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMovement.ReadValue<Vector2>().y) * m_movementSpeed * Time.fixedDeltaTime));
+        }
 
-        //private void SideMovement(InputAction.CallbackContext _callbackContext)
-        //{
-        //    m_movement = _callbackContext.ReadValue<Vector2>();
-        //}
-
-        //private void StopSideMovement(InputAction.CallbackContext _callbackContext)
-        //{
-        //    m_movement = Vector2.zero;
-        //}
+        private void TurnPlayer()
+        {
+            Quaternion deltaRotation = Quaternion.Euler(m_axisRotation * m_rotationSpeed * Time.fixedDeltaTime);
+            m_rigidbody.MoveRotation(m_rigidbody.rotation * deltaRotation);
+        }
 
         private void ToggleMenu(InputAction.CallbackContext _callbackContext)
         {

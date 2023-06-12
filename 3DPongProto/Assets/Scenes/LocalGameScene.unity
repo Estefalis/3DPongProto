@@ -4322,7 +4322,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_rigidbody: {fileID: 0}
   m_movementSpeed: 10
-  m_widthAdjustment: 0
+  m_startWidthAdjustment: 0
+  m_rotationSpeed: 400
+  m_maxRotationAngle: 45
   m_localPaddleScale: {x: 3.5, y: 1, z: 0.5}
 --- !u!114 &1723233805084045120
 MonoBehaviour:
