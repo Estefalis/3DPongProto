@@ -2,13 +2,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using ThreeDeePongProto.Managers;
 
-namespace ThreeDeePongProto.Player.Input
+namespace ThreeDeePongProto.Player.Inputs
 {
     public class PlayerMovement : MonoBehaviour
     {
         private PlayerInputActions m_playerMovement;
 
         [SerializeField] private Rigidbody m_rigidbody;
+        [SerializeField] private Transform m_rbTransform;
         [SerializeField] private float m_movementSpeed, m_startWidthAdjustment;
         [SerializeField] private float m_rotationSpeed, m_maxRotationAngle;
         [SerializeField] private Vector3 m_localPaddleScale;
@@ -23,6 +24,7 @@ namespace ThreeDeePongProto.Player.Input
             if (m_rigidbody == null)
             {
                 m_rigidbody = GetComponentInChildren<Rigidbody>();
+                m_rbTransform = GetComponentInChildren<Rigidbody>().transform;
                 ClampMoveRange();
             }
         }
@@ -48,12 +50,12 @@ namespace ThreeDeePongProto.Player.Input
             m_axisRotation = new Vector3(0, m_playerMovement.PlayerActions.TurnMovement.ReadValue<Vector2>().x, 0);
 
             //TODO: MUST be removed after testing is completed!!!___
-            if (Keyboard.current.wKey.wasPressedThisFrame)
+            if (Keyboard.current.pKey.wasPressedThisFrame)
             {
                 GameManager.Instance.SetPaddleAdjustAmount(0.5f);
             }
 
-            if (Keyboard.current.wKey.wasReleasedThisFrame)
+            if (Keyboard.current.pKey.wasReleasedThisFrame)
             {
                 GameManager.Instance.SetPaddleAdjustAmount(-0.5f);
             }
@@ -81,7 +83,7 @@ namespace ThreeDeePongProto.Player.Input
 
         private void ClampRotationAngle()
         {
-            Quaternion rotation = Quaternion.LookRotation(m_rigidbody.transform.forward, Vector3.up);
+            Quaternion rotation = Quaternion.LookRotation(m_rbTransform.forward, Vector3.up);
             rotation.ToAngleAxis(out float angle, out Vector3 axis);
             angle = Mathf.Clamp(angle, -m_maxRotationAngle, m_maxRotationAngle);
             m_rigidbody.transform.rotation = Quaternion.AngleAxis(angle, axis);
@@ -89,7 +91,7 @@ namespace ThreeDeePongProto.Player.Input
 
         private void MovePlayer()
         {
-            m_rigidbody.MovePosition(m_rigidbody.transform.position + (new Vector3(m_playerMovement.PlayerActions.SideMovement.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMovement.ReadValue<Vector2>().y) * m_movementSpeed * Time.fixedDeltaTime));
+            m_rigidbody.MovePosition(m_rbTransform.position + (new Vector3(m_playerMovement.PlayerActions.SideMovement.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMovement.ReadValue<Vector2>().y) * m_movementSpeed * Time.fixedDeltaTime));
         }
 
         private void TurnPlayer()

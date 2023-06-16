@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-namespace ThreeDeePongProto.Player.Input
+namespace ThreeDeePongProto.Player.Inputs
 {
     public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     {
