@@ -8,6 +8,7 @@ namespace ThreeDeePongProto.CameraSetup
     public class CameraBehaviour : MonoBehaviour
     {
         private PlayerInputActions m_cameraInputActions;
+        [SerializeField] private PlayerMovement m_playerMovement;
 
         [Header("Camera-Positions")]
         //[SerializeField] private Transform m_rbTransform;
@@ -26,9 +27,11 @@ namespace ThreeDeePongProto.CameraSetup
         [SerializeField] private float m_zoomStep;
         [SerializeField] private float m_zoomDampening;
 
-        private float m_maxSideMovement;
+        private float m_maxSideMovement, m_directFollowVectorX;
         private Transform m_cameraTransform;
         private Vector3 m_cameraStartPosition;
+
+        private uint m_playerID;
 
         private float m_currentHeight, m_cameraZPos;
 
@@ -51,6 +54,8 @@ namespace ThreeDeePongProto.CameraSetup
             m_cameraInputActions = UserInputManager.m_playerInputActions;
             m_cameraInputActions.Enable();
             m_cameraInputActions.PlayerActions.Zoom.performed += Zooming;
+
+            m_playerID = m_playerMovement.GetComponent<PlayerMovement>().PlayerID;
         }
 
         private void OnDisable()
@@ -100,8 +105,16 @@ namespace ThreeDeePongProto.CameraSetup
 
         private void FollowDirectly()
         {
+            switch (m_playerID % 2 == 0)
+            {
+                case true:
+                    m_directFollowVectorX = -m_RbPlayer.transform.localPosition.x; break;
+                case false:
+                    m_directFollowVectorX = m_RbPlayer.transform.localPosition.x;  break;
+            }
+
             //m_cameraTransform.position.z MUST NOT be localPosition, or the Camera2-Position flickers between + and - Z-Values.
-            Vector3 desiredPosition = new Vector3(Mathf.Clamp(m_RbPlayer.transform.localPosition.x,
+            Vector3 desiredPosition = new Vector3(Mathf.Clamp(m_directFollowVectorX,
                 -m_maxSideMovement + (GameManager.Instance.WidthAdjustment * 0.5f),
                 m_maxSideMovement - (GameManager.Instance.WidthAdjustment * 0.5f)),
                 m_cameraTransform.position.y, m_cameraTransform.position.z);

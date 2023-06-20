@@ -31,6 +31,9 @@ namespace ThreeDeePongProto.Managers
         public float MaxFieldWidth { get => m_maxFieldWidth; private set => m_maxFieldWidth = value; }
         private float m_maxFieldWidth = 25.0f;  //Current Default until the FieldWidth gets set by SettingsOptions.
 
+        public float MaxFieldLength { get => m_maxFieldLength; private set => m_maxFieldLength = value; }
+        private float m_maxFieldLength = 50.0f;  //Current Default until the FieldWidth gets set by SettingsOptions.
+
         public float WidthAdjustment { get => m_widthAdjustment; private set => m_widthAdjustment = value; }
         private float m_widthAdjustment;
 
