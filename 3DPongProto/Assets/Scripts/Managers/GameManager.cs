@@ -9,7 +9,7 @@ public enum EGameModi
 
 public enum ECameraModi
 {
-    SingleCam = default,
+    SingleCam/* = default*/,
     TwoHorizontal,
     TwoVertical,
     FourSplit

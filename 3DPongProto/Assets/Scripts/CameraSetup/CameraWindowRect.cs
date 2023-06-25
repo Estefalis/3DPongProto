@@ -7,8 +7,6 @@ namespace ThreeDeePongProto.CameraSetup
 {
     public class CameraWindowRect : MonoBehaviour
     {
-        //[SerializeField] private ECameraModi m_setCameraMode;
-
         [SerializeField] private Camera m_playerCam1;
         [SerializeField] private Camera m_playerCam2;
         [SerializeField] private Camera m_playerCam3;
@@ -18,67 +16,72 @@ namespace ThreeDeePongProto.CameraSetup
         [SerializeField] private float m_halfHeightHor, m_fullHeightVer;
 
         private Rect m_resetRect;
+        private uint m_lastSetCameraMode;
 
         private void OnEnable()
         {
             m_resetRect = m_playerCam1.pixelRect;
+            m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
 
-            if (m_playerCam3 != null && m_playerCam4 != null && GameManager.Instance.ECameraMode == ECameraModi.FourSplit)
-            //if (m_playerCam3 != null && m_playerCam4 != null && m_setCameraMode == ECameraModi.FourSplit)
+            if (m_playerCam3 != null && m_playerCam4 != null && m_lastSetCameraMode == (uint)ECameraModi.FourSplit)
             {
-                SetPizzaFourSeasons(m_playerCam1, m_playerCam2, m_playerCam3, m_playerCam4);
+                SetFourSplit(m_playerCam1, m_playerCam2, m_playerCam3, m_playerCam4);
                 return;
             }
-            else if (GameManager.Instance.ECameraMode == ECameraModi.TwoVertical)
-                //else if (m_setCameraMode == ECameraModi.TwoVertical)
+            else if (m_playerCam2 != null && m_lastSetCameraMode == (uint)ECameraModi.TwoVertical)
                 SetCamerasVertical(m_playerCam1, m_playerCam2);
-            else if (GameManager.Instance.ECameraMode == ECameraModi.TwoHorizontal)
-                //else if (m_setCameraMode == ECameraModi.TwoHorizontal)
+            else if (m_playerCam2 != null && m_lastSetCameraMode == (uint)ECameraModi.TwoHorizontal)
                 SetCamerasHorizontal(m_playerCam1, m_playerCam2);
             else
-                SetSingleCamera(m_playerCam1);
+                SetSingleCamera();
         }
 
         private void Update()
         {
-            //TODO: InputSettings need to be removed from CamViewSetup after development if finished, or they still change the CameraSettings in the PauseMode.
-            if (Input.GetKeyDown(KeyCode.H))
+            if ((uint)GameManager.Instance.ECameraMode != m_lastSetCameraMode)
             {
-                GameManager.Instance.ECameraMode = ECameraModi.TwoHorizontal;
-                //m_setCameraMode = ECameraModi.TwoHorizontal;
-                SetCamerasHorizontal(m_playerCam1, m_playerCam2);
-            }
-
-            if (Input.GetKeyDown(KeyCode.V))
-            {
-                GameManager.Instance.ECameraMode = ECameraModi.TwoVertical;
-                //m_setCameraMode = ECameraModi.TwoVertical;
-                SetCamerasVertical(m_playerCam1, m_playerCam2);
-            }
-
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                GameManager.Instance.ECameraMode = ECameraModi.FourSplit;
-                //m_setCameraMode = ECameraModi.FourSplit;
-                SetPizzaFourSeasons(m_playerCam1, m_playerCam2, m_playerCam3, m_playerCam4);
-            }
-
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                GameManager.Instance.ECameraMode = ECameraModi.SingleCam;
-                //m_setCameraMode = ECameraModi.SingleCam;
-                SetSingleCamera(m_playerCam1);
+                switch ((uint)GameManager.Instance.ECameraMode)
+                {
+                    case 0:
+                    {
+                        m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
+                        SetSingleCamera();
+                        break;
+                    }
+                    case 1:
+                    {
+                        m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
+                        SetCamerasHorizontal(m_playerCam1, m_playerCam2);
+                        break;
+                    }
+                    case 2:
+                    {
+                        m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
+                        SetCamerasVertical(m_playerCam1, m_playerCam2);
+                        break;
+                    }
+                    case 3:
+                    {
+                        m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
+                        SetFourSplit(m_playerCam1, m_playerCam2, m_playerCam3, m_playerCam4);
+                        break;
+                    }
+                    default:
+                        m_lastSetCameraMode = (uint)ECameraModi.SingleCam;
+                        SetSingleCamera();
+                        break;
+                }
             }
         }
 
-        private void SetSingleCamera(Camera _camera1)
+        public void SetSingleCamera()
         {
-            SetCamerasAndRects(_camera1);
+            SetCamerasAndRects(m_lastSetCameraMode);
         }
 
-        private void SetCamerasHorizontal(Camera _camera1, Camera _camera2)
+        public void SetCamerasHorizontal(Camera _camera1, Camera _camera2)
         {
-            SetCamerasAndRects(_camera1, _camera2);
+            SetCamerasAndRects(m_lastSetCameraMode);
 
             float Cam1X, Cam1Y, Cam1W, Cam1H, Cam2X, Cam2Y, Cam2W, Cam2H;
             CamRectOut(_camera1, _camera2, out Cam1X, out Cam1Y, out Cam1W, out Cam1H, out Cam2X, out Cam2Y, out Cam2W, out Cam2H);
@@ -89,9 +92,9 @@ namespace ThreeDeePongProto.CameraSetup
             _camera2.pixelRect = new Rect(Cam2X, Cam2Y, Cam2W * m_fullWidthHor, Cam2H * m_halfHeightHor);
         }
 
-        private void SetCamerasVertical(Camera _camera1, Camera _camera2)
+        public void SetCamerasVertical(Camera _camera1, Camera _camera2)
         {
-            SetCamerasAndRects(_camera1, _camera2);
+            SetCamerasAndRects(m_lastSetCameraMode);
 
             float Cam1X, Cam1Y, Cam1W, Cam1H, Cam2X, Cam2Y, Cam2W, Cam2H;
             CamRectOut(_camera1, _camera2, out Cam1X, out Cam1Y, out Cam1W, out Cam1H, out Cam2X, out Cam2Y, out Cam2W, out Cam2H);
@@ -102,9 +105,9 @@ namespace ThreeDeePongProto.CameraSetup
             _camera2.pixelRect = new Rect(Cam2X, Cam2Y, Cam2W * m_halfWidthVer, Cam2H * m_fullHeightVer);
         }
 
-        private void SetPizzaFourSeasons(Camera _camera1, Camera _camera2, Camera _camera3, Camera _camera4)
+        public void SetFourSplit(Camera _camera1, Camera _camera2, Camera _camera3, Camera _camera4)
         {
-            SetCamerasAndRects(_camera1, _camera2, _camera3, _camera4);
+            SetCamerasAndRects(m_lastSetCameraMode);
 
             float Cam1X, Cam1Y, Cam1W, Cam1H, Cam2X, Cam2Y, Cam2W, Cam2H;
             CamRectOut(_camera1, _camera2, out Cam1X, out Cam1Y, out Cam1W, out Cam1H, out Cam2X, out Cam2Y, out Cam2W, out Cam2H);
@@ -145,6 +148,49 @@ namespace ThreeDeePongProto.CameraSetup
             Cam2H = _camera2.pixelRect.height;
         }
 
+        private void SetCamerasAndRects(uint _cameraMode)
+        {
+            switch (_cameraMode)
+            {
+                case 0:
+                {
+                    //TODO: Here Camera Transform- & Rotation-Settings. (SetCameraAlignment())
+                    m_playerCam2.gameObject.SetActive(false);
+                    m_playerCam3.gameObject.SetActive(false);
+                    m_playerCam4.gameObject.SetActive(false);
+                    ResetViewportRects(m_playerCam1);
+                    break;
+                }
+                case 1:
+                {
+                    m_playerCam2.gameObject.SetActive(true);
+                    m_playerCam3.gameObject.SetActive(false);
+                    m_playerCam4.gameObject.SetActive(false);
+                    ResetViewportRects(m_playerCam1, m_playerCam2);
+                    break;
+                }
+                case 2:
+                {
+                    m_playerCam2.gameObject.SetActive(true);
+                    m_playerCam3.gameObject.SetActive(false);
+                    m_playerCam4.gameObject.SetActive(false);
+                    ResetViewportRects(m_playerCam1, m_playerCam2);
+                    break;
+                }
+                case 3:
+                {
+                    m_playerCam2.gameObject.SetActive(true);
+                    m_playerCam3.gameObject.SetActive(true);
+                    m_playerCam4.gameObject.SetActive(true);
+                    ResetViewportRects(m_playerCam1, m_playerCam2, m_playerCam3, m_playerCam4);
+                    break;
+                }
+                default:
+                    Debug.Log("Mode not implemented, yet! Please ask your personal Progger. <(~.^)'");
+                    break;
+            }
+        }
+
         private void ResetViewportRects(Camera _camera1, Camera _camera2 = null, Camera _camera3 = null, Camera _camera4 = null)
         {
             _camera1.pixelRect = m_resetRect;
@@ -155,50 +201,6 @@ namespace ThreeDeePongProto.CameraSetup
                 _camera3.pixelRect = m_resetRect;
             if (_camera4 != null)
                 m_playerCam4.pixelRect = m_resetRect;
-        }
-
-        private void SetCamerasAndRects(Camera _camera1, Camera _camera2 = null, Camera _camera3 = null, Camera _camera4 = null)
-        {
-            switch (GameManager.Instance.ECameraMode)
-            //switch (m_setCameraMode)
-            {
-                case ECameraModi.SingleCam:
-                {
-                    //TODO: Here Camera Transform- & Rotation-Settings. (SetCameraAlignment())
-                    m_playerCam2.gameObject.SetActive(false);
-                    m_playerCam3.gameObject.SetActive(false);
-                    m_playerCam4.gameObject.SetActive(false);
-                    ResetViewportRects(_camera1);
-                    break;
-                }
-                case ECameraModi.TwoHorizontal:
-                {
-                    m_playerCam2.gameObject.SetActive(true);
-                    m_playerCam3.gameObject.SetActive(false);
-                    m_playerCam4.gameObject.SetActive(false);
-                    ResetViewportRects(_camera1, _camera2);
-                    break;
-                }
-                case ECameraModi.TwoVertical:
-                {
-                    m_playerCam2.gameObject.SetActive(true);
-                    m_playerCam3.gameObject.SetActive(false);
-                    m_playerCam4.gameObject.SetActive(false);
-                    ResetViewportRects(_camera1, _camera2);
-                    break;
-                }
-                case ECameraModi.FourSplit:
-                {
-                    m_playerCam2.gameObject.SetActive(true);
-                    m_playerCam3.gameObject.SetActive(true);
-                    m_playerCam4.gameObject.SetActive(true);
-                    ResetViewportRects(_camera1, _camera2, _camera3, _camera4);
-                    break;
-                }
-                default:
-                    Debug.Log("Mode not implemented! Please ask your personal Progger. <(~.^)'");
-                    break;
-            }
         }
     }
 }
