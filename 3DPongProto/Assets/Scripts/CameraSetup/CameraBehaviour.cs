@@ -115,8 +115,8 @@ namespace ThreeDeePongProto.CameraSetup
 
             //m_cameraTransform.position.z MUST NOT be localPosition, or the Camera2-Position flickers between + and - Z-Values.
             Vector3 desiredPosition = new Vector3(Mathf.Clamp(m_directFollowVectorX,
-                -m_maxSideMovement + (GameManager.Instance.WidthAdjustment * 0.5f),
-                m_maxSideMovement - (GameManager.Instance.WidthAdjustment * 0.5f)),
+                -m_maxSideMovement + (GameManager.Instance.PaddleWidthAdjustment * 0.5f),
+                m_maxSideMovement - (GameManager.Instance.PaddleWidthAdjustment * 0.5f)),
                 m_cameraTransform.position.y, m_cameraTransform.position.z);
 
             m_cameraTransform.position = desiredPosition;

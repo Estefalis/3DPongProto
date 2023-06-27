@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
-[CreateAssetMenu(fileName = "Lighting Condition", menuName = "Scriptables/Lighting Preset", order = 0)]
+[CreateAssetMenu(menuName = "Scriptable Objects/Day Circle/Lighting Preset", fileName = "Lighting Condition", order = 0)]
 public class LightingConditions : ScriptableObject
 {
     public Gradient m_ambientColor;

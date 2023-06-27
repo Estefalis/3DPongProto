@@ -1160,7 +1160,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1604866537994792152}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2136965604}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Settings.VolumeSettings, Assembly-CSharp
+        m_MethodName: IncreaseSliderValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1604866538142413968}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1604866537998037552
 GameObject:
   m_ObjectHideFlags: 0
@@ -1254,8 +1266,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -4700,10 +4712,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 1604866538649981884}
+    m_SelectOnUp: {fileID: 1604866539800753971}
+    m_SelectOnDown: {fileID: 1604866539235745824}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -4733,7 +4745,19 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1604866538952352134}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Settings.GraphicSettings, Assembly-CSharp
+        m_MethodName: SetFullscreen
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 1
 --- !u!1 &1604866538334605826
 GameObject:
@@ -5456,7 +5480,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1604866538385957260}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2136965604}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Settings.VolumeSettings, Assembly-CSharp
+        m_MethodName: IncreaseSliderValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1604866539242098714}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1604866538405344264
 GameObject:
   m_ObjectHideFlags: 0
@@ -7186,7 +7222,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1604866538539336195}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2136965604}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Settings.VolumeSettings, Assembly-CSharp
+        m_MethodName: LowerSliderValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1604866539242098714}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1604866538546955887
 GameObject:
   m_ObjectHideFlags: 0
@@ -8210,7 +8258,7 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 1604866539848859989}
-    m_SelectOnDown: {fileID: 1604866539848859989}
+    m_SelectOnDown: {fileID: 1604866539673542057}
     m_SelectOnLeft: {fileID: 1604866539596720252}
     m_SelectOnRight: {fileID: 1604866538631320742}
   m_Transition: 1
@@ -9417,7 +9465,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1604866538798964283}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2136965604}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Settings.VolumeSettings, Assembly-CSharp
+        m_MethodName: IncreaseSliderValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1604866538073296766}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1604866538814392992
 GameObject:
   m_ObjectHideFlags: 0
@@ -9837,7 +9897,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1604866538851225824}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2136965604}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Settings.VolumeSettings, Assembly-CSharp
+        m_MethodName: LowerSliderValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1604866538142413968}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1604866538877172837
 GameObject:
   m_ObjectHideFlags: 0
@@ -10373,6 +10445,7 @@ GameObject:
   - component: {fileID: 1604866538929261353}
   - component: {fileID: 1604866538929261355}
   - component: {fileID: 1604866538929261354}
+  - component: {fileID: 2136965604}
   m_Layer: 5
   m_Name: VolumeSettings
   m_TagString: Untagged
@@ -10441,6 +10514,38 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2136965604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1604866538929261352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df3b2b9af2d9d1e4ba617431cf59c76f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_audioMixer: {fileID: 24100000, guid: 0741db7ce93d64743ab030324208aac8, type: 2}
+  m_volumeVariables: {fileID: 11400000, guid: 4c48b9b8578164547b04a0d3d732e116, type: 2}
+  m_masterVolumeParameter: MasterVolume
+  m_quieterButtonMaster: {fileID: 1604866538539336194}
+  m_sliderMaster: {fileID: 1604866539242098714}
+  m_louderButtonMaster: {fileID: 1604866538385957259}
+  m_muteMaster: {fileID: 1604866538336179150}
+  m_bgmVolumeParameter: BGMVolume
+  m_quieterButtonBGM: {fileID: 1604866540028902854}
+  m_sliderBGM: {fileID: 1604866538073296766}
+  m_louderButtonBGM: {fileID: 1604866538798964282}
+  m_muteBGM: {fileID: 1604866538412401443}
+  m_sfxVolumeParameter: SFXVolume
+  m_quieterButtonSFX: {fileID: 1604866538851225839}
+  m_sliderSFX: {fileID: 1604866538142413968}
+  m_louderButtonSFX: {fileID: 1604866537994792135}
+  m_muteSFX: {fileID: 1604866538709313808}
+  m_adjustSliderStep: 0.05
+  m_logarithmMultiplier: 20
+  m_muteAmountVariable: -80
 --- !u!1 &1604866538932048674
 GameObject:
   m_ObjectHideFlags: 0
@@ -10925,6 +11030,7 @@ MonoBehaviour:
   m_resolutionDropdown: {fileID: 1604866539800753971}
   m_fullscreenToggle: {fileID: 1604866538321971470}
   m_screenSplitDropdown: {fileID: 1604866539235745824}
+  m_graphicVariables: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11, type: 2}
 --- !u!1 &1604866538974239223
 GameObject:
   m_ObjectHideFlags: 0
@@ -11787,7 +11893,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 400
+  m_Spacing: 425
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -13018,7 +13124,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 400
+  m_Spacing: 350
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -13430,18 +13536,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 1604866538321971470}
+    m_SelectOnDown: {fileID: 1604866539848859989}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 0.5686275, g: 0, b: 1, a: 0.5019608}
+    m_PressedColor: {r: 0, g: 0.09019608, b: 1, a: 0.5019608}
+    m_SelectedColor: {r: 1, g: 0.5019608, b: 0, a: 0.5019608}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -14980,8 +15086,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -16589,8 +16695,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -17229,8 +17335,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1185, y: -37.5}
-  m_SizeDelta: {x: 200, y: 45}
+  m_AnchoredPosition: {x: 1197.5, y: -37.5}
+  m_SizeDelta: {x: 175, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1604866539673542059
 CanvasRenderer:
@@ -17283,18 +17389,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 1604866538673979863}
+    m_SelectOnDown: {fileID: 1604866539800753971}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 0.5686275, g: 0, b: 1, a: 0.5019608}
+    m_PressedColor: {r: 0, g: 0.09019608, b: 1, a: 0.5019608}
+    m_SelectedColor: {r: 1, g: 0.5019608, b: 0, a: 0.5019608}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -17320,17 +17426,27 @@ MonoBehaviour:
   m_Value: 1
   m_Options:
     m_Options:
-    - m_Text: Low
+    - m_Text: Performant
       m_Image: {fileID: 0}
-    - m_Text: Medium
+    - m_Text: Balanced
       m_Image: {fileID: 0}
-    - m_Text: High
-      m_Image: {fileID: 0}
-    - m_Text: Extrem
+    - m_Text: High Fidelity
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1604866538952352134}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Settings.GraphicSettings, Assembly-CSharp
+        m_MethodName: SetGraphicQuality
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!1 &1604866539681013452
 GameObject:
@@ -18210,8 +18326,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1185, y: -37.5}
-  m_SizeDelta: {x: 200, y: 45}
+  m_AnchoredPosition: {x: 1160, y: -37.5}
+  m_SizeDelta: {x: 250, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1604866539800753973
 CanvasRenderer:
@@ -18264,18 +18380,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 1604866539673542057}
+    m_SelectOnDown: {fileID: 1604866538321971470}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 0.5686275, g: 0, b: 1, a: 0.5019608}
+    m_PressedColor: {r: 0, g: 0.09019608, b: 1, a: 0.5019608}
+    m_SelectedColor: {r: 1, g: 0.5019608, b: 0, a: 0.5019608}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -18311,7 +18427,19 @@ MonoBehaviour:
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1604866538952352134}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Settings.GraphicSettings, Assembly-CSharp
+        m_MethodName: SetResolution
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!1 &1604866539810019421
 GameObject:
@@ -18455,7 +18583,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Medium
+  m_text: Balanced
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -19027,7 +19155,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 1604866538673979863}
+    m_SelectOnUp: {fileID: 1604866539235745824}
     m_SelectOnDown: {fileID: 1604866538673979863}
     m_SelectOnLeft: {fileID: 1604866538191588359}
     m_SelectOnRight: {fileID: 1604866538191588359}
@@ -20629,7 +20757,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1604866538482799281}
   m_HandleRect: {fileID: 1604866538482799280}
   m_Direction: 3
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -20940,7 +21068,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -7.5, y: -0.5}
+  m_AnchoredPosition: {x: -7.5000153, y: -0.5}
   m_SizeDelta: {x: -35, y: -13}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1604866539998449330
@@ -21413,7 +21541,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1604866540028902855}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2136965604}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Settings.VolumeSettings, Assembly-CSharp
+        m_MethodName: LowerSliderValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1604866538073296766}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1604866540049097189
 GameObject:
   m_ObjectHideFlags: 0

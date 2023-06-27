@@ -103,7 +103,7 @@ namespace ThreeDeePongProto.Player.Inputs
                 m_rigidbody.transform.localPosition.y,
                 Mathf.Clamp(m_rigidbody.transform.localPosition.z, -GameManager.Instance.MaxFieldLength * 0.5f - -m_minGoalDistance, -GameManager.Instance.MaxFieldLength * 0.5f - -m_maxGoalDistance));
 
-            m_rigidbody.transform.localScale = new Vector3(m_localPaddleScale.x + GameManager.Instance.WidthAdjustment, m_localPaddleScale.y, m_localPaddleScale.z);
+            m_rigidbody.transform.localScale = new Vector3(m_localPaddleScale.x + GameManager.Instance.PaddleWidthAdjustment, m_localPaddleScale.y, m_localPaddleScale.z);
 
             m_maxSideMovement = GameManager.Instance.MaxFieldWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
         }
