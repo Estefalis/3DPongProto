@@ -14,7 +14,7 @@ namespace ThreeDeePongProto.Settings
 
         #region MasterVolume
         [Header("Master-Volume")]
-        [SerializeField] private string m_masterVolumeParameter = "MasterVolume";
+        //[SerializeField] private string m_masterVolumeParameter = "MasterVolume";
         [SerializeField] private Button m_quieterButtonMaster;
         [SerializeField] private Slider m_sliderMaster;
         [SerializeField] private Button m_louderButtonMaster;
@@ -23,7 +23,7 @@ namespace ThreeDeePongProto.Settings
 
         #region BGMVolume
         [Header("BGM-Volume")]
-        [SerializeField] private string m_bgmVolumeParameter = "BGMVolume";
+        //[SerializeField] private string m_bgmVolumeParameter = "BGMVolume";
         [SerializeField] private Button m_quieterButtonBGM;
         [SerializeField] private Slider m_sliderBGM;
         [SerializeField] private Button m_louderButtonBGM;
@@ -32,7 +32,7 @@ namespace ThreeDeePongProto.Settings
 
         #region SFXVolume
         [Header("SFX-Volume")]
-        [SerializeField] private string m_sfxVolumeParameter = "SFXVolume";
+        //[SerializeField] private string m_sfxVolumeParameter = "SFXVolume";
         [SerializeField] private Button m_quieterButtonSFX;
         [SerializeField] private Slider m_sliderSFX;
         [SerializeField] private Button m_louderButtonSFX;
@@ -43,8 +43,8 @@ namespace ThreeDeePongProto.Settings
         [Header("Variables")]
         //Mathf-Log(arithm)-Multiplier
         [SerializeField] private float m_adjustSliderStep = 0.05f;
-        [SerializeField] private float m_logarithmMultiplier = 20f;
-        [SerializeField] private float m_muteAmountVariable = -80f;
+        //[SerializeField] private float m_logarithmMultiplier = 20f;
+        //[SerializeField] private float m_muteAmountVariable = -80f;
         #endregion
 
         private void OnEnable()
