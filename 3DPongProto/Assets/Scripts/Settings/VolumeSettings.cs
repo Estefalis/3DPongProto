@@ -14,91 +14,261 @@ namespace ThreeDeePongProto.Settings
 
         #region MasterVolume
         [Header("Master-Volume")]
-        //[SerializeField] private string m_masterVolumeParameter = "MasterVolume";
+        [SerializeField] private string m_masterVolumeParameter = "MasterVolume";
         [SerializeField] private Button m_quieterButtonMaster;
         [SerializeField] private Slider m_sliderMaster;
         [SerializeField] private Button m_louderButtonMaster;
         [SerializeField] private Toggle m_muteMaster;
+
+        //public bool MasterMuteShowsActive { get => m_muteMasterCheckboxShowsActive; private set => m_muteMasterCheckboxShowsActive = value; }
+        private bool m_muteMasterCheckboxShowsActive = false;
         #endregion
 
         #region BGMVolume
         [Header("BGM-Volume")]
-        //[SerializeField] private string m_bgmVolumeParameter = "BGMVolume";
+        [SerializeField] private string m_bgmVolumeParameter = "BGMVolume";
         [SerializeField] private Button m_quieterButtonBGM;
         [SerializeField] private Slider m_sliderBGM;
         [SerializeField] private Button m_louderButtonBGM;
         [SerializeField] private Toggle m_muteBGM;
+
+        //public bool BGMMuteShowsActive { get => m_muteBGMCheckboxShowsActive; private set => m_muteBGMCheckboxShowsActive = value; }
+        private bool m_muteBGMCheckboxShowsActive = false;
         #endregion
 
         #region SFXVolume
         [Header("SFX-Volume")]
-        //[SerializeField] private string m_sfxVolumeParameter = "SFXVolume";
+        [SerializeField] private string m_sfxVolumeParameter = "SFXVolume";
         [SerializeField] private Button m_quieterButtonSFX;
         [SerializeField] private Slider m_sliderSFX;
         [SerializeField] private Button m_louderButtonSFX;
         [SerializeField] private Toggle m_muteSFX;
         #endregion
 
+        //public bool SFXMuteShowsActive { get => m_muteSFXCheckboxShowsActive; private set => m_muteSFXCheckboxShowsActive = value; }
+        private bool m_muteSFXCheckboxShowsActive = false;
+
         #region Variables
         [Header("Variables")]
         //Mathf-Log(arithm)-Multiplier
         [SerializeField] private float m_adjustSliderStep = 0.05f;
-        //[SerializeField] private float m_logarithmMultiplier = 20f;
-        //[SerializeField] private float m_muteAmountVariable = -80f;
+        [SerializeField] private float m_logarithmMultiplier = 20f;
+        [SerializeField] private float m_muteAmountVariable = -80f;
         #endregion
+
+        [Space]
+        [SerializeField] private Toggle[] m_muteToggle;
+        [SerializeField] private Slider[] m_sliderType;
+        private Dictionary<Toggle, Slider> m_toggleSliderConnection = new Dictionary<Toggle, Slider>();
+
+        private void Awake()
+        {
+            SetSliderValues();
+            SetAudioMixerParameter();
+
+            //Connect the Toggles and Sliders for each VolumeGroup by a Dictionary (Key-Value-Pair).
+            for (int i = 0; i < m_muteToggle.Length; i++)
+                m_toggleSliderConnection.Add(m_muteToggle[i], m_sliderType[i]);
+        }
 
         private void OnEnable()
         {
             //TODO: AddSliderAndToggleListener(); - LoadVolumeSettings();
+            AddSliderAndToggleListener();
         }
 
         private void OnDisable()
         {
             //TODO: RemoveSliderAndToggleListener(); - SaveVolumeSettings();
+            RemoveSliderAndToggleListener();
         }
 
-        public void LowerSliderValue(Slider _sliderType)
+        /// <summary>
+        /// Subscribe VolumeControl-Elements to UnityEvents.
+        /// </summary>
+        #region Listener-Region
+        private void AddSliderAndToggleListener()
         {
-            switch (_sliderType.name)
+            m_sliderMaster.onValueChanged.AddListener(HandleMasterSliderValueChanges);
+            m_sliderBGM.onValueChanged.AddListener(HandleBGMSliderValueChanges);
+            m_sliderSFX.onValueChanged.AddListener(HandleSFXSliderValueChanges);
+
+            m_muteMaster.onValueChanged.AddListener(HandleMasterToggleValueChanges);
+            m_muteBGM.onValueChanged.AddListener(HandleBGMToggleValueChanges);
+            m_muteSFX.onValueChanged.AddListener(HandleSFXToggleValueChanges);
+        }
+
+        /// <summary>
+        /// Unsubscribe VolumeControl-Elements from UnityEvents.
+        /// </summary>
+        private void RemoveSliderAndToggleListener()
+        {
+            m_sliderMaster.onValueChanged.RemoveListener(HandleMasterSliderValueChanges);
+            m_sliderBGM.onValueChanged.RemoveListener(HandleBGMSliderValueChanges);
+            m_sliderSFX.onValueChanged.RemoveListener(HandleSFXSliderValueChanges);
+
+            m_muteMaster.onValueChanged.RemoveListener(HandleMasterToggleValueChanges);
+            m_muteBGM.onValueChanged.RemoveListener(HandleBGMToggleValueChanges);
+            m_muteSFX.onValueChanged.RemoveListener(HandleSFXToggleValueChanges);
+        }
+        #endregion
+
+        #region Listener-Methods
+        #region SlidersChanges
+        private void HandleMasterSliderValueChanges(float _value)
+        {
+            //Set MasterVolume-floats with the AudioMixer. (Also sets the Slider back to the saved amount on unmuting.)
+            m_audioMixer.SetFloat(m_masterVolumeParameter, Mathf.Log10(_value) * m_logarithmMultiplier);
+
+            m_muteMasterCheckboxShowsActive = false;
+            //MasterMute is on, when the corresponding SliderValue is the minimalValue.
+            m_muteMaster.isOn = !(m_sliderMaster.value > m_sliderMaster.minValue);
+            m_muteMasterCheckboxShowsActive = true;
+
+            //Also save the new value in the ScriptableObject.
+            if (m_sliderMaster.value > m_sliderMaster.minValue)
+                m_volumeVariables.m_LatestMasterVolume = _value;
+        }
+
+        private void HandleBGMSliderValueChanges(float _value)
+        {
+            //Set BackgroundVolume-floats with the audioMixer. (Also sets the Slider back to the saved amount on unmuting.)
+            m_audioMixer.SetFloat(m_bgmVolumeParameter, Mathf.Log10(_value) * m_logarithmMultiplier);
+
+            m_muteBGMCheckboxShowsActive = false;
+            //BGMMute is on, when the corresponding SliderValue is the minimalValue.
+            m_muteBGM.isOn = !(m_sliderBGM.value > m_sliderBGM.minValue);
+            m_muteBGMCheckboxShowsActive = true;
+
+            //Also save the new value in the ScriptableObject.
+            if (m_sliderBGM.value > m_sliderBGM.minValue)
+                m_volumeVariables.m_LatestBGMVolume = _value;
+        }
+
+        private void HandleSFXSliderValueChanges(float _value)
+        {
+            //Set SoundeffectsVolume-floats with the audioMixer. (Also sets the Slider back to the saved amount on unmuting.)
+            m_audioMixer.SetFloat(m_sfxVolumeParameter, Mathf.Log10(_value) * m_logarithmMultiplier);
+
+            m_muteSFXCheckboxShowsActive = false;
+            //SFXMute is on, when the corresponding SliderValue is the minimalValue.
+            m_muteSFX.isOn = !(m_sliderSFX.value > m_sliderSFX.minValue);
+            m_muteSFXCheckboxShowsActive = true;
+
+            //Also save the new value in the ScriptableObject.
+            if (m_sliderSFX.value > m_sliderSFX.minValue)
+                m_volumeVariables.m_LatestSFXVolume = _value;
+        }
+        #endregion
+        #region MuteChanges
+        private void HandleMasterToggleValueChanges(bool _mute)
+        {
+            if (!m_muteMasterCheckboxShowsActive)
+                return;
+
+            //If we activate the Toggle to mute the MasterVolume.
+            if (_mute)
             {
-                case "SliderMasterVolume":
-                    LowerSliderByType(m_sliderMaster, m_muteMaster);
-                    break;
-                case "SliderBGMVolume":
-                    LowerSliderByType(m_sliderBGM, m_muteBGM);
-                    break;
-                case "SliderSFXVolume":
-                    LowerSliderByType(m_sliderSFX, m_muteSFX);
-                    break;
+                //Tempsave the corresponding SliderValue in a ScriptableObject.
+                m_volumeVariables.m_LatestMasterVolume = m_sliderMaster.value;
+                //Set Sliders 'minValue' as new value.
+                m_sliderMaster.value = m_sliderMaster.minValue;
+                //Use the memberVariable to reduce the audioMixer-VolumeChannel by that amount.
+                m_audioMixer.SetFloat(m_masterVolumeParameter, m_muteAmountVariable);
+            }
+            else
+            {
+                m_sliderMaster.value = m_volumeVariables.m_LatestMasterVolume;
             }
         }
 
-        public void IncreaseSliderValue(Slider _sliderType)
+        private void HandleBGMToggleValueChanges(bool _mute)
         {
-            switch (_sliderType.name)
+            if (!m_muteBGMCheckboxShowsActive)
+                return;
+
+            //If we activate the Toggle to mute the BGMVolume.
+            if (_mute)
             {
-                case "SliderMasterVolume":
-                    IncreaseSliderByType(m_sliderMaster, m_muteMaster);
-                    break;
-                case "SliderBGMVolume":
-                    IncreaseSliderByType(m_sliderBGM, m_muteBGM);
-                    break;
-                case "SliderSFXVolume":
-                    IncreaseSliderByType(m_sliderSFX, m_muteSFX);
-                    break;
+                //Tempsave the corresponding SliderValue in a ScriptableObject.
+                m_volumeVariables.m_LatestBGMVolume = m_sliderBGM.value;
+                //Set Sliders 'minValue' as new value.
+                m_sliderBGM.value = m_sliderBGM.minValue;
+                //Use the memberVariable to reduce the audioMixer-VolumeChannel by that amount.
+                m_audioMixer.SetFloat(m_bgmVolumeParameter, m_muteAmountVariable);
+            }
+            else
+            {
+                m_sliderBGM.value = m_volumeVariables.m_LatestBGMVolume;
             }
         }
 
-        private void LowerSliderByType(Slider _sliderType, Toggle _mute)
+        private void HandleSFXToggleValueChanges(bool _mute)
         {
-            if (!_mute.isOn)
-                _sliderType.value -= m_adjustSliderStep;
+            if (!m_muteSFXCheckboxShowsActive)
+                return;
+
+            //If we activate the Toggle to mute the SFXVolume.
+            if (_mute)
+            {
+                //Tempsave the corresponding SliderValue in a ScriptableObject.
+                m_volumeVariables.m_LatestSFXVolume = m_sliderSFX.value;
+                //Set Sliders 'minValue' as new value.
+                m_sliderSFX.value = m_sliderSFX.minValue;
+                //Use the memberVariable to reduce the audioMixer-VolumeChannel by that amount.
+                m_audioMixer.SetFloat(m_sfxVolumeParameter, m_muteAmountVariable);
+            }
+            else
+            {
+                m_sliderSFX.value = m_volumeVariables.m_LatestSFXVolume;
+            }
+        }
+        #endregion
+        #endregion
+
+        private void SetSliderValues()
+        {
+            if (m_volumeVariables != null)
+            {
+                m_sliderMaster.value = m_volumeVariables.m_LatestMasterVolume;
+                m_sliderBGM.value = m_volumeVariables.m_LatestBGMVolume;
+                m_sliderMaster.value = m_volumeVariables.m_LatestSFXVolume;
+            }
         }
 
-        private void IncreaseSliderByType(Slider _sliderType, Toggle _mute)
+        private void SetAudioMixerParameter()
         {
-            if (!_mute.isOn)
-                _sliderType.value += m_adjustSliderStep;
+            if (m_volumeVariables != null)
+            {
+                m_audioMixer.SetFloat(m_masterVolumeParameter, m_volumeVariables.m_LatestMasterVolume);
+                m_audioMixer.SetFloat(m_bgmVolumeParameter, m_volumeVariables.m_LatestBGMVolume);
+                m_audioMixer.SetFloat(m_sfxVolumeParameter, m_volumeVariables.m_LatestSFXVolume);
+
+                //These are required to enable the ToggleCheckboxes right on opening the menupage.
+                m_muteMasterCheckboxShowsActive = true;
+                m_muteBGMCheckboxShowsActive = true;
+                m_muteSFXCheckboxShowsActive = true;
+            }
+        }
+
+        public void LowerSliderValue(Toggle _connectedMute)
+        {
+            //Get the corresponding Slider (Value) in the Dictionary, for each submitted Mute (Key), by the Button inside Unity.
+            Slider connectedSlider = m_toggleSliderConnection[_connectedMute];
+
+            //Only if the submitted Mute isn't on, then the Button can lower the SliderValue.
+            if (!_connectedMute.isOn)
+                connectedSlider.value -= m_adjustSliderStep;
+        }
+
+        public void IncreaseSliderValue(Toggle _connectedMute)
+        {
+            //Get the corresponding Slider (Value) in the Dictionary, for each submitted Mute (Key), by the Button inside Unity.
+            Slider connectedSlider = m_toggleSliderConnection[_connectedMute];
+
+            //Commented out, to allow the 'LouderButton' to increase the SliderValue out of the muted state.
+            //if (!_connectedMute.isOn)
+            connectedSlider.value += m_adjustSliderStep;
         }
     }
 }
