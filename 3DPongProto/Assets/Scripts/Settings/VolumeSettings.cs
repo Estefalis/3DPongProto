@@ -18,6 +18,7 @@ namespace ThreeDeePongProto.Settings
         [SerializeField] private Button m_quieterButtonMaster;
         [SerializeField] private Slider m_sliderMaster;
         [SerializeField] private Button m_louderButtonMaster;
+        [SerializeField] private TextMeshProUGUI m_masterValueText;
         [SerializeField] private Toggle m_muteMaster;
 
         //public bool MasterMuteShowsActive { get => m_muteMasterCheckboxShowsActive; private set => m_muteMasterCheckboxShowsActive = value; }
@@ -30,6 +31,7 @@ namespace ThreeDeePongProto.Settings
         [SerializeField] private Button m_quieterButtonBGM;
         [SerializeField] private Slider m_sliderBGM;
         [SerializeField] private Button m_louderButtonBGM;
+        [SerializeField] private TextMeshProUGUI m_bgmValueText;
         [SerializeField] private Toggle m_muteBGM;
 
         //public bool BGMMuteShowsActive { get => m_muteBGMCheckboxShowsActive; private set => m_muteBGMCheckboxShowsActive = value; }
@@ -42,6 +44,7 @@ namespace ThreeDeePongProto.Settings
         [SerializeField] private Button m_quieterButtonSFX;
         [SerializeField] private Slider m_sliderSFX;
         [SerializeField] private Button m_louderButtonSFX;
+        [SerializeField] private TextMeshProUGUI m_sfxValueText;
         [SerializeField] private Toggle m_muteSFX;
         #endregion
 
@@ -63,9 +66,6 @@ namespace ThreeDeePongProto.Settings
 
         private void Awake()
         {
-            SetSliderValues();
-            SetAudioMixerParameter();
-
             //Connect the Toggles and Sliders for each VolumeGroup by a Dictionary (Key-Value-Pair).
             for (int i = 0; i < m_muteToggle.Length; i++)
                 m_toggleSliderConnection.Add(m_muteToggle[i], m_sliderType[i]);
@@ -75,6 +75,13 @@ namespace ThreeDeePongProto.Settings
         {
             //TODO: AddSliderAndToggleListener(); - LoadVolumeSettings();
             AddSliderAndToggleListener();
+        }
+
+        private void Start()
+        {
+            HandleMasterSliderValueChanges(m_volumeVariables.m_LatestMasterVolume);
+            HandleBGMSliderValueChanges(m_volumeVariables.m_LatestBGMVolume);
+            HandleSFXSliderValueChanges(m_volumeVariables.m_LatestSFXVolume);
         }
 
         private void OnDisable()
@@ -125,6 +132,9 @@ namespace ThreeDeePongProto.Settings
             m_muteMaster.isOn = !(m_sliderMaster.value > m_sliderMaster.minValue);
             m_muteMasterCheckboxShowsActive = true;
 
+            m_sliderMaster.value = _value;
+            m_masterValueText.SetText($"{_value:N2}");
+
             //Also save the new value in the ScriptableObject.
             if (m_sliderMaster.value > m_sliderMaster.minValue)
                 m_volumeVariables.m_LatestMasterVolume = _value;
@@ -140,6 +150,9 @@ namespace ThreeDeePongProto.Settings
             m_muteBGM.isOn = !(m_sliderBGM.value > m_sliderBGM.minValue);
             m_muteBGMCheckboxShowsActive = true;
 
+            m_sliderBGM.value = _value;
+            m_bgmValueText.SetText($"{_value:N2}");
+
             //Also save the new value in the ScriptableObject.
             if (m_sliderBGM.value > m_sliderBGM.minValue)
                 m_volumeVariables.m_LatestBGMVolume = _value;
@@ -154,6 +167,9 @@ namespace ThreeDeePongProto.Settings
             //SFXMute is on, when the corresponding SliderValue is the minimalValue.
             m_muteSFX.isOn = !(m_sliderSFX.value > m_sliderSFX.minValue);
             m_muteSFXCheckboxShowsActive = true;
+
+            m_sliderSFX.value = _value;
+            m_sfxValueText.SetText($"{_value:N2}");
 
             //Also save the new value in the ScriptableObject.
             if (m_sliderSFX.value > m_sliderSFX.minValue)
@@ -225,31 +241,6 @@ namespace ThreeDeePongProto.Settings
         }
         #endregion
         #endregion
-
-        private void SetSliderValues()
-        {
-            if (m_volumeVariables != null)
-            {
-                m_sliderMaster.value = m_volumeVariables.m_LatestMasterVolume;
-                m_sliderBGM.value = m_volumeVariables.m_LatestBGMVolume;
-                m_sliderMaster.value = m_volumeVariables.m_LatestSFXVolume;
-            }
-        }
-
-        private void SetAudioMixerParameter()
-        {
-            if (m_volumeVariables != null)
-            {
-                m_audioMixer.SetFloat(m_masterVolumeParameter, m_volumeVariables.m_LatestMasterVolume);
-                m_audioMixer.SetFloat(m_bgmVolumeParameter, m_volumeVariables.m_LatestBGMVolume);
-                m_audioMixer.SetFloat(m_sfxVolumeParameter, m_volumeVariables.m_LatestSFXVolume);
-
-                //These are required to enable the ToggleCheckboxes right on opening the menupage.
-                m_muteMasterCheckboxShowsActive = true;
-                m_muteBGMCheckboxShowsActive = true;
-                m_muteSFXCheckboxShowsActive = true;
-            }
-        }
 
         public void LowerSliderValue(Toggle _connectedMute)
         {
