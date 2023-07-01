@@ -53,7 +53,7 @@ namespace ThreeDeePongProto.CameraSetup
 
             m_cameraInputActions = UserInputManager.m_playerInputActions;
             m_cameraInputActions.Enable();
-            m_cameraInputActions.PlayerActions.Zoom.performed += Zooming;
+            m_cameraInputActions.PlayerActions.ZoomModuUneven.performed += Zooming;
 
             m_playerID = m_playerMovement.GetComponent<PlayerMovement>().PlayerID;
         }
@@ -61,7 +61,7 @@ namespace ThreeDeePongProto.CameraSetup
         private void OnDisable()
         {
             m_cameraInputActions?.Disable();
-            m_cameraInputActions.PlayerActions.Zoom.performed -= Zooming;
+            m_cameraInputActions.PlayerActions.ZoomModuUneven.performed -= Zooming;
         }
 
         private void Update()

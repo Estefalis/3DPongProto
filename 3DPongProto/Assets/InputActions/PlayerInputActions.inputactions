@@ -6,7 +6,7 @@
             "id": "526c9e06-ccf1-4cdc-8f6c-76780cdabe0a",
             "actions": [
                 {
-                    "name": "SideMovement",
+                    "name": "SideMoveModuUneven",
                     "type": "Value",
                     "id": "7c6a3161-3337-423d-8b1e-29133147bf87",
                     "expectedControlType": "Vector2",
@@ -15,7 +15,34 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "TurnMovement",
+                    "name": "SideMoveModuEven",
+                    "type": "Value",
+                    "id": "bda9284c-275a-4ee4-a6f6-f64b8000ffe8",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "PushMoveModuUneven",
+                    "type": "Button",
+                    "id": "4ad07715-00a1-4463-9d52-fd9c38b9cb23",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PushMoveModuEven",
+                    "type": "Button",
+                    "id": "2e5937d5-e90c-4a9a-b68f-1ba0e46cab7f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "TurnMoveModuUneven",
                     "type": "Value",
                     "id": "e97003bb-4773-4c8e-aecb-922c50060b22",
                     "expectedControlType": "Vector2",
@@ -24,9 +51,27 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Zoom",
+                    "name": "TurnMoveModuEven",
+                    "type": "Value",
+                    "id": "d16ac77c-8227-4d99-acfc-03fc5c3e9f73",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "ZoomModuUneven",
                     "type": "Value",
                     "id": "4d87abec-b5b1-491c-8e08-6723d51b35fa",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "ZoomModuEvenTODO",
+                    "type": "Value",
+                    "id": "c7ad430c-8468-4069-82b9-73ab0e0aa75c",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -50,7 +95,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMovement",
+                    "action": "SideMoveModuUneven",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -61,7 +106,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMovement",
+                    "action": "SideMoveModuUneven",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -72,7 +117,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMovement",
+                    "action": "SideMoveModuUneven",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -83,7 +128,7 @@
                     "interactions": "",
                     "processors": "StickDeadzone",
                     "groups": "",
-                    "action": "SideMovement",
+                    "action": "SideMoveModuUneven",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -116,7 +161,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Zoom",
+                    "action": "ZoomModuUneven",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -127,7 +172,7 @@
                     "interactions": "",
                     "processors": "ScaleVector2",
                     "groups": "",
-                    "action": "Zoom",
+                    "action": "ZoomModuUneven",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -138,7 +183,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Zoom",
+                    "action": "ZoomModuUneven",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -149,7 +194,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Zoom",
+                    "action": "ZoomModuUneven",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -160,7 +205,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TurnMovement",
+                    "action": "TurnMoveModuUneven",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -171,7 +216,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TurnMovement",
+                    "action": "TurnMoveModuUneven",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -182,7 +227,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TurnMovement",
+                    "action": "TurnMoveModuUneven",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -193,7 +238,161 @@
                     "interactions": "",
                     "processors": "StickDeadzone",
                     "groups": "",
-                    "action": "TurnMovement",
+                    "action": "TurnMoveModuUneven",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "ArrowKeys",
+                    "id": "7e053f50-7114-45d1-9b0f-b55e4cc40471",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SideMoveModuEven",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "left",
+                    "id": "cee94070-030d-409e-bee2-d6d91b8d09a6",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SideMoveModuEven",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "d758c9bd-0abf-4e0b-8463-30fed5d77148",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SideMoveModuEven",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "882c1045-9755-4069-91a8-89bbcb52e850",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "StickDeadzone",
+                    "groups": "",
+                    "action": "SideMoveModuEven",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Turning",
+                    "id": "efac8c4e-ae5c-43db-a215-0ca9aa12b89e",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TurnMoveModuEven",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "left",
+                    "id": "e2408596-e4c7-415c-9760-3168bd8249e3",
+                    "path": "<Keyboard>/rightShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TurnMoveModuEven",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "01883edd-7551-4863-b0fb-f8a68b061217",
+                    "path": "<Keyboard>/numpad1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TurnMoveModuEven",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "e0f32920-62c1-4021-aa57-15f833e8d310",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "StickDeadzone",
+                    "groups": "",
+                    "action": "TurnMoveModuEven",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ac228c30-4335-40cc-9e13-e2cecc994a98",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ZoomModuEvenTODO",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "GampadZoom",
+                    "id": "e54c586e-7502-4304-9531-fe23079c973b",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "ScaleVector2",
+                    "groups": "",
+                    "action": "ZoomModuEvenTODO",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "be111079-9f4a-4929-917f-10946bb527ce",
+                    "path": "<Gamepad>/dpad/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ZoomModuEvenTODO",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "3f95b2f1-5cd6-4fd1-ab81-96d4aef48699",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ZoomModuEvenTODO",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "8e316275-ed43-4791-819c-8d332385a840",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PushMoveModuUneven",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "92e91c2a-0148-45dd-9fd2-e4dedc251277",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PushMoveModuEven",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

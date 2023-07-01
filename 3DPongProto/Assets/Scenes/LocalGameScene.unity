@@ -2647,7 +2647,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4dfdbae8d3538449a9e1837dd917bff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_eCameraMode: 0
+  m_eCameraMode: 1
   eGameConnectionMode: 0
   m_gameIsPaused: 0
 --- !u!4 &1618325686

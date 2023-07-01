@@ -17,7 +17,8 @@ namespace ThreeDeePongProto.Player.Inputs
         [SerializeField] private float m_movementSpeed;
         [SerializeField] private float m_rotationSpeed, m_maxRotationAngle;
         private float m_maxSideMovement;
-        private Vector3 m_axisRotation, m_localRbPosition, m_readValueVector;
+        private Vector3 m_axisRotPUneven, m_axisRotPEven, m_localRbPosition, m_readValueVector;
+        private Quaternion m_deltaRotation;
 
         [Header("Paddle-Scale")]
         [SerializeField] private float m_startWidthAdjustment;
@@ -32,6 +33,7 @@ namespace ThreeDeePongProto.Player.Inputs
         [SerializeField] private bool m_enablePushRestriction = false;
 
         private bool m_pushForward = false;
+        private bool m_pushForward2 = false;
         private bool m_pushesRestricted = false;
         private IEnumerator m_pushMovement;
 
@@ -72,7 +74,8 @@ namespace ThreeDeePongProto.Player.Inputs
 
         private void Update()
         {
-            m_axisRotation = new Vector3(0, m_playerMovement.PlayerActions.TurnMovement.ReadValue<Vector2>().x, 0);
+            m_axisRotPUneven = new Vector3(0, m_playerMovement.PlayerActions.TurnMoveModuUneven.ReadValue<Vector2>().x, 0);    //Modulo Uneven = Player1/Player3
+            m_axisRotPEven = new Vector3(0, m_playerMovement.PlayerActions.TurnMoveModuEven.ReadValue<Vector2>().x, 0);      //Modulo Even   = Player2/Player4
 
             //TODO: MUST be removed after testing is completed!!!___
             if (Keyboard.current.pKey.wasPressedThisFrame)
@@ -93,12 +96,17 @@ namespace ThreeDeePongProto.Player.Inputs
             {
                 m_pushForward = true;
             }
+
+            if (Keyboard.current.upArrowKey.wasPressedThisFrame && !m_pushesRestricted)
+            {
+                m_pushForward2 = true;
+            }
         }
 
         private void FixedUpdate()
         {
             MovePlayer(m_playerID);
-            TurnPlayer();
+            TurnPlayer(m_playerID);
         }
 
         /// <summary>
@@ -136,16 +144,18 @@ namespace ThreeDeePongProto.Player.Inputs
             //Modulo is used to direct into the required codeline. false for Player1 and true for Player2.
             switch (playerID % 2 == 0)
             {
+                //Modulo Even   = Player2/Player4
                 case true:
                 {
                     m_localRbPosition = -m_rigidbody.transform.localPosition;
-                    m_readValueVector = -new Vector3(m_playerMovement.PlayerActions.SideMovement.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMovement.ReadValue<Vector2>().y) * m_movementSpeed * Time.fixedDeltaTime;
+                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActions.SideMoveModuEven.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMoveModuEven.ReadValue<Vector2>().y);
                     break;
                 }
+                //Modulo Uneven = Player1/Player3
                 case false:
                 {
                     m_localRbPosition = m_rigidbody.transform.localPosition;
-                    m_readValueVector = new Vector3(m_playerMovement.PlayerActions.SideMovement.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMovement.ReadValue<Vector2>().y) * m_movementSpeed * Time.fixedDeltaTime;
+                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_playerMovement.PlayerActions.SideMoveModuUneven.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMoveModuUneven.ReadValue<Vector2>().y);
                     break;
                 }
             }
@@ -156,10 +166,26 @@ namespace ThreeDeePongProto.Player.Inputs
         /// <summary>
         /// Turns the playerPaddle based on Quaternion and 'rigidbody.rotation'.
         /// </summary>
-        private void TurnPlayer()
+        private void TurnPlayer(uint playerID)
         {
-            Quaternion deltaRotation = Quaternion.Euler(m_axisRotation * m_rotationSpeed * Time.fixedDeltaTime);
-            m_rigidbody.MoveRotation(m_rigidbody.rotation * deltaRotation);
+            switch (playerID % 2 == 0)
+            {
+                //Modulo Even   = Player2/Player4
+                case true:
+                {
+                    m_deltaRotation = Quaternion.Euler(m_axisRotPEven * m_rotationSpeed * Time.fixedDeltaTime);
+                    //m_rigidbody.MoveRotation(m_rigidbody.rotation * deltaRotation);
+                    break;
+                }
+                //Modulo Uneven = Player1/Player3
+                case false:
+                {
+                    m_deltaRotation = Quaternion.Euler(m_axisRotPUneven * m_rotationSpeed * Time.fixedDeltaTime);
+                    break;
+                }
+            }
+
+            m_rigidbody.MoveRotation(m_rigidbody.rotation * m_deltaRotation);
         }
 
         #region IEnumerators
@@ -180,6 +206,7 @@ namespace ThreeDeePongProto.Player.Inputs
                 {
                     currentTime += Time.deltaTime;
 
+                    //TODO: Limit rigidbodyMovement by PlayerID.
                     #region Mathf.MoveTowards
                     m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, endZPos = Mathf.MoveTowards(startZPos, endZPos, _moveDistance)) + m_rigidbody.transform.forward;
                     m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, endZPos);
