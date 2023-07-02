@@ -63,7 +63,7 @@ namespace ThreeDeePongProto.UI
 
         private void EnableNavigation(InputAction.CallbackContext _callbackContext)
         {
-            if (!m_firstElement.gameObject.activeInHierarchy && !GameManager.Instance.GameIsPaused)
+            if (!m_firstElement.gameObject.activeInHierarchy && !m_keyTransform[1].gameObject.activeInHierarchy)
             {
                 m_firstElement.gameObject.SetActive(true);
             }

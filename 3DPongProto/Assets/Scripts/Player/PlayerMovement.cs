@@ -8,8 +8,9 @@ namespace ThreeDeePongProto.Player.Inputs
     public class PlayerMovement : MonoBehaviour
     {
         private PlayerInputActions m_playerMovement;
-        public uint PlayerID { get { return m_playerID; } }
-        [SerializeField] private uint m_playerID;
+        //private LevelBuildManager m_levelBuildManager;
+        public uint PlayerId { get { return m_playerId; } }
+        [SerializeField] private uint m_playerId;
 
         [SerializeField] private Rigidbody m_rigidbody;
 
@@ -32,10 +33,10 @@ namespace ThreeDeePongProto.Player.Inputs
         [SerializeField] private float m_delayRepetition;
         [SerializeField] private bool m_enablePushRestriction = false;
 
-        private bool m_pushForward = false;
-        private bool m_pushForward2 = false;
+        private bool m_pushPlayerOne = false;
+        private bool m_pushPlayerTwo = false;
         private bool m_pushesRestricted = false;
-        private IEnumerator m_pushMovement;
+        private IEnumerator m_paddleOneCoroutine, m_paddleTwoCoroutine;
 
         private void Awake()
         {
@@ -48,7 +49,8 @@ namespace ThreeDeePongProto.Player.Inputs
                 ClampMoveRange();
             }
 
-            m_pushMovement = MoveForthAndBack(m_maxPushDistance);
+            m_paddleOneCoroutine = PushPaddleOne(m_maxPushDistance);
+            m_paddleTwoCoroutine = PushPaddleTwo(m_maxPushDistance);
         }
 
         /// <summary>
@@ -60,8 +62,10 @@ namespace ThreeDeePongProto.Player.Inputs
             m_playerMovement.PlayerActions.Enable();
             m_playerMovement.PlayerActions.ToggleGameMenu.performed += ToggleMenu;
 
-            if (m_pushMovement != null)
-                StartCoroutine(m_pushMovement);
+            if (m_paddleOneCoroutine != null)
+                StartCoroutine(m_paddleOneCoroutine);
+            if (m_paddleTwoCoroutine != null)
+                StartCoroutine(m_paddleTwoCoroutine);
         }
 
         private void OnDisable()
@@ -94,19 +98,19 @@ namespace ThreeDeePongProto.Player.Inputs
 
             if (Keyboard.current.wKey.wasPressedThisFrame && !m_pushesRestricted)
             {
-                m_pushForward = true;
+                m_pushPlayerOne = true;
             }
 
             if (Keyboard.current.upArrowKey.wasPressedThisFrame && !m_pushesRestricted)
             {
-                m_pushForward2 = true;
+                m_pushPlayerTwo = true;
             }
         }
 
         private void FixedUpdate()
         {
-            MovePlayer(m_playerID);
-            TurnPlayer(m_playerID);
+            MovePlayer(m_playerId);
+            TurnPlayer(m_playerId);
         }
 
         /// <summary>
@@ -144,18 +148,18 @@ namespace ThreeDeePongProto.Player.Inputs
             //Modulo is used to direct into the required codeline. false for Player1 and true for Player2.
             switch (playerID % 2 == 0)
             {
-                //Modulo Even   = Player2/Player4
-                case true:
-                {
-                    m_localRbPosition = -m_rigidbody.transform.localPosition;
-                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActions.SideMoveModuEven.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMoveModuEven.ReadValue<Vector2>().y);
-                    break;
-                }
                 //Modulo Uneven = Player1/Player3
-                case false:
+                case true:
                 {
                     m_localRbPosition = m_rigidbody.transform.localPosition;
                     m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_playerMovement.PlayerActions.SideMoveModuUneven.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMoveModuUneven.ReadValue<Vector2>().y);
+                    break;
+                }
+                //Modulo Even   = Player2/Player4
+                case false:
+                {
+                    m_localRbPosition = -m_rigidbody.transform.localPosition;
+                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActions.SideMoveModuEven.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMoveModuEven.ReadValue<Vector2>().y);
                     break;
                 }
             }
@@ -170,17 +174,17 @@ namespace ThreeDeePongProto.Player.Inputs
         {
             switch (playerID % 2 == 0)
             {
-                //Modulo Even   = Player2/Player4
+                //Modulo Uneven = Player1/Player3
                 case true:
+                {
+                    m_deltaRotation = Quaternion.Euler(m_axisRotPUneven * m_rotationSpeed * Time.fixedDeltaTime);
+                    break;
+                }
+                //Modulo Even   = Player2/Player4
+                case false:
                 {
                     m_deltaRotation = Quaternion.Euler(m_axisRotPEven * m_rotationSpeed * Time.fixedDeltaTime);
                     //m_rigidbody.MoveRotation(m_rigidbody.rotation * deltaRotation);
-                    break;
-                }
-                //Modulo Uneven = Player1/Player3
-                case false:
-                {
-                    m_deltaRotation = Quaternion.Euler(m_axisRotPUneven * m_rotationSpeed * Time.fixedDeltaTime);
                     break;
                 }
             }
@@ -194,7 +198,7 @@ namespace ThreeDeePongProto.Player.Inputs
         /// '_moveDistance' also works as maximal Time in the whileLoop, but could be replaced with a fix floatAmount.
         /// <param name="_moveDistance"></param>
         /// <returns></returns>
-        private IEnumerator MoveForthAndBack(float _moveDistance)
+        private IEnumerator PushPaddleOne(float _moveDistance)
         {
             float currentTime = 0;
             float startZPos = m_rigidbody.transform.localPosition.z;
@@ -202,31 +206,34 @@ namespace ThreeDeePongProto.Player.Inputs
 
             while (currentTime < _moveDistance)
             {
-                if (m_pushForward)
+                if (m_pushPlayerOne)
                 {
                     currentTime += Time.deltaTime;
 
                     //TODO: Limit rigidbodyMovement by PlayerID.
                     #region Mathf.MoveTowards
-                    m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, endZPos = Mathf.MoveTowards(startZPos, endZPos, _moveDistance)) + m_rigidbody.transform.forward;
-                    m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, endZPos);
-
-                    yield return new WaitForSeconds(m_delayRetreat);
-                    m_pushForward = false;
-
-                    m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, startZPos = Mathf.MoveTowards(endZPos, startZPos, _moveDistance)) + -m_rigidbody.transform.forward;
-                    m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, startZPos);
-
-                    #region Nested Coroutine
-                    //Coroutine to restrict paddleForwardMovement by a certain amount of time.
-                    if (m_enablePushRestriction)
+                    if (m_playerId == 0)
                     {
-                        m_pushesRestricted = true;
-                        Coroutine pushRestriction = StartCoroutine(RestrictPushes());
-                        yield return pushRestriction;
-                        m_pushesRestricted = false;
+                        m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, endZPos = Mathf.MoveTowards(startZPos, endZPos, _moveDistance)) + m_rigidbody.transform.forward;
+                        m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, endZPos);
+
+                        yield return new WaitForSeconds(m_delayRetreat);
+                        m_pushPlayerOne = false;
+
+                        m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, startZPos = Mathf.MoveTowards(endZPos, startZPos, _moveDistance)) + -m_rigidbody.transform.forward;
+                        m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, startZPos);
+
+                        #region Nested Coroutine
+                        //Coroutine to restrict paddleForwardMovement by a certain amount of time.
+                        if (m_enablePushRestriction)
+                        {
+                            m_pushesRestricted = true;
+                            Coroutine pushRestriction = StartCoroutine(RestrictPushZero());
+                            yield return pushRestriction;
+                            m_pushesRestricted = false;
+                        }
+                        #endregion
                     }
-                    #endregion
                     #endregion
                 }
                 else
@@ -236,7 +243,63 @@ namespace ThreeDeePongProto.Player.Inputs
             }
         }
 
-        private IEnumerator RestrictPushes()
+        private IEnumerator PushPaddleTwo(float _moveDistance)
+        {
+            float currentTime = 0;
+            float startZPos = m_rigidbody.transform.localPosition.z;
+            float endZPos = m_rigidbody.transform.localPosition.z - -_moveDistance;
+
+            while (currentTime < _moveDistance)
+            {
+                if (m_pushPlayerTwo)
+                {
+                    currentTime += Time.deltaTime;
+
+                    //TODO: Limit rigidbodyMovement by PlayerID.
+                    #region Mathf.MoveTowards
+                    if (m_playerId == 1)
+                    {
+                        m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, endZPos = Mathf.MoveTowards(startZPos, endZPos, _moveDistance)) + m_rigidbody.transform.forward;
+                        m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, endZPos);
+
+                        yield return new WaitForSeconds(m_delayRetreat);
+                        m_pushPlayerTwo = false;
+
+                        m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, startZPos = Mathf.MoveTowards(endZPos, startZPos, _moveDistance)) + -m_rigidbody.transform.forward;
+                        m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, startZPos);
+
+                        #region Nested Coroutine
+                        //Coroutine to restrict paddleForwardMovement by a certain amount of time.
+                        if (m_enablePushRestriction)
+                        {
+                            m_pushesRestricted = true;
+                            Coroutine pushRestriction = StartCoroutine(RestrictPushOne());
+                            yield return pushRestriction;
+                            m_pushesRestricted = false;
+                        }
+                        #endregion
+                    }
+                    #endregion
+                }
+                else
+                {
+                    yield return null;
+                }
+            }
+        }
+
+        private IEnumerator RestrictPushZero()
+        {
+            float countdown = m_delayRepetition;
+
+            while (countdown > 0)
+            {
+                countdown -= Time.deltaTime;
+                yield return null;
+            }
+        }
+
+        private IEnumerator RestrictPushOne()
         {
             float countdown = m_delayRepetition;
 

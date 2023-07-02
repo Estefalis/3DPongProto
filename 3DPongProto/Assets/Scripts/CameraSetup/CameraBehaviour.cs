@@ -55,7 +55,7 @@ namespace ThreeDeePongProto.CameraSetup
             m_cameraInputActions.Enable();
             m_cameraInputActions.PlayerActions.ZoomModuUneven.performed += Zooming;
 
-            m_playerID = m_playerMovement.GetComponent<PlayerMovement>().PlayerID;
+            m_playerID = m_playerMovement.GetComponent<PlayerMovement>().PlayerId;
         }
 
         private void OnDisable()
@@ -108,9 +108,11 @@ namespace ThreeDeePongProto.CameraSetup
             switch (m_playerID % 2 == 0)
             {
                 case true:
-                    m_directFollowVectorX = -m_RbPlayer.transform.localPosition.x; break;
+                    m_directFollowVectorX = m_RbPlayer.transform.localPosition.x;
+                    break;
                 case false:
-                    m_directFollowVectorX = m_RbPlayer.transform.localPosition.x;  break;
+                    m_directFollowVectorX = -m_RbPlayer.transform.localPosition.x;
+                    break;
             }
 
             //m_cameraTransform.position.z MUST NOT be localPosition, or the Camera2-Position flickers between + and - Z-Values.
