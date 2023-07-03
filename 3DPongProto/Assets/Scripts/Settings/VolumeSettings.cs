@@ -133,7 +133,7 @@ namespace ThreeDeePongProto.Settings
             m_muteMasterCheckboxShowsActive = true;
 
             m_sliderMaster.value = _value;
-            m_masterValueText.SetText($"{_value:N2}");
+            m_masterValueText.SetText($"{_value:P0}");
 
             //Also save the new value in the ScriptableObject.
             if (m_sliderMaster.value > m_sliderMaster.minValue)
@@ -151,7 +151,7 @@ namespace ThreeDeePongProto.Settings
             m_muteBGMCheckboxShowsActive = true;
 
             m_sliderBGM.value = _value;
-            m_bgmValueText.SetText($"{_value:N2}");
+            m_bgmValueText.SetText($"{_value:P0}");
 
             //Also save the new value in the ScriptableObject.
             if (m_sliderBGM.value > m_sliderBGM.minValue)
@@ -169,7 +169,7 @@ namespace ThreeDeePongProto.Settings
             m_muteSFXCheckboxShowsActive = true;
 
             m_sliderSFX.value = _value;
-            m_sfxValueText.SetText($"{_value:N2}");
+            m_sfxValueText.SetText($"{_value:P0}");
 
             //Also save the new value in the ScriptableObject.
             if (m_sliderSFX.value > m_sliderSFX.minValue)

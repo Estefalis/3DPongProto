@@ -63,7 +63,9 @@ namespace ThreeDeePongProto.CameraSetup
                     case 3:
                     {
                         m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
-                        SetFourSplit(m_playerCam1, m_playerCam2, m_playerCam3, m_playerCam4);
+                        //2 Camera should be always available. Up to 4 Cameras is just a mindplay until further changes.
+                        if (m_playerCam3 != null && m_playerCam4 != null)
+                            SetFourSplit(m_playerCam1, m_playerCam2, m_playerCam3, m_playerCam4);
                         break;
                     }
                     default:

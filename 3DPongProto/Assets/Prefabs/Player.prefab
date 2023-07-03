@@ -56,7 +56,7 @@ MonoBehaviour:
   m_maxPushDistance: 1.5
   m_minGoalDistance: 1.5
   m_delayRetreat: 0.1
-  m_delayRepetition: 10
+  m_delayRepetition: 1.5
   m_enablePushRestriction: 1
 --- !u!1 &6673783636198326063
 GameObject:
