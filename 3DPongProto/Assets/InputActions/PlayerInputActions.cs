@@ -109,6 +109,15 @@ namespace ThreeDeePongProto.Player.Inputs
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MousePosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""c4240df0-389e-40ee-b595-a3955f3a745d"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -417,6 +426,17 @@ namespace ThreeDeePongProto.Player.Inputs
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""PushMoveModuEven"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1209280c-c852-41f6-88fb-a483cda3fad4"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MousePosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -983,6 +1003,7 @@ namespace ThreeDeePongProto.Player.Inputs
             m_PlayerActions_ZoomModuUneven = m_PlayerActions.FindAction("ZoomModuUneven", throwIfNotFound: true);
             m_PlayerActions_ZoomModuEvenTODO = m_PlayerActions.FindAction("ZoomModuEvenTODO", throwIfNotFound: true);
             m_PlayerActions_ToggleGameMenu = m_PlayerActions.FindAction("ToggleGameMenu", throwIfNotFound: true);
+            m_PlayerActions_MousePosition = m_PlayerActions.FindAction("MousePosition", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1066,6 +1087,7 @@ namespace ThreeDeePongProto.Player.Inputs
         private readonly InputAction m_PlayerActions_ZoomModuUneven;
         private readonly InputAction m_PlayerActions_ZoomModuEvenTODO;
         private readonly InputAction m_PlayerActions_ToggleGameMenu;
+        private readonly InputAction m_PlayerActions_MousePosition;
         public struct PlayerActionsActions
         {
             private @PlayerInputActions m_Wrapper;
@@ -1079,6 +1101,7 @@ namespace ThreeDeePongProto.Player.Inputs
             public InputAction @ZoomModuUneven => m_Wrapper.m_PlayerActions_ZoomModuUneven;
             public InputAction @ZoomModuEvenTODO => m_Wrapper.m_PlayerActions_ZoomModuEvenTODO;
             public InputAction @ToggleGameMenu => m_Wrapper.m_PlayerActions_ToggleGameMenu;
+            public InputAction @MousePosition => m_Wrapper.m_PlayerActions_MousePosition;
             public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1115,6 +1138,9 @@ namespace ThreeDeePongProto.Player.Inputs
                 @ToggleGameMenu.started += instance.OnToggleGameMenu;
                 @ToggleGameMenu.performed += instance.OnToggleGameMenu;
                 @ToggleGameMenu.canceled += instance.OnToggleGameMenu;
+                @MousePosition.started += instance.OnMousePosition;
+                @MousePosition.performed += instance.OnMousePosition;
+                @MousePosition.canceled += instance.OnMousePosition;
             }
 
             private void UnregisterCallbacks(IPlayerActionsActions instance)
@@ -1146,6 +1172,9 @@ namespace ThreeDeePongProto.Player.Inputs
                 @ToggleGameMenu.started -= instance.OnToggleGameMenu;
                 @ToggleGameMenu.performed -= instance.OnToggleGameMenu;
                 @ToggleGameMenu.canceled -= instance.OnToggleGameMenu;
+                @MousePosition.started -= instance.OnMousePosition;
+                @MousePosition.performed -= instance.OnMousePosition;
+                @MousePosition.canceled -= instance.OnMousePosition;
             }
 
             public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -1300,6 +1329,7 @@ namespace ThreeDeePongProto.Player.Inputs
             void OnZoomModuUneven(InputAction.CallbackContext context);
             void OnZoomModuEvenTODO(InputAction.CallbackContext context);
             void OnToggleGameMenu(InputAction.CallbackContext context);
+            void OnMousePosition(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {

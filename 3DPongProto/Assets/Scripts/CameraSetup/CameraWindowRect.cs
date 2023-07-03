@@ -26,7 +26,7 @@ namespace ThreeDeePongProto.CameraSetup
             if (m_playerCam3 != null && m_playerCam4 != null && m_lastSetCameraMode == (uint)ECameraModi.FourSplit)
             {
                 SetFourSplit(m_playerCam1, m_playerCam2, m_playerCam3, m_playerCam4);
-                return;
+                return; //TODO: May got to delete this return. <(<.<)>
             }
             else if (m_playerCam2 != null && m_lastSetCameraMode == (uint)ECameraModi.TwoVertical)
                 SetCamerasVertical(m_playerCam1, m_playerCam2);
