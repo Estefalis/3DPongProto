@@ -23,16 +23,13 @@ namespace ThreeDeePongProto.CameraSetup
         [Range(1f, 20.0f)]
         [SerializeField] private float m_smoothfactor;
         private float m_maxSideMovement, m_directFollowVectorX;
-        //private Transform m_cameraTransform;
         private Camera m_camera;
 
         [Header("Camera-Zoom")]
         [SerializeField, Min(0.001f)] private float m_zoomSpeed;
         [SerializeField] private float m_zoomStep;
         [SerializeField] private float m_zoomDampening;
-        //private Rect m_ownCameraRect;
         private Vector3 m_mousePosition;
-
 
         private uint m_playerId;
 
@@ -41,18 +38,16 @@ namespace ThreeDeePongProto.CameraSetup
             if (m_RbPlayer == null)
                 m_RbPlayer = GetComponent<Rigidbody>();
 
-            //m_cameraTransform = GetComponentInChildren<Camera>().transform;
             m_camera = GetComponentInChildren<Camera>();
-            //m_ownCameraRect = GetComponentInChildren<Camera>().pixelRect;
-            //Add Position for LookAtTarget here, if wanted.
-
-            //Saved vector to keep the playerCamera-startposition.
-            SetCameraStartPosition();
+            //Add Position for LookAtTarget here or in 'Start()', if wanted.
         }
 
         private void Start()
         {
             GetMaxSideMovement();
+
+            //Saved vector to keep the playerCamera-startposition.
+            SetCameraStartPosition();
 
             m_cameraInputActions = UserInputManager.m_playerInputActions;
             m_cameraInputActions.Enable();
@@ -84,8 +79,6 @@ namespace ThreeDeePongProto.CameraSetup
 #if UNITY_EDITOR
             if (m_mousePosition.x >= (m_camera.pixelRect.width - m_camera.pixelRect.width) && m_mousePosition.x <= m_camera.pixelRect.width &&
                 m_mousePosition.y >= (m_camera.pixelRect.height - m_camera.pixelRect.height) && m_mousePosition.y <= m_camera.pixelRect.height)
-                //if (m_mousePosition.x >= (m_ownCameraRect.width - m_ownCameraRect.width) && m_mousePosition.x <= m_ownCameraRect.width &&
-                //m_mousePosition.y >= (m_ownCameraRect.height - m_ownCameraRect.height) && m_mousePosition.y <= m_ownCameraRect.height)
             {
                 Debug.Log(m_mousePosition);
             }
@@ -152,10 +145,7 @@ namespace ThreeDeePongProto.CameraSetup
             //TODO: Zoom-Funktion darauf beschraenken, dass es nur innerhalb des eigenen WindowRects funktioniert.)
             if(m_mousePosition.x >= (m_camera.pixelRect.width - m_camera.pixelRect.width) && m_mousePosition.x <= m_camera.pixelRect.width &&
                 m_mousePosition.y >= (m_camera.pixelRect.height - m_camera.pixelRect.height) && m_mousePosition.y <= m_camera.pixelRect.height)
-            //if (m_mousePosition.x >= (m_ownCameraRect.width - m_ownCameraRect.width) && m_mousePosition.x <= m_ownCameraRect.width &&
-            //    m_mousePosition.y >= (m_ownCameraRect.height - m_ownCameraRect.height) && m_mousePosition.y <= m_ownCameraRect.height)
             {
-                //m_zoomDirection = _callbackContext.ReadValue<Vector2>();
                 float zoomValue = -_callbackContext.ReadValue<Vector2>().y * m_zoomSpeed;
 
                 if (Mathf.Abs(zoomValue) > 0.1f)
