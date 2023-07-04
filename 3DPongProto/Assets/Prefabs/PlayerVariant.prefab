@@ -92,6 +92,11 @@ PrefabInstance:
       propertyPath: m_enableOffset
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6673783637509275386, guid: 783feb4697821a043931bae4b63b27b7,
+        type: 3}
+      propertyPath: m_Name
+      value: PlayerCameraTwo
+      objectReference: {fileID: 0}
     - target: {fileID: 8973898448692739539, guid: 783feb4697821a043931bae4b63b27b7,
         type: 3}
       propertyPath: m_playerID

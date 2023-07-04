@@ -33,13 +33,12 @@ namespace ThreeDeePongProto.CameraSetup
 
         private uint m_playerId;
 
-        private void OnEnable()
+        private void Awake()
         {
+            m_camera = GetComponentInChildren<Camera>();
+            
             if (m_RbPlayer == null)
                 m_RbPlayer = GetComponent<Rigidbody>();
-
-            m_camera = GetComponentInChildren<Camera>();
-            //Add Position for LookAtTarget here or in 'Start()', if wanted.
         }
 
         private void Start()
@@ -49,6 +48,7 @@ namespace ThreeDeePongProto.CameraSetup
             //Saved vector to keep the playerCamera-startposition.
             SetCameraStartPosition();
 
+            //CameraActions need to be in Start to prevent NullReferenceExceptions due to relation to the UserInputManager.
             m_cameraInputActions = UserInputManager.m_playerInputActions;
             m_cameraInputActions.Enable();
             m_cameraInputActions.PlayerActions.ZoomModuUneven.performed += Zooming;
@@ -77,11 +77,11 @@ namespace ThreeDeePongProto.CameraSetup
                 FollowWithOffset();
             }
 #if UNITY_EDITOR
-            if (m_mousePosition.x >= (m_camera.pixelRect.width - m_camera.pixelRect.width) && m_mousePosition.x <= m_camera.pixelRect.width &&
-                m_mousePosition.y >= (m_camera.pixelRect.height - m_camera.pixelRect.height) && m_mousePosition.y <= m_camera.pixelRect.height)
-            {
-                Debug.Log(m_mousePosition);
-            }
+            //if (m_mousePosition.x >= (m_camera.pixelRect.width - m_camera.pixelRect.width) && m_mousePosition.x <= m_camera.pixelRect.width &&
+            //    m_mousePosition.y >= (m_camera.pixelRect.height - m_camera.pixelRect.height) && m_mousePosition.y <= m_camera.pixelRect.height)
+            //{
+            //    Debug.Log(m_mousePosition);
+            //}
 #endif
             UpdateCameraPosition();
         }
@@ -145,7 +145,7 @@ namespace ThreeDeePongProto.CameraSetup
             //TODO: Zoom-Funktion darauf beschraenken, dass es nur innerhalb des eigenen WindowRects funktioniert.)
             if(m_mousePosition.x >= (m_camera.pixelRect.width - m_camera.pixelRect.width) && m_mousePosition.x <= m_camera.pixelRect.width &&
                 m_mousePosition.y >= (m_camera.pixelRect.height - m_camera.pixelRect.height) && m_mousePosition.y <= m_camera.pixelRect.height)
-            {
+                {
                 float zoomValue = -_callbackContext.ReadValue<Vector2>().y * m_zoomSpeed;
 
                 if (Mathf.Abs(zoomValue) > 0.1f)

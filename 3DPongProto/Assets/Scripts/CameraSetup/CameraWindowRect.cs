@@ -7,6 +7,8 @@ namespace ThreeDeePongProto.CameraSetup
 {
     public class CameraWindowRect : MonoBehaviour
     {
+        private CameraManager m_cameraManager;
+
         [SerializeField] private Camera m_playerCam1;
         [SerializeField] private Camera m_playerCam2;
         [SerializeField] private Camera m_playerCam3;
@@ -17,6 +19,11 @@ namespace ThreeDeePongProto.CameraSetup
 
         private Rect m_resetRect;
         private uint m_lastSetCameraMode;
+
+        private void Awake()
+        {
+            m_cameraManager = GetComponent<CameraManager>();
+        }
 
         private void OnEnable()
         {
@@ -89,9 +96,11 @@ namespace ThreeDeePongProto.CameraSetup
             CamRectOut(_camera1, _camera2, out Cam1X, out Cam1Y, out Cam1W, out Cam1H, out Cam2X, out Cam2Y, out Cam2W, out Cam2H);
 
             _camera1.pixelRect = new Rect(Cam1X, Cam1Y, Cam1W * m_fullWidthHor, Cam1H * m_halfHeightHor);
+            m_cameraManager.UpdateRectDimensions(_camera1, _camera1.pixelRect);
 
             Cam2Y += Cam2H * m_halfHeightHor;
             _camera2.pixelRect = new Rect(Cam2X, Cam2Y, Cam2W * m_fullWidthHor, Cam2H * m_halfHeightHor);
+            m_cameraManager.UpdateRectDimensions(_camera2, _camera2.pixelRect);
         }
 
         public void SetCamerasVertical(Camera _camera1, Camera _camera2)
@@ -102,9 +111,11 @@ namespace ThreeDeePongProto.CameraSetup
             CamRectOut(_camera1, _camera2, out Cam1X, out Cam1Y, out Cam1W, out Cam1H, out Cam2X, out Cam2Y, out Cam2W, out Cam2H);
 
             _camera1.pixelRect = new Rect(Cam1X, Cam1Y, Cam1W * m_halfWidthVer, Cam1H * m_fullHeightVer);
+            m_cameraManager.UpdateRectDimensions(_camera1, _camera1.pixelRect);
 
             Cam2X += Cam2W * m_halfWidthVer;
             _camera2.pixelRect = new Rect(Cam2X, Cam2Y, Cam2W * m_halfWidthVer, Cam2H * m_fullHeightVer);
+            m_cameraManager.UpdateRectDimensions(_camera2, _camera2.pixelRect);
         }
 
         public void SetFourSplit(Camera _camera1, Camera _camera2, Camera _camera3, Camera _camera4)
@@ -126,16 +137,20 @@ namespace ThreeDeePongProto.CameraSetup
 
             //Cam1W *= m_halfWidthVer;
             _camera1.pixelRect = new Rect(Cam1X, Cam1Y, Cam1W * m_halfWidthVer, Cam1H * m_halfHeightHor);
+            m_cameraManager.UpdateRectDimensions(_camera1, _camera1.pixelRect);
 
             Cam2X += Cam2W * m_halfWidthVer;
             _camera2.pixelRect = new Rect(Cam2X, Cam2Y, Cam2W * m_halfWidthVer, Cam2H * m_halfHeightHor);
+            m_cameraManager.UpdateRectDimensions(_camera2, _camera2.pixelRect);
 
             Cam3Y += Cam3H * m_halfHeightHor;
             _camera3.pixelRect = new Rect(Cam3X, Cam3Y, Cam3W * m_halfWidthVer, Cam3H * m_halfHeightHor);
+            m_cameraManager.UpdateRectDimensions(_camera3, _camera3.pixelRect);
 
             Cam4X += Cam4W * m_halfWidthVer;
             Cam4Y += Cam4H * m_halfHeightHor;
             _camera4.pixelRect = new Rect(Cam4X, Cam4Y, Cam4W * m_halfWidthVer, Cam4H * m_halfHeightHor);
+            m_cameraManager.UpdateRectDimensions(_camera4, _camera4.pixelRect);
         }
 
         private void CamRectOut(Camera _camera1, Camera _camera2, out float Cam1X, out float Cam1Y, out float Cam1W, out float Cam1H, out float Cam2X, out float Cam2Y, out float Cam2W, out float Cam2H)
@@ -156,7 +171,6 @@ namespace ThreeDeePongProto.CameraSetup
             {
                 case 0:
                 {
-                    //TODO: Here Camera Transform- & Rotation-Settings. (SetCameraAlignment())
                     m_playerCam2.gameObject.SetActive(false);
                     m_playerCam3.gameObject.SetActive(false);
                     m_playerCam4.gameObject.SetActive(false);
@@ -195,12 +209,30 @@ namespace ThreeDeePongProto.CameraSetup
 
         private void ResetViewportRects(Camera _camera1, Camera _camera2 = null, Camera _camera3 = null, Camera _camera4 = null)
         {
+            if (m_playerCam1.pixelRect != m_resetRect)
+            {
+                m_cameraManager.UpdateRectDimensions(m_playerCam1, m_resetRect);
+            }
             _camera1.pixelRect = m_resetRect;
 
+            if (m_playerCam2.pixelRect != m_resetRect)
+            {
+                m_cameraManager.UpdateRectDimensions(m_playerCam2, m_resetRect);
+            }
             if (_camera2 != null)
                 _camera2.pixelRect = m_resetRect;
+
+            if (m_playerCam3.pixelRect != m_resetRect)
+            {
+                m_cameraManager.UpdateRectDimensions(m_playerCam3, m_resetRect);
+            }
             if (_camera3 != null)
                 _camera3.pixelRect = m_resetRect;
+
+            if (m_playerCam4.pixelRect != m_resetRect)
+            {
+                m_cameraManager.UpdateRectDimensions(m_playerCam4, m_resetRect);
+            }
             if (_camera4 != null)
                 m_playerCam4.pixelRect = m_resetRect;
         }
