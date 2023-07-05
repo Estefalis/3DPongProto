@@ -1,18 +1,17 @@
 using UnityEngine;
 using ThreeDeePongProto.Managers;
 
-//FullCamWindow: Width 536.4 - Height 302.
-
 namespace ThreeDeePongProto.CameraSetup
 {
-    public class CameraWindowRect : MonoBehaviour
+    public class SetCameraRects : MonoBehaviour
     {
         private CameraManager m_cameraManager;
 
-        [SerializeField] private Camera m_playerCam1;
-        [SerializeField] private Camera m_playerCam2;
-        [SerializeField] private Camera m_playerCam3;
-        [SerializeField] private Camera m_playerCam4;
+        //'[SerializeField]s' moved to CamaeraManager
+        //[SerializeField] private Camera m_playerCam1;
+        //[SerializeField] private Camera m_playerCam2;
+        //[SerializeField] private Camera m_playerCam3;
+        //[SerializeField] private Camera m_playerCam4;
 
         [SerializeField] private float m_fullWidthHor, m_halfWidthVer;
         [SerializeField] private float m_halfHeightHor, m_fullHeightVer;
@@ -27,18 +26,20 @@ namespace ThreeDeePongProto.CameraSetup
 
         private void OnEnable()
         {
-            m_resetRect = m_playerCam1.pixelRect;
+            //Debug.Log(m_cameraManager.AvailableCameras[0]); //Old m_playerCam1
+            //Debug.Log(m_cameraManager.AvailableCameras[1]); //Old m_playerCam2
+            //Debug.Log(m_cameraManager.AvailableCameras[2]); //Old m_playerCam3
+            //Debug.Log(m_cameraManager.AvailableCameras[3]); //Old m_playerCam4
+
+            m_resetRect = m_cameraManager.AvailableCameras[0].pixelRect;
             m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
 
-            if (m_playerCam3 != null && m_playerCam4 != null && m_lastSetCameraMode == (uint)ECameraModi.FourSplit)
-            {
-                SetFourSplit(m_playerCam1, m_playerCam2, m_playerCam3, m_playerCam4);
-                return; //TODO: May got to delete this return. <(<.<)>
-            }
-            else if (m_playerCam2 != null && m_lastSetCameraMode == (uint)ECameraModi.TwoVertical)
-                SetCamerasVertical(m_playerCam1, m_playerCam2);
-            else if (m_playerCam2 != null && m_lastSetCameraMode == (uint)ECameraModi.TwoHorizontal)
-                SetCamerasHorizontal(m_playerCam1, m_playerCam2);
+            if (m_cameraManager.AvailableCameras[2] != null && m_cameraManager.AvailableCameras[3] != null && m_lastSetCameraMode == (uint)ECameraModi.FourSplit)
+                SetFourSplit(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1], m_cameraManager.AvailableCameras[2], m_cameraManager.AvailableCameras[3]);
+            else if (m_cameraManager.AvailableCameras[1] != null && m_lastSetCameraMode == (uint)ECameraModi.TwoVertical)
+                SetCamerasVertical(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
+            else if (m_cameraManager.AvailableCameras[1] != null && m_lastSetCameraMode == (uint)ECameraModi.TwoHorizontal)
+                SetCamerasHorizontal(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
             else
                 SetSingleCamera();
         }
@@ -58,21 +59,21 @@ namespace ThreeDeePongProto.CameraSetup
                     case 1:
                     {
                         m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
-                        SetCamerasHorizontal(m_playerCam1, m_playerCam2);
+                        SetCamerasHorizontal(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
                         break;
                     }
                     case 2:
                     {
                         m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
-                        SetCamerasVertical(m_playerCam1, m_playerCam2);
+                        SetCamerasVertical(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
                         break;
                     }
                     case 3:
                     {
                         m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
                         //2 Camera should be always available. Up to 4 Cameras is just a mindplay until further changes.
-                        if (m_playerCam3 != null && m_playerCam4 != null)
-                            SetFourSplit(m_playerCam1, m_playerCam2, m_playerCam3, m_playerCam4);
+                        if (m_cameraManager.AvailableCameras[2] != null && m_cameraManager.AvailableCameras[3] != null)
+                            SetFourSplit(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1], m_cameraManager.AvailableCameras[2], m_cameraManager.AvailableCameras[3]);
                         break;
                     }
                     default:
@@ -171,34 +172,34 @@ namespace ThreeDeePongProto.CameraSetup
             {
                 case 0:
                 {
-                    m_playerCam2.gameObject.SetActive(false);
-                    m_playerCam3.gameObject.SetActive(false);
-                    m_playerCam4.gameObject.SetActive(false);
-                    ResetViewportRects(m_playerCam1);
+                    m_cameraManager.AvailableCameras[1].gameObject.SetActive(false);
+                    m_cameraManager.AvailableCameras[2].gameObject.SetActive(false);
+                    m_cameraManager.AvailableCameras[3].gameObject.SetActive(false);
+                    ResetViewportRects(m_cameraManager.AvailableCameras[0]);
                     break;
                 }
                 case 1:
                 {
-                    m_playerCam2.gameObject.SetActive(true);
-                    m_playerCam3.gameObject.SetActive(false);
-                    m_playerCam4.gameObject.SetActive(false);
-                    ResetViewportRects(m_playerCam1, m_playerCam2);
+                    m_cameraManager.AvailableCameras[1].gameObject.SetActive(true);
+                    m_cameraManager.AvailableCameras[2].gameObject.SetActive(false);
+                    m_cameraManager.AvailableCameras[3].gameObject.SetActive(false);
+                    ResetViewportRects(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
                     break;
                 }
                 case 2:
                 {
-                    m_playerCam2.gameObject.SetActive(true);
-                    m_playerCam3.gameObject.SetActive(false);
-                    m_playerCam4.gameObject.SetActive(false);
-                    ResetViewportRects(m_playerCam1, m_playerCam2);
+                    m_cameraManager.AvailableCameras[1].gameObject.SetActive(true);
+                    m_cameraManager.AvailableCameras[2].gameObject.SetActive(false);
+                    m_cameraManager.AvailableCameras[3].gameObject.SetActive(false);
+                    ResetViewportRects(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
                     break;
                 }
                 case 3:
                 {
-                    m_playerCam2.gameObject.SetActive(true);
-                    m_playerCam3.gameObject.SetActive(true);
-                    m_playerCam4.gameObject.SetActive(true);
-                    ResetViewportRects(m_playerCam1, m_playerCam2, m_playerCam3, m_playerCam4);
+                    m_cameraManager.AvailableCameras[1].gameObject.SetActive(true);
+                    m_cameraManager.AvailableCameras[2].gameObject.SetActive(true);
+                    m_cameraManager.AvailableCameras[3].gameObject.SetActive(true);
+                    ResetViewportRects(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1], m_cameraManager.AvailableCameras[2], m_cameraManager.AvailableCameras[3]);
                     break;
                 }
                 default:
@@ -209,32 +210,32 @@ namespace ThreeDeePongProto.CameraSetup
 
         private void ResetViewportRects(Camera _camera1, Camera _camera2 = null, Camera _camera3 = null, Camera _camera4 = null)
         {
-            if (m_playerCam1.pixelRect != m_resetRect)
+            if (m_cameraManager.AvailableCameras[0].pixelRect != m_resetRect)
             {
-                m_cameraManager.UpdateRectDimensions(m_playerCam1, m_resetRect);
+                m_cameraManager.UpdateRectDimensions(m_cameraManager.AvailableCameras[0], m_resetRect);
             }
             _camera1.pixelRect = m_resetRect;
 
-            if (m_playerCam2.pixelRect != m_resetRect)
+            if (m_cameraManager.AvailableCameras[1].pixelRect != m_resetRect)
             {
-                m_cameraManager.UpdateRectDimensions(m_playerCam2, m_resetRect);
+                m_cameraManager.UpdateRectDimensions(m_cameraManager.AvailableCameras[1], m_resetRect);
             }
             if (_camera2 != null)
                 _camera2.pixelRect = m_resetRect;
 
-            if (m_playerCam3.pixelRect != m_resetRect)
+            if (m_cameraManager.AvailableCameras[2].pixelRect != m_resetRect)
             {
-                m_cameraManager.UpdateRectDimensions(m_playerCam3, m_resetRect);
+                m_cameraManager.UpdateRectDimensions(m_cameraManager.AvailableCameras[2], m_resetRect);
             }
             if (_camera3 != null)
                 _camera3.pixelRect = m_resetRect;
 
-            if (m_playerCam4.pixelRect != m_resetRect)
+            if (m_cameraManager.AvailableCameras[3].pixelRect != m_resetRect)
             {
-                m_cameraManager.UpdateRectDimensions(m_playerCam4, m_resetRect);
+                m_cameraManager.UpdateRectDimensions(m_cameraManager.AvailableCameras[3], m_resetRect);
             }
             if (_camera4 != null)
-                m_playerCam4.pixelRect = m_resetRect;
+                m_cameraManager.AvailableCameras[3].pixelRect = m_resetRect;
         }
     }
 }

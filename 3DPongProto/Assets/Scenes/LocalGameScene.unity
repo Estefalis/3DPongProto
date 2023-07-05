@@ -2753,10 +2753,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98313fd36d66110489decacd6bf72974, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_playerCam1: {fileID: 351870950}
-  m_playerCam2: {fileID: 20960489}
-  m_playerCam3: {fileID: 646256016}
-  m_playerCam4: {fileID: 2009713561}
   m_fullWidthHor: 1
   m_halfWidthVer: 0.5
   m_halfHeightHor: 0.5
@@ -4624,6 +4620,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 589839930171080835, guid: 4343b137e3ea7c54ca00b070a5412312,
+        type: 3}
+      propertyPath: m_cameraManager
+      value: 
+      objectReference: {fileID: 1715171899}
+    - target: {fileID: 589839930171080835, guid: 4343b137e3ea7c54ca00b070a5412312,
+        type: 3}
+      propertyPath: m_ownPlayerCamera
+      value: 
+      objectReference: {fileID: 20960489}
     - target: {fileID: 589839930643274322, guid: 4343b137e3ea7c54ca00b070a5412312,
         type: 3}
       propertyPath: m_Name
@@ -7411,5 +7417,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6673783636466660463, guid: 783feb4697821a043931bae4b63b27b7,
+        type: 3}
+      propertyPath: m_cameraManager
+      value: 
+      objectReference: {fileID: 1715171899}
+    - target: {fileID: 6673783636466660463, guid: 783feb4697821a043931bae4b63b27b7,
+        type: 3}
+      propertyPath: m_ownPlayerCamera
+      value: 
+      objectReference: {fileID: 351870950}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 783feb4697821a043931bae4b63b27b7, type: 3}
