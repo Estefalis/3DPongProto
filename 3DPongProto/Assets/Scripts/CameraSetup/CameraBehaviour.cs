@@ -7,9 +7,9 @@ namespace ThreeDeePongProto.CameraSetup
 {
     public class CameraBehaviour : MonoBehaviour
     {
-        //At current ScriptStructure 'CameraManager m_cameraManager' requires 'FindObjectOfType<CameraManager>();'.
         private PlayerInputActions m_cameraInputActions;
         [SerializeField] private PlayerMovement m_playerMovement;
+        //private CameraManager m_cameraManager;
 
         [Header("Camera-Positions")]
         [SerializeField] private float m_lowestHeight;
@@ -37,6 +37,7 @@ namespace ThreeDeePongProto.CameraSetup
         private void Awake()
         {
             m_ownPlayerCamera = GetComponentInChildren<Camera>();
+            //m_cameraManager = FindObjectOfType<CameraManager>();
 
             if (m_RbPlayer == null)
                 m_RbPlayer = GetComponent<Rigidbody>();
@@ -71,6 +72,30 @@ namespace ThreeDeePongProto.CameraSetup
             {
                 FollowDirectly();
             }
+
+            //if (m_mousePosition.x > (m_cameraManager.SeparatedDictsRects[0].width - m_cameraManager.SeparatedDictsRects[0].width) && m_mousePosition.x < m_cameraManager.SeparatedDictsRects[0].width &&
+            //    m_mousePosition.y > (m_cameraManager.SeparatedDictsRects[0].height - m_cameraManager.SeparatedDictsRects[0].height) && m_mousePosition.y < m_cameraManager.SeparatedDictsRects[0].height)
+            //{
+            //    Debug.Log("0");
+            //}
+            
+            //if (m_mousePosition.x > (m_cameraManager.SeparatedDictsRects[1].width - m_cameraManager.SeparatedDictsRects[1].width) && m_mousePosition.x < m_cameraManager.SeparatedDictsRects[1].width &&
+            //    m_mousePosition.y > (m_cameraManager.SeparatedDictsRects[1].height - m_cameraManager.SeparatedDictsRects[1].height) && m_mousePosition.y < m_cameraManager.SeparatedDictsRects[1].height)
+            //{
+            //    Debug.Log("1");
+            //}
+            
+            //if (m_mousePosition.x > (m_cameraManager.SeparatedDictsRects[2].width - m_cameraManager.SeparatedDictsRects[2].width) && m_mousePosition.x < m_cameraManager.SeparatedDictsRects[2].width &&
+            //    m_mousePosition.y > (m_cameraManager.SeparatedDictsRects[2].height - m_cameraManager.SeparatedDictsRects[2].height) && m_mousePosition.y < m_cameraManager.SeparatedDictsRects[2].height)
+            //{
+            //    Debug.Log("2");
+            //}
+            
+            //if (m_mousePosition.x > (m_cameraManager.SeparatedDictsRects[3].width - m_cameraManager.SeparatedDictsRects[3].width) && m_mousePosition.x < m_cameraManager.SeparatedDictsRects[3].width &&
+            //    m_mousePosition.y > (m_cameraManager.SeparatedDictsRects[3].height - m_cameraManager.SeparatedDictsRects[3].height) && m_mousePosition.y < m_cameraManager.SeparatedDictsRects[3].height)
+            //{
+            //    Debug.Log("3");
+            //}
         }
 
         private void FixedUpdate()
@@ -80,7 +105,7 @@ namespace ThreeDeePongProto.CameraSetup
                 FollowWithOffset();
             }
 
-            UpdateCameraPosition();
+            UpdateZoomPosition();
         }
 
         private void GetMaxSideMovement()
@@ -105,7 +130,7 @@ namespace ThreeDeePongProto.CameraSetup
             m_cameraStartPosition = new Vector3(m_cameraStartPosition.x, m_currentHeight, -m_cameraZPos);
         }
 
-        private void UpdateCameraPosition()
+        private void UpdateZoomPosition()
         {
             Vector3 zoomTarget = new Vector3(m_ownPlayerCamera.transform.localPosition.x, m_currentHeight, m_ownPlayerCamera.transform.localPosition.z);
 
@@ -144,9 +169,9 @@ namespace ThreeDeePongProto.CameraSetup
         private void Zooming(InputAction.CallbackContext _callbackContext)
         {
             //TODO: Zoom-Funktion darauf beschraenken, dass es nur innerhalb des eigenen WindowRects funktioniert.)
-            if (m_mousePosition.x >= (m_ownPlayerCamera.pixelRect.width - m_ownPlayerCamera.pixelRect.width) && m_mousePosition.x <= m_ownPlayerCamera.pixelRect.width &&
-                m_mousePosition.y >= (m_ownPlayerCamera.pixelRect.height - m_ownPlayerCamera.pixelRect.height) && m_mousePosition.y <= m_ownPlayerCamera.pixelRect.height)
-            {
+            //if (m_mousePosition.x >= (m_ownPlayerCamera.pixelRect.width - m_ownPlayerCamera.pixelRect.width) && m_mousePosition.x <= m_ownPlayerCamera.pixelRect.width &&
+            //    m_mousePosition.y >= (m_ownPlayerCamera.pixelRect.height - m_ownPlayerCamera.pixelRect.height) && m_mousePosition.y <= m_ownPlayerCamera.pixelRect.height)
+            //{
                 float zoomValue = -_callbackContext.ReadValue<Vector2>().y * m_zoomSpeed;
 
                 if (Mathf.Abs(zoomValue) > 0.1f)
@@ -157,7 +182,7 @@ namespace ThreeDeePongProto.CameraSetup
                     else if (m_currentHeight > m_maximalHeight)
                         m_currentHeight = m_maximalHeight;
                 }
-            }
+            //}
         }
     }
 }
