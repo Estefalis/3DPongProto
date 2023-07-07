@@ -8,7 +8,7 @@ namespace ThreeDeePongProto.Managers
         public List<Camera> AvailableCameras { get => m_availableCameras; }
         [SerializeField] private List<Camera> m_availableCameras = new();
 
-        //public Dictionary<Camera, Rect> CameraRectDict { get => m_cameraRectDict; }
+        public Dictionary<Camera, Rect> CameraRectDict { get => m_cameraRectDict; }
         private Dictionary<Camera, Rect> m_cameraRectDict = new();
 
         //public List<Camera> SeparatedDictCameras { get => m_dictCameras; }
