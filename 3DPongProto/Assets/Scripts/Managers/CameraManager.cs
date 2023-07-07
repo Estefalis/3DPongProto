@@ -30,6 +30,7 @@ namespace ThreeDeePongProto.Managers
             }
         }
 
+#if UNITY_EDITOR
         private void Update()
         {
             //Debug.Log("Dictionary Rect 0: " + m_cameraRectDict[m_availableCameras[0]]);
@@ -42,8 +43,9 @@ namespace ThreeDeePongProto.Managers
             //Debug.Log($"{m_dictCameras[2]} + {m_dictRects[2]}");
             //Debug.Log($"{m_dictCameras[3]} + {m_dictRects[3]}");
         }
+#endif
 
-        #region CameraRect Stats
+        #region CameraRect Stats Example
         //Single Camera
         //Rect0(x:0.00,   y:0.00,   width:506.00, height:285.00)  -  Fullsize in width and height
         //Rect1(x:0.00,   y:0.00,   width:506.00, height:285.00)  -  Fullsize in width and height

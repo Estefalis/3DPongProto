@@ -13,10 +13,12 @@ namespace ThreeDeePongProto.CameraSetup
         //[SerializeField] private Camera m_playerCam3;
         //[SerializeField] private Camera m_playerCam4;
 
-        [SerializeField] private float m_fullWidthHor, m_halfWidthVer;
-        [SerializeField] private float m_halfHeightHor, m_fullHeightVer;
+        private float m_fullWidthHor = 1.0f;
+        private float m_fullHeightVer = 1.0f;
+        private float m_halfHeightHor = 0.5f;
+        private float m_halfWidthVer = 0.5f;
 
-        private Rect /*m_resetRect,*/ m_fullsizeRect;
+        private Rect m_fullsizeRect;
         private uint m_lastSetCameraMode;
 
         private void Awake()
@@ -31,7 +33,7 @@ namespace ThreeDeePongProto.CameraSetup
             //Debug.Log(m_cameraManager.AvailableCameras[2]); //Old m_playerCam3
             //Debug.Log(m_cameraManager.AvailableCameras[3]); //Old m_playerCam4
 
-            m_fullsizeRect = m_cameraManager.AvailableCameras[0].pixelRect;
+            UpdateFullsizeRect();
             m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
 
             if (m_cameraManager.AvailableCameras[2] != null && m_cameraManager.AvailableCameras[3] != null && m_lastSetCameraMode == (uint)ECameraModi.FourSplit)
@@ -129,8 +131,7 @@ namespace ThreeDeePongProto.CameraSetup
         {
             SetCamerasAndRects(m_lastSetCameraMode);
 
-            float Cam1X, Cam1Y, Cam1W, Cam1H, Cam2X, Cam2Y, Cam2W, Cam2H;
-            CamRectOut(_camera1, _camera2, out Cam1X, out Cam1Y, out Cam1W, out Cam1H, out Cam2X, out Cam2Y, out Cam2W, out Cam2H);
+            CamRectOut(_camera1, _camera2, out float Cam1X, out float Cam1Y, out float Cam1W, out float Cam1H, out float Cam2X, out float Cam2Y, out float Cam2W, out float Cam2H);
 
             _camera1.pixelRect = new Rect(Cam1X, Cam1Y, Cam1W * m_fullWidthHor, Cam1H * m_halfHeightHor);
             m_cameraManager.UpdateRectDimensions(_camera1, _camera1.pixelRect);
@@ -144,8 +145,7 @@ namespace ThreeDeePongProto.CameraSetup
         {
             SetCamerasAndRects(m_lastSetCameraMode);
 
-            float Cam1X, Cam1Y, Cam1W, Cam1H, Cam2X, Cam2Y, Cam2W, Cam2H;
-            CamRectOut(_camera1, _camera2, out Cam1X, out Cam1Y, out Cam1W, out Cam1H, out Cam2X, out Cam2Y, out Cam2W, out Cam2H);
+            CamRectOut(_camera1, _camera2, out float Cam1X, out float Cam1Y, out float Cam1W, out float Cam1H, out float Cam2X, out float Cam2Y, out float Cam2W, out float Cam2H);
 
             _camera1.pixelRect = new Rect(Cam1X, Cam1Y, Cam1W * m_halfWidthVer, Cam1H * m_fullHeightVer);
             m_cameraManager.UpdateRectDimensions(_camera1, _camera1.pixelRect);
@@ -159,8 +159,7 @@ namespace ThreeDeePongProto.CameraSetup
         {
             SetCamerasAndRects(m_lastSetCameraMode);
 
-            float Cam1X, Cam1Y, Cam1W, Cam1H, Cam2X, Cam2Y, Cam2W, Cam2H;
-            CamRectOut(_camera1, _camera2, out Cam1X, out Cam1Y, out Cam1W, out Cam1H, out Cam2X, out Cam2Y, out Cam2W, out Cam2H);
+            CamRectOut(_camera1, _camera2, out float Cam1X, out float Cam1Y, out float Cam1W, out float Cam1H, out float Cam2X, out float Cam2Y, out float Cam2W, out float Cam2H);
 
             float Cam3X = _camera3.pixelRect.x;
             float Cam3Y = _camera3.pixelRect.y;
