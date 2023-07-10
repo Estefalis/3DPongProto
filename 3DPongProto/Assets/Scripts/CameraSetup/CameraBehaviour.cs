@@ -9,7 +9,7 @@ namespace ThreeDeePongProto.CameraSetup
     {
         private PlayerInputActions m_cameraInputActions;
         [SerializeField] private PlayerMovement m_playerMovement;
-        //private CameraManager m_cameraManager;
+        private CameraManager m_cameraManager;
 
         [Header("Camera-Positions")]
         [SerializeField] private float m_lowestHeight;
@@ -31,13 +31,14 @@ namespace ThreeDeePongProto.CameraSetup
         [SerializeField] private float m_zoomStep;
         [SerializeField] private float m_zoomDampening;
         private Vector3 m_mousePosition;
+        private Camera m_mouseSelectedCamera;
 
         private uint m_playerId;
 
         private void Awake()
         {
             m_ownPlayerCamera = GetComponentInChildren<Camera>();
-            //m_cameraManager = FindObjectOfType<CameraManager>();
+            m_cameraManager = FindObjectOfType<CameraManager>();
 
             if (m_RbPlayer == null)
                 m_RbPlayer = GetComponent<Rigidbody>();
@@ -72,8 +73,9 @@ namespace ThreeDeePongProto.CameraSetup
             }
 
             GetMousePosition();
-            //RuntimePlayerRects();
+            SelectCameraToZoom();
             //TODO: MousePosition shall be used to set the ZoomCamera while moving within each WindowRect.
+            Debug.Log(m_mouseSelectedCamera);
         }
 
         private void FixedUpdate()
@@ -84,6 +86,55 @@ namespace ThreeDeePongProto.CameraSetup
             }
 
             UpdateZoomPosition();
+        }
+
+        private void SelectCameraToZoom()
+        {
+            switch((uint)GameManager.Instance.ECameraMode)
+            {
+                //SingleCamera
+                case 0:
+                {
+                    m_mouseSelectedCamera = m_cameraManager.AvailableCameras[0];
+                    break; 
+                }
+                //TwoHorizontal
+                case 1:
+                {
+                    if (m_mousePosition.y >= m_cameraManager.AvailableCameras[1].pixelRect.yMin)
+                        m_mouseSelectedCamera = m_cameraManager.AvailableCameras[1];
+                    else
+                        m_mouseSelectedCamera = m_cameraManager.AvailableCameras[0];
+                    break;
+                }
+                //TwoVertical
+                case 2:
+                {
+                    if (m_mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin)
+                        m_mouseSelectedCamera = m_cameraManager.AvailableCameras[1];
+                    else
+                        m_mouseSelectedCamera = m_cameraManager.AvailableCameras[0];
+                    break;
+                }
+                //FourSplit
+                case 3:
+                {
+                    if (m_mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin && m_mousePosition.y < m_cameraManager.AvailableCameras[3].pixelRect.yMin)
+                        m_mouseSelectedCamera = m_cameraManager.AvailableCameras[1];
+                    else if (m_mousePosition.x < m_cameraManager.AvailableCameras[1].pixelRect.xMin && m_mousePosition.y >= m_cameraManager.AvailableCameras[2].pixelRect.yMin)
+                        m_mouseSelectedCamera = m_cameraManager.AvailableCameras[2];
+                    else if (m_mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin && m_mousePosition.y >= m_cameraManager.AvailableCameras[3].pixelRect.yMin)
+                        m_mouseSelectedCamera = m_cameraManager.AvailableCameras[3];
+                    else
+                        m_mouseSelectedCamera = m_cameraManager.AvailableCameras[0];
+                    break;
+                }
+                default:
+                {
+                    m_mouseSelectedCamera = m_cameraManager.AvailableCameras[0];
+                    break;
+                }
+            }
         }
 
         private void GetMaxSideMovement()

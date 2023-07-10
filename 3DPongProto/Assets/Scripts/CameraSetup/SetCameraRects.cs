@@ -7,12 +7,6 @@ namespace ThreeDeePongProto.CameraSetup
     {
         private CameraManager m_cameraManager;
 
-        //'[SerializeField]s' moved to CamaeraManager
-        //[SerializeField] private Camera m_playerCam1;
-        //[SerializeField] private Camera m_playerCam2;
-        //[SerializeField] private Camera m_playerCam3;
-        //[SerializeField] private Camera m_playerCam4;
-
         private float m_fullWidthHor = 1.0f;
         private float m_fullHeightVer = 1.0f;
         private float m_halfHeightHor = 0.5f;
@@ -34,57 +28,53 @@ namespace ThreeDeePongProto.CameraSetup
             //Debug.Log(m_cameraManager.AvailableCameras[3]); //Old m_playerCam4
 
             UpdateFullsizeRect();
-            m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
 
-            if (m_cameraManager.AvailableCameras[2] != null && m_cameraManager.AvailableCameras[3] != null && m_lastSetCameraMode == (uint)ECameraModi.FourSplit)
-                SetFourSplit(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1], m_cameraManager.AvailableCameras[2], m_cameraManager.AvailableCameras[3]);
-            else if (m_cameraManager.AvailableCameras[1] != null && m_lastSetCameraMode == (uint)ECameraModi.TwoVertical)
-                SetCamerasVertical(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
-            else if (m_cameraManager.AvailableCameras[1] != null && m_lastSetCameraMode == (uint)ECameraModi.TwoHorizontal)
-                SetCamerasHorizontal(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
-            else
-                SetSingleCamera();
+            m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
+            SetCameraMode(m_lastSetCameraMode);
+        }
+
+        private void SetCameraMode(uint _cameraMode)
+        {
+            switch (_cameraMode)
+            {
+                case 0:
+                {
+                    SetSingleCamera();
+                    break; 
+                }
+                case 1:
+                {
+                    if (m_cameraManager.AvailableCameras[1] != null && m_lastSetCameraMode == (uint)ECameraModi.TwoHorizontal)
+                        SetCamerasHorizontal(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
+                    break; 
+                }
+                case 2:
+                {
+                    if (m_cameraManager.AvailableCameras[1] != null && m_lastSetCameraMode == (uint)ECameraModi.TwoVertical)
+                        SetCamerasVertical(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
+                    break; 
+                }
+                case 3:
+                {
+                    if (m_cameraManager.AvailableCameras[2] != null && m_cameraManager.AvailableCameras[3] != null && m_lastSetCameraMode == (uint)ECameraModi.FourSplit)
+                        SetFourSplit(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1], m_cameraManager.AvailableCameras[2], m_cameraManager.AvailableCameras[3]);
+                    break; 
+                }
+                default:
+                    m_lastSetCameraMode = (uint)ECameraModi.SingleCam;
+                    SetSingleCamera();
+                    break;
+            }
         }
 
         private void Update()
         {
             UpdateFullsizeRect();
 
-            if ((uint)GameManager.Instance.ECameraMode != m_lastSetCameraMode)
+            if (m_lastSetCameraMode != (uint)GameManager.Instance.ECameraMode)
             {
-                switch ((uint)GameManager.Instance.ECameraMode)
-                {
-                    case 0:
-                    {
-                        m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
-                        SetSingleCamera();
-                        break;
-                    }
-                    case 1:
-                    {
-                        m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
-                        SetCamerasHorizontal(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
-                        break;
-                    }
-                    case 2:
-                    {
-                        m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
-                        SetCamerasVertical(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
-                        break;
-                    }
-                    case 3:
-                    {
-                        m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
-                        //2 Camera should be always available. Up to 4 Cameras is just a mindplay until further changes.
-                        if (m_cameraManager.AvailableCameras[2] != null && m_cameraManager.AvailableCameras[3] != null)
-                            SetFourSplit(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1], m_cameraManager.AvailableCameras[2], m_cameraManager.AvailableCameras[3]);
-                        break;
-                    }
-                    default:
-                        m_lastSetCameraMode = (uint)ECameraModi.SingleCam;
-                        SetSingleCamera();
-                        break;
-                }
+                m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
+                SetCameraMode(m_lastSetCameraMode);
             }
         }
 

@@ -71,7 +71,7 @@ namespace ThreeDeePongProto.Managers
             //And additionally clear and update the separated Lists of Camera and Rects. (It's easier to do/follow, if we do it here.)
             UpdateSplittedCamRectLists();
 #if UNITY_EDITOR
-            Debug.Log("Adjustment in CameraManager: " + m_cameraRectDict[_keyCamera]);
+            //Debug.Log("Adjustment in CameraManager: " + m_cameraRectDict[_keyCamera]);
 #endif
         }
 
