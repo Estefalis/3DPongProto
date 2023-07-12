@@ -66,18 +66,9 @@ namespace ThreeDeePongProto.Player.Inputs
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""TurnMoveModuUneven"",
+                    ""name"": ""TurnMovement"",
                     ""type"": ""Value"",
                     ""id"": ""e97003bb-4773-4c8e-aecb-922c50060b22"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""TurnMoveModuEven"",
-                    ""type"": ""Value"",
-                    ""id"": ""d16ac77c-8227-4d99-acfc-03fc5c3e9f73"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -232,13 +223,13 @@ namespace ThreeDeePongProto.Player.Inputs
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""Turning"",
+                    ""name"": ""KeyboardKeys"",
                     ""id"": ""99196118-49ba-4601-ae59-9f99efba25d5"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""TurnMoveModuUneven"",
+                    ""action"": ""TurnMovement"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -249,7 +240,7 @@ namespace ThreeDeePongProto.Player.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""TurnMoveModuUneven"",
+                    ""action"": ""TurnMovement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -260,7 +251,7 @@ namespace ThreeDeePongProto.Player.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""TurnMoveModuUneven"",
+                    ""action"": ""TurnMovement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -271,7 +262,7 @@ namespace ThreeDeePongProto.Player.Inputs
                     ""interactions"": """",
                     ""processors"": ""StickDeadzone"",
                     ""groups"": """",
-                    ""action"": ""TurnMoveModuUneven"",
+                    ""action"": ""TurnMovement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -316,50 +307,6 @@ namespace ThreeDeePongProto.Player.Inputs
                     ""processors"": ""StickDeadzone"",
                     ""groups"": """",
                     ""action"": ""SideMoveModuEven"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""Turning"",
-                    ""id"": ""efac8c4e-ae5c-43db-a215-0ca9aa12b89e"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""TurnMoveModuEven"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""e2408596-e4c7-415c-9760-3168bd8249e3"",
-                    ""path"": ""<Keyboard>/rightShift"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""TurnMoveModuEven"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""01883edd-7551-4863-b0fb-f8a68b061217"",
-                    ""path"": ""<Keyboard>/numpad1"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""TurnMoveModuEven"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e0f32920-62c1-4021-aa57-15f833e8d310"",
-                    ""path"": ""<Gamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": ""StickDeadzone"",
-                    ""groups"": """",
-                    ""action"": ""TurnMoveModuEven"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -998,8 +945,7 @@ namespace ThreeDeePongProto.Player.Inputs
             m_PlayerActions_SideMoveModuEven = m_PlayerActions.FindAction("SideMoveModuEven", throwIfNotFound: true);
             m_PlayerActions_PushMoveModuUneven = m_PlayerActions.FindAction("PushMoveModuUneven", throwIfNotFound: true);
             m_PlayerActions_PushMoveModuEven = m_PlayerActions.FindAction("PushMoveModuEven", throwIfNotFound: true);
-            m_PlayerActions_TurnMoveModuUneven = m_PlayerActions.FindAction("TurnMoveModuUneven", throwIfNotFound: true);
-            m_PlayerActions_TurnMoveModuEven = m_PlayerActions.FindAction("TurnMoveModuEven", throwIfNotFound: true);
+            m_PlayerActions_TurnMovement = m_PlayerActions.FindAction("TurnMovement", throwIfNotFound: true);
             m_PlayerActions_ZoomModuUneven = m_PlayerActions.FindAction("ZoomModuUneven", throwIfNotFound: true);
             m_PlayerActions_ZoomModuEvenTODO = m_PlayerActions.FindAction("ZoomModuEvenTODO", throwIfNotFound: true);
             m_PlayerActions_ToggleGameMenu = m_PlayerActions.FindAction("ToggleGameMenu", throwIfNotFound: true);
@@ -1082,8 +1028,7 @@ namespace ThreeDeePongProto.Player.Inputs
         private readonly InputAction m_PlayerActions_SideMoveModuEven;
         private readonly InputAction m_PlayerActions_PushMoveModuUneven;
         private readonly InputAction m_PlayerActions_PushMoveModuEven;
-        private readonly InputAction m_PlayerActions_TurnMoveModuUneven;
-        private readonly InputAction m_PlayerActions_TurnMoveModuEven;
+        private readonly InputAction m_PlayerActions_TurnMovement;
         private readonly InputAction m_PlayerActions_ZoomModuUneven;
         private readonly InputAction m_PlayerActions_ZoomModuEvenTODO;
         private readonly InputAction m_PlayerActions_ToggleGameMenu;
@@ -1096,8 +1041,7 @@ namespace ThreeDeePongProto.Player.Inputs
             public InputAction @SideMoveModuEven => m_Wrapper.m_PlayerActions_SideMoveModuEven;
             public InputAction @PushMoveModuUneven => m_Wrapper.m_PlayerActions_PushMoveModuUneven;
             public InputAction @PushMoveModuEven => m_Wrapper.m_PlayerActions_PushMoveModuEven;
-            public InputAction @TurnMoveModuUneven => m_Wrapper.m_PlayerActions_TurnMoveModuUneven;
-            public InputAction @TurnMoveModuEven => m_Wrapper.m_PlayerActions_TurnMoveModuEven;
+            public InputAction @TurnMovement => m_Wrapper.m_PlayerActions_TurnMovement;
             public InputAction @ZoomModuUneven => m_Wrapper.m_PlayerActions_ZoomModuUneven;
             public InputAction @ZoomModuEvenTODO => m_Wrapper.m_PlayerActions_ZoomModuEvenTODO;
             public InputAction @ToggleGameMenu => m_Wrapper.m_PlayerActions_ToggleGameMenu;
@@ -1123,12 +1067,9 @@ namespace ThreeDeePongProto.Player.Inputs
                 @PushMoveModuEven.started += instance.OnPushMoveModuEven;
                 @PushMoveModuEven.performed += instance.OnPushMoveModuEven;
                 @PushMoveModuEven.canceled += instance.OnPushMoveModuEven;
-                @TurnMoveModuUneven.started += instance.OnTurnMoveModuUneven;
-                @TurnMoveModuUneven.performed += instance.OnTurnMoveModuUneven;
-                @TurnMoveModuUneven.canceled += instance.OnTurnMoveModuUneven;
-                @TurnMoveModuEven.started += instance.OnTurnMoveModuEven;
-                @TurnMoveModuEven.performed += instance.OnTurnMoveModuEven;
-                @TurnMoveModuEven.canceled += instance.OnTurnMoveModuEven;
+                @TurnMovement.started += instance.OnTurnMovement;
+                @TurnMovement.performed += instance.OnTurnMovement;
+                @TurnMovement.canceled += instance.OnTurnMovement;
                 @ZoomModuUneven.started += instance.OnZoomModuUneven;
                 @ZoomModuUneven.performed += instance.OnZoomModuUneven;
                 @ZoomModuUneven.canceled += instance.OnZoomModuUneven;
@@ -1157,12 +1098,9 @@ namespace ThreeDeePongProto.Player.Inputs
                 @PushMoveModuEven.started -= instance.OnPushMoveModuEven;
                 @PushMoveModuEven.performed -= instance.OnPushMoveModuEven;
                 @PushMoveModuEven.canceled -= instance.OnPushMoveModuEven;
-                @TurnMoveModuUneven.started -= instance.OnTurnMoveModuUneven;
-                @TurnMoveModuUneven.performed -= instance.OnTurnMoveModuUneven;
-                @TurnMoveModuUneven.canceled -= instance.OnTurnMoveModuUneven;
-                @TurnMoveModuEven.started -= instance.OnTurnMoveModuEven;
-                @TurnMoveModuEven.performed -= instance.OnTurnMoveModuEven;
-                @TurnMoveModuEven.canceled -= instance.OnTurnMoveModuEven;
+                @TurnMovement.started -= instance.OnTurnMovement;
+                @TurnMovement.performed -= instance.OnTurnMovement;
+                @TurnMovement.canceled -= instance.OnTurnMovement;
                 @ZoomModuUneven.started -= instance.OnZoomModuUneven;
                 @ZoomModuUneven.performed -= instance.OnZoomModuUneven;
                 @ZoomModuUneven.canceled -= instance.OnZoomModuUneven;
@@ -1324,8 +1262,7 @@ namespace ThreeDeePongProto.Player.Inputs
             void OnSideMoveModuEven(InputAction.CallbackContext context);
             void OnPushMoveModuUneven(InputAction.CallbackContext context);
             void OnPushMoveModuEven(InputAction.CallbackContext context);
-            void OnTurnMoveModuUneven(InputAction.CallbackContext context);
-            void OnTurnMoveModuEven(InputAction.CallbackContext context);
+            void OnTurnMovement(InputAction.CallbackContext context);
             void OnZoomModuUneven(InputAction.CallbackContext context);
             void OnZoomModuEvenTODO(InputAction.CallbackContext context);
             void OnToggleGameMenu(InputAction.CallbackContext context);

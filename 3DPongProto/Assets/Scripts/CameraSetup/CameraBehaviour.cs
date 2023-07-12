@@ -16,17 +16,15 @@ namespace ThreeDeePongProto.CameraSetup
         [SerializeField] private float m_maximalHeight;
         private float m_currentHeight, m_cameraZPos;
         private Vector3 m_cameraPosition;
-        //private float[] m_cameraHeightSlot = new float[4];
-        //TODO: Pro Kamera die jeweilige Höhe zwischen-/abspeichern, sobald man die Maus in das jeweilige Fenster hinein- und wieder herausbewegt.
 
         [Header("Smooth Following")]
         [SerializeField] private Rigidbody m_RbPlayer;
+        [SerializeField] private Camera m_ownPlayerCamera;
         [SerializeField] private bool m_enableOffset;
         [SerializeField] private Vector3 m_desiredOffset;
         [Range(1f, 20.0f)]
         [SerializeField] private float m_smoothfactor;
         private float m_maxSideMovement, m_directFollowVectorX;
-        private Camera m_ownPlayerCamera;
 
         [Header("Camera-Zoom")]
         [SerializeField, Min(0.001f)] private float m_zoomSpeed;
@@ -39,15 +37,14 @@ namespace ThreeDeePongProto.CameraSetup
 
         private void Awake()
         {
-            m_ownPlayerCamera = GetComponentInChildren<Camera>();
-            m_cameraManager = FindObjectOfType<CameraManager>();
-
             if (m_RbPlayer == null)
                 m_RbPlayer = GetComponent<Rigidbody>();
         }
 
         private void Start()
         {
+            m_cameraManager = FindObjectOfType<CameraManager>();
+
             GetMaxSideMovement();
 
             //CameraActions need to be in Start to prevent NullReferenceExceptions due to relation to the UserInputManager.
@@ -58,7 +55,7 @@ namespace ThreeDeePongProto.CameraSetup
             m_playerId = m_playerMovement.GetComponent<PlayerMovement>().PlayerId;
 
             //Saved vector to keep the playerCamera-startposition.
-            CameraPositions(m_ownPlayerCamera);
+            CameraPositions(m_cameraManager.AvailableCameras[(int)m_playerId]);
         }
 
         private void OnDisable()
@@ -89,9 +86,9 @@ namespace ThreeDeePongProto.CameraSetup
             UpdateZoomPosition();
         }
 
-        private void CameraPositions(Camera _thisCamera)
+        private void CameraPositions(Camera _camera)
         {
-            m_cameraPosition = -(_thisCamera.transform.localPosition - Vector3.zero);
+            m_cameraPosition = -(_camera.transform.localPosition - Vector3.zero);
             m_currentHeight = -m_cameraPosition.y;
             m_cameraZPos = m_cameraPosition.z;
             m_cameraPosition = new Vector3(m_cameraPosition.x, m_currentHeight, -m_cameraZPos);
@@ -165,9 +162,10 @@ namespace ThreeDeePongProto.CameraSetup
                         m_mouseSelectedCamera = m_cameraManager.AvailableCameras[0];
                         break;
                     }
+
                 }
 #if UNITY_EDITOR
-                Debug.Log(m_mouseSelectedCamera);
+                //Debug.Log(m_mouseSelectedCamera);
 #endif
             }
         }
@@ -216,28 +214,54 @@ namespace ThreeDeePongProto.CameraSetup
 
         private void UpdateZoomPosition()
         {
-            if (m_mouseSelectedCamera == m_ownPlayerCamera)
-            {
-                m_zoomTarget = new Vector3(m_mouseSelectedCamera.transform.localPosition.x, m_currentHeight, m_mouseSelectedCamera.transform.localPosition.z);
+            m_zoomTarget = new Vector3(m_ownPlayerCamera.transform.localPosition.x, m_currentHeight, m_ownPlayerCamera.transform.localPosition.z);
 
-                m_zoomTarget -= m_zoomStep * (m_currentHeight - m_mouseSelectedCamera.transform.localPosition.y) * Vector3.forward;
-                m_mouseSelectedCamera.transform.localPosition = Vector3.Lerp(m_mouseSelectedCamera.transform.localPosition, m_zoomTarget, Time.fixedDeltaTime * m_zoomDampening);
-            }
+            m_zoomTarget -= m_zoomStep * (m_currentHeight - m_ownPlayerCamera.transform.localPosition.y) * Vector3.forward;
+            m_ownPlayerCamera.transform.localPosition = Vector3.Lerp(m_ownPlayerCamera.transform.localPosition, m_zoomTarget, Time.fixedDeltaTime * m_zoomDampening);
         }
 
         private void Zooming(InputAction.CallbackContext _callbackContext)
         {
-            //TODO: Zoom-Funktion darauf beschraenken, dass es nur innerhalb des eigenen WindowRects je Camera funktioniert.)
-
-            float zoomValue = -_callbackContext.ReadValue<Vector2>().y * m_zoomSpeed;
-
-            if (Mathf.Abs(zoomValue) > 0.1f)
+            //Zooming limited to the inside of the gameWindow.
+            if (!(m_mousePosition.x < (m_cameraManager.RuntimeFullsizeRect.width - m_cameraManager.RuntimeFullsizeRect.width)) &&
+                !(m_mousePosition.x > m_cameraManager.RuntimeFullsizeRect.width) &&
+                !(m_mousePosition.y < (m_cameraManager.RuntimeFullsizeRect.height - m_cameraManager.RuntimeFullsizeRect.height)) &&
+                !(m_mousePosition.y > m_cameraManager.RuntimeFullsizeRect.height))
             {
-                m_currentHeight = m_mouseSelectedCamera.transform.localPosition.y + zoomValue * m_zoomStep;
-                if (m_currentHeight < m_lowestHeight)
-                    m_currentHeight = m_lowestHeight;
-                else if (m_currentHeight > m_maximalHeight)
-                    m_currentHeight = m_maximalHeight;
+                float zoomValue = -_callbackContext.ReadValue<Vector2>().y * m_zoomSpeed;
+
+                if (Mathf.Abs(zoomValue) > 0.1f)
+                {
+                    switch (m_mouseSelectedCamera.name)
+                    {
+                        case "PlayerCameraA":
+                        {
+                            m_ownPlayerCamera = m_cameraManager.AvailableCameras[0];
+                            break;
+                        }
+                        case "PlayerCameraB":
+                        {
+                            m_ownPlayerCamera = m_cameraManager.AvailableCameras[1];
+                            break;
+                        }
+                        case "CameraC":
+                        {
+                            m_ownPlayerCamera = m_cameraManager.AvailableCameras[2];
+                            break;
+                        }
+                        case "CameraD":
+                        {
+                            m_ownPlayerCamera = m_cameraManager.AvailableCameras[3];
+                            break;
+                        }
+                    }
+
+                    m_currentHeight = m_ownPlayerCamera.transform.localPosition.y + zoomValue * m_zoomStep;
+                    if (m_currentHeight < m_lowestHeight)
+                        m_currentHeight = m_lowestHeight;
+                    else if (m_currentHeight > m_maximalHeight)
+                        m_currentHeight = m_maximalHeight;
+                }
             }
         }
     }

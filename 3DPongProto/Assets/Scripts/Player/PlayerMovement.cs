@@ -78,8 +78,8 @@ namespace ThreeDeePongProto.Player.Inputs
 
         private void Update()
         {
-            m_axisRotPUneven = new Vector3(0, m_playerMovement.PlayerActions.TurnMoveModuUneven.ReadValue<Vector2>().x, 0);    //Modulo Uneven = Player1/Player3
-            m_axisRotPEven = new Vector3(0, m_playerMovement.PlayerActions.TurnMoveModuEven.ReadValue<Vector2>().x, 0);      //Modulo Even   = Player2/Player4
+            m_axisRotPUneven = new Vector3(0, m_playerMovement.PlayerActions.TurnMovement.ReadValue<Vector2>().x, 0);    //Modulo Uneven = Player1/Player3
+            m_axisRotPEven = new Vector3(0, m_playerMovement.PlayerActions.TurnMovement.ReadValue<Vector2>().x, 0);      //Modulo Even   = Player2/Player4
 
             //TODO: MUST be removed after testing is completed!!!___
             if (Keyboard.current.pKey.wasPressedThisFrame)
