@@ -19,7 +19,7 @@ namespace ThreeDeePongProto.CameraSetup
 
         [Header("Smooth Following")]
         [SerializeField] private Rigidbody m_RbPlayer;
-        [SerializeField] private Camera m_ownPlayerCamera;
+        [SerializeField] private Camera m_followCamera;
         [SerializeField] private bool m_enableOffset;
         [SerializeField] private Vector3 m_desiredOffset;
         [Range(1f, 20.0f)]
@@ -31,9 +31,10 @@ namespace ThreeDeePongProto.CameraSetup
         [SerializeField] private float m_zoomStep;
         [SerializeField] private float m_zoomDampening;
         private Vector3 m_mousePosition, m_zoomTarget;
-        private Camera m_mouseSelectedCamera;
+        //private Camera m_selectedCamera;
 
         private uint m_playerId;
+        private int m_playerWindowId;
 
         private void Awake()
         {
@@ -107,7 +108,7 @@ namespace ThreeDeePongProto.CameraSetup
                     //SingleCamera
                     case 0:
                     {
-                        m_mouseSelectedCamera = m_cameraManager.AvailableCameras[0];
+                        m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
                         break;
                     }
                     //TwoHorizontal
@@ -115,11 +116,11 @@ namespace ThreeDeePongProto.CameraSetup
                     {
                         if (m_mousePosition.y >= m_cameraManager.AvailableCameras[1].pixelRect.yMin)
                         {
-                            m_mouseSelectedCamera = m_cameraManager.AvailableCameras[1];
+                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1]);
                         }
                         else
                         {
-                            m_mouseSelectedCamera = m_cameraManager.AvailableCameras[0];
+                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
                         }
                         break;
                     }
@@ -128,11 +129,11 @@ namespace ThreeDeePongProto.CameraSetup
                     {
                         if (m_mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin)
                         {
-                            m_mouseSelectedCamera = m_cameraManager.AvailableCameras[1];
+                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1]);
                         }
                         else
                         {
-                            m_mouseSelectedCamera = m_cameraManager.AvailableCameras[0];
+                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
                         }
                         break;
                     }
@@ -141,31 +142,31 @@ namespace ThreeDeePongProto.CameraSetup
                     {
                         if (m_mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin && m_mousePosition.y < m_cameraManager.AvailableCameras[3].pixelRect.yMin)
                         {
-                            m_mouseSelectedCamera = m_cameraManager.AvailableCameras[1];
+                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1]);
                         }
                         else if (m_mousePosition.x < m_cameraManager.AvailableCameras[1].pixelRect.xMin && m_mousePosition.y >= m_cameraManager.AvailableCameras[2].pixelRect.yMin)
                         {
-                            m_mouseSelectedCamera = m_cameraManager.AvailableCameras[2];
+                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[2]);
                         }
                         else if (m_mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin && m_mousePosition.y >= m_cameraManager.AvailableCameras[3].pixelRect.yMin)
                         {
-                            m_mouseSelectedCamera = m_cameraManager.AvailableCameras[3];
+                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[3]);
                         }
                         else
                         {
-                            m_mouseSelectedCamera = m_cameraManager.AvailableCameras[0];
+                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
                         }
                         break;
                     }
                     default:
                     {
-                        m_mouseSelectedCamera = m_cameraManager.AvailableCameras[0];
+                        m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
                         break;
                     }
 
                 }
 #if UNITY_EDITOR
-                //Debug.Log(m_mouseSelectedCamera);
+                //Debug.Log("WindowId: " + m_playerWindowId);
 #endif
             }
         }
@@ -200,24 +201,24 @@ namespace ThreeDeePongProto.CameraSetup
             Vector3 desiredPosition = new Vector3(Mathf.Clamp(m_directFollowVectorX,
                 -m_maxSideMovement + (GameManager.Instance.PaddleWidthAdjustment * 0.5f),
                 m_maxSideMovement - (GameManager.Instance.PaddleWidthAdjustment * 0.5f)),
-                m_ownPlayerCamera.transform.position.y, m_ownPlayerCamera.transform.position.z);
+                m_followCamera.transform.position.y, m_followCamera.transform.position.z);
 
-            m_ownPlayerCamera.transform.position = desiredPosition;
+            m_followCamera.transform.position = desiredPosition;
         }
 
         private void FollowWithOffset()
         {
             Vector3 desiredPosition = m_RbPlayer.transform.localPosition + new Vector3(m_desiredOffset.x, m_desiredOffset.y, -m_desiredOffset.z);
-            Vector3 smoothedFollowing = Vector3.Lerp(m_ownPlayerCamera.transform.localPosition, desiredPosition, m_smoothfactor * Time.deltaTime);
-            m_ownPlayerCamera.transform.localPosition = smoothedFollowing;
+            Vector3 smoothedFollowing = Vector3.Lerp(m_followCamera.transform.localPosition, desiredPosition, m_smoothfactor * Time.deltaTime);
+            m_followCamera.transform.localPosition = smoothedFollowing;
         }
 
         private void UpdateZoomPosition()
         {
-            m_zoomTarget = new Vector3(m_ownPlayerCamera.transform.localPosition.x, m_currentHeight, m_ownPlayerCamera.transform.localPosition.z);
+            m_zoomTarget = new Vector3(m_followCamera.transform.localPosition.x, m_currentHeight, m_followCamera.transform.localPosition.z);
 
-            m_zoomTarget -= m_zoomStep * (m_currentHeight - m_ownPlayerCamera.transform.localPosition.y) * Vector3.forward;
-            m_ownPlayerCamera.transform.localPosition = Vector3.Lerp(m_ownPlayerCamera.transform.localPosition, m_zoomTarget, Time.fixedDeltaTime * m_zoomDampening);
+            m_zoomTarget -= m_zoomStep * (m_currentHeight - m_followCamera.transform.localPosition.y) * Vector3.forward;
+            m_followCamera.transform.localPosition = Vector3.Lerp(m_followCamera.transform.localPosition, m_zoomTarget, Time.fixedDeltaTime * m_zoomDampening);
         }
 
         private void Zooming(InputAction.CallbackContext _callbackContext)
@@ -232,31 +233,31 @@ namespace ThreeDeePongProto.CameraSetup
 
                 if (Mathf.Abs(zoomValue) > 0.1f)
                 {
-                    switch (m_mouseSelectedCamera.name)
+                    switch (m_playerWindowId)
                     {
-                        case "PlayerCameraA":
+                        case 0:
                         {
-                            m_ownPlayerCamera = m_cameraManager.AvailableCameras[0];
+                            m_followCamera = m_cameraManager.AvailableCameras[0];
                             break;
                         }
-                        case "PlayerCameraB":
+                        case 1:
                         {
-                            m_ownPlayerCamera = m_cameraManager.AvailableCameras[1];
+                            m_followCamera = m_cameraManager.AvailableCameras[1];
                             break;
                         }
-                        case "CameraC":
+                        case 2:
                         {
-                            m_ownPlayerCamera = m_cameraManager.AvailableCameras[2];
+                            m_followCamera = m_cameraManager.AvailableCameras[2];
                             break;
                         }
-                        case "CameraD":
+                        case 3:
                         {
-                            m_ownPlayerCamera = m_cameraManager.AvailableCameras[3];
+                            m_followCamera = m_cameraManager.AvailableCameras[3];
                             break;
                         }
                     }
 
-                    m_currentHeight = m_ownPlayerCamera.transform.localPosition.y + zoomValue * m_zoomStep;
+                    m_currentHeight = m_followCamera.transform.localPosition.y + zoomValue * m_zoomStep;
                     if (m_currentHeight < m_lowestHeight)
                         m_currentHeight = m_lowestHeight;
                     else if (m_currentHeight > m_maximalHeight)
