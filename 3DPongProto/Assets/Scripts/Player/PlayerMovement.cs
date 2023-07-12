@@ -212,7 +212,7 @@ namespace ThreeDeePongProto.Player.Inputs
 
                     //TODO: Limit rigidbodyMovement by PlayerID.
                     #region Mathf.MoveTowards
-                    if (m_playerId == 0)
+                    if (m_playerId == 0 || m_playerId == 2)
                     {
                         m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, endZPos = Mathf.MoveTowards(startZPos, endZPos, _moveDistance)) + m_rigidbody.transform.forward;
                         m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, endZPos);
@@ -257,7 +257,7 @@ namespace ThreeDeePongProto.Player.Inputs
 
                     //TODO: Limit rigidbodyMovement by PlayerID.
                     #region Mathf.MoveTowards
-                    if (m_playerId == 1)
+                    if (m_playerId == 1 || m_playerId == 3)
                     {
                         m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, endZPos = Mathf.MoveTowards(startZPos, endZPos, _moveDistance)) + m_rigidbody.transform.forward;
                         m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, endZPos);

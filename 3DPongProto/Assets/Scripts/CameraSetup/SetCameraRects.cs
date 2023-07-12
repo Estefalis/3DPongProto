@@ -12,7 +12,7 @@ namespace ThreeDeePongProto.CameraSetup
         private float m_halfHeightHor = 0.5f;
         private float m_halfWidthVer = 0.5f;
 
-        private Rect m_fullsizeRect;
+        //private Rect m_fullsizeRect; //Moved to CameraManager.
         private uint m_lastSetCameraMode;
 
         private void Awake()
@@ -88,25 +88,25 @@ namespace ThreeDeePongProto.CameraSetup
                 //SingleCamera
                 case 0:
                 {
-                    m_fullsizeRect = m_cameraManager.AvailableCameras[0].pixelRect;
+                    m_cameraManager.RuntimeFullsizeRect = m_cameraManager.AvailableCameras[0].pixelRect;
                     break;
                 }
                 //TwoHorizontal
                 case 1:
                 {
-                    m_fullsizeRect = new Rect(0, 0, m_cameraManager.AvailableCameras[0].pixelRect.width, m_cameraManager.AvailableCameras[0].pixelRect.height + m_cameraManager.AvailableCameras[1].pixelRect.height);
+                    m_cameraManager.RuntimeFullsizeRect = new Rect(0, 0, m_cameraManager.AvailableCameras[0].pixelRect.width, m_cameraManager.AvailableCameras[0].pixelRect.height + m_cameraManager.AvailableCameras[1].pixelRect.height);
                     break;
                 }
                 //TwoVertical
                 case 2:
                 {
-                    m_fullsizeRect = new Rect(0, 0, m_cameraManager.AvailableCameras[0].pixelRect.width + m_cameraManager.AvailableCameras[1].pixelRect.width, m_cameraManager.AvailableCameras[0].pixelRect.height);
+                    m_cameraManager.RuntimeFullsizeRect = new Rect(0, 0, m_cameraManager.AvailableCameras[0].pixelRect.width + m_cameraManager.AvailableCameras[1].pixelRect.width, m_cameraManager.AvailableCameras[0].pixelRect.height);
                     break;
                 }
                 //FourSplit
                 case 3:
                 {
-                    m_fullsizeRect = new Rect(0, 0, m_cameraManager.AvailableCameras[0].pixelRect.width + m_cameraManager.AvailableCameras[1].pixelRect.width, m_cameraManager.AvailableCameras[0].pixelRect.height + m_cameraManager.AvailableCameras[1].pixelRect.height);
+                    m_cameraManager.RuntimeFullsizeRect = new Rect(0, 0, m_cameraManager.AvailableCameras[0].pixelRect.width + m_cameraManager.AvailableCameras[1].pixelRect.width, m_cameraManager.AvailableCameras[0].pixelRect.height + m_cameraManager.AvailableCameras[1].pixelRect.height);
                     break;
                 }
             }
@@ -235,32 +235,32 @@ namespace ThreeDeePongProto.CameraSetup
 
         private void ResetViewportRects(Camera _camera1, Camera _camera2 = null, Camera _camera3 = null, Camera _camera4 = null)
         {
-            if (m_cameraManager.AvailableCameras[0].pixelRect != m_fullsizeRect)
+            if (m_cameraManager.AvailableCameras[0].pixelRect != m_cameraManager.RuntimeFullsizeRect)
             {
-                m_cameraManager.UpdateRectDimensions(m_cameraManager.AvailableCameras[0], m_fullsizeRect);
+                m_cameraManager.UpdateRectDimensions(m_cameraManager.AvailableCameras[0], m_cameraManager.RuntimeFullsizeRect);
             }
-            _camera1.pixelRect = m_fullsizeRect;
+            _camera1.pixelRect = m_cameraManager.RuntimeFullsizeRect;
 
-            if (m_cameraManager.AvailableCameras[1].pixelRect != m_fullsizeRect)
+            if (m_cameraManager.AvailableCameras[1].pixelRect != m_cameraManager.RuntimeFullsizeRect)
             {
-                m_cameraManager.UpdateRectDimensions(m_cameraManager.AvailableCameras[1], m_fullsizeRect);
+                m_cameraManager.UpdateRectDimensions(m_cameraManager.AvailableCameras[1], m_cameraManager.RuntimeFullsizeRect);
             }
             if (_camera2 != null)
-                _camera2.pixelRect = m_fullsizeRect;
+                _camera2.pixelRect = m_cameraManager.RuntimeFullsizeRect;
 
-            if (m_cameraManager.AvailableCameras[2].pixelRect != m_fullsizeRect)
+            if (m_cameraManager.AvailableCameras[2].pixelRect != m_cameraManager.RuntimeFullsizeRect)
             {
-                m_cameraManager.UpdateRectDimensions(m_cameraManager.AvailableCameras[2], m_fullsizeRect);
+                m_cameraManager.UpdateRectDimensions(m_cameraManager.AvailableCameras[2], m_cameraManager.RuntimeFullsizeRect);
             }
             if (_camera3 != null)
-                _camera3.pixelRect = m_fullsizeRect;
+                _camera3.pixelRect = m_cameraManager.RuntimeFullsizeRect;
 
-            if (m_cameraManager.AvailableCameras[3].pixelRect != m_fullsizeRect)
+            if (m_cameraManager.AvailableCameras[3].pixelRect != m_cameraManager.RuntimeFullsizeRect)
             {
-                m_cameraManager.UpdateRectDimensions(m_cameraManager.AvailableCameras[3], m_fullsizeRect);
+                m_cameraManager.UpdateRectDimensions(m_cameraManager.AvailableCameras[3], m_cameraManager.RuntimeFullsizeRect);
             }
             if (_camera4 != null)
-                m_cameraManager.AvailableCameras[3].pixelRect = m_fullsizeRect;
+                m_cameraManager.AvailableCameras[3].pixelRect = m_cameraManager.RuntimeFullsizeRect;
         }
     }
 }

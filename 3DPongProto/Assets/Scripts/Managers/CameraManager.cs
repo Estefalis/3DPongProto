@@ -14,8 +14,10 @@ namespace ThreeDeePongProto.Managers
         //public List<Camera> SeparatedDictCameras { get => m_dictCameras; }
         private List<Camera> m_dictCameras = new();
 
-        public List<Rect> SeparatedDictsRects { get => m_dictRects; }
+        //public List<Rect> SeparatedDictsRects { get => m_dictRects; }
         private List<Rect> m_dictRects = new();
+
+        public Rect RuntimeFullsizeRect { get; set; }
 
         private void Awake()
         {
@@ -38,10 +40,10 @@ namespace ThreeDeePongProto.Managers
             //Debug.Log("Dictionary Rect 2: " + m_cameraRectDict[m_availableCameras[2]]);
             //Debug.Log("Dictionary Rect 3: " + m_cameraRectDict[m_availableCameras[3]]);
 
-            //Debug.Log($"{m_dictCameras[0]} + {m_dictRects[0]}");
-            //Debug.Log($"{m_dictCameras[1]} + {m_dictRects[1]}");
-            //Debug.Log($"{m_dictCameras[2]} + {m_dictRects[2]}");
-            //Debug.Log($"{m_dictCameras[3]} + {m_dictRects[3]}");
+            //Debug.Log($"DictCamera 0 {m_dictCameras[0]} + DictRects 0 {m_dictRects[0]}");
+            //Debug.Log($"DictCamera 1 {m_dictCameras[1]} + DictRects 1 {m_dictRects[1]}");
+            //Debug.Log($"DictCamera 2 {m_dictCameras[2]} + DictRects 2 {m_dictRects[2]}");
+            //Debug.Log($"DictCamera 3 {m_dictCameras[3]} + DictRects 3 {m_dictRects[3]}");
         }
 #endif
 
@@ -63,6 +65,7 @@ namespace ThreeDeePongProto.Managers
         //Rect1(x:253.00, y:0.00,   width:253.00, height:142.50)  -  Halfsize width and fullsize height
         //Rect2(x:0.00,   y:142.50, width:253.00, height:142.50)  -  Halfsize width and halfsize height
         //Rect3(x:253.00, y:142.50, width:253.00, height:142.50)  -  Halfsize width and halfsize height
+        #endregion
 
         public void UpdateRectDimensions(Camera _keyCamera, Rect _newValueRect)
         {
@@ -89,7 +92,6 @@ namespace ThreeDeePongProto.Managers
                 m_dictRects.Add(rect);
             }
         }
-        #endregion
 
         //Methode-Variant of the public 'CameraRectDict'-property.
         //public Dictionary<Camera, Rect> GetDictionary()
