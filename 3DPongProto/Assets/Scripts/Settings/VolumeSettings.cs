@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using ThreeDeePongProto.Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -79,9 +78,9 @@ namespace ThreeDeePongProto.Settings
 
         private void Start()
         {
-            HandleMasterSliderValueChanges(m_volumeVariables.m_LatestMasterVolume);
-            HandleBGMSliderValueChanges(m_volumeVariables.m_LatestBGMVolume);
-            HandleSFXSliderValueChanges(m_volumeVariables.m_LatestSFXVolume);
+            HandleMasterSliderValueChanges(m_volumeVariables.LatestMasterVolume);
+            HandleBGMSliderValueChanges(m_volumeVariables.LatestBGMVolume);
+            HandleSFXSliderValueChanges(m_volumeVariables.LatestSFXVolume);
         }
 
         private void OnDisable()
@@ -137,7 +136,7 @@ namespace ThreeDeePongProto.Settings
 
             //Also save the new value in the ScriptableObject.
             if (m_sliderMaster.value > m_sliderMaster.minValue)
-                m_volumeVariables.m_LatestMasterVolume = _value;
+                m_volumeVariables.LatestMasterVolume = _value;
         }
 
         private void HandleBGMSliderValueChanges(float _value)
@@ -155,7 +154,7 @@ namespace ThreeDeePongProto.Settings
 
             //Also save the new value in the ScriptableObject.
             if (m_sliderBGM.value > m_sliderBGM.minValue)
-                m_volumeVariables.m_LatestBGMVolume = _value;
+                m_volumeVariables.LatestBGMVolume = _value;
         }
 
         private void HandleSFXSliderValueChanges(float _value)
@@ -173,7 +172,7 @@ namespace ThreeDeePongProto.Settings
 
             //Also save the new value in the ScriptableObject.
             if (m_sliderSFX.value > m_sliderSFX.minValue)
-                m_volumeVariables.m_LatestSFXVolume = _value;
+                m_volumeVariables.LatestSFXVolume = _value;
         }
         #endregion
         #region MuteChanges
@@ -186,7 +185,7 @@ namespace ThreeDeePongProto.Settings
             if (_mute)
             {
                 //Tempsave the corresponding SliderValue in a ScriptableObject.
-                m_volumeVariables.m_LatestMasterVolume = m_sliderMaster.value;
+                m_volumeVariables.LatestMasterVolume = m_sliderMaster.value;
                 //Set Sliders 'minValue' as new value.
                 m_sliderMaster.value = m_sliderMaster.minValue;
                 //Use the memberVariable to reduce the audioMixer-VolumeChannel by that amount.
@@ -194,7 +193,7 @@ namespace ThreeDeePongProto.Settings
             }
             else
             {
-                m_sliderMaster.value = m_volumeVariables.m_LatestMasterVolume;
+                m_sliderMaster.value = m_volumeVariables.LatestMasterVolume;
             }
         }
 
@@ -207,7 +206,7 @@ namespace ThreeDeePongProto.Settings
             if (_mute)
             {
                 //Tempsave the corresponding SliderValue in a ScriptableObject.
-                m_volumeVariables.m_LatestBGMVolume = m_sliderBGM.value;
+                m_volumeVariables.LatestBGMVolume = m_sliderBGM.value;
                 //Set Sliders 'minValue' as new value.
                 m_sliderBGM.value = m_sliderBGM.minValue;
                 //Use the memberVariable to reduce the audioMixer-VolumeChannel by that amount.
@@ -215,7 +214,7 @@ namespace ThreeDeePongProto.Settings
             }
             else
             {
-                m_sliderBGM.value = m_volumeVariables.m_LatestBGMVolume;
+                m_sliderBGM.value = m_volumeVariables.LatestBGMVolume;
             }
         }
 
@@ -228,7 +227,7 @@ namespace ThreeDeePongProto.Settings
             if (_mute)
             {
                 //Tempsave the corresponding SliderValue in a ScriptableObject.
-                m_volumeVariables.m_LatestSFXVolume = m_sliderSFX.value;
+                m_volumeVariables.LatestSFXVolume = m_sliderSFX.value;
                 //Set Sliders 'minValue' as new value.
                 m_sliderSFX.value = m_sliderSFX.minValue;
                 //Use the memberVariable to reduce the audioMixer-VolumeChannel by that amount.
@@ -236,7 +235,7 @@ namespace ThreeDeePongProto.Settings
             }
             else
             {
-                m_sliderSFX.value = m_volumeVariables.m_LatestSFXVolume;
+                m_sliderSFX.value = m_volumeVariables.LatestSFXVolume;
             }
         }
         #endregion

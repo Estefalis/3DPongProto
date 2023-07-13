@@ -25,7 +25,8 @@ namespace ThreeDeePongProto.Managers
             {
                 for (int i = 0; i < m_availableCameras.Count; i++)
                 {
-                    m_cameraRectDict.Add(m_availableCameras[i], m_availableCameras[i].pixelRect);
+                    if (!m_cameraRectDict.ContainsKey(m_availableCameras[i]))
+                        m_cameraRectDict.Add(m_availableCameras[i], m_availableCameras[i].pixelRect);
                 }
 
                 UpdateSplittedCamRectLists();
@@ -78,7 +79,7 @@ namespace ThreeDeePongProto.Managers
 #endif
         }
 
-        public void UpdateSplittedCamRectLists()
+        private void UpdateSplittedCamRectLists()
         {
             m_dictCameras.Clear();
             m_dictRects.Clear();

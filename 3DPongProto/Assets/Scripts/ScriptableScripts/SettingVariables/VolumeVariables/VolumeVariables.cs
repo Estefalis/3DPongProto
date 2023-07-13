@@ -6,7 +6,7 @@ using UnityEngine;
 public class VolumeVariables : ScriptableObject
 {
     [Header("Volume")]
-    public float m_LatestMasterVolume;
-    public float m_LatestBGMVolume;
-    public float m_LatestSFXVolume;
+    public float LatestMasterVolume;
+    public float LatestBGMVolume;
+    public float LatestSFXVolume;
 }

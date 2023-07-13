@@ -67,7 +67,7 @@ namespace ThreeDeePongProto.Settings
         public void SetActiveCameras()
         {
             GameManager.Instance.ECameraMode = (ECameraModi)m_screenSplitDropdown.value;
-            m_graphicVariables.m_ActiveCameraIndex = m_screenSplitDropdown.value;
+            m_graphicVariables.ActiveCameraIndex = m_screenSplitDropdown.value;
         }
 
         public void SetGraphicQuality(int _qualityIndex)
@@ -76,7 +76,7 @@ namespace ThreeDeePongProto.Settings
             m_qualityDropdown.value = _qualityIndex;
 
             if (m_graphicVariables != null)
-                m_graphicVariables.m_QualityLevel = _qualityIndex;
+                m_graphicVariables.QualityLevel = _qualityIndex;
         }
 
         public void SetResolution(int _resolutionIndex)
@@ -86,7 +86,7 @@ namespace ThreeDeePongProto.Settings
             m_resolutionDropdown.value = _resolutionIndex;
 
             if (m_graphicVariables != null)
-                m_graphicVariables.m_SelectedResolutionIndex = _resolutionIndex;
+                m_graphicVariables.SelectedResolutionIndex = _resolutionIndex;
         }
 
         public void SetFullscreen(bool _setFullscreen)
@@ -95,7 +95,7 @@ namespace ThreeDeePongProto.Settings
             m_fullscreenToggle.isOn = _setFullscreen;
 
             if (m_graphicVariables != null)
-                m_graphicVariables.m_ScreenMode = _setFullscreen;
+                m_graphicVariables.ScreenMode = _setFullscreen;
         }
     }
 }

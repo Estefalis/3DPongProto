@@ -6,8 +6,8 @@ using UnityEngine;
 public class GraphicVariables : ScriptableObject
 {
     [Header("Graphic")]
-    public int m_QualityLevel;
-    public int m_SelectedResolutionIndex;
-    public int m_ActiveCameraIndex;
-    public bool m_ScreenMode;
+    public int QualityLevel;
+    public int SelectedResolutionIndex;
+    public int ActiveCameraIndex;
+    public bool ScreenMode;
 }

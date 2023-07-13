@@ -18,6 +18,7 @@ namespace ThreeDeePongProto.CameraSetup
         private Vector3 m_cameraPosition;
 
         [Header("Smooth Following")]
+        [SerializeField] private PlayfieldVariables m_playfieldVariables;
         [SerializeField] private Rigidbody m_RbPlayer;
         [SerializeField] private Camera m_followCamera;
         [SerializeField] private bool m_enableOffset;
@@ -31,7 +32,6 @@ namespace ThreeDeePongProto.CameraSetup
         [SerializeField] private float m_zoomStep;
         [SerializeField] private float m_zoomDampening;
         private Vector3 m_mousePosition, m_zoomTarget;
-        //private Camera m_selectedCamera;
 
         private uint m_playerId;
         private int m_playerWindowId;
@@ -39,21 +39,21 @@ namespace ThreeDeePongProto.CameraSetup
         private void Awake()
         {
             if (m_RbPlayer == null)
-                m_RbPlayer = GetComponent<Rigidbody>();
+                m_RbPlayer = GetComponentInParent<Rigidbody>();
+            
+            m_playerId = m_playerMovement/*.GetComponent<PlayerMovement>()*/.PlayerId;
         }
 
         private void Start()
         {
             m_cameraManager = FindObjectOfType<CameraManager>();
 
-            GetMaxSideMovement();
+            MaxSideMovement();
 
             //CameraActions need to be in Start to prevent NullReferenceExceptions due to relation to the UserInputManager.
             m_cameraInputActions = UserInputManager.m_playerInputActions;
             m_cameraInputActions.Enable();
-            m_cameraInputActions.PlayerActions.ZoomModuUneven.performed += Zooming;
-
-            m_playerId = m_playerMovement.GetComponent<PlayerMovement>().PlayerId;
+            m_cameraInputActions.PlayerActions.Zoom.performed += Zooming;
 
             //Saved vector to keep the playerCamera-startposition.
             CameraPositions(m_cameraManager.AvailableCameras[(int)m_playerId]);
@@ -62,11 +62,12 @@ namespace ThreeDeePongProto.CameraSetup
         private void OnDisable()
         {
             m_cameraInputActions?.Disable();
-            m_cameraInputActions.PlayerActions.ZoomModuUneven.performed -= Zooming;
+            m_cameraInputActions.PlayerActions.Zoom.performed -= Zooming;
         }
 
         private void Update()
         {
+            MaxSideMovement();
             GetMousePosition();
 
             if (!m_enableOffset)
@@ -171,9 +172,9 @@ namespace ThreeDeePongProto.CameraSetup
             }
         }
 
-        private void GetMaxSideMovement()
+        private void MaxSideMovement()
         {
-            m_maxSideMovement = GameManager.Instance.MaxFieldWidth * 0.5f - m_RbPlayer.transform.localScale.x * 0.5f;
+            m_maxSideMovement = m_playfieldVariables.GroundWidth * 0.5f - m_RbPlayer.transform.localScale.x * 0.5f;
         }
 
         private void GetMousePosition()
@@ -232,32 +233,10 @@ namespace ThreeDeePongProto.CameraSetup
                 float zoomValue = -_callbackContext.ReadValue<Vector2>().y * m_zoomSpeed;
 
                 if (Mathf.Abs(zoomValue) > 0.1f)
-                {
-                    switch (m_playerWindowId)
-                    {
-                        case 0:
-                        {
-                            m_followCamera = m_cameraManager.AvailableCameras[0];
-                            break;
-                        }
-                        case 1:
-                        {
-                            m_followCamera = m_cameraManager.AvailableCameras[1];
-                            break;
-                        }
-                        case 2:
-                        {
-                            m_followCamera = m_cameraManager.AvailableCameras[2];
-                            break;
-                        }
-                        case 3:
-                        {
-                            m_followCamera = m_cameraManager.AvailableCameras[3];
-                            break;
-                        }
-                    }
-
+                {                    
+                    if(m_playerWindowId == m_playerId)
                     m_currentHeight = m_followCamera.transform.localPosition.y + zoomValue * m_zoomStep;
+
                     if (m_currentHeight < m_lowestHeight)
                         m_currentHeight = m_lowestHeight;
                     else if (m_currentHeight > m_maximalHeight)

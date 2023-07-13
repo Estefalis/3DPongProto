@@ -29,20 +29,20 @@ namespace ThreeDeePongProto.Managers
         [SerializeField] private bool m_gameIsPaused;
 
         #region GameSettings
-        public float MaxFieldWidth { get => m_maxFieldWidth; private set => m_maxFieldWidth = value; }
-        private float m_maxFieldWidth = 25.0f;  //Current Default until the FieldWidth gets set by SettingsOptions.
+        //public float MaxFieldWidth { get => m_maxFieldWidth; private set => m_maxFieldWidth = value; }
+        //private float m_maxFieldWidth = 25.0f;  //Current Default until the FieldWidth gets set by SettingsOptions.
 
-        public float MaxFieldLength { get => m_maxFieldLength; private set => m_maxFieldLength = value; }
-        private float m_maxFieldLength = 50.0f;  //Current Default until the FieldWidth gets set by SettingsOptions.
+        //public float MaxFieldLength { get => m_maxFieldLength; private set => m_maxFieldLength = value; }
+        //private float m_maxFieldLength = 50.0f;  //Current Default until the FieldWidth gets set by SettingsOptions.
 
         public float PaddleWidthAdjustment { get => m_paddleWidthAdjustment; private set => m_paddleWidthAdjustment = value; }
         private float m_paddleWidthAdjustment;
         #endregion
 
-        public void SetFieldWidth(float _fieldWidth)
-        {
-            m_maxFieldWidth = _fieldWidth;
-        }
+        //public void SetFieldWidth(float _fieldWidth)
+        //{
+        //    m_maxFieldWidth = _fieldWidth;
+        //}
 
         public void SetPaddleAdjustAmount(float _amount)
         {
