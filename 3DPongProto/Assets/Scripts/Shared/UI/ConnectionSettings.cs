@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using ThreeDeePongProto.Managers;
 
-namespace ThreeDeePongProto.UI
+namespace ThreeDeePongProto.Shared.UI
 {
     public class ConnectionSettings : MonoBehaviour
     {

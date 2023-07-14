@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ThreeDeePongProto.DayCircle
+namespace ThreeDeePongProto.Shared.DayCircle
 {
     [ExecuteAlways]
     public class LightingCircle : MonoBehaviour

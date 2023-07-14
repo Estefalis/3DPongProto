@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ThreeDeePongProto.Settings
+namespace ThreeDeePongProto.Shared.Settings
 {
     public class SharedSettings : MonoBehaviour
     {

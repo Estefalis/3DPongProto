@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ThreeDeePongProto.Settings
+namespace ThreeDeePongProto.Offline.Settings
 {
     public class GraphicSettings : MonoBehaviour
     {

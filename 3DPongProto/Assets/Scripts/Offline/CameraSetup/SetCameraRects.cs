@@ -1,7 +1,7 @@
 using UnityEngine;
 using ThreeDeePongProto.Managers;
 
-namespace ThreeDeePongProto.CameraSetup
+namespace ThreeDeePongProto.Offline.CameraSetup
 {
     public class SetCameraRects : MonoBehaviour
     {

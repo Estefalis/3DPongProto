@@ -1,9 +1,9 @@
 using ThreeDeePongProto.Managers;
-using ThreeDeePongProto.Player.Inputs;
+using ThreeDeePongProto.Offline.Player.Inputs;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace ThreeDeePongProto.CameraSetup
+namespace ThreeDeePongProto.Offline.CameraSetup
 {
     public class CameraBehaviour : MonoBehaviour
     {

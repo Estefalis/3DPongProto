@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ThreeDeePongProto.Managers
+namespace ThreeDeePongProto.Offline.CameraSetup
 {
     public class CameraManager : MonoBehaviour
     {

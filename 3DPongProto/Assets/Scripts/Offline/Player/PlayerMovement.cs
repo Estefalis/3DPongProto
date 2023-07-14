@@ -3,7 +3,7 @@ using ThreeDeePongProto.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace ThreeDeePongProto.Player.Inputs
+namespace ThreeDeePongProto.Offline.Player.Inputs
 {
     public class PlayerMovement : MonoBehaviour
     {

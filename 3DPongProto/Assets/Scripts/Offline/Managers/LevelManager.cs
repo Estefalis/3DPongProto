@@ -1,5 +1,3 @@
-//using System.Collections.Generic;
-//using ThreeDeePongProto.Player.Inputs;
 using UnityEngine;
 
 namespace ThreeDeePongProto.Managers
