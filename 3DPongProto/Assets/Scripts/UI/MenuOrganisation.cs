@@ -13,9 +13,10 @@ namespace ThreeDeePongProto.UI
     public class MenuOrganisation : MonoBehaviour
     {
         private PlayerInputActions m_menuActions;
-        [SerializeField] private string m_loadWinScene;
-        [SerializeField] private string m_loadMenuScene;
+        //[SerializeField] private string m_loadWinScene;
+        //[SerializeField] private string m_loadLoseScene;
         [SerializeField] private EventSystem m_eventSystem;
+        private readonly string m_startMenuScene = "StartMenuScene";
 
         #region Select First Elements by using the EventSystem.
         // The stack of active (Transform-)elements for menu-navigation needs to have a Start-Transform to prevent an error. It gets set active in 'Awake()'.
@@ -63,7 +64,7 @@ namespace ThreeDeePongProto.UI
 
         private void EnableNavigation(InputAction.CallbackContext _callbackContext)
         {
-            if (!m_firstElement.gameObject.activeInHierarchy && !m_keyTransform[1].gameObject.activeInHierarchy)
+            if (!m_firstElement.gameObject.activeInHierarchy)
             {
                 m_firstElement.gameObject.SetActive(true);
             }
@@ -74,6 +75,7 @@ namespace ThreeDeePongProto.UI
             ResetPauseAndTimescale();
             //UserInputManager.ResetPauseAndTimescale();
             m_firstElement.gameObject.SetActive(false);
+            UserInputManager.ToggleActionMaps(UserInputManager.m_playerInputActions.PlayerActions);
         }
 
         private void SetUIElements()
@@ -94,21 +96,25 @@ namespace ThreeDeePongProto.UI
 
         public void RestartLevel()
         {
-            UserInputManager.ResetPauseAndTimescale();
+            ResetPauseAndTimescale();
+            //UserInputManager.ResetPauseAndTimescale();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            UserInputManager.ToggleActionMaps(UserInputManager.m_playerInputActions.PlayerActions);
         }
 
         public void ReturnToMainScene()
         {
-            UserInputManager.ResetPauseAndTimescale();
+            ResetPauseAndTimescale();
+            //UserInputManager.ResetPauseAndTimescale();
 
-            if (m_loadMenuScene != null || m_loadMenuScene != string.Empty)
-                if (GameManager.Instance.EGameConnectionModi == EGameModi.LocalPC)
-                    SceneManager.LoadScene(m_loadMenuScene);
+            if (m_startMenuScene == "StartMenuScene" && GameManager.Instance.EGameConnectionModi == EGameModi.LocalPC)
+                SceneManager.LoadScene(m_startMenuScene);
+            else
+                Debug.Log("Der SzenenName ist nicht mehr aktuell. Bitte aktualisieren! Danke~.");   /*Ggf. SzenenName eingeben lassen.*/
             //TODO: Also disconnect from Network in Online-Seasons.
         }
 
-        public void QuitGame()
+        public void QuitGameIngame()
         {
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
@@ -153,15 +159,15 @@ namespace ThreeDeePongProto.UI
         protected void SetFirstElement(Transform _firstElement)
         {
             m_activeElement.Push(_firstElement);
-            if (SceneManager.GetActiveScene().name == m_loadMenuScene)
-                _firstElement.gameObject.SetActive(true);
+            //if (SceneManager.GetActiveScene().name == m_startMenuScene)
+                //_firstElement.gameObject.SetActive(true);
         }
 
-        protected void ResetFirstElement()
-        {
-            m_activeElement.Clear();
-            m_activeElement.Push(m_firstElement);
-        }
+        //protected void ResetFirstElement()
+        //{
+        //    m_activeElement.Clear();
+        //    m_activeElement.Push(m_firstElement);
+        //}
         #endregion
 
         /// <summary>

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 098c7a5f2f4e3764f98c7038595239f0, type: 3}
   m_Name: GraphicAndCamera
   m_EditorClassIdentifier: 
-  m_QualityLevel: 1
-  m_SelectedResolutionIndex: 3
-  m_ScreenMode: 1
+  QualityLevel: 0
+  SelectedResolutionIndex: 7
+  ActiveCameraIndex: 0
+  ScreenMode: 1

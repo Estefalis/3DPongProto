@@ -5,9 +5,11 @@ using ThreeDeePongProto.Managers;
 
 namespace ThreeDeePongProto.UI
 {
-    public class MainMenuButtonActions : MonoBehaviour
+    public class ConnectionSettings : MonoBehaviour
     {
-        [SerializeField] private string m_loadNextScene;
+        [SerializeField] private string m_localGameScene = "LocalGameScene";
+        //[SerializeField] private string m_lanScene = "LanScene";
+        //[SerializeField] private string m_internetScene = "InternetScene";
         [SerializeField] private Button[] m_modiButtons;
 
         public void SetGameModi(Button _sender)
@@ -34,7 +36,7 @@ namespace ThreeDeePongProto.UI
 
         public void StartLocalGame()
         {
-            SceneManager.LoadScene(m_loadNextScene);
+            SceneManager.LoadScene(m_localGameScene);
         }
 
         public void StartLanGame()

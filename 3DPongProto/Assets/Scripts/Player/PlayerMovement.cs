@@ -31,11 +31,11 @@ namespace ThreeDeePongProto.Player.Inputs
         [SerializeField] private float m_minGoalDistance;
         [SerializeField] private float m_delayRetreat;
         [SerializeField] private float m_delayRepetition;
-        [SerializeField] private bool m_enablePushRestriction = false;
+        [SerializeField] private bool m_enablePushDelay = false;
 
         private bool m_pushPlayerOne = false;
         private bool m_pushPlayerTwo = false;
-        private bool m_pushesRestricted = false;
+        private bool m_tempNotBlocked = false;
         private IEnumerator m_paddleOneCoroutine, m_paddleTwoCoroutine;
 
         private void Awake()
@@ -63,6 +63,10 @@ namespace ThreeDeePongProto.Player.Inputs
             m_playerMovement = UserInputManager.m_playerInputActions;
             m_playerMovement.PlayerActions.Enable();
             m_playerMovement.PlayerActions.ToggleGameMenu.performed += ToggleMenu;
+            m_playerMovement.PlayerActions.PushMoveModuUneven.performed += PushInputFirstPlayer;
+            m_playerMovement.PlayerActions.PushMoveModuUneven.canceled += CanceledInputFirstPlayer;
+            m_playerMovement.PlayerActions.PushMoveModuEven.performed += PushInputSecondPlayer;
+            m_playerMovement.PlayerActions.PushMoveModuEven.canceled += CanceledInputSecondPlayer;
 
             if (m_paddleOneCoroutine != null)
                 StartCoroutine(m_paddleOneCoroutine);
@@ -74,6 +78,10 @@ namespace ThreeDeePongProto.Player.Inputs
         {
             m_playerMovement.PlayerActions.Disable();
             m_playerMovement.PlayerActions.ToggleGameMenu.performed -= ToggleMenu;
+            m_playerMovement.PlayerActions.PushMoveModuUneven.performed -= PushInputFirstPlayer;
+            m_playerMovement.PlayerActions.PushMoveModuUneven.canceled -= CanceledInputFirstPlayer;
+            m_playerMovement.PlayerActions.PushMoveModuEven.performed -= PushInputSecondPlayer;
+            m_playerMovement.PlayerActions.PushMoveModuEven.canceled -= CanceledInputSecondPlayer;
 
             StopAllCoroutines();
         }
@@ -97,17 +105,6 @@ namespace ThreeDeePongProto.Player.Inputs
                 GameManager.Instance.SetPaddleAdjustAmount(-0.5f);
             }
             //______________________________________________________
-
-
-            if (Keyboard.current.wKey.wasPressedThisFrame && !m_pushesRestricted)
-            {
-                m_pushPlayerOne = true;
-            }
-
-            if (Keyboard.current.upArrowKey.wasPressedThisFrame && !m_pushesRestricted)
-            {
-                m_pushPlayerTwo = true;
-            }
         }
 
         private void FixedUpdate()
@@ -213,7 +210,6 @@ namespace ThreeDeePongProto.Player.Inputs
                 {
                     currentTime += Time.deltaTime;
 
-                    //TODO: Limit rigidbodyMovement by PlayerID.
                     #region Mathf.MoveTowards
                     if (m_playerId == 0 || m_playerId == 2)
                     {
@@ -228,12 +224,12 @@ namespace ThreeDeePongProto.Player.Inputs
 
                         #region Nested Coroutine
                         //Coroutine to restrict paddleForwardMovement by a certain amount of time.
-                        if (m_enablePushRestriction)
+                        if (m_enablePushDelay)
                         {
-                            m_pushesRestricted = true;
+                            m_tempNotBlocked = true;
                             Coroutine pushRestriction = StartCoroutine(RestrictPushZero());
                             yield return pushRestriction;
-                            m_pushesRestricted = false;
+                            m_tempNotBlocked = false;
                         }
                         #endregion
                     }
@@ -258,7 +254,6 @@ namespace ThreeDeePongProto.Player.Inputs
                 {
                     currentTime += Time.deltaTime;
 
-                    //TODO: Limit rigidbodyMovement by PlayerID.
                     #region Mathf.MoveTowards
                     if (m_playerId == 1 || m_playerId == 3)
                     {
@@ -273,12 +268,12 @@ namespace ThreeDeePongProto.Player.Inputs
 
                         #region Nested Coroutine
                         //Coroutine to restrict paddleForwardMovement by a certain amount of time.
-                        if (m_enablePushRestriction)
+                        if (m_enablePushDelay)
                         {
-                            m_pushesRestricted = true;
+                            m_tempNotBlocked = true;
                             Coroutine pushRestriction = StartCoroutine(RestrictPushOne());
                             yield return pushRestriction;
-                            m_pushesRestricted = false;
+                            m_tempNotBlocked = false;
                         }
                         #endregion
                     }
@@ -314,8 +309,42 @@ namespace ThreeDeePongProto.Player.Inputs
         }
         #endregion
 
+        #region PlayerOne CallbackContexts
+        private void PushInputFirstPlayer(InputAction.CallbackContext _callbackContext)
+        {
+            if (!m_tempNotBlocked)
+            {
+                //'ReadValueAsButton()' is only available inside these CallbackContext-Methods.
+                m_pushPlayerOne = _callbackContext.ReadValueAsButton();
+            }
+        }
+
+        private void CanceledInputFirstPlayer(InputAction.CallbackContext _callbackContext)
+        {
+            m_pushPlayerOne = false;
+        }
+        #endregion
+
+        #region #region PlayerTwo CallbackContexts
+        private void PushInputSecondPlayer(InputAction.CallbackContext _callbackContext)
+        {
+            if (!m_tempNotBlocked)
+            {
+                //'ReadValueAsButton()' is only available inside these CallbackContext-Methods.
+                m_pushPlayerTwo = _callbackContext.ReadValueAsButton();
+            }
+        }
+
+        private void CanceledInputSecondPlayer(InputAction.CallbackContext _callbackContext)
+        {
+            m_pushPlayerTwo = false;
+        }
+        #endregion
+
         private void ToggleMenu(InputAction.CallbackContext _callbackContext)
         {
+            StopAllCoroutines();
+
             if (!GameManager.Instance.GameIsPaused && UserInputManager.m_playerInputActions.PlayerActions.enabled)
             {
                 Time.timeScale = 0f;
