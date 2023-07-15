@@ -1,5 +1,6 @@
 using System.Collections;
 using ThreeDeePongProto.Managers;
+using ThreeDeePongProto.Offline.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -68,10 +69,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             m_playerMovement.PlayerActions.PushMoveModuEven.performed += PushInputSecondPlayer;
             m_playerMovement.PlayerActions.PushMoveModuEven.canceled += CanceledInputSecondPlayer;
 
-            if (m_paddleOneCoroutine != null)
-                StartCoroutine(m_paddleOneCoroutine);
-            if (m_paddleTwoCoroutine != null)
-                StartCoroutine(m_paddleTwoCoroutine);
+            StartPlayerCoroutines();
+            MenuOrganisation.GameMenuCloses += StartPlayerCoroutines;
         }
 
         private void OnDisable()
@@ -84,6 +83,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             m_playerMovement.PlayerActions.PushMoveModuEven.canceled -= CanceledInputSecondPlayer;
 
             StopAllCoroutines();
+            MenuOrganisation.GameMenuCloses -= StartPlayerCoroutines;
         }
 
         private void Update()
@@ -351,6 +351,14 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
                 GameManager.Instance.GameIsPaused = true;
                 UserInputManager.ToggleActionMaps(UserInputManager.m_playerInputActions.UI);
             }
+        }
+
+        private void StartPlayerCoroutines()
+        {
+            if (m_paddleOneCoroutine != null)
+                StartCoroutine(m_paddleOneCoroutine);
+            if (m_paddleTwoCoroutine != null)
+                StartCoroutine(m_paddleTwoCoroutine);
         }
     }
 }

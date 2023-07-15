@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
-using ThreeDeePongProto.Offline.Player.Inputs;
 using ThreeDeePongProto.Managers;
+using ThreeDeePongProto.Offline.Player.Inputs;
 
 namespace ThreeDeePongProto.Offline.UI
 {
@@ -41,6 +41,13 @@ namespace ThreeDeePongProto.Offline.UI
         [SerializeField] private Transform[] m_subPageTransforms;
         #endregion
 
+        public static event Action GameMenuCloses;
+
+        private void Awake()
+        {
+            SetUIElements();
+        }
+
         /// <summary>
         /// PlayerMovement and UIControls need to be moved into 'Start()' and the PlayerInputActions of the UserInputManager into 'Awake()', to prevent Exceptions.
         /// </summary>
@@ -57,25 +64,13 @@ namespace ThreeDeePongProto.Offline.UI
             m_menuActions.PlayerActions.ToggleGameMenu.performed -= EnableNavigation;
         }
 
-        private void Awake()
-        {
-            SetUIElements();
-        }
-
         private void EnableNavigation(InputAction.CallbackContext _callbackContext)
         {
             if (!m_firstElement.gameObject.activeInHierarchy)
             {
                 m_firstElement.gameObject.SetActive(true);
+                SetSelectedElement(m_firstElement);
             }
-        }
-
-        public void ResumeGame()
-        {
-            ResetPauseAndTimescale();
-            //UserInputManager.ResetPauseAndTimescale();
-            m_firstElement.gameObject.SetActive(false);
-            UserInputManager.ToggleActionMaps(UserInputManager.m_playerInputActions.PlayerActions);
         }
 
         private void SetUIElements()
@@ -88,16 +83,20 @@ namespace ThreeDeePongProto.Offline.UI
             SetSelectedElement(m_firstElement);
         }
 
-        private void ResetPauseAndTimescale()
+        public void ResumeGame()
         {
-            Time.timeScale = 1f;
-            GameManager.Instance.GameIsPaused = false;
+            ResetPauseAndTimescale();
+            //UserInputManager.ResetPauseAndTimescale();
+            GameMenuCloses?.Invoke();
+            m_firstElement.gameObject.SetActive(false);
+            UserInputManager.ToggleActionMaps(UserInputManager.m_playerInputActions.PlayerActions);
         }
 
         public void RestartLevel()
         {
             ResetPauseAndTimescale();
             //UserInputManager.ResetPauseAndTimescale();
+            GameMenuCloses?.Invoke();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             UserInputManager.ToggleActionMaps(UserInputManager.m_playerInputActions.PlayerActions);
         }
@@ -112,6 +111,12 @@ namespace ThreeDeePongProto.Offline.UI
             else
                 Debug.Log("Der SzenenName ist nicht mehr aktuell. Bitte aktualisieren! Danke~.");   /*Ggf. SzenenName eingeben lassen.*/
             //TODO: Also disconnect from Network in Online-Seasons.
+        }
+
+        private void ResetPauseAndTimescale()
+        {
+            Time.timeScale = 1f;
+            GameManager.Instance.GameIsPaused = false;
         }
 
         public void QuitGameIngame()
