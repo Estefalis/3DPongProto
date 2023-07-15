@@ -30,10 +30,11 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         //PushDistance for 'Mathf.MoveTowards'.
         [SerializeField] private float m_maxPushDistance;
         [SerializeField] private float m_minGoalDistance;
+        [SerializeField] private float m_lerpDuration;
         [SerializeField] private float m_delayRetreat;
         [SerializeField] private float m_delayRepetition;
         [SerializeField] private bool m_enablePushDelay = false;
-
+                
         private bool m_pushPlayerOne = false;
         private bool m_pushPlayerTwo = false;
         private bool m_tempNotBlocked = false;
@@ -192,7 +193,15 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             m_rigidbody.MoveRotation(m_rigidbody.rotation * m_deltaRotation);
         }
 
-        #region IEnumerators
+        #region IEnumerators - Coroutines
+        private void StartPlayerCoroutines()
+        {
+            if (m_paddleOneCoroutine != null)
+                StartCoroutine(m_paddleOneCoroutine);
+            if (m_paddleTwoCoroutine != null)
+                StartCoroutine(m_paddleTwoCoroutine);
+        }
+
         /// <summary>
         /// MoveForthAndBack handles forward- and backwardPushes of the playerPaddle.
         /// '_moveDistance' also works as maximal Time in the whileLoop, but could be replaced with a fix floatAmount.
@@ -201,6 +210,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         private IEnumerator PushPaddleOne(float _moveDistance)
         {
             float currentTime = 0;
+
             float startZPos = m_rigidbody.transform.localPosition.z;
             float endZPos = m_rigidbody.transform.localPosition.z - -_moveDistance;
 
@@ -210,7 +220,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
                 {
                     currentTime += Time.deltaTime;
 
-                    #region Mathf.MoveTowards
+                    #region zFloat Mathf.MoveTowards
                     if (m_playerId == 0 || m_playerId == 2)
                     {
                         m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, endZPos = Mathf.MoveTowards(startZPos, endZPos, _moveDistance)) + m_rigidbody.transform.forward;
@@ -254,7 +264,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
                 {
                     currentTime += Time.deltaTime;
 
-                    #region Mathf.MoveTowards
+                    #region zFloat Mathf.MoveTowards
                     if (m_playerId == 1 || m_playerId == 3)
                     {
                         m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, endZPos = Mathf.MoveTowards(startZPos, endZPos, _moveDistance)) + m_rigidbody.transform.forward;
@@ -325,7 +335,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         }
         #endregion
 
-        #region #region PlayerTwo CallbackContexts
+        #region PlayerTwo CallbackContexts
         private void PushInputSecondPlayer(InputAction.CallbackContext _callbackContext)
         {
             if (!m_tempNotBlocked)
@@ -351,14 +361,6 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
                 GameManager.Instance.GameIsPaused = true;
                 UserInputManager.ToggleActionMaps(UserInputManager.m_playerInputActions.UI);
             }
-        }
-
-        private void StartPlayerCoroutines()
-        {
-            if (m_paddleOneCoroutine != null)
-                StartCoroutine(m_paddleOneCoroutine);
-            if (m_paddleTwoCoroutine != null)
-                StartCoroutine(m_paddleTwoCoroutine);
         }
     }
 }

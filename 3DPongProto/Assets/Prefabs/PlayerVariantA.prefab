@@ -69,9 +69,25 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6673783636466660463, guid: 783feb4697821a043931bae4b63b27b7,
         type: 3}
+      propertyPath: m_enableOffset
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6673783636466660463, guid: 783feb4697821a043931bae4b63b27b7,
+        type: 3}
       propertyPath: m_followCamera
       value: 
       objectReference: {fileID: 1143006865406562293}
+    - target: {fileID: 6673783636466660463, guid: 783feb4697821a043931bae4b63b27b7,
+        type: 3}
+      propertyPath: m_smoothfactor
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6673783636466660463, guid: 783feb4697821a043931bae4b63b27b7,
+        type: 3}
+      propertyPath: m_playfieldVariables
+      value: 
+      objectReference: {fileID: 11400000, guid: e8965173f2180a642ab17cdfdade39ee,
+        type: 2}
     - target: {fileID: 6673783637509275386, guid: 783feb4697821a043931bae4b63b27b7,
         type: 3}
       propertyPath: m_Name

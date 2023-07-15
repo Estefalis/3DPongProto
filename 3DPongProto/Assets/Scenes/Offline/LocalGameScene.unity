@@ -1400,6 +1400,7 @@ MonoBehaviour:
   m_localPaddleScale: {x: 3.5, y: 1, z: 0.5}
   m_maxPushDistance: 1.5
   m_minGoalDistance: 3.5
+  m_lerpDuration: 0
   m_delayRetreat: 0.1
   m_delayRepetition: 1.5
   m_enablePushDelay: 0
@@ -1867,12 +1868,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 589839930171080835, guid: 4343b137e3ea7c54ca00b070a5412312,
-        type: 3}
-      propertyPath: m_playfieldVariables
-      value: 
-      objectReference: {fileID: 11400000, guid: e8965173f2180a642ab17cdfdade39ee,
-        type: 2}
     - target: {fileID: 589839930643274322, guid: 4343b137e3ea7c54ca00b070a5412312,
         type: 3}
       propertyPath: m_Name
@@ -2306,6 +2301,7 @@ MonoBehaviour:
   m_localPaddleScale: {x: 3.5, y: 1, z: 0.5}
   m_maxPushDistance: 1.5
   m_minGoalDistance: 3.5
+  m_lerpDuration: 1
   m_delayRetreat: 0.1
   m_delayRepetition: 1.5
   m_enablePushDelay: 0
@@ -2562,12 +2558,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerVariantA
       objectReference: {fileID: 0}
-    - target: {fileID: 1143006866515756388, guid: b0402eef9d089b84ea8dc01ae94c65f6,
+    - target: {fileID: 3443984312207903960, guid: b0402eef9d089b84ea8dc01ae94c65f6,
         type: 3}
-      propertyPath: m_playfieldVariables
-      value: 
-      objectReference: {fileID: 11400000, guid: e8965173f2180a642ab17cdfdade39ee,
-        type: 2}
+      propertyPath: m_lerpDuration
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3443984312207903960, guid: b0402eef9d089b84ea8dc01ae94c65f6,
         type: 3}
       propertyPath: m_enablePushDelay
@@ -2609,7 +2604,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4dfdbae8d3538449a9e1837dd917bff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_eCameraMode: 1
+  m_eCameraMode: 0
   eGameConnectionMode: 0
   m_gameIsPaused: 0
 --- !u!4 &1618325686

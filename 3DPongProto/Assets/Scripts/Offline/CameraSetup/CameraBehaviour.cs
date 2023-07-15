@@ -188,6 +188,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void FollowDirectly()
         {
+            //TODO: FollowDirectly dahingehend ändern, dass es 'FollowWithOffset' mit stark gesenktem Smmothfactor entspricht.
             switch (m_playerId % 2 == 0)
             {
                 case true:
