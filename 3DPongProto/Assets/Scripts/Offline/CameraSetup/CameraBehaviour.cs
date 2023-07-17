@@ -21,11 +21,11 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         [SerializeField] private PlayfieldVariables m_playfieldVariables;
         [SerializeField] private Rigidbody m_RbPlayer;
         [SerializeField] private Camera m_followCamera;
-        [SerializeField] private bool m_enableOffset;
+        [SerializeField] private bool m_enableSmoothFollow;
         [SerializeField] private Vector3 m_desiredOffset;
-        [Range(1f, 20.0f)]
+        [Range(1.0f, 30.0f)]
         [SerializeField] private float m_smoothfactor;
-        private float m_maxSideMovement, m_directFollowVectorX;
+        private float m_maxSideMovement;
 
         [Header("Camera-Zoom")]
         [SerializeField, Min(0.001f)] private float m_zoomSpeed;
@@ -70,19 +70,19 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             MaxSideMovement();
             GetMousePosition();
 
-            if (!m_enableOffset)
-            {
-                FollowDirectly();
-            }
-
             SelectCameraToZoom();
         }
 
         private void FixedUpdate()
         {
-            if (m_enableOffset)
+            if (!m_enableSmoothFollow)
             {
-                FollowWithOffset();
+                FollowUnsmoothed();
+            }
+
+            if (m_enableSmoothFollow)
+            {
+                FollowSmoothly();
             }
 
             UpdateZoomPosition();
@@ -186,32 +186,19 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 #endif
         }
 
-        private void FollowDirectly()
+        private void FollowUnsmoothed()
         {
-            //TODO: FollowDirectly dahingehend ändern, dass es 'FollowWithOffset' mit stark gesenktem Smmothfactor entspricht.
-            switch (m_playerId % 2 == 0)
-            {
-                case true:
-                    m_directFollowVectorX = m_RbPlayer.transform.localPosition.x;
-                    break;
-                case false:
-                    m_directFollowVectorX = -m_RbPlayer.transform.localPosition.x;
-                    break;
-            }
-
-            //m_cameraTransform.position.z MUST NOT be localPosition, or the Camera2-Position flickers between + and - Z-Values.
-            Vector3 desiredPosition = new Vector3(Mathf.Clamp(m_directFollowVectorX,
-                -m_maxSideMovement + (GameManager.Instance.PaddleWidthAdjustment * 0.5f),
-                m_maxSideMovement - (GameManager.Instance.PaddleWidthAdjustment * 0.5f)),
-                m_followCamera.transform.position.y, m_followCamera.transform.position.z);
-
-            m_followCamera.transform.position = desiredPosition;
+            //Follows directly in xPosition, but the visible push looks buggy, if not lerped.
+            Vector3 desiredPosition = new Vector3(m_RbPlayer.transform.localPosition.x/* + m_desiredOffset.x*/, m_RbPlayer.transform.localPosition.y + m_desiredOffset.y, m_RbPlayer.transform.localPosition.z + -m_desiredOffset.z);
+            Vector3 smoothedFollowing = Vector3.Lerp(m_followCamera.transform.localPosition, desiredPosition, Mathf.Max(m_smoothfactor, 30.0f) * Time.fixedDeltaTime);
+            //m_followCamera.transform.localPosition = desiredPosition;
+            m_followCamera.transform.localPosition = smoothedFollowing;
         }
 
-        private void FollowWithOffset()
+        private void FollowSmoothly()
         {
             Vector3 desiredPosition = m_RbPlayer.transform.localPosition + new Vector3(m_desiredOffset.x, m_desiredOffset.y, -m_desiredOffset.z);
-            Vector3 smoothedFollowing = Vector3.Lerp(m_followCamera.transform.localPosition, desiredPosition, m_smoothfactor * Time.deltaTime);
+            Vector3 smoothedFollowing = Vector3.Lerp(m_followCamera.transform.localPosition, desiredPosition, m_smoothfactor * Time.fixedDeltaTime);
             m_followCamera.transform.localPosition = smoothedFollowing;
         }
 

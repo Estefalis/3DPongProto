@@ -2238,7 +2238,7 @@ MonoBehaviour:
     type: 2}
   m_RbPlayer: {fileID: 845527698}
   m_followCamera: {fileID: 646256016}
-  m_enableOffset: 0
+  m_enableSmoothFollow: 0
   m_desiredOffset: {x: 0, y: 2.5, z: 7.5}
   m_smoothfactor: 7.5
   m_zoomSpeed: 0.001
@@ -2557,6 +2557,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayerVariantA
+      objectReference: {fileID: 0}
+    - target: {fileID: 1143006866515756388, guid: b0402eef9d089b84ea8dc01ae94c65f6,
+        type: 3}
+      propertyPath: m_enableOffset
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3443984312207903960, guid: b0402eef9d089b84ea8dc01ae94c65f6,
         type: 3}
@@ -4613,7 +4618,7 @@ MonoBehaviour:
     type: 2}
   m_RbPlayer: {fileID: 490459509}
   m_followCamera: {fileID: 2009713561}
-  m_enableOffset: 0
+  m_enableSmoothFollow: 0
   m_desiredOffset: {x: 0, y: 2.5, z: 7.5}
   m_smoothfactor: 7.5
   m_zoomSpeed: 0.001
