@@ -58,7 +58,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         }
 
         /// <summary>
-        /// Methode zum Wechsel der ActionMaps. Solange die uebergebene ActionMap dieselbe ist, passiert nichts.
+        /// Switches ActionMaps, if the active actionMap isn't equal to the submitted one. But does not disable the old actionMaps!
         /// </summary>
         /// <param name="_actionMap"></param>
         #region Action-Maps

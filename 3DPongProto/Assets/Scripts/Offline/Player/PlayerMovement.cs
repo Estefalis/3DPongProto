@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using ThreeDeePongProto.Managers;
 using ThreeDeePongProto.Offline.UI;
@@ -40,6 +41,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         private bool m_tempBlocked = false;
         private IEnumerator m_paddleOneCoroutine, m_paddleTwoCoroutine;
 
+        public static event Action InGameMenuOpens;
+
         private void Awake()
         {
             if (m_rigidbody == null)
@@ -67,8 +70,9 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             m_playerMovement.PlayerActions.PushMoveModuEven.performed += PushInputSecondPlayer;
             m_playerMovement.PlayerActions.PushMoveModuEven.canceled += CanceledInputSecondPlayer;
 
-            StartPlayerCoroutines();
-            MenuOrganisation.GameMenuCloses += StartPlayerCoroutines;
+            StartCoroutinesAndActions();
+            MenuOrganisation.InGameMenuCloses += StartCoroutinesAndActions;
+            InGameMenuOpens += StopGameActions;
         }
 
         private void OnDisable()
@@ -81,7 +85,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             m_playerMovement.PlayerActions.PushMoveModuEven.canceled -= CanceledInputSecondPlayer;
 
             StopAllCoroutines();
-            MenuOrganisation.GameMenuCloses -= StartPlayerCoroutines;
+            MenuOrganisation.InGameMenuCloses -= StartCoroutinesAndActions;
+            InGameMenuOpens -= StopGameActions;
         }
 
         private void Update()
@@ -194,12 +199,14 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         }
 
         #region IEnumerators - Coroutines
-        private void StartPlayerCoroutines()
+        private void StartCoroutinesAndActions()
         {
             if (m_paddleOneCoroutine != null)
                 StartCoroutine(m_paddleOneCoroutine);
             if (m_paddleTwoCoroutine != null)
                 StartCoroutine(m_paddleTwoCoroutine);
+
+            m_playerMovement.PlayerActions.Enable();
         }
 
         /// <summary>
@@ -359,14 +366,19 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         private void ToggleMenu(InputAction.CallbackContext _callbackContext)
         {
-            StopAllCoroutines();
-
-            if (!GameManager.Instance.GameIsPaused && UserInputManager.m_playerInputActions.PlayerActions.enabled)
+            if (!GameManager.Instance.GameIsPaused && m_playerMovement.PlayerActions.enabled)
             {
-                Time.timeScale = 0f;
-                GameManager.Instance.GameIsPaused = true;
+                InGameMenuOpens?.Invoke();
                 UserInputManager.ToggleActionMaps(UserInputManager.m_playerInputActions.UI);
             }
+        }
+
+        private void StopGameActions()
+        {
+            StopAllCoroutines();
+            Time.timeScale = 0f;
+            GameManager.Instance.GameIsPaused = true;
+            m_playerMovement.PlayerActions.Disable();
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using ThreeDeePongProto.Managers;
 using ThreeDeePongProto.Offline.Player.Inputs;
 using UnityEngine;
@@ -40,7 +41,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         {
             if (m_RbPlayer == null)
                 m_RbPlayer = GetComponentInParent<Rigidbody>();
-            
+
             m_playerId = m_playerMovement/*.GetComponent<PlayerMovement>()*/.PlayerId;
         }
 
@@ -204,10 +205,14 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void UpdateZoomPosition()
         {
-            m_zoomTarget = new Vector3(m_followCamera.transform.localPosition.x, m_currentHeight, m_followCamera.transform.localPosition.z);
+            //The 'zoomTarget' and 'm_currentHeight' shall only change, while the PlayerMovement in the 'PlayerActions' is enabled.
+            if (m_cameraInputActions.PlayerActions.enabled)
+            {
+                m_zoomTarget = new Vector3(m_followCamera.transform.localPosition.x, m_currentHeight, m_followCamera.transform.localPosition.z);
 
-            m_zoomTarget -= m_zoomStep * (m_currentHeight - m_followCamera.transform.localPosition.y) * Vector3.forward;
-            m_followCamera.transform.localPosition = Vector3.Lerp(m_followCamera.transform.localPosition, m_zoomTarget, Time.fixedDeltaTime * m_zoomDampening);
+                m_zoomTarget -= m_zoomStep * (m_currentHeight - m_followCamera.transform.localPosition.y) * Vector3.forward;
+                m_followCamera.transform.localPosition = Vector3.Lerp(m_followCamera.transform.localPosition, m_zoomTarget, Time.fixedDeltaTime * m_zoomDampening);
+            }
         }
 
         private void Zooming(InputAction.CallbackContext _callbackContext)
@@ -221,9 +226,9 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                 float zoomValue = -_callbackContext.ReadValue<Vector2>().y * m_zoomSpeed;
 
                 if (Mathf.Abs(zoomValue) > 0.1f)
-                {                    
-                    if(m_playerWindowId == m_playerId)
-                    m_currentHeight = m_followCamera.transform.localPosition.y + zoomValue * m_zoomStep;
+                {
+                    if (m_playerWindowId == m_playerId)
+                        m_currentHeight = m_followCamera.transform.localPosition.y + zoomValue * m_zoomStep;
 
                     if (m_currentHeight < m_lowestHeight)
                         m_currentHeight = m_lowestHeight;

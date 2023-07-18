@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fab2af534f7ffba42b2b034d273631ca, type: 3}
-  m_Name: Volume Variables
+  m_Name: VolumeVariables
   m_EditorClassIdentifier: 
   LatestMasterVolume: 1
   LatestBGMVolume: 0.9

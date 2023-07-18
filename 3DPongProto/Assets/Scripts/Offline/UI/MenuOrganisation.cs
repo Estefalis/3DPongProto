@@ -41,7 +41,7 @@ namespace ThreeDeePongProto.Offline.UI
         [SerializeField] private Transform[] m_subPageTransforms;
         #endregion
 
-        public static event Action GameMenuCloses;
+        public static event Action InGameMenuCloses;
 
         private void Awake()
         {
@@ -87,7 +87,7 @@ namespace ThreeDeePongProto.Offline.UI
         {
             ResetPauseAndTimescale();
             //UserInputManager.ResetPauseAndTimescale();
-            GameMenuCloses?.Invoke();
+            InGameMenuCloses?.Invoke();
             m_firstElement.gameObject.SetActive(false);
             UserInputManager.ToggleActionMaps(UserInputManager.m_playerInputActions.PlayerActions);
         }
@@ -96,7 +96,7 @@ namespace ThreeDeePongProto.Offline.UI
         {
             ResetPauseAndTimescale();
             //UserInputManager.ResetPauseAndTimescale();
-            GameMenuCloses?.Invoke();
+            InGameMenuCloses?.Invoke();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             UserInputManager.ToggleActionMaps(UserInputManager.m_playerInputActions.PlayerActions);
         }

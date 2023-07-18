@@ -22994,9 +22994,10 @@ MonoBehaviour:
   m_roundsDropdown: {fileID: 7764365727681392023}
   m_unlimitPoints: {fileID: 7764365727289266066}
   m_maxPointsDropdown: {fileID: 7764365726503239927}
-  m_rounds: 5
+  m_defaultRoundAmount: 5
   m_maxRoundPoints: 25
   m_matchVariables: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
+  m_defaultMatchVariables: {fileID: 0}
 --- !u!1 &7764365727910049044
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,8 +6,8 @@ using UnityEngine;
 public class MatchVariables : ScriptableObject
 {
     [Header("Round-Details")]
-    public uint LastRoundIndex;
-    public uint LastMaxPointIndex;
+    public int LastRoundIndex;
+    public int LastMaxPointIndex;
 
     [Header("Playfield-Dimensions")]
     public float GroundWidth;

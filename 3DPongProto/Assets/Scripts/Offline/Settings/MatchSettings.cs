@@ -12,10 +12,11 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private Toggle m_unlimitPoints;
         [SerializeField] private TMP_Dropdown m_maxPointsDropdown;
 
-        [SerializeField] private uint m_rounds = 5;
-        [SerializeField] private uint m_maxRoundPoints = 25;
+        [SerializeField] private int m_defaultRoundAmount;
+        [SerializeField] private int m_maxRoundPoints;
 
         [SerializeField] private MatchVariables m_matchVariables;
+        [SerializeField] private MatchVariables m_defaultMatchVariables;
 
         private void Awake()
         {
@@ -28,13 +29,14 @@ namespace ThreeDeePongProto.Offline.Settings
             m_roundsDropdown.ClearOptions();
             List<string> rounds = new List<string>();
 
-            for (uint i = 1; i < m_rounds + 1; i++)
+            for (int i = 1; i < m_defaultRoundAmount + 1; i++)
             {
                 rounds.Add(i.ToString());
             }
 
             m_roundsDropdown.AddOptions(rounds);
-            m_roundsDropdown.value = (int)m_rounds;
+            //m_roundsDropdown.value = m_defaultRoundAmount;
+            SetIntDropdownValues(m_roundsDropdown, m_defaultRoundAmount);
             m_roundsDropdown.RefreshShownValue();
         }
 
@@ -43,15 +45,21 @@ namespace ThreeDeePongProto.Offline.Settings
             m_maxPointsDropdown.ClearOptions();
             List<string> maxPoints = new List<string>();
 
-            for (uint i = 1; i < m_maxRoundPoints + 1; i++)
+            for (int i = 1; i < m_maxRoundPoints + 1; i++)
             {
-                //'m_maxPointsDropdown.options.Add (new Dropdown.OptionData() { text = variable });' in foreach loops.
+                //'m_maxPointsDropdown.options.Add (new Dropdown.OptionData() { text = variable });' in foreach-loops.
                 maxPoints.Add(i.ToString());
             }
 
             m_maxPointsDropdown.AddOptions(maxPoints);
-            m_maxPointsDropdown.value = (int)m_maxRoundPoints;
+            //m_maxPointsDropdown.value = m_maxRoundPoints;
+            SetIntDropdownValues(m_maxPointsDropdown, m_maxRoundPoints);
             m_maxPointsDropdown.RefreshShownValue();
+        }
+
+        private void SetIntDropdownValues(TMP_Dropdown _dropdown, int _value)
+        {
+            _dropdown.value = _value;
         }
 
         /// <summary>
@@ -61,7 +69,7 @@ namespace ThreeDeePongProto.Offline.Settings
         public void SetRoundAmount(int _roundIndex)
         {
             m_roundsDropdown.value = _roundIndex;
-            m_matchVariables.LastRoundIndex = (uint)m_roundsDropdown.value;
+            m_matchVariables.LastRoundIndex = _roundIndex;
         }
 
         /// <summary>
@@ -71,7 +79,7 @@ namespace ThreeDeePongProto.Offline.Settings
         public void SetMaxPoints(int _maxPointIndex)
         {
             m_maxPointsDropdown.value = _maxPointIndex;
-            m_matchVariables.LastMaxPointIndex = (uint)m_maxPointsDropdown.value;
+            m_matchVariables.LastMaxPointIndex = _maxPointIndex;
         }
     }
 }
