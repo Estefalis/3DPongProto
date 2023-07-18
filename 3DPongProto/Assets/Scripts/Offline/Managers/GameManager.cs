@@ -27,15 +27,5 @@ namespace ThreeDeePongProto.Managers
 
         public bool GameIsPaused { get => m_gameIsPaused; set { m_gameIsPaused = value; } }
         [SerializeField] private bool m_gameIsPaused;
-
-        #region GameSettings
-        public float PaddleWidthAdjustment { get => m_paddleWidthAdjustment; private set => m_paddleWidthAdjustment = value; }
-        private float m_paddleWidthAdjustment;
-        #endregion
-
-        public void SetPaddleAdjustAmount(float _amount)
-        {
-            m_paddleWidthAdjustment += _amount;
-        }
     }
 }

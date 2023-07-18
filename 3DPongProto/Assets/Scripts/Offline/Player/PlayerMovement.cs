@@ -15,7 +15,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         [SerializeField] private Rigidbody m_rigidbody;
 
         [Header("Side-Movement")]
-        [SerializeField] private PlayfieldVariables m_playfieldVariables;
+        [SerializeField] private MatchVariables m_matchVariables;
         [SerializeField] private float m_movementSpeed;
         [SerializeField] private float m_rotationSpeed, m_maxRotationAngle;
         private float m_maxSideMovement;
@@ -30,21 +30,18 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         //PushDistance for 'Mathf.MoveTowards'.
         [SerializeField] private float m_maxPushDistance;
         [SerializeField] private float m_minGoalDistance;
-        [SerializeField] private float m_lerpDuration;
         [SerializeField] private float m_delayRetreat;
         [SerializeField] private float m_delayRepetition;
         [SerializeField] private bool m_enablePushDelay = false;
-                
+        [SerializeField] private bool m_blockPushInput;
+
         private bool m_pushPlayerOne = false;
         private bool m_pushPlayerTwo = false;
-        private bool m_tempNotBlocked = false;
+        private bool m_tempBlocked = false;
         private IEnumerator m_paddleOneCoroutine, m_paddleTwoCoroutine;
 
         private void Awake()
         {
-            //Adjustment of the paddleWidth for ingame power ups and debuffs.
-            GameManager.Instance.SetPaddleAdjustAmount(m_startWidthAdjustment);
-
             if (m_rigidbody == null)
             {
                 m_rigidbody = GetComponentInChildren<Rigidbody>();
@@ -54,7 +51,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             m_paddleOneCoroutine = PushPaddleOne(m_maxPushDistance);
             m_paddleTwoCoroutine = PushPaddleTwo(m_maxPushDistance);
 
-            m_maxSideMovement = m_playfieldVariables.GroundWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
+            m_maxSideMovement = m_matchVariables.GroundWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
         }
 
         /// <summary>
@@ -98,12 +95,14 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             //TODO: MUST be removed after testing is completed!!!___
             if (Keyboard.current.pKey.wasPressedThisFrame)
             {
-                GameManager.Instance.SetPaddleAdjustAmount(0.5f);
+                if (m_matchVariables != null)
+                    m_matchVariables.PaddleWidthAdjustment += 0.25f;
             }
 
             if (Keyboard.current.pKey.wasReleasedThisFrame)
             {
-                GameManager.Instance.SetPaddleAdjustAmount(-0.5f);
+                if (m_matchVariables != null)
+                    m_matchVariables.PaddleWidthAdjustment -= 0.25f;
             }
             //______________________________________________________
         }
@@ -120,13 +119,14 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         /// </summary>
         public void ClampMoveRange()
         {
-            m_maxSideMovement = m_playfieldVariables.GroundWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
+            m_maxSideMovement = m_matchVariables.GroundWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
 
-            m_rigidbody.transform.localScale = new Vector3(m_localPaddleScale.x + GameManager.Instance.PaddleWidthAdjustment, m_localPaddleScale.y, m_localPaddleScale.z);
+            if (m_matchVariables != null)
+                m_rigidbody.transform.localScale = new Vector3(m_localPaddleScale.x + m_matchVariables.PaddleWidthAdjustment, m_localPaddleScale.y, m_localPaddleScale.z);
 
             m_rigidbody.transform.localPosition = new Vector3(Mathf.Clamp(m_rigidbody.transform.localPosition.x, -m_maxSideMovement, m_maxSideMovement),
                 m_rigidbody.transform.localPosition.y,
-                Mathf.Clamp(m_rigidbody.transform.localPosition.z, -m_playfieldVariables.GroundLength * 0.5f - -m_minGoalDistance, -m_playfieldVariables.GroundLength * 0.5f - -(m_minGoalDistance + m_maxPushDistance)));
+                Mathf.Clamp(m_rigidbody.transform.localPosition.z, -m_matchVariables.GroundLength * 0.5f - -m_minGoalDistance, -m_matchVariables.GroundLength * 0.5f - -(m_minGoalDistance + m_maxPushDistance)));
         }
 
         /// <summary>
@@ -236,10 +236,10 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
                         //Coroutine to restrict paddleForwardMovement by a certain amount of time.
                         if (m_enablePushDelay)
                         {
-                            m_tempNotBlocked = true;
+                            m_tempBlocked = true;
                             Coroutine pushRestriction = StartCoroutine(RestrictPushZero());
                             yield return pushRestriction;
-                            m_tempNotBlocked = false;
+                            m_tempBlocked = false;
                         }
                         #endregion
                     }
@@ -280,10 +280,10 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
                         //Coroutine to restrict paddleForwardMovement by a certain amount of time.
                         if (m_enablePushDelay)
                         {
-                            m_tempNotBlocked = true;
+                            m_tempBlocked = true;
                             Coroutine pushRestriction = StartCoroutine(RestrictPushOne());
                             yield return pushRestriction;
-                            m_tempNotBlocked = false;
+                            m_tempBlocked = false;
                         }
                         #endregion
                     }
@@ -322,10 +322,13 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         #region PlayerOne CallbackContexts
         private void PushInputFirstPlayer(InputAction.CallbackContext _callbackContext)
         {
-            if (!m_tempNotBlocked)
+            if (!m_blockPushInput)
             {
-                //'ReadValueAsButton()' is only available inside these CallbackContext-Methods.
-                m_pushPlayerOne = _callbackContext.ReadValueAsButton();
+                if (!m_tempBlocked)
+                {
+                    //'ReadValueAsButton()' is only available inside these CallbackContext-Methods.
+                    m_pushPlayerOne = _callbackContext.ReadValueAsButton();
+                }
             }
         }
 
@@ -338,10 +341,13 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         #region PlayerTwo CallbackContexts
         private void PushInputSecondPlayer(InputAction.CallbackContext _callbackContext)
         {
-            if (!m_tempNotBlocked)
+            if (!m_blockPushInput)
             {
-                //'ReadValueAsButton()' is only available inside these CallbackContext-Methods.
-                m_pushPlayerTwo = _callbackContext.ReadValueAsButton();
+                if (!m_tempBlocked)
+                {
+                    //'ReadValueAsButton()' is only available inside these CallbackContext-Methods.
+                    m_pushPlayerTwo = _callbackContext.ReadValueAsButton();
+                }
             }
         }
 

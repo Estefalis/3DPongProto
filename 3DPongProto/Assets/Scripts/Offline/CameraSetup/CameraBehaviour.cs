@@ -18,7 +18,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private Vector3 m_cameraPosition;
 
         [Header("Smooth Following")]
-        [SerializeField] private PlayfieldVariables m_playfieldVariables;
+        [SerializeField] private MatchVariables m_matchVariables;
         [SerializeField] private Rigidbody m_RbPlayer;
         [SerializeField] private Camera m_followCamera;
         [SerializeField] private bool m_enableSmoothFollow;
@@ -174,7 +174,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void MaxSideMovement()
         {
-            m_maxSideMovement = m_playfieldVariables.GroundWidth * 0.5f - m_RbPlayer.transform.localScale.x * 0.5f;
+            m_maxSideMovement = m_matchVariables.GroundWidth * 0.5f - m_RbPlayer.transform.localScale.x * 0.5f;
         }
 
         private void GetMousePosition()

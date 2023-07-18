@@ -449,18 +449,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd81c5f1a66210a4e88940c96120be22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1394232750 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1348851186166137656, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-    type: 3}
-  m_PrefabInstance: {fileID: 1348851186268754285}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8da2c558ed6364144990e6fbc7872677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1655706969
 GameObject:
   m_ObjectHideFlags: 0
@@ -508,12 +496,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!224 &1779109464 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 359642130326684238, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-    type: 3}
-  m_PrefabInstance: {fileID: 1348851186268754285}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1805932205
 GameObject:
   m_ObjectHideFlags: 0
@@ -610,66 +592,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 359642129575677645, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1394232750}
-    - target: {fileID: 359642129575677645, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetButtonAlpha
-      objectReference: {fileID: 0}
-    - target: {fileID: 359642129823474239, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1394232750}
-    - target: {fileID: 359642129823474239, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetButtonAlpha
-      objectReference: {fileID: 0}
-    - target: {fileID: 359642130766882662, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1394232750}
-    - target: {fileID: 359642130766882662, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetButtonAlpha
-      objectReference: {fileID: 0}
-    - target: {fileID: 359642130790674967, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1394232750}
-    - target: {fileID: 359642130790674967, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetButtonAlpha
-      objectReference: {fileID: 0}
-    - target: {fileID: 359642131538913259, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1394232750}
-    - target: {fileID: 359642131538913259, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetButtonAlpha
-      objectReference: {fileID: 0}
-    - target: {fileID: 1348851185501308948, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ThreeDeePongProto.UI.ConnectionSettings, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 1348851185661843122, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
-      value: 
-      objectReference: {fileID: 1779109464}
     - target: {fileID: 1348851186166137635, guid: aa14b37a3cb54fc42a599a1e795cabf7,
         type: 3}
       propertyPath: m_Name

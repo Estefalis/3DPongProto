@@ -816,7 +816,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1348851186166137656}
         m_TargetAssemblyTypeName: ThreeDeePongProto.UI.MenuOrganisation, Assembly-CSharp
         m_MethodName: SetButtonAlpha
         m_Mode: 2
@@ -2886,7 +2886,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1348851186166137656}
         m_TargetAssemblyTypeName: ThreeDeePongProto.UI.MenuOrganisation, Assembly-CSharp
         m_MethodName: SetButtonAlpha
         m_Mode: 2
@@ -11929,7 +11929,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1348851186166137656}
         m_TargetAssemblyTypeName: ThreeDeePongProto.UI.MenuOrganisation, Assembly-CSharp
         m_MethodName: SetButtonAlpha
         m_Mode: 2
@@ -12424,7 +12424,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1348851186166137656}
         m_TargetAssemblyTypeName: ThreeDeePongProto.UI.MenuOrganisation, Assembly-CSharp
         m_MethodName: SetButtonAlpha
         m_Mode: 2
@@ -19940,7 +19940,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1348851186166137656}
         m_TargetAssemblyTypeName: ThreeDeePongProto.UI.MenuOrganisation, Assembly-CSharp
         m_MethodName: SetButtonAlpha
         m_Mode: 2
@@ -28418,7 +28418,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1348851186166137657}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Menu.Actions.MenuActions, Assembly-CSharp
+        m_TargetAssemblyTypeName: ThreeDeePongProto.UI.ConnectionSettings, Assembly-CSharp
         m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
@@ -29652,7 +29652,7 @@ MonoBehaviour:
         m_MethodName: NextElement
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgument: {fileID: 359642130326684238}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -32808,7 +32808,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7296dca01bc7b40459970cc2a31aab34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_loadNextScene: LocalGameScene
+  m_localGameScene: LocalGameScene
   m_modiButtons:
   - {fileID: 1348851186528675014}
   - {fileID: 1348851184668552445}
@@ -32825,7 +32825,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8da2c558ed6364144990e6fbc7872677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_loadMenuScene: 
   m_eventSystem: {fileID: 0}
   m_firstElement: {fileID: 1348851186693439613}
   m_keyTransform:
