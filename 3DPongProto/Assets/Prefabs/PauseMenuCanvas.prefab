@@ -5572,8 +5572,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 35
+  m_fontSizeBase: 35
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -9546,7 +9546,7 @@ GameObject:
   - component: {fileID: 7764365726503239926}
   - component: {fileID: 7764365726503239927}
   m_Layer: 5
-  m_Name: SetMaxPointsDropdown
+  m_Name: MaxPointsDropdown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9715,19 +9715,7 @@ MonoBehaviour:
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8454354971940978650}
-        m_TargetAssemblyTypeName: MatchSettings, Assembly-CSharp
-        m_MethodName: SetMaxPoints
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_AlphaFadeSpeed: 0.15
 --- !u!1 &7764365726507735492
 GameObject:
@@ -12340,7 +12328,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000022888184}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1364, y: 200}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &7764365726806897741
@@ -20337,7 +20325,7 @@ GameObject:
   - component: {fileID: 7764365727681392022}
   - component: {fileID: 7764365727681392023}
   m_Layer: 5
-  m_Name: SetRoundsDropdown
+  m_Name: RoundsDropdown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20506,19 +20494,7 @@ MonoBehaviour:
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8454354971940978650}
-        m_TargetAssemblyTypeName: MatchSettings, Assembly-CSharp
-        m_MethodName: SetRoundAmount
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_AlphaFadeSpeed: 0.15
 --- !u!1 &7764365727682101612
 GameObject:
@@ -20558,7 +20534,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.000061035156}
   m_SizeDelta: {x: 1380, y: 227}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &7764365727682101520
@@ -22225,8 +22201,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 35
+  m_fontSizeBase: 35
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -22651,7 +22627,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 2}
-  m_SizeDelta: {x: 0, y: 150}
+  m_SizeDelta: {x: 0, y: 145.7}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &7764365727867118103
 CanvasRenderer:
@@ -22710,7 +22686,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 3.3329
   m_Viewport: {fileID: 7764365726518681833}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 7764365726419339227}
@@ -22990,14 +22966,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3355b97b27b864e4f909052a28d45da0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_unlimitRounds: {fileID: 7764365727135366162}
-  m_roundsDropdown: {fileID: 7764365727681392023}
-  m_unlimitPoints: {fileID: 7764365727289266066}
-  m_maxPointsDropdown: {fileID: 7764365726503239927}
+  m_unlimitToggleKeys:
+  - {fileID: 7764365727135366162}
+  - {fileID: 7764365727289266066}
+  m_roundValueDropdowns:
+  - {fileID: 7764365727681392023}
+  - {fileID: 7764365726503239927}
   m_defaultRoundAmount: 5
   m_maxRoundPoints: 25
+  m_infiniteRounds: 1
+  m_infinitePoints: 0
   m_matchVariables: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
-  m_defaultMatchVariables: {fileID: 0}
+  m_defaultMatchVariables: {fileID: 11400000, guid: e4dc2891c9044a441a756504123caec1,
+    type: 2}
 --- !u!1 &7764365727910049044
 GameObject:
   m_ObjectHideFlags: 0

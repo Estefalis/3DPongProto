@@ -7,79 +7,254 @@ namespace ThreeDeePongProto.Offline.Settings
 {
     public class MatchSettings : MonoBehaviour
     {
-        [SerializeField] private Toggle m_unlimitRounds;
-        [SerializeField] private TMP_Dropdown m_roundsDropdown;
-        [SerializeField] private Toggle m_unlimitPoints;
-        [SerializeField] private TMP_Dropdown m_maxPointsDropdown;
+        //[SerializeField] private Toggle m_unlimitedRounds;
+        //[SerializeField] private TMP_Dropdown m_roundsDropdown;
+        //[SerializeField] private Toggle m_unlimitedPoints;
+        //[SerializeField] private TMP_Dropdown m_maxPointsDropdown;
+
+        [SerializeField] private List<Toggle> m_unlimitToggleKeys = new List<Toggle>();
+        [SerializeField] private List<TMP_Dropdown> m_roundValueDropdowns = new List<TMP_Dropdown>();
+        private Dictionary<Toggle, TMP_Dropdown> m_matchKeyValuePairs = new Dictionary<Toggle, TMP_Dropdown>();
 
         [SerializeField] private int m_defaultRoundAmount;
         [SerializeField] private int m_maxRoundPoints;
 
+        [SerializeField] private bool m_infiniteRounds;
+        [SerializeField] private bool m_infinitePoints;
+
         [SerializeField] private MatchVariables m_matchVariables;
         [SerializeField] private MatchVariables m_defaultMatchVariables;
 
+        List<string> m_rounds/* = new List<string>()*/;
+        List<string> m_maxPoints/* = new List<string>()*/;
+
+        private readonly int m_infiniteValue = int.MaxValue;
+
         private void Awake()
         {
-            FillRoundsDropdown();
-            FillPointsDropdown();
-        }
-
-        private void FillRoundsDropdown()
-        {
-            m_roundsDropdown.ClearOptions();
-            List<string> rounds = new List<string>();
-
-            for (int i = 1; i < m_defaultRoundAmount + 1; i++)
+            for (int i = 0; i < m_unlimitToggleKeys.Count; i++)
             {
-                rounds.Add(i.ToString());
+                m_matchKeyValuePairs.Add(m_unlimitToggleKeys[i], m_roundValueDropdowns[i]);
             }
 
-            m_roundsDropdown.AddOptions(rounds);
-            //m_roundsDropdown.value = m_defaultRoundAmount;
-            SetIntDropdownValues(m_roundsDropdown, m_defaultRoundAmount);
-            m_roundsDropdown.RefreshShownValue();
+            //m_unlimitedRounds.isOn = m_infiniteRounds;
+            m_unlimitToggleKeys[0].isOn = m_infiniteRounds;
+            //m_unlimitedPoints.isOn = m_infinitePoints;
+            m_unlimitToggleKeys[1].isOn = m_infinitePoints;
+            //TODO: Implement code to set 'm_infiniteValue = int.MaxValue', if the corresponding toggles are on.
+
+            //FillDropdowns(m_unlimitedRounds);
+            FillDropdowns(m_unlimitToggleKeys[0]);
+            //FillDropdowns(m_unlimitedPoints);
+            FillDropdowns(m_unlimitToggleKeys[1]);
         }
 
-        private void FillPointsDropdown()
+        private void OnEnable()
         {
-            m_maxPointsDropdown.ClearOptions();
-            List<string> maxPoints = new List<string>();
+            AddGroupListeners();
+        }
 
-            for (int i = 1; i < m_maxRoundPoints + 1; i++)
+        private void OnDisable()
+        {
+            RemoveGroupListeners();
+        }
+
+        private void AddGroupListeners()
+        {
+            m_unlimitToggleKeys[0].onValueChanged.AddListener(delegate
+            { RoundToggleValueChanged(m_unlimitToggleKeys[0]); });
+            m_unlimitToggleKeys[1].onValueChanged.AddListener(delegate
+            { MaxPointToggleValueChanged(m_unlimitToggleKeys[1]); });
+
+            m_roundValueDropdowns[0].onValueChanged.AddListener(delegate
+            { RoundDropdownValueChanged(m_unlimitToggleKeys[0]); });
+            m_roundValueDropdowns[1].onValueChanged.AddListener(delegate
+            { MaxPointDropdownValueChanged(m_unlimitToggleKeys[1]); });
+        }
+
+        private void RemoveGroupListeners()
+        {
+            m_unlimitToggleKeys[0].onValueChanged.RemoveAllListeners();
+            m_unlimitToggleKeys[1].onValueChanged.RemoveAllListeners();
+            m_roundValueDropdowns[0].onValueChanged.RemoveAllListeners();
+            m_roundValueDropdowns[1].onValueChanged.RemoveAllListeners();
+        }
+
+        #region Toggle-Listeners
+        private void RoundToggleValueChanged(Toggle _toggle)
+        {
+            m_rounds = new List<string>();
+
+            TMP_Dropdown dropdown = m_matchKeyValuePairs[_toggle];
+            dropdown.interactable = !dropdown.interactable;
+            dropdown.ClearOptions();
+
+            switch (_toggle.isOn)
             {
-                //'m_maxPointsDropdown.options.Add (new Dropdown.OptionData() { text = variable });' in foreach-loops.
-                maxPoints.Add(i.ToString());
-            }
+                case false:
+                {
+                    for (int i = 1; i < m_defaultRoundAmount + 1; i++)
+                    {
+                        m_rounds.Add(i.ToString());
+                    }
 
-            m_maxPointsDropdown.AddOptions(maxPoints);
-            //m_maxPointsDropdown.value = m_maxRoundPoints;
-            SetIntDropdownValues(m_maxPointsDropdown, m_maxRoundPoints);
-            m_maxPointsDropdown.RefreshShownValue();
+                    dropdown.AddOptions(m_rounds);
+                    dropdown.RefreshShownValue();
+                    dropdown.interactable = true;
+                    SetIntDropdownValues(dropdown, m_matchVariables.LastRoundIndex);
+
+                    break;
+                }
+                case true:
+                {
+                    m_rounds.Add("(-.-)");
+                    dropdown.AddOptions(m_rounds);
+                    dropdown.RefreshShownValue();
+                    dropdown.interactable = false;
+                    break;
+                }
+            }
+        }
+
+        private void MaxPointToggleValueChanged(Toggle _toggle)
+        {
+            m_maxPoints = new List<string>();
+
+            TMP_Dropdown dropdown = m_matchKeyValuePairs[_toggle];
+            dropdown.interactable = !dropdown.interactable;
+            dropdown.ClearOptions();
+
+            switch (_toggle.isOn)
+            {
+                case false:
+                {
+                    for (int i = 1; i < m_maxRoundPoints + 1; i++)
+                    {
+                        //'m_maxPointsDropdown.options.Add (new Dropdown.OptionData() { text = variable });' in foreach-loops.
+                        m_maxPoints.Add(i.ToString());
+                    }
+
+                    dropdown.AddOptions(m_maxPoints);
+                    SetIntDropdownValues(dropdown, m_matchVariables.LastMaxPointIndex);
+                    dropdown.RefreshShownValue();
+                    break;
+                }
+                case true:
+                {
+                    m_maxPoints.Add("(-.-)");
+                    dropdown.AddOptions(m_maxPoints);
+                    dropdown.RefreshShownValue();
+                    break;
+                }
+            }
+        }
+        #endregion
+
+        private void RoundDropdownValueChanged(Toggle _toggle)
+        {
+            TMP_Dropdown dropdown = m_matchKeyValuePairs[_toggle];
+
+            switch (dropdown.interactable)
+            {
+                case false:
+                {
+                    break;
+                }
+                case true:
+                {
+                    SetIntDropdownValues(dropdown, dropdown.value);
+                    m_matchVariables.LastRoundIndex = dropdown.value;
+                    break;
+                }
+            }
+        }
+
+        private void MaxPointDropdownValueChanged(Toggle _toggle)
+        {
+            TMP_Dropdown dropdown = m_matchKeyValuePairs[_toggle];
+
+            switch (dropdown.interactable)
+            {
+                case false:
+                {
+                    break;
+                }
+                case true:
+                {
+                    SetIntDropdownValues(dropdown, dropdown.value);
+                    m_matchVariables.LastMaxPointIndex = dropdown.value;
+                    break;
+                }
+            }
+        }
+
+        private void FillDropdowns(Toggle _toggle)
+        {
+            TMP_Dropdown dropdown = m_matchKeyValuePairs[_toggle];
+            dropdown.ClearOptions();
+
+            m_rounds = new List<string>();
+            m_maxPoints = new List<string>();
+
+            switch (_toggle.isOn)
+            {
+                case false:
+                {
+                    if (dropdown == m_roundValueDropdowns[0])
+                    {
+                        for (int i = 1; i < m_defaultRoundAmount + 1; i++)
+                        {
+                            m_rounds.Add(i.ToString());
+                        }
+
+                        dropdown.AddOptions(m_rounds);
+                        SetIntDropdownValues(dropdown, m_matchVariables.LastRoundIndex);
+                        dropdown.RefreshShownValue();
+                        dropdown.interactable = true;
+                    }
+
+                    if (dropdown == m_roundValueDropdowns[1])
+                    {
+                        for (int i = 1; i < m_maxRoundPoints + 1; i++)
+                        {
+                            //'m_maxPointsDropdown.options.Add (new Dropdown.OptionData() { text = variable });' in foreach-loops.
+                            m_maxPoints.Add(i.ToString());
+                        }
+
+                        dropdown.AddOptions(m_maxPoints);
+                        SetIntDropdownValues(dropdown, m_matchVariables.LastMaxPointIndex);
+                        dropdown.RefreshShownValue();
+                        dropdown.interactable = true;
+                    }
+
+                    break;
+                }                
+                case true:
+                {
+                    if (dropdown == m_roundValueDropdowns[0])
+                    {
+                        m_rounds.Add("(-.-)");
+                        dropdown.AddOptions(m_rounds);
+                        dropdown.RefreshShownValue();
+                        dropdown.interactable = false;
+                    }
+
+                    if (dropdown == m_roundValueDropdowns[1])
+                    {
+                        m_maxPoints.Add("(-.-)");
+                        dropdown.AddOptions(m_maxPoints);
+                        dropdown.RefreshShownValue();
+                        dropdown.interactable = false;
+                    }
+
+                    break;
+                }
+            }
         }
 
         private void SetIntDropdownValues(TMP_Dropdown _dropdown, int _value)
         {
             _dropdown.value = _value;
-        }
-
-        /// <summary>
-        /// OnValueChanged inside Unity does not find uint! And dropdownIndices start from 0. So setable rounds are in fact '_roundIndex + 1'.
-        /// </summary>
-        /// <param name="_roundIndex"></param>
-        public void SetRoundAmount(int _roundIndex)
-        {
-            m_roundsDropdown.value = _roundIndex;
-            m_matchVariables.LastRoundIndex = _roundIndex;
-        }
-
-        /// <summary>
-        /// OnValueChanged inside Unity does not find uint! And dropdownIndices start from 0. So setable maxPoints are in fact '_maxPointIndex + 1'.
-        /// </summary>
-        /// <param name="_maxPointIndex"></param>        
-        public void SetMaxPoints(int _maxPointIndex)
-        {
-            m_maxPointsDropdown.value = _maxPointIndex;
-            m_matchVariables.LastMaxPointIndex = _maxPointIndex;
         }
     }
 }

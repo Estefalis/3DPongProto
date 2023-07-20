@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34a34bc4151ae364fbffe531b16729cb, type: 3}
   m_Name: MatchVariables
   m_EditorClassIdentifier: 
-  Round: 0
-  MaxRoundPoints: 0
+  LastRoundIndex: 0
+  LastMaxPointIndex: 0
   GroundWidth: 25
   GroundLength: 50
+  PaddleWidthAdjustment: 0
