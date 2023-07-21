@@ -22973,7 +22973,7 @@ MonoBehaviour:
   - {fileID: 7764365727681392023}
   - {fileID: 7764365726503239927}
   m_defaultRoundAmount: 5
-  m_maxRoundPoints: 25
+  m_maxPointsAmount: 25
   m_infiniteRounds: 1
   m_infinitePoints: 0
   m_matchVariables: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}

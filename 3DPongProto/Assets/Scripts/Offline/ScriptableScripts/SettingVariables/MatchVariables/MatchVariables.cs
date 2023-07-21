@@ -9,6 +9,9 @@ public class MatchVariables : ScriptableObject
     public int LastRoundIndex;
     public int LastMaxPointIndex;
 
+    public bool InfiniteRounds;
+    public bool InfinitePoints;
+
     [Header("Playfield-Dimensions")]
     public float GroundWidth;
     public float GroundLength;
