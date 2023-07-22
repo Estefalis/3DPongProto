@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
-using ThreeDeePongProto.Managers;
 
 namespace ThreeDeePongProto.Offline.Player.Inputs
 {
@@ -77,11 +76,5 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 #endif
         }
         #endregion
-
-        public static void ResetPauseAndTimescale()
-        {
-            Time.timeScale = 1f;
-            GameManager.Instance.GameIsPaused = false;
-        }
     }
 }

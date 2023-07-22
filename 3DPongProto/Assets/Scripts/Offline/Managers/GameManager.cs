@@ -1,3 +1,5 @@
+using ThreeDeePongProto.Offline.Player.Inputs;
+using ThreeDeePongProto.Offline.UI;
 using UnityEngine;
 
 public enum EGameModi
@@ -25,7 +27,45 @@ namespace ThreeDeePongProto.Managers
         public EGameModi EGameConnectionModi { get => eGameConnectionMode; set => eGameConnectionMode = value; }
         [SerializeField] private EGameModi eGameConnectionMode;
 
-        public bool GameIsPaused { get => m_gameIsPaused; set { m_gameIsPaused = value; } }
+        public bool GameIsPaused { get => m_gameIsPaused; private set { m_gameIsPaused = value; } }
         [SerializeField] private bool m_gameIsPaused;
+
+        private void OnEnable()
+        {
+            PlayerMovement.InGameMenuOpens += PauseAndTimeScale;
+            MenuOrganisation.CloseInGameMenu += ResetPauseAndTimescale;
+            MenuOrganisation.RestartGameLevel += GameRestartActions;
+            MenuOrganisation.LoadMainScene += MainSceneRestartActions;
+        }
+
+        private void OnDisable()
+        {
+            PlayerMovement.InGameMenuOpens -= PauseAndTimeScale;
+            MenuOrganisation.CloseInGameMenu -= ResetPauseAndTimescale;
+            MenuOrganisation.RestartGameLevel -= GameRestartActions;
+            MenuOrganisation.LoadMainScene -= MainSceneRestartActions;
+        }
+
+        private void PauseAndTimeScale()
+        {
+            Time.timeScale = 0f;
+            GameIsPaused = true;
+        }
+
+        private void ResetPauseAndTimescale()
+        {
+            Time.timeScale = 1f;
+            GameIsPaused = false;
+        }
+
+        private void GameRestartActions()
+        {
+            ResetPauseAndTimescale();
+        }
+
+        private void MainSceneRestartActions()
+        {
+            ResetPauseAndTimescale();
+        }
     }
 }

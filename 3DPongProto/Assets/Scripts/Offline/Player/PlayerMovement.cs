@@ -41,6 +41,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         private bool m_tempBlocked = false;
         private IEnumerator m_paddleOneCoroutine, m_paddleTwoCoroutine;
 
+        //GameManager pauses the Game. Coroutines and the Inputsystem.PlayerActions get disabled inside this class.
         public static event Action InGameMenuOpens;
 
         private void Awake()
@@ -71,8 +72,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             m_playerMovement.PlayerActions.PushMoveModuEven.canceled += CanceledInputSecondPlayer;
 
             StartCoroutinesAndActions();
-            MenuOrganisation.InGameMenuCloses += StartCoroutinesAndActions;
-            InGameMenuOpens += StopGameActions;
+            MenuOrganisation.CloseInGameMenu += StartCoroutinesAndActions;
+            InGameMenuOpens += DisablePlayerActions;
         }
 
         private void OnDisable()
@@ -85,8 +86,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             m_playerMovement.PlayerActions.PushMoveModuEven.canceled -= CanceledInputSecondPlayer;
 
             StopAllCoroutines();
-            MenuOrganisation.InGameMenuCloses -= StartCoroutinesAndActions;
-            InGameMenuOpens -= StopGameActions;
+            MenuOrganisation.CloseInGameMenu -= StartCoroutinesAndActions;
+            InGameMenuOpens -= DisablePlayerActions;
         }
 
         private void Update()
@@ -373,11 +374,9 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             }
         }
 
-        private void StopGameActions()
+        private void DisablePlayerActions()
         {
             StopAllCoroutines();
-            Time.timeScale = 0f;
-            GameManager.Instance.GameIsPaused = true;
             m_playerMovement.PlayerActions.Disable();
         }
     }

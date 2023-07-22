@@ -31,7 +31,7 @@ namespace ThreeDeePongProto.Offline.UI
         #endregion
 
         #region Alpha-Buttons and SubPages.
-        //I could not leave this undone. Only the clicked button shall be highlighted, the others should visibly stay inactive.
+        //I could not leave this undone. Only the clicked button shall be dominant, the others should visibly stay in the back.
         [Header("Button Alpha-Values")]
         [SerializeField] private Button[] m_alphaButtons;
         [SerializeField, Range(0.1f, 0.9f)] private float m_reducedAlphaValue = 0.5f;
@@ -41,7 +41,12 @@ namespace ThreeDeePongProto.Offline.UI
         [SerializeField] private Transform[] m_subPageTransforms;
         #endregion
 
-        public static event Action InGameMenuCloses;
+        //G-Manager unpauses the Game. - PlayerMovement restarts Coroutines and Inputsystem.PlayerActions.
+        public static event Action CloseInGameMenu;
+        //G-Manager unpauses the Game. Plus possible, additionial gameLevel-internal-options.
+        public static event Action RestartGameLevel;
+        //G-Manager unpauses the Game. Plus possible, additionial mainScene-specific-options.
+        public static event Action LoadMainScene;
 
         private void Awake()
         {
@@ -85,38 +90,27 @@ namespace ThreeDeePongProto.Offline.UI
 
         public void ResumeGame()
         {
-            ResetPauseAndTimescale();
-            //UserInputManager.ResetPauseAndTimescale();
-            InGameMenuCloses?.Invoke();
+            CloseInGameMenu?.Invoke();
             m_firstElement.gameObject.SetActive(false);
             UserInputManager.ToggleActionMaps(UserInputManager.m_playerInputActions.PlayerActions);
         }
 
         public void RestartLevel()
         {
-            ResetPauseAndTimescale();
-            //UserInputManager.ResetPauseAndTimescale();
-            InGameMenuCloses?.Invoke();
+            RestartGameLevel?.Invoke();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             UserInputManager.ToggleActionMaps(UserInputManager.m_playerInputActions.PlayerActions);
         }
 
         public void ReturnToMainScene()
         {
-            ResetPauseAndTimescale();
-            //UserInputManager.ResetPauseAndTimescale();
+            LoadMainScene?.Invoke();
 
             if (m_startMenuScene == "StartMenuScene" && GameManager.Instance.EGameConnectionModi == EGameModi.LocalPC)
                 SceneManager.LoadScene(m_startMenuScene);
             else
                 Debug.Log("Der SzenenName ist nicht mehr aktuell. Bitte aktualisieren! Danke~.");   /*Ggf. SzenenName eingeben lassen.*/
             //TODO: Also disconnect from Network in Online-Seasons.
-        }
-
-        private void ResetPauseAndTimescale()
-        {
-            Time.timeScale = 1f;
-            GameManager.Instance.GameIsPaused = false;
         }
 
         public void QuitGameIngame()
@@ -164,8 +158,6 @@ namespace ThreeDeePongProto.Offline.UI
         protected void SetFirstElement(Transform _firstElement)
         {
             m_activeElement.Push(_firstElement);
-            //if (SceneManager.GetActiveScene().name == m_startMenuScene)
-                //_firstElement.gameObject.SetActive(true);
         }
 
         //protected void ResetFirstElement()
