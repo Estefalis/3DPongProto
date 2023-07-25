@@ -18,4 +18,5 @@ public class MatchVariables : ScriptableObject
 
     [Header("Player-Adjustments")]
     public float PaddleWidthAdjustment;
+    public float DistanceToGoal;
 }

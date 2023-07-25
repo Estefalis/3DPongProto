@@ -8,10 +8,10 @@ namespace ThreeDeePongProto.Offline.Settings
     public class MatchSettings : MonoBehaviour
     {
         //TODO: Desired Inputfield-behaviour to select the gameObject without a blinking cursor and to enable editing on pressing Enter.
-        [SerializeField] private TMP_InputField m_playerOneIF;
-        [SerializeField] private string m_playernameOne;
+        [SerializeField] private TMP_InputField m_playerIF;
+        //[SerializeField] private TMP_Text m_playerTMPText;
         [SerializeField] private TMP_InputField m_playerTwoIF;
-        [SerializeField] private string m_playernameTwo;
+        //[SerializeField] private TMP_Text m_playerTwoTMPText;
 
         [SerializeField] private List<Toggle> m_unlimitToggleKeys = new List<Toggle>();
         [SerializeField] private List<TMP_Dropdown> m_roundValueDropdowns = new List<TMP_Dropdown>();
@@ -27,10 +27,13 @@ namespace ThreeDeePongProto.Offline.Settings
         List<string> m_maxPointsList/* = new List<string>()*/;
 
         [SerializeField] private MatchVariables m_matchVariables;
+        [SerializeField] private PlayerData[] m_playerData;
         //[SerializeField] private MatchVariables m_defaultMatchVariables;
 
         private readonly int m_infiniteValue = int.MaxValue;
         private int m_tempPointValue = 0, m_tempRoundValue = 0;
+
+        private bool m_editablePlayerIF = false, m_editablePlayerTwoIF = false;
 
         private void Awake()
         {
@@ -62,12 +65,12 @@ namespace ThreeDeePongProto.Offline.Settings
         #region Name-Inputfields
         public void PlayerOneInput(string _playernameOne)
         {
-            m_playernameOne = _playernameOne;
+            m_playerData[0].PlayerName = _playernameOne;
         }
 
         public void PlayerTwoInput(string _playernameTwo)
         {
-            m_playernameTwo = _playernameTwo;
+            m_playerData[1].PlayerName = _playernameTwo;
         }
         #endregion
 
@@ -87,24 +90,56 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void AddGroupListeners()
         {
-            m_unlimitToggleKeys[0].onValueChanged.AddListener(delegate { RoundToggleValueChanged(m_unlimitToggleKeys[0]); });
-            m_unlimitToggleKeys[1].onValueChanged.AddListener(delegate { MaxPointToggleValueChanged(m_unlimitToggleKeys[1]); });
+            m_unlimitToggleKeys[0].onValueChanged.AddListener(delegate { OnRoundToggleValueChanged(m_unlimitToggleKeys[0]); });
+            m_unlimitToggleKeys[1].onValueChanged.AddListener(delegate { OnMaxPointToggleValueChanged(m_unlimitToggleKeys[1]); });
 
-            m_roundValueDropdowns[0].onValueChanged.AddListener(delegate { RoundDropdownValueChanged(m_unlimitToggleKeys[0]); });
-            m_roundValueDropdowns[1].onValueChanged.AddListener(delegate { MaxPointDropdownValueChanged(m_unlimitToggleKeys[1]); });
+            m_roundValueDropdowns[0].onValueChanged.AddListener(delegate { OnRoundDropdownValueChanged(m_unlimitToggleKeys[0]); });
+            m_roundValueDropdowns[1].onValueChanged.AddListener(delegate { OnMaxPointDropdownValueChanged(m_unlimitToggleKeys[1]); });
         }
 
         private void RemoveGroupListeners()
         {
-            m_unlimitToggleKeys[0].onValueChanged.RemoveListener(delegate { RoundToggleValueChanged(m_unlimitToggleKeys[0]); });
-            m_unlimitToggleKeys[1].onValueChanged.RemoveListener(delegate { MaxPointToggleValueChanged(m_unlimitToggleKeys[1]); });
+            m_unlimitToggleKeys[0].onValueChanged.RemoveListener(delegate { OnRoundToggleValueChanged(m_unlimitToggleKeys[0]); });
+            m_unlimitToggleKeys[1].onValueChanged.RemoveListener(delegate { OnMaxPointToggleValueChanged(m_unlimitToggleKeys[1]); });
 
-            m_roundValueDropdowns[0].onValueChanged.RemoveListener(delegate { RoundDropdownValueChanged(m_unlimitToggleKeys[0]); });
-            m_roundValueDropdowns[1].onValueChanged.RemoveListener(delegate { MaxPointDropdownValueChanged(m_unlimitToggleKeys[1]); });
+            m_roundValueDropdowns[0].onValueChanged.RemoveListener(delegate { OnRoundDropdownValueChanged(m_unlimitToggleKeys[0]); });
+            m_roundValueDropdowns[1].onValueChanged.RemoveListener(delegate { OnMaxPointDropdownValueChanged(m_unlimitToggleKeys[1]); });
+        }
+
+        public void OnPlayerIFSelected()
+        {
+            m_editablePlayerIF = !m_editablePlayerIF;
+#if UNITY_EDITOR
+            Debug.Log($"IF 1 editable = {m_editablePlayerIF}.");
+#endif
+        }
+        
+        public void OnPlayerIFDeselected()
+        {
+            m_editablePlayerIF = !m_editablePlayerIF;
+#if UNITY_EDITOR
+            Debug.Log($"IF 1 editable = {m_editablePlayerIF}.");
+#endif
+        }
+
+        public void OnPlayerTwoIFSelected()
+        {
+            m_editablePlayerTwoIF = !m_editablePlayerTwoIF;
+#if UNITY_EDITOR
+            Debug.Log($"IF 2 editable = {m_editablePlayerTwoIF}.");
+#endif
+        }
+
+        public void OnPlayerTwoIFDeselected(/*TMP_InputField _playerTwoIF*/)
+        {
+            m_editablePlayerTwoIF = !m_editablePlayerTwoIF;
+#if UNITY_EDITOR
+            Debug.Log($"IF 2 editable = {m_editablePlayerTwoIF}.");
+#endif
         }
 
         #region Toggle-OnValueChanged-Methods
-        private void RoundToggleValueChanged(Toggle _toggle)
+        private void OnRoundToggleValueChanged(Toggle _toggle)
         {
             m_roundsList = new List<string>();
 
@@ -141,7 +176,7 @@ namespace ThreeDeePongProto.Offline.Settings
             }
         }
 
-        private void MaxPointToggleValueChanged(Toggle _toggle)
+        private void OnMaxPointToggleValueChanged(Toggle _toggle)
         {
             m_maxPointsList = new List<string>();
 
@@ -181,7 +216,7 @@ namespace ThreeDeePongProto.Offline.Settings
         #endregion
 
         #region Dropdown-OnValueChanged-Methods
-        private void RoundDropdownValueChanged(Toggle _toggle)
+        private void OnRoundDropdownValueChanged(Toggle _toggle)
         {
             TMP_Dropdown dropdown = m_matchKeyValuePairs[_toggle];
 
@@ -200,7 +235,7 @@ namespace ThreeDeePongProto.Offline.Settings
             }
         }
 
-        private void MaxPointDropdownValueChanged(Toggle _toggle)
+        private void OnMaxPointDropdownValueChanged(Toggle _toggle)
         {
             TMP_Dropdown dropdown = m_matchKeyValuePairs[_toggle];
 

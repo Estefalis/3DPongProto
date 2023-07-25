@@ -11,9 +11,12 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
     {
         private PlayerInputActions m_playerMovement;
 
-        public uint PlayerId { get { return m_playerId; } }
-        [SerializeField] private uint m_playerId;
         [SerializeField] private Rigidbody m_rigidbody;
+        [Space]
+        [SerializeField] private PlayerData m_playerData;
+        [SerializeField] private uint m_playerId;
+        public uint PlayerId { get { return m_playerId; } }
+        //public uint PlayerId { get { return m_playerData.PlayerId; } }
 
         [Header("Side-Movement")]
         [SerializeField] private MatchVariables m_matchVariables;
@@ -46,6 +49,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         private void Awake()
         {
+            m_playerData.PlayerId = m_playerId;
+
             if (m_rigidbody == null)
             {
                 m_rigidbody = GetComponentInChildren<Rigidbody>();
