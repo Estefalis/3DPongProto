@@ -8,36 +8,45 @@ namespace ThreeDeePongProto.Offline.Settings
     public class MatchSettings : MonoBehaviour
     {
         //TODO: Desired Inputfield-behaviour to select the gameObject without a blinking cursor and to enable editing on pressing Enter.
+        #region Player-Names
         [SerializeField] private TMP_InputField m_playerIF;
-        //[SerializeField] private TMP_Text m_playerTMPText;
         [SerializeField] private TMP_InputField m_playerTwoIF;
-        //[SerializeField] private TMP_Text m_playerTwoTMPText;
+        #endregion
 
+        #region Toggle-Dropdown-Connection
         [SerializeField] private List<Toggle> m_unlimitToggleKeys = new List<Toggle>();
         [SerializeField] private List<TMP_Dropdown> m_roundValueDropdowns = new List<TMP_Dropdown>();
-        private Dictionary<Toggle, TMP_Dropdown> m_matchKeyValuePairs = new Dictionary<Toggle, TMP_Dropdown>();
+        #endregion
 
-        [SerializeField] private int m_defaultRoundAmount;
+        #region SerializeField-Member-Variables
+        [SerializeField] private int m_roundAmount/* = 5*/;
         [SerializeField] private bool m_infiniteRounds;
 
-        [SerializeField] private int m_maxPointsAmount;
+        [SerializeField] private int m_maxPointsAmount/* = 25*/;
         [SerializeField] private bool m_infinitePoints;
+        #endregion
 
-        List<string> m_roundsList/* = new List<string>()*/;
-        List<string> m_maxPointsList/* = new List<string>()*/;
-
+        #region Scriptable-References
         [SerializeField] private MatchVariables m_matchVariables;
         [SerializeField] private PlayerData[] m_playerData;
-        //[SerializeField] private MatchVariables m_defaultMatchVariables;
+        #endregion
 
+        #region Non-SerializeField-Member-Variables
         private readonly int m_infiniteValue = int.MaxValue;
         private int m_tempPointValue = 0, m_tempRoundValue = 0;
 
         private bool m_editablePlayerIF = false, m_editablePlayerTwoIF = false;
+        #endregion
+
+        #region Lists and Dictionaries
+        private List<string> m_roundsList;
+        private List<string> m_maxPointsList;
+        private Dictionary<Toggle, TMP_Dropdown> m_matchKeyValuePairs = new Dictionary<Toggle, TMP_Dropdown>();
+        #endregion
 
         private void Awake()
         {
-            //Setup Dictionary
+            //Setup Dictionary to connect the toggles with Round and MaxPoints-Dropdowns.
             for (int i = 0; i < m_unlimitToggleKeys.Count; i++)
             {
                 m_matchKeyValuePairs.Add(m_unlimitToggleKeys[i], m_roundValueDropdowns[i]);
@@ -56,7 +65,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void Start()
         {
-            SetToggles();
+            PresetToggles();
 
             FillRoundDropdown(m_unlimitToggleKeys[0]);
             FillMaxPointsDropdown(m_unlimitToggleKeys[1]);
@@ -74,8 +83,12 @@ namespace ThreeDeePongProto.Offline.Settings
         }
         #endregion
 
-        private void SetToggles()
+        private void PresetToggles()
         {
+#if UNITY_EDITOR
+            m_unlimitToggleKeys[0].isOn = m_infiniteRounds;
+            m_unlimitToggleKeys[1].isOn = m_infinitePoints;
+#else
             if (m_matchVariables != null)
             {
                 m_unlimitToggleKeys[0].isOn = m_matchVariables.InfiniteRounds;
@@ -86,24 +99,33 @@ namespace ThreeDeePongProto.Offline.Settings
                 m_unlimitToggleKeys[0].isOn = m_infiniteRounds;
                 m_unlimitToggleKeys[1].isOn = m_infinitePoints;
             }
+#endif
         }
 
         private void AddGroupListeners()
         {
-            m_unlimitToggleKeys[0].onValueChanged.AddListener(delegate { OnRoundToggleValueChanged(m_unlimitToggleKeys[0]); });
-            m_unlimitToggleKeys[1].onValueChanged.AddListener(delegate { OnMaxPointToggleValueChanged(m_unlimitToggleKeys[1]); });
+            m_unlimitToggleKeys[0].onValueChanged.AddListener(delegate
+            { OnRoundToggleValueChanged(m_unlimitToggleKeys[0]); });
+            m_unlimitToggleKeys[1].onValueChanged.AddListener(delegate
+            { OnMaxPointToggleValueChanged(m_unlimitToggleKeys[1]); });
 
-            m_roundValueDropdowns[0].onValueChanged.AddListener(delegate { OnRoundDropdownValueChanged(m_unlimitToggleKeys[0]); });
-            m_roundValueDropdowns[1].onValueChanged.AddListener(delegate { OnMaxPointDropdownValueChanged(m_unlimitToggleKeys[1]); });
+            m_roundValueDropdowns[0].onValueChanged.AddListener(delegate
+            { OnRoundDropdownValueChanged(m_unlimitToggleKeys[0]); });
+            m_roundValueDropdowns[1].onValueChanged.AddListener(delegate
+            { OnMaxPointDropdownValueChanged(m_unlimitToggleKeys[1]); });
         }
 
         private void RemoveGroupListeners()
         {
-            m_unlimitToggleKeys[0].onValueChanged.RemoveListener(delegate { OnRoundToggleValueChanged(m_unlimitToggleKeys[0]); });
-            m_unlimitToggleKeys[1].onValueChanged.RemoveListener(delegate { OnMaxPointToggleValueChanged(m_unlimitToggleKeys[1]); });
+            m_unlimitToggleKeys[0].onValueChanged.RemoveListener(delegate
+            { OnRoundToggleValueChanged(m_unlimitToggleKeys[0]); });
+            m_unlimitToggleKeys[1].onValueChanged.RemoveListener(delegate
+            { OnMaxPointToggleValueChanged(m_unlimitToggleKeys[1]); });
 
-            m_roundValueDropdowns[0].onValueChanged.RemoveListener(delegate { OnRoundDropdownValueChanged(m_unlimitToggleKeys[0]); });
-            m_roundValueDropdowns[1].onValueChanged.RemoveListener(delegate { OnMaxPointDropdownValueChanged(m_unlimitToggleKeys[1]); });
+            m_roundValueDropdowns[0].onValueChanged.RemoveListener(delegate
+            { OnRoundDropdownValueChanged(m_unlimitToggleKeys[0]); });
+            m_roundValueDropdowns[1].onValueChanged.RemoveListener(delegate
+            { OnMaxPointDropdownValueChanged(m_unlimitToggleKeys[1]); });
         }
 
         public void OnPlayerIFSelected()
@@ -113,7 +135,7 @@ namespace ThreeDeePongProto.Offline.Settings
             Debug.Log($"IF 1 editable = {m_editablePlayerIF}.");
 #endif
         }
-        
+
         public void OnPlayerIFDeselected()
         {
             m_editablePlayerIF = !m_editablePlayerIF;
@@ -130,7 +152,7 @@ namespace ThreeDeePongProto.Offline.Settings
 #endif
         }
 
-        public void OnPlayerTwoIFDeselected(/*TMP_InputField _playerTwoIF*/)
+        public void OnPlayerTwoIFDeselected()
         {
             m_editablePlayerTwoIF = !m_editablePlayerTwoIF;
 #if UNITY_EDITOR
@@ -139,6 +161,10 @@ namespace ThreeDeePongProto.Offline.Settings
         }
 
         #region Toggle-OnValueChanged-Methods
+        /// <summary>
+        /// Listener-Method to replace the displayed round-information in the related dropdown. Also sets roundAmount and bool-state in the scriptable. 
+        /// </summary>
+        /// <param name="_toggle"></param>
         private void OnRoundToggleValueChanged(Toggle _toggle)
         {
             m_roundsList = new List<string>();
@@ -151,13 +177,14 @@ namespace ThreeDeePongProto.Offline.Settings
             {
                 case false:
                 {
-                    for (int i = 1; i < m_defaultRoundAmount + 1; i++)
+                    for (int i = 1; i < m_roundAmount + 1; i++)
                     {
                         m_roundsList.Add(i.ToString());
                     }
 
                     dropdown.AddOptions(m_roundsList);
                     dropdown.RefreshShownValue();
+                    //Reset to the last saved value, instead of the set value in the scriptable object.
                     dropdown.value = m_tempRoundValue;
                     m_matchVariables.LastRoundIndex = m_tempRoundValue;
                     m_matchVariables.InfiniteRounds = _toggle.isOn;
@@ -176,6 +203,10 @@ namespace ThreeDeePongProto.Offline.Settings
             }
         }
 
+        /// <summary>
+        /// Listener-Method to replace the displayed point-information in the related dropdown. Also sets pointAmount and bool-state in the scriptable.
+        /// </summary>
+        /// <param name="_toggle"></param>
         private void OnMaxPointToggleValueChanged(Toggle _toggle)
         {
             m_maxPointsList = new List<string>();
@@ -196,6 +227,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
                     dropdown.AddOptions(m_maxPointsList);
                     dropdown.RefreshShownValue();
+                    //Reset to the last saved value, instead of the set value in the scriptable object.
                     dropdown.value = m_tempPointValue;
                     m_matchVariables.LastMaxPointIndex = m_tempPointValue;
                     m_matchVariables.InfinitePoints = _toggle.isOn;
@@ -216,6 +248,10 @@ namespace ThreeDeePongProto.Offline.Settings
         #endregion
 
         #region Dropdown-OnValueChanged-Methods
+        /// <summary>
+        /// Listener-Method to set round-values, only while the corresponding dropdown is interactable.
+        /// </summary>
+        /// <param name="_toggle"></param>
         private void OnRoundDropdownValueChanged(Toggle _toggle)
         {
             TMP_Dropdown dropdown = m_matchKeyValuePairs[_toggle];
@@ -224,6 +260,7 @@ namespace ThreeDeePongProto.Offline.Settings
             {
                 case false:
                 {
+                    //Nothing shall happen.
                     break;
                 }
                 case true:
@@ -235,6 +272,10 @@ namespace ThreeDeePongProto.Offline.Settings
             }
         }
 
+        /// <summary>
+        /// Listener-Method to set maxPoint-values, only while the corresponding dropdown is interactable.
+        /// </summary>
+        /// <param name="_toggle"></param>
         private void OnMaxPointDropdownValueChanged(Toggle _toggle)
         {
             TMP_Dropdown dropdown = m_matchKeyValuePairs[_toggle];
@@ -255,7 +296,11 @@ namespace ThreeDeePongProto.Offline.Settings
         }
         #endregion
 
-        #region Refill-Dropdown-By-Status
+        #region Fill-Dropdowns-On-Start
+        /// <summary>
+        /// Method to fill the round-dropdown on Start. Also sets it's interactable-status.
+        /// </summary>
+        /// <param name="_toggle"></param>
         private void FillRoundDropdown(Toggle _toggle)
         {
             TMP_Dropdown dropdown = m_matchKeyValuePairs[_toggle];
@@ -267,7 +312,7 @@ namespace ThreeDeePongProto.Offline.Settings
             {
                 case false:
                 {
-                    for (int i = 1; i < m_defaultRoundAmount + 1; i++)
+                    for (int i = 1; i < m_roundAmount + 1; i++)
                     {
                         m_roundsList.Add(i.ToString());
                     }
@@ -277,7 +322,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     if (m_matchVariables != null)
                         dropdown.value = m_matchVariables.LastRoundIndex;
                     else
-                        dropdown.value = m_defaultRoundAmount;
+                        dropdown.value = m_roundAmount;
                     m_tempRoundValue = dropdown.value;
 
                     dropdown.RefreshShownValue();
@@ -297,6 +342,10 @@ namespace ThreeDeePongProto.Offline.Settings
             }
         }
 
+        /// <summary>
+        /// Method to fill the maxPoint-dropdown on Start. Also sets it's interactable-status.
+        /// </summary>
+        /// <param name="_toggle"></param>
         private void FillMaxPointsDropdown(Toggle _toggle)
         {
             TMP_Dropdown dropdown = m_matchKeyValuePairs[_toggle];

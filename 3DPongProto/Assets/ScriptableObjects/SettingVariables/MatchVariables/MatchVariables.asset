@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LastRoundIndex: 0
   LastMaxPointIndex: 0
+  InfiniteRounds: 0
+  InfinitePoints: 0
   GroundWidth: 25
   GroundLength: 50
   PaddleWidthAdjustment: 0
+  DistanceToGoal: 0
