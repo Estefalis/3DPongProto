@@ -18,12 +18,22 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private List<TMP_Dropdown> m_roundValueDropdowns = new List<TMP_Dropdown>();
         #endregion
 
+        #region Field-Dimension
+        [SerializeField] private TMP_Dropdown[] m_fieldDropdowns;
+        #endregion
+
         #region SerializeField-Member-Variables
         [SerializeField] private int m_roundAmount/* = 5*/;
         [SerializeField] private bool m_infiniteRounds;
 
         [SerializeField] private int m_maxPointsAmount/* = 25*/;
         [SerializeField] private bool m_infinitePoints;
+
+        [Header("Field-Dimension")]
+        [SerializeField] private int m_maxFieldWidth/* = 50*/;
+        [SerializeField] private int m_maxFieldLength/* = 100*/;
+        [SerializeField] private int m_fieldDdWidthIndex /*= 0*/;
+        [SerializeField] private int m_fieldDdLengthIndex/* = 0*/;
         #endregion
 
         #region Scriptable-References
@@ -41,6 +51,8 @@ namespace ThreeDeePongProto.Offline.Settings
         #region Lists and Dictionaries
         private List<string> m_roundsList;
         private List<string> m_maxPointsList;
+        private List<string> m_widthList;
+        private List<string> m_lengthList;
         private Dictionary<Toggle, TMP_Dropdown> m_matchKeyValuePairs = new Dictionary<Toggle, TMP_Dropdown>();
         #endregion
 
@@ -69,6 +81,9 @@ namespace ThreeDeePongProto.Offline.Settings
 
             FillRoundDropdown(m_unlimitToggleKeys[0]);
             FillMaxPointsDropdown(m_unlimitToggleKeys[1]);
+
+            FillWidthDropdown();
+            FillHeightDropdown();
         }
 
         #region Name-Inputfields
@@ -104,15 +119,26 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void AddGroupListeners()
         {
+            //Listener for changes on 'UnlimitedRounds'-UI-Toggle.
             m_unlimitToggleKeys[0].onValueChanged.AddListener(delegate
             { OnRoundToggleValueChanged(m_unlimitToggleKeys[0]); });
+            //Listener for changes on 'UnlimitedMaxPoints'-UI-Toggle.
             m_unlimitToggleKeys[1].onValueChanged.AddListener(delegate
             { OnMaxPointToggleValueChanged(m_unlimitToggleKeys[1]); });
 
+            //Listener for changes on 'UnlimitedRounds'-UI-Dropdown.
             m_roundValueDropdowns[0].onValueChanged.AddListener(delegate
             { OnRoundDropdownValueChanged(m_unlimitToggleKeys[0]); });
+            //Listener for changes on 'UnlimitedMaxPoints'-UI-Dropdown.
             m_roundValueDropdowns[1].onValueChanged.AddListener(delegate
             { OnMaxPointDropdownValueChanged(m_unlimitToggleKeys[1]); });
+
+            //Field-Width-Dropdown-Listener.
+            m_fieldDropdowns[0].onValueChanged.AddListener(delegate
+            { OnWidthDropdownValueChanged(m_fieldDropdowns[0]); });
+            //Field-Length-Dropdown-Listener.
+            m_fieldDropdowns[1].onValueChanged.AddListener(delegate
+            { OnLengthDropdownValueChanged(m_fieldDropdowns[1]); });
         }
 
         private void RemoveGroupListeners()
@@ -126,6 +152,11 @@ namespace ThreeDeePongProto.Offline.Settings
             { OnRoundDropdownValueChanged(m_unlimitToggleKeys[0]); });
             m_roundValueDropdowns[1].onValueChanged.RemoveListener(delegate
             { OnMaxPointDropdownValueChanged(m_unlimitToggleKeys[1]); });
+
+            m_fieldDropdowns[0].onValueChanged.RemoveListener(delegate
+            { OnWidthDropdownValueChanged(m_fieldDropdowns[0]); });
+            m_fieldDropdowns[1].onValueChanged.RemoveListener(delegate
+            { OnLengthDropdownValueChanged(m_fieldDropdowns[1]); });
         }
 
         public void OnPlayerIFSelected()
@@ -294,6 +325,16 @@ namespace ThreeDeePongProto.Offline.Settings
                 }
             }
         }
+
+        private void OnWidthDropdownValueChanged(TMP_Dropdown _dropdown)
+        {
+            m_matchVariables.FieldWidthDdIndex = _dropdown.value;
+        }
+        
+        private void OnLengthDropdownValueChanged(TMP_Dropdown _dropdown)
+        {
+            m_matchVariables.FieldLengthDdIndex = _dropdown.value;
+        }
         #endregion
 
         #region Fill-Dropdowns-On-Start
@@ -323,6 +364,7 @@ namespace ThreeDeePongProto.Offline.Settings
                         dropdown.value = m_matchVariables.LastRoundIndex;
                     else
                         dropdown.value = m_roundAmount;
+
                     m_tempRoundValue = dropdown.value;
 
                     dropdown.RefreshShownValue();
@@ -369,6 +411,7 @@ namespace ThreeDeePongProto.Offline.Settings
                         dropdown.value = m_matchVariables.LastMaxPointIndex;
                     else
                         dropdown.value = m_maxPointsAmount;
+
                     m_tempPointValue = dropdown.value;
 
                     dropdown.RefreshShownValue();
@@ -386,6 +429,46 @@ namespace ThreeDeePongProto.Offline.Settings
                     break;
                 }
             }
+        }
+
+        private void FillWidthDropdown()
+        {
+            m_widthList = new List<string>();
+
+            for (int i = 25; i < m_maxFieldWidth + 1; i++)
+            {
+                m_widthList.Add(i.ToString());
+            }
+
+            m_fieldDropdowns[0].ClearOptions();
+            m_fieldDropdowns[0].AddOptions(m_widthList);
+
+            if (m_matchVariables != null)
+                m_fieldDropdowns[0].value = m_matchVariables.FieldWidthDdIndex;
+            else
+                m_fieldDropdowns[0].value = m_fieldDdWidthIndex;
+
+            m_fieldDropdowns[0].RefreshShownValue();
+        }
+
+        private void FillHeightDropdown()
+        {
+            m_lengthList = new List<string>();
+
+            for (int i = 50; i < m_maxFieldLength + 1; i++)
+            {
+                m_lengthList.Add(i.ToString());
+            }
+
+            m_fieldDropdowns[1].ClearOptions();
+            m_fieldDropdowns[1].AddOptions(m_lengthList);
+
+            if (m_matchVariables != null)
+                m_fieldDropdowns[1].value = m_matchVariables.FieldLengthDdIndex;
+            else
+                m_fieldDropdowns[1].value = m_fieldDdLengthIndex;
+
+            m_fieldDropdowns[1].RefreshShownValue();
         }
         #endregion
     }

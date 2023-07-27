@@ -18,5 +18,8 @@ MonoBehaviour:
   InfinitePoints: 0
   GroundWidth: 25
   GroundLength: 50
+  FieldWidthDdIndex: 0
+  FieldLengthDdIndex: 0
+  FixRatio: 0
   PaddleWidthAdjustment: 0
   DistanceToGoal: 0

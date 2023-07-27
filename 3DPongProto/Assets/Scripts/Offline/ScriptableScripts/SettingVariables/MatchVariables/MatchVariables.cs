@@ -13,8 +13,11 @@ public class MatchVariables : ScriptableObject
     public bool InfinitePoints;
 
     [Header("Playfield-Dimensions")]
-    public float GroundWidth;
-    public float GroundLength;
+    public int GroundWidth;
+    public int GroundLength;
+    public int FieldWidthDdIndex;
+    public int FieldLengthDdIndex;
+    public bool FixRatio;
 
     [Header("Player-Adjustments")]
     public float PaddleWidthAdjustment;
