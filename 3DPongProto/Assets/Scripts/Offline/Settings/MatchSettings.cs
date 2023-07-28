@@ -19,6 +19,7 @@ namespace ThreeDeePongProto.Offline.Settings
         #endregion
 
         #region Field-Dimension
+        [SerializeField] private Toggle m_ratioToggle;
         [SerializeField] private TMP_Dropdown[] m_fieldDropdowns;
         #endregion
 
@@ -34,6 +35,7 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private int m_maxFieldLength/* = 100*/;
         [SerializeField] private int m_fieldDdWidthIndex /*= 0*/;
         [SerializeField] private int m_fieldDdLengthIndex/* = 0*/;
+        [SerializeField] private bool m_fixAspectRatio = false;
         #endregion
 
         #region Scriptable-References
@@ -45,6 +47,10 @@ namespace ThreeDeePongProto.Offline.Settings
         private readonly int m_infiniteValue = int.MaxValue;
         private int m_tempPointValue = 0, m_tempRoundValue = 0;
 
+        private int m_lastWidthValue = 0, m_lastLengthValue = 0;
+        //private int m_tempWidthDelta = 0;
+        private bool m_fixRatioIfTrue;
+
         private bool m_editablePlayerIF = false, m_editablePlayerTwoIF = false;
         #endregion
 
@@ -54,15 +60,20 @@ namespace ThreeDeePongProto.Offline.Settings
         private List<string> m_widthList;
         private List<string> m_lengthList;
         private Dictionary<Toggle, TMP_Dropdown> m_matchKeyValuePairs = new Dictionary<Toggle, TMP_Dropdown>();
+        private Dictionary<Toggle, TMP_Dropdown[]> m_ratioDict = new Dictionary<Toggle, TMP_Dropdown[]>();
         #endregion
 
         private void Awake()
         {
+            m_ratioToggle.isOn = false;
+
             //Setup Dictionary to connect the toggles with Round and MaxPoints-Dropdowns.
             for (int i = 0; i < m_unlimitToggleKeys.Count; i++)
             {
                 m_matchKeyValuePairs.Add(m_unlimitToggleKeys[i], m_roundValueDropdowns[i]);
             }
+
+            m_ratioDict.Add(m_ratioToggle, m_fieldDropdowns);
         }
 
         private void OnEnable()
@@ -103,16 +114,20 @@ namespace ThreeDeePongProto.Offline.Settings
 #if UNITY_EDITOR
             m_unlimitToggleKeys[0].isOn = m_infiniteRounds;
             m_unlimitToggleKeys[1].isOn = m_infinitePoints;
+            m_fixRatioIfTrue = m_fixAspectRatio;
+            m_matchVariables.FixRatio = m_fixAspectRatio;
 #else
             if (m_matchVariables != null)
             {
                 m_unlimitToggleKeys[0].isOn = m_matchVariables.InfiniteRounds;
                 m_unlimitToggleKeys[1].isOn = m_matchVariables.InfinitePoints;
+                m_fixRatioIfTrue = m_matchVariables.FixRatio;
             }
             else
             {
                 m_unlimitToggleKeys[0].isOn = m_infiniteRounds;
                 m_unlimitToggleKeys[1].isOn = m_infinitePoints;
+                m_fixRatioIfTrue = m_fixAspectRatio;
             }
 #endif
         }
@@ -133,6 +148,9 @@ namespace ThreeDeePongProto.Offline.Settings
             m_roundValueDropdowns[1].onValueChanged.AddListener(delegate
             { OnMaxPointDropdownValueChanged(m_unlimitToggleKeys[1]); });
 
+            m_ratioToggle.onValueChanged.AddListener(delegate
+            { OnRatioToggleValueChanged(m_ratioToggle); });
+
             //Field-Width-Dropdown-Listener.
             m_fieldDropdowns[0].onValueChanged.AddListener(delegate
             { OnWidthDropdownValueChanged(m_fieldDropdowns[0]); });
@@ -152,6 +170,9 @@ namespace ThreeDeePongProto.Offline.Settings
             { OnRoundDropdownValueChanged(m_unlimitToggleKeys[0]); });
             m_roundValueDropdowns[1].onValueChanged.RemoveListener(delegate
             { OnMaxPointDropdownValueChanged(m_unlimitToggleKeys[1]); });
+
+            m_ratioToggle.onValueChanged.RemoveListener(delegate
+            { OnRatioToggleValueChanged(m_ratioToggle); });
 
             m_fieldDropdowns[0].onValueChanged.RemoveListener(delegate
             { OnWidthDropdownValueChanged(m_fieldDropdowns[0]); });
@@ -326,13 +347,52 @@ namespace ThreeDeePongProto.Offline.Settings
             }
         }
 
+        private void OnRatioToggleValueChanged(Toggle _toggle)
+        {
+            TMP_Dropdown[] ratioDropdown = m_ratioDict[_toggle];
+
+            switch (_toggle.isOn)
+            {
+                case true:
+                {
+                    m_fixRatioIfTrue = true;
+                    ratioDropdown[1].interactable = false;
+                    ratioDropdown[1].value = ratioDropdown[0].value * 2;
+                    m_matchVariables.FixRatio = _toggle.isOn;
+                    break;
+                }
+                case false:
+                {
+                    m_fixRatioIfTrue = false;
+                    ratioDropdown[1].interactable = true;
+                    m_matchVariables.FixRatio = _toggle.isOn;
+                    break;
+                }
+            }
+        }
+
         private void OnWidthDropdownValueChanged(TMP_Dropdown _dropdown)
         {
+            if (m_fixRatioIfTrue)
+            {
+                m_fieldDropdowns[0].onValueChanged.RemoveListener(delegate
+                { OnWidthDropdownValueChanged(m_fieldDropdowns[0]); });
+
+                m_fieldDropdowns[1].value = _dropdown.value * 2;
+                //m_tempWidthDelta = _dropdown.value - m_lastWidthValue;
+                //m_fieldDropdowns[1].value += m_tempWidthDelta * 2;
+
+                m_fieldDropdowns[0].onValueChanged.AddListener(delegate
+                { OnWidthDropdownValueChanged(m_fieldDropdowns[0]); });
+            }
+
+            m_lastWidthValue = _dropdown.value;
             m_matchVariables.FieldWidthDdIndex = _dropdown.value;
         }
-        
+
         private void OnLengthDropdownValueChanged(TMP_Dropdown _dropdown)
         {
+            m_lastLengthValue = _dropdown.value;
             m_matchVariables.FieldLengthDdIndex = _dropdown.value;
         }
         #endregion
