@@ -356,7 +356,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 case true:
                 {
                     m_fixRatioIfTrue = true;
-                    ratioDropdown[1].interactable = false;
+                    //ratioDropdown[1].interactable = false;
                     ratioDropdown[1].value = ratioDropdown[0].value * 2;
                     m_matchVariables.FixRatio = _toggle.isOn;
                     break;
@@ -364,7 +364,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 case false:
                 {
                     m_fixRatioIfTrue = false;
-                    ratioDropdown[1].interactable = true;
+                    //ratioDropdown[1].interactable = true;
                     m_matchVariables.FixRatio = _toggle.isOn;
                     break;
                 }
@@ -375,15 +375,7 @@ namespace ThreeDeePongProto.Offline.Settings
         {
             if (m_fixRatioIfTrue)
             {
-                m_fieldDropdowns[0].onValueChanged.RemoveListener(delegate
-                { OnWidthDropdownValueChanged(m_fieldDropdowns[0]); });
-
                 m_fieldDropdowns[1].value = _dropdown.value * 2;
-                //m_tempWidthDelta = _dropdown.value - m_lastWidthValue;
-                //m_fieldDropdowns[1].value += m_tempWidthDelta * 2;
-
-                m_fieldDropdowns[0].onValueChanged.AddListener(delegate
-                { OnWidthDropdownValueChanged(m_fieldDropdowns[0]); });
             }
 
             m_lastWidthValue = _dropdown.value;
@@ -392,6 +384,11 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void OnLengthDropdownValueChanged(TMP_Dropdown _dropdown)
         {
+            if (m_fixRatioIfTrue)
+            {
+                m_fieldDropdowns[0].value = (int)(_dropdown.value * 0.5f);
+            }
+
             m_lastLengthValue = _dropdown.value;
             m_matchVariables.FieldLengthDdIndex = _dropdown.value;
         }
