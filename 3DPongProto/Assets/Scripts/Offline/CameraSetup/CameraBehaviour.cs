@@ -26,7 +26,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         [SerializeField] private Vector3 m_desiredOffset;
         [Range(1.0f, 30.0f)]
         [SerializeField] private float m_smoothfactor;
-        private float m_maxSideMovement;
+        private float m_maxSideMovement, m_setGroundWidth;
 
         [Header("Camera-Zoom")]
         [SerializeField, Min(0.001f)] private float m_zoomSpeed;
@@ -43,6 +43,10 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                 m_RbPlayer = GetComponentInParent<Rigidbody>();
 
             m_playerId = m_playerMovement/*.GetComponent<PlayerMovement>()*/.PlayerId;
+
+            m_setGroundWidth = m_matchVariables.SetGroundWidth;
+            //TODO: Move Setting of 'm_enableSmoothFollow' boolean into UI-Settings.
+            m_enableSmoothFollow = true;
         }
 
         private void Start()
@@ -68,7 +72,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void Update()
         {
-            MaxSideMovement();
+            //MaxSideMovement();
             GetMousePosition();
 
             SelectCameraToZoom();
@@ -175,7 +179,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void MaxSideMovement()
         {
-            m_maxSideMovement = m_matchVariables.GroundWidth * 0.5f - m_RbPlayer.transform.localScale.x * 0.5f;
+            m_maxSideMovement = m_setGroundWidth * 0.5f - m_RbPlayer.transform.localScale.x * 0.5f;
         }
 
         private void GetMousePosition()

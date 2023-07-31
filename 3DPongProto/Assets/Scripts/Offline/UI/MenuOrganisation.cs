@@ -159,12 +159,6 @@ namespace ThreeDeePongProto.Offline.UI
         {
             m_activeElement.Push(_firstElement);
         }
-
-        //protected void ResetFirstElement()
-        //{
-        //    m_activeElement.Clear();
-        //    m_activeElement.Push(m_firstElement);
-        //}
         #endregion
 
         /// <summary>

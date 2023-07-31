@@ -24,15 +24,17 @@ namespace ThreeDeePongProto.Offline.Settings
         #endregion
 
         #region SerializeField-Member-Variables
-        [SerializeField] private int m_roundAmount/* = 5*/;
+        [SerializeField] private int m_setMaxRound/* = 5*/;
+        [SerializeField] private int m_maxRoundIndex/* = 4*/;
         [SerializeField] private bool m_infiniteRounds;
 
-        [SerializeField] private int m_maxPointsAmount/* = 25*/;
+        [SerializeField] private int m_setMaxPoints/* = 25*/;
+        [SerializeField] private int m_maxPointIndex/* = 24*/;
         [SerializeField] private bool m_infinitePoints;
 
         [Header("Field-Dimension")]
-        [SerializeField] private int m_maxFieldWidth/* = 50*/;
-        [SerializeField] private int m_maxFieldLength/* = 100*/;
+        [SerializeField] private int m_maxFieldWidth/* = 30*/;
+        [SerializeField] private int m_maxFieldLength/* = 60*/;
         [SerializeField] private int m_fieldDdWidthIndex /*= 0*/;
         [SerializeField] private int m_fieldDdLengthIndex/* = 0*/;
         [SerializeField] private bool m_fixAspectRatio = false;
@@ -45,10 +47,10 @@ namespace ThreeDeePongProto.Offline.Settings
 
         #region Non-SerializeField-Member-Variables
         private readonly int m_infiniteValue = int.MaxValue;
-        private int m_tempPointValue = 0, m_tempRoundValue = 0;
+        private int m_firstRoundOffset = 1, m_firstPointOffset = 1, m_firstWidthOffset = 25, m_firstLengthOffset = 50;
+        private int m_tempPointDdValue = 0, m_tempRoundDdValue = 0;
 
-        private int m_lastWidthValue = 0, m_lastLengthValue = 0;
-        //private int m_tempWidthDelta = 0;
+        private int m_tempWidthDdValue = 0, m_tempLengthDdValue = 0;
         private bool m_fixRatioIfTrue;
 
         private bool m_editablePlayerIF = false, m_editablePlayerTwoIF = false;
@@ -94,7 +96,7 @@ namespace ThreeDeePongProto.Offline.Settings
             FillMaxPointsDropdown(m_unlimitToggleKeys[1]);
 
             FillWidthDropdown();
-            FillHeightDropdown();
+            FillLengthDropdown();
         }
 
         #region Name-Inputfields
@@ -229,7 +231,7 @@ namespace ThreeDeePongProto.Offline.Settings
             {
                 case false:
                 {
-                    for (int i = 1; i < m_roundAmount + 1; i++)
+                    for (int i = m_firstRoundOffset; i < m_setMaxRound + 1; i++)
                     {
                         m_roundsList.Add(i.ToString());
                     }
@@ -237,8 +239,10 @@ namespace ThreeDeePongProto.Offline.Settings
                     dropdown.AddOptions(m_roundsList);
                     dropdown.RefreshShownValue();
                     //Reset to the last saved value, instead of the set value in the scriptable object.
-                    dropdown.value = m_tempRoundValue;
-                    m_matchVariables.LastRoundIndex = m_tempRoundValue;
+                    dropdown.value = m_tempRoundDdValue;
+                    //DropdownValue is equal to DropdownIndex +1.
+                    m_matchVariables.SetRounds = dropdown.value + m_firstRoundOffset;
+                    m_matchVariables.LastRoundIndex = m_tempRoundDdValue;
                     m_matchVariables.InfiniteRounds = _toggle.isOn;
 
                     break;
@@ -248,7 +252,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     m_roundsList.Add("\u221E");
                     dropdown.AddOptions(m_roundsList);
                     dropdown.RefreshShownValue();
-                    m_matchVariables.LastRoundIndex = m_infiniteValue;
+                    m_matchVariables.SetRounds = m_infiniteValue;
                     m_matchVariables.InfiniteRounds = _toggle.isOn;
                     break;
                 }
@@ -271,7 +275,7 @@ namespace ThreeDeePongProto.Offline.Settings
             {
                 case false:
                 {
-                    for (int i = 1; i < m_maxPointsAmount + 1; i++)
+                    for (int i = m_firstPointOffset; i < m_setMaxPoints + 1; i++)
                     {
                         //'m_maxPointsDropdown.options.Add (new Dropdown.OptionData() { text = variable });' in foreach-loops.
                         m_maxPointsList.Add(i.ToString());
@@ -280,8 +284,10 @@ namespace ThreeDeePongProto.Offline.Settings
                     dropdown.AddOptions(m_maxPointsList);
                     dropdown.RefreshShownValue();
                     //Reset to the last saved value, instead of the set value in the scriptable object.
-                    dropdown.value = m_tempPointValue;
-                    m_matchVariables.LastMaxPointIndex = m_tempPointValue;
+                    dropdown.value = m_tempPointDdValue;
+                    //DropdownValue is equal to DropdownIndex +1.
+                    m_matchVariables.SetMaxPoints = dropdown.value + m_firstPointOffset;
+                    m_matchVariables.LastMaxPointIndex = m_tempPointDdValue;
                     m_matchVariables.InfinitePoints = _toggle.isOn;
 
                     break;
@@ -291,7 +297,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     m_maxPointsList.Add("\u221E");
                     dropdown.AddOptions(m_maxPointsList);
                     dropdown.RefreshShownValue();
-                    m_matchVariables.LastMaxPointIndex = m_infiniteValue;
+                    m_matchVariables.SetMaxPoints = m_infiniteValue;
                     m_matchVariables.InfinitePoints = _toggle.isOn;
                     break;
                 }
@@ -317,8 +323,10 @@ namespace ThreeDeePongProto.Offline.Settings
                 }
                 case true:
                 {
+                    //DropdownValue is equal to DropdownIndex +1.
+                    m_matchVariables.SetRounds = dropdown.value + m_firstRoundOffset;
                     m_matchVariables.LastRoundIndex = dropdown.value;
-                    m_tempRoundValue = dropdown.value;
+                    m_tempRoundDdValue = dropdown.value;
                     break;
                 }
             }
@@ -340,8 +348,10 @@ namespace ThreeDeePongProto.Offline.Settings
                 }
                 case true:
                 {
+                    //DropdownValue is equal to DropdownIndex +1.
+                    m_matchVariables.SetMaxPoints = dropdown.value + m_firstPointOffset;
                     m_matchVariables.LastMaxPointIndex = dropdown.value;
-                    m_tempPointValue = dropdown.value;
+                    m_tempPointDdValue = dropdown.value;
                     break;
                 }
             }
@@ -356,7 +366,6 @@ namespace ThreeDeePongProto.Offline.Settings
                 case true:
                 {
                     m_fixRatioIfTrue = true;
-                    //ratioDropdown[1].interactable = false;
                     ratioDropdown[1].value = ratioDropdown[0].value * 2;
                     m_matchVariables.FixRatio = _toggle.isOn;
                     break;
@@ -364,7 +373,6 @@ namespace ThreeDeePongProto.Offline.Settings
                 case false:
                 {
                     m_fixRatioIfTrue = false;
-                    //ratioDropdown[1].interactable = true;
                     m_matchVariables.FixRatio = _toggle.isOn;
                     break;
                 }
@@ -378,8 +386,9 @@ namespace ThreeDeePongProto.Offline.Settings
                 m_fieldDropdowns[1].value = _dropdown.value * 2;
             }
 
-            m_lastWidthValue = _dropdown.value;
-            m_matchVariables.FieldWidthDdIndex = _dropdown.value;
+            m_tempWidthDdValue = _dropdown.value;
+            m_matchVariables.SetGroundWidth = _dropdown.value + m_firstWidthOffset;
+            m_matchVariables.LastFieldWidthIndex = _dropdown.value;
         }
 
         private void OnLengthDropdownValueChanged(TMP_Dropdown _dropdown)
@@ -389,8 +398,9 @@ namespace ThreeDeePongProto.Offline.Settings
                 m_fieldDropdowns[0].value = (int)(_dropdown.value * 0.5f);
             }
 
-            m_lastLengthValue = _dropdown.value;
-            m_matchVariables.FieldLengthDdIndex = _dropdown.value;
+            m_tempLengthDdValue = _dropdown.value;
+            m_matchVariables.SetGroundLength = _dropdown.value + m_firstLengthOffset;
+            m_matchVariables.LastFieldLengthIndex = _dropdown.value;
         }
         #endregion
 
@@ -410,7 +420,7 @@ namespace ThreeDeePongProto.Offline.Settings
             {
                 case false:
                 {
-                    for (int i = 1; i < m_roundAmount + 1; i++)
+                    for (int i = m_firstRoundOffset; i < m_setMaxRound + 1; i++)
                     {
                         m_roundsList.Add(i.ToString());
                     }
@@ -418,11 +428,15 @@ namespace ThreeDeePongProto.Offline.Settings
                     dropdown.AddOptions(m_roundsList);
 
                     if (m_matchVariables != null)
+                    {
                         dropdown.value = m_matchVariables.LastRoundIndex;
+                    }
                     else
-                        dropdown.value = m_roundAmount;
+                    {
+                        dropdown.value = m_maxRoundIndex;
+                    }
 
-                    m_tempRoundValue = dropdown.value;
+                    m_tempRoundDdValue = dropdown.value;
 
                     dropdown.RefreshShownValue();
                     dropdown.interactable = true;
@@ -456,7 +470,7 @@ namespace ThreeDeePongProto.Offline.Settings
             {
                 case false:
                 {
-                    for (int i = 1; i < m_maxPointsAmount + 1; i++)
+                    for (int i = m_firstPointOffset; i < m_setMaxPoints + 1; i++)
                     {
                         //'m_maxPointsDropdown.options.Add (new Dropdown.OptionData() { text = variable });' in foreach-loops.
                         m_maxPointsList.Add(i.ToString());
@@ -465,11 +479,15 @@ namespace ThreeDeePongProto.Offline.Settings
                     dropdown.AddOptions(m_maxPointsList);
 
                     if (m_matchVariables != null)
+                    {
                         dropdown.value = m_matchVariables.LastMaxPointIndex;
+                    }
                     else
-                        dropdown.value = m_maxPointsAmount;
+                    {
+                        dropdown.value = m_maxPointIndex;
+                    }
 
-                    m_tempPointValue = dropdown.value;
+                    m_tempPointDdValue = dropdown.value;
 
                     dropdown.RefreshShownValue();
                     dropdown.interactable = true;
@@ -492,7 +510,7 @@ namespace ThreeDeePongProto.Offline.Settings
         {
             m_widthList = new List<string>();
 
-            for (int i = 25; i < m_maxFieldWidth + 1; i++)
+            for (int i = m_firstWidthOffset; i < m_maxFieldWidth + 1; i++)
             {
                 m_widthList.Add(i.ToString());
             }
@@ -501,18 +519,18 @@ namespace ThreeDeePongProto.Offline.Settings
             m_fieldDropdowns[0].AddOptions(m_widthList);
 
             if (m_matchVariables != null)
-                m_fieldDropdowns[0].value = m_matchVariables.FieldWidthDdIndex;
+                m_fieldDropdowns[0].value = m_matchVariables.LastFieldWidthIndex;
             else
                 m_fieldDropdowns[0].value = m_fieldDdWidthIndex;
 
             m_fieldDropdowns[0].RefreshShownValue();
         }
 
-        private void FillHeightDropdown()
+        private void FillLengthDropdown()
         {
             m_lengthList = new List<string>();
 
-            for (int i = 50; i < m_maxFieldLength + 1; i++)
+            for (int i = m_firstLengthOffset; i < m_maxFieldLength + 1; i++)
             {
                 m_lengthList.Add(i.ToString());
             }
@@ -521,7 +539,7 @@ namespace ThreeDeePongProto.Offline.Settings
             m_fieldDropdowns[1].AddOptions(m_lengthList);
 
             if (m_matchVariables != null)
-                m_fieldDropdowns[1].value = m_matchVariables.FieldLengthDdIndex;
+                m_fieldDropdowns[1].value = m_matchVariables.LastFieldLengthIndex;
             else
                 m_fieldDropdowns[1].value = m_fieldDdLengthIndex;
 

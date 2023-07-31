@@ -12,14 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34a34bc4151ae364fbffe531b16729cb, type: 3}
   m_Name: MatchVariables
   m_EditorClassIdentifier: 
-  LastRoundIndex: 0
-  LastMaxPointIndex: 0
+  SetRounds: 5
+  LastRoundIndex: 4
   InfiniteRounds: 0
+  SetMaxPoints: 25
+  LastMaxPointIndex: 24
   InfinitePoints: 0
-  GroundWidth: 25
-  GroundLength: 50
-  FieldWidthDdIndex: 0
-  FieldLengthDdIndex: 0
+  SetGroundWidth: 25
+  LastFieldWidthIndex: 0
+  SetGroundLength: 50
+  LastFieldLengthIndex: 0
   FixRatio: 0
   PaddleWidthAdjustment: 0
   DistanceToGoal: 0

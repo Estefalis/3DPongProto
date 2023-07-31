@@ -63,7 +63,7 @@ namespace ThreeDeePongProto.Offline.Settings
             m_resolutionDropdown.RefreshShownValue();
         }
 
-        //TODO: Ggf. Methode in LevelManager transferieren.
+        //TODO: Ggf. Methode in MatchManager transferieren.
         public void SetActiveCameras()
         {
             GameManager.Instance.ECameraMode = (ECameraModi)m_screenSplitDropdown.value;

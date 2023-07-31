@@ -6,17 +6,21 @@ using UnityEngine;
 public class MatchVariables : ScriptableObject
 {
     [Header("Round-Details")]
+    public int SetRounds;
     public int LastRoundIndex;
-    public int LastMaxPointIndex;
-
     public bool InfiniteRounds;
+
+    public int SetMaxPoints;
+    public int LastMaxPointIndex;
     public bool InfinitePoints;
 
     [Header("Playfield-Dimensions")]
-    public int GroundWidth;
-    public int GroundLength;
-    public int FieldWidthDdIndex;
-    public int FieldLengthDdIndex;
+    public int SetGroundWidth;
+    public int LastFieldWidthIndex;
+    [Space]
+    public int SetGroundLength;
+    public int LastFieldLengthIndex;
+
     public bool FixRatio;
 
     [Header("Player-Adjustments")]

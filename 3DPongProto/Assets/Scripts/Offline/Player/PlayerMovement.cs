@@ -22,7 +22,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         [SerializeField] private MatchVariables m_matchVariables;
         [SerializeField] private float m_movementSpeed;
         [SerializeField] private float m_rotationSpeed, m_maxRotationAngle;
-        private float m_maxSideMovement;
+        private float m_maxSideMovement, m_setGroundWidth, m_setGroundLength;
         private Vector3 m_axisRotUneven, m_axisRotEven, m_localRbPosition, m_readValueVector;
         private Quaternion m_deltaRotation;
 
@@ -60,7 +60,10 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             m_paddleOneCoroutine = PushPaddleOne(m_maxPushDistance);
             m_paddleTwoCoroutine = PushPaddleTwo(m_maxPushDistance);
 
-            m_maxSideMovement = m_matchVariables.GroundWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
+            m_setGroundWidth = m_matchVariables.SetGroundWidth;
+            m_setGroundLength = m_matchVariables.SetGroundLength;
+
+            m_maxSideMovement = m_setGroundWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
         }
 
         /// <summary>
@@ -130,14 +133,14 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         /// </summary>
         public void ClampMoveRange()
         {
-            m_maxSideMovement = m_matchVariables.GroundWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
+            m_maxSideMovement = m_setGroundWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
 
             if (m_matchVariables != null)
                 m_rigidbody.transform.localScale = new Vector3(m_localPaddleScale.x + m_matchVariables.PaddleWidthAdjustment, m_localPaddleScale.y, m_localPaddleScale.z);
 
             m_rigidbody.transform.localPosition = new Vector3(Mathf.Clamp(m_rigidbody.transform.localPosition.x, -m_maxSideMovement, m_maxSideMovement),
                 m_rigidbody.transform.localPosition.y,
-                Mathf.Clamp(m_rigidbody.transform.localPosition.z, -m_matchVariables.GroundLength * 0.5f - -m_minGoalDistance, -m_matchVariables.GroundLength * 0.5f - -(m_minGoalDistance + m_maxPushDistance)));
+                Mathf.Clamp(m_rigidbody.transform.localPosition.z, -m_setGroundLength * 0.5f - -m_minGoalDistance, -m_setGroundLength * 0.5f - -(m_minGoalDistance + m_maxPushDistance)));
         }
 
         /// <summary>
