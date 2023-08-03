@@ -12,6 +12,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerVariantA
       objectReference: {fileID: 0}
+    - target: {fileID: 6673783635722497726, guid: 783feb4697821a043931bae4b63b27b7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6673783635722497727, guid: 783feb4697821a043931bae4b63b27b7,
         type: 3}
       propertyPath: m_RootOrder
@@ -65,6 +70,32 @@ PrefabInstance:
     - target: {fileID: 6673783635722497727, guid: 783feb4697821a043931bae4b63b27b7,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6673783636198326049, guid: 783feb4697821a043931bae4b63b27b7,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: b3a0ca693c3f5f640b6d570b54ecd1d5,
+        type: 2}
+    - target: {fileID: 6673783636198326050, guid: 783feb4697821a043931bae4b63b27b7,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6673783636198326050, guid: 783feb4697821a043931bae4b63b27b7,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6673783636198326063, guid: 783feb4697821a043931bae4b63b27b7,
+        type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 6673783636466660461, guid: 783feb4697821a043931bae4b63b27b7,
+        type: 3}
+      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6673783636466660463, guid: 783feb4697821a043931bae4b63b27b7,

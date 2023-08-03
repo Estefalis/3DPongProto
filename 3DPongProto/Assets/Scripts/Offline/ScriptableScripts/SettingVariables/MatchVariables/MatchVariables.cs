@@ -14,6 +14,13 @@ public class MatchVariables : ScriptableObject
     public int LastMaxPointIndex;
     public bool InfinitePoints;
 
+    [Header("TMP-Match-Values")]
+    public uint CurrentPointsTeamOne;
+    public uint TotalPointsTeamOne;
+    
+    public uint CurrentPointsTeamTwo;
+    public uint TotalPointsTeamTwo;
+
     [Header("Playfield-Dimensions")]
     public int SetGroundWidth;
     public int LastFieldWidthIndex;

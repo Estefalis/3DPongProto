@@ -18,6 +18,12 @@ MonoBehaviour:
   SetMaxPoints: 25
   LastMaxPointIndex: 24
   InfinitePoints: 0
+  PointsTeamOne: 0
+  m_currentPointsTeamOne: 0
+  TotalPointsTeamOne: 0
+  PointsTeamTwo: 0
+  m_latestPointsTeamTwo: 0
+  TotalPointsTeamTwo: 0
   SetGroundWidth: 25
   LastFieldWidthIndex: 0
   SetGroundLength: 50

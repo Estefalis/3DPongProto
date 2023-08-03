@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - PlayerCamera
+  - GoalOne
+  - GoalTwo
+  - WestWall
+  - EastWall
+  - Ball
   layers:
   - Default
   - TransparentFX
@@ -12,9 +17,9 @@ TagManager:
   - Player
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Ground
+  - Walls
+  - Ball
   - 
   - 
   - 
