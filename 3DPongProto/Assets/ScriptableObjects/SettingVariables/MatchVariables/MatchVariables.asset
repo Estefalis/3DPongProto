@@ -21,7 +21,7 @@ MonoBehaviour:
   CurrentPointsTeamOne: 0
   TotalPointsTeamOne: 0
   CurrentPointsTeamTwo: 0
-  TotalPointsTeamTwo: 1
+  TotalPointsTeamTwo: 0
   SetGroundWidth: 25
   LastFieldWidthIndex: 0
   SetGroundLength: 50

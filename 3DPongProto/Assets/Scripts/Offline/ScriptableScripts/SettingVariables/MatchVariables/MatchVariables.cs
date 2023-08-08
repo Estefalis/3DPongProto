@@ -15,11 +15,11 @@ public class MatchVariables : ScriptableObject
     public bool InfinitePoints;
 
     [Header("TMP-Match-Values")]
-    public uint CurrentPointsTeamOne;
-    public uint TotalPointsTeamOne;
+    public uint CurrentPointsTPOne;
+    public uint TotalPointsTPOne;
     
-    public uint CurrentPointsTeamTwo;
-    public uint TotalPointsTeamTwo;
+    public uint CurrentPointsTPTwo;
+    public uint TotalPointsTPTwo;
 
     [Header("Playfield-Dimensions")]
     public int SetGroundWidth;

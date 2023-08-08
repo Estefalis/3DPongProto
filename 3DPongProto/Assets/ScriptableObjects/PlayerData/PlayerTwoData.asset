@@ -9,8 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 674dcee24c083c24bb97a21fdca0130c, type: 3}
+  m_Script: {fileID: 11500000, guid: 5605ff35a294c074295f36fff8d42230, type: 3}
   m_Name: PlayerTwoData
   m_EditorClassIdentifier: 
   PlayerName: 
   PlayerId: 1
+  TotalPoints: 0
+  Avatar: {fileID: 0}

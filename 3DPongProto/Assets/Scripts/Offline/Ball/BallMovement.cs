@@ -50,24 +50,35 @@ public class BallMovement : MonoBehaviour
 
     private void ApplyForceOnBall()
     {
-        int randomZDirection = UnityEngine.Random.Range(0, 2);
-
         //TODO: Research, if 'UnityEngine.Random.insideUnitCircle' could replace 'UnityEngine.Random.Range'.
-        int sidechoice = UnityEngine.Random.Range(0, 3);
-        if (sidechoice == 0)
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(15, 55), transform.eulerAngles.z);
-        else if (sidechoice == 1)
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(125, 175), transform.eulerAngles.z);
-        if (sidechoice == 2)
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(195, 235), transform.eulerAngles.z);
-        else if (sidechoice == 3)
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(305, 345), transform.eulerAngles.z);
+        int sideChoice = 0;
+        if (DateTime.Now.Millisecond < 500)
+            sideChoice = Mathf.FloorToInt(UnityEngine.Random.Range(0, 4) + DateTime.Now.Millisecond / 1000);
+        else
+            sideChoice = Mathf.RoundToInt(UnityEngine.Random.Range(0, 4) + DateTime.Now.Millisecond / 1000);
+#if UNITY_EDITOR
+        //Debug.Log($"BallMovement Randomed Side: {sideChoice}");
+#endif
+        switch (sideChoice)
+        {
+            case 0:
+                transform.eulerAngles = new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(10, 80), transform.eulerAngles.z);
+                break;
+            case 1:
+                transform.eulerAngles = new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(100, 170), transform.eulerAngles.z);
+                break;
+            case 2:
+                transform.eulerAngles = new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(190, 260), transform.eulerAngles.z);
+                break;
+            case 3:
+                transform.eulerAngles = new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(280, 350), transform.eulerAngles.z);
+                break;
+            default:
+                transform.eulerAngles = new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(10, 80), transform.eulerAngles.z);
+                break;
+        }
 
         m_rigidbody.AddRelativeForce(transform.forward * m_impulseForce, ForceMode.Impulse);
-
-#if UNITY_EDITOR
-        Debug.Log(sidechoice);
-#endif
     }
 
     private void OnTriggerEnter(Collider _other)
