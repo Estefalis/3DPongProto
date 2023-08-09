@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ThreeDeePongProto.Managers;
 using TMPro;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ namespace ThreeDeePongProto.Offline.UI
 {
     public class MatchUserInterface : MonoBehaviour
     {
+        //TODO: MatchUI RoundTextfield
         [SerializeField] private List<TextMeshProUGUI> m_playerNamesTMPList;
         [SerializeField] private List<TextMeshProUGUI> m_totalPointsTMPList;
         [SerializeField] private List<GameObject> m_playerAvatarList = new List<GameObject>();
@@ -27,20 +29,26 @@ namespace ThreeDeePongProto.Offline.UI
         private void OnEnable()
         {
             m_playerPointsConnection.Add(m_playerNamesTMPList, m_totalPointsTMPList);
-            UpdateRoundPointsTMP();
-            UpdatePlayerTMPs();
-
+            
             BallMovement.m_HitGoalOne += UpdateUserInterface;
             BallMovement.m_HitGoalTwo += UpdateUserInterface;
+            MatchManager.m_StartNextRound += UpdateUserInterface;
+
+            if (m_matchVariables == null)
+                return;
+
+            UpdateRoundTMPs();
+            UpdatePlayerTMPs();
         }
 
         private void OnDisable()
         {
             BallMovement.m_HitGoalOne -= UpdateUserInterface;
             BallMovement.m_HitGoalTwo -= UpdateUserInterface;
+            MatchManager.m_StartNextRound -= UpdateUserInterface;
         }
 
-        private void UpdateUserInterface(uint _index)
+        private void UpdateUserInterface()
         {
             if (m_matchVariables == null)
             {
@@ -50,12 +58,13 @@ namespace ThreeDeePongProto.Offline.UI
                 return;
             }
 
-            UpdateRoundPointsTMP();
+            UpdateRoundTMPs();
             UpdatePlayerTMPs();
         }
 
-        private void UpdateRoundPointsTMP()
+        private void UpdateRoundTMPs()
         {
+            m_RoundNrTMP.text = $"Round {m_matchVariables.CurrentRoundNr}";
             m_ZeroToZeroTMP.text = $"{m_matchVariables.CurrentPointsTPOne} : {m_matchVariables.CurrentPointsTPTwo}";
         }
 

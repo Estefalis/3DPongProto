@@ -231,6 +231,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
                 if (Mathf.Abs(zoomValue) > 0.1f)
                 {
+                    //Limits the zoom to the window of each player.
                     if (m_playerWindowId == m_playerId)
                         m_currentHeight = m_followCamera.transform.localPosition.y + zoomValue * m_zoomStep;
 

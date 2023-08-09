@@ -12,20 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34a34bc4151ae364fbffe531b16729cb, type: 3}
   m_Name: MatchVariables
   m_EditorClassIdentifier: 
-  SetRounds: 5
-  LastRoundIndex: 4
+  SetMaxRounds: 5
+  LastRoundDdIndex: 4
+  CurrentRoundNr: 1
   InfiniteRounds: 0
   SetMaxPoints: 25
-  LastMaxPointIndex: 24
+  LastMaxPointDdIndex: 24
+  WinPointDifference: 2
   InfinitePoints: 0
-  CurrentPointsTeamOne: 0
-  TotalPointsTeamOne: 0
-  CurrentPointsTeamTwo: 0
-  TotalPointsTeamTwo: 0
+  CurrentPointsTPOne: 1
+  TotalPointsTPOne: 57
+  CurrentPointsTPTwo: 0
+  TotalPointsTPTwo: 61
   SetGroundWidth: 25
-  LastFieldWidthIndex: 0
+  LastFieldWidthDdIndex: 0
   SetGroundLength: 50
-  LastFieldLengthIndex: 0
+  LastFieldLengthDdIndex: 0
   FixRatio: 0
   PaddleWidthAdjustment: 0
   DistanceToGoal: 0

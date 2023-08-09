@@ -128,4 +128,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_rigidbody: {fileID: 5041537836607581328}
-  m_impulseForce: 10
+  m_impulseForce: 11
+  m_offWallAngle: 15

@@ -6,12 +6,14 @@ using UnityEngine;
 public class MatchVariables : ScriptableObject
 {
     [Header("Round-Details")]
-    public int SetRounds;
-    public int LastRoundIndex;
+    public int SetMaxRounds;
+    public int LastRoundDdIndex;
+    public uint CurrentRoundNr;
     public bool InfiniteRounds;
 
     public int SetMaxPoints;
-    public int LastMaxPointIndex;
+    public int LastMaxPointDdIndex;
+    public int WinPointDifference;
     public bool InfinitePoints;
 
     [Header("TMP-Match-Values")]
@@ -23,10 +25,10 @@ public class MatchVariables : ScriptableObject
 
     [Header("Playfield-Dimensions")]
     public int SetGroundWidth;
-    public int LastFieldWidthIndex;
+    public int LastFieldWidthDdIndex;
     [Space]
     public int SetGroundLength;
-    public int LastFieldLengthIndex;
+    public int LastFieldLengthDdIndex;
 
     public bool FixRatio;
 
