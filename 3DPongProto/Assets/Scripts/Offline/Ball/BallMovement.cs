@@ -53,6 +53,7 @@ public class BallMovement : MonoBehaviour
     {
         //TODO: Research, if 'UnityEngine.Random.insideUnitCircle' could replace 'UnityEngine.Random.Range'.
         int sideChoice = 0;
+
         if (DateTime.Now.Millisecond < 500)
             sideChoice = Mathf.FloorToInt(UnityEngine.Random.Range(0, 4) + DateTime.Now.Millisecond / 1000);
         else

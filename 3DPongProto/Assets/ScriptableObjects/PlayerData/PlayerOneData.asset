@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5605ff35a294c074295f36fff8d42230, type: 3}
   m_Name: PlayerOneData
   m_EditorClassIdentifier: 
-  PlayerName: 
+  PlayerName: Estefalis
   PlayerId: 0
   TotalPoints: 0
   Avatar: {fileID: 0}

@@ -20,10 +20,10 @@ MonoBehaviour:
   LastMaxPointDdIndex: 24
   WinPointDifference: 2
   InfinitePoints: 0
-  CurrentPointsTPOne: 1
-  TotalPointsTPOne: 57
+  CurrentPointsTPOne: 0
+  TotalPointsTPOne: 12
   CurrentPointsTPTwo: 0
-  TotalPointsTPTwo: 61
+  TotalPointsTPTwo: 34
   SetGroundWidth: 25
   LastFieldWidthDdIndex: 0
   SetGroundLength: 50

@@ -17,6 +17,8 @@ namespace ThreeDeePongProto.Managers
         public static event Action m_StartNextRound;
         public static event Action m_StartWinProcedure;
 
+        private string m_scoredPlayer;
+
         private void Awake()
         {
             m_matchVariables.CurrentRoundNr = 1;
@@ -26,8 +28,8 @@ namespace ThreeDeePongProto.Managers
         private void OnEnable()
         {
             MenuOrganisation.RestartGameLevel += ReSetMatch;
-            BallMovement.m_HitGoalOne += UpdateTPOnePoints;
-            BallMovement.m_HitGoalTwo += UpdateTPTwoPoints;
+            BallMovement.m_HitGoalOne += UpdateTPTwoPoints;
+            BallMovement.m_HitGoalTwo += UpdateTPOnePoints;
             m_StartNextRound += StartNextRound;
             m_StartWinProcedure += StartWinProcedure;
         }
@@ -35,8 +37,8 @@ namespace ThreeDeePongProto.Managers
         private void OnDisable()
         {
             MenuOrganisation.RestartGameLevel -= ReSetMatch;
-            BallMovement.m_HitGoalOne -= UpdateTPOnePoints;
-            BallMovement.m_HitGoalTwo -= UpdateTPTwoPoints;
+            BallMovement.m_HitGoalOne -= UpdateTPTwoPoints;
+            BallMovement.m_HitGoalTwo -= UpdateTPOnePoints;
             m_StartNextRound -= StartNextRound;
             m_StartWinProcedure -= StartWinProcedure;
         }
@@ -65,12 +67,15 @@ namespace ThreeDeePongProto.Managers
                 return;
             }
 
-            ++m_matchVariables.CurrentPointsTPTwo;
-            ++m_matchVariables.TotalPointsTPTwo;
-            //Player 2
-            m_playerData[1].TotalPoints = m_matchVariables.TotalPointsTPTwo;
-            //Player 4
-            m_playerData[3].TotalPoints = m_matchVariables.TotalPointsTPTwo;
+            if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
+                m_scoredPlayer = m_playerData[0].PlayerName;
+
+            ++m_matchVariables.CurrentPointsTPOne;
+            ++m_matchVariables.TotalPointsTPOne;
+            //Player 1
+            m_playerData[0].TotalPoints = m_matchVariables.TotalPointsTPOne;
+            //Player 3
+            m_playerData[2].TotalPoints = m_matchVariables.TotalPointsTPOne;
 
             CheckMatchConditions();
         }
@@ -85,13 +90,16 @@ namespace ThreeDeePongProto.Managers
                 return;
             }
 
-            ++m_matchVariables.CurrentPointsTPOne;
-            ++m_matchVariables.TotalPointsTPOne;
+            if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
+                m_scoredPlayer = m_playerData[1].PlayerName;
 
-            //Player 1
-            m_playerData[0].TotalPoints = m_matchVariables.TotalPointsTPOne;
-            //Player 3
-            m_playerData[2].TotalPoints = m_matchVariables.TotalPointsTPOne;
+            ++m_matchVariables.CurrentPointsTPTwo;
+            ++m_matchVariables.TotalPointsTPTwo;
+
+            //Player 2
+            m_playerData[1].TotalPoints = m_matchVariables.TotalPointsTPTwo;
+            //Player 4
+            m_playerData[3].TotalPoints = m_matchVariables.TotalPointsTPTwo;
 
             CheckMatchConditions();
         }
@@ -111,7 +119,7 @@ namespace ThreeDeePongProto.Managers
 
         private void CheckMatchConditions()
         {
-            bool nextRoundConditionIsMet = 
+            bool nextRoundConditionIsMet =
                 m_matchVariables.CurrentPointsTPOne >= m_matchVariables.SetMaxPoints &&
                 m_matchVariables.CurrentPointsTPOne >= m_matchVariables.CurrentPointsTPTwo + m_matchVariables.WinPointDifference
                 ||
@@ -120,7 +128,7 @@ namespace ThreeDeePongProto.Managers
 
             bool winConditionIsMet = m_matchVariables.CurrentRoundNr == m_matchVariables.SetMaxRounds && nextRoundConditionIsMet;
 
-            if(winConditionIsMet)
+            if (winConditionIsMet)
             {
                 m_StartWinProcedure.Invoke();
                 return;
@@ -131,14 +139,14 @@ namespace ThreeDeePongProto.Managers
                 case true:
                 {
                     m_StartNextRound?.Invoke();
-                    break; 
+                    break;
                 }
                 case false:
                 {
 #if UNITY_EDITOR
-                    Debug.Log("Requirements for the next round not met, yet.");
+                    Debug.Log($"{m_scoredPlayer} scored. Congratulations!");
 #endif
-                    break; 
+                    break;
                 }
             }
         }
