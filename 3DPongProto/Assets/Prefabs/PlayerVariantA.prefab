@@ -143,6 +143,11 @@ PrefabInstance:
         type: 2}
     - target: {fileID: 8973898448692739539, guid: 783feb4697821a043931bae4b63b27b7,
         type: 3}
+      propertyPath: m_goalDistance
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8973898448692739539, guid: 783feb4697821a043931bae4b63b27b7,
+        type: 3}
       propertyPath: m_moveDuration
       value: 1.5
       objectReference: {fileID: 0}

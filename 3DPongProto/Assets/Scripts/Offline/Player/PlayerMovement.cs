@@ -23,6 +23,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         [SerializeField] private float m_movementSpeed;
         private Vector3 m_rbPosition, m_readValueVector;
         private float m_maxSideMovement, m_setGroundWidth, m_setGroundLength;
+        private float m_frontLineDistance, m_backLineDistance;
 
         [Header("Rotation")]
         [SerializeField, Range(1, 5)] private float m_rotationSpeed;
@@ -32,18 +33,18 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         private Quaternion m_deltaRotation;
 
         [Header("Paddle-Scale")]
-        [SerializeField] private float m_startWidthAdjustment;
+        //[SerializeField] private float m_startWidthAdjustment;
         [SerializeField] private Vector3 m_localPaddleScale;
 
         [Header("Z-Axis-Movement")]
         //PushDistance for 'Mathf.MoveTowards'.
         [SerializeField] private float m_maxPushDistance;
         [SerializeField] private float m_moveDuration;
-        [SerializeField] private float m_minGoalDistance;
         [SerializeField] private float m_delayRetreat;
         [SerializeField] private float m_delayRepetition;
         [SerializeField] private bool m_enablePushDelay = false;
         [SerializeField] private bool m_blockPushInput;
+        private float m_goalDistance;
 
         private bool m_pushPlayerOne = false;
         private bool m_pushPlayerTwo = false;
@@ -65,12 +66,13 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             m_paddleOneCoroutine = PushPaddleOne(m_moveDuration);
             m_paddleTwoCoroutine = PushPaddleTwo(m_moveDuration);
 
-            m_setGroundWidth = m_matchVariables.SetGroundWidth;
-            m_setGroundLength = m_matchVariables.SetGroundLength;
+            GetMatchFieldData();
+        }
 
+        private void OnEnable()
+        {
+            m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, -m_setGroundLength * 0.5f - -m_goalDistance);            
             ClampMoveRange();
-            m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, -m_setGroundLength * 0.5f - -m_minGoalDistance);
-            //m_maxSideMovement = m_setGroundWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
         }
 
         /// <summary>
@@ -134,9 +136,21 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             TurnPlayer(m_playerId);
         }
 
+        private void GetMatchFieldData()
+        {
+            m_setGroundWidth = m_matchVariables.SetGroundWidth;
+            m_setGroundLength = m_matchVariables.SetGroundLength;
+
+            if (m_playerId == 0 || m_playerId == 1)
+                m_goalDistance = m_matchVariables.BackLineDistance;
+
+            if (m_playerId == 2 || m_playerId == 3)
+                m_goalDistance = m_matchVariables.FrontLineDistance;
+        }
+
         /// <summary>
         /// Clamps the paddlemMovement on it's 'localPosition.x' and the calculated movementRange based on paddleWidth and fieldWidth.
-        /// Also clamps the desired minimal and maximal moveDistance on the zAxis based on m_minGoalDistance and m_maxPushDistance to the playerGoals.
+        /// Also clamps the desired minimal and maximal moveDistance on the zAxis based on m_goalDistance and m_maxPushDistance to the playerGoals.
         /// </summary>
         public void ClampMoveRange()
         {
@@ -147,7 +161,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
             m_rigidbody.transform.localPosition = new Vector3(Mathf.Clamp(m_rigidbody.transform.localPosition.x, -m_maxSideMovement, m_maxSideMovement),
                 m_rigidbody.transform.localPosition.y,
-                Mathf.Clamp(m_rigidbody.transform.localPosition.z, -m_setGroundLength * 0.5f - -m_minGoalDistance, -m_setGroundLength * 0.5f - -(m_minGoalDistance + m_maxPushDistance)));
+                Mathf.Clamp(m_rigidbody.transform.localPosition.z, -m_setGroundLength * 0.5f - -m_goalDistance, -m_setGroundLength * 0.5f - -(m_goalDistance + m_maxPushDistance)));
         }
 
         /// <summary>

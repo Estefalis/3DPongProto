@@ -9,6 +9,8 @@ namespace ThreeDeePongProto.Managers
         //TODO: MatchUI RoundTextfield
         [SerializeField] private GameObject m_ground;
         [SerializeField] private float m_groundWidthScale, m_groundLengthScale;
+        [SerializeField] private uint m_startRound = 1;
+        [SerializeField] private float m_frontLineDistance = 6.0f, m_backLineDistance = 1.5f;
         [SerializeField] private MatchVariables m_matchVariables;
         [SerializeField] private PlayerData[] m_playerData;
 
@@ -21,7 +23,9 @@ namespace ThreeDeePongProto.Managers
 
         private void Awake()
         {
-            m_matchVariables.CurrentRoundNr = 1;
+            m_matchVariables.CurrentRoundNr = m_startRound;
+            m_matchVariables.FrontLineDistance = m_frontLineDistance;
+            m_matchVariables.BackLineDistance = m_backLineDistance;
             ReSetMatch();
         }
 
