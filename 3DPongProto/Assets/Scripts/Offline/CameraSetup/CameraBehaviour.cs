@@ -103,7 +103,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void SelectCameraToZoom()
         {
-            //Set camera only within the gameWindow. (If the mouse is not less width or height == 0 and not more than full width or height.)
+            //Sets camera only within the gameWindow. (If the mouse is not less width or height == 0 and not more than full width or height.)
             if (!(m_mousePosition.x < (m_cameraManager.RuntimeFullsizeRect.width - m_cameraManager.RuntimeFullsizeRect.width)) &&
                 !(m_mousePosition.x > m_cameraManager.RuntimeFullsizeRect.width) &&
                 !(m_mousePosition.y < (m_cameraManager.RuntimeFullsizeRect.height - m_cameraManager.RuntimeFullsizeRect.height)) &&

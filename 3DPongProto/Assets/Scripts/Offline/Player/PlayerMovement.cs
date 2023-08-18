@@ -72,6 +72,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         private void OnEnable()
         {
             m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, -m_setGroundLength * 0.5f - -m_goalDistance);            
+
             ClampMoveRange();
         }
 
@@ -88,9 +89,10 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             m_playerMovement.PlayerActions.PushMoveModuEven.performed += PushInputSecondPlayer;
             m_playerMovement.PlayerActions.PushMoveModuEven.canceled += CanceledInputSecondPlayer;
 
-            StartCoroutinesAndActions();
-            MenuOrganisation.CloseInGameMenu += StartCoroutinesAndActions;
             InGameMenuOpens += DisablePlayerActions;
+
+            MenuOrganisation.CloseInGameMenu += StartCoroutinesAndActions;
+            StartCoroutinesAndActions();
         }
 
         private void OnDisable()
@@ -102,9 +104,9 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             m_playerMovement.PlayerActions.PushMoveModuEven.performed -= PushInputSecondPlayer;
             m_playerMovement.PlayerActions.PushMoveModuEven.canceled -= CanceledInputSecondPlayer;
 
-            StopAllCoroutines();
-            MenuOrganisation.CloseInGameMenu -= StartCoroutinesAndActions;
             InGameMenuOpens -= DisablePlayerActions;
+            MenuOrganisation.CloseInGameMenu -= StartCoroutinesAndActions;
+            StopAllCoroutines();
         }
 
         private void Update()

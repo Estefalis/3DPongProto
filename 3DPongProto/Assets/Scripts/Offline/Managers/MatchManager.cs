@@ -6,26 +6,31 @@ namespace ThreeDeePongProto.Managers
 {
     public class MatchManager : MonoBehaviour
     {
-        //TODO: MatchUI RoundTextfield
+        #region SerializeField-Member-Variables
         [SerializeField] private GameObject m_ground;
         [SerializeField] private float m_groundWidthScale, m_groundLengthScale;
         [SerializeField] private uint m_startRound = 1;
         [SerializeField] private float m_frontLineDistance = 6.0f, m_backLineDistance = 1.5f;
+        [Space]
         [SerializeField] private MatchVariables m_matchVariables;
         [SerializeField] private PlayerData[] m_playerData;
+        [SerializeField] private int m_winPointDifference;
+        #endregion
 
-        //[SerializeField] private int m_winPointDifference;
-
+        #region Non-SerializeField-Member-Variables
         public static event Action m_StartNextRound;
         public static event Action m_StartWinProcedure;
 
         private string m_scoredPlayer;
+        #endregion
 
         private void Awake()
         {
             m_matchVariables.CurrentRoundNr = m_startRound;
             m_matchVariables.FrontLineDistance = m_frontLineDistance;
             m_matchVariables.BackLineDistance = m_backLineDistance;
+            m_matchVariables.WinPointDifference = m_winPointDifference;
+
             ReSetMatch();
         }
 
@@ -34,6 +39,7 @@ namespace ThreeDeePongProto.Managers
             MenuOrganisation.RestartGameLevel += ReSetMatch;
             BallMovement.m_HitGoalOne += UpdateTPTwoPoints;
             BallMovement.m_HitGoalTwo += UpdateTPOnePoints;
+
             m_StartNextRound += StartNextRound;
             m_StartWinProcedure += StartWinProcedure;
         }
@@ -43,6 +49,7 @@ namespace ThreeDeePongProto.Managers
             MenuOrganisation.RestartGameLevel -= ReSetMatch;
             BallMovement.m_HitGoalOne -= UpdateTPTwoPoints;
             BallMovement.m_HitGoalTwo -= UpdateTPOnePoints;
+
             m_StartNextRound -= StartNextRound;
             m_StartWinProcedure -= StartWinProcedure;
         }

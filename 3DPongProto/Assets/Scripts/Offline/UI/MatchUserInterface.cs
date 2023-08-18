@@ -7,12 +7,10 @@ namespace ThreeDeePongProto.Offline.UI
 {
     public class MatchUserInterface : MonoBehaviour
     {
-        //TODO: MatchUI RoundTextfield
+        #region SerializeField-Member-Variables
         [SerializeField] private List<TextMeshProUGUI> m_playerNamesTMPList;
         [SerializeField] private List<TextMeshProUGUI> m_totalPointsTMPList;
         [SerializeField] private List<GameObject> m_playerAvatarList = new List<GameObject>();
-
-        private Dictionary<List<TextMeshProUGUI>, List<TextMeshProUGUI>> m_playerPointsConnection = new Dictionary<List<TextMeshProUGUI>, List<TextMeshProUGUI>>();
 
         [Header("Round-Details")]
         [SerializeField] private TextMeshProUGUI m_RoundNrTMP;
@@ -25,6 +23,9 @@ namespace ThreeDeePongProto.Offline.UI
         //[SerializeField] private GameObject m_songIcon;
 
         [SerializeField] private MatchVariables m_matchVariables;
+        #endregion
+
+        private Dictionary<List<TextMeshProUGUI>, List<TextMeshProUGUI>> m_playerPointsConnection = new Dictionary<List<TextMeshProUGUI>, List<TextMeshProUGUI>>();
 
         private void OnEnable()
         {

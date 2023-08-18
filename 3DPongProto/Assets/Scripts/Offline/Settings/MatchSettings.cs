@@ -8,31 +8,18 @@ namespace ThreeDeePongProto.Offline.Settings
     public class MatchSettings : MonoBehaviour
     {
         //TODO: Desired Inputfield-behaviour to select the gameObject without a blinking cursor and to enable editing on pressing Enter.
+        #region SerializeField-Member-Variables
         #region Player-Names
+        [Header("Player-Names")]
         [SerializeField] private TMP_InputField m_playerIF;
         [SerializeField] private TMP_InputField m_playerTwoIF;
         #endregion
 
-        #region Toggle-Dropdown-Connection
-        [SerializeField] private List<Toggle> m_unlimitToggleKeys = new List<Toggle>();
-        [SerializeField] private List<TMP_Dropdown> m_roundValueDropdowns = new List<TMP_Dropdown>();
-        #endregion
-
         #region Field-Dimension
+        [Header("Field-Dimension")]
         [SerializeField] private Toggle m_ratioToggle;
         [SerializeField] private TMP_Dropdown[] m_fieldDropdowns;
-        #endregion
 
-        #region SerializeField-Member-Variables
-        [SerializeField] private int m_setMaxRound/* = 5*/;
-        [SerializeField] private int m_maxRoundIndex/* = 4*/;
-        [SerializeField] private bool m_infiniteRounds;
-
-        [SerializeField] private int m_setMaxPoints/* = 25*/;
-        [SerializeField] private int m_maxPointIndex/* = 24*/;
-        [SerializeField] private bool m_infinitePoints;
-
-        [Header("Field-Dimension")]
         [SerializeField] private int m_maxFieldWidth/* = 30*/;
         [SerializeField] private int m_maxFieldLength/* = 60*/;
         [SerializeField] private int m_fieldDdWidthIndex /*= 0*/;
@@ -40,9 +27,38 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private bool m_fixAspectRatio = false;
         #endregion
 
+        #region Line-Ups
+        [Header("Line-Up")]
+        [SerializeField] private TMP_Dropdown m_frontLineDd;
+        [SerializeField] private TMP_Dropdown m_backLineDd;
+        [SerializeField] private Slider m_frontLineSlider;
+        [SerializeField] private Slider m_backLineSlider;
+        #endregion
+
+        #region Rounds and Points
+        [Header("Rounds and Points")]
+        [SerializeField] private int m_setMaxRound/* = 5*/;
+        [SerializeField] private int m_maxRoundIndex/* = 4*/;
+        [SerializeField] private bool m_infiniteRounds;
+
+        [SerializeField] private int m_setMaxPoints/* = 25*/;
+        [SerializeField] private int m_maxPointIndex/* = 24*/;
+        [SerializeField] private bool m_infinitePoints;
+        #endregion
+
         #region Scriptable-References
         [SerializeField] private MatchVariables m_matchVariables;
         [SerializeField] private PlayerData[] m_playerData;
+        #endregion
+        #endregion
+
+        #region Lists and Dictionaries
+        #region Toggle-Dropdown-Connection
+        [SerializeField] private List<Toggle> m_unlimitToggleKeys = new List<Toggle>();
+        [SerializeField] private List<TMP_Dropdown> m_roundValueDropdowns = new List<TMP_Dropdown>();
+        #endregion
+        private Dictionary<Toggle, TMP_Dropdown> m_matchKeyValuePairs = new Dictionary<Toggle, TMP_Dropdown>();
+        private Dictionary<Toggle, TMP_Dropdown[]> m_ratioDict = new Dictionary<Toggle, TMP_Dropdown[]>();
         #endregion
 
         #region Non-SerializeField-Member-Variables
@@ -53,16 +69,10 @@ namespace ThreeDeePongProto.Offline.Settings
         private int m_tempWidthDdValue = 0, m_tempLengthDdValue = 0;
         private bool m_fixRatioIfTrue;
 
-        private bool m_editablePlayerIF = false, m_editablePlayerTwoIF = false;
-        #endregion
-
-        #region Lists and Dictionaries
         private List<string> m_roundsList;
         private List<string> m_maxPointsList;
         private List<string> m_widthList;
         private List<string> m_lengthList;
-        private Dictionary<Toggle, TMP_Dropdown> m_matchKeyValuePairs = new Dictionary<Toggle, TMP_Dropdown>();
-        private Dictionary<Toggle, TMP_Dropdown[]> m_ratioDict = new Dictionary<Toggle, TMP_Dropdown[]>();
         #endregion
 
         private void Awake()
@@ -159,6 +169,11 @@ namespace ThreeDeePongProto.Offline.Settings
             //Field-Length-Dropdown-Listener.
             m_fieldDropdowns[1].onValueChanged.AddListener(delegate
             { OnLengthDropdownValueChanged(m_fieldDropdowns[1]); });
+
+            m_frontLineDd.onValueChanged.AddListener(delegate
+            { OnFrontLineDropdownValueChanged(m_frontLineDd); });
+            m_backLineDd.onValueChanged.AddListener(delegate
+            { OnBackLineDropdownValueChanged(m_backLineDd); });
         }
 
         private void RemoveGroupListeners()
@@ -182,39 +197,8 @@ namespace ThreeDeePongProto.Offline.Settings
             { OnLengthDropdownValueChanged(m_fieldDropdowns[1]); });
         }
 
-        public void OnPlayerIFSelected()
-        {
-            m_editablePlayerIF = !m_editablePlayerIF;
-#if UNITY_EDITOR
-            Debug.Log($"IF 1 editable = {m_editablePlayerIF}.");
-#endif
-        }
-
-        public void OnPlayerIFDeselected()
-        {
-            m_editablePlayerIF = !m_editablePlayerIF;
-#if UNITY_EDITOR
-            Debug.Log($"IF 1 editable = {m_editablePlayerIF}.");
-#endif
-        }
-
-        public void OnPlayerTwoIFSelected()
-        {
-            m_editablePlayerTwoIF = !m_editablePlayerTwoIF;
-#if UNITY_EDITOR
-            Debug.Log($"IF 2 editable = {m_editablePlayerTwoIF}.");
-#endif
-        }
-
-        public void OnPlayerTwoIFDeselected()
-        {
-            m_editablePlayerTwoIF = !m_editablePlayerTwoIF;
-#if UNITY_EDITOR
-            Debug.Log($"IF 2 editable = {m_editablePlayerTwoIF}.");
-#endif
-        }
-
         #region Toggle-OnValueChanged-Methods
+        #region Round-Toggle
         /// <summary>
         /// Listener-Method to replace the displayed round-information in the related dropdown. Also sets roundAmount and bool-state in the scriptable. 
         /// </summary>
@@ -249,7 +233,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 }
                 case true:
                 {
-                    m_roundsList.Add("\u221E");
+                    m_roundsList.Add("\u221E"); //infinity icon.
                     dropdown.AddOptions(m_roundsList);
                     dropdown.RefreshShownValue();
                     m_matchVariables.SetMaxRounds = m_infiniteValue;
@@ -258,7 +242,9 @@ namespace ThreeDeePongProto.Offline.Settings
                 }
             }
         }
+        #endregion
 
+        #region MaxPoint-Toggle
         /// <summary>
         /// Listener-Method to replace the displayed point-information in the related dropdown. Also sets pointAmount and bool-state in the scriptable.
         /// </summary>
@@ -294,7 +280,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 }
                 case true:
                 {
-                    m_maxPointsList.Add("\u221E");
+                    m_maxPointsList.Add("\u221E"); //infinity icon.
                     dropdown.AddOptions(m_maxPointsList);
                     dropdown.RefreshShownValue();
                     m_matchVariables.SetMaxPoints = m_infiniteValue;
@@ -305,7 +291,37 @@ namespace ThreeDeePongProto.Offline.Settings
         }
         #endregion
 
+        #region Fix Ratio-Toggle
+        /// <summary>
+        /// Enabling this Toggle shall fix changes of width and length of the playfield to 1:2 ratio, while changing values on one of the two dropdowns.
+        /// </summary>
+        /// <param name="_toggle"></param>
+        private void OnRatioToggleValueChanged(Toggle _toggle)
+        {
+            TMP_Dropdown[] ratioDropdown = m_ratioDict[_toggle];
+
+            switch (_toggle.isOn)
+            {
+                case true:
+                {
+                    m_fixRatioIfTrue = true;
+                    ratioDropdown[1].value = ratioDropdown[0].value * 2;
+                    m_matchVariables.FixRatio = _toggle.isOn;
+                    break;
+                }
+                case false:
+                {
+                    m_fixRatioIfTrue = false;
+                    m_matchVariables.FixRatio = _toggle.isOn;
+                    break;
+                }
+            }
+        }
+        #endregion
+        #endregion
+
         #region Dropdown-OnValueChanged-Methods
+        #region Round-Dropdown
         /// <summary>
         /// Listener-Method to set round-values, only while the corresponding dropdown is interactable.
         /// </summary>
@@ -331,7 +347,9 @@ namespace ThreeDeePongProto.Offline.Settings
                 }
             }
         }
+        #endregion
 
+        #region MaxPoint-Dropdown
         /// <summary>
         /// Listener-Method to set maxPoint-values, only while the corresponding dropdown is interactable.
         /// </summary>
@@ -356,29 +374,9 @@ namespace ThreeDeePongProto.Offline.Settings
                 }
             }
         }
+        #endregion
 
-        private void OnRatioToggleValueChanged(Toggle _toggle)
-        {
-            TMP_Dropdown[] ratioDropdown = m_ratioDict[_toggle];
-
-            switch (_toggle.isOn)
-            {
-                case true:
-                {
-                    m_fixRatioIfTrue = true;
-                    ratioDropdown[1].value = ratioDropdown[0].value * 2;
-                    m_matchVariables.FixRatio = _toggle.isOn;
-                    break;
-                }
-                case false:
-                {
-                    m_fixRatioIfTrue = false;
-                    m_matchVariables.FixRatio = _toggle.isOn;
-                    break;
-                }
-            }
-        }
-
+        #region FieldDimension (Width & Length)
         private void OnWidthDropdownValueChanged(TMP_Dropdown _dropdown)
         {
             if (m_fixRatioIfTrue)
@@ -404,7 +402,68 @@ namespace ThreeDeePongProto.Offline.Settings
         }
         #endregion
 
-        #region Fill-Dropdowns-On-Start
+        private void OnFrontLineDropdownValueChanged(TMP_Dropdown _dropdown)
+        {
+            switch (_dropdown.value)
+            {
+                case 0:
+                {
+                    //Frontline Player 1 (Team 1, ID 0) = Backline Player 3 (Team 1, ID 2).
+                    m_backLineDd.value = 2;
+                    break;
+                }
+                case 1:
+                {
+                    //Frontline Player 2 (Team 2, ID 1) = Backline Player 4 (Team 2, ID 3).
+                    m_backLineDd.value = 3;
+                    break;
+                }
+                case 2:
+                {
+                    //Frontline Player 3 (Team 1, ID 2) = Backline Player 1 (Team 1, ID 0).
+                    m_backLineDd.value = 0;
+                    break; }
+                case 3:
+                {
+                    //Frontline Player 4 (Team 2, ID 3) = Backline Player 2 (Team 2, ID 1).
+                    m_backLineDd.value = 1;
+                    break; }
+                default:
+                { break; }
+            }
+        }
+
+        private void OnBackLineDropdownValueChanged(TMP_Dropdown _dropdown)
+        {
+            switch (_dropdown.value)
+            {
+                case 0:
+                {
+                    //Backline Player 1 (Team 1, ID 0) = Frontline Player 3 (Team 1, ID 2).
+                    m_frontLineDd.value = 2;
+                    break; }
+                case 1:
+                {
+                    //Backline Player 2 (Team 2, ID 1) = Frontline Player 4 (Team 2, ID 3).
+                    m_frontLineDd.value = 3;
+                    break; }
+                case 2:
+                {
+                    //Backline Player 3 (Team 1, ID 2) = Frontline Player 1 (Team 1, ID 0).
+                    m_frontLineDd.value = 0;
+                    break; }
+                case 3:
+                {
+                    //Backline Player 4 (Team 2, ID 3) = Frontline Player 2 (Team 2, ID 1).
+                    m_frontLineDd.value = 1;
+                    break; }
+                default:
+                { break; }
+            }
+        }
+        #endregion
+
+        #region EXTRA Fill-Dropdowns-On-Start
         /// <summary>
         /// Method to fill the round-dropdown on Start. Also sets it's interactable-status.
         /// </summary>
