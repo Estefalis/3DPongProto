@@ -130,3 +130,4 @@ MonoBehaviour:
   m_rigidbody: {fileID: 5041537836607581328}
   m_impulseForce: 11
   m_offWallAngle: 15
+  m_offPaddleAngle: 1

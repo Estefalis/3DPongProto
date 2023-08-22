@@ -10,4 +10,6 @@ public class PlayerData : ScriptableObject
     public uint PlayerId;
     public uint TotalPoints;
     public Image Avatar;
+
+    public bool PlayerOnFrontline;
 }

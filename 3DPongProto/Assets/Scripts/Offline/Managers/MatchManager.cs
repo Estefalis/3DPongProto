@@ -66,6 +66,7 @@ namespace ThreeDeePongProto.Managers
 
             ResetPlayfield();
             ResetRoundValues();
+            //ReSetPlayerLineUp();
         }
 
         private void UpdateTPOnePoints()

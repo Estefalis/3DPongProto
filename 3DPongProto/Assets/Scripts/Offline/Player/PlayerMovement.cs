@@ -143,11 +143,15 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             m_setGroundWidth = m_matchVariables.SetGroundWidth;
             m_setGroundLength = m_matchVariables.SetGroundLength;
 
-            if (m_playerId == 0 || m_playerId == 1)
-                m_goalDistance = m_matchVariables.BackLineDistance;
-
-            if (m_playerId == 2 || m_playerId == 3)
-                m_goalDistance = m_matchVariables.FrontLineDistance;
+            switch (m_playerData.PlayerOnFrontline)
+            {
+                case true:
+                    m_goalDistance = m_matchVariables.FrontLineDistance;
+                    break;
+                case false:
+                    m_goalDistance = m_matchVariables.BackLineDistance;
+                    break;
+            }   
         }
 
         /// <summary>

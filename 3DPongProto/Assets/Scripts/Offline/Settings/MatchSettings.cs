@@ -29,8 +29,8 @@ namespace ThreeDeePongProto.Offline.Settings
 
         #region Line-Ups
         [Header("Line-Up")]
-        [SerializeField] private TMP_Dropdown m_frontLineDd;
-        [SerializeField] private TMP_Dropdown m_backLineDd;
+        [SerializeField] private TMP_Dropdown[] m_frontLineDds;
+        [SerializeField] private TMP_Dropdown[] m_backLineDds;
         [SerializeField] private Slider m_frontLineSlider;
         [SerializeField] private Slider m_backLineSlider;
         #endregion
@@ -73,6 +73,8 @@ namespace ThreeDeePongProto.Offline.Settings
         private List<string> m_maxPointsList;
         private List<string> m_widthList;
         private List<string> m_lengthList;
+        private List<string> m_playersTeamOne;
+        private List<string> m_playersTeamTwo;
         #endregion
 
         private void Awake()
@@ -90,16 +92,11 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void OnEnable()
         {
-            AddGroupListeners();
-        }
-
-        private void OnDisable()
-        {
-            RemoveGroupListeners();
-        }
-
-        private void Start()
-        {
+            if (m_playerData.Length > 2)
+            {
+                FillFrontlineDropdowns();
+                FillBacklineDropdowns();
+            }
             PresetToggles();
 
             FillRoundDropdown(m_unlimitToggleKeys[0]);
@@ -107,19 +104,14 @@ namespace ThreeDeePongProto.Offline.Settings
 
             FillWidthDropdown();
             FillLengthDropdown();
+
+            AddGroupListeners();
         }
 
-        #region Name-Inputfields
-        public void PlayerOneInput(string _playernameOne)
+        private void OnDisable()
         {
-            m_playerData[0].PlayerName = _playernameOne;
+            RemoveGroupListeners();
         }
-
-        public void PlayerTwoInput(string _playernameTwo)
-        {
-            m_playerData[1].PlayerName = _playernameTwo;
-        }
-        #endregion
 
         private void PresetToggles()
         {
@@ -170,10 +162,15 @@ namespace ThreeDeePongProto.Offline.Settings
             m_fieldDropdowns[1].onValueChanged.AddListener(delegate
             { OnLengthDropdownValueChanged(m_fieldDropdowns[1]); });
 
-            m_frontLineDd.onValueChanged.AddListener(delegate
-            { OnFrontLineDropdownValueChanged(m_frontLineDd); });
-            m_backLineDd.onValueChanged.AddListener(delegate
-            { OnBackLineDropdownValueChanged(m_backLineDd); });
+            m_frontLineDds[0].onValueChanged.AddListener(delegate
+            { OnTeamOneFrontlineDropdownValueChanged(m_frontLineDds[0]); });
+            m_frontLineDds[1].onValueChanged.AddListener(delegate
+            { OnTeamTwoFrontlineDropdownValueChanged(m_frontLineDds[1]); });
+
+            m_backLineDds[0].onValueChanged.AddListener(delegate
+            { OnTeamOneBacklineDropdownValueChanged(m_backLineDds[0]); });
+            m_backLineDds[1].onValueChanged.AddListener(delegate
+            { OnTeamTwoBacklineDropdownValueChanged(m_backLineDds[1]); });
         }
 
         private void RemoveGroupListeners()
@@ -195,6 +192,16 @@ namespace ThreeDeePongProto.Offline.Settings
             { OnWidthDropdownValueChanged(m_fieldDropdowns[0]); });
             m_fieldDropdowns[1].onValueChanged.RemoveListener(delegate
             { OnLengthDropdownValueChanged(m_fieldDropdowns[1]); });
+
+            m_frontLineDds[0].onValueChanged.RemoveListener(delegate
+            { OnTeamOneFrontlineDropdownValueChanged(m_frontLineDds[0]); });
+            m_frontLineDds[1].onValueChanged.RemoveListener(delegate
+            { OnTeamTwoFrontlineDropdownValueChanged(m_frontLineDds[1]); });
+
+            m_backLineDds[0].onValueChanged.RemoveListener(delegate
+            { OnTeamOneBacklineDropdownValueChanged(m_backLineDds[0]); });
+            m_backLineDds[1].onValueChanged.RemoveListener(delegate
+            { OnTeamTwoBacklineDropdownValueChanged(m_backLineDds[1]); });
         }
 
         #region Toggle-OnValueChanged-Methods
@@ -402,68 +409,116 @@ namespace ThreeDeePongProto.Offline.Settings
         }
         #endregion
 
-        private void OnFrontLineDropdownValueChanged(TMP_Dropdown _dropdown)
+        /// <summary>
+        /// dropdownIndex-Changes set Booleans on playerData-Scriptables to set their goalDistance-Positions on Match-Start.
+        /// </summary>
+        /// <param name="_dropdown"></param>
+        private void OnTeamOneFrontlineDropdownValueChanged(TMP_Dropdown _dropdown)
         {
             switch (_dropdown.value)
             {
                 case 0:
                 {
                     //Frontline Player 1 (Team 1, ID 0) = Backline Player 3 (Team 1, ID 2).
-                    m_backLineDd.value = 2;
+                    m_backLineDds[0].value = 1;
+                    UpdateFrontlineSetup(_dropdown.value);
                     break;
                 }
                 case 1:
                 {
-                    //Frontline Player 2 (Team 2, ID 1) = Backline Player 4 (Team 2, ID 3).
-                    m_backLineDd.value = 3;
+                    //Frontline Player 3 (Team 1, ID 2) = Backline Player 1 (Team 1, ID 0).
+                    m_backLineDds[0].value = 0;
+                    UpdateFrontlineSetup(_dropdown.value);
                     break;
                 }
-                case 2:
-                {
-                    //Frontline Player 3 (Team 1, ID 2) = Backline Player 1 (Team 1, ID 0).
-                    m_backLineDd.value = 0;
-                    break; }
-                case 3:
-                {
-                    //Frontline Player 4 (Team 2, ID 3) = Backline Player 2 (Team 2, ID 1).
-                    m_backLineDd.value = 1;
-                    break; }
                 default:
                 { break; }
             }
         }
 
-        private void OnBackLineDropdownValueChanged(TMP_Dropdown _dropdown)
+        /// <summary>
+        /// dropdownIndex-Changes set Booleans on playerData-Scriptables to set their goalDistance-Positions on Match-Start.
+        /// </summary>
+        /// <param name="_dropdown"></param>
+        private void OnTeamTwoFrontlineDropdownValueChanged(TMP_Dropdown _dropdown)
+        {
+            switch (_dropdown.value)
+            {
+                case 0:
+                {
+                    //Frontline Player 2 (Team 2, ID 1) = Backline Player 4 (Team 2, ID 3).
+                    m_backLineDds[1].value = 1;
+                    UpdateFrontlineSetup(_dropdown.value);
+                    break;
+                }
+                case 1:
+                {
+                    //Frontline Player 4 (Team 2, ID 3) = Backline Player 2 (Team 2, ID 1).
+                    m_backLineDds[1].value = 0;
+                    UpdateFrontlineSetup(_dropdown.value);
+                    break;
+                }
+                default:
+                { break; }
+            }
+        }
+
+        /// <summary>
+        /// dropdownIndex-Changes set Booleans on playerData-Scriptables to set their goalDistance-Positions on Match-Start.
+        /// </summary>
+        /// <param name="_dropdown"></param>
+        private void OnTeamOneBacklineDropdownValueChanged(TMP_Dropdown _dropdown)
         {
             switch (_dropdown.value)
             {
                 case 0:
                 {
                     //Backline Player 1 (Team 1, ID 0) = Frontline Player 3 (Team 1, ID 2).
-                    m_frontLineDd.value = 2;
-                    break; }
+                    m_frontLineDds[0].value = 1;
+                    UpdateBacklineSetup(_dropdown.value);
+                    break;
+                }
                 case 1:
                 {
-                    //Backline Player 2 (Team 2, ID 1) = Frontline Player 4 (Team 2, ID 3).
-                    m_frontLineDd.value = 3;
-                    break; }
-                case 2:
-                {
                     //Backline Player 3 (Team 1, ID 2) = Frontline Player 1 (Team 1, ID 0).
-                    m_frontLineDd.value = 0;
-                    break; }
-                case 3:
+                    m_frontLineDds[0].value = 0;
+                    UpdateBacklineSetup(_dropdown.value);
+                    break;
+                }
+                default:
+                { break; }
+            }
+        }
+
+        /// <summary>
+        /// dropdownIndex-Changes set Booleans on playerData-Scriptables to set their goalDistance-Positions on Match-Start.
+        /// </summary>
+        /// <param name="_dropdown"></param>
+        private void OnTeamTwoBacklineDropdownValueChanged(TMP_Dropdown _dropdown)
+        {
+            switch (_dropdown.value)
+            {
+                case 0:
+                {
+                    //Backline Player 2 (Team 2, ID 1) = Frontline Player 4 (Team 2, ID 3).
+                    m_frontLineDds[1].value = 1;
+                    UpdateBacklineSetup(_dropdown.value);
+                    break;
+                }
+                case 1:
                 {
                     //Backline Player 4 (Team 2, ID 3) = Frontline Player 2 (Team 2, ID 1).
-                    m_frontLineDd.value = 1;
-                    break; }
+                    m_frontLineDds[1].value = 0;
+                    UpdateBacklineSetup(_dropdown.value);
+                    break;
+                }
                 default:
                 { break; }
             }
         }
         #endregion
 
-        #region EXTRA Fill-Dropdowns-On-Start
+        #region Fill-Dropdowns-On-Start
         /// <summary>
         /// Method to fill the round-dropdown on Start. Also sets it's interactable-status.
         /// </summary>
@@ -603,6 +658,78 @@ namespace ThreeDeePongProto.Offline.Settings
                 m_fieldDropdowns[1].value = m_fieldDdLengthIndex;
 
             m_fieldDropdowns[1].RefreshShownValue();
+        }
+
+        private void FillFrontlineDropdowns()
+        {
+            m_playersTeamOne = new List<string>();
+            m_playersTeamTwo = new List<string>();
+
+            for (int i = 0; i < m_playerData.Length; i++)
+            {
+                if (m_playerData[i].PlayerId % 2 == 0)
+                    m_playersTeamOne.Add($"Player {i + 1}");
+                if (m_playerData[i].PlayerId % 2 != 0)
+                    m_playersTeamTwo.Add($"Player {i + 1}");
+            }
+
+            m_frontLineDds[0].ClearOptions();
+            m_frontLineDds[0].AddOptions(m_playersTeamOne);
+            m_frontLineDds[0].value = 0;
+            m_frontLineDds[0].RefreshShownValue();
+
+            m_frontLineDds[1].ClearOptions();
+            m_frontLineDds[1].AddOptions(m_playersTeamTwo);
+            m_frontLineDds[1].value = 0;
+            m_frontLineDds[1].RefreshShownValue();
+        }
+
+        private void FillBacklineDropdowns()
+        {
+            m_playersTeamOne = new List<string>();
+            m_playersTeamTwo = new List<string>();
+
+            for (int i = 0; i < m_playerData.Length; i++)
+            {
+                if (m_playerData[i].PlayerId % 2 == 0)
+                    m_playersTeamOne.Add($"Player {i + 1}");
+                if (m_playerData[i].PlayerId % 2 != 0)
+                    m_playersTeamTwo.Add($"Player {i + 1}");
+            }
+
+            m_backLineDds[0].ClearOptions();
+            m_backLineDds[0].AddOptions(m_playersTeamOne);
+            m_backLineDds[0].value = 1;
+            m_backLineDds[0].RefreshShownValue();
+
+            m_backLineDds[1].ClearOptions();
+            m_backLineDds[1].AddOptions(m_playersTeamTwo);
+            m_backLineDds[1].value = 1;
+            m_backLineDds[1].RefreshShownValue();
+        }
+        #endregion
+
+        #region Non-OnValueChanged-Methods
+        #region Name-Inputfields
+        public void PlayerOneInput(string _playernameOne)
+        {
+            m_playerData[0].PlayerName = _playernameOne;
+        }
+
+        public void PlayerTwoInput(string _playernameTwo)
+        {
+            m_playerData[1].PlayerName = _playernameTwo;
+        }
+        #endregion
+
+        private void UpdateFrontlineSetup(int _dropdownPlayerId)
+        {
+            m_playerData[_dropdownPlayerId].PlayerOnFrontline = true;
+        }
+
+        private void UpdateBacklineSetup(int _dropdownPlayerId)
+        {
+            m_playerData[_dropdownPlayerId].PlayerOnFrontline = false;
         }
         #endregion
     }
