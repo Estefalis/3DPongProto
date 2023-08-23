@@ -9,31 +9,26 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 {
     public class PlayerMovement : MonoBehaviour
     {
+        #region Script-References
         private PlayerInputActions m_playerMovement;
+        private MatchManager m_matchManager;
+        #endregion
 
+        #region SerializeField-Member-Variables
         [SerializeField] private Rigidbody m_rigidbody;
         [Space]
         [SerializeField] private PlayerData m_playerData;
         [SerializeField] private uint m_playerId;
-        public uint PlayerId { get { return m_playerId; } }
-        //public uint PlayerId { get { return m_playerData.PlayerId; } }
 
         [Header("Side-Movement")]
         [SerializeField] private MatchVariables m_matchVariables;
         [SerializeField] private float m_movementSpeed;
-        private Vector3 m_rbPosition, m_readValueVector;
-        private float m_maxSideMovement, m_setGroundWidth, m_setGroundLength;
-        private float m_frontLineDistance, m_backLineDistance;
 
         [Header("Rotation")]
         [SerializeField, Range(1, 5)] private float m_rotationSpeed;
-        private readonly float m_baseRotationSpeed = 100;
         [SerializeField] private float m_maxRotationAngle;
-        private Vector3 m_axisRotUneven, m_axisRotEven;
-        private Quaternion m_deltaRotation;
 
         [Header("Paddle-Scale")]
-        //[SerializeField] private float m_startWidthAdjustment;
         [SerializeField] private Vector3 m_localPaddleScale;
 
         [Header("Z-Axis-Movement")]
@@ -44,18 +39,39 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         [SerializeField] private float m_delayRepetition;
         [SerializeField] private bool m_enablePushDelay = false;
         [SerializeField] private bool m_blockPushInput;
+
+        [Header("Default Player Details")]
+        [SerializeField] private bool m_defaultFrontLineUp;
+        #endregion
+
+        #region Non-SerializeField-Member-Variables
+        #region Properties-Access
+        public uint PlayerId { get { return m_playerId; } }
+        //public uint PlayerId { get { return m_playerData.PlayerId; } }
+        #endregion
+
+        private float m_maxSideMovement, m_groundWidth, m_groundLength;
+        private float m_frontLineDistance, m_backLineDistance;
+        private readonly float m_baseRotationSpeed = 100;
         private float m_goalDistance;
 
         private bool m_pushPlayerOne = false;
         private bool m_pushPlayerTwo = false;
         private bool m_tempBlocked = false;
-        private IEnumerator m_paddleOneCoroutine, m_paddleTwoCoroutine;
+
+        private Vector3 m_rbPosition, m_readValueVector;
+        private Vector3 m_axisRotUneven, m_axisRotEven;
+        private Quaternion m_deltaRotation;
 
         //GameManager pauses the Game. Coroutines and the Inputsystem.PlayerActions get disabled inside this class.
         public static event Action InGameMenuOpens;
+        private IEnumerator m_paddleOneCoroutine, m_paddleTwoCoroutine;
+        #endregion
 
         private void Awake()
         {
+            m_matchManager = GetComponent<MatchManager>();
+
             m_playerData.PlayerId = m_playerId;
 
             if (m_rigidbody == null)
@@ -65,13 +81,15 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
             m_paddleOneCoroutine = PushPaddleOne(m_moveDuration);
             m_paddleTwoCoroutine = PushPaddleTwo(m_moveDuration);
-
-            GetMatchFieldData();
         }
 
         private void OnEnable()
         {
-            m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, -m_setGroundLength * 0.5f - -m_goalDistance);            
+            //Gets GroundWidth, Ground-Length and goalDistance to set and clamp the playerPositions right after.
+            GetFieldDetails();
+            GetPlayerDetails();
+
+            m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, -m_groundLength * 0.5f - -m_goalDistance);
 
             ClampMoveRange();
         }
@@ -138,20 +156,44 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             TurnPlayer(m_playerId);
         }
 
-        private void GetMatchFieldData()
+        private void GetFieldDetails()
         {
-            m_setGroundWidth = m_matchVariables.SetGroundWidth;
-            m_setGroundLength = m_matchVariables.SetGroundLength;
-
-            switch (m_playerData.PlayerOnFrontline)
+            if (m_matchVariables == null)
             {
-                case true:
-                    m_goalDistance = m_matchVariables.FrontLineDistance;
-                    break;
-                case false:
-                    m_goalDistance = m_matchVariables.BackLineDistance;
-                    break;
-            }   
+                m_groundWidth = m_matchManager.DefaultFieldWidth;
+                m_groundLength = m_matchManager.DefaultFieldLength;
+            }
+            else
+            {
+                m_groundWidth = m_matchVariables.SetGroundWidth;
+                m_groundLength = m_matchVariables.SetGroundLength;
+            }
+        }
+
+        private void GetPlayerDetails()
+        {
+            if (m_playerData == null || m_matchVariables == null)
+                switch (m_defaultFrontLineUp)
+                {
+                    case true:
+                        m_goalDistance = m_matchManager.DefaultFrontLineDistance;
+                        break;
+                    case false:
+                        m_goalDistance = m_matchManager.DefaultBackLineDistance;
+                        break;
+                }
+            else
+            {
+                switch (m_playerData.PlayerOnFrontline)
+                {
+                    case true:
+                        m_goalDistance = m_matchVariables.FrontLineDistance;
+                        break;
+                    case false:
+                        m_goalDistance = m_matchVariables.BackLineDistance;
+                        break;
+                }
+            }
         }
 
         /// <summary>
@@ -160,14 +202,14 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         /// </summary>
         public void ClampMoveRange()
         {
-            m_maxSideMovement = m_setGroundWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
+            m_maxSideMovement = m_groundWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
 
             if (m_matchVariables != null)
                 m_rigidbody.transform.localScale = new Vector3(m_localPaddleScale.x + m_matchVariables.PaddleWidthAdjustment, m_localPaddleScale.y, m_localPaddleScale.z);
 
             m_rigidbody.transform.localPosition = new Vector3(Mathf.Clamp(m_rigidbody.transform.localPosition.x, -m_maxSideMovement, m_maxSideMovement),
                 m_rigidbody.transform.localPosition.y,
-                Mathf.Clamp(m_rigidbody.transform.localPosition.z, -m_setGroundLength * 0.5f - -m_goalDistance, -m_setGroundLength * 0.5f - -(m_goalDistance + m_maxPushDistance)));
+                Mathf.Clamp(m_rigidbody.transform.localPosition.z, -m_groundLength * 0.5f - -m_goalDistance, -m_groundLength * 0.5f - -(m_goalDistance + m_maxPushDistance)));
         }
 
         /// <summary>

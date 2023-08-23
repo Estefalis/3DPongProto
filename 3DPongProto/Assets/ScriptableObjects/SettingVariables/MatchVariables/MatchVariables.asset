@@ -30,4 +30,5 @@ MonoBehaviour:
   LastFieldLengthDdIndex: 0
   FixRatio: 0
   PaddleWidthAdjustment: 0
-  DistanceToGoal: 0
+  FrontLineDistance: 6
+  BackLineDistance: 1.5

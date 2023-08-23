@@ -7,29 +7,49 @@ namespace ThreeDeePongProto.Managers
     public class MatchManager : MonoBehaviour
     {
         #region SerializeField-Member-Variables
-        [SerializeField] private GameObject m_ground;
-        [SerializeField] private float m_groundWidthScale, m_groundLengthScale;
+        [SerializeField] private GameObject m_playGround;
+
+        [Header("Defaults")]
+        [SerializeField] private float m_playGroundWidthScale = 0.1f;
+        [SerializeField] private float m_playGroundLengthScale = 0.1f;
+        [SerializeField] private float m_playGroundWidth = 25.0f;
+        [SerializeField] private float m_playGroundLength = 50.0f;
+        [SerializeField] private float m_defaultFrontLineDistance = 6.0f;
+        [SerializeField] private float m_defaultBackLineDistance = 1.5f;
         [SerializeField] private uint m_startRound = 1;
-        [SerializeField] private float m_frontLineDistance = 6.0f, m_backLineDistance = 1.5f;
+        [SerializeField] private int m_winPointDifference = 2;
         [Space]
+
+        #region Scriptable Objects
         [SerializeField] private MatchVariables m_matchVariables;
         [SerializeField] private PlayerData[] m_playerData;
-        [SerializeField] private int m_winPointDifference;
+        #endregion
         #endregion
 
         #region Non-SerializeField-Member-Variables
-        public static event Action m_StartNextRound;
-        public static event Action m_StartWinProcedure;
+        #region Properties-Access
+        public float DefaultFrontLineDistance { get => m_defaultFrontLineDistance; }
+        public float DefaultBackLineDistance { get => m_defaultBackLineDistance; }
+        public float DefaultFieldWidth { get => m_playGroundWidth; }
+        public float DefaultFieldLength { get => m_playGroundLength; }
+        #endregion
 
         private string m_scoredPlayer;
+
+        public static event Action m_StartNextRound;
+        public static event Action m_StartWinProcedure;
         #endregion
 
         private void Awake()
         {
-            m_matchVariables.CurrentRoundNr = m_startRound;
-            m_matchVariables.FrontLineDistance = m_frontLineDistance;
-            m_matchVariables.BackLineDistance = m_backLineDistance;
-            m_matchVariables.WinPointDifference = m_winPointDifference;
+            if (m_matchVariables != null)
+            {
+                //TODO: May replace these settings with an active Save- and Loadsystem later.
+                m_matchVariables.CurrentRoundNr = m_startRound;
+                m_matchVariables.FrontLineDistance = m_defaultFrontLineDistance;
+                m_matchVariables.BackLineDistance = m_defaultBackLineDistance;
+                m_matchVariables.WinPointDifference = m_winPointDifference;
+            }
 
             ReSetMatch();
         }
@@ -66,7 +86,6 @@ namespace ThreeDeePongProto.Managers
 
             ResetPlayfield();
             ResetRoundValues();
-            //ReSetPlayerLineUp();
         }
 
         private void UpdateTPOnePoints()
@@ -119,18 +138,27 @@ namespace ThreeDeePongProto.Managers
         #region Match-Presets
         private void ResetPlayfield()
         {
-            m_ground.transform.localScale = new Vector3(m_matchVariables.SetGroundWidth * m_groundWidthScale, m_ground.transform.localScale.y, m_matchVariables.SetGroundLength * m_groundLengthScale);
+            if (m_matchVariables == null)
+                m_playGround.transform.localScale = new Vector3(m_playGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_playGroundLength * m_playGroundLengthScale);
+            else
+                m_playGround.transform.localScale = new Vector3(m_matchVariables.SetGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_matchVariables.SetGroundLength * m_playGroundLengthScale);
         }
 
         private void ResetRoundValues()
         {
-            m_matchVariables.CurrentPointsTPOne = 0;
-            m_matchVariables.CurrentPointsTPTwo = 0;
+            if (m_matchVariables != null)
+            {
+                m_matchVariables.CurrentPointsTPOne = 0;
+                m_matchVariables.CurrentPointsTPTwo = 0;
+            }
         }
         #endregion
 
         private void CheckMatchConditions()
         {
+            if (m_matchVariables == null)
+                return;
+
             bool nextRoundConditionIsMet =
                 m_matchVariables.CurrentPointsTPOne >= m_matchVariables.SetMaxPoints &&
                 m_matchVariables.CurrentPointsTPOne >= m_matchVariables.CurrentPointsTPTwo + m_matchVariables.WinPointDifference
@@ -171,7 +199,6 @@ namespace ThreeDeePongProto.Managers
 #if UNITY_EDITOR
             Debug.Log("Next Round starts!");
 #endif
-            //May save RoundPoints of Players/Teams.
             //TODO: May implement a procedure to transition into the next set Round.
 
             //Increase the RoundNr by 1.

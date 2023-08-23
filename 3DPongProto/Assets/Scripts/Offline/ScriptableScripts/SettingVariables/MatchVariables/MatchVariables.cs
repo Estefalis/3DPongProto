@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -36,4 +37,5 @@ public class MatchVariables : ScriptableObject
     public float PaddleWidthAdjustment;
     public float FrontLineDistance;
     public float BackLineDistance;
+    public Array FrontLineUpOnTrue = new bool[4];
 }
