@@ -18,6 +18,8 @@ namespace ThreeDeePongProto.Managers
         [SerializeField] private float m_defaultBackLineDistance = 1.5f;
         [SerializeField] private uint m_startRound = 1;
         [SerializeField] private int m_winPointDifference = 2;
+        [SerializeField] private float m_maxPushDistance = 1.5f;
+        [SerializeField] private Vector3 m_defaultPaddleScale;
         [Space]
 
         #region Scriptable Objects
@@ -32,6 +34,8 @@ namespace ThreeDeePongProto.Managers
         public float DefaultBackLineDistance { get => m_defaultBackLineDistance; }
         public float DefaultFieldWidth { get => m_playGroundWidth; }
         public float DefaultFieldLength { get => m_playGroundLength; }
+        public float MaxPushDistance { get => m_maxPushDistance; }
+        public Vector3 DefaultPaddleScale { get => m_defaultPaddleScale; }
         #endregion
 
         private string m_scoredPlayer;
@@ -42,14 +46,7 @@ namespace ThreeDeePongProto.Managers
 
         private void Awake()
         {
-            if (m_matchVariables != null)
-            {
-                //TODO: May replace these settings with an active Save- and Loadsystem later.
-                m_matchVariables.CurrentRoundNr = m_startRound;
-                m_matchVariables.FrontLineDistance = m_defaultFrontLineDistance;
-                m_matchVariables.BackLineDistance = m_defaultBackLineDistance;
-                m_matchVariables.WinPointDifference = m_winPointDifference;
-            }
+            SetScriptableDefaults();
 
             ReSetMatch();
         }
@@ -72,6 +69,20 @@ namespace ThreeDeePongProto.Managers
 
             m_StartNextRound -= StartNextRound;
             m_StartWinProcedure -= StartWinProcedure;
+        }
+
+        private void SetScriptableDefaults()
+        {
+            if (m_matchVariables != null)
+            {
+                //TODO: May replace these settings with an active Save- and Loadsystem later.
+                m_matchVariables.CurrentRoundNr = m_startRound;
+                m_matchVariables.FrontLineDistance = m_defaultFrontLineDistance;
+                m_matchVariables.BackLineDistance = m_defaultBackLineDistance;
+                m_matchVariables.WinPointDifference = m_winPointDifference;
+                m_matchVariables.MaxPushDistance = m_maxPushDistance;
+                m_matchVariables.StartPaddleScale = m_defaultPaddleScale;
+            }
         }
 
         private void ReSetMatch()

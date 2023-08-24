@@ -7,9 +7,9 @@ using UnityEngine.UI;
 public class PlayerData : ScriptableObject
 {
     public string PlayerName;
-    public uint PlayerId;
+    public int PlayerId;
     public uint TotalPoints;
     public Image Avatar;
 
-    public bool PlayerOnFrontline;
+    public bool PlayerOnFrontline;  //has to be saved and loaded!!!
 }

@@ -11,27 +11,20 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
     {
         #region Script-References
         private PlayerInputActions m_playerMovement;
-        private MatchManager m_matchManager;
+        [SerializeField] private MatchManager m_matchManager;
         #endregion
 
         #region SerializeField-Member-Variables
         [SerializeField] private Rigidbody m_rigidbody;
-        [Space]
-        [SerializeField] private PlayerData m_playerData;
-        [SerializeField] private uint m_playerId;
-
-        [Header("Side-Movement")]
-        [SerializeField] private MatchVariables m_matchVariables;
+        [Header("Player Details")]
+        [SerializeField] private int m_playerId;
         [SerializeField] private float m_movementSpeed;
-
-        [Header("Rotation")]
         [SerializeField, Range(1, 5)] private float m_rotationSpeed;
         [SerializeField] private float m_maxRotationAngle;
+        //[SerializeField] private Vector3 m_localPaddleScale;
+        [SerializeField] private bool m_defaultFrontLineUp;
 
-        [Header("Paddle-Scale")]
-        [SerializeField] private Vector3 m_localPaddleScale;
-
-        [Header("Z-Axis-Movement")]
+        [Header("Forward-Movement")]
         //PushDistance for 'Mathf.MoveTowards'.
         [SerializeField] private float m_maxPushDistance;
         [SerializeField] private float m_moveDuration;
@@ -39,26 +32,31 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         [SerializeField] private float m_delayRepetition;
         [SerializeField] private bool m_enablePushDelay = false;
         [SerializeField] private bool m_blockPushInput;
+        [Space]
 
-        [Header("Default Player Details")]
-        [SerializeField] private bool m_defaultFrontLineUp;
+        #region Scriptable Objects
+        [SerializeField] private PlayerData m_playerData;
+        [SerializeField] private MatchVariables m_matchVariables;
+        #endregion
         #endregion
 
         #region Non-SerializeField-Member-Variables
         #region Properties-Access
-        public uint PlayerId { get { return m_playerId; } }
-        //public uint PlayerId { get { return m_playerData.PlayerId; } }
+        public int PlayerId { get { return m_playerId; } }
+        //public int PlayerId { get { return m_playerData.PlayerId; } }
         #endregion
 
         private float m_maxSideMovement, m_groundWidth, m_groundLength;
         private float m_frontLineDistance, m_backLineDistance;
         private readonly float m_baseRotationSpeed = 100;
         private float m_goalDistance;
+        private float m_paddleWidthAdjustment;
 
         private bool m_pushPlayerOne = false;
         private bool m_pushPlayerTwo = false;
         private bool m_tempBlocked = false;
 
+        private Vector3 m_localPaddleScale;
         private Vector3 m_rbPosition, m_readValueVector;
         private Vector3 m_axisRotUneven, m_axisRotEven;
         private Quaternion m_deltaRotation;
@@ -70,8 +68,6 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         private void Awake()
         {
-            m_matchManager = GetComponent<MatchManager>();
-
             m_playerData.PlayerId = m_playerId;
 
             if (m_rigidbody == null)
@@ -162,17 +158,20 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             {
                 m_groundWidth = m_matchManager.DefaultFieldWidth;
                 m_groundLength = m_matchManager.DefaultFieldLength;
+                m_maxPushDistance = m_matchManager.MaxPushDistance;               
             }
             else
             {
                 m_groundWidth = m_matchVariables.SetGroundWidth;
                 m_groundLength = m_matchVariables.SetGroundLength;
+                m_maxPushDistance = m_matchVariables.MaxPushDistance;
             }
         }
 
         private void GetPlayerDetails()
         {
-            if (m_playerData == null || m_matchVariables == null)
+            if (m_playerData == null ^ m_matchVariables == null)
+            {
                 switch (m_defaultFrontLineUp)
                 {
                     case true:
@@ -182,6 +181,9 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
                         m_goalDistance = m_matchManager.DefaultBackLineDistance;
                         break;
                 }
+
+                m_localPaddleScale = m_matchManager.DefaultPaddleScale;
+            }
             else
             {
                 switch (m_playerData.PlayerOnFrontline)
@@ -193,6 +195,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
                         m_goalDistance = m_matchVariables.BackLineDistance;
                         break;
                 }
+
+                m_localPaddleScale = m_matchVariables.StartPaddleScale;
             }
         }
 
@@ -204,8 +208,12 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         {
             m_maxSideMovement = m_groundWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
 
-            if (m_matchVariables != null)
-                m_rigidbody.transform.localScale = new Vector3(m_localPaddleScale.x + m_matchVariables.PaddleWidthAdjustment, m_localPaddleScale.y, m_localPaddleScale.z);
+            if (m_matchVariables == null)
+                m_paddleWidthAdjustment = 0;
+            else
+                m_paddleWidthAdjustment = m_matchVariables.PaddleWidthAdjustment;
+
+            m_rigidbody.transform.localScale = new Vector3(m_localPaddleScale.x + m_paddleWidthAdjustment, m_localPaddleScale.y, m_localPaddleScale.z);
 
             m_rigidbody.transform.localPosition = new Vector3(Mathf.Clamp(m_rigidbody.transform.localPosition.x, -m_maxSideMovement, m_maxSideMovement),
                 m_rigidbody.transform.localPosition.y,
@@ -227,7 +235,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         /// MovePlayer requires a switch to handle the positive and negative paddlePositions and moveDirections based on a playerID.
         /// </summary>
         /// <param name="playerID"></param>
-        private void MovePlayer(uint playerID)
+        private void MovePlayer(int playerID)
         {
             //Modulo is used to direct into the required codeline. false for Player1 and true for Player2.
             switch (playerID % 2 == 0)
@@ -254,7 +262,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         /// <summary>
         /// Turns the playerPaddle based on Quaternion and 'rigidbody.rotation'.
         /// </summary>
-        private void TurnPlayer(uint playerID)
+        private void TurnPlayer(int playerID)
         {
             switch (playerID % 2 == 0)
             {

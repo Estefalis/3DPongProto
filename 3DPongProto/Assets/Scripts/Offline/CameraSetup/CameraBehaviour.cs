@@ -34,7 +34,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         [SerializeField] private float m_zoomDampening;
         private Vector3 m_mousePosition, m_zoomTarget;
 
-        private uint m_playerId;
+        private int m_playerId;
         private int m_playerWindowId;
 
         private void Awake()

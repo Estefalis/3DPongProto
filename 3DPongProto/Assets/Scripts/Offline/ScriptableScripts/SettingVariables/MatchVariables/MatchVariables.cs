@@ -37,5 +37,11 @@ public class MatchVariables : ScriptableObject
     public float PaddleWidthAdjustment;
     public float FrontLineDistance;
     public float BackLineDistance;
-    public Array FrontLineUpOnTrue = new bool[4];
+    public float MaxPushDistance;
+    public Vector3 StartPaddleScale;
+
+    public int TPOneFrontDdValue;
+    public int TPTwoFrontDdValue;
+    public int TPOneBacklineValue;
+    public int TPTwoBacklineValue;
 }

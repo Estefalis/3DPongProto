@@ -16,3 +16,4 @@ MonoBehaviour:
   PlayerId: 1
   TotalPoints: 0
   Avatar: {fileID: 0}
+  PlayerOnFrontline: 0
