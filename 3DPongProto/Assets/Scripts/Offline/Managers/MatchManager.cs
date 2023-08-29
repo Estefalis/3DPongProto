@@ -14,8 +14,8 @@ namespace ThreeDeePongProto.Managers
         [SerializeField] private float m_playGroundLengthScale = 0.1f;
         [SerializeField] private float m_playGroundWidth = 25.0f;
         [SerializeField] private float m_playGroundLength = 50.0f;
-        [SerializeField] private float m_defaultFrontLineDistance = 6.0f;
-        [SerializeField] private float m_defaultBackLineDistance = 1.5f;
+        [SerializeField] private float m_minimalFrontLineDistance = 6.0f;
+        [SerializeField] private float m_minimalBackLineDistance = 1.5f;
         [SerializeField] private uint m_startRound = 1;
         [SerializeField] private int m_winPointDifference = 2;
         [SerializeField] private float m_maxPushDistance = 1.5f;
@@ -30,8 +30,8 @@ namespace ThreeDeePongProto.Managers
 
         #region Non-SerializeField-Member-Variables
         #region Properties-Access
-        public float DefaultFrontLineDistance { get => m_defaultFrontLineDistance; }
-        public float DefaultBackLineDistance { get => m_defaultBackLineDistance; }
+        public float DefaultFrontLineDistance { get => m_minimalFrontLineDistance; }
+        public float DefaultBackLineDistance { get => m_minimalBackLineDistance; }
         public float DefaultFieldWidth { get => m_playGroundWidth; }
         public float DefaultFieldLength { get => m_playGroundLength; }
         public float MaxPushDistance { get => m_maxPushDistance; }
@@ -77,8 +77,8 @@ namespace ThreeDeePongProto.Managers
             {
                 //TODO: May replace these settings with an active Save- and Loadsystem later.
                 m_matchVariables.CurrentRoundNr = m_startRound;
-                m_matchVariables.FrontLineDistance = m_defaultFrontLineDistance;
-                m_matchVariables.BackLineDistance = m_defaultBackLineDistance;
+                m_matchVariables.MinFrontLineDistance = m_minimalFrontLineDistance;
+                m_matchVariables.MinBackLineDistance = m_minimalBackLineDistance;
                 m_matchVariables.WinPointDifference = m_winPointDifference;
                 m_matchVariables.MaxPushDistance = m_maxPushDistance;
                 m_matchVariables.StartPaddleScale = m_defaultPaddleScale;

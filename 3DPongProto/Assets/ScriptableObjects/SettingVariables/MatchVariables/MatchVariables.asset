@@ -30,8 +30,12 @@ MonoBehaviour:
   LastFieldLengthDdIndex: 0
   FixRatio: 0
   PaddleWidthAdjustment: 0
-  FrontLineDistance: 6
-  BackLineDistance: 1.5
+  MinFrontLineDistance: 6
+  FLAdjustAmount: 0
+  MinBackLineDistance: 1.5
+  BLAdjustAmount: 0
+  MaxPushDistance: 1.5
+  StartPaddleScale: {x: 3.5, y: 1, z: 0.5}
   TPOneFrontDdValue: 1
   TPTwoFrontDdValue: 1
   TPOneBacklineValue: 0

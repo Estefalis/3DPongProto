@@ -189,10 +189,10 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
                 switch (m_playerData.PlayerOnFrontline)
                 {
                     case true:
-                        m_goalDistance = m_matchVariables.FrontLineDistance;
+                        m_goalDistance = m_matchVariables.MinFrontLineDistance + m_matchVariables.FLAdjustAmount + m_matchVariables.BLAdjustAmount;
                         break;
                     case false:
-                        m_goalDistance = m_matchVariables.BackLineDistance;
+                        m_goalDistance = m_matchVariables.MinBackLineDistance + m_matchVariables.BLAdjustAmount;
                         break;
                 }
 

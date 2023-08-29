@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ThreeDeePongProto.Managers;
 using TMPro;
 using UnityEngine;
@@ -37,6 +38,9 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private TMP_Dropdown[] m_backLineDds;
         [SerializeField] private Slider m_frontLineSlider;
         [SerializeField] private Slider m_backLineSlider;
+        [SerializeField] private TextMeshProUGUI m_frontLineText;
+        [SerializeField] private TextMeshProUGUI m_backLineText;
+        [SerializeField] private float m_sliderAdjustStep = 0.01f;
         #endregion
 
         #region Rounds and Points
@@ -57,12 +61,20 @@ namespace ThreeDeePongProto.Offline.Settings
         #endregion
 
         #region Lists and Dictionaries
-        #region Toggle-Dropdown-Connection
         [SerializeField] private List<Toggle> m_unlimitToggleKeys = new List<Toggle>();
-        [SerializeField] private List<TMP_Dropdown> m_roundValueDropdowns = new List<TMP_Dropdown>();
-        #endregion
+        [SerializeField] private List<TMP_Dropdown> m_roundDropdownValues = new List<TMP_Dropdown>();
+
+        [SerializeField] private List<Button> m_reduceButtonKeys = new List<Button>();
+        [SerializeField] private List<Button> m_increaseButtonKeys = new List<Button>();
+        [SerializeField] private List<Slider> m_sliderValues = new List<Slider>();
+
+        #region Key-Value-Connection
         private Dictionary<Toggle, TMP_Dropdown> m_matchKeyValuePairs = new Dictionary<Toggle, TMP_Dropdown>();
         private Dictionary<Toggle, TMP_Dropdown[]> m_ratioDict = new Dictionary<Toggle, TMP_Dropdown[]>();
+
+        private Dictionary<Button, Slider> m_reduceLineSlider = new Dictionary<Button, Slider>();
+        private Dictionary<Button, Slider> m_increaseLineSlider = new Dictionary<Button, Slider>();
+        #endregion
         #endregion
 
         #region Non-SerializeField-Member-Variables
@@ -81,11 +93,14 @@ namespace ThreeDeePongProto.Offline.Settings
         private List<string> m_playersTeamTwo;
         #endregion
 
+        private event Action m_updateLineText;
+
         private void Awake()
         {
             SetupMatchDictionaries();
+            SetupLineDictionaries();
         }
-                
+
         private void OnEnable()
         {
             if (m_playerData.Length > 2)
@@ -101,7 +116,9 @@ namespace ThreeDeePongProto.Offline.Settings
 
             FillWidthDropdown();
             FillLengthDropdown();
-            
+
+            UpdateLineUpTMPs();
+            m_updateLineText += UpdateLineUpTMPs;
             SetupLineUpSliders();
 
             AddGroupListeners();
@@ -146,10 +163,10 @@ namespace ThreeDeePongProto.Offline.Settings
             { OnMaxPointToggleValueChanged(m_unlimitToggleKeys[1]); });
 
             //Listener for changes on 'UnlimitedRounds'-UI-Dropdown.
-            m_roundValueDropdowns[0].onValueChanged.AddListener(delegate
+            m_roundDropdownValues[0].onValueChanged.AddListener(delegate
             { OnRoundDropdownValueChanged(m_unlimitToggleKeys[0]); });
             //Listener for changes on 'UnlimitedMaxPoints'-UI-Dropdown.
-            m_roundValueDropdowns[1].onValueChanged.AddListener(delegate
+            m_roundDropdownValues[1].onValueChanged.AddListener(delegate
             { OnMaxPointDropdownValueChanged(m_unlimitToggleKeys[1]); });
 
             m_ratioToggle.onValueChanged.AddListener(delegate
@@ -182,9 +199,9 @@ namespace ThreeDeePongProto.Offline.Settings
             m_unlimitToggleKeys[1].onValueChanged.RemoveListener(delegate
             { OnMaxPointToggleValueChanged(m_unlimitToggleKeys[1]); });
 
-            m_roundValueDropdowns[0].onValueChanged.RemoveListener(delegate
+            m_roundDropdownValues[0].onValueChanged.RemoveListener(delegate
             { OnRoundDropdownValueChanged(m_unlimitToggleKeys[0]); });
-            m_roundValueDropdowns[1].onValueChanged.RemoveListener(delegate
+            m_roundDropdownValues[1].onValueChanged.RemoveListener(delegate
             { OnMaxPointDropdownValueChanged(m_unlimitToggleKeys[1]); });
 
             m_ratioToggle.onValueChanged.RemoveListener(delegate
@@ -715,7 +732,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
             m_backLineDds[0].ClearOptions();
             m_backLineDds[0].AddOptions(m_playersTeamOne);
-            
+
             if (m_matchVariables != null)
                 m_backLineDds[0].value = m_matchVariables.TPOneBacklineValue;
 
@@ -737,19 +754,23 @@ namespace ThreeDeePongProto.Offline.Settings
             //Setup Dictionary to connect the toggles with Round and MaxPoints-Dropdowns.
             for (int i = 0; i < m_unlimitToggleKeys.Count; i++)
             {
-                m_matchKeyValuePairs.Add(m_unlimitToggleKeys[i], m_roundValueDropdowns[i]);
+                m_matchKeyValuePairs.Add(m_unlimitToggleKeys[i], m_roundDropdownValues[i]);
             }
 
             m_ratioDict.Add(m_ratioToggle, m_fieldDropdowns);
         }
 
-        private void SetupLineUpSliders()
+        private void SetupLineDictionaries()
         {
-            m_frontLineSlider.minValue = m_matchManager.DefaultFrontLineDistance;
-            m_frontLineSlider.maxValue = m_frontLineSlider.minValue + m_matchVariables.MaxPushDistance;
+            for (int i = 0; i < m_reduceButtonKeys.Count; i++)
+            {
+                m_reduceLineSlider.Add(m_reduceButtonKeys[i], m_sliderValues[i]);
+            }
 
-            m_backLineSlider.minValue = m_matchManager.DefaultBackLineDistance;
-            m_backLineSlider.maxValue = m_backLineSlider.minValue + m_matchVariables.MaxPushDistance;
+            for (int i = 0; i < m_increaseButtonKeys.Count; i++)
+            {
+                m_increaseLineSlider.Add(m_increaseButtonKeys[i], m_sliderValues[i]);
+            }
         }
 
         #region Name-Inputfields
@@ -763,6 +784,83 @@ namespace ThreeDeePongProto.Offline.Settings
             m_playerData[1].PlayerName = _playernameTwo;
         }
         #endregion
+
+        private void SetupLineUpSliders()
+        {
+            m_frontLineSlider.value = m_matchVariables.FLAdjustAmount;
+            m_backLineSlider.value = m_matchVariables.BLAdjustAmount;
+        }
+
+        private void UpdateLineUpTMPs()
+        {
+            if (m_matchVariables == null)
+            {
+                m_frontLineText.text = "No Data";
+                m_backLineText.text = "No Data";
+                return;
+            }
+
+            m_frontLineText.SetText($"{m_matchVariables.MinFrontLineDistance + m_matchVariables.FLAdjustAmount:N2}");
+            m_backLineText.text = $"{m_matchVariables.MinBackLineDistance + m_matchVariables.BLAdjustAmount:N2}";
+        }
+
+        //Front = ID 0, Back = ID 1. Lists and UI are organized in the same scheme.
+        public void MoveLinesForward(int _sliderIndex)
+        {
+            Slider sliderToIncrease = m_increaseLineSlider[m_increaseButtonKeys[_sliderIndex]];
+
+            if (sliderToIncrease.value < sliderToIncrease.maxValue)
+            {
+                sliderToIncrease.value += m_sliderAdjustStep;
+
+                switch (_sliderIndex)
+                {
+                    case 0:
+                    {
+                        m_matchVariables.FLAdjustAmount += m_sliderAdjustStep;
+                        break;
+                    }
+                    case 1:
+                    {
+                        m_matchVariables.BLAdjustAmount += m_sliderAdjustStep;
+                        break;
+                    }
+                    default:
+                        break;
+                }
+
+                m_updateLineText?.Invoke();
+            }
+        }
+
+        //Front = ID 0, Back = ID 1. Lists and UI are organized in the same scheme.
+        public void MoveLinesBackward(int _sliderIndex)
+        {
+            Slider sliderToReduce = m_reduceLineSlider[m_reduceButtonKeys[_sliderIndex]];
+
+            if (sliderToReduce.value > sliderToReduce.minValue)
+            {
+                sliderToReduce.value -= m_sliderAdjustStep;
+
+                switch (_sliderIndex)
+                {
+                    case 0:
+                    {
+                        m_matchVariables.FLAdjustAmount -= m_sliderAdjustStep;
+                        break;
+                    }
+                    case 1:
+                    {
+                        m_matchVariables.BLAdjustAmount -= m_sliderAdjustStep;
+                        break;
+                    }
+                    default:
+                        break;
+                }
+
+                m_updateLineText?.Invoke();
+            }
+        }
 
         private void UpdateFrontlineSetup(int _playerId)
         {
