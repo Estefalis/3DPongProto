@@ -39,6 +39,10 @@ namespace ThreeDeePongProto.Managers
         #endregion
 
         private string m_scoredPlayer;
+        public bool MatchStarted { get => m_matchHasStarted; private set => m_matchHasStarted = value; }
+        private bool m_matchHasStarted = false;
+        public float MatchStartTime { get => m_matchStartTime; private set => m_matchStartTime = value; }
+        private float m_matchStartTime;
 
         public static event Action m_StartNextRound;
         public static event Action m_StartWinProcedure;
@@ -54,6 +58,8 @@ namespace ThreeDeePongProto.Managers
         private void OnEnable()
         {
             MenuOrganisation.RestartGameLevel += ReSetMatch;
+
+            BallMovement.m_RoundCountStarts += StartDisplayTimer;
             BallMovement.m_HitGoalOne += UpdateTPTwoPoints;
             BallMovement.m_HitGoalTwo += UpdateTPOnePoints;
 
@@ -64,6 +70,8 @@ namespace ThreeDeePongProto.Managers
         private void OnDisable()
         {
             MenuOrganisation.RestartGameLevel -= ReSetMatch;
+
+            BallMovement.m_RoundCountStarts -= StartDisplayTimer;
             BallMovement.m_HitGoalOne -= UpdateTPTwoPoints;
             BallMovement.m_HitGoalTwo -= UpdateTPOnePoints;
 
@@ -97,6 +105,12 @@ namespace ThreeDeePongProto.Managers
 
             ResetPlayfield();
             ResetRoundValues();
+        }
+
+        private void StartDisplayTimer()
+        {
+            m_matchHasStarted = true;
+            m_matchStartTime = Time.time;
         }
 
         private void UpdateTPOnePoints()

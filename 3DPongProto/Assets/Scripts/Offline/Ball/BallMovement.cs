@@ -1,8 +1,16 @@
 using System;
+using ThreeDeePongProto.Managers;
+using ThreeDeePongProto.Offline.Player.Inputs;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class BallMovement : MonoBehaviour
 {
+    #region Script-References
+    [SerializeField] private MatchManager m_matchManager;
+    private PlayerInputActions m_ballMovement;
+    #endregion
+
     [SerializeField] private Rigidbody m_rigidbody;
     [SerializeField] private float m_impulseForce;
     [SerializeField] private float m_offWallAngle = 15.0f;
@@ -22,6 +30,7 @@ public class BallMovement : MonoBehaviour
     //These uint-Actions tell the MatchUserInterface class to update the corresponding TMP element.
     public static event Action m_HitGoalOne;
     public static event Action m_HitGoalTwo;
+    public static event Action m_RoundCountStarts;
 
     private void Awake()
     {
@@ -32,13 +41,17 @@ public class BallMovement : MonoBehaviour
         m_ballPopRotation = m_rigidbody.rotation;
     }
 
-    private void Update()
+    private void Start()
     {
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            ResetBall();
-            ApplyForceOnBall();
-        }
+        m_ballMovement = UserInputManager.m_playerInputActions;
+        m_ballMovement.PlayerActions.Enable();
+        m_ballMovement.PlayerActions.PokeTheBall.performed += StartBallMovement;
+    }
+
+    private void OnDisable()
+    {
+        m_ballMovement.PlayerActions.Disable();
+        m_ballMovement.PlayerActions.PokeTheBall.performed -= StartBallMovement;
     }
 
     private void ResetBall()
@@ -101,6 +114,18 @@ public class BallMovement : MonoBehaviour
         {
             //Match-Points of Player/Team 1 are increasing.
             m_HitGoalTwo?.Invoke();
+        }
+    }
+
+    private void StartBallMovement(InputAction.CallbackContext _callbackContext)
+    {
+        if (!GameManager.Instance.GameIsPaused)
+        {
+            ResetBall();
+            ApplyForceOnBall();
+
+            if (!m_matchManager.MatchStarted)
+                m_RoundCountStarts?.Invoke();
         }
     }
 

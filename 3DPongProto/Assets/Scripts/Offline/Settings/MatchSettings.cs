@@ -36,8 +36,8 @@ namespace ThreeDeePongProto.Offline.Settings
         [Header("Line-Up")]
         [SerializeField] private TMP_Dropdown[] m_frontLineDds;
         [SerializeField] private TMP_Dropdown[] m_backLineDds;
-        [SerializeField] private Slider m_frontLineSlider;
-        [SerializeField] private Slider m_backLineSlider;
+        //[SerializeField] private Slider m_frontLineSlider;
+        //[SerializeField] private Slider m_backLineSlider;
         [SerializeField] private TextMeshProUGUI m_frontLineText;
         [SerializeField] private TextMeshProUGUI m_backLineText;
         [SerializeField] private float m_sliderAdjustStep = 0.01f;
@@ -59,6 +59,7 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private PlayerData[] m_playerData;
         #endregion
         #endregion
+        [Space]
 
         #region Lists and Dictionaries
         [SerializeField] private List<Toggle> m_unlimitToggleKeys = new List<Toggle>();
@@ -66,7 +67,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
         [SerializeField] private List<Button> m_reduceButtonKeys = new List<Button>();
         [SerializeField] private List<Button> m_increaseButtonKeys = new List<Button>();
-        [SerializeField] private List<Slider> m_sliderValues = new List<Slider>();
+        [SerializeField] private List<Slider> m_distanceSliderValues = new List<Slider>();
 
         #region Key-Value-Connection
         private Dictionary<Toggle, TMP_Dropdown> m_matchKeyValuePairs = new Dictionary<Toggle, TMP_Dropdown>();
@@ -764,12 +765,12 @@ namespace ThreeDeePongProto.Offline.Settings
         {
             for (int i = 0; i < m_reduceButtonKeys.Count; i++)
             {
-                m_reduceLineSlider.Add(m_reduceButtonKeys[i], m_sliderValues[i]);
+                m_reduceLineSlider.Add(m_reduceButtonKeys[i], m_distanceSliderValues[i]);
             }
 
             for (int i = 0; i < m_increaseButtonKeys.Count; i++)
             {
-                m_increaseLineSlider.Add(m_increaseButtonKeys[i], m_sliderValues[i]);
+                m_increaseLineSlider.Add(m_increaseButtonKeys[i], m_distanceSliderValues[i]);
             }
         }
 
@@ -787,8 +788,10 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void SetupLineUpSliders()
         {
-            m_frontLineSlider.value = m_matchVariables.FLAdjustAmount;
-            m_backLineSlider.value = m_matchVariables.BLAdjustAmount;
+            //FrontSlider
+            m_distanceSliderValues[0].value = m_matchVariables.FLAdjustAmount;
+            //BackSlider
+            m_distanceSliderValues[1].value = m_matchVariables.BLAdjustAmount;
         }
 
         private void UpdateLineUpTMPs()

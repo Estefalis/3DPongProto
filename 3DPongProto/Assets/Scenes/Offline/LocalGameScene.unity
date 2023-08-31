@@ -1226,7 +1226,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -55}
+  m_AnchoredPosition: {x: 0, y: -60}
   m_SizeDelta: {x: 400, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &521710090
@@ -1249,7 +1249,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Elapsed Time
+  m_text: Push B(all) to Start
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1276,8 +1276,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42
-  m_fontSizeBase: 42
+  m_fontSize: 44
+  m_fontSizeBase: 44
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3496,6 +3496,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 665629720bbc64843998e4d222df76a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_matchManager: {fileID: 911050368}
   m_playerNamesTMPList:
   - {fileID: 1208393004}
   - {fileID: 1654241587}
@@ -3511,9 +3512,10 @@ MonoBehaviour:
   - {fileID: 619619789}
   - {fileID: 1874074984}
   - {fileID: 702061742}
-  m_RoundNrTMP: {fileID: 1163421187}
-  m_ElapsedTimeTMP: {fileID: 521710090}
-  m_ZeroToZeroTMP: {fileID: 313760599}
+  m_roundNrTMP: {fileID: 1163421187}
+  m_elapsedTimeTMP: {fileID: 521710090}
+  m_zeroToZeroTMP: {fileID: 313760599}
+  m_showMilliseconds: 0
   m_matchVariables: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
 --- !u!1 &1374411988
 GameObject:
@@ -5358,6 +5360,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5041537836607581334, guid: 0128b9a642ea2bc47926a20e2a5ced79,
+        type: 3}
+      propertyPath: m_matchManager
+      value: 
+      objectReference: {fileID: 911050368}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0128b9a642ea2bc47926a20e2a5ced79, type: 3}
 --- !u!1001 &9044689168236938363
