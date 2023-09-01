@@ -15,4 +15,4 @@ MonoBehaviour:
   QualityLevel: 0
   SelectedResolutionIndex: 7
   ActiveCameraIndex: 0
-  ScreenMode: 1
+  FullScreenMode: 1

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ThreeDeePongProto.Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,9 +10,6 @@ namespace ThreeDeePongProto.Offline.Settings
     {
         //TODO: Desired Inputfield-behaviour to select the gameObject without a blinking cursor and to enable editing on pressing Enter.
         #region SerializeField-Member-Variables
-        #region Script-References
-        [SerializeField] private MatchManager m_matchManager;
-        #endregion
         #region Player-Names
         [Header("Player-Names")]
         [SerializeField] private TMP_InputField m_playerIF;

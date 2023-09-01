@@ -29,7 +29,9 @@ namespace ThreeDeePongProto.Offline.UI
         //[SerializeField] private TextMeshProUGUI m_songTitleTMP;
         //[SerializeField] private GameObject m_songIcon;
 
+        #region Scriptable Variables
         [SerializeField] private MatchVariables m_matchVariables;
+        #endregion
         #endregion
 
         private Dictionary<List<TextMeshProUGUI>, List<TextMeshProUGUI>> m_playerPointsConnection = new Dictionary<List<TextMeshProUGUI>, List<TextMeshProUGUI>>();
@@ -126,20 +128,25 @@ namespace ThreeDeePongProto.Offline.UI
             //else if (m_timerShallCountUp)
             #endregion
             //{
+            //Mathf.FloorToInt(days: '_timeToDisplay / 86400', hours: '_timeToDisplay / 3600' minutes: '_timeToDisplay / 60', seconds: '_timeToDisplay % 60'.
+            //Calculating Hours.
+            float hours = Mathf.FloorToInt(_timeToDisplay / 3600);
+            //Calculating Minutes.
+            float minutes = Mathf.FloorToInt(_timeToDisplay / 60 % 60);
             //Calculating Seconds.
-            float minutes = Mathf.FloorToInt(_timeToDisplay / 60);
-                //Calculating Seconds.
-                float seconds = Mathf.FloorToInt(_timeToDisplay % 60);
-                //Calculating Milliseconds.
-                if (m_showMilliseconds)
-                {
-                    float milliseconds = _timeToDisplay % 1 * 1000;
-                    m_elapsedTimeTMP.text = string.Format("{0:00}:{1:00}:{2:000}", minutes, seconds, milliseconds);
-                }
-                else
-                {
-                    m_elapsedTimeTMP.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-                }
+            float seconds = Mathf.FloorToInt(_timeToDisplay % 60);
+            //Calculating Milliseconds.
+            if (m_showMilliseconds)
+            {
+                float milliseconds = _timeToDisplay % 1 * 1000;
+                //m_elapsedTimeTMP.text = string.Format("{0:00}:{1:00}:{2:000}", minutes, seconds, milliseconds);
+                m_elapsedTimeTMP.text = string.Format("{0:00}:{1:00}:{2:00}:{3:000}", hours, minutes, seconds, milliseconds);
+            }
+            else
+            {
+                //m_elapsedTimeTMP.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+                m_elapsedTimeTMP.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+            }
             //}
         }
     }

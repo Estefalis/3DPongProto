@@ -1,11 +1,14 @@
 using UnityEngine;
-using ThreeDeePongProto.Managers;
+using ThreeDeePongProto.Offline.Settings;
 
 namespace ThreeDeePongProto.Offline.CameraSetup
 {
     public class SetCameraRects : MonoBehaviour
     {
+        #region Script-References
+        [SerializeField] private GraphicSettings m_graphicsSettings;
         private CameraManager m_cameraManager;
+        #endregion
 
         private float m_fullWidthHor = 1.0f;
         private float m_fullHeightVer = 1.0f;
@@ -13,7 +16,11 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private float m_halfWidthVer = 0.5f;
 
         //private Rect m_fullsizeRect; //Moved to CameraManager.
-        private uint m_lastSetCameraMode;
+        private int m_lastSetCameraMode;
+
+        #region Scriptable Variables
+        [SerializeField] private MatchVariables m_matchVariables;
+        #endregion
 
         private void Awake()
         {
@@ -28,40 +35,50 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             //Debug.Log(m_cameraManager.AvailableCameras[3]); //Old m_playerCam4
 
             UpdateFullsizeRect();
+        }
 
-            m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
+        private void Start()
+        {
+            if (m_matchVariables == null)
+            {
+                m_lastSetCameraMode = (int)m_graphicsSettings.ECameraMode;
+            }
+            else
+                //m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
+                m_lastSetCameraMode = (int)m_matchVariables.SetCameraMode;
+
             SetCameraMode(m_lastSetCameraMode);
         }
 
-        private void SetCameraMode(uint _cameraMode)
+        private void SetCameraMode(int _cameraMode)
         {
             switch (_cameraMode)
             {
                 case 0:
                 {
                     SetSingleCamera();
-                    break; 
+                    break;
                 }
                 case 1:
                 {
-                    if (m_cameraManager.AvailableCameras[1] != null && m_lastSetCameraMode == (uint)ECameraModi.TwoHorizontal)
+                    if (m_cameraManager.AvailableCameras[1] != null && m_lastSetCameraMode == (int)ECameraModi.TwoHorizontal)
                         SetCamerasHorizontal(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
-                    break; 
+                    break;
                 }
                 case 2:
                 {
-                    if (m_cameraManager.AvailableCameras[1] != null && m_lastSetCameraMode == (uint)ECameraModi.TwoVertical)
+                    if (m_cameraManager.AvailableCameras[1] != null && m_lastSetCameraMode == (int)ECameraModi.TwoVertical)
                         SetCamerasVertical(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
-                    break; 
+                    break;
                 }
                 case 3:
                 {
-                    if (m_cameraManager.AvailableCameras[2] != null && m_cameraManager.AvailableCameras[3] != null && m_lastSetCameraMode == (uint)ECameraModi.FourSplit)
+                    if (m_cameraManager.AvailableCameras[2] != null && m_cameraManager.AvailableCameras[3] != null && m_lastSetCameraMode == (int)ECameraModi.FourSplit)
                         SetFourSplit(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1], m_cameraManager.AvailableCameras[2], m_cameraManager.AvailableCameras[3]);
-                    break; 
+                    break;
                 }
                 default:
-                    m_lastSetCameraMode = (uint)ECameraModi.SingleCam;
+                    m_lastSetCameraMode = (int)ECameraModi.SingleCam;
                     SetSingleCamera();
                     break;
             }
@@ -71,12 +88,18 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         {
             UpdateFullsizeRect();
 
-            if (m_lastSetCameraMode != (uint)GameManager.Instance.ECameraMode)
-            {
-                m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
-                SetCameraMode(m_lastSetCameraMode);
-            }
+            //SetRectSplit();
         }
+
+        //private void SetRectSplit()
+        //{
+        //    //if (m_lastSetCameraMode != (int)GameManager.Instance.ECameraMode)
+        //    if (m_lastSetCameraMode != (int)m_matchVariables.SetCameraMode)
+        //    {
+        //        m_lastSetCameraMode = (int)m_matchVariables.SetCameraMode;
+        //        SetCameraMode(m_lastSetCameraMode);
+        //    }
+        //}
 
         /// <summary>
         /// new Rect(xOrigin, yOrigin, width, height)
@@ -191,7 +214,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             Cam2H = _camera2.pixelRect.height;
         }
 
-        private void SetCamerasAndRects(uint _cameraMode)
+        private void SetCamerasAndRects(int _cameraMode)
         {
             switch (_cameraMode)
             {

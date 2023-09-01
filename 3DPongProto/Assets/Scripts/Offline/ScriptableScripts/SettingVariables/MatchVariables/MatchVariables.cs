@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -46,4 +45,7 @@ public class MatchVariables : ScriptableObject
     public int TPTwoFrontDdValue;
     public int TPOneBacklineValue;
     public int TPTwoBacklineValue;
+
+    [Header("Camera-Settings")]
+    public ECameraModi SetCameraMode;
 }

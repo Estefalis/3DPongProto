@@ -2,6 +2,14 @@ using System;
 using ThreeDeePongProto.Offline.UI;
 using UnityEngine;
 
+public enum EMatchCountOptions
+{
+    NoChanges,
+    InfiniteRounds,
+    InfinitePoints,
+    InfiniteMatch
+}
+
 namespace ThreeDeePongProto.Managers
 {
     public class MatchManager : MonoBehaviour
@@ -10,6 +18,7 @@ namespace ThreeDeePongProto.Managers
         [SerializeField] private GameObject m_playGround;
 
         [Header("Defaults")]
+
         [SerializeField] private float m_playGroundWidthScale = 0.1f;
         [SerializeField] private float m_playGroundLengthScale = 0.1f;
         [SerializeField] private float m_playGroundWidth = 25.0f;
@@ -36,6 +45,7 @@ namespace ThreeDeePongProto.Managers
         public float DefaultFieldLength { get => m_playGroundLength; }
         public float MaxPushDistance { get => m_maxPushDistance; }
         public Vector3 DefaultPaddleScale { get => m_defaultPaddleScale; }
+        
         #endregion
 
         private string m_scoredPlayer;
@@ -59,7 +69,7 @@ namespace ThreeDeePongProto.Managers
         {
             MenuOrganisation.RestartGameLevel += ReSetMatch;
 
-            BallMovement.m_RoundCountStarts += StartDisplayTimer;
+            BallMovement.m_RoundCountStarts += MatchStartValues;
             BallMovement.m_HitGoalOne += UpdateTPTwoPoints;
             BallMovement.m_HitGoalTwo += UpdateTPOnePoints;
 
@@ -71,7 +81,7 @@ namespace ThreeDeePongProto.Managers
         {
             MenuOrganisation.RestartGameLevel -= ReSetMatch;
 
-            BallMovement.m_RoundCountStarts -= StartDisplayTimer;
+            BallMovement.m_RoundCountStarts -= MatchStartValues;
             BallMovement.m_HitGoalOne -= UpdateTPTwoPoints;
             BallMovement.m_HitGoalTwo -= UpdateTPOnePoints;
 
@@ -79,35 +89,34 @@ namespace ThreeDeePongProto.Managers
             m_StartWinProcedure -= StartWinProcedure;
         }
 
+        private void UseDefaultSettings()
+        {
+            m_playGround.transform.localScale = new Vector3(m_playGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_playGroundLength * m_playGroundLengthScale);
+        }
+
         private void SetScriptableDefaults()
         {
             if (m_matchVariables != null)
             {
-                //TODO: May replace these settings with an active Save- and Loadsystem later.
+#if UNITY_EDITOR
                 m_matchVariables.CurrentRoundNr = m_startRound;
+                m_matchVariables.WinPointDifference = m_winPointDifference;
+
                 m_matchVariables.MinFrontLineDistance = m_minimalFrontLineDistance;
                 m_matchVariables.MinBackLineDistance = m_minimalBackLineDistance;
-                m_matchVariables.WinPointDifference = m_winPointDifference;
+
                 m_matchVariables.MaxPushDistance = m_maxPushDistance;
                 m_matchVariables.StartPaddleScale = m_defaultPaddleScale;
-            }
-        }
 
-        private void ReSetMatch()
-        {
-            if (m_matchVariables == null)
-            {
-#if UNITY_EDITOR
-                Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
+                //Needs to be uncommented to test Rect-Change on Restart Game-Scene.
+                //m_matchVariables.SetCameraMode = m_eCameraMode;
+            }
 #endif
-                return;
-            }
-
-            ResetPlayfield();
-            ResetRoundValues();
+            //else
+                //TODO: Load settings with an active Save- and Load-System.
         }
 
-        private void StartDisplayTimer()
+        private void MatchStartValues()
         {
             m_matchHasStarted = true;
             m_matchStartTime = Time.time;
@@ -160,13 +169,25 @@ namespace ThreeDeePongProto.Managers
             CheckMatchConditions();
         }
 
+        private void ReSetMatch()
+        {
+            if (m_matchVariables == null)
+            {
+#if UNITY_EDITOR
+                Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
+#endif
+                UseDefaultSettings();
+                return;
+            }
+
+            ResetPlayfield();
+            ResetRoundValues();
+        }
+
         #region Match-Presets
         private void ResetPlayfield()
         {
-            if (m_matchVariables == null)
-                m_playGround.transform.localScale = new Vector3(m_playGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_playGroundLength * m_playGroundLengthScale);
-            else
-                m_playGround.transform.localScale = new Vector3(m_matchVariables.SetGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_matchVariables.SetGroundLength * m_playGroundLengthScale);
+            m_playGround.transform.localScale = new Vector3(m_matchVariables.SetGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_matchVariables.SetGroundLength * m_playGroundLengthScale);
         }
 
         private void ResetRoundValues()

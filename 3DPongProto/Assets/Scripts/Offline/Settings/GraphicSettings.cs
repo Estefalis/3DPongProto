@@ -1,13 +1,22 @@
 using System.Collections.Generic;
-using ThreeDeePongProto.Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
+public enum ECameraModi
+{
+    SingleCam,
+    TwoHorizontal,
+    TwoVertical,
+    FourSplit
+}
 
 namespace ThreeDeePongProto.Offline.Settings
 {
     public class GraphicSettings : MonoBehaviour
     {
+        //[SerializeField] private MatchManager m_matchManager;
+
         #region Object-References
         [SerializeField] private TMP_Dropdown m_qualityDropdown;
         [SerializeField] private TMP_Dropdown m_resolutionDropdown;
@@ -15,23 +24,46 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private TMP_Dropdown m_screenSplitDropdown;
         #endregion
 
+        [SerializeField] private bool m_defaultFullscreen = true;
+        [SerializeField] private ECameraModi m_eCameraMode;
+
         #region Scriptable Variables
         [Header("Scriptable Variables")]
         [SerializeField] private GraphicVariables m_graphicVariables;
-        //[SerializeField] private GraphicVariables m_graphicDefaults;
+        [SerializeField] private MatchVariables m_matchVariables;
         #endregion
 
         private Resolution[] m_screenResolutions;
+        private int m_currentResolutionIndex;
+        private int m_systemQualityLevel;
+
+        public ECameraModi ECameraMode { get => m_eCameraMode; }
 
         private void Awake()
         {
-#if UNITY_EDITOR
-            if (m_graphicVariables == null)
-                Debug.LogWarning("GraphicVariables are null! Loading Default-Values is required.");
-#endif
-            m_screenSplitDropdown.value = (int)GameManager.Instance.ECameraMode;
+            m_systemQualityLevel = QualitySettings.GetQualityLevel();
 
             GetAvailableResolutions();
+
+            if (m_graphicVariables == null)
+            {
+#if UNITY_EDITOR
+                Debug.LogWarning("GraphicSettings: Forgot to add a Scriptable Object in the Editor!");
+#endif
+                UseDefaultSettings();
+            }
+            else
+            {
+//#if UNITY_EDITOR
+//                UseDefaultSettings();
+//#else
+                m_qualityDropdown.value = m_graphicVariables.QualityLevel;
+                m_resolutionDropdown.value = m_graphicVariables.SelectedResolutionIndex;
+                m_fullscreenToggle.isOn = m_graphicVariables.FullScreenMode;
+                //m_screenSplitDropdown.value = (int)GameManager.Instance.ECameraMode;
+                m_screenSplitDropdown.value = m_graphicVariables.ActiveCameraIndex;
+//#endif
+            }
         }
 
         private void GetAvailableResolutions()
@@ -55,6 +87,8 @@ namespace ThreeDeePongProto.Offline.Settings
                 if (m_screenResolutions[i].width == Screen.currentResolution.width && m_screenResolutions[i].height == Screen.currentResolution.height)
                 {
                     currentResolutionIndex = i;
+                    //System-ResolutionIndex.
+                    m_currentResolutionIndex = i;
                 }
             }
 
@@ -66,8 +100,10 @@ namespace ThreeDeePongProto.Offline.Settings
         //TODO: Ggf. Methode in MatchManager transferieren.
         public void SetActiveCameras()
         {
-            GameManager.Instance.ECameraMode = (ECameraModi)m_screenSplitDropdown.value;
+            //No cast needed on saving an index.
             m_graphicVariables.ActiveCameraIndex = m_screenSplitDropdown.value;
+            //GameManager.Instance.ECameraMode = (ECameraModi)m_screenSplitDropdown.value;
+            m_matchVariables.SetCameraMode = (ECameraModi)m_screenSplitDropdown.value;
         }
 
         public void SetGraphicQuality(int _qualityIndex)
@@ -95,7 +131,16 @@ namespace ThreeDeePongProto.Offline.Settings
             m_fullscreenToggle.isOn = _setFullscreen;
 
             if (m_graphicVariables != null)
-                m_graphicVariables.ScreenMode = _setFullscreen;
+                m_graphicVariables.FullScreenMode = _setFullscreen;
+        }
+
+        private void UseDefaultSettings()
+        {
+            m_qualityDropdown.value = m_systemQualityLevel;
+            //Index equal to your System-Resolution, set by 'GetAvailableResolutions();'.
+            m_resolutionDropdown.value = m_currentResolutionIndex;
+            m_fullscreenToggle.isOn = m_defaultFullscreen;
+            m_screenSplitDropdown.value = (int)m_eCameraMode;
         }
     }
 }

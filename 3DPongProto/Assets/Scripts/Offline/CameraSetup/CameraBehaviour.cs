@@ -1,5 +1,4 @@
 using System;
-using ThreeDeePongProto.Managers;
 using ThreeDeePongProto.Offline.Player.Inputs;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -19,7 +18,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private Vector3 m_cameraPosition;
 
         [Header("Smooth Following")]
-        [SerializeField] private MatchVariables m_matchVariables;
         [SerializeField] private Rigidbody m_RbPlayer;
         [SerializeField] private Camera m_followCamera;
         [SerializeField] private bool m_enableSmoothFollow;
@@ -33,6 +31,10 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         [SerializeField] private float m_zoomStep;
         [SerializeField] private float m_zoomDampening;
         private Vector3 m_mousePosition, m_zoomTarget;
+
+        #region Scriptable Variables
+        [SerializeField] private MatchVariables m_matchVariables;
+        #endregion
 
         private int m_playerId;
         private int m_playerWindowId;
@@ -72,7 +74,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void Update()
         {
-            //MaxSideMovement();
             GetMousePosition();
 
             SelectCameraToZoom();
@@ -109,7 +110,8 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                 !(m_mousePosition.y < (m_cameraManager.RuntimeFullsizeRect.height - m_cameraManager.RuntimeFullsizeRect.height)) &&
                 !(m_mousePosition.y > m_cameraManager.RuntimeFullsizeRect.height))
             {
-                switch ((uint)GameManager.Instance.ECameraMode)
+                //switch ((uint)GameManager.Instance.ECameraMode)
+                switch ((int)m_matchVariables.SetCameraMode)
                 {
                     //SingleCamera
                     case 0:

@@ -9,20 +9,20 @@ public enum EGameModi
     Internet
 }
 
-public enum ECameraModi
-{
-    SingleCam,
-    TwoHorizontal,
-    TwoVertical,
-    FourSplit
-}
+//public enum ECameraModi
+//{
+//    SingleCam,
+//    TwoHorizontal,
+//    TwoVertical,
+//    FourSplit
+//}
 
 namespace ThreeDeePongProto.Managers
 {
     public class GameManager : GenericSingleton<GameManager>
     {
-        public ECameraModi ECameraMode { get => m_eCameraMode; set => m_eCameraMode = value; }
-        [SerializeField] private ECameraModi m_eCameraMode;
+        //public ECameraModi ECameraMode { get => m_eCameraMode; set => m_eCameraMode = value; }
+        //[SerializeField] private ECameraModi m_eCameraMode;
 
         public EGameModi EGameConnectionModi { get => eGameConnectionMode; set => eGameConnectionMode = value; }
         [SerializeField] private EGameModi eGameConnectionMode;
