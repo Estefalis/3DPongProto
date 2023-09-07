@@ -29,8 +29,8 @@ namespace ThreeDeePongProto.Offline.Settings
 
         #region Scriptable Variables
         [Header("Scriptable Variables")]
-        [SerializeField] private GraphicVariables m_graphicVariables;
-        [SerializeField] private MatchVariables m_matchVariables;
+        [SerializeField] private GraphicUiStates m_graphicVariables;
+        [SerializeField] private MatchUiStates m_uiStates;
         #endregion
 
         private Resolution[] m_screenResolutions;
@@ -103,7 +103,7 @@ namespace ThreeDeePongProto.Offline.Settings
             //No cast needed on saving an index.
             m_graphicVariables.ActiveCameraIndex = m_screenSplitDropdown.value;
             //GameManager.Instance.ECameraMode = (ECameraModi)m_screenSplitDropdown.value;
-            m_matchVariables.SetCameraMode = (ECameraModi)m_screenSplitDropdown.value;
+            m_uiStates.SetCameraMode = (ECameraModi)m_screenSplitDropdown.value;
         }
 
         public void SetGraphicQuality(int _qualityIndex)

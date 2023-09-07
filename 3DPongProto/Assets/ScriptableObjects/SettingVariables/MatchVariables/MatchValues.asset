@@ -9,26 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34a34bc4151ae364fbffe531b16729cb, type: 3}
-  m_Name: MatchVariables
+  m_Script: {fileID: 11500000, guid: b6c8efb4be29349478192d860c40c12e, type: 3}
+  m_Name: MatchValues
   m_EditorClassIdentifier: 
   SetMaxRounds: 5
-  LastRoundDdIndex: 4
   CurrentRoundNr: 1
-  InfiniteRounds: 0
   SetMaxPoints: 25
-  LastMaxPointDdIndex: 24
   WinPointDifference: 2
-  InfinitePoints: 0
   CurrentPointsTPOne: 0
   TotalPointsTPOne: 12
   CurrentPointsTPTwo: 0
   TotalPointsTPTwo: 34
   SetGroundWidth: 25
-  LastFieldWidthDdIndex: 0
   SetGroundLength: 50
-  LastFieldLengthDdIndex: 0
-  FixRatio: 0
   PaddleWidthAdjustment: 0
   MinFrontLineDistance: 6
   FLAdjustAmount: 0
@@ -36,7 +29,3 @@ MonoBehaviour:
   BLAdjustAmount: 0
   MaxPushDistance: 1.5
   StartPaddleScale: {x: 3.5, y: 1, z: 0.5}
-  TPOneFrontDdValue: 1
-  TPTwoFrontDdValue: 1
-  TPOneBacklineValue: 0
-  TPTwoBacklineValue: 0

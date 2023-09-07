@@ -2055,6 +2055,12 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 9044689168406316142}
+    - target: {fileID: 7313720338195380833, guid: 5d99c73a2379ef643b2423fb48c9661c,
+        type: 3}
+      propertyPath: m_uiStates
+      value: 
+      objectReference: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d,
+        type: 2}
     - target: {fileID: 7313720338195380836, guid: 5d99c73a2379ef643b2423fb48c9661c,
         type: 3}
       propertyPath: m_Pivot.x
@@ -2209,6 +2215,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7764365726835653431}
     m_Modifications:
+    - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
+        type: 3}
+      propertyPath: m_uiStates
+      value: 
+      objectReference: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d,
+        type: 2}
+    - target: {fileID: 8735401616754901098, guid: d5d526be9fc149148aeb5951486723ed,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.000061035156
+      objectReference: {fileID: 0}
     - target: {fileID: 8735401617680716356, guid: d5d526be9fc149148aeb5951486723ed,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
@@ -2682,6 +2699,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 9044689168406316142}
+    - target: {fileID: 5575190014852774183, guid: 55fb1881186267542992d56e3f7720d3,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5575190014900076001, guid: 55fb1881186267542992d56e3f7720d3,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp

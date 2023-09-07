@@ -15,6 +15,7 @@ public class BallMovement : MonoBehaviour
     [SerializeField] private float m_impulseForce;
     [SerializeField] private float m_offWallAngle = 15.0f;
     [SerializeField] private float m_offPaddleAngle = 0.1f;
+    [SerializeField] private MatchValues m_matchValues;
     //[SerializeField] float m_onContactAddUp = 1.10f;
 
     private Vector3 m_ballPopPosition;
@@ -125,7 +126,11 @@ public class BallMovement : MonoBehaviour
             ApplyForceOnBall();
 
             if (!m_matchManager.MatchStarted)
+            {
                 m_RoundCountStarts?.Invoke();
+                m_matchValues.StartDateTime = DateTime.Now.Ticks;
+                m_matchValues.StartTime = Time.time;
+            }
         }
     }
 

@@ -33,7 +33,8 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private Vector3 m_mousePosition, m_zoomTarget;
 
         #region Scriptable Variables
-        [SerializeField] private MatchVariables m_matchVariables;
+        [SerializeField] private MatchUiStates m_uiStates;
+        [SerializeField] private MatchValues m_matchVariables;
         #endregion
 
         private int m_playerId;
@@ -111,7 +112,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                 !(m_mousePosition.y > m_cameraManager.RuntimeFullsizeRect.height))
             {
                 //switch ((uint)GameManager.Instance.ECameraMode)
-                switch ((int)m_matchVariables.SetCameraMode)
+                switch ((int)m_uiStates.SetCameraMode)
                 {
                     //SingleCamera
                     case 0:

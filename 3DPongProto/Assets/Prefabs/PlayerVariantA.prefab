@@ -100,6 +100,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6673783636466660463, guid: 783feb4697821a043931bae4b63b27b7,
         type: 3}
+      propertyPath: m_uiStates
+      value: 
+      objectReference: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d,
+        type: 2}
+    - target: {fileID: 6673783636466660463, guid: 783feb4697821a043931bae4b63b27b7,
+        type: 3}
       propertyPath: m_enableOffset
       value: 1
       objectReference: {fileID: 0}

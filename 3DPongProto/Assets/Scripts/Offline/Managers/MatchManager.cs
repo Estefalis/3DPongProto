@@ -32,7 +32,8 @@ namespace ThreeDeePongProto.Managers
         [Space]
 
         #region Scriptable Objects
-        [SerializeField] private MatchVariables m_matchVariables;
+        [SerializeField] private MatchUiStates m_uiStates;
+        [SerializeField] private MatchValues m_matchVariables;
         [SerializeField] private PlayerData[] m_playerData;
         #endregion
         #endregion
@@ -109,7 +110,7 @@ namespace ThreeDeePongProto.Managers
                 m_matchVariables.StartPaddleScale = m_defaultPaddleScale;
 
                 //Needs to be uncommented to test Rect-Change on Restart Game-Scene.
-                //m_matchVariables.SetCameraMode = m_eCameraMode;
+                //m_uiStates.SetCameraMode = m_eCameraMode;
             }
 #endif
             //else
@@ -239,8 +240,8 @@ namespace ThreeDeePongProto.Managers
 
         private void StartNextRound()
         {
-            //reuse of 'MatchVariables/MatchSettings public bool InfiniteRounds'.
-            if (m_matchVariables == null || m_matchVariables.InfiniteRounds)
+            //reuse of 'MatchValues/MatchSettings public bool InfiniteRounds'.
+            if (m_matchVariables == null || m_uiStates.InfiniteRounds)
                 return;
 #if UNITY_EDITOR
             Debug.Log("Next Round starts!");

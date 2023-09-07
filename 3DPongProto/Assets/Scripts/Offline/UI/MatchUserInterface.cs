@@ -30,7 +30,7 @@ namespace ThreeDeePongProto.Offline.UI
         //[SerializeField] private GameObject m_songIcon;
 
         #region Scriptable Variables
-        [SerializeField] private MatchVariables m_matchVariables;
+        [SerializeField] private MatchValues m_matchVariables;
         #endregion
         #endregion
 
