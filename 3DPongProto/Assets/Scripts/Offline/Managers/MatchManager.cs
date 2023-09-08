@@ -107,10 +107,12 @@ namespace ThreeDeePongProto.Managers
                 m_matchVariables.MinBackLineDistance = m_minimalBackLineDistance;
 
                 m_matchVariables.MaxPushDistance = m_maxPushDistance;
-                m_matchVariables.StartPaddleScale = m_defaultPaddleScale;
+                m_matchVariables.XPaddleScale = m_defaultPaddleScale.x;
+                m_matchVariables.YPaddleScale = m_defaultPaddleScale.y;
+                m_matchVariables.ZPaddleScale = m_defaultPaddleScale.z;
 
                 //Needs to be uncommented to test Rect-Change on Restart Game-Scene.
-                //m_uiStates.SetCameraMode = m_eCameraMode;
+                //m_matchUiStates.SetCameraMode = m_eCameraMode;
             }
 #endif
             //else

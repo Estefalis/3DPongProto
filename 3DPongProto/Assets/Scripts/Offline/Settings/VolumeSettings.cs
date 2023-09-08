@@ -63,6 +63,9 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private Slider[] m_sliderType;
         private Dictionary<Toggle, Slider> m_toggleSliderConnection = new Dictionary<Toggle, Slider>();
 
+        private IPersistentData m_serializingData = new SerializingData();
+        private bool m_encryptionEnabled = false;
+
         private void Awake()
         {
             //Connect the Toggles and Sliders for each VolumeGroup by a Dictionary (Key-Value-Pair).
@@ -87,6 +90,8 @@ namespace ThreeDeePongProto.Offline.Settings
         {
             //TODO: RemoveSliderAndToggleListener(); - SaveVolumeSettings();
             RemoveSliderAndToggleListener();
+
+            m_serializingData.SaveData("/SaveData/UI-Variables", "/Volume", ".json", m_volumeVariables, m_encryptionEnabled, true);
         }
 
         /// <summary>

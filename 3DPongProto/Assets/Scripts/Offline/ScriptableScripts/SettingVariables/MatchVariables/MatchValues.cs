@@ -33,5 +33,8 @@ public class MatchValues : ScriptableObject
     public float MinBackLineDistance;
     public float BLAdjustAmount;
     public float MaxPushDistance;
-    public Vector3 StartPaddleScale;
+
+    public float XPaddleScale;
+    public float YPaddleScale;
+    public float ZPaddleScale;
 }

@@ -5,8 +5,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptable Objects/Graphic Settings/Quality and Resolution", fileName = "Graphic Indices and Boolean")]
 public class GraphicUiStates : ScriptableObject
 {
-    public int QualityLevel;
+    public int QualityLevelIndex;
     public int SelectedResolutionIndex;
     public bool FullScreenMode;
     public int ActiveCameraIndex;
+
+    [Header("Camera-Settings")]
+    public ECameraModi SetCameraMode;
 }

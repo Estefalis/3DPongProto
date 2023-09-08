@@ -30,7 +30,7 @@ namespace ThreeDeePongProto.Offline.UI
         //[SerializeField] private GameObject m_songIcon;
 
         #region Scriptable Variables
-        [SerializeField] private MatchValues m_matchVariables;
+        [SerializeField] private MatchValues m_matchValues;
         #endregion
         #endregion
 
@@ -44,7 +44,7 @@ namespace ThreeDeePongProto.Offline.UI
             BallMovement.m_HitGoalTwo += UpdateUserInterface;
             MatchManager.m_StartNextRound += UpdateUserInterface;
 
-            if (m_matchVariables == null)
+            if (m_matchValues == null)
                 return;
 
             UpdateRoundTMPs();
@@ -66,7 +66,7 @@ namespace ThreeDeePongProto.Offline.UI
 
         private void UpdateUserInterface()
         {
-            if (m_matchVariables == null)
+            if (m_matchValues == null)
             {
 #if UNITY_EDITOR
                 Debug.Log("Forgot to add the Scriptable Object in the Editor!");
@@ -80,18 +80,18 @@ namespace ThreeDeePongProto.Offline.UI
 
         private void UpdateRoundTMPs()
         {
-            m_roundNrTMP.text = $"Round {m_matchVariables.CurrentRoundNr}";
-            m_zeroToZeroTMP.text = $"{m_matchVariables.CurrentPointsTPOne} : {m_matchVariables.CurrentPointsTPTwo}";
+            m_roundNrTMP.text = $"Round {m_matchValues.CurrentRoundNr}";
+            m_zeroToZeroTMP.text = $"{m_matchValues.CurrentPointsTPOne} : {m_matchValues.CurrentPointsTPTwo}";
         }
 
         private void UpdatePlayerTMPs()
         {
             List<TextMeshProUGUI> playerTotalPointsTMP = m_playerPointsConnection[m_playerNamesTMPList];
 
-            playerTotalPointsTMP[0].text = $"Total: {m_matchVariables.TotalPointsTPOne}";
-            playerTotalPointsTMP[1].text = $"Total: {m_matchVariables.TotalPointsTPTwo}";
-            playerTotalPointsTMP[2].text = $"Total: {m_matchVariables.TotalPointsTPOne}";
-            playerTotalPointsTMP[3].text = $"Total: {m_matchVariables.TotalPointsTPTwo}";
+            playerTotalPointsTMP[0].text = $"Total: {m_matchValues.TotalPointsTPOne}";
+            playerTotalPointsTMP[1].text = $"Total: {m_matchValues.TotalPointsTPTwo}";
+            playerTotalPointsTMP[2].text = $"Total: {m_matchValues.TotalPointsTPOne}";
+            playerTotalPointsTMP[3].text = $"Total: {m_matchValues.TotalPointsTPTwo}";
         }
 
         /// <summary>

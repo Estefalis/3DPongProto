@@ -196,7 +196,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
                         break;
                 }
 
-                m_localPaddleScale = m_matchVariables.StartPaddleScale;
+                m_localPaddleScale = new Vector3(m_matchVariables.XPaddleScale, m_matchVariables.YPaddleScale, m_matchVariables.ZPaddleScale);
             }
         }
 

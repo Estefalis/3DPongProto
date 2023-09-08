@@ -51,7 +51,7 @@ namespace ThreeDeePongProto.Offline.Settings
         #endregion
 
         #region Scriptable-References
-        [SerializeField] private MatchUiStates m_uiStates;
+        [SerializeField] private MatchUiStates m_matchUiStates;
         [SerializeField] private MatchValues m_matchVariables;
         [SerializeField] private PlayerData[] m_playerData;
         #endregion
@@ -128,7 +128,8 @@ namespace ThreeDeePongProto.Offline.Settings
         {
             RemoveGroupListeners();
             
-            m_serializingData.SaveData("/SaveData/UI-Settings", "/Match", ".json", m_uiStates, m_encryptionEnabled, true);
+            m_serializingData.SaveData("/SaveData/UI-States", "/Match", ".json", m_matchUiStates, m_encryptionEnabled, true);
+            m_serializingData.SaveData("/SaveData/UI-Variables", "/Match", ".json", m_matchVariables, m_encryptionEnabled, true);
         }
 
         private void PresetToggles()
@@ -138,7 +139,7 @@ namespace ThreeDeePongProto.Offline.Settings
             m_unlimitToggleKeys[0].isOn = m_infiniteRounds;
             m_unlimitToggleKeys[1].isOn = m_infinitePoints;
             m_fixRatioIfTrue = m_fixAspectRatio;
-            m_uiStates.FixRatio = m_fixAspectRatio;
+            m_matchUiStates.FixRatio = m_fixAspectRatio;
 #else
             if (m_uiStates != null)
             {
@@ -254,8 +255,8 @@ namespace ThreeDeePongProto.Offline.Settings
                     dropdown.value = m_tempRoundDdValue;
                     //DropdownValue is equal to DropdownIndex +1.
                     m_matchVariables.SetMaxRounds = dropdown.value + m_firstRoundOffset;
-                    m_uiStates.LastRoundDdIndex = m_tempRoundDdValue;
-                    m_uiStates.InfiniteRounds = _toggle.isOn;
+                    m_matchUiStates.LastRoundDdIndex = m_tempRoundDdValue;
+                    m_matchUiStates.InfiniteRounds = _toggle.isOn;
 
                     break;
                 }
@@ -265,7 +266,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     dropdown.AddOptions(m_roundsList);
                     dropdown.RefreshShownValue();
                     m_matchVariables.SetMaxRounds = m_infiniteValue;
-                    m_uiStates.InfiniteRounds = _toggle.isOn;
+                    m_matchUiStates.InfiniteRounds = _toggle.isOn;
                     break;
                 }
             }
@@ -301,8 +302,8 @@ namespace ThreeDeePongProto.Offline.Settings
                     dropdown.value = m_tempPointDdValue;
                     //DropdownValue is equal to DropdownIndex +1.
                     m_matchVariables.SetMaxPoints = dropdown.value + m_firstPointOffset;
-                    m_uiStates.LastMaxPointDdIndex = m_tempPointDdValue;
-                    m_uiStates.InfinitePoints = _toggle.isOn;
+                    m_matchUiStates.LastMaxPointDdIndex = m_tempPointDdValue;
+                    m_matchUiStates.InfinitePoints = _toggle.isOn;
 
                     break;
                 }
@@ -312,7 +313,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     dropdown.AddOptions(m_maxPointsList);
                     dropdown.RefreshShownValue();
                     m_matchVariables.SetMaxPoints = m_infiniteValue;
-                    m_uiStates.InfinitePoints = _toggle.isOn;
+                    m_matchUiStates.InfinitePoints = _toggle.isOn;
                     break;
                 }
             }
@@ -334,13 +335,13 @@ namespace ThreeDeePongProto.Offline.Settings
                 {
                     m_fixRatioIfTrue = true;
                     ratioDropdown[1].value = ratioDropdown[0].value * 2;
-                    m_uiStates.FixRatio = _toggle.isOn;
+                    m_matchUiStates.FixRatio = _toggle.isOn;
                     break;
                 }
                 case false:
                 {
                     m_fixRatioIfTrue = false;
-                    m_uiStates.FixRatio = _toggle.isOn;
+                    m_matchUiStates.FixRatio = _toggle.isOn;
                     break;
                 }
             }
@@ -369,7 +370,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 {
                     //DropdownValue is equal to DropdownIndex +1.
                     m_matchVariables.SetMaxRounds = dropdown.value + m_firstRoundOffset;
-                    m_uiStates.LastRoundDdIndex = dropdown.value;
+                    m_matchUiStates.LastRoundDdIndex = dropdown.value;
                     m_tempRoundDdValue = dropdown.value;
                     break;
                 }
@@ -396,7 +397,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 {
                     //DropdownValue is equal to DropdownIndex +1.
                     m_matchVariables.SetMaxPoints = dropdown.value + m_firstPointOffset;
-                    m_uiStates.LastMaxPointDdIndex = dropdown.value;
+                    m_matchUiStates.LastMaxPointDdIndex = dropdown.value;
                     m_tempPointDdValue = dropdown.value;
                     break;
                 }
@@ -414,7 +415,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
             m_tempWidthDdValue = _dropdown.value;
             m_matchVariables.SetGroundWidth = _dropdown.value + m_firstWidthOffset;
-            m_uiStates.LastFieldWidthDdIndex = _dropdown.value;
+            m_matchUiStates.LastFieldWidthDdIndex = _dropdown.value;
         }
 
         private void OnLengthDropdownValueChanged(TMP_Dropdown _dropdown)
@@ -426,7 +427,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
             m_tempLengthDdValue = _dropdown.value;
             m_matchVariables.SetGroundLength = _dropdown.value + m_firstLengthOffset;
-            m_uiStates.LastFieldLengthDdIndex = _dropdown.value;
+            m_matchUiStates.LastFieldLengthDdIndex = _dropdown.value;
         }
         #endregion
 
@@ -442,7 +443,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 {
                     //Frontline Player 1 (Team 1, ID 0) = Backline Player 3 (Team 1, ID 2).
                     m_backLineDds[0].value = 1;
-                    m_uiStates.TPOneFrontDdIndex = 0;
+                    m_matchUiStates.TPOneFrontDdIndex = 0;
                     UpdateFrontlineSetup(m_playerData[0].PlayerId);
                     break;
                 }
@@ -450,7 +451,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 {
                     //Frontline Player 3 (Team 1, ID 2) = Backline Player 1 (Team 1, ID 0).
                     m_backLineDds[0].value = 0;
-                    m_uiStates.TPOneFrontDdIndex = 1;
+                    m_matchUiStates.TPOneFrontDdIndex = 1;
                     UpdateFrontlineSetup(m_playerData[2].PlayerId);
                     break;
                 }
@@ -471,7 +472,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 {
                     //Frontline Player 2 (Team 2, ID 1) = Backline Player 4 (Team 2, ID 3).
                     m_backLineDds[1].value = 1;
-                    m_uiStates.TPTwoFrontDdIndex = 0;
+                    m_matchUiStates.TPTwoFrontDdIndex = 0;
                     UpdateFrontlineSetup(m_playerData[1].PlayerId);
                     break;
                 }
@@ -479,7 +480,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 {
                     //Frontline Player 4 (Team 2, ID 3) = Backline Player 2 (Team 2, ID 1).
                     m_backLineDds[1].value = 0;
-                    m_uiStates.TPTwoFrontDdIndex = 1;
+                    m_matchUiStates.TPTwoFrontDdIndex = 1;
                     UpdateFrontlineSetup(m_playerData[3].PlayerId);
                     break;
                 }
@@ -500,7 +501,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 {
                     //Backline Player 1 (Team 1, ID 0) = Frontline Player 3 (Team 1, ID 2).
                     m_frontLineDds[0].value = 1;
-                    m_uiStates.TPOneBacklineIndex = 0;
+                    m_matchUiStates.TPOneBacklineIndex = 0;
                     UpdateBacklineSetup(m_playerData[0].PlayerId);
                     break;
                 }
@@ -508,7 +509,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 {
                     //Backline Player 3 (Team 1, ID 2) = Frontline Player 1 (Team 1, ID 0).
                     m_frontLineDds[0].value = 0;
-                    m_uiStates.TPOneBacklineIndex = 1;
+                    m_matchUiStates.TPOneBacklineIndex = 1;
                     UpdateBacklineSetup(m_playerData[2].PlayerId);
                     break;
                 }
@@ -529,7 +530,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 {
                     //Backline Player 2 (Team 2, ID 1) = Frontline Player 4 (Team 2, ID 3).
                     m_frontLineDds[1].value = 1;
-                    m_uiStates.TPTwoBacklineIndex = 0;
+                    m_matchUiStates.TPTwoBacklineIndex = 0;
                     UpdateBacklineSetup(m_playerData[1].PlayerId);
                     break;
                 }
@@ -537,7 +538,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 {
                     //Backline Player 4 (Team 2, ID 3) = Frontline Player 2 (Team 2, ID 1).
                     m_frontLineDds[1].value = 0;
-                    m_uiStates.TPTwoBacklineIndex = 1;
+                    m_matchUiStates.TPTwoBacklineIndex = 1;
                     UpdateBacklineSetup(m_playerData[3].PlayerId);
                     break;
                 }
@@ -570,9 +571,9 @@ namespace ThreeDeePongProto.Offline.Settings
 
                     dropdown.AddOptions(m_roundsList);
 
-                    if (m_uiStates != null)
+                    if (m_matchUiStates != null)
                     {
-                        dropdown.value = m_uiStates.LastRoundDdIndex;
+                        dropdown.value = m_matchUiStates.LastRoundDdIndex;
                     }
                     else
                     {
@@ -621,9 +622,9 @@ namespace ThreeDeePongProto.Offline.Settings
 
                     dropdown.AddOptions(m_maxPointsList);
 
-                    if (m_uiStates != null)
+                    if (m_matchUiStates != null)
                     {
-                        dropdown.value = m_uiStates.LastMaxPointDdIndex;
+                        dropdown.value = m_matchUiStates.LastMaxPointDdIndex;
                     }
                     else
                     {
@@ -661,8 +662,8 @@ namespace ThreeDeePongProto.Offline.Settings
             m_fieldDropdowns[0].ClearOptions();
             m_fieldDropdowns[0].AddOptions(m_widthList);
 
-            if (m_uiStates != null)
-                m_fieldDropdowns[0].value = m_uiStates.LastFieldWidthDdIndex;
+            if (m_matchUiStates != null)
+                m_fieldDropdowns[0].value = m_matchUiStates.LastFieldWidthDdIndex;
             else
                 m_fieldDropdowns[0].value = m_fieldDdWidthIndex;
 
@@ -681,8 +682,8 @@ namespace ThreeDeePongProto.Offline.Settings
             m_fieldDropdowns[1].ClearOptions();
             m_fieldDropdowns[1].AddOptions(m_lengthList);
 
-            if (m_uiStates != null)
-                m_fieldDropdowns[1].value = m_uiStates.LastFieldLengthDdIndex;
+            if (m_matchUiStates != null)
+                m_fieldDropdowns[1].value = m_matchUiStates.LastFieldLengthDdIndex;
             else
                 m_fieldDropdowns[1].value = m_fieldDdLengthIndex;
 
@@ -705,16 +706,16 @@ namespace ThreeDeePongProto.Offline.Settings
             m_frontLineDds[0].ClearOptions();
             m_frontLineDds[0].AddOptions(m_playersTeamOne);
 
-            if (m_uiStates != null)
-                m_frontLineDds[0].value = m_uiStates.TPOneFrontDdIndex;
+            if (m_matchUiStates != null)
+                m_frontLineDds[0].value = m_matchUiStates.TPOneFrontDdIndex;
 
             m_frontLineDds[0].RefreshShownValue();
 
             m_frontLineDds[1].ClearOptions();
             m_frontLineDds[1].AddOptions(m_playersTeamTwo);
 
-            if (m_uiStates != null)
-                m_frontLineDds[1].value = m_uiStates.TPTwoFrontDdIndex;
+            if (m_matchUiStates != null)
+                m_frontLineDds[1].value = m_matchUiStates.TPTwoFrontDdIndex;
 
             m_frontLineDds[1].RefreshShownValue();
         }
@@ -735,16 +736,16 @@ namespace ThreeDeePongProto.Offline.Settings
             m_backLineDds[0].ClearOptions();
             m_backLineDds[0].AddOptions(m_playersTeamOne);
 
-            if (m_uiStates != null)
-                m_backLineDds[0].value = m_uiStates.TPOneBacklineIndex;
+            if (m_matchUiStates != null)
+                m_backLineDds[0].value = m_matchUiStates.TPOneBacklineIndex;
 
             m_backLineDds[0].RefreshShownValue();
 
             m_backLineDds[1].ClearOptions();
             m_backLineDds[1].AddOptions(m_playersTeamTwo);
 
-            if (m_uiStates != null)
-                m_backLineDds[1].value = m_uiStates.TPTwoBacklineIndex;
+            if (m_matchUiStates != null)
+                m_backLineDds[1].value = m_matchUiStates.TPTwoBacklineIndex;
 
             m_backLineDds[1].RefreshShownValue();
         }

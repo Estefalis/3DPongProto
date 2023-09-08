@@ -127,6 +127,12 @@ PrefabInstance:
         type: 2}
     - target: {fileID: 6673783636466660463, guid: 783feb4697821a043931bae4b63b27b7,
         type: 3}
+      propertyPath: m_graphicUiStates
+      value: 
+      objectReference: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11,
+        type: 2}
+    - target: {fileID: 6673783636466660463, guid: 783feb4697821a043931bae4b63b27b7,
+        type: 3}
       propertyPath: m_enableSmoothFollow
       value: 1
       objectReference: {fileID: 0}

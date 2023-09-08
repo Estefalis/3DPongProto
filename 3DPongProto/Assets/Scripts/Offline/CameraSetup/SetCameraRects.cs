@@ -19,7 +19,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private int m_lastSetCameraMode;
 
         #region Scriptable Variables
-        [SerializeField] private MatchUiStates m_uiStates;
+        [SerializeField] private GraphicUiStates m_graphicUiStates;
         #endregion
 
         private void Awake()
@@ -39,13 +39,13 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void Start()
         {
-            if (m_uiStates == null)
+            if (m_graphicUiStates == null)
             {
                 m_lastSetCameraMode = (int)m_graphicsSettings.ECameraMode;
             }
             else
                 //m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
-                m_lastSetCameraMode = (int)m_uiStates.SetCameraMode;
+                m_lastSetCameraMode = (int)m_graphicUiStates.SetCameraMode;
 
             SetCameraMode(m_lastSetCameraMode);
         }
@@ -94,9 +94,9 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         //private void SetRectSplit()
         //{
         //    //if (m_lastSetCameraMode != (int)GameManager.Instance.ECameraMode)
-        //    if (m_lastSetCameraMode != (int)m_uiStates.SetCameraMode)
+        //    if (m_lastSetCameraMode != (int)m_matchUiStates.SetCameraMode)
         //    {
-        //        m_lastSetCameraMode = (int)m_uiStates.SetCameraMode;
+        //        m_lastSetCameraMode = (int)m_matchUiStates.SetCameraMode;
         //        SetCameraMode(m_lastSetCameraMode);
         //    }
         //}

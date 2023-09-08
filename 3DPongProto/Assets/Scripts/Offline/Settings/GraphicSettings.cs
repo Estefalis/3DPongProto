@@ -29,8 +29,8 @@ namespace ThreeDeePongProto.Offline.Settings
 
         #region Scriptable Variables
         [Header("Scriptable Variables")]
-        [SerializeField] private GraphicUiStates m_graphicVariables;
-        [SerializeField] private MatchUiStates m_uiStates;
+        [SerializeField] private GraphicUiStates m_graphicUiStates;
+        [SerializeField] private MatchUiStates m_matchUiStates;
         #endregion
 
         private Resolution[] m_screenResolutions;
@@ -39,13 +39,16 @@ namespace ThreeDeePongProto.Offline.Settings
 
         public ECameraModi ECameraMode { get => m_eCameraMode; }
 
+        private IPersistentData m_serializingData = new SerializingData();
+        private bool m_encryptionEnabled = false;
+
         private void Awake()
         {
             m_systemQualityLevel = QualitySettings.GetQualityLevel();
 
             GetAvailableResolutions();
 
-            if (m_graphicVariables == null)
+            if (m_graphicUiStates == null)
             {
 #if UNITY_EDITOR
                 Debug.LogWarning("GraphicSettings: Forgot to add a Scriptable Object in the Editor!");
@@ -57,13 +60,18 @@ namespace ThreeDeePongProto.Offline.Settings
 //#if UNITY_EDITOR
 //                UseDefaultSettings();
 //#else
-                m_qualityDropdown.value = m_graphicVariables.QualityLevel;
-                m_resolutionDropdown.value = m_graphicVariables.SelectedResolutionIndex;
-                m_fullscreenToggle.isOn = m_graphicVariables.FullScreenMode;
+                m_qualityDropdown.value = m_graphicUiStates.QualityLevelIndex;
+                m_resolutionDropdown.value = m_graphicUiStates.SelectedResolutionIndex;
+                m_fullscreenToggle.isOn = m_graphicUiStates.FullScreenMode;
                 //m_screenSplitDropdown.value = (int)GameManager.Instance.ECameraMode;
-                m_screenSplitDropdown.value = m_graphicVariables.ActiveCameraIndex;
+                m_screenSplitDropdown.value = m_graphicUiStates.ActiveCameraIndex;
 //#endif
             }
+        }
+
+        private void OnDisable()
+        {
+            m_serializingData.SaveData("/SaveData/UI-States", "/Graphic", ".json", m_graphicUiStates, m_encryptionEnabled, true);
         }
 
         private void GetAvailableResolutions()
@@ -101,9 +109,9 @@ namespace ThreeDeePongProto.Offline.Settings
         public void SetActiveCameras()
         {
             //No cast needed on saving an index.
-            m_graphicVariables.ActiveCameraIndex = m_screenSplitDropdown.value;
+            m_graphicUiStates.ActiveCameraIndex = m_screenSplitDropdown.value;
             //GameManager.Instance.ECameraMode = (ECameraModi)m_screenSplitDropdown.value;
-            m_uiStates.SetCameraMode = (ECameraModi)m_screenSplitDropdown.value;
+            m_graphicUiStates.SetCameraMode = (ECameraModi)m_screenSplitDropdown.value;
         }
 
         public void SetGraphicQuality(int _qualityIndex)
@@ -111,8 +119,8 @@ namespace ThreeDeePongProto.Offline.Settings
             QualitySettings.SetQualityLevel(_qualityIndex);
             m_qualityDropdown.value = _qualityIndex;
 
-            if (m_graphicVariables != null)
-                m_graphicVariables.QualityLevel = _qualityIndex;
+            if (m_graphicUiStates != null)
+                m_graphicUiStates.QualityLevelIndex = _qualityIndex;
         }
 
         public void SetResolution(int _resolutionIndex)
@@ -121,8 +129,8 @@ namespace ThreeDeePongProto.Offline.Settings
             Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
             m_resolutionDropdown.value = _resolutionIndex;
 
-            if (m_graphicVariables != null)
-                m_graphicVariables.SelectedResolutionIndex = _resolutionIndex;
+            if (m_graphicUiStates != null)
+                m_graphicUiStates.SelectedResolutionIndex = _resolutionIndex;
         }
 
         public void SetFullscreen(bool _setFullscreen)
@@ -130,8 +138,8 @@ namespace ThreeDeePongProto.Offline.Settings
             Screen.fullScreen = _setFullscreen;
             m_fullscreenToggle.isOn = _setFullscreen;
 
-            if (m_graphicVariables != null)
-                m_graphicVariables.FullScreenMode = _setFullscreen;
+            if (m_graphicUiStates != null)
+                m_graphicUiStates.FullScreenMode = _setFullscreen;
         }
 
         private void UseDefaultSettings()

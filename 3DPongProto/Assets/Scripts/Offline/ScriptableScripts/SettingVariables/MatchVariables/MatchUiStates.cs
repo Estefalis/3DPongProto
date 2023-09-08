@@ -18,12 +18,12 @@ public class MatchUiStates : ScriptableObject
     public int LastFieldLengthDdIndex;
     public bool FixRatio;
 
-    [Header("Line-Dropdown-Indiuces")]
+    [Header("Line-Dropdown-Indices")]
     public int TPOneFrontDdIndex;
     public int TPTwoFrontDdIndex;
     public int TPOneBacklineIndex;
     public int TPTwoBacklineIndex;
 
-    [Header("Camera-Settings")]
-    public ECameraModi SetCameraMode;
+    //[Header("Camera-Settings")]
+    //public ECameraModi SetCameraMode;
 }
