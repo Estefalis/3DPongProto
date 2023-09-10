@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fab2af534f7ffba42b2b034d273631ca, type: 3}
-  m_Name: VolumeVariables
+  m_Script: {fileID: 11500000, guid: 50984026285a27d4bbdb7fc18bfe5b71, type: 3}
+  m_Name: VolumeStates
   m_EditorClassIdentifier: 
-  LatestMasterVolume: 1
-  LatestBGMVolume: 0.9
-  LatestSFXVolume: 0.8
+  MasterMute: 0
+  BGMMute: 0
+  SFXMute: 0

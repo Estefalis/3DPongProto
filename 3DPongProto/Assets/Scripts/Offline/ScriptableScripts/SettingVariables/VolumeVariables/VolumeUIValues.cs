@@ -3,7 +3,7 @@ using UnityEngine;
 
 [Serializable]
 [CreateAssetMenu(menuName = "Scriptable Objects/Volume Settings/Volume Variables", fileName = "Volume Variables")]
-public class VolumeVariables : ScriptableObject
+public class VolumeUIValues : ScriptableObject
 {
     [Header("Volume")]
     public float LatestMasterVolume;

@@ -94,9 +94,9 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         //private void SetRectSplit()
         //{
         //    //if (m_lastSetCameraMode != (int)GameManager.Instance.ECameraMode)
-        //    if (m_lastSetCameraMode != (int)m_matchUiStates.SetCameraMode)
+        //    if (m_lastSetCameraMode != (int)m_matchUIStates.SetCameraMode)
         //    {
-        //        m_lastSetCameraMode = (int)m_matchUiStates.SetCameraMode;
+        //        m_lastSetCameraMode = (int)m_matchUIStates.SetCameraMode;
         //        SetCameraMode(m_lastSetCameraMode);
         //    }
         //}

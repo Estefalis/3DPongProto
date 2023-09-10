@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a9ee96d9df3a0d4cbc17634ba528bc4, type: 3}
-  m_Name: GraphicAndCamera
+  m_Script: {fileID: 11500000, guid: fab2af534f7ffba42b2b034d273631ca, type: 3}
+  m_Name: VolumeValues
   m_EditorClassIdentifier: 
-  QualityLevelIndex: 0
-  SelectedResolutionIndex: 7
-  FullScreenMode: 1
-  ActiveCameraIndex: 0
-  SetCameraMode: 1
+  LatestMasterVolume: 1
+  LatestBGMVolume: 0.9
+  LatestSFXVolume: 0.8

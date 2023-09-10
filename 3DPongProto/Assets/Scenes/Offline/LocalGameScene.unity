@@ -3248,8 +3248,8 @@ MonoBehaviour:
   m_winPointDifference: 2
   m_maxPushDistance: 1.5
   m_defaultPaddleScale: {x: 3.5, y: 1, z: 0.5}
-  m_uiStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
-  m_matchVariables: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
+  m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
+  m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
   m_playerData:
   - {fileID: 11400000, guid: 533fe6eee149a3143aab50fbfb5541a8, type: 2}
   - {fileID: 11400000, guid: 21b573c09ff18ba4893ceecaaf9c5756, type: 2}
@@ -8892,24 +8892,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 7764365727269222301, guid: 2fbda9605b25f77479a8f81125af8d47,
-        type: 3}
-      propertyPath: m_matchUiStates
-      value: 
-      objectReference: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d,
-        type: 2}
-    - target: {fileID: 7764365727269222301, guid: 2fbda9605b25f77479a8f81125af8d47,
-        type: 3}
-      propertyPath: m_graphicUiStates
-      value: 
-      objectReference: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11,
-        type: 2}
-    - target: {fileID: 8454354971940978650, guid: 2fbda9605b25f77479a8f81125af8d47,
-        type: 3}
-      propertyPath: m_matchUiStates
-      value: 
-      objectReference: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d,
-        type: 2}
     - target: {fileID: 9044689168406316139, guid: 2fbda9605b25f77479a8f81125af8d47,
         type: 3}
       propertyPath: m_Name

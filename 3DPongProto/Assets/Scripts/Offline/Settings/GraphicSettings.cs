@@ -24,19 +24,19 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private TMP_Dropdown m_screenSplitDropdown;
         #endregion
 
+        //[SerializeField] private int m_defaultQualityLevel = 0;
+        [SerializeField] private int m_systemQualityLevel;
+        [SerializeField] private int m_currentResolutionIndex;
         [SerializeField] private bool m_defaultFullscreen = true;
         [SerializeField] private ECameraModi m_eCameraMode;
 
         #region Scriptable Variables
         [Header("Scriptable Variables")]
         [SerializeField] private GraphicUiStates m_graphicUiStates;
-        [SerializeField] private MatchUiStates m_matchUiStates;
+        [SerializeField] private MatchUIStates m_matchUiStates;
         #endregion
 
         private Resolution[] m_screenResolutions;
-        private int m_currentResolutionIndex;
-        private int m_systemQualityLevel;
-
         public ECameraModi ECameraMode { get => m_eCameraMode; }
 
         private IPersistentData m_serializingData = new SerializingData();
@@ -53,7 +53,8 @@ namespace ThreeDeePongProto.Offline.Settings
 #if UNITY_EDITOR
                 Debug.LogWarning("GraphicSettings: Forgot to add a Scriptable Object in the Editor!");
 #endif
-                UseDefaultSettings();
+                //UseDefaultSettings();
+                ReSetDefault();
             }
             else
             {
@@ -64,7 +65,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 m_resolutionDropdown.value = m_graphicUiStates.SelectedResolutionIndex;
                 m_fullscreenToggle.isOn = m_graphicUiStates.FullScreenMode;
                 //m_screenSplitDropdown.value = (int)GameManager.Instance.ECameraMode;
-                m_screenSplitDropdown.value = m_graphicUiStates.ActiveCameraIndex;
+                m_screenSplitDropdown.value =(int)m_graphicUiStates.SetCameraMode;
 //#endif
             }
         }
@@ -108,9 +109,6 @@ namespace ThreeDeePongProto.Offline.Settings
         //TODO: Ggf. Methode in MatchManager transferieren.
         public void SetActiveCameras()
         {
-            //No cast needed on saving an index.
-            m_graphicUiStates.ActiveCameraIndex = m_screenSplitDropdown.value;
-            //GameManager.Instance.ECameraMode = (ECameraModi)m_screenSplitDropdown.value;
             m_graphicUiStates.SetCameraMode = (ECameraModi)m_screenSplitDropdown.value;
         }
 
@@ -142,7 +140,16 @@ namespace ThreeDeePongProto.Offline.Settings
                 m_graphicUiStates.FullScreenMode = _setFullscreen;
         }
 
-        private void UseDefaultSettings()
+        //private void UseDefaultSettings()
+        //{
+        //    m_qualityDropdown.value = m_systemQualityLevel;
+        //    //Index equal to your System-Resolution, set by 'GetAvailableResolutions();'.
+        //    m_resolutionDropdown.value = m_currentResolutionIndex;
+        //    m_fullscreenToggle.isOn = m_defaultFullscreen;
+        //    m_screenSplitDropdown.value = (int)m_eCameraMode;
+        //}
+
+        public void ReSetDefault()
         {
             m_qualityDropdown.value = m_systemQualityLevel;
             //Index equal to your System-Resolution, set by 'GetAvailableResolutions();'.

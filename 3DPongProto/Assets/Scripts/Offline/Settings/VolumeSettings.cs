@@ -9,7 +9,6 @@ namespace ThreeDeePongProto.Offline.Settings
     public class VolumeSettings : MonoBehaviour
     {
         [SerializeField] private AudioMixer m_audioMixer;
-        [SerializeField] private VolumeVariables m_volumeVariables;
 
         #region MasterVolume
         [Header("Master-Volume")]
@@ -18,7 +17,9 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private Slider m_sliderMaster;
         [SerializeField] private Button m_louderButtonMaster;
         [SerializeField] private TextMeshProUGUI m_masterValueText;
-        [SerializeField] private Toggle m_muteMaster;
+        [SerializeField] private Toggle m_masterMute;
+        [SerializeField] private float m_defaultMasterVolume = 1.0f;
+        [SerializeField] private bool m_defaultMasterMuteIsOn = false;
 
         //public bool MasterMuteShowsActive { get => m_muteMasterCheckboxShowsActive; private set => m_muteMasterCheckboxShowsActive = value; }
         private bool m_muteMasterCheckboxShowsActive = false;
@@ -31,8 +32,9 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private Slider m_sliderBGM;
         [SerializeField] private Button m_louderButtonBGM;
         [SerializeField] private TextMeshProUGUI m_bgmValueText;
-        [SerializeField] private Toggle m_muteBGM;
-
+        [SerializeField] private Toggle m_bGMMute;
+        [SerializeField] private float m_defaultBGMVolume = 0.9f;
+        [SerializeField] private bool m_defaultBGMMuteIsOn = false;
         //public bool BGMMuteShowsActive { get => m_muteBGMCheckboxShowsActive; private set => m_muteBGMCheckboxShowsActive = value; }
         private bool m_muteBGMCheckboxShowsActive = false;
         #endregion
@@ -44,7 +46,9 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private Slider m_sliderSFX;
         [SerializeField] private Button m_louderButtonSFX;
         [SerializeField] private TextMeshProUGUI m_sfxValueText;
-        [SerializeField] private Toggle m_muteSFX;
+        [SerializeField] private Toggle m_sFXMute;
+        [SerializeField] private float m_defaultSFXVolume = 1.0f;
+        [SerializeField] private bool m_defaultSFXMuteIsOn = false;
         #endregion
 
         //public bool SFXMuteShowsActive { get => m_muteSFXCheckboxShowsActive; private set => m_muteSFXCheckboxShowsActive = value; }
@@ -62,6 +66,9 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private Toggle[] m_muteToggle;
         [SerializeField] private Slider[] m_sliderType;
         private Dictionary<Toggle, Slider> m_toggleSliderConnection = new Dictionary<Toggle, Slider>();
+
+        [SerializeField] private VolumeUIStates m_VolumeUIStates;
+        [SerializeField] private VolumeUIValues m_volumeUIValues;
 
         private IPersistentData m_serializingData = new SerializingData();
         private bool m_encryptionEnabled = false;
@@ -81,9 +88,9 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void Start()
         {
-            HandleMasterSliderValueChanges(m_volumeVariables.LatestMasterVolume);
-            HandleBGMSliderValueChanges(m_volumeVariables.LatestBGMVolume);
-            HandleSFXSliderValueChanges(m_volumeVariables.LatestSFXVolume);
+            HandleMasterSliderValueChanges(m_volumeUIValues.LatestMasterVolume);
+            HandleBGMSliderValueChanges(m_volumeUIValues.LatestBGMVolume);
+            HandleSFXSliderValueChanges(m_volumeUIValues.LatestSFXVolume);
         }
 
         private void OnDisable()
@@ -91,7 +98,8 @@ namespace ThreeDeePongProto.Offline.Settings
             //TODO: RemoveSliderAndToggleListener(); - SaveVolumeSettings();
             RemoveSliderAndToggleListener();
 
-            m_serializingData.SaveData("/SaveData/UI-Variables", "/Volume", ".json", m_volumeVariables, m_encryptionEnabled, true);
+            m_serializingData.SaveData("/SaveData/UI-States", "/Volume", ".json", m_VolumeUIStates, m_encryptionEnabled, true);
+            m_serializingData.SaveData("/SaveData/UI-Values", "/Volume", ".json", m_volumeUIValues, m_encryptionEnabled, true);
         }
 
         /// <summary>
@@ -104,9 +112,9 @@ namespace ThreeDeePongProto.Offline.Settings
             m_sliderBGM.onValueChanged.AddListener(HandleBGMSliderValueChanges);
             m_sliderSFX.onValueChanged.AddListener(HandleSFXSliderValueChanges);
 
-            m_muteMaster.onValueChanged.AddListener(HandleMasterToggleValueChanges);
-            m_muteBGM.onValueChanged.AddListener(HandleBGMToggleValueChanges);
-            m_muteSFX.onValueChanged.AddListener(HandleSFXToggleValueChanges);
+            m_masterMute.onValueChanged.AddListener(HandleMasterToggleValueChanges);
+            m_bGMMute.onValueChanged.AddListener(HandleBGMToggleValueChanges);
+            m_sFXMute.onValueChanged.AddListener(HandleSFXToggleValueChanges);
         }
 
         /// <summary>
@@ -118,9 +126,9 @@ namespace ThreeDeePongProto.Offline.Settings
             m_sliderBGM.onValueChanged.RemoveListener(HandleBGMSliderValueChanges);
             m_sliderSFX.onValueChanged.RemoveListener(HandleSFXSliderValueChanges);
 
-            m_muteMaster.onValueChanged.RemoveListener(HandleMasterToggleValueChanges);
-            m_muteBGM.onValueChanged.RemoveListener(HandleBGMToggleValueChanges);
-            m_muteSFX.onValueChanged.RemoveListener(HandleSFXToggleValueChanges);
+            m_masterMute.onValueChanged.RemoveListener(HandleMasterToggleValueChanges);
+            m_bGMMute.onValueChanged.RemoveListener(HandleBGMToggleValueChanges);
+            m_sFXMute.onValueChanged.RemoveListener(HandleSFXToggleValueChanges);
         }
         #endregion
 
@@ -133,7 +141,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
             m_muteMasterCheckboxShowsActive = false;
             //MasterMute is on, when the corresponding SliderValue is the minimalValue.
-            m_muteMaster.isOn = !(m_sliderMaster.value > m_sliderMaster.minValue);
+            m_masterMute.isOn = !(m_sliderMaster.value > m_sliderMaster.minValue);
             m_muteMasterCheckboxShowsActive = true;
 
             m_sliderMaster.value = _value;
@@ -141,7 +149,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
             //Also save the new value in the ScriptableObject.
             if (m_sliderMaster.value > m_sliderMaster.minValue)
-                m_volumeVariables.LatestMasterVolume = _value;
+                m_volumeUIValues.LatestMasterVolume = _value;
         }
 
         private void HandleBGMSliderValueChanges(float _value)
@@ -151,7 +159,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
             m_muteBGMCheckboxShowsActive = false;
             //BGMMute is on, when the corresponding SliderValue is the minimalValue.
-            m_muteBGM.isOn = !(m_sliderBGM.value > m_sliderBGM.minValue);
+            m_bGMMute.isOn = !(m_sliderBGM.value > m_sliderBGM.minValue);
             m_muteBGMCheckboxShowsActive = true;
 
             m_sliderBGM.value = _value;
@@ -159,7 +167,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
             //Also save the new value in the ScriptableObject.
             if (m_sliderBGM.value > m_sliderBGM.minValue)
-                m_volumeVariables.LatestBGMVolume = _value;
+                m_volumeUIValues.LatestBGMVolume = _value;
         }
 
         private void HandleSFXSliderValueChanges(float _value)
@@ -169,7 +177,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
             m_muteSFXCheckboxShowsActive = false;
             //SFXMute is on, when the corresponding SliderValue is the minimalValue.
-            m_muteSFX.isOn = !(m_sliderSFX.value > m_sliderSFX.minValue);
+            m_sFXMute.isOn = !(m_sliderSFX.value > m_sliderSFX.minValue);
             m_muteSFXCheckboxShowsActive = true;
 
             m_sliderSFX.value = _value;
@@ -177,7 +185,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
             //Also save the new value in the ScriptableObject.
             if (m_sliderSFX.value > m_sliderSFX.minValue)
-                m_volumeVariables.LatestSFXVolume = _value;
+                m_volumeUIValues.LatestSFXVolume = _value;
         }
         #endregion
 
@@ -191,7 +199,7 @@ namespace ThreeDeePongProto.Offline.Settings
             if (_mute)
             {
                 //Tempsave the corresponding SliderValue in a ScriptableObject.
-                m_volumeVariables.LatestMasterVolume = m_sliderMaster.value;
+                m_volumeUIValues.LatestMasterVolume = m_sliderMaster.value;
                 //Set Sliders 'minValue' as new value.
                 m_sliderMaster.value = m_sliderMaster.minValue;
                 //Use the memberVariable to reduce the audioMixer-VolumeChannel by that amount.
@@ -199,7 +207,7 @@ namespace ThreeDeePongProto.Offline.Settings
             }
             else
             {
-                m_sliderMaster.value = m_volumeVariables.LatestMasterVolume;
+                m_sliderMaster.value = m_volumeUIValues.LatestMasterVolume;
             }
         }
 
@@ -212,7 +220,7 @@ namespace ThreeDeePongProto.Offline.Settings
             if (_mute)
             {
                 //Tempsave the corresponding SliderValue in a ScriptableObject.
-                m_volumeVariables.LatestBGMVolume = m_sliderBGM.value;
+                m_volumeUIValues.LatestBGMVolume = m_sliderBGM.value;
                 //Set Sliders 'minValue' as new value.
                 m_sliderBGM.value = m_sliderBGM.minValue;
                 //Use the memberVariable to reduce the audioMixer-VolumeChannel by that amount.
@@ -220,7 +228,7 @@ namespace ThreeDeePongProto.Offline.Settings
             }
             else
             {
-                m_sliderBGM.value = m_volumeVariables.LatestBGMVolume;
+                m_sliderBGM.value = m_volumeUIValues.LatestBGMVolume;
             }
         }
 
@@ -233,7 +241,7 @@ namespace ThreeDeePongProto.Offline.Settings
             if (_mute)
             {
                 //Tempsave the corresponding SliderValue in a ScriptableObject.
-                m_volumeVariables.LatestSFXVolume = m_sliderSFX.value;
+                m_volumeUIValues.LatestSFXVolume = m_sliderSFX.value;
                 //Set Sliders 'minValue' as new value.
                 m_sliderSFX.value = m_sliderSFX.minValue;
                 //Use the memberVariable to reduce the audioMixer-VolumeChannel by that amount.
@@ -241,7 +249,7 @@ namespace ThreeDeePongProto.Offline.Settings
             }
             else
             {
-                m_sliderSFX.value = m_volumeVariables.LatestSFXVolume;
+                m_sliderSFX.value = m_volumeUIValues.LatestSFXVolume;
             }
         }
         #endregion
@@ -265,6 +273,17 @@ namespace ThreeDeePongProto.Offline.Settings
             //Commented out, to allow the 'LouderButton' to increase the SliderValue out of the muted state.
             //if (!_connectedMute.isOn)
             connectedSlider.value += m_adjustSliderStep;
+        }
+
+        public void ReSetDefault()
+        {
+            m_masterMute.isOn = m_defaultMasterMuteIsOn;
+            m_bGMMute.isOn = m_defaultBGMMuteIsOn;
+            m_sFXMute.isOn = m_defaultSFXMuteIsOn;
+
+            m_sliderMaster.value = m_defaultMasterVolume;
+            m_sliderBGM.value = m_defaultBGMVolume;
+            m_sliderSFX.value= m_defaultSFXVolume;
         }
     }
 }

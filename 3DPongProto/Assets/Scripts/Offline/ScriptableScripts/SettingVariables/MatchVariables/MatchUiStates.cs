@@ -3,7 +3,7 @@ using UnityEngine;
 
 [Serializable]
 [CreateAssetMenu(menuName = "Scriptable Objects/Match Settings/Indices and Boolean", fileName = "MatchUISettings")]
-public class MatchUiStates : ScriptableObject
+public class MatchUIStates : ScriptableObject
 {
     [Header("Round-Details")]
     public int LastRoundDdIndex;
@@ -23,7 +23,4 @@ public class MatchUiStates : ScriptableObject
     public int TPTwoFrontDdIndex;
     public int TPOneBacklineIndex;
     public int TPTwoBacklineIndex;
-
-    //[Header("Camera-Settings")]
-    //public ECameraModi SetCameraMode;
 }

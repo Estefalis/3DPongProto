@@ -8,7 +8,6 @@ public class GraphicUiStates : ScriptableObject
     public int QualityLevelIndex;
     public int SelectedResolutionIndex;
     public bool FullScreenMode;
-    public int ActiveCameraIndex;
 
     [Header("Camera-Settings")]
     public ECameraModi SetCameraMode;

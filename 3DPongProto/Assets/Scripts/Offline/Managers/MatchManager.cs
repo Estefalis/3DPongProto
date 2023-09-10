@@ -14,6 +14,8 @@ namespace ThreeDeePongProto.Managers
 {
     public class MatchManager : MonoBehaviour
     {
+        //TODO EMatchCountOptions implementieren.
+
         #region SerializeField-Member-Variables
         [SerializeField] private GameObject m_playGround;
 
@@ -32,8 +34,8 @@ namespace ThreeDeePongProto.Managers
         [Space]
 
         #region Scriptable Objects
-        [SerializeField] private MatchUiStates m_uiStates;
-        [SerializeField] private MatchValues m_matchVariables;
+        [SerializeField] private MatchUIStates m_matchUIStates;
+        [SerializeField] private MatchValues m_matchValues;
         [SerializeField] private PlayerData[] m_playerData;
         #endregion
         #endregion
@@ -97,22 +99,22 @@ namespace ThreeDeePongProto.Managers
 
         private void SetScriptableDefaults()
         {
-            if (m_matchVariables != null)
+            if (m_matchValues != null)
             {
 #if UNITY_EDITOR
-                m_matchVariables.CurrentRoundNr = m_startRound;
-                m_matchVariables.WinPointDifference = m_winPointDifference;
+                m_matchValues.CurrentRoundNr = m_startRound;
+                m_matchValues.WinPointDifference = m_winPointDifference;
 
-                m_matchVariables.MinFrontLineDistance = m_minimalFrontLineDistance;
-                m_matchVariables.MinBackLineDistance = m_minimalBackLineDistance;
+                m_matchValues.MinFrontLineDistance = m_minimalFrontLineDistance;
+                m_matchValues.MinBackLineDistance = m_minimalBackLineDistance;
 
-                m_matchVariables.MaxPushDistance = m_maxPushDistance;
-                m_matchVariables.XPaddleScale = m_defaultPaddleScale.x;
-                m_matchVariables.YPaddleScale = m_defaultPaddleScale.y;
-                m_matchVariables.ZPaddleScale = m_defaultPaddleScale.z;
+                m_matchValues.MaxPushDistance = m_maxPushDistance;
+                m_matchValues.XPaddleScale = m_defaultPaddleScale.x;
+                m_matchValues.YPaddleScale = m_defaultPaddleScale.y;
+                m_matchValues.ZPaddleScale = m_defaultPaddleScale.z;
 
                 //Needs to be uncommented to test Rect-Change on Restart Game-Scene.
-                //m_matchUiStates.SetCameraMode = m_eCameraMode;
+                //m_matchUIStates.SetCameraMode = m_eCameraMode;
             }
 #endif
             //else
@@ -127,7 +129,7 @@ namespace ThreeDeePongProto.Managers
 
         private void UpdateTPOnePoints()
         {
-            if (m_playerData == null || m_matchVariables == null)
+            if (m_playerData == null || m_matchValues == null)
             {
 #if UNITY_EDITOR
                 Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
@@ -138,19 +140,19 @@ namespace ThreeDeePongProto.Managers
             if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
                 m_scoredPlayer = m_playerData[0].PlayerName;
 
-            ++m_matchVariables.CurrentPointsTPOne;
-            ++m_matchVariables.TotalPointsTPOne;
+            ++m_matchValues.CurrentPointsTPOne;
+            ++m_matchValues.TotalPointsTPOne;
             //Player 1
-            m_playerData[0].TotalPoints = m_matchVariables.TotalPointsTPOne;
+            m_playerData[0].TotalPoints = m_matchValues.TotalPointsTPOne;
             //Player 3
-            m_playerData[2].TotalPoints = m_matchVariables.TotalPointsTPOne;
+            m_playerData[2].TotalPoints = m_matchValues.TotalPointsTPOne;
 
             CheckMatchConditions();
         }
 
         private void UpdateTPTwoPoints()
         {
-            if (m_playerData == null || m_matchVariables == null)
+            if (m_playerData == null || m_matchValues == null)
             {
 #if UNITY_EDITOR
                 Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
@@ -161,20 +163,20 @@ namespace ThreeDeePongProto.Managers
             if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
                 m_scoredPlayer = m_playerData[1].PlayerName;
 
-            ++m_matchVariables.CurrentPointsTPTwo;
-            ++m_matchVariables.TotalPointsTPTwo;
+            ++m_matchValues.CurrentPointsTPTwo;
+            ++m_matchValues.TotalPointsTPTwo;
 
             //Player 2
-            m_playerData[1].TotalPoints = m_matchVariables.TotalPointsTPTwo;
+            m_playerData[1].TotalPoints = m_matchValues.TotalPointsTPTwo;
             //Player 4
-            m_playerData[3].TotalPoints = m_matchVariables.TotalPointsTPTwo;
+            m_playerData[3].TotalPoints = m_matchValues.TotalPointsTPTwo;
 
             CheckMatchConditions();
         }
 
         private void ReSetMatch()
         {
-            if (m_matchVariables == null)
+            if (m_matchValues == null)
             {
 #if UNITY_EDITOR
                 Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
@@ -190,32 +192,32 @@ namespace ThreeDeePongProto.Managers
         #region Match-Presets
         private void ResetPlayfield()
         {
-            m_playGround.transform.localScale = new Vector3(m_matchVariables.SetGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_matchVariables.SetGroundLength * m_playGroundLengthScale);
+            m_playGround.transform.localScale = new Vector3(m_matchValues.SetGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_matchValues.SetGroundLength * m_playGroundLengthScale);
         }
 
         private void ResetRoundValues()
         {
-            if (m_matchVariables != null)
+            if (m_matchValues != null)
             {
-                m_matchVariables.CurrentPointsTPOne = 0;
-                m_matchVariables.CurrentPointsTPTwo = 0;
+                m_matchValues.CurrentPointsTPOne = 0;
+                m_matchValues.CurrentPointsTPTwo = 0;
             }
         }
         #endregion
 
         private void CheckMatchConditions()
         {
-            if (m_matchVariables == null)
+            if (m_matchValues == null)
                 return;
 
             bool nextRoundConditionIsMet =
-                m_matchVariables.CurrentPointsTPOne >= m_matchVariables.SetMaxPoints &&
-                m_matchVariables.CurrentPointsTPOne >= m_matchVariables.CurrentPointsTPTwo + m_matchVariables.WinPointDifference
+                m_matchValues.CurrentPointsTPOne >= m_matchValues.SetMaxPoints &&
+                m_matchValues.CurrentPointsTPOne >= m_matchValues.CurrentPointsTPTwo + m_matchValues.WinPointDifference
                 ||
-                m_matchVariables.CurrentPointsTPTwo >= m_matchVariables.SetMaxPoints &&
-                m_matchVariables.CurrentPointsTPTwo >= m_matchVariables.CurrentPointsTPOne + m_matchVariables.WinPointDifference;
+                m_matchValues.CurrentPointsTPTwo >= m_matchValues.SetMaxPoints &&
+                m_matchValues.CurrentPointsTPTwo >= m_matchValues.CurrentPointsTPOne + m_matchValues.WinPointDifference;
 
-            bool winConditionIsMet = m_matchVariables.CurrentRoundNr == m_matchVariables.SetMaxRounds && nextRoundConditionIsMet;
+            bool winConditionIsMet = m_matchValues.CurrentRoundNr == m_matchValues.SetMaxRounds && nextRoundConditionIsMet;
 
             if (winConditionIsMet)
             {
@@ -243,7 +245,7 @@ namespace ThreeDeePongProto.Managers
         private void StartNextRound()
         {
             //reuse of 'MatchValues/MatchSettings public bool InfiniteRounds'.
-            if (m_matchVariables == null || m_uiStates.InfiniteRounds)
+            if (m_matchValues == null || m_matchUIStates.InfiniteRounds)
                 return;
 #if UNITY_EDITOR
             Debug.Log("Next Round starts!");
@@ -251,7 +253,7 @@ namespace ThreeDeePongProto.Managers
             //TODO: May implement a procedure to transition into the next set Round.
 
             //Increase the RoundNr by 1.
-            m_matchVariables.CurrentRoundNr++;
+            m_matchValues.CurrentRoundNr++;
             ResetRoundValues();
         }
 
