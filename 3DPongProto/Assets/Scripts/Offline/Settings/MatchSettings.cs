@@ -117,9 +117,9 @@ namespace ThreeDeePongProto.Offline.Settings
             FillWidthDropdown();
             FillLengthDropdown();
 
+            SetupLineUpSliders();
             UpdateLineUpTMPs();
             m_updateLineText += UpdateLineUpTMPs;
-            SetupLineUpSliders();
 
             AddGroupListeners();
         }
@@ -127,7 +127,7 @@ namespace ThreeDeePongProto.Offline.Settings
         private void OnDisable()
         {
             RemoveGroupListeners();
-            
+
             m_serializingData.SaveData("/SaveData/UI-States", "/Match", ".json", m_matchUiStates, m_encryptionEnabled, true);
             m_serializingData.SaveData("/SaveData/UI-Variables", "/Match", ".json", m_matchVariables, m_encryptionEnabled, true);
         }
@@ -193,6 +193,9 @@ namespace ThreeDeePongProto.Offline.Settings
             { OnTeamOneBacklineDropdownValueChanged(m_backLineDds[0]); });
             m_backLineDds[1].onValueChanged.AddListener(delegate
             { OnTeamTwoBacklineDropdownValueChanged(m_backLineDds[1]); });
+
+            m_distanceSliderValues[0].onValueChanged.AddListener(OnFrontlineSliderValueChanged);
+            m_distanceSliderValues[1].onValueChanged.AddListener(OnBacklineSliderValueChanged);
         }
 
         private void RemoveGroupListeners()
@@ -224,6 +227,9 @@ namespace ThreeDeePongProto.Offline.Settings
             { OnTeamOneBacklineDropdownValueChanged(m_backLineDds[0]); });
             m_backLineDds[1].onValueChanged.RemoveListener(delegate
             { OnTeamTwoBacklineDropdownValueChanged(m_backLineDds[1]); });
+
+            m_distanceSliderValues[0].onValueChanged.RemoveListener(OnFrontlineSliderValueChanged);
+            m_distanceSliderValues[1].onValueChanged.RemoveListener(OnBacklineSliderValueChanged);
         }
 
         #region Toggle-OnValueChanged-Methods
@@ -548,6 +554,22 @@ namespace ThreeDeePongProto.Offline.Settings
         }
         #endregion
 
+        #region Slider-OnValueChanged
+        private void OnFrontlineSliderValueChanged(float _value)
+        {
+            m_distanceSliderValues[0].value = _value;
+            m_matchVariables.FrontlineAdjustment = m_distanceSliderValues[0].minValue + _value;
+            m_updateLineText?.Invoke();
+        }
+
+        private void OnBacklineSliderValueChanged(float _value)
+        {
+            m_distanceSliderValues[1].value = _value;
+            m_matchVariables.BacklineAdjustment = m_distanceSliderValues[1].minValue + _value;
+            m_updateLineText?.Invoke();
+        }
+        #endregion
+
         #region Fill-Dropdowns-On-Start
         /// <summary>
         /// Method to fill the round-dropdown on Start. Also sets it's interactable-status.
@@ -791,9 +813,9 @@ namespace ThreeDeePongProto.Offline.Settings
         private void SetupLineUpSliders()
         {
             //FrontSlider
-            m_distanceSliderValues[0].value = m_matchVariables.FLAdjustAmount;
+            m_distanceSliderValues[0].value = m_distanceSliderValues[0].minValue + m_matchVariables.FrontlineAdjustment;
             //BackSlider
-            m_distanceSliderValues[1].value = m_matchVariables.BLAdjustAmount;
+            m_distanceSliderValues[1].value = m_distanceSliderValues[1].minValue + m_matchVariables.BacklineAdjustment;
         }
 
         private void UpdateLineUpTMPs()
@@ -805,66 +827,22 @@ namespace ThreeDeePongProto.Offline.Settings
                 return;
             }
 
-            m_frontLineText.SetText($"{m_matchVariables.MinFrontLineDistance + m_matchVariables.FLAdjustAmount:N2}");
-            m_backLineText.text = $"{m_matchVariables.MinBackLineDistance + m_matchVariables.BLAdjustAmount:N2}";
+            m_frontLineText.SetText($"{m_distanceSliderValues[0].value + m_matchVariables.MinFrontLineDistance + m_matchVariables.BacklineAdjustment:N2}");
+            m_backLineText.text = $"{m_distanceSliderValues[1].value + m_matchVariables.MinBackLineDistance:N2}";
         }
 
         //Front = ID 0, Back = ID 1. Lists and UI are organized in the same scheme.
         public void MoveLinesForward(int _sliderIndex)
         {
             Slider sliderToIncrease = m_increaseLineSlider[m_increaseButtonKeys[_sliderIndex]];
-
-            if (sliderToIncrease.value < sliderToIncrease.maxValue)
-            {
-                sliderToIncrease.value += m_sliderAdjustStep;
-
-                switch (_sliderIndex)
-                {
-                    case 0:
-                    {
-                        m_matchVariables.FLAdjustAmount += m_sliderAdjustStep;
-                        break;
-                    }
-                    case 1:
-                    {
-                        m_matchVariables.BLAdjustAmount += m_sliderAdjustStep;
-                        break;
-                    }
-                    default:
-                        break;
-                }
-
-                m_updateLineText?.Invoke();
-            }
+            sliderToIncrease.value += m_sliderAdjustStep;
         }
 
         //Front = ID 0, Back = ID 1. Lists and UI are organized in the same scheme.
         public void MoveLinesBackward(int _sliderIndex)
         {
             Slider sliderToReduce = m_reduceLineSlider[m_reduceButtonKeys[_sliderIndex]];
-
-            if (sliderToReduce.value > sliderToReduce.minValue)
-            {
-                sliderToReduce.value -= m_sliderAdjustStep;
-
-                switch (_sliderIndex)
-                {
-                    case 0:
-                    {
-                        m_matchVariables.FLAdjustAmount -= m_sliderAdjustStep;
-                        break;
-                    }
-                    case 1:
-                    {
-                        m_matchVariables.BLAdjustAmount -= m_sliderAdjustStep;
-                        break;
-                    }
-                    default:
-                        break;
-                }
-
-                m_updateLineText?.Invoke();
-            }
+            sliderToReduce.value -= m_sliderAdjustStep;
         }
 
         private void UpdateFrontlineSetup(int _playerId)

@@ -29,9 +29,9 @@ public class MatchValues : ScriptableObject
     [Header("Player-Adjustments")]
     public float PaddleWidthAdjustment;
     public float MinFrontLineDistance;
-    public float FLAdjustAmount;
+    public float FrontlineAdjustment;
     public float MinBackLineDistance;
-    public float BLAdjustAmount;
+    public float BacklineAdjustment;
     public float MaxPushDistance;
 
     public float XPaddleScale;

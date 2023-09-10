@@ -180,6 +180,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 m_volumeVariables.LatestSFXVolume = _value;
         }
         #endregion
+
         #region MuteChanges
         private void HandleMasterToggleValueChanges(bool _mute)
         {

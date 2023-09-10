@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6c8efb4be29349478192d860c40c12e, type: 3}
   m_Name: MatchValues
   m_EditorClassIdentifier: 
+  StartDateTime: 0
+  StartTime: 0
   SetMaxRounds: 5
   CurrentRoundNr: 1
   SetMaxPoints: 25
@@ -28,4 +30,6 @@ MonoBehaviour:
   MinBackLineDistance: 1.5
   BLAdjustAmount: 0
   MaxPushDistance: 1.5
-  StartPaddleScale: {x: 3.5, y: 1, z: 0.5}
+  XPaddleScale: 3.5
+  YPaddleScale: 1
+  ZPaddleScale: 0.5
