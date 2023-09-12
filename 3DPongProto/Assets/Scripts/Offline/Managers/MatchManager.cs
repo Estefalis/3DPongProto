@@ -48,7 +48,7 @@ namespace ThreeDeePongProto.Managers
         public float DefaultFieldLength { get => m_playGroundLength; }
         public float MaxPushDistance { get => m_maxPushDistance; }
         public Vector3 DefaultPaddleScale { get => m_defaultPaddleScale; }
-        
+
         #endregion
 
         private string m_scoredPlayer;
@@ -118,7 +118,7 @@ namespace ThreeDeePongProto.Managers
             }
 #endif
             //else
-                //TODO: Load settings with an active Save- and Load-System.
+            //TODO: Load settings with an active Save- and Load-System.
         }
 
         private void MatchStartValues()
@@ -147,7 +147,7 @@ namespace ThreeDeePongProto.Managers
             //Player 3
             m_playerData[2].TotalPoints = m_matchValues.TotalPointsTPOne;
 
-            CheckMatchConditions();
+            CheckMatchConditions(m_scoredPlayer);
         }
 
         private void UpdateTPTwoPoints()
@@ -171,7 +171,7 @@ namespace ThreeDeePongProto.Managers
             //Player 4
             m_playerData[3].TotalPoints = m_matchValues.TotalPointsTPTwo;
 
-            CheckMatchConditions();
+            CheckMatchConditions(m_scoredPlayer);
         }
 
         private void ReSetMatch()
@@ -205,7 +205,7 @@ namespace ThreeDeePongProto.Managers
         }
         #endregion
 
-        private void CheckMatchConditions()
+        private void CheckMatchConditions(string _winningPlayer)
         {
             if (m_matchValues == null)
                 return;
@@ -221,6 +221,10 @@ namespace ThreeDeePongProto.Managers
 
             if (winConditionIsMet)
             {
+                TimeSpan timespan = TimeSpan.FromSeconds(Time.time - m_matchValues.StartTime);
+                m_matchValues.TotalPlaytime = (float)timespan.TotalSeconds;
+                m_matchValues.WinningPlayer = _winningPlayer + "inDev";
+
                 m_StartWinProcedure.Invoke();
                 return;
             };

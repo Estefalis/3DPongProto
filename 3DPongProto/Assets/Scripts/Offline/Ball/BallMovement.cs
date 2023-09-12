@@ -128,7 +128,7 @@ public class BallMovement : MonoBehaviour
             if (!m_matchManager.MatchStarted)
             {
                 m_RoundCountStarts?.Invoke();
-                m_matchValues.StartDateTime = DateTime.Now.Ticks;
+                //m_matchValues.StartDateTime = DateTime.Now.Ticks;
                 m_matchValues.StartTime = Time.time;
             }
         }

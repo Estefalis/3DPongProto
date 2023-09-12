@@ -64,7 +64,6 @@ namespace ThreeDeePongProto.Offline.Settings
                 m_qualityDropdown.value = m_graphicUiStates.QualityLevelIndex;
                 m_resolutionDropdown.value = m_graphicUiStates.SelectedResolutionIndex;
                 m_fullscreenToggle.isOn = m_graphicUiStates.FullScreenMode;
-                //m_screenSplitDropdown.value = (int)GameManager.Instance.ECameraMode;
                 m_screenSplitDropdown.value =(int)m_graphicUiStates.SetCameraMode;
 //#endif
             }

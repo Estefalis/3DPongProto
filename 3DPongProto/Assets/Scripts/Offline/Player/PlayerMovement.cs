@@ -36,7 +36,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         #region Scriptable Objects
         [SerializeField] private PlayerData m_playerData;
-        [SerializeField] private MatchValues m_matchVariables;
+        [SerializeField] private MatchValues m_matchValues;
         #endregion
         #endregion
 
@@ -134,14 +134,14 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             //TODO: MUST be removed after testing is completed!!!___
             if (Keyboard.current.pKey.wasPressedThisFrame)
             {
-                if (m_matchVariables != null)
-                    m_matchVariables.PaddleWidthAdjustment += 0.25f;
+                if (m_matchValues != null)
+                    m_matchValues.PaddleWidthAdjustment += 0.25f;
             }
 
             if (Keyboard.current.pKey.wasReleasedThisFrame)
             {
-                if (m_matchVariables != null)
-                    m_matchVariables.PaddleWidthAdjustment -= 0.25f;
+                if (m_matchValues != null)
+                    m_matchValues.PaddleWidthAdjustment -= 0.25f;
             }
             //______________________________________________________
         }
@@ -154,7 +154,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         private void GetFieldDetails()
         {
-            if (m_matchVariables == null)
+            if (m_matchValues == null)
             {
                 m_groundWidth = m_matchManager.DefaultFieldWidth;
                 m_groundLength = m_matchManager.DefaultFieldLength;
@@ -162,15 +162,15 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             }
             else
             {
-                m_groundWidth = m_matchVariables.SetGroundWidth;
-                m_groundLength = m_matchVariables.SetGroundLength;
-                m_maxPushDistance = m_matchVariables.MaxPushDistance;
+                m_groundWidth = m_matchValues.SetGroundWidth;
+                m_groundLength = m_matchValues.SetGroundLength;
+                m_maxPushDistance = m_matchValues.MaxPushDistance;
             }
         }
 
         private void GetPlayerDetails()
         {
-            if (m_playerData == null ^ m_matchVariables == null)
+            if (m_playerData == null ^ m_matchValues == null)
             {
                 switch (m_defaultFrontLineUp)
                 {
@@ -189,14 +189,14 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
                 switch (m_playerData.PlayerOnFrontline)
                 {
                     case true:
-                        m_goalDistance = m_matchVariables.MinFrontLineDistance + m_matchVariables.FrontlineAdjustment + m_matchVariables.BacklineAdjustment;
+                        m_goalDistance = m_matchValues.MinFrontLineDistance + m_matchValues.FrontlineAdjustment + m_matchValues.BacklineAdjustment;
                         break;
                     case false:
-                        m_goalDistance = m_matchVariables.MinBackLineDistance + m_matchVariables.BacklineAdjustment;
+                        m_goalDistance = m_matchValues.MinBackLineDistance + m_matchValues.BacklineAdjustment;
                         break;
                 }
 
-                m_localPaddleScale = new Vector3(m_matchVariables.XPaddleScale, m_matchVariables.YPaddleScale, m_matchVariables.ZPaddleScale);
+                m_localPaddleScale = new Vector3(m_matchValues.XPaddleScale, m_matchValues.YPaddleScale, m_matchValues.ZPaddleScale);
             }
         }
 
@@ -208,10 +208,10 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         {
             m_maxSideMovement = m_groundWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
 
-            if (m_matchVariables == null)
+            if (m_matchValues == null)
                 m_paddleWidthAdjustment = 0;
             else
-                m_paddleWidthAdjustment = m_matchVariables.PaddleWidthAdjustment;
+                m_paddleWidthAdjustment = m_matchValues.PaddleWidthAdjustment;
 
             m_rigidbody.transform.localScale = new Vector3(m_localPaddleScale.x + m_paddleWidthAdjustment, m_localPaddleScale.y, m_localPaddleScale.z);
 

@@ -32,8 +32,6 @@ namespace ThreeDeePongProto.Offline.Settings
         [Header("Line-Up")]
         [SerializeField] private TMP_Dropdown[] m_frontLineDds;
         [SerializeField] private TMP_Dropdown[] m_backLineDds;
-        //[SerializeField] private Slider m_frontLineSlider;
-        //[SerializeField] private Slider m_backLineSlider;
         [SerializeField] private TextMeshProUGUI m_frontLineText;
         [SerializeField] private TextMeshProUGUI m_backLineText;
         [SerializeField] private float m_sliderAdjustStep = 0.01f;
@@ -81,6 +79,7 @@ namespace ThreeDeePongProto.Offline.Settings
         private int m_firstRoundOffset = 1, m_firstPointOffset = 1, m_firstWidthOffset = 25, m_firstLengthOffset = 50;
         private int m_tempPointDdValue = 0, m_tempRoundDdValue = 0;
 
+        //Set in OnValueChanged-Dropdown-Methods.
         private int m_tempWidthDdValue = 0, m_tempLengthDdValue = 0;
         private bool m_fixRatioIfTrue;
 

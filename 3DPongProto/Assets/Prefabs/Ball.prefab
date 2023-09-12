@@ -127,7 +127,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da2ef3c5e8efe9e41a952f3aa2be0e46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_matchManager: {fileID: 0}
   m_rigidbody: {fileID: 5041537836607581328}
   m_impulseForce: 11
   m_offWallAngle: 15
-  m_offPaddleAngle: 1
+  m_offPaddleAngle: 0.1
+  m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}

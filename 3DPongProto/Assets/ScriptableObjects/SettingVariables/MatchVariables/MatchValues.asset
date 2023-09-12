@@ -12,23 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6c8efb4be29349478192d860c40c12e, type: 3}
   m_Name: MatchValues
   m_EditorClassIdentifier: 
-  StartDateTime: 0
-  StartTime: 0
-  SetMaxRounds: 5
+  m_playerNamesByRank: []
+  TotalPlaytime: 42582.86
+  StartTime: 16.179905
   CurrentRoundNr: 1
+  SetMaxRounds: 5
   SetMaxPoints: 25
   WinPointDifference: 2
+  WinningPlayer: EstefalisInDev
   CurrentPointsTPOne: 0
-  TotalPointsTPOne: 12
+  TotalPointsTPOne: 68
   CurrentPointsTPTwo: 0
-  TotalPointsTPTwo: 34
+  TotalPointsTPTwo: 59
   SetGroundWidth: 25
   SetGroundLength: 50
-  PaddleWidthAdjustment: 0
   MinFrontLineDistance: 6
-  FLAdjustAmount: 0
+  FrontlineAdjustment: 0
   MinBackLineDistance: 1.5
-  BLAdjustAmount: 0
+  BacklineAdjustment: 0
+  PaddleWidthAdjustment: 0
   MaxPushDistance: 1.5
   XPaddleScale: 3.5
   YPaddleScale: 1
