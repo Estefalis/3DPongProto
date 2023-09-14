@@ -1,6 +1,14 @@
 using System;
+using ThreeDeePongProto.Offline.Player.Inputs;
 using ThreeDeePongProto.Offline.UI;
 using UnityEngine;
+
+public enum EGameModi
+{
+    LocalPC,
+    LAN,
+    Internet
+}
 
 public enum EMatchCountOptions
 {
@@ -56,6 +64,8 @@ namespace ThreeDeePongProto.Managers
         private bool m_matchHasStarted = false;
         public float MatchStartTime { get => m_matchStartTime; private set => m_matchStartTime = value; }
         private float m_matchStartTime;
+        public bool GameIsPaused { get => m_gameIsPaused; /*private set { m_gameIsPaused = value; }*/ }
+        [SerializeField] private bool m_gameIsPaused;
 
         public static event Action m_StartNextRound;
         public static event Action m_StartWinProcedure;
@@ -70,6 +80,11 @@ namespace ThreeDeePongProto.Managers
 
         private void OnEnable()
         {
+            PlayerMovement.InGameMenuOpens += PauseAndTimeScale;
+
+            MenuOrganisation.CloseInGameMenu += ResetPauseAndTimescale;
+            //MenuOrganisation.RestartGameLevel += GameRestartActions;
+            MenuOrganisation.LoadMainScene += MainSceneRestartActions;
             MenuOrganisation.RestartGameLevel += ReSetMatch;
 
             BallMovement.m_RoundCountStarts += MatchStartValues;
@@ -82,6 +97,11 @@ namespace ThreeDeePongProto.Managers
 
         private void OnDisable()
         {
+            PlayerMovement.InGameMenuOpens -= PauseAndTimeScale;
+
+            MenuOrganisation.CloseInGameMenu -= ResetPauseAndTimescale;
+            //MenuOrganisation.RestartGameLevel -= GameRestartActions;
+            MenuOrganisation.LoadMainScene -= MainSceneRestartActions;
             MenuOrganisation.RestartGameLevel -= ReSetMatch;
 
             BallMovement.m_RoundCountStarts -= MatchStartValues;
@@ -116,6 +136,8 @@ namespace ThreeDeePongProto.Managers
                 //Needs to be uncommented to test Rect-Change on Restart Game-Scene.
                 //m_matchUIStates.SetCameraMode = m_eCameraMode;
             }
+
+            m_gameIsPaused = false;
 #endif
             //else
             //TODO: Load settings with an active Save- and Load-System.
@@ -187,6 +209,7 @@ namespace ThreeDeePongProto.Managers
 
             ResetPlayfield();
             ResetRoundValues();
+            ResetPauseAndTimescale();
         }
 
         #region Match-Presets
@@ -221,9 +244,7 @@ namespace ThreeDeePongProto.Managers
 
             if (winConditionIsMet)
             {
-                TimeSpan timespan = TimeSpan.FromSeconds(Time.time - m_matchValues.StartTime);
-                m_matchValues.TotalPlaytime = (float)timespan.TotalSeconds;
-                m_matchValues.WinningPlayer = _winningPlayer + "inDev";
+                FormatTextStrings(_winningPlayer);
 
                 m_StartWinProcedure.Invoke();
                 return;
@@ -244,6 +265,14 @@ namespace ThreeDeePongProto.Managers
                     break;
                 }
             }
+        }
+
+        private void FormatTextStrings(string _winningPlayer)
+        {
+            m_matchValues.WinningPlayer = _winningPlayer;
+            m_matchValues.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+            TimeSpan timespan = TimeSpan.FromSeconds(Time.time - m_matchValues.StartTime);
+            m_matchValues.TotalPlaytime = (float)timespan.TotalSeconds;
         }
 
         private void StartNextRound()
@@ -267,6 +296,28 @@ namespace ThreeDeePongProto.Managers
             Debug.Log("Won!");
 #endif
             //TODO: Start WinProcedure.
+        }
+
+        private void PauseAndTimeScale()
+        {
+            Time.timeScale = 0f;
+            m_gameIsPaused = true;
+        }
+
+        private void ResetPauseAndTimescale()
+        {
+            Time.timeScale = 1f;
+            m_gameIsPaused = false;
+        }
+
+        //private void GameRestartActions()
+        //{
+        //    ResetPauseAndTimescale();
+        //}
+
+        private void MainSceneRestartActions()
+        {
+            ResetPauseAndTimescale();
         }
     }
 }

@@ -10902,6 +10902,7 @@ MonoBehaviour:
   - {fileID: 1348851186528675014}
   - {fileID: 1348851184668552445}
   - {fileID: 1348851184923046129}
+  m_matchControl: {fileID: 11400000, guid: a1c716385d30a6e428e0721cf9d35245, type: 2}
 --- !u!114 &1348851186166137656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10944,6 +10945,7 @@ MonoBehaviour:
   - {fileID: 447071265568922531}
   - {fileID: 195441028983239259}
   - {fileID: 447071265759203900}
+  m_matchControl: {fileID: 11400000, guid: a1c716385d30a6e428e0721cf9d35245, type: 2}
 --- !u!1 &1348851186189551338
 GameObject:
   m_ObjectHideFlags: 0

@@ -120,7 +120,8 @@ public class BallMovement : MonoBehaviour
 
     private void StartBallMovement(InputAction.CallbackContext _callbackContext)
     {
-        if (!GameManager.Instance.GameIsPaused)
+        //if (!GameManager.Instance.GameIsPaused)
+        if (!m_matchManager.GameIsPaused)
         {
             ResetBall();
             ApplyForceOnBall();

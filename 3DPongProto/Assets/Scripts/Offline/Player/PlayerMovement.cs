@@ -37,6 +37,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         #region Scriptable Objects
         [SerializeField] private PlayerData m_playerData;
         [SerializeField] private MatchValues m_matchValues;
+        [SerializeField] private MatchControl m_matchControl;
         #endregion
         #endregion
 
@@ -452,7 +453,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         private void ToggleMenu(InputAction.CallbackContext _callbackContext)
         {
-            if (!GameManager.Instance.GameIsPaused && m_playerMovement.PlayerActions.enabled)
+            //if (!GameManager.Instance.GameIsPaused && m_playerMovement.PlayerActions.enabled)
+            if (!m_matchManager.GameIsPaused && m_playerMovement.PlayerActions.enabled)
             {
                 InGameMenuOpens?.Invoke();
                 UserInputManager.ToggleActionMaps(UserInputManager.m_playerInputActions.UI);

@@ -2,12 +2,12 @@ using ThreeDeePongProto.Offline.Player.Inputs;
 using ThreeDeePongProto.Offline.UI;
 using UnityEngine;
 
-public enum EGameModi
-{
-    LocalPC,
-    LAN,
-    Internet
-}
+//public enum EGameModi
+//{
+//    LocalPC,
+//    LAN,
+//    Internet
+//}
 
 //public enum ECameraModi
 //{
@@ -24,48 +24,48 @@ namespace ThreeDeePongProto.Managers
         //public ECameraModi ECameraMode { get => m_eCameraMode; set => m_eCameraMode = value; }
         //[SerializeField] private ECameraModi m_eCameraMode;
 
-        public EGameModi EGameConnectionModi { get => eGameConnectionMode; set => eGameConnectionMode = value; }
-        [SerializeField] private EGameModi eGameConnectionMode;
+        //public EGameModi EGameConnectionModi { get => eGameConnectionMode; set => eGameConnectionMode = value; }
+        //[SerializeField] private EGameModi eGameConnectionMode;
 
-        public bool GameIsPaused { get => m_gameIsPaused; private set { m_gameIsPaused = value; } }
-        [SerializeField] private bool m_gameIsPaused;
+        //public bool GameIsPaused { get => m_gameIsPaused; private set { m_gameIsPaused = value; } }
+        //[SerializeField] private bool m_gameIsPaused;
 
-        private void OnEnable()
-        {
-            PlayerMovement.InGameMenuOpens += PauseAndTimeScale;
-            MenuOrganisation.CloseInGameMenu += ResetPauseAndTimescale;
-            MenuOrganisation.RestartGameLevel += GameRestartActions;
-            MenuOrganisation.LoadMainScene += MainSceneRestartActions;
-        }
+        //private void OnEnable()
+        //{
+        //    PlayerMovement.InGameMenuOpens += PauseAndTimeScale;
+        //    MenuOrganisation.CloseInGameMenu += ResetPauseAndTimescale;
+        //    MenuOrganisation.RestartGameLevel += GameRestartActions;
+        //    MenuOrganisation.LoadMainScene += MainSceneRestartActions;
+        //}
 
-        private void OnDisable()
-        {
-            PlayerMovement.InGameMenuOpens -= PauseAndTimeScale;
-            MenuOrganisation.CloseInGameMenu -= ResetPauseAndTimescale;
-            MenuOrganisation.RestartGameLevel -= GameRestartActions;
-            MenuOrganisation.LoadMainScene -= MainSceneRestartActions;
-        }
+        //private void OnDisable()
+        //{
+        //    PlayerMovement.InGameMenuOpens -= PauseAndTimeScale;
+        //    MenuOrganisation.CloseInGameMenu -= ResetPauseAndTimescale;
+        //    MenuOrganisation.RestartGameLevel -= GameRestartActions;
+        //    MenuOrganisation.LoadMainScene -= MainSceneRestartActions;
+        //}
 
-        private void PauseAndTimeScale()
-        {
-            Time.timeScale = 0f;
-            GameIsPaused = true;
-        }
+        //private void PauseAndTimeScale()
+        //{
+        //    Time.timeScale = 0f;
+        //    GameIsPaused = true;
+        //}
 
-        private void ResetPauseAndTimescale()
-        {
-            Time.timeScale = 1f;
-            GameIsPaused = false;
-        }
+        //private void ResetPauseAndTimescale()
+        //{
+        //    Time.timeScale = 1f;
+        //    GameIsPaused = false;
+        //}
 
-        private void GameRestartActions()
-        {
-            ResetPauseAndTimescale();
-        }
+        //private void GameRestartActions()
+        //{
+        //    ResetPauseAndTimescale();
+        //}
 
-        private void MainSceneRestartActions()
-        {
-            ResetPauseAndTimescale();
-        }
+        //private void MainSceneRestartActions()
+        //{
+        //    ResetPauseAndTimescale();
+        //}
     }
 }

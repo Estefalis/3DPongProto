@@ -1861,6 +1861,7 @@ MonoBehaviour:
   - {fileID: 7764365726360506750}
   - {fileID: 7764365727902271496}
   - {fileID: 7764365726675507425}
+  m_matchControl: {fileID: 11400000, guid: a1c716385d30a6e428e0721cf9d35245, type: 2}
 --- !u!1 &9044689168592634429
 GameObject:
   m_ObjectHideFlags: 0

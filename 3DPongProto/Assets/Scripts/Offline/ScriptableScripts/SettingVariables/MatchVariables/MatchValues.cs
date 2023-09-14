@@ -1,13 +1,10 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
 [CreateAssetMenu(menuName = "Scriptable Objects/Match Settings/Dimensions and Variables", fileName = "Match Variables")]
 public class MatchValues : ScriptableObject
 {
-    public List<string> m_playerNamesByRank = new();
-
     [Header("Round-Details")]
     public float StartTime;
     public float TotalPlaytime;
@@ -16,6 +13,8 @@ public class MatchValues : ScriptableObject
     public int SetMaxPoints;
     public int WinPointDifference;
     public string WinningPlayer;
+    public string MatchWinDate;
+    public int ListIndex;
 
     [Header("TMP-Match-Values")]
     public uint CurrentPointsTPOne;

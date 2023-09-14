@@ -1,41 +1,42 @@
-using System;
-using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace ThreeDeePongProto.Offline.Highscores
 {
     public class HighscoreList : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI m_rankText;
-        [SerializeField] private TextMeshProUGUI m_roundsText;
-        [SerializeField] private TextMeshProUGUI m_maxPointsText;
-        [SerializeField] private TextMeshProUGUI m_playerNameText;
-        [SerializeField] private TextMeshProUGUI m_matchDateText;
-        [SerializeField] private TextMeshProUGUI m_totalMatchTimeText;
+        [SerializeField] private Transform m_contentParentTransform;
+        [SerializeField] private HighscoreEntrySlot m_listSlotPrefab;
 
+        [SerializeField] private int m_highscoreSlots;
         [SerializeField] private MatchValues m_matchValues;
+
+        private float m_slotHeight;
 
         //private IPersistentData m_persistentData = new SerializingData();
         //[SerializeField] private bool m_encryptionEnabled = false;
 
-#if UNITY_EDITOR
-        private void Update()
+        private void Awake()
         {
-            if (Keyboard.current.tKey.wasPressedThisFrame)
-                Time.timeScale = 60.0f;
+            m_slotHeight = m_listSlotPrefab.GetComponent<RectTransform>().rect.height;
 
-            if (Keyboard.current.fKey.wasPressedThisFrame)
+            for (int i = 0; i < m_highscoreSlots; i++)
             {
-                m_rankText.text = "1st";
-                m_roundsText.text = $"{m_matchValues.SetMaxRounds}";
-                m_maxPointsText.text = $"{m_matchValues.SetMaxPoints}";
-                m_playerNameText.text = $"{m_matchValues.WinningPlayer}";
-                m_matchDateText.text = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                m_totalMatchTimeText.text = $"{m_matchValues.TotalPlaytime / 3600:N0}h {m_matchValues.TotalPlaytime / 60 % 60:N0}m {m_matchValues.TotalPlaytime % 60:N0}s";
+                //(Slot & Parent);
+                HighscoreEntrySlot dataSlot = Instantiate(m_listSlotPrefab, m_contentParentTransform);
+                RectTransform organizeRectTransform = dataSlot.GetComponent<RectTransform>();
+                organizeRectTransform.anchoredPosition = new Vector2(0, -m_slotHeight * i);
+
+                m_matchValues.ListIndex += 1;
+                dataSlot.Initialise(m_matchValues);
+                dataSlot.gameObject.SetActive(true);
             }
         }
-#endif
+
+        private void OnDisable()
+        {
+            m_matchValues.ListIndex = 0;
+        }
+
         public void SortListBySetRounds()
         {
             Debug.Log("Kommt noch!");
@@ -62,6 +63,3 @@ namespace ThreeDeePongProto.Offline.Highscores
         }
     }
 }
-//m_totalMatchTimeText.text = string.Format("{0:00}:{1:00}:{2:00}:{3:000}", hours, minutes, seconds, milliseconds);
-//m_matchDateText.text = $"{DateTime.Now.Day}d {DateTime.Now.Hour}h {DateTime.Now.Minute}m {DateTime.Now.Second}s";
-//m_matchDateText.text = $"{DateTime.Today.TimeOfDay}";
