@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -6,15 +7,17 @@ using UnityEngine;
 public class MatchValues : ScriptableObject
 {
     [Header("Round-Details")]
+    public List<string> PlayerInGame = new();
     public float StartTime;
     public float TotalPlaytime;
     public uint CurrentRoundNr;
+
     public int SetMaxRounds;
     public int SetMaxPoints;
+    
     public int WinPointDifference;
     public string WinningPlayer;
     public string MatchWinDate;
-    public int ListIndex;
 
     [Header("TMP-Match-Values")]
     public uint CurrentPointsTPOne;

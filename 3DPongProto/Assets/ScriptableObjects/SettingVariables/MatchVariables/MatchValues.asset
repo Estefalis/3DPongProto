@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6c8efb4be29349478192d860c40c12e, type: 3}
   m_Name: MatchValues
   m_EditorClassIdentifier: 
+  PlayerInGame:
+  - Estefalis
+  - Rayago
+  - 
+  - 
   StartTime: 16.569433
-  TotalPlaytime: 53.517
+  TotalPlaytime: 34.517
   CurrentRoundNr: 1
   SetMaxRounds: 5
   SetMaxPoints: 25
@@ -22,7 +27,6 @@ MonoBehaviour:
   MatchWinDate: '14.09.2023
 
     19:56:59'
-  ListIndex: 0
   CurrentPointsTPOne: 0
   TotalPointsTPOne: 72
   CurrentPointsTPTwo: 0

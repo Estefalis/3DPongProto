@@ -47,6 +47,7 @@ namespace ThreeDeePongProto.Offline.UI
             if (m_matchValues == null)
                 return;
 
+            DisplayPlayerNames();
             UpdateRoundTMPs();
             UpdatePlayerTMPs();
         }
@@ -76,6 +77,14 @@ namespace ThreeDeePongProto.Offline.UI
 
             UpdateRoundTMPs();
             UpdatePlayerTMPs();
+        }
+
+        private void DisplayPlayerNames()
+        {
+            for (int i = 0; i < m_playerNamesTMPList.Count; i++)
+            {
+                m_playerNamesTMPList[i].text = m_matchValues.PlayerInGame[i];
+            }
         }
 
         private void UpdateRoundTMPs()

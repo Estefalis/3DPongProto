@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5605ff35a294c074295f36fff8d42230, type: 3}
+  m_Script: {fileID: 11500000, guid: 23ae38de6bc0d3f4aaa8718fe9de0dee, type: 3}
   m_Name: PlayerFourData
   m_EditorClassIdentifier: 
   PlayerName: 
   PlayerId: 3
-  TotalPoints: 0
   Avatar: {fileID: 0}
   PlayerOnFrontline: 1

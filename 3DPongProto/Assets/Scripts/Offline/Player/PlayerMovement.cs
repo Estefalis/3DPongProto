@@ -35,7 +35,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         [Space]
 
         #region Scriptable Objects
-        [SerializeField] private PlayerData m_playerData;
+        [SerializeField] private PlayerIDData m_playerIDData;
         [SerializeField] private MatchValues m_matchValues;
         [SerializeField] private MatchControl m_matchControl;
         #endregion
@@ -44,7 +44,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         #region Non-SerializeField-Member-Variables
         #region Properties-Access
         public int PlayerId { get { return m_playerId; } }
-        //public int PlayerId { get { return m_playerData.PlayerId; } }
+        //public int PlayerId { get { return m_playerIDData.PlayerId; } }
         #endregion
 
         private float m_maxSideMovement, m_groundWidth, m_groundLength;
@@ -69,7 +69,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         private void Awake()
         {
-            m_playerData.PlayerId = m_playerId;
+            m_playerIDData.PlayerId = m_playerId;
 
             if (m_rigidbody == null)
             {
@@ -171,7 +171,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         private void GetPlayerDetails()
         {
-            if (m_playerData == null ^ m_matchValues == null)
+            if (m_playerIDData == null ^ m_matchValues == null)
             {
                 switch (m_defaultFrontLineUp)
                 {
@@ -187,7 +187,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             }
             else
             {
-                switch (m_playerData.PlayerOnFrontline)
+                switch (m_playerIDData.PlayerOnFrontline)
                 {
                     case true:
                         m_goalDistance = m_matchValues.MinFrontLineDistance + m_matchValues.FrontlineAdjustment + m_matchValues.BacklineAdjustment;

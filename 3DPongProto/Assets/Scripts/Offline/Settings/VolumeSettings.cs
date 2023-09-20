@@ -70,7 +70,7 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private VolumeUIStates m_VolumeUIStates;
         [SerializeField] private VolumeUIValues m_volumeUIValues;
 
-        private IPersistentData m_serializingData = new SerializingData();
+        private IPersistentData m_persistentData = new SerializingData();
         private bool m_encryptionEnabled = false;
 
         private void Awake()
@@ -98,8 +98,8 @@ namespace ThreeDeePongProto.Offline.Settings
             //TODO: RemoveSliderAndToggleListener(); - SaveVolumeSettings();
             RemoveSliderAndToggleListener();
 
-            m_serializingData.SaveData("/SaveData/UI-States", "/Volume", ".json", m_VolumeUIStates, m_encryptionEnabled, true);
-            m_serializingData.SaveData("/SaveData/UI-Values", "/Volume", ".json", m_volumeUIValues, m_encryptionEnabled, true);
+            m_persistentData.SaveData("/SaveData/UI-States", "/Volume", ".json", m_VolumeUIStates, m_encryptionEnabled, true);
+            m_persistentData.SaveData("/SaveData/UI-Values", "/Volume", ".json", m_volumeUIValues, m_encryptionEnabled, true);
         }
 
         /// <summary>

@@ -282,14 +282,14 @@ GameObject:
   - component: {fileID: 2386518805716554138}
   - component: {fileID: 2386518805716554133}
   - component: {fileID: 2386518805716554132}
-  - component: {fileID: 7224300307608602747}
+  - component: {fileID: 6225738724942728192}
   m_Layer: 5
-  m_Name: ListSlotPrefab
+  m_Name: HighscoreEntryPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2386518805716554135
 RectTransform:
   m_ObjectHideFlags: 0
@@ -380,7 +380,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2386518805716554134}
   m_CullTransparentMesh: 1
---- !u!114 &7224300307608602747
+--- !u!114 &6225738724942728192
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -389,16 +389,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 2386518805716554134}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b34896b47298a84ea9f582cd3a8ff81, type: 3}
+  m_Script: {fileID: 11500000, guid: ff58fcb06b0d0b64fb8413b5e47d17b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_rankText: {fileID: 2386518806153449310}
   m_roundsText: {fileID: 2386518805925701288}
   m_maxPointsText: {fileID: 2386518806644651391}
   m_playerNameText: {fileID: 2386518805697580953}
-  m_matchDateText: {fileID: 2386518805502543230}
-  m_totalMatchTimeText: {fileID: 2386518806719660705}
-  m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
+  m_matchWinDateText: {fileID: 2386518805502543230}
+  m_totalPlaytimeText: {fileID: 2386518806719660705}
 --- !u!1 &2386518805925701290
 GameObject:
   m_ObjectHideFlags: 0
@@ -435,7 +434,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 150, y: 0}
+  m_SizeDelta: {x: 160, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2386518805925701289
 CanvasRenderer:
@@ -705,7 +704,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 0}
+  m_SizeDelta: {x: 220, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2386518806644651388
 CanvasRenderer:

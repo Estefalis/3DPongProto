@@ -46,20 +46,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 544b8e2d5adef194f96901de0090e6ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_playerId: 0
+  m_matchManager: {fileID: 0}
   m_rigidbody: {fileID: 6673783636198326050}
-  m_playfieldVariables: {fileID: 0}
+  m_playerId: 0
   m_movementSpeed: 10
   m_rotationSpeed: 400
   m_maxRotationAngle: 45
-  m_startWidthAdjustment: 0
-  m_localPaddleScale: {x: 3.5, y: 1, z: 0.5}
+  m_defaultFrontLineUp: 0
   m_maxPushDistance: 1.5
-  m_minGoalDistance: 1.5
-  m_lerpDuration: 0
+  m_moveDuration: 0
   m_delayRetreat: 0.1
   m_delayRepetition: 1.5
   m_enablePushDelay: 0
+  m_blockPushInput: 0
+  m_playerData: {fileID: 0}
+  m_matchValues: {fileID: 0}
+  m_matchControl: {fileID: 11400000, guid: a1c716385d30a6e428e0721cf9d35245, type: 2}
 --- !u!1 &6673783636198326063
 GameObject:
   m_ObjectHideFlags: 0
@@ -222,15 +224,16 @@ MonoBehaviour:
   m_playerMovement: {fileID: 8973898448692739539}
   m_lowestHeight: 1.25
   m_maximalHeight: 6
-  m_playfieldVariables: {fileID: 0}
   m_RbPlayer: {fileID: 6673783636198326050}
   m_followCamera: {fileID: 0}
-  m_enableOffset: 0
+  m_enableSmoothFollow: 0
   m_desiredOffset: {x: 0, y: 2.5, z: 7.5}
   m_smoothfactor: 7.5
   m_zoomSpeed: 0.001
   m_zoomStep: 2
   m_zoomDampening: 10
+  m_graphicUiStates: {fileID: 0}
+  m_matchValues: {fileID: 0}
 --- !u!1 &6673783637509275386
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,10 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23ae38de6bc0d3f4aaa8718fe9de0dee, type: 3}
-  m_Name: PlayerOneData
+  m_Script: {fileID: 11500000, guid: f18958b7b0809ba4b8ba4e1497fe9e70, type: 3}
+  m_Name: HighscoreSlotData
   m_EditorClassIdentifier: 
-  PlayerName: Estefalis
-  PlayerId: 0
-  Avatar: {fileID: 0}
-  PlayerOnFrontline: 0
+  Rank: 1st
+  SetMaxRounds: 5
+  SetMaxPoints: 25
+  WinningPlayer: Estefalis
+  MatchWinDate: '14.09.2023
+
+    19:56:59'
+  TotalPlaytime: 34.517

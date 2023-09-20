@@ -29,6 +29,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void OnEnable()
         {
+            //Moved to CameraManager.
             //Debug.Log(m_cameraManager.AvailableCameras[0]); //Old m_playerCam1
             //Debug.Log(m_cameraManager.AvailableCameras[1]); //Old m_playerCam2
             //Debug.Log(m_cameraManager.AvailableCameras[2]); //Old m_playerCam3
@@ -91,6 +92,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             //SetRectSplit();
         }
 
+        #region Direct Runtime ScreenChange
         //private void SetRectSplit()
         //{
         //    //if (m_lastSetCameraMode != (int)GameManager.Instance.ECameraMode)
@@ -100,6 +102,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         //        SetCameraMode(m_lastSetCameraMode);
         //    }
         //}
+        #endregion
 
         /// <summary>
         /// new Rect(xOrigin, yOrigin, width, height)

@@ -28,7 +28,6 @@ namespace ThreeDeePongProto.Managers
         [SerializeField] private GameObject m_playGround;
 
         [Header("Defaults")]
-
         [SerializeField] private float m_playGroundWidthScale = 0.1f;
         [SerializeField] private float m_playGroundLengthScale = 0.1f;
         [SerializeField] private float m_playGroundWidth = 25.0f;
@@ -44,7 +43,7 @@ namespace ThreeDeePongProto.Managers
         #region Scriptable Objects
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
-        [SerializeField] private PlayerData[] m_playerData;
+        [SerializeField] private PlayerIDData[] m_playerIDData;
         #endregion
         #endregion
 
@@ -64,7 +63,7 @@ namespace ThreeDeePongProto.Managers
         private bool m_matchHasStarted = false;
         public float MatchStartTime { get => m_matchStartTime; private set => m_matchStartTime = value; }
         private float m_matchStartTime;
-        public bool GameIsPaused { get => m_gameIsPaused; /*private set { m_gameIsPaused = value; }*/ }
+        public bool GameIsPaused { get => m_gameIsPaused; }
         [SerializeField] private bool m_gameIsPaused;
 
         public static event Action m_StartNextRound;
@@ -74,7 +73,7 @@ namespace ThreeDeePongProto.Managers
         private void Awake()
         {
             SetScriptableDefaults();
-
+            RegisterPlayerNames();
             ReSetMatch();
         }
 
@@ -83,7 +82,6 @@ namespace ThreeDeePongProto.Managers
             PlayerMovement.InGameMenuOpens += PauseAndTimeScale;
 
             MenuOrganisation.CloseInGameMenu += ResetPauseAndTimescale;
-            //MenuOrganisation.RestartGameLevel += GameRestartActions;
             MenuOrganisation.LoadMainScene += MainSceneRestartActions;
             MenuOrganisation.RestartGameLevel += ReSetMatch;
 
@@ -100,7 +98,6 @@ namespace ThreeDeePongProto.Managers
             PlayerMovement.InGameMenuOpens -= PauseAndTimeScale;
 
             MenuOrganisation.CloseInGameMenu -= ResetPauseAndTimescale;
-            //MenuOrganisation.RestartGameLevel -= GameRestartActions;
             MenuOrganisation.LoadMainScene -= MainSceneRestartActions;
             MenuOrganisation.RestartGameLevel -= ReSetMatch;
 
@@ -149,9 +146,20 @@ namespace ThreeDeePongProto.Managers
             m_matchStartTime = Time.time;
         }
 
+        private void RegisterPlayerNames()
+        {
+            m_matchValues.PlayerInGame.Clear();
+
+            foreach (PlayerIDData player in m_playerIDData)
+            {
+                if (player.PlayerName != null || player.PlayerName != string.Empty)
+                    m_matchValues.PlayerInGame.Add(player.PlayerName);
+            }
+        }
+
         private void UpdateTPOnePoints()
         {
-            if (m_playerData == null || m_matchValues == null)
+            if (m_playerIDData == null || m_matchValues == null)
             {
 #if UNITY_EDITOR
                 Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
@@ -160,21 +168,17 @@ namespace ThreeDeePongProto.Managers
             }
 
             if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
-                m_scoredPlayer = m_playerData[0].PlayerName;
+                m_scoredPlayer = m_playerIDData[0].PlayerName;
 
             ++m_matchValues.CurrentPointsTPOne;
             ++m_matchValues.TotalPointsTPOne;
-            //Player 1
-            m_playerData[0].TotalPoints = m_matchValues.TotalPointsTPOne;
-            //Player 3
-            m_playerData[2].TotalPoints = m_matchValues.TotalPointsTPOne;
 
             CheckMatchConditions(m_scoredPlayer);
         }
 
         private void UpdateTPTwoPoints()
         {
-            if (m_playerData == null || m_matchValues == null)
+            if (m_playerIDData == null || m_matchValues == null)
             {
 #if UNITY_EDITOR
                 Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
@@ -183,15 +187,10 @@ namespace ThreeDeePongProto.Managers
             }
 
             if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
-                m_scoredPlayer = m_playerData[1].PlayerName;
+                m_scoredPlayer = m_playerIDData[1].PlayerName;
 
             ++m_matchValues.CurrentPointsTPTwo;
             ++m_matchValues.TotalPointsTPTwo;
-
-            //Player 2
-            m_playerData[1].TotalPoints = m_matchValues.TotalPointsTPTwo;
-            //Player 4
-            m_playerData[3].TotalPoints = m_matchValues.TotalPointsTPTwo;
 
             CheckMatchConditions(m_scoredPlayer);
         }
@@ -277,8 +276,7 @@ namespace ThreeDeePongProto.Managers
 
         private void StartNextRound()
         {
-            //reuse of 'MatchValues/MatchSettings public bool InfiniteRounds'.
-            if (m_matchValues == null || m_matchUIStates.InfiniteRounds)
+            if (m_matchValues == null || m_matchUIStates.InfiniteRounds || m_matchUIStates.InfinitePoints)
                 return;
 #if UNITY_EDITOR
             Debug.Log("Next Round starts!");
@@ -309,11 +307,6 @@ namespace ThreeDeePongProto.Managers
             Time.timeScale = 1f;
             m_gameIsPaused = false;
         }
-
-        //private void GameRestartActions()
-        //{
-        //    ResetPauseAndTimescale();
-        //}
 
         private void MainSceneRestartActions()
         {

@@ -39,7 +39,7 @@ namespace ThreeDeePongProto.Offline.Settings
         private Resolution[] m_screenResolutions;
         public ECameraModi ECameraMode { get => m_eCameraMode; }
 
-        private IPersistentData m_serializingData = new SerializingData();
+        private IPersistentData m_persistentData = new SerializingData();
         private bool m_encryptionEnabled = false;
 
         private void Awake()
@@ -71,7 +71,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void OnDisable()
         {
-            m_serializingData.SaveData("/SaveData/UI-States", "/Graphic", ".json", m_graphicUiStates, m_encryptionEnabled, true);
+            m_persistentData.SaveData("/SaveData/UI-States", "/Graphic", ".json", m_graphicUiStates, m_encryptionEnabled, true);
         }
 
         private void GetAvailableResolutions()
