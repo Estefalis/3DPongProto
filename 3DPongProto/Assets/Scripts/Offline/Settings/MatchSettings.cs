@@ -19,7 +19,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
         #region Field-Dimension
         [Header("Field-Dimension")]
-        [SerializeField] private Toggle m_ratioToggle;
+        [SerializeField] private Toggle m_fixRatioToggle;
         [SerializeField] private TMP_Dropdown[] m_fieldDropdowns;
 
         [SerializeField] private int m_maxFieldWidth/* = 30*/;
@@ -41,10 +41,10 @@ namespace ThreeDeePongProto.Offline.Settings
         #region Rounds and Points
         [Header("Rounds and Points")]
         [SerializeField] private int m_setMaxRound/* = 5*/;
-        [SerializeField] private int m_maxRoundDdIndex = 4;
+        [SerializeField] private int m_maxRoundDdIndex = 5;
 
         [SerializeField] private int m_setMaxPoints/* = 25*/;
-        [SerializeField] private int m_maxPointDdIndex = 24;
+        [SerializeField] private int m_maxPointDdIndex = 25;
         [SerializeField] private TMP_Dropdown m_roundsDropdown;
         [SerializeField] private TMP_Dropdown m_maxPointsDropdown;
         #endregion
@@ -64,8 +64,6 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private List<Slider> m_distanceSliderValues = new List<Slider>();
 
         #region Key-Value-Connection
-        private Dictionary<Toggle, TMP_Dropdown[]> m_ratioDict = new Dictionary<Toggle, TMP_Dropdown[]>();
-
         private Dictionary<Button, Slider> m_reduceLineSlider = new Dictionary<Button, Slider>();
         private Dictionary<Button, Slider> m_increaseLineSlider = new Dictionary<Button, Slider>();
         #endregion
@@ -128,7 +126,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void PresetToggles()
         {
-            m_ratioToggle.isOn = false;
+            m_fixRatioToggle.isOn = false;
 #if UNITY_EDITOR
             m_fixRatioIfTrue = m_fixAspectRatio;
             m_matchUIStates.FixRatio = m_fixAspectRatio;
@@ -153,8 +151,8 @@ namespace ThreeDeePongProto.Offline.Settings
             m_maxPointsDropdown.onValueChanged.AddListener(delegate
             { OnMaxPointDropdownValueChanged(m_maxPointsDropdown); });
 
-            m_ratioToggle.onValueChanged.AddListener(delegate
-            { OnRatioToggleValueChanged(m_ratioToggle); });
+            m_fixRatioToggle.onValueChanged.AddListener(delegate
+            { OnRatioToggleValueChanged(m_fixRatioToggle); });
 
             //Field-Width-Dropdown-Listener.
             m_fieldDropdowns[0].onValueChanged.AddListener(delegate
@@ -186,8 +184,8 @@ namespace ThreeDeePongProto.Offline.Settings
             m_maxPointsDropdown.onValueChanged.RemoveListener(delegate
             { OnMaxPointDropdownValueChanged(m_maxPointsDropdown); });
 
-            m_ratioToggle.onValueChanged.RemoveListener(delegate
-            { OnRatioToggleValueChanged(m_ratioToggle); });
+            m_fixRatioToggle.onValueChanged.RemoveListener(delegate
+            { OnRatioToggleValueChanged(m_fixRatioToggle); });
 
             m_fieldDropdowns[0].onValueChanged.RemoveListener(delegate
             { OnWidthDropdownValueChanged(m_fieldDropdowns[0]); });
@@ -216,14 +214,12 @@ namespace ThreeDeePongProto.Offline.Settings
         /// <param name="_toggle"></param>
         private void OnRatioToggleValueChanged(Toggle _toggle)
         {
-            TMP_Dropdown[] ratioDropdown = m_ratioDict[_toggle];
-
-            switch (_toggle.isOn)
+switch (_toggle.isOn)
             {
                 case true:
                 {
                     m_fixRatioIfTrue = true;
-                    ratioDropdown[1].value = ratioDropdown[0].value * 2;
+                    m_fieldDropdowns[1].value = m_fieldDropdowns[0].value * 2;
                     m_matchUIStates.FixRatio = _toggle.isOn;
                     break;
                 }
@@ -246,13 +242,14 @@ namespace ThreeDeePongProto.Offline.Settings
         /// <param name="_toggle"></param>
         private void OnRoundDropdownValueChanged(TMP_Dropdown _maxRoundsDropdown)
         {
-            //DropdownValue is equal to DropdownIndex +1.
-            m_matchValues.SetMaxRounds = _maxRoundsDropdown.value + m_firstRoundOffset;
+            //DropdownValue is equal to DropdownIndex +1, without the infinity option at index 0.
+            m_matchValues.SetMaxRounds = _maxRoundsDropdown.value /*+ m_firstRoundOffset*/;
             m_matchUIStates.LastRoundDdIndex = _maxRoundsDropdown.value;
             //m_tempRoundDdValue = _maxRoundsDropdown.value;
 
             //'m_firstRoundOffset' oversteps the Round 0 in the '_maxRoundsDropdown' + current '_maxRoundsDropdown.value' == m_roundsDdList.Count.
-            if (m_firstRoundOffset + _maxRoundsDropdown.value == m_roundsDdList.Count)
+            //if (m_firstRoundOffset + _maxRoundsDropdown.value == m_roundsDdList.Count)
+            if (_maxRoundsDropdown.value == 0)
                 m_matchUIStates.InfiniteRounds = true;
             else
                 m_matchUIStates.InfiniteRounds = false;
@@ -266,13 +263,13 @@ namespace ThreeDeePongProto.Offline.Settings
         /// <param name="_toggle"></param>
         private void OnMaxPointDropdownValueChanged(TMP_Dropdown _maxPointsDropdown)
         {
-            //DropdownValue is equal to DropdownIndex +1.
-            m_matchValues.SetMaxPoints = _maxPointsDropdown.value + m_firstPointOffset;
+            //DropdownValue is equal to DropdownIndex +1, without the infinity option at index 0.
+            m_matchValues.SetMaxPoints = _maxPointsDropdown.value/* + m_firstPointOffset*/;
             m_matchUIStates.LastMaxPointDdIndex = _maxPointsDropdown.value;
-            //m_tempPointDdValue = _maxPointsDropdown.value;
 
             //'m_firstPointOffset' oversteps the Point 0 in the '_maxPointsDropdown' + current '_maxPointsDropdown.value' == m_maxPointsDdList.Count.
-            if (m_firstPointOffset + _maxPointsDropdown.value == m_maxPointsDdList.Count)
+            //if (m_firstPointOffset + _maxPointsDropdown.value == m_maxPointsDdList.Count)
+            if (_maxPointsDropdown.value == 0)
                 m_matchUIStates.InfinitePoints = true;
             else
                 m_matchUIStates.InfinitePoints = false;
@@ -446,13 +443,11 @@ namespace ThreeDeePongProto.Offline.Settings
         private void FillRoundDropdown(TMP_Dropdown _maxRoundsDropdown)
         {
             _maxRoundsDropdown.ClearOptions();
-            m_roundsDdList = new List<string>();
-            //m_roundsDdList = new List<string> { "\u221E" };
+            m_roundsDdList = new List<string> { "\u221E" };
             for (int i = m_firstRoundOffset; i < m_setMaxRound + 1; i++)
             {
                 m_roundsDdList.Add(i.ToString());
             }
-            m_roundsDdList.Add("\u221E");
             _maxRoundsDropdown.AddOptions(m_roundsDdList);
 
             if (m_matchUIStates != null)
@@ -478,13 +473,12 @@ namespace ThreeDeePongProto.Offline.Settings
         private void FillMaxPointsDropdown(TMP_Dropdown _maxPointsDropdown)
         {
             _maxPointsDropdown.ClearOptions();
-            m_maxPointsDdList = new List<string>();
+            m_maxPointsDdList = new List<string> {"\u221E"};
             for (int i = m_firstPointOffset; i < m_setMaxPoints + 1; i++)
             {
                 //'m_maxPointsDropdown.options.Add (new Dropdown.OptionData() { text = variable });' in foreach-loops.
                 m_maxPointsDdList.Add(i.ToString());
             }
-            m_maxPointsDdList.Add("\u221E");
             _maxPointsDropdown.AddOptions(m_maxPointsDdList);
 
             if (m_matchUIStates != null)
@@ -679,7 +673,7 @@ namespace ThreeDeePongProto.Offline.Settings
             m_roundsDropdown.value = m_maxRoundDdIndex;
             m_maxPointsDropdown.value = m_maxPointDdIndex;
 
-            m_ratioToggle.isOn = m_fixAspectRatio;
+            m_fixRatioToggle.isOn = m_fixAspectRatio;
             m_fieldDropdowns[0].value = m_fieldWidthDdIndex;
             m_fieldDropdowns[1].value = m_fieldLengthDdIndex;
 

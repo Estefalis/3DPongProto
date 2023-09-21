@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace ThreeDeePongProto.Offline.Highscores
@@ -22,6 +23,7 @@ namespace ThreeDeePongProto.Offline.Highscores
         [SerializeField] private Button[] m_topListButtons;
         [SerializeField] private TMP_Dropdown m_roundsDropdown;
         [SerializeField] private TMP_Dropdown m_maxPointsDropdown;
+        [SerializeField] private Button m_finishButton;
         [Space]
         [SerializeField] private Transform m_contentParentTransform;
         [SerializeField] private HighscoreEntryPrefab m_highscoreEntryChildPrefab;
@@ -73,22 +75,22 @@ namespace ThreeDeePongProto.Offline.Highscores
             m_roundsDdList = new List<string>();
             m_maxPointsDdList = new List<string>();
 
-            m_roundsDdList.Add("?");
+            //m_roundsDdList.Add("?");
+            m_roundsDdList.Add("\u221E");
             for (int i = m_firstRoundOffset; i < m_matchValues.SetMaxRounds + 1; i++)
             {
                 m_roundsDdList.Add(i.ToString());
             }
-            m_roundsDdList.Add("\u221E");
             //m_roundsDropdown.value = m_matchUIStates.LastRoundDdIndex;
             m_roundsDropdown.AddOptions(m_roundsDdList);
 
-            m_maxPointsDdList.Add("?");
+            //m_maxPointsDdList.Add("?");
+            m_maxPointsDdList.Add("\u221E");
             for (int i = m_firstPointOffset; i < m_matchValues.SetMaxPoints + 1; i++)
             {
                 //'m_maxPointsDropdown.options.Add (new Dropdown.OptionData() { text = variable });' in foreach-loops.
                 m_maxPointsDdList.Add(i.ToString());
             }
-            m_maxPointsDdList.Add("\u221E");
 
             m_maxPointsDropdown.AddOptions(m_maxPointsDdList);
             m_roundsDropdown.RefreshShownValue();
@@ -157,6 +159,11 @@ namespace ThreeDeePongProto.Offline.Highscores
         {
             m_listSortMode = EListSortMode.TotalPlaytime;
             Debug.Log(m_listSortMode);
+        }
+
+        public void BackToStartMenu()
+        {
+            SceneManager.LoadScene(0);
         }
     }
 }

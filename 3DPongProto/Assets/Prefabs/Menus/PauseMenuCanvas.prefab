@@ -2311,6 +2311,11 @@ PrefabInstance:
         type: 2}
     - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
         type: 3}
+      propertyPath: m_fixRatioToggle
+      value: 
+      objectReference: {fileID: 2758816002592363230}
+    - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
+        type: 3}
       propertyPath: m_roundsDropdown
       value: 
       objectReference: {fileID: 7764365727681392023}
@@ -2688,6 +2693,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2758816002592363230 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3797581810002044666, guid: d5d526be9fc149148aeb5951486723ed,
+    type: 3}
+  m_PrefabInstance: {fileID: 1367669322830738468}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &7764365725870946842 stripped

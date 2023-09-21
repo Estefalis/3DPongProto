@@ -660,45 +660,5 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2028078766761788809, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-        type: 3}
-      propertyPath: m_matchUIStates
-      value: 
-      objectReference: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d,
-        type: 2}
-    - target: {fileID: 2028078766761788809, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-        type: 3}
-      propertyPath: m_roundsDropdown
-      value: 
-      objectReference: {fileID: 1348851186268754287}
-    - target: {fileID: 2028078766761788809, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-        type: 3}
-      propertyPath: m_maxPointsDropdown
-      value: 
-      objectReference: {fileID: 1348851186268754286}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa14b37a3cb54fc42a599a1e795cabf7, type: 3}
---- !u!114 &1348851186268754286 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 195441029815581348, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-    type: 3}
-  m_PrefabInstance: {fileID: 1348851186268754285}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1348851186268754287 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 195441029173385156, guid: aa14b37a3cb54fc42a599a1e795cabf7,
-    type: 3}
-  m_PrefabInstance: {fileID: 1348851186268754285}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

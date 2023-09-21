@@ -10,13 +10,13 @@ public enum EGameModi
     Internet
 }
 
-public enum EMatchCountOptions
-{
-    NoChanges,
-    InfiniteRounds,
-    InfinitePoints,
-    InfiniteMatch
-}
+//public enum EMatchCountOptions
+//{
+//    NoChanges,
+//    InfiniteRounds,
+//    InfinitePoints,
+//    InfiniteMatch
+//}
 
 namespace ThreeDeePongProto.Managers
 {
