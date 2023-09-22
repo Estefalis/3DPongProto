@@ -1,14 +1,16 @@
 using System;
-using UnityEngine;
 
-[Serializable]
-[CreateAssetMenu(menuName = "Scriptable Objects/Highscore List/Highscore Slot Data", fileName = "Highscore Slot Data")]
-public class HighscoreSlotData : ScriptableObject
+namespace ThreeDeePongProto.Offline.Highscores
 {
-    //Details-Structure for each listed Object.
-    public int SetMaxRounds;
-    public int SetMaxPoints;
-    public string WinningPlayer;
-    public string MatchWinDate;
-    public float TotalPlaytime;
+    [Serializable]
+    public struct HighscoreSlotData
+    {
+        //Details-Structure for each listed Object.
+        public int SetMaxRounds;
+        public int SetMaxPoints;
+        public uint WinPlayerPoints;
+        public string WinningPlayer;
+        public string MatchWinDate;
+        public float TotalPlaytime;
+    }
 }

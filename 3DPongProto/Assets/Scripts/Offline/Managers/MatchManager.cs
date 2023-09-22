@@ -38,6 +38,7 @@ namespace ThreeDeePongProto.Managers
         [SerializeField] private int m_winPointDifference = 2;
         [SerializeField] private float m_maxPushDistance = 1.5f;
         [SerializeField] private Vector3 m_defaultPaddleScale;
+        [SerializeField] private bool m_gameIsPaused;
         [Space]
 
         #region Scriptable Objects
@@ -55,16 +56,15 @@ namespace ThreeDeePongProto.Managers
         public float DefaultFieldLength { get => m_playGroundLength; }
         public float MaxPushDistance { get => m_maxPushDistance; }
         public Vector3 DefaultPaddleScale { get => m_defaultPaddleScale; }
-
+        public bool MatchStarted { get => m_matchHasStarted; private set => m_matchHasStarted = value; }
+        public float MatchStartTime { get => m_matchStartTime; private set => m_matchStartTime = value; }
         #endregion
 
         private string m_scoredPlayer;
-        public bool MatchStarted { get => m_matchHasStarted; private set => m_matchHasStarted = value; }
         private bool m_matchHasStarted = false;
-        public float MatchStartTime { get => m_matchStartTime; private set => m_matchStartTime = value; }
         private float m_matchStartTime;
+        private bool m_nextRoundConditionIsMet;
         public bool GameIsPaused { get => m_gameIsPaused; }
-        [SerializeField] private bool m_gameIsPaused;
 
         public static event Action m_StartNextRound;
         public static event Action m_StartWinProcedure;
@@ -173,7 +173,8 @@ namespace ThreeDeePongProto.Managers
             ++m_matchValues.CurrentPointsTPOne;
             ++m_matchValues.TotalPointsTPOne;
 
-            CheckMatchConditions(m_scoredPlayer);
+            //TODO: For infinite matches add a new line for TotalPointsTPOne.
+            CheckMatchConditions(m_scoredPlayer, m_matchValues.CurrentPointsTPOne);
         }
 
         private void UpdateTPTwoPoints()
@@ -192,7 +193,8 @@ namespace ThreeDeePongProto.Managers
             ++m_matchValues.CurrentPointsTPTwo;
             ++m_matchValues.TotalPointsTPTwo;
 
-            CheckMatchConditions(m_scoredPlayer);
+            //TODO: For infinite matches add a new line for TotalPointsTPTwo.
+            CheckMatchConditions(m_scoredPlayer, m_matchValues.CurrentPointsTPTwo);
         }
 
         private void ReSetMatch()
@@ -227,29 +229,37 @@ namespace ThreeDeePongProto.Managers
         }
         #endregion
 
-        private void CheckMatchConditions(string _winningPlayer)
+        private void CheckMatchConditions(string _winningPlayer, uint _winPlayerPoints)
         {
             if (m_matchValues == null)
                 return;
 
-            bool nextRoundConditionIsMet =
+            if (m_matchUIStates.InfiniteRounds)
+            {
+                m_nextRoundConditionIsMet = false;
+                return;
+            }
+            else
+            {
+                m_nextRoundConditionIsMet =
                 m_matchValues.CurrentPointsTPOne >= m_matchValues.SetMaxPoints &&
                 m_matchValues.CurrentPointsTPOne >= m_matchValues.CurrentPointsTPTwo + m_matchValues.WinPointDifference
                 ||
                 m_matchValues.CurrentPointsTPTwo >= m_matchValues.SetMaxPoints &&
                 m_matchValues.CurrentPointsTPTwo >= m_matchValues.CurrentPointsTPOne + m_matchValues.WinPointDifference;
+            }
 
-            bool winConditionIsMet = m_matchValues.CurrentRoundNr == m_matchValues.SetMaxRounds && nextRoundConditionIsMet;
+            bool winConditionIsMet = m_matchValues.CurrentRoundNr == m_matchValues.SetMaxRounds && m_nextRoundConditionIsMet;
 
             if (winConditionIsMet)
             {
-                FormatTextStrings(_winningPlayer);
+                SaveMatchDetails(_winningPlayer, _winPlayerPoints);
 
                 m_StartWinProcedure.Invoke();
                 return;
             };
 
-            switch (nextRoundConditionIsMet)
+            switch (m_nextRoundConditionIsMet)
             {
                 case true:
                 {
@@ -266,9 +276,10 @@ namespace ThreeDeePongProto.Managers
             }
         }
 
-        private void FormatTextStrings(string _winningPlayer)
+        private void SaveMatchDetails(string _winningPlayer, uint _winPlayerPoints)
         {
             m_matchValues.WinningPlayer = _winningPlayer;
+            m_matchValues.WinPlayerPoints = _winPlayerPoints;
             m_matchValues.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             TimeSpan timespan = TimeSpan.FromSeconds(Time.time - m_matchValues.StartTime);
             m_matchValues.TotalPlaytime = (float)timespan.TotalSeconds;
@@ -276,7 +287,7 @@ namespace ThreeDeePongProto.Managers
 
         private void StartNextRound()
         {
-            if (m_matchValues == null || m_matchUIStates.InfiniteRounds || m_matchUIStates.InfinitePoints)
+            if (m_matchValues == null)
                 return;
 #if UNITY_EDITOR
             Debug.Log("Next Round starts!");

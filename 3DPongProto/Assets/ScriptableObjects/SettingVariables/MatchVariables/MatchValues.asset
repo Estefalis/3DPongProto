@@ -18,15 +18,16 @@ MonoBehaviour:
   - 
   - 
   StartTime: 16.569433
-  TotalPlaytime: 34.517
+  WinPointDifference: 2
   CurrentRoundNr: 1
   SetMaxRounds: 5
   SetMaxPoints: 25
-  WinPointDifference: 2
+  WinPlayerPoints: 50
   WinningPlayer: Estefalis
   MatchWinDate: '14.09.2023
 
     19:56:59'
+  TotalPlaytime: 34.517
   CurrentPointsTPOne: 0
   TotalPointsTPOne: 72
   CurrentPointsTPTwo: 0

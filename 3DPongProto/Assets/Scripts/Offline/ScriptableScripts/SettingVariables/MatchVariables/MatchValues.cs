@@ -9,15 +9,15 @@ public class MatchValues : ScriptableObject
     [Header("Round-Details")]
     public List<string> PlayerInGame = new();
     public float StartTime;
-    public float TotalPlaytime;
+    public int WinPointDifference;
     public uint CurrentRoundNr;
-
     public int SetMaxRounds;
     public int SetMaxPoints;
-    
-    public int WinPointDifference;
+
+    public uint WinPlayerPoints;
     public string WinningPlayer;
     public string MatchWinDate;
+    public float TotalPlaytime;
 
     [Header("TMP-Match-Values")]
     public uint CurrentPointsTPOne;
