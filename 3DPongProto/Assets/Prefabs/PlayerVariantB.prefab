@@ -214,6 +214,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8973898448692739539, guid: 783feb4697821a043931bae4b63b27b7,
         type: 3}
+      propertyPath: m_matchConnection
+      value: 
+      objectReference: {fileID: 11400000, guid: a1c716385d30a6e428e0721cf9d35245,
+        type: 2}
+    - target: {fileID: 8973898448692739539, guid: 783feb4697821a043931bae4b63b27b7,
+        type: 3}
       propertyPath: m_playfieldVariables
       value: 
       objectReference: {fileID: 11400000, guid: e8965173f2180a642ab17cdfdade39ee,

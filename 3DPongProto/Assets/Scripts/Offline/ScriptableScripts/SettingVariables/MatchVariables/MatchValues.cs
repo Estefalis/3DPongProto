@@ -14,16 +14,16 @@ public class MatchValues : ScriptableObject
     public int SetMaxRounds;
     public int SetMaxPoints;
 
-    public uint WinPlayerPoints;
+    public double TotalPoints;
     public string WinningPlayer;
     public string MatchWinDate;
     public float TotalPlaytime;
 
     [Header("TMP-Match-Values")]
-    public uint CurrentPointsTPOne;
-    public uint TotalPointsTPOne;
-    public uint CurrentPointsTPTwo;
-    public uint TotalPointsTPTwo;
+    public uint MatchPointsTPOne;
+    public double TotalPointsTPOne;
+    public uint MatchPointsTPTwo;
+    public double TotalPointsTPTwo;
 
     [Header("Playfield-Setup")]
     public int SetGroundWidth;

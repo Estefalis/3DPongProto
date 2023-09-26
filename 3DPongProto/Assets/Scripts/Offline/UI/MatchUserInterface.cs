@@ -90,7 +90,7 @@ namespace ThreeDeePongProto.Offline.UI
         private void UpdateRoundTMPs()
         {
             m_roundNrTMP.text = $"Round {m_matchValues.CurrentRoundNr}";
-            m_zeroToZeroTMP.text = $"{m_matchValues.CurrentPointsTPOne} : {m_matchValues.CurrentPointsTPTwo}";
+            m_zeroToZeroTMP.text = $"{m_matchValues.MatchPointsTPOne} : {m_matchValues.MatchPointsTPTwo}";
         }
 
         private void UpdatePlayerTMPs()

@@ -37,7 +37,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         #region Scriptable Objects
         [SerializeField] private PlayerIDData m_playerIDData;
         [SerializeField] private MatchValues m_matchValues;
-        [SerializeField] private MatchControl m_matchControl;
+        [SerializeField] private MatchConnection m_matchConnection;
         #endregion
         #endregion
 

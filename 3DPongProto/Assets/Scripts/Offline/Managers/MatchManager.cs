@@ -10,14 +10,6 @@ public enum EGameModi
     Internet
 }
 
-//public enum EMatchCountOptions
-//{
-//    NoChanges,
-//    InfiniteRounds,
-//    InfinitePoints,
-//    InfiniteMatch
-//}
-
 namespace ThreeDeePongProto.Managers
 {
     public class MatchManager : MonoBehaviour
@@ -167,14 +159,19 @@ namespace ThreeDeePongProto.Managers
                 return;
             }
 
-            if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
+            //Solo
+            if ((m_scoredPlayer != null || m_scoredPlayer != string.Empty) && m_playerIDData.Length <= 2)
                 m_scoredPlayer = m_playerIDData[0].PlayerName;
+            //Team
+            else if ((m_scoredPlayer != null || m_scoredPlayer != string.Empty) && m_playerIDData.Length > 2)
+                m_scoredPlayer = $"{m_playerIDData[0].PlayerName} & {m_playerIDData[2].PlayerName}";
 
-            ++m_matchValues.CurrentPointsTPOne;
+            //MatchValue
+            ++m_matchValues.MatchPointsTPOne;
+            //InfiniteValue
             ++m_matchValues.TotalPointsTPOne;
 
-            //TODO: For infinite matches add a new line for TotalPointsTPOne.
-            CheckMatchConditions(m_scoredPlayer, m_matchValues.CurrentPointsTPOne);
+            CheckMatchConditions(m_scoredPlayer, m_matchValues.MatchPointsTPOne);
         }
 
         private void UpdateTPTwoPoints()
@@ -187,14 +184,19 @@ namespace ThreeDeePongProto.Managers
                 return;
             }
 
-            if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
+            //Solo
+            if ((m_scoredPlayer != null || m_scoredPlayer != string.Empty) && m_playerIDData.Length <= 2)
                 m_scoredPlayer = m_playerIDData[1].PlayerName;
+            //Team
+            else if ((m_scoredPlayer != null || m_scoredPlayer != string.Empty) && m_playerIDData.Length > 2)
+                m_scoredPlayer = $"{m_playerIDData[1].PlayerName} & {m_playerIDData[3].PlayerName}";
 
-            ++m_matchValues.CurrentPointsTPTwo;
+            //MatchValue
+            ++m_matchValues.MatchPointsTPTwo;
+            //InfiniteValue
             ++m_matchValues.TotalPointsTPTwo;
 
-            //TODO: For infinite matches add a new line for TotalPointsTPTwo.
-            CheckMatchConditions(m_scoredPlayer, m_matchValues.CurrentPointsTPTwo);
+            CheckMatchConditions(m_scoredPlayer, m_matchValues.MatchPointsTPTwo);
         }
 
         private void ReSetMatch()
@@ -223,8 +225,12 @@ namespace ThreeDeePongProto.Managers
         {
             if (m_matchValues != null)
             {
-                m_matchValues.CurrentPointsTPOne = 0;
-                m_matchValues.CurrentPointsTPTwo = 0;
+                //Values for matches with a set point amount.
+                m_matchValues.MatchPointsTPOne = 0;
+                m_matchValues.MatchPointsTPTwo = 0;
+                //Values for an endless match.
+                m_matchValues.TotalPointsTPOne = 0;
+                m_matchValues.TotalPointsTPTwo = 0;
             }
         }
         #endregion
@@ -234,7 +240,8 @@ namespace ThreeDeePongProto.Managers
             if (m_matchValues == null)
                 return;
 
-            if (m_matchUIStates.InfiniteRounds)
+            //If either no max Round or max Point amount is set, then there shall be no next Round.
+            if (m_matchUIStates.InfiniteRounds || m_matchUIStates.InfinitePoints)
             {
                 m_nextRoundConditionIsMet = false;
                 return;
@@ -242,13 +249,14 @@ namespace ThreeDeePongProto.Managers
             else
             {
                 m_nextRoundConditionIsMet =
-                m_matchValues.CurrentPointsTPOne >= m_matchValues.SetMaxPoints &&
-                m_matchValues.CurrentPointsTPOne >= m_matchValues.CurrentPointsTPTwo + m_matchValues.WinPointDifference
+                m_matchValues.MatchPointsTPOne >= m_matchValues.SetMaxPoints &&
+                m_matchValues.MatchPointsTPOne >= m_matchValues.MatchPointsTPTwo + m_matchValues.WinPointDifference
                 ||
-                m_matchValues.CurrentPointsTPTwo >= m_matchValues.SetMaxPoints &&
-                m_matchValues.CurrentPointsTPTwo >= m_matchValues.CurrentPointsTPOne + m_matchValues.WinPointDifference;
+                m_matchValues.MatchPointsTPTwo >= m_matchValues.SetMaxPoints &&
+                m_matchValues.MatchPointsTPTwo >= m_matchValues.MatchPointsTPOne + m_matchValues.WinPointDifference;
             }
 
+            //WinCondition is true, when the current RoundNumber equals the max set roundAmount AND the winpointDifference (Player 1 <-> Player 2) triggers a new round.
             bool winConditionIsMet = m_matchValues.CurrentRoundNr == m_matchValues.SetMaxRounds && m_nextRoundConditionIsMet;
 
             if (winConditionIsMet)
@@ -279,10 +287,47 @@ namespace ThreeDeePongProto.Managers
         private void SaveMatchDetails(string _winningPlayer, uint _winPlayerPoints)
         {
             m_matchValues.WinningPlayer = _winningPlayer;
-            m_matchValues.WinPlayerPoints = _winPlayerPoints;
+            m_matchValues.TotalPoints = _winPlayerPoints;
             m_matchValues.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             TimeSpan timespan = TimeSpan.FromSeconds(Time.time - m_matchValues.StartTime);
             m_matchValues.TotalPlaytime = (float)timespan.TotalSeconds;
+        }
+
+        //TODO: Player shall have the option to stop and save a match, without a set endcondition, with an ingame button.
+        public void SaveInfiniteDetails()
+        {
+            //m_matchValues.WinningPlayer gets set while checking for GetHigherPlayerPoints.
+            m_matchValues.TotalPoints = GetHigherPlayerPoints(m_matchValues.TotalPointsTPOne, m_matchValues.TotalPointsTPTwo);
+            m_matchValues.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+            TimeSpan timespan = TimeSpan.FromSeconds(Time.time - m_matchValues.StartTime);
+            m_matchValues.TotalPlaytime = (float)timespan.TotalSeconds;
+
+            m_StartWinProcedure?.Invoke();
+        }
+                
+        private double GetHigherPlayerPoints(double _infinitePointsTPOne, double _infinitePointsTPTwo)
+        {
+            if (_infinitePointsTPOne != _infinitePointsTPTwo)
+            {
+                bool higherPoints = _infinitePointsTPOne > _infinitePointsTPTwo;
+                switch (higherPoints)
+                {
+                    case true:
+                    {
+                        //Team One.
+                        m_matchValues.WinningPlayer = $"{m_playerIDData[0].PlayerName} & {m_playerIDData[2].PlayerName}";
+                        return _infinitePointsTPOne;
+                    }
+                    case false:
+                    {
+                        //Team Two.
+                        m_matchValues.WinningPlayer = $"{m_playerIDData[1].PlayerName} & {m_playerIDData[3].PlayerName}";
+                        return _infinitePointsTPTwo;
+                    }
+                }
+            }
+            else
+                return _infinitePointsTPOne - _infinitePointsTPTwo;
         }
 
         private void StartNextRound()

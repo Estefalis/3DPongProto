@@ -130,7 +130,7 @@ public class SerializingData : IPersistentData
 
         //OneTime use for Key and IV creation set, on top of this class:_____________________________
         //Debug.Log($" Key: {Convert.ToBase64String(aesEncryptionProvider.Key)}");
-        //Debug.Log($"Initialization Vector: {Convert.ToBase64String(aesEncryptionProvider.IV)}");
+        //Debug.Log($"InitializeBasic Vector: {Convert.ToBase64String(aesEncryptionProvider.IV)}");
         //___________________________________________________________________________________________
 
         //Encoding.ASCII in the Tutorial 'https://www.youtube.com/watch?v=mntS45g8OK4'.

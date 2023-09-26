@@ -86,7 +86,7 @@ namespace ThreeDeePongProto.Offline.Highscores
                     _ => $"{rank}th",
                 };
 
-                highscoreEntrySlot.Initialization(rankSuffix, highscores.SetMaxRounds, highscores.SetMaxPoints, highscores.WinPlayerPoints, highscores.WinningPlayer, highscores.MatchWinDate, highscores.TotalPlaytime);
+                highscoreEntrySlot.Initialize(rankSuffix, highscores.SetMaxRounds, highscores.SetMaxPoints, highscores.TotalPoints, highscores.WinningPlayer, highscores.MatchWinDate, highscores.TotalPlaytime);
             }
         }
 
@@ -94,7 +94,7 @@ namespace ThreeDeePongProto.Offline.Highscores
         {
             m_highscoreSlotData.SetMaxRounds = m_matchValues.SetMaxRounds;
             m_highscoreSlotData.SetMaxPoints = m_matchValues.SetMaxPoints;
-            m_highscoreSlotData.WinPlayerPoints = m_matchValues.WinPlayerPoints;
+            m_highscoreSlotData.TotalPoints = m_matchValues.TotalPoints;
             m_highscoreSlotData.WinningPlayer = m_matchValues.WinningPlayer;
             m_highscoreSlotData.MatchWinDate = m_matchValues.MatchWinDate;
             m_highscoreSlotData.TotalPlaytime = m_matchValues.TotalPlaytime;
@@ -113,6 +113,7 @@ namespace ThreeDeePongProto.Offline.Highscores
                 m_roundsDdList.Add(i.ToString());
             }
             m_roundsDropdown.AddOptions(m_roundsDdList);
+            //TODO: Option to set this dropdown value, when people want to check Highscores from the mainmenu.
             m_roundsDropdown.value = m_roundsDdList.Count;
             m_roundsDropdown.RefreshShownValue();
 
@@ -125,6 +126,7 @@ namespace ThreeDeePongProto.Offline.Highscores
                 m_maxPointsDdList.Add(i.ToString());
             }
             m_maxPointsDropdown.AddOptions(m_maxPointsDdList);
+            //TODO: Option to set this dropdown value, when people want to check Highscores from the mainmenu.
             m_maxPointsDropdown.value = m_maxPointsDdList.Count;
             m_roundsDropdown.RefreshShownValue();
         }
@@ -146,50 +148,64 @@ namespace ThreeDeePongProto.Offline.Highscores
                 _ => $"{rank}th",
             };
 
-            highscoreEntrySlot.Initialization(rankSuffix, m_matchValues.SetMaxRounds, m_matchValues.SetMaxPoints, m_matchValues.WinPlayerPoints, m_matchValues.WinningPlayer, m_matchValues.MatchWinDate, m_matchValues.TotalPlaytime);
+            highscoreEntrySlot.Initialize(rankSuffix, m_matchValues.SetMaxRounds, m_matchValues.SetMaxPoints, m_matchValues.TotalPoints, m_matchValues.WinningPlayer, m_matchValues.MatchWinDate, m_matchValues.TotalPlaytime);
             //}
         }
 
         public void SortListBySetRounds(TMP_Dropdown _roundsDropdown)
         {
             m_listSortMode = EListSortMode.Rounds;
-            Debug.Log(_roundsDropdown.value);
+#if UNITY_EDITOR
+            Debug.Log($"RoundsDropdown.value {_roundsDropdown.value}");
+#endif
         }
 
         public void ShowInfiniteRoundEntries()
         {
             m_listSortMode = EListSortMode.InfiniteRounds;
+#if UNITY_EDITOR
             Debug.Log(m_listSortMode);
+#endif
         }
 
         public void SortListBySetMaxPoints(TMP_Dropdown _maxPointsDropdown)
         {
             m_listSortMode = EListSortMode.MaxPoints;
-            Debug.Log(_maxPointsDropdown.value);
+#if UNITY_EDITOR
+            Debug.Log($"MaxPointsDropdown.value {_maxPointsDropdown.value}");
+#endif
         }
 
         public void ShowInfinitePointsEntries()
         {
             m_listSortMode = EListSortMode.InfinitePoints;
+#if UNITY_EDITOR
             Debug.Log(m_listSortMode);
+#endif
         }
 
         public void SortListByPlayer()
         {
             m_listSortMode = EListSortMode.PlayerName;
+#if UNITY_EDITOR
             Debug.Log(m_listSortMode);
+#endif
         }
 
         public void SortListByDate()
         {
             m_listSortMode = EListSortMode.WinDate;
+#if UNITY_EDITOR
             Debug.Log(m_listSortMode);
+#endif
         }
 
         public void SortListByTotalTime()
         {
             m_listSortMode = EListSortMode.TotalPlaytime;
+#if UNITY_EDITOR
             Debug.Log(m_listSortMode);
+#endif
         }
 
         public void BackToStartMenu()

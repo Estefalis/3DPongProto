@@ -41,7 +41,7 @@ namespace ThreeDeePongProto.Offline.UI
         [SerializeField] private Transform[] m_subPageTransforms;
         #endregion
 
-        [SerializeField] private MatchControl m_matchControl;
+        [SerializeField] private MatchConnection m_matchConnection;
         //MatchManager unpauses the Game. - PlayerMovement restarts Coroutines and Inputsystem.PlayerActions.
         public static event Action CloseInGameMenu;
         //MatchManager unpauses the Game.
@@ -108,7 +108,7 @@ namespace ThreeDeePongProto.Offline.UI
             LoadMainScene?.Invoke();
 
             //if (m_startMenuScene == "StartMenuScene" && GameManager.Instance.EGameConnectionModi == EGameModi.LocalPC)
-            if (m_startMenuScene == "StartMenuScene" && m_matchControl.EGameConnectionModi == EGameModi.LocalPC)
+            if (m_startMenuScene == "StartMenuScene" && m_matchConnection.EGameConnectionModi == EGameModi.LocalPC)
                 SceneManager.LoadScene(m_startMenuScene);
             else
                 Debug.Log("Der SzenenName ist nicht mehr aktuell. Bitte aktualisieren! Danke~.");   /*Ggf. SzenenName eingeben lassen.*/

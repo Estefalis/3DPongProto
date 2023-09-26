@@ -8,7 +8,7 @@ namespace ThreeDeePongProto.Offline.Highscores
         //Details-Structure for each listed Object.
         public int SetMaxRounds;
         public int SetMaxPoints;
-        public uint WinPlayerPoints;
+        public double TotalPoints;
         public string WinningPlayer;
         public string MatchWinDate;
         public float TotalPlaytime;

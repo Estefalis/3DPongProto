@@ -11,7 +11,7 @@ namespace ThreeDeePongProto.Shared.UI
         //[SerializeField] private string m_lanScene = "LanScene";
         //[SerializeField] private string m_internetScene = "InternetScene";
         [SerializeField] private Button[] m_modiButtons;
-        [SerializeField] private MatchControl m_matchControl;
+        [SerializeField] private MatchConnection m_matchConnection;
 
         public void SetGameModi(Button _sender)
         {
@@ -20,22 +20,22 @@ namespace ThreeDeePongProto.Shared.UI
                 if (_sender == m_modiButtons[0])
                 {
                     //GameManager.Instance.EGameConnectionModi = EGameModi.LocalPC;
-                    m_matchControl.EGameConnectionModi = EGameModi.LocalPC;
+                    m_matchConnection.EGameConnectionModi = EGameModi.LocalPC;
                 }
                 else if (_sender == m_modiButtons[1])
                 {
                     //GameManager.Instance.EGameConnectionModi = EGameModi.LAN;
-                    m_matchControl.EGameConnectionModi = EGameModi.LAN;
+                    m_matchConnection.EGameConnectionModi = EGameModi.LAN;
                 }
                 else if (_sender == m_modiButtons[2])
                 {
                     //GameManager.Instance.EGameConnectionModi = EGameModi.Internet;
-                    m_matchControl.EGameConnectionModi = EGameModi.Internet;
+                    m_matchConnection.EGameConnectionModi = EGameModi.Internet;
                 }
             }
 #if UNITY_EDITOR
             //Debug.Log("Meldung für Spiel-Modus: " + GameManager.Instance.EGameConnectionModi);
-            Debug.Log("Meldung für Spiel-Modus: " + m_matchControl.EGameConnectionModi);
+            Debug.Log("Meldung für Spiel-Modus: " + m_matchConnection.EGameConnectionModi);
 #endif
         }
 
