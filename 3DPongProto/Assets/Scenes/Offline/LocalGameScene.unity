@@ -972,6 +972,8 @@ MonoBehaviour:
   m_contentParentTransform: {fileID: 383893856}
   m_highscoreEntryChildPrefab: {fileID: 6225738724942728192, guid: 9bad064e1da580c4b9b255f8a0043f6c,
     type: 3}
+  m_noDataPrefab: {fileID: 7876011991351949999, guid: 12f70dfacccaa6d448fd783e4a2a9277,
+    type: 3}
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
   m_encryptionEnabled: 0
@@ -1659,7 +1661,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1361106448}
   m_HandleRect: {fileID: 1361106447}
   m_Direction: 3
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5777,8 +5779,9 @@ GameObject:
   - component: {fileID: 1800833900}
   - component: {fileID: 1800833902}
   - component: {fileID: 1800833901}
+  - component: {fileID: 1800833903}
   m_Layer: 5
-  m_Name: TotalPointsText
+  m_Name: TotalPointsButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5843,6 +5846,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1800833899}
   m_CullTransparentMesh: 1
+--- !u!114 &1800833903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1800833899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 4
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 1450293847}
+    m_SelectOnDown: {fileID: 1450293847}
+    m_SelectOnLeft: {fileID: 741551068115327129}
+    m_SelectOnRight: {fileID: 8495242847599553869}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.5686275, g: 0, b: 1, a: 0.5019608}
+    m_PressedColor: {r: 0, g: 0.09019608, b: 1, a: 0.5019608}
+    m_SelectedColor: {r: 1, g: 0.5019608, b: 0, a: 0.5019608}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 8495242847599553868}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 316173228}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Highscores.HighscoreBoard,
+          Assembly-CSharp
+        m_MethodName: SortByTotalPoints
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1823600138
 GameObject:
   m_ObjectHideFlags: 0
@@ -8032,7 +8092,7 @@ MonoBehaviour:
     m_SelectOnUp: {fileID: 1450293847}
     m_SelectOnDown: {fileID: 1450293847}
     m_SelectOnLeft: {fileID: 8495242847623870524}
-    m_SelectOnRight: {fileID: 8495242847599553869}
+    m_SelectOnRight: {fileID: 1800833903}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -9528,9 +9588,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 316173228}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Highscores.HighscoreList,
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Highscores.HighscoreBoard,
           Assembly-CSharp
-        m_MethodName: SortListByDate
+        m_MethodName: SortByWinDate
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9574,7 +9634,7 @@ GameObject:
   - component: {fileID: 8495242846854953136}
   - component: {fileID: 8495242846854953137}
   m_Layer: 5
-  m_Name: MatchDateButton
+  m_Name: WinDateButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9770,7 +9830,7 @@ MonoBehaviour:
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 1450293847}
     m_SelectOnDown: {fileID: 1450293847}
-    m_SelectOnLeft: {fileID: 741551068115327129}
+    m_SelectOnLeft: {fileID: 1800833903}
     m_SelectOnRight: {fileID: 8495242846854953137}
   m_Transition: 1
   m_Colors:
@@ -9798,9 +9858,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 316173228}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Highscores.HighscoreList,
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Highscores.HighscoreBoard,
           Assembly-CSharp
-        m_MethodName: SortListByPlayer
+        m_MethodName: SortByPlayerNames
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9943,7 +10003,7 @@ MonoBehaviour:
       - m_Target: {fileID: 316173228}
         m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Highscores.HighscoreBoard,
           Assembly-CSharp
-        m_MethodName: SortListBySetMaxPoints
+        m_MethodName: SortByMaxPoints
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 741551068115327129}
@@ -10609,9 +10669,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 316173228}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Highscores.HighscoreList,
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Highscores.HighscoreBoard,
           Assembly-CSharp
-        m_MethodName: SortListByTotalTime
+        m_MethodName: SortByTotalTime
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10865,7 +10925,7 @@ MonoBehaviour:
       - m_Target: {fileID: 316173228}
         m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Highscores.HighscoreBoard,
           Assembly-CSharp
-        m_MethodName: SortListBySetRounds
+        m_MethodName: SortByRounds
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 2446055331410395422}

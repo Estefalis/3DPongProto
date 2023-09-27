@@ -296,8 +296,8 @@ namespace ThreeDeePongProto.Managers
         //TODO: Player shall have the option to stop and save a match, without a set endcondition, with an ingame button.
         public void SaveInfiniteDetails()
         {
-            //m_matchValues.WinningPlayer gets set while checking for GetHigherPlayerPoints.
-            m_matchValues.TotalPoints = GetHigherPlayerPoints(m_matchValues.TotalPointsTPOne, m_matchValues.TotalPointsTPTwo);
+            //m_matchValues.WinningPlayer gets set while checking for GetHigherPlayerScore.
+            m_matchValues.TotalPoints = GetHigherPlayerScore(m_matchValues.TotalPointsTPOne, m_matchValues.TotalPointsTPTwo);
             m_matchValues.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             TimeSpan timespan = TimeSpan.FromSeconds(Time.time - m_matchValues.StartTime);
             m_matchValues.TotalPlaytime = (float)timespan.TotalSeconds;
@@ -305,7 +305,7 @@ namespace ThreeDeePongProto.Managers
             m_StartWinProcedure?.Invoke();
         }
                 
-        private double GetHigherPlayerPoints(double _infinitePointsTPOne, double _infinitePointsTPTwo)
+        private double GetHigherPlayerScore(double _infinitePointsTPOne, double _infinitePointsTPTwo)
         {
             if (_infinitePointsTPOne != _infinitePointsTPTwo)
             {
@@ -327,7 +327,10 @@ namespace ThreeDeePongProto.Managers
                 }
             }
             else
-                return _infinitePointsTPOne - _infinitePointsTPTwo;
+            {
+                m_matchValues.WinningPlayer = $"{m_playerIDData[0].PlayerName} & {m_playerIDData[2].PlayerName} draw to \n{m_playerIDData[1].PlayerName} & {m_playerIDData[3].PlayerName}";
+                return _infinitePointsTPOne;
+            }
         }
 
         private void StartNextRound()

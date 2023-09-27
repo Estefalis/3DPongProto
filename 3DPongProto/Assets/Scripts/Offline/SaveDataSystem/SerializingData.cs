@@ -90,8 +90,11 @@ public class SerializingData : IPersistentData
 
         if (!File.Exists(path))
         {
-            Debug.LogError($"The file at {path} cannot be loaded, because it does not exist!");
-            throw new FileNotFoundException($"{path} does not exit!");
+            //Debug.LogError($"The file at {path} cannot be loaded, because it does not exist!");
+            //throw new FileNotFoundException($"{path} does not exit!");
+
+            //The receiver can check for and react to 'Null'.
+            return default;
         }
 
         try

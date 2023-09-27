@@ -3,7 +3,7 @@ using System;
 namespace ThreeDeePongProto.Offline.Highscores
 {
     [Serializable]
-    public struct HighscoreSlotData
+    public struct HighscoreEntryData
     {
         //Details-Structure for each listed Object.
         public int SetMaxRounds;

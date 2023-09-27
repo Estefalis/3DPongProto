@@ -18,9 +18,6 @@ namespace ThreeDeePongProto.Offline.Highscores
             m_rankText.text = _rank;
             m_roundsText.text = $"{_rounds}";
             m_maxPointsText.text = $"{_maxPoints}";
-            if (_totalPoints == 0)
-                m_totalPointsText.text = "Even Match";
-            else
             m_totalPointsText.text = $"{_totalPoints}";
             m_playerNameText.text = _winningPlayer;
             m_matchWinDateText.text = _winDate;
