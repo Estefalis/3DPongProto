@@ -1,6 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
+using ThreeDeePongProto.Managers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,14 +14,17 @@ namespace ThreeDeePongProto.Offline.Highscores
     {
         private enum EListSortMode
         {
+            None,
             Rounds,
             MaxPoints,
             TotalPoints,
-            PlayerName, //Sort- & Search-Option by PlayerName.
-            WinDate,
+            PlayerNames, //Sort- & Search-Option by PlayerNames.
+            MatchWinDate,
             TotalPlaytime
         }
 
+        [SerializeField] private Transform m_disableTransform;
+        [SerializeField] private EventSystem m_eventSystem;
         [SerializeField] private Button[] m_topListButtons;
         [SerializeField] private TMP_Dropdown m_roundsDropdown;
         [SerializeField] private TMP_Dropdown m_maxPointsDropdown;
@@ -31,6 +37,8 @@ namespace ThreeDeePongProto.Offline.Highscores
 
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
+
+        [SerializeField] private bool m_sortLowToHigh;
 
         private List<string> m_roundsDdList;
         private List<string> m_maxPointsDdList;
@@ -47,12 +55,23 @@ namespace ThreeDeePongProto.Offline.Highscores
         private void Awake()
         {
             SetDropdowns();
-
             LoadHighscoresFromFiles();
 
             //TODO: Action to join load these inside the game, so the highscore list can be used outside of matches.
             //m_slotHeight = m_highscoreEntryChildPrefab.GetComponent<RectTransform>().rect.height;
             m_parentChildCount = m_contentParentTransform.GetComponent<Transform>().childCount;
+
+            MatchManager.m_StartWinProcedure += DisplayHighscoreBoard;
+            m_eventSystem.SetSelectedGameObject(m_finishButton.gameObject);
+            if (m_disableTransform.gameObject.activeInHierarchy)
+                m_disableTransform.gameObject.SetActive(false);
+        }
+
+        private void OnDisable()
+        {
+            gameObject.SetActive(false);
+
+            MatchManager.m_StartWinProcedure -= DisplayHighscoreBoard;
         }
 
         private void Update()
@@ -110,12 +129,14 @@ namespace ThreeDeePongProto.Offline.Highscores
                 return;
             }
 
+            SortListByEnum(highscoreList);
+
             m_parentChildCount = 0;
             foreach (HighscoreEntryData highscores in highscoreList.highscores)
             {
                 HighscoreEntryPrefab highscoreEntrySlot = Instantiate(m_highscoreEntryChildPrefab, m_contentParentTransform);
 
-                int rank = + 1 + m_parentChildCount++;
+                int rank = +1 + m_parentChildCount++;
                 string rankSuffix = rank switch
                 {
                     1 => $"{rank}st",
@@ -128,57 +149,172 @@ namespace ThreeDeePongProto.Offline.Highscores
             }
         }
 
-        public void SortByRounds(TMP_Dropdown _roundsDropdown)
+        private HighscoreList SortListByEnum(HighscoreList _highscoreList)
+        {
+            switch (m_listSortMode)
+            {
+                case EListSortMode.None:
+                    break;
+                //In this setup Rounds & MaxPoints are set and used to navigate to the correct ListFolder, by using the corresponding Dropdown.Value. (LoadData Path)
+                //case EListSortMode.Rounds:
+                //    break;
+                //case EListSortMode.MaxPoints:
+                //    break;
+                case EListSortMode.TotalPoints:
+                {
+                    m_sortLowToHigh = !m_sortLowToHigh;
+                    SortListByTotalPoints(_highscoreList);
+                    break;
+                }
+                case EListSortMode.PlayerNames:
+                { break; }
+                case EListSortMode.MatchWinDate:
+                {
+                    //The WinDate SortBehaviour was partly strange. Sending the parameter here, while don't elsewhere, currently avoid bool setting errors. 
+                    m_sortLowToHigh = !m_sortLowToHigh;
+                    SortListByMatchWinDate(_highscoreList, m_sortLowToHigh);
+                    break;
+                }
+                case EListSortMode.TotalPlaytime:
+                {
+                    m_sortLowToHigh = !m_sortLowToHigh;
+                    SortListByTotalPlaytime(_highscoreList);
+                    break;
+                }
+            }
+
+            return _highscoreList;
+        }
+
+        private HighscoreList SortListByTotalPoints(HighscoreList _highscoreList)
+        {
+            #region Linq-IfElse
+            //if (m_sortLowToHigh)
+            //    _highscoreList.highscores = _highscoreList.highscores.OrderBy(linqSorts => linqSorts.TotalPoints).ToList();
+            //else
+            //    _highscoreList.highscores = _highscoreList.highscores.OrderByDescending(linqSorts => linqSorts.TotalPoints).ToList();
+
+            //return _highscoreList;
+            #endregion
+
+            #region Linq-Switch
+            switch (m_sortLowToHigh)
+            {
+                case true:
+                    _highscoreList.highscores = _highscoreList.highscores.OrderBy(linqSorts => linqSorts.TotalPoints).ToList();
+                    break;
+                case false:
+                    _highscoreList.highscores = _highscoreList.highscores.OrderByDescending(linqSorts => linqSorts.TotalPoints).ToList();
+                    break;
+            }
+
+            return _highscoreList;
+            #endregion
+        }
+
+        private HighscoreList SortListByMatchWinDate(HighscoreList _highscoreList, bool _sortLowToHigh)
+        {
+            #region Linq-IfElse
+            //if (m_sortLowToHigh)
+            //    _highscoreList.highscores = _highscoreList.highscores.OrderBy(linqSorts => linqSorts.MatchWinDate).ToList();
+            //else
+            //    _highscoreList.highscores = _highscoreList.highscores.OrderByDescending(linqSorts => linqSorts.MatchWinDate).ToList();
+
+            //return _highscoreList;
+            #endregion
+
+            #region Linq-Switch
+            switch (_sortLowToHigh)
+            {
+                case true:
+                    _highscoreList.highscores = _highscoreList.highscores.OrderBy(linqSorts => linqSorts.MatchWinDate).ToList();
+                    break;
+                case false:
+                    _highscoreList.highscores = _highscoreList.highscores.OrderByDescending(linqSorts => linqSorts.MatchWinDate).ToList();
+                    break;
+            }
+
+            return _highscoreList;
+            #endregion
+        }
+
+        private HighscoreList SortListByTotalPlaytime(HighscoreList _highscoreList)
+        {
+            #region Linq-IfElse
+            //if (m_sortLowToHigh)
+            //    _highscoreList.highscores = _highscoreList.highscores.OrderBy(linqSorts => linqSorts.TotalPlaytime).ToList();
+            //else
+            //    _highscoreList.highscores = _highscoreList.highscores.OrderByDescending(linqSorts => linqSorts.TotalPlaytime).ToList();
+
+            //return _highscoreList;
+            #endregion
+
+            #region Linq-Switch
+            switch (m_sortLowToHigh)
+            {
+                case true:
+                    _highscoreList.highscores = _highscoreList.highscores.OrderBy(linqSorts => linqSorts.TotalPlaytime).ToList();
+                    break;
+                case false:
+                    _highscoreList.highscores = _highscoreList.highscores.OrderByDescending(linqSorts => linqSorts.TotalPlaytime).ToList();
+                    break;
+            }
+
+            return _highscoreList;
+            #endregion
+        }
+
+        private void DisplayHighscoreBoard()
+        {
+            m_disableTransform.gameObject.SetActive(true);
+        }
+
+        #region Unity-Button-Methods
+        public void SortByRounds()
         {
             m_listSortMode = EListSortMode.Rounds;
-
             LoadHighscoresFromFiles();
         }
 
-        public void SortByMaxPoints(TMP_Dropdown _maxPointsDropdown)
+        public void SortByMaxPoints()
         {
-            LoadHighscoresFromFiles();
-
             m_listSortMode = EListSortMode.MaxPoints;
+            LoadHighscoresFromFiles();
         }
 
         public void SortByTotalPoints()
         {
             m_listSortMode = EListSortMode.TotalPoints;
-#if UNITY_EDITOR
-            Debug.Log(m_listSortMode);
-#endif
+            LoadHighscoresFromFiles();
         }
 
         public void SortByPlayerNames()
         {
-            m_listSortMode = EListSortMode.PlayerName;
+            m_listSortMode = EListSortMode.PlayerNames;
 #if UNITY_EDITOR
             Debug.Log(m_listSortMode);
 #endif
         }
 
-        public void SortByWinDate()
+        public void SortByMatchWinDate()
         {
-            m_listSortMode = EListSortMode.WinDate;
-#if UNITY_EDITOR
-            Debug.Log(m_listSortMode);
-#endif
+            m_listSortMode = EListSortMode.MatchWinDate;
+            LoadHighscoresFromFiles();
         }
-        public void SortByTotalTime()
+        public void SortByTotalPlaytime()
         {
             m_listSortMode = EListSortMode.TotalPlaytime;
-#if UNITY_EDITOR
-            Debug.Log(m_listSortMode);
-#endif
+            LoadHighscoresFromFiles();
         }
 
         public void BackToStartMenu()
         {
             SceneManager.LoadScene(0);
         }
+        #endregion
 
-        //TODO: Remove TestSave on temporary RankButton.
+        #region Delete after Development
+        //TODO: Remove TestSave on temporary RankButton and implement Saving on Disable.
         public void TestSave()
         {
             HighscoreList highscoreListData = new();
@@ -220,5 +356,6 @@ namespace ThreeDeePongProto.Offline.Highscores
             highscoreEntrySlot.Initialize(rankSuffix, m_matchValues.SetMaxRounds, m_matchValues.SetMaxPoints, m_matchValues.TotalPoints, m_matchValues.WinningPlayer, m_matchValues.MatchWinDate, m_matchValues.TotalPlaytime);
             //}
         }
+        #endregion
     }
 }

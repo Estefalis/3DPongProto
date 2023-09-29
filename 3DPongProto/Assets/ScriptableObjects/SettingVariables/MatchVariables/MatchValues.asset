@@ -14,24 +14,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerInGame:
   - Estefalis
+  - Nyclia
   - Rayago
-  - 
-  - 
-  StartTime: 16.569433
+  - Mycandra
+  StartTime: 15.5629015
   WinPointDifference: 2
   CurrentRoundNr: 1
   SetMaxRounds: 5
   SetMaxPoints: 25
-  WinPlayerPoints: 50
+  TotalPoints: 135
   WinningPlayer: Estefalis
-  MatchWinDate: '14.09.2023
+  MatchWinDate: '29.09.2023
 
-    19:56:59'
-  TotalPlaytime: 34.517
-  CurrentPointsTPOne: 0
-  TotalPointsTPOne: 72
-  CurrentPointsTPTwo: 0
-  TotalPointsTPTwo: 60
+    17:34:07'
+  TotalPlaytime: 182.117
+  MatchPointsTPOne: 0
+  TotalPointsTPOne: 0
+  MatchPointsTPTwo: 0
+  TotalPointsTPTwo: 0
   SetGroundWidth: 25
   SetGroundLength: 50
   MinFrontLineDistance: 6

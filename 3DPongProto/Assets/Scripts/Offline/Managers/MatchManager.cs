@@ -36,6 +36,7 @@ namespace ThreeDeePongProto.Managers
         #region Scriptable Objects
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
+        [SerializeField] private MatchConnection m_matchConnection;
         [SerializeField] private PlayerIDData[] m_playerIDData;
         #endregion
         #endregion
@@ -99,6 +100,10 @@ namespace ThreeDeePongProto.Managers
 
             m_StartNextRound -= StartNextRound;
             m_StartWinProcedure -= StartWinProcedure;
+
+            //Useable for Infinite Matches.
+            m_matchValues.TotalPointsTPOne = 0;
+            m_matchValues.TotalPointsTPTwo = 0;
         }
 
         private void UseDefaultSettings()
@@ -160,18 +165,18 @@ namespace ThreeDeePongProto.Managers
             }
 
             //Solo
-            if ((m_scoredPlayer != null || m_scoredPlayer != string.Empty) && m_playerIDData.Length <= 2)
+            if ((m_scoredPlayer != null || m_scoredPlayer != string.Empty) && (m_matchConnection.EGameConnectionModi == EGameModi.LocalPC))
                 m_scoredPlayer = m_playerIDData[0].PlayerName;
             //Team
-            else if ((m_scoredPlayer != null || m_scoredPlayer != string.Empty) && m_playerIDData.Length > 2)
+            else if ((m_scoredPlayer != null || m_scoredPlayer != string.Empty) && (m_matchConnection.EGameConnectionModi == EGameModi.LAN || m_matchConnection.EGameConnectionModi == EGameModi.Internet))
                 m_scoredPlayer = $"{m_playerIDData[0].PlayerName} & {m_playerIDData[2].PlayerName}";
 
-            //MatchValue
+            //Reset each Round.
             ++m_matchValues.MatchPointsTPOne;
-            //InfiniteValue
+            //Reset only on Disable.
             ++m_matchValues.TotalPointsTPOne;
 
-            CheckMatchConditions(m_scoredPlayer, m_matchValues.MatchPointsTPOne);
+            CheckMatchConditions(m_scoredPlayer, m_matchValues.TotalPointsTPOne);
         }
 
         private void UpdateTPTwoPoints()
@@ -185,18 +190,18 @@ namespace ThreeDeePongProto.Managers
             }
 
             //Solo
-            if ((m_scoredPlayer != null || m_scoredPlayer != string.Empty) && m_playerIDData.Length <= 2)
+            if ((m_scoredPlayer != null || m_scoredPlayer != string.Empty) && (m_matchConnection.EGameConnectionModi == EGameModi.LocalPC))
                 m_scoredPlayer = m_playerIDData[1].PlayerName;
             //Team
-            else if ((m_scoredPlayer != null || m_scoredPlayer != string.Empty) && m_playerIDData.Length > 2)
+            else if ((m_scoredPlayer != null || m_scoredPlayer != string.Empty) && (m_matchConnection.EGameConnectionModi == EGameModi.LAN || m_matchConnection.EGameConnectionModi == EGameModi.Internet))
                 m_scoredPlayer = $"{m_playerIDData[1].PlayerName} & {m_playerIDData[3].PlayerName}";
 
-            //MatchValue
+            //Reset each Round.
             ++m_matchValues.MatchPointsTPTwo;
-            //InfiniteValue
+            //Reset only on Disable.
             ++m_matchValues.TotalPointsTPTwo;
 
-            CheckMatchConditions(m_scoredPlayer, m_matchValues.MatchPointsTPTwo);
+            CheckMatchConditions(m_scoredPlayer, m_matchValues.TotalPointsTPTwo);
         }
 
         private void ReSetMatch()
@@ -228,14 +233,11 @@ namespace ThreeDeePongProto.Managers
                 //Values for matches with a set point amount.
                 m_matchValues.MatchPointsTPOne = 0;
                 m_matchValues.MatchPointsTPTwo = 0;
-                //Values for an endless match.
-                m_matchValues.TotalPointsTPOne = 0;
-                m_matchValues.TotalPointsTPTwo = 0;
             }
         }
         #endregion
 
-        private void CheckMatchConditions(string _winningPlayer, uint _winPlayerPoints)
+        private void CheckMatchConditions(string _winningPlayer, double _pointCount)
         {
             if (m_matchValues == null)
                 return;
@@ -261,7 +263,8 @@ namespace ThreeDeePongProto.Managers
 
             if (winConditionIsMet)
             {
-                SaveMatchDetails(_winningPlayer, _winPlayerPoints);
+                if (m_matchConnection.EGameConnectionModi == EGameModi.LocalPC)
+                    SaveMatchDetails(_winningPlayer, _pointCount);
 
                 m_StartWinProcedure.Invoke();
                 return;
@@ -277,14 +280,14 @@ namespace ThreeDeePongProto.Managers
                 case false:
                 {
 #if UNITY_EDITOR
-                    Debug.Log($"{m_scoredPlayer} scored. Congratulations!");
+                    Debug.Log($"MatchManager: {m_scoredPlayer} scored. Congratulations!");
 #endif
                     break;
                 }
             }
         }
 
-        private void SaveMatchDetails(string _winningPlayer, uint _winPlayerPoints)
+        private void SaveMatchDetails(string _winningPlayer, double _winPlayerPoints)
         {
             m_matchValues.WinningPlayer = _winningPlayer;
             m_matchValues.TotalPoints = _winPlayerPoints;
@@ -304,7 +307,13 @@ namespace ThreeDeePongProto.Managers
 
             m_StartWinProcedure?.Invoke();
         }
-                
+
+        /// <summary>
+        /// Method to get the Higher Value for Infinite Matches.
+        /// </summary>
+        /// <param name="_infinitePointsTPOne"></param>
+        /// <param name="_infinitePointsTPTwo"></param>
+        /// <returns></returns>
         private double GetHigherPlayerScore(double _infinitePointsTPOne, double _infinitePointsTPTwo)
         {
             if (_infinitePointsTPOne != _infinitePointsTPTwo)
@@ -328,7 +337,7 @@ namespace ThreeDeePongProto.Managers
             }
             else
             {
-                m_matchValues.WinningPlayer = $"{m_playerIDData[0].PlayerName} & {m_playerIDData[2].PlayerName} draw to \n{m_playerIDData[1].PlayerName} & {m_playerIDData[3].PlayerName}";
+                m_matchValues.WinningPlayer = $"{m_playerIDData[0].PlayerName} & {m_playerIDData[2].PlayerName} draw \nto {m_playerIDData[1].PlayerName} & {m_playerIDData[3].PlayerName}";
                 return _infinitePointsTPOne;
             }
         }

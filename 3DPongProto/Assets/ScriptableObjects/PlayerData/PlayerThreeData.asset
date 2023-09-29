@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23ae38de6bc0d3f4aaa8718fe9de0dee, type: 3}
   m_Name: PlayerThreeData
   m_EditorClassIdentifier: 
-  PlayerName: Nyclia
+  PlayerName: Rayago
   PlayerId: 2
   Avatar: {fileID: 0}
   PlayerOnFrontline: 1
