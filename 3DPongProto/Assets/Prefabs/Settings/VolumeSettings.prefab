@@ -870,25 +870,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_audioMixer: {fileID: 24100000, guid: 0741db7ce93d64743ab030324208aac8, type: 2}
-  m_volumeVariables: {fileID: 11400000, guid: 4c48b9b8578164547b04a0d3d732e116, type: 2}
   m_masterVolumeParameter: MasterVolume
   m_quieterButtonMaster: {fileID: 5575190014566886445}
   m_sliderMaster: {fileID: 5575190016343391797}
   m_louderButtonMaster: {fileID: 5575190014951411620}
   m_masterValueText: {fileID: 2065806463377987748}
-  m_muteMaster: {fileID: 5575190014900076001}
+  m_masterMute: {fileID: 0}
+  m_defaultMasterVolume: 1
+  m_defaultMasterMuteIsOn: 0
   m_bgmVolumeParameter: BGMVolume
   m_quieterButtonBGM: {fileID: 5575190015518512105}
   m_sliderBGM: {fileID: 5575190015175631185}
   m_louderButtonBGM: {fileID: 5575190014290685973}
   m_bgmValueText: {fileID: 6928806170200330220}
-  m_muteBGM: {fileID: 5575190014975233292}
+  m_bGMMute: {fileID: 0}
+  m_defaultBGMVolume: 0.9
+  m_defaultBGMMuteIsOn: 0
   m_sfxVolumeParameter: SFXVolume
   m_quieterButtonSFX: {fileID: 5575190014343478976}
   m_sliderSFX: {fileID: 5575190015245261503}
   m_louderButtonSFX: {fileID: 5575190015095014120}
   m_sfxValueText: {fileID: 490978620551479120}
-  m_muteSFX: {fileID: 5575190014736844607}
+  m_sFXMute: {fileID: 0}
+  m_defaultSFXVolume: 1
+  m_defaultSFXMuteIsOn: 0
   m_adjustSliderStep: 0.01
   m_logarithmMultiplier: 20
   m_muteAmountVariable: -80
@@ -900,6 +905,8 @@ MonoBehaviour:
   - {fileID: 5575190016343391797}
   - {fileID: 5575190015175631185}
   - {fileID: 5575190015245261503}
+  m_volumeUIStates: {fileID: 11400000, guid: 0b099063a6f6ebe45a293a2c06b6c6e8, type: 2}
+  m_volumeUIValues: {fileID: 0}
 --- !u!1 &5575190014546006701
 GameObject:
   m_ObjectHideFlags: 0

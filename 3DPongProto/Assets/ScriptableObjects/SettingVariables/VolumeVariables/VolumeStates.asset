@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50984026285a27d4bbdb7fc18bfe5b71, type: 3}
   m_Name: VolumeStates
   m_EditorClassIdentifier: 
-  MasterMute: 0
-  BGMMute: 0
-  SFXMute: 0
+  MuteMode: 3
+  MasterMuteIsOn: 0
+  BGMMuteIsOn: 0
+  SFXMuteIsOn: 0

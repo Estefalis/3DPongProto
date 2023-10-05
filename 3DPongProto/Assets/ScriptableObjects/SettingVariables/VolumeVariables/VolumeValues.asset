@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: VolumeValues
   m_EditorClassIdentifier: 
   LatestMasterVolume: 1
-  LatestBGMVolume: 0.9
-  LatestSFXVolume: 0.8
+  LatestBGMVolume: 0.9151037
+  LatestSFXVolume: 0.8026647
