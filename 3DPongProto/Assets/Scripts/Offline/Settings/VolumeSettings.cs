@@ -66,9 +66,15 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private VolumeUIStates m_volumeUIStates;
         [SerializeField] private VolumeUIValues m_volumeUIValues;
 
-        private EMuteMode m_muteMode;
+        #region Serialization
+        private string m_stateFolderPath = "/SaveData/UI-States";
+        private string m_valueFolderPath = "/SaveData/UI-Values";
+        private string m_fileName = "/Volume";
+        private string m_dataFormat = ".json";
+
         private IPersistentData m_persistentData = new SerializingData();
         private bool m_encryptionEnabled = false;
+        #endregion
 
         private void Awake()
         {
@@ -76,7 +82,10 @@ namespace ThreeDeePongProto.Offline.Settings
             for (int i = 0; i < m_muteToggleKeys.Length; i++)
                 m_toggleSliderConnection.Add(m_muteToggleKeys[i], m_volumeSliderValues[i]);
 
-            LoadVolumeSettings();
+            if (m_volumeUIStates == null || m_volumeUIValues == null)
+                ReSetDefault();
+            else
+                LoadVolumeSettings();
         }
 
         private void OnEnable()
@@ -86,13 +95,13 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void Start()
         {
-            InitialSliderSet();
+            InitialUISetup();
         }
 
         private void LoadVolumeSettings()
         {
-            VolumeUISettingsStates uiIndices = m_persistentData.LoadData<VolumeUISettingsStates>("/SaveData/UI-States", "/Volume", ".json", m_encryptionEnabled);
-            VolumeUISettingsValues uiValues = m_persistentData.LoadData<VolumeUISettingsValues>("/SaveData/UI-Values", "/Volume", ".json", m_encryptionEnabled);
+            VolumeUISettingsStates uiIndices = m_persistentData.LoadData<VolumeUISettingsStates>(m_stateFolderPath, m_fileName, m_dataFormat, m_encryptionEnabled);
+            VolumeUISettingsValues uiValues = m_persistentData.LoadData<VolumeUISettingsValues>(m_valueFolderPath, m_fileName, m_dataFormat, m_encryptionEnabled);
 
             m_volumeUIStates.MasterMuteIsOn = uiIndices.MasterMuteIsOn;
             m_volumeUIStates.BGMMuteIsOn = uiIndices.BGMMuteIsOn;
@@ -103,7 +112,7 @@ namespace ThreeDeePongProto.Offline.Settings
             m_volumeUIValues.LatestSFXVolume = uiValues.LatestSFXVolume;
         }
 
-        private void InitialSliderSet()
+        private void InitialUISetup()
         {
             switch (m_volumeUIStates.MasterMuteIsOn)
             {
@@ -114,7 +123,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     HandleMasterSliderValueChanges(m_volumeUIValues.LatestMasterVolume);
                     break;
             }
-            
+
             switch (m_volumeUIStates.BGMMuteIsOn)
             {
                 case true:
@@ -124,7 +133,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     HandleBGMSliderValueChanges(m_volumeUIValues.LatestBGMVolume);
                     break;
             }
-            
+
             switch (m_volumeUIStates.SFXMuteIsOn)
             {
                 case true:
@@ -140,8 +149,8 @@ namespace ThreeDeePongProto.Offline.Settings
         {
             RemoveSliderAndToggleListener();
 
-            m_persistentData.SaveData("/SaveData/UI-States", "/Volume", ".json", m_volumeUIStates, m_encryptionEnabled, true);
-            m_persistentData.SaveData("/SaveData/UI-Values", "/Volume", ".json", m_volumeUIValues, m_encryptionEnabled, true);
+            m_persistentData.SaveData(m_stateFolderPath, m_fileName, m_dataFormat, m_volumeUIStates, m_encryptionEnabled, true);
+            m_persistentData.SaveData(m_valueFolderPath, m_fileName, m_dataFormat, m_volumeUIValues, m_encryptionEnabled, true);
         }
 
         /// <summary>

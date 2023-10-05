@@ -15,8 +15,6 @@ namespace ThreeDeePongProto.Offline.Settings
 {
     public class GraphicSettings : MonoBehaviour
     {
-        //[SerializeField] private MatchManager m_matchManager;
-
         #region Object-References
         [SerializeField] private TMP_Dropdown m_qualityDropdown;
         [SerializeField] private TMP_Dropdown m_resolutionDropdown;
@@ -24,7 +22,6 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private TMP_Dropdown m_screenSplitDropdown;
         #endregion
 
-        //[SerializeField] private int m_defaultQualityLevel = 0;
         [SerializeField] private int m_systemQualityLevel;
         [SerializeField] private int m_currentResolutionIndex;
         [SerializeField] private bool m_defaultFullscreen = true;
@@ -39,8 +36,14 @@ namespace ThreeDeePongProto.Offline.Settings
         private Resolution[] m_screenResolutions;
         public ECameraModi ECameraMode { get => m_eCameraMode; }
 
+        #region Serialization
+        private string m_stateFolderPath = "/SaveData/UI-States";
+        private string m_fileName = "/Graphic";
+        private string m_dataFormat = ".json";
+
         private IPersistentData m_persistentData = new SerializingData();
         private bool m_encryptionEnabled = false;
+        #endregion
 
         private void Awake()
         {
@@ -53,25 +56,37 @@ namespace ThreeDeePongProto.Offline.Settings
 #if UNITY_EDITOR
                 Debug.LogWarning("GraphicSettings: Forgot to add a Scriptable Object in the Editor!");
 #endif
-                //UseDefaultSettings();
                 ReSetDefault();
             }
             else
-            {
-//#if UNITY_EDITOR
-//                UseDefaultSettings();
-//#else
-                m_qualityDropdown.value = m_graphicUiStates.QualityLevelIndex;
-                m_resolutionDropdown.value = m_graphicUiStates.SelectedResolutionIndex;
-                m_fullscreenToggle.isOn = m_graphicUiStates.FullScreenMode;
-                m_screenSplitDropdown.value =(int)m_graphicUiStates.SetCameraMode;
-//#endif
-            }
+                LoadGraphicSettings();            
+        }
+
+        private void Start()
+        {
+            InitialUISetup();
         }
 
         private void OnDisable()
         {
-            m_persistentData.SaveData("/SaveData/UI-States", "/Graphic", ".json", m_graphicUiStates, m_encryptionEnabled, true);
+            m_persistentData.SaveData(m_stateFolderPath, m_fileName, m_dataFormat, m_graphicUiStates, m_encryptionEnabled, true);
+        }
+
+        private void LoadGraphicSettings()
+        {
+            GraphicUiSettingsStates uiIndices = m_persistentData.LoadData<GraphicUiSettingsStates>(m_stateFolderPath, m_fileName, m_dataFormat, m_encryptionEnabled);
+            m_graphicUiStates.QualityLevelIndex = uiIndices.QualityLevelIndex;
+            m_graphicUiStates.SelectedResolutionIndex = uiIndices.SelectedResolutionIndex;
+            m_graphicUiStates.FullScreenMode = uiIndices.FullScreenMode;
+            m_graphicUiStates.SetCameraMode = uiIndices.SetCameraMode;
+        }
+
+        private void InitialUISetup()
+        {
+            m_qualityDropdown.value = m_graphicUiStates.QualityLevelIndex;
+            m_resolutionDropdown.value = m_graphicUiStates.SelectedResolutionIndex;
+            m_fullscreenToggle.isOn = m_graphicUiStates.FullScreenMode;
+            m_screenSplitDropdown.value = (int)m_graphicUiStates.SetCameraMode;
         }
 
         private void GetAvailableResolutions()
@@ -105,7 +120,6 @@ namespace ThreeDeePongProto.Offline.Settings
             m_resolutionDropdown.RefreshShownValue();
         }
 
-        //TODO: Ggf. Methode in MatchManager transferieren.
         public void SetActiveCameras()
         {
             m_graphicUiStates.SetCameraMode = (ECameraModi)m_screenSplitDropdown.value;
@@ -138,15 +152,6 @@ namespace ThreeDeePongProto.Offline.Settings
             if (m_graphicUiStates != null)
                 m_graphicUiStates.FullScreenMode = _setFullscreen;
         }
-
-        //private void UseDefaultSettings()
-        //{
-        //    m_qualityDropdown.value = m_systemQualityLevel;
-        //    //Index equal to your System-Resolution, set by 'GetAvailableResolutions();'.
-        //    m_resolutionDropdown.value = m_currentResolutionIndex;
-        //    m_fullscreenToggle.isOn = m_defaultFullscreen;
-        //    m_screenSplitDropdown.value = (int)m_eCameraMode;
-        //}
 
         public void ReSetDefault()
         {
