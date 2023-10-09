@@ -8,35 +8,29 @@ public class MatchValues : ScriptableObject
 {
     [Header("Round-Details")]
     public List<string> PlayerInGame = new();
-    public float StartTime;
-    public int WinPointDifference;
-    public uint CurrentRoundNr;
-    public int SetMaxRounds;
-    public int SetMaxPoints;
+    public float StartTime;             //each Match
+    public uint CurrentRoundNr;         //each Match
+    public int WinPointDifference;      //each Match (MatchManager)
 
-    public double TotalPoints;
-    public string WinningPlayer;
-    public string MatchWinDate;
-    public float TotalPlaytime;
+    public double TotalPoints;          //each Match
+    public string WinningPlayer;        //each Match
+    public string MatchWinDate;         //each Match
+    public float TotalPlaytime;         //each Match
 
     [Header("TMP-Match-Values")]
-    public uint MatchPointsTPOne;
-    public double TotalPointsTPOne;
-    public uint MatchPointsTPTwo;
-    public double TotalPointsTPTwo;
+    public uint MatchPointsTPOne;       //each Match
+    public double TotalPointsTPOne;     //each Match
+    public uint MatchPointsTPTwo;       //each Match
+    public double TotalPointsTPTwo;     //each Match
 
     [Header("Playfield-Setup")]
-    public int SetGroundWidth;
-    public int SetGroundLength;
-    public float MinFrontLineDistance;
-    public float FrontlineAdjustment;
-    public float MinBackLineDistance;
-    public float BacklineAdjustment;
+    public float MinFrontLineDistance;  //each Match (MatchManager)
+    public float MinBackLineDistance;   //each Match (MatchManager)
 
     [Header("Player-Adjustments")]
-    public float PaddleWidthAdjustment;
-    public float MaxPushDistance;
-    public float XPaddleScale;
-    public float YPaddleScale;
-    public float ZPaddleScale;
+    public float PaddleWidthAdjustment; //each Match (Player)
+    public float MaxPushDistance;       //each Match (Player. MOVE into MatchManager?)
+    public float XPaddleScale;          //each Match
+    public float YPaddleScale;          //each Match
+    public float ZPaddleScale;          //each Match
 }

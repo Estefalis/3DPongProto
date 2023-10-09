@@ -36,6 +36,7 @@ namespace ThreeDeePongProto.Offline.Highscores
         //[SerializeField] private int m_maxHighscoreSlots;
 
         [SerializeField] private MatchUIStates m_matchUIStates;
+        [SerializeField] private MatchUIValues m_matchUIValues;
         [SerializeField] private MatchValues m_matchValues;
 
         [SerializeField] private bool m_sortLowToHigh;
@@ -91,7 +92,7 @@ namespace ThreeDeePongProto.Offline.Highscores
             m_roundsDropdown.ClearOptions();
             //m_roundsDdList.Add("?");
             m_roundsDdList.Add("\u221E");
-            for (int i = m_firstRoundOffset; i < m_matchValues.SetMaxRounds + 1; i++)
+            for (int i = m_firstRoundOffset; i < m_matchUIValues.SetMaxRounds + 1; i++)
             {
                 m_roundsDdList.Add(i.ToString());
             }
@@ -103,7 +104,7 @@ namespace ThreeDeePongProto.Offline.Highscores
             m_maxPointsDropdown.ClearOptions();
             //m_maxPointsDdList.Add("?");
             m_maxPointsDdList.Add("\u221E");
-            for (int i = m_firstPointOffset; i < m_matchValues.SetMaxPoints + 1; i++)
+            for (int i = m_firstPointOffset; i < m_matchUIValues.SetMaxPoints + 1; i++)
             {
                 //'m_maxPointsDropdown.options.Add (new Dropdown.OptionData() { text = variable });' in foreach-loops.
                 m_maxPointsDdList.Add(i.ToString());
@@ -323,13 +324,13 @@ namespace ThreeDeePongProto.Offline.Highscores
                 highscoreListData.highscores.Add(m_highscoreSlotData);
 
             //(/Folder/SubFolder/RoundInfinityFolder on 0/MaxPointsInfinityFolder on 0, /FileName, .format)
-            m_persistentData.SaveData($"/SaveData/Highscore Lists/{m_matchValues.SetMaxRounds}/{m_matchValues.SetMaxPoints}", "/Highscores", ".json", highscoreListData, m_encryptionEnabled, true);
+            m_persistentData.SaveData($"/SaveData/Highscore Lists/{m_matchUIValues.SetMaxRounds}/{m_matchUIValues.SetMaxPoints}", "/Highscores", ".json", highscoreListData, m_encryptionEnabled, true);
         }
 
         private void CopyScriptableDetails()
         {
-            m_highscoreSlotData.SetMaxRounds = m_matchValues.SetMaxRounds;
-            m_highscoreSlotData.SetMaxPoints = m_matchValues.SetMaxPoints;
+            m_highscoreSlotData.SetMaxRounds = m_matchUIValues.SetMaxRounds;
+            m_highscoreSlotData.SetMaxPoints = m_matchUIValues.SetMaxPoints;
             m_highscoreSlotData.TotalPoints = m_matchValues.TotalPoints;
             m_highscoreSlotData.WinningPlayer = m_matchValues.WinningPlayer;
             m_highscoreSlotData.MatchWinDate = m_matchValues.MatchWinDate;
@@ -353,7 +354,7 @@ namespace ThreeDeePongProto.Offline.Highscores
                 _ => $"{rank}th",
             };
 
-            highscoreEntrySlot.Initialize(rankSuffix, m_matchValues.SetMaxRounds, m_matchValues.SetMaxPoints, m_matchValues.TotalPoints, m_matchValues.WinningPlayer, m_matchValues.MatchWinDate, m_matchValues.TotalPlaytime);
+            highscoreEntrySlot.Initialize(rankSuffix, m_matchUIValues.SetMaxRounds, m_matchUIValues.SetMaxPoints, m_matchValues.TotalPoints, m_matchValues.WinningPlayer, m_matchValues.MatchWinDate, m_matchValues.TotalPlaytime);
             //}
         }
         #endregion

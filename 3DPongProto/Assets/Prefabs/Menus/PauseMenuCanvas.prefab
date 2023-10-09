@@ -2305,6 +2305,12 @@ PrefabInstance:
         type: 2}
     - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
         type: 3}
+      propertyPath: m_matchUIValues
+      value: 
+      objectReference: {fileID: 11400000, guid: 1d141bd7b5d00df40ab384340a00c97e,
+        type: 2}
+    - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
+        type: 3}
       propertyPath: m_matchUiStates
       value: 
       objectReference: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d,
@@ -2321,9 +2327,39 @@ PrefabInstance:
       objectReference: {fileID: 7764365727681392023}
     - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
         type: 3}
+      propertyPath: m_maxPointDdIndex
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
+        type: 3}
       propertyPath: m_maxPointsDropdown
       value: 
       objectReference: {fileID: 7764365726503239927}
+    - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
+        type: 3}
+      propertyPath: m_matchSetupDropdowns.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
+        type: 3}
+      propertyPath: m_matchSetupDropdowns.Array.data[0]
+      value: 
+      objectReference: {fileID: 7764365727681392023}
+    - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
+        type: 3}
+      propertyPath: m_matchSetupDropdowns.Array.data[1]
+      value: 
+      objectReference: {fileID: 7764365726503239927}
+    - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
+        type: 3}
+      propertyPath: m_matchSetupDropdowns.Array.data[2]
+      value: 
+      objectReference: {fileID: 3347744218737891094}
+    - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
+        type: 3}
+      propertyPath: m_matchSetupDropdowns.Array.data[3]
+      value: 
+      objectReference: {fileID: 6952829708232900387}
     - target: {fileID: 7533973042652483405, guid: d5d526be9fc149148aeb5951486723ed,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -2705,6 +2741,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3347744218737891094 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4363816109254320946, guid: d5d526be9fc149148aeb5951486723ed,
+    type: 3}
+  m_PrefabInstance: {fileID: 1367669322830738468}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6952829708232900387 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8252733928910572295, guid: d5d526be9fc149148aeb5951486723ed,
+    type: 3}
+  m_PrefabInstance: {fileID: 1367669322830738468}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &7764365725870946842 stripped

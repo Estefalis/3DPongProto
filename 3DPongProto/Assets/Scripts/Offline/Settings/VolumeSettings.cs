@@ -70,7 +70,7 @@ namespace ThreeDeePongProto.Offline.Settings
         private string m_stateFolderPath = "/SaveData/UI-States";
         private string m_valueFolderPath = "/SaveData/UI-Values";
         private string m_fileName = "/Volume";
-        private string m_dataFormat = ".json";
+        private string m_fileFormat = ".json";
 
         private IPersistentData m_persistentData = new SerializingData();
         private bool m_encryptionEnabled = false;
@@ -100,8 +100,8 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void LoadVolumeSettings()
         {
-            VolumeUISettingsStates uiIndices = m_persistentData.LoadData<VolumeUISettingsStates>(m_stateFolderPath, m_fileName, m_dataFormat, m_encryptionEnabled);
-            VolumeUISettingsValues uiValues = m_persistentData.LoadData<VolumeUISettingsValues>(m_valueFolderPath, m_fileName, m_dataFormat, m_encryptionEnabled);
+            VolumeUISettingsStates uiIndices = m_persistentData.LoadData<VolumeUISettingsStates>(m_stateFolderPath, m_fileName, m_fileFormat, m_encryptionEnabled);
+            VolumeUISettingsValues uiValues = m_persistentData.LoadData<VolumeUISettingsValues>(m_valueFolderPath, m_fileName, m_fileFormat, m_encryptionEnabled);
 
             m_volumeUIStates.MasterMuteIsOn = uiIndices.MasterMuteIsOn;
             m_volumeUIStates.BGMMuteIsOn = uiIndices.BGMMuteIsOn;
@@ -149,8 +149,8 @@ namespace ThreeDeePongProto.Offline.Settings
         {
             RemoveSliderAndToggleListener();
 
-            m_persistentData.SaveData(m_stateFolderPath, m_fileName, m_dataFormat, m_volumeUIStates, m_encryptionEnabled, true);
-            m_persistentData.SaveData(m_valueFolderPath, m_fileName, m_dataFormat, m_volumeUIValues, m_encryptionEnabled, true);
+            m_persistentData.SaveData(m_stateFolderPath, m_fileName, m_fileFormat, m_volumeUIStates, m_encryptionEnabled, true);
+            m_persistentData.SaveData(m_valueFolderPath, m_fileName, m_fileFormat, m_volumeUIValues, m_encryptionEnabled, true);
         }
 
         /// <summary>

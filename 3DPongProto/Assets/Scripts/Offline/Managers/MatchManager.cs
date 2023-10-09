@@ -29,12 +29,14 @@ namespace ThreeDeePongProto.Managers
         [SerializeField] private uint m_startRound = 1;
         [SerializeField] private int m_winPointDifference = 2;
         [SerializeField] private float m_maxPushDistance = 1.5f;
+        [SerializeField] private float m_paddleWidthAdjustStep = 0.25f;
         [SerializeField] private Vector3 m_defaultPaddleScale;
         [SerializeField] private bool m_gameIsPaused;
         [Space]
 
         #region Scriptable Objects
         [SerializeField] private MatchUIStates m_matchUIStates;
+        [SerializeField] private MatchUIValues m_matchUIValues;
         [SerializeField] private MatchValues m_matchValues;
         [SerializeField] private MatchConnection m_matchConnection;
         [SerializeField] private PlayerIDData[] m_playerIDData;
@@ -51,6 +53,7 @@ namespace ThreeDeePongProto.Managers
         public Vector3 DefaultPaddleScale { get => m_defaultPaddleScale; }
         public bool MatchStarted { get => m_matchHasStarted; private set => m_matchHasStarted = value; }
         public float MatchStartTime { get => m_matchStartTime; private set => m_matchStartTime = value; }
+        public float PaddleWidthAdjustStep { get => m_paddleWidthAdjustStep; }
         #endregion
 
         private string m_scoredPlayer;
@@ -223,7 +226,7 @@ namespace ThreeDeePongProto.Managers
         #region Match-Presets
         private void ResetPlayfield()
         {
-            m_playGround.transform.localScale = new Vector3(m_matchValues.SetGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_matchValues.SetGroundLength * m_playGroundLengthScale);
+            m_playGround.transform.localScale = new Vector3(m_matchUIValues.SetGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_matchUIValues.SetGroundLength * m_playGroundLengthScale);
         }
 
         private void ResetRoundValues()
@@ -251,15 +254,15 @@ namespace ThreeDeePongProto.Managers
             else
             {
                 m_nextRoundConditionIsMet =
-                m_matchValues.MatchPointsTPOne >= m_matchValues.SetMaxPoints &&
+                m_matchValues.MatchPointsTPOne >= m_matchUIValues.SetMaxPoints &&
                 m_matchValues.MatchPointsTPOne >= m_matchValues.MatchPointsTPTwo + m_matchValues.WinPointDifference
                 ||
-                m_matchValues.MatchPointsTPTwo >= m_matchValues.SetMaxPoints &&
+                m_matchValues.MatchPointsTPTwo >= m_matchUIValues.SetMaxPoints &&
                 m_matchValues.MatchPointsTPTwo >= m_matchValues.MatchPointsTPOne + m_matchValues.WinPointDifference;
             }
 
             //WinCondition is true, when the current RoundNumber equals the max set roundAmount AND the winpointDifference (Player 1 <-> Player 2) triggers a new round.
-            bool winConditionIsMet = m_matchValues.CurrentRoundNr == m_matchValues.SetMaxRounds && m_nextRoundConditionIsMet;
+            bool winConditionIsMet = m_matchValues.CurrentRoundNr == m_matchUIValues.SetMaxRounds && m_nextRoundConditionIsMet;
 
             if (winConditionIsMet)
             {

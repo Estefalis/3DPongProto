@@ -36,6 +36,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         #region Scriptable Objects
         [SerializeField] private PlayerIDData m_playerIDData;
+        [SerializeField] private MatchUIValues m_matchUIValues;
         [SerializeField] private MatchValues m_matchValues;
         [SerializeField] private MatchConnection m_matchConnection;
         #endregion
@@ -132,19 +133,19 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             m_axisRotUneven = new Vector3(0, m_playerMovement.PlayerActions.TurnMovementUneven.ReadValue<Vector2>().x, 0);  //Modulo = Player1/Player3
             m_axisRotEven = new Vector3(0, m_playerMovement.PlayerActions.TurnMovementEven.ReadValue<Vector2>().x, 0);      //Modulo = Player2/Player4
 
-            //TODO: MUST be removed after testing is completed!!!___
+            //TODO: MUST be removed after testing is completed!!!_______________________________
             if (Keyboard.current.pKey.wasPressedThisFrame)
             {
                 if (m_matchValues != null)
-                    m_matchValues.PaddleWidthAdjustment += 0.25f;
+                    m_matchValues.PaddleWidthAdjustment += m_matchManager.PaddleWidthAdjustStep;
             }
 
             if (Keyboard.current.pKey.wasReleasedThisFrame)
             {
                 if (m_matchValues != null)
-                    m_matchValues.PaddleWidthAdjustment -= 0.25f;
+                    m_matchValues.PaddleWidthAdjustment -= m_matchManager.PaddleWidthAdjustStep;
             }
-            //______________________________________________________
+            //__________________________________________________________________________________
         }
 
         private void FixedUpdate()
@@ -163,8 +164,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             }
             else
             {
-                m_groundWidth = m_matchValues.SetGroundWidth;
-                m_groundLength = m_matchValues.SetGroundLength;
+                m_groundWidth = m_matchUIValues.SetGroundWidth;
+                m_groundLength = m_matchUIValues.SetGroundLength;
                 m_maxPushDistance = m_matchValues.MaxPushDistance;
             }
         }
@@ -190,10 +191,10 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
                 switch (m_playerIDData.PlayerOnFrontline)
                 {
                     case true:
-                        m_goalDistance = m_matchValues.MinFrontLineDistance + m_matchValues.FrontlineAdjustment + m_matchValues.BacklineAdjustment;
+                        m_goalDistance = m_matchValues.MinFrontLineDistance + m_matchUIValues.FrontlineAdjustment + m_matchUIValues.BacklineAdjustment;
                         break;
                     case false:
-                        m_goalDistance = m_matchValues.MinBackLineDistance + m_matchValues.BacklineAdjustment;
+                        m_goalDistance = m_matchValues.MinBackLineDistance + m_matchUIValues.BacklineAdjustment;
                         break;
                 }
 

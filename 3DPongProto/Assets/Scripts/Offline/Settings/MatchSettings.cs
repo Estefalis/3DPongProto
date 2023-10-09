@@ -20,10 +20,10 @@ namespace ThreeDeePongProto.Offline.Settings
         #region Field-Dimension
         [Header("Field-Dimension")]
         [SerializeField] private Toggle m_fixRatioToggle;
-        [SerializeField] private TMP_Dropdown[] m_fieldDropdowns;
+        [SerializeField] private TMP_Dropdown[] m_matchSetupDropdowns;
 
-        [SerializeField] private int m_maxFieldWidth/* = 30*/;
-        [SerializeField] private int m_maxFieldLength/* = 60*/;
+        [SerializeField] private int m_maxFieldWidth = 30;
+        [SerializeField] private int m_maxFieldLength = 60;
         [SerializeField] private int m_fieldWidthDdIndex = 0;
         [SerializeField] private int m_fieldLengthDdIndex = 0;
         [SerializeField] private bool m_fixAspectRatio = false;
@@ -40,28 +40,34 @@ namespace ThreeDeePongProto.Offline.Settings
 
         #region Rounds and Points
         [Header("Rounds and Points")]
-        [SerializeField] private int m_setMaxRound/* = 5*/;
+        [SerializeField] private int m_setMaxRound = 5;
         [SerializeField] private int m_maxRoundDdIndex = 5;
-
-        [SerializeField] private int m_setMaxPoints/* = 25*/;
+        [SerializeField] private int m_setMaxPoints = 25;
         [SerializeField] private int m_maxPointDdIndex = 25;
-        [SerializeField] private TMP_Dropdown m_roundsDropdown;
-        [SerializeField] private TMP_Dropdown m_maxPointsDropdown;
+        [Space]
         #endregion
 
         #region Scriptable-References
         [SerializeField] private MatchUIStates m_matchUIStates;
+        [SerializeField] private MatchUIValues m_matchUIValues;
         [SerializeField] private MatchValues m_matchValues;
         [SerializeField] private PlayerIDData[] m_playerIDData;
         #endregion
         #endregion
-        [Space]
         [Space]
 
         #region Lists and Dictionaries
         [SerializeField] private List<Button> m_reduceButtonKeys = new List<Button>();
         [SerializeField] private List<Button> m_increaseButtonKeys = new List<Button>();
         [SerializeField] private List<Slider> m_distanceSliderValues = new List<Slider>();
+
+        private List<string> m_roundsDdList;
+        private List<string> m_maxPointsDdList;
+        private List<string> m_widthList;
+        private List<string> m_lengthList;
+
+        private List<string> m_playersTeamOne;
+        private List<string> m_playersTeamTwo;
 
         #region Key-Value-Connection
         private Dictionary<Button, Slider> m_reduceLineSlider = new Dictionary<Button, Slider>();
@@ -74,43 +80,32 @@ namespace ThreeDeePongProto.Offline.Settings
 
         //Set in OnValueChanged-Dropdown-Methods.
         private int m_tempWidthDdValue = 0, m_tempLengthDdValue = 0;
-        private bool m_fixRatioIfTrue;
-
-        private List<string> m_roundsDdList;
-        private List<string> m_maxPointsDdList;
-        private List<string> m_widthList;
-        private List<string> m_lengthList;
-        private List<string> m_playersTeamOne;
-        private List<string> m_playersTeamTwo;
         #endregion
 
         private event Action m_updateLineText;
+
+        private string m_uiStateFolderPath = "/SaveData/UI-States";
+        private string m_uiValueFolderPath = "/SaveData/UI-Values";
+        private string m_fieldSettingsPath = "/SaveData/FieldSettings";
+        private string m_fileName = "/Match";
+        private string m_fileFormat = ".json";
         private IPersistentData m_persistentData = new SerializingData();
         private bool m_encryptionEnabled = false;
 
         private void Awake()
         {
             SetupLineDictionaries();
+
+            if (m_matchUIStates == null || m_matchValues == null)
+                ReSetDefault();
+            else
+                LoadMatchSettings();
         }
 
         private void OnEnable()
         {
-            if (m_playerIDData.Length > 2)
-            {
-                FillFrontlineDropdowns();
-                FillBacklineDropdowns();
-            }
-
-            PresetToggles();
-
-            FillRoundDropdown(m_roundsDropdown);
-            FillMaxPointsDropdown(m_maxPointsDropdown);
-
-            FillWidthDropdown();
-            FillLengthDropdown();
-
-            SetupLineUpSliders();
-            UpdateLineUpTMPs();
+            InitializeUI();
+            
             m_updateLineText += UpdateLineUpTMPs;
 
             AddGroupListeners();
@@ -120,54 +115,85 @@ namespace ThreeDeePongProto.Offline.Settings
         {
             RemoveGroupListeners();
 
-            m_persistentData.SaveData("/SaveData/UI-States", "/Match", ".json", m_matchUIStates, m_encryptionEnabled, true);
-            m_persistentData.SaveData("/SaveData/UI-Values", "/Match", ".json", m_matchValues, m_encryptionEnabled, true);
+            m_persistentData.SaveData(m_uiStateFolderPath, m_fileName, m_fileFormat, m_matchUIStates, m_encryptionEnabled, true);
+            m_persistentData.SaveData(m_uiValueFolderPath, m_fileName, m_fileFormat, m_matchUIValues, m_encryptionEnabled, true);
+            m_persistentData.SaveData(m_fieldSettingsPath, m_fileName, m_fileFormat, m_matchValues, m_encryptionEnabled, true);
         }
 
-        private void PresetToggles()
+        private void LoadMatchSettings()
         {
-            m_fixRatioToggle.isOn = false;
-#if UNITY_EDITOR
-            m_fixRatioIfTrue = m_fixAspectRatio;
-            m_matchUIStates.FixRatio = m_fixAspectRatio;
-#else
-            if (m_uiStates != null)
+            MatchUISettingsStates uiIndices = m_persistentData.LoadData<MatchUISettingsStates>(m_uiStateFolderPath, m_fileName, m_fileFormat, m_encryptionEnabled);
+            m_matchUIStates.InfiniteRounds = uiIndices.InfiniteRounds;
+            m_matchUIStates.InfinitePoints = uiIndices.InfinitePoints;
+            m_matchUIStates.LastRoundDdIndex = uiIndices.LastRoundDdIndex;
+            m_matchUIStates.LastMaxPointDdIndex = uiIndices.LastMaxPointDdIndex;
+
+            m_matchUIStates.FixRatio = uiIndices.FixRatio;
+            m_matchUIStates.LastFieldWidthDdIndex = uiIndices.LastFieldWidthDdIndex;
+            m_matchUIStates.LastFieldLengthDdIndex = uiIndices.LastFieldLengthDdIndex;
+
+            m_matchUIStates.TPOneBacklineDdIndex = uiIndices.TPOneBacklineDdIndex;
+            m_matchUIStates.TPTwoBacklineDdIndex = uiIndices.TPTwoBacklineDdIndex;
+            m_matchUIStates.TPOneFrontlineDdIndex = uiIndices.TPOneFrontlineDdIndex;
+            m_matchUIStates.TPTwoFrontlineDdIndex = uiIndices.TPTwoFrontlineDdIndex;
+
+            MatchUISettingsValues uiValues = m_persistentData.LoadData<MatchUISettingsValues>(m_uiValueFolderPath, m_fileName, m_fileFormat, m_encryptionEnabled);
+            m_matchUIValues.SetMaxRounds = uiValues.SetMaxRounds;
+            m_matchUIValues.SetMaxPoints = uiValues.SetMaxPoints;
+
+            m_matchUIValues.SetGroundWidth = uiValues.SetGroundWidth;
+            m_matchUIValues.SetGroundLength = uiValues.SetGroundLength;
+            m_matchUIValues.FrontlineAdjustment = uiValues.FrontlineAdjustment;
+            m_matchUIValues.BacklineAdjustment = uiValues.BacklineAdjustment;
+        }
+
+        private void InitializeUI()
+        {
+            m_fixRatioToggle.isOn = m_matchUIStates.FixRatio;
+
+            //(fn) or fn both work?
+            int roundDdIndex = Array.FindIndex(m_matchSetupDropdowns, (fn) => fn == m_matchSetupDropdowns[0]);
+            int maxPointDdIndex = Array.FindIndex(m_matchSetupDropdowns, (fn) => fn == m_matchSetupDropdowns[1]);
+            int fieldWidthDdIndex = Array.FindIndex(m_matchSetupDropdowns, (fn) => fn == m_matchSetupDropdowns[2]);
+            int fieldLengthDdIndex = Array.FindIndex(m_matchSetupDropdowns, (fn) => fn == m_matchSetupDropdowns[3]);
+            SetupMatchDropdowns(roundDdIndex);
+            SetupMatchDropdowns(maxPointDdIndex);
+            SetupMatchDropdowns(fieldWidthDdIndex);
+            SetupMatchDropdowns(fieldLengthDdIndex);
+
+            SetupLineUpSliders();
+            UpdateLineUpTMPs();
+            
+            if (m_playerIDData.Length > 2)
             {
-                m_fixRatioIfTrue = m_uiStates.FixRatio;
+                FillFrontlineDropdowns();
+                FillBacklineDropdowns();
             }
-            else
-            {
-                m_fixRatioIfTrue = m_fixAspectRatio;
-            }
-#endif
         }
 
         private void AddGroupListeners()
         {
-            //Listener for changes on 'UnlimitedRounds'-UI-Dropdown.
-            m_roundsDropdown.onValueChanged.AddListener(delegate
-            { OnRoundDropdownValueChanged(m_roundsDropdown); });
-            //Listener for changes on 'UnlimitedMaxPoints'-UI-Dropdown.
-            m_maxPointsDropdown.onValueChanged.AddListener(delegate
-            { OnMaxPointDropdownValueChanged(m_maxPointsDropdown); });
+            //Rounds
+            m_matchSetupDropdowns[0].onValueChanged.AddListener(delegate
+            { OnRoundDropdownValueChanged(m_matchSetupDropdowns[0]); });
+            //MaxPoints
+            m_matchSetupDropdowns[1].onValueChanged.AddListener(delegate
+            { OnMaxPointDropdownValueChanged(m_matchSetupDropdowns[1]); });
 
             m_fixRatioToggle.onValueChanged.AddListener(delegate
             { OnRatioToggleValueChanged(m_fixRatioToggle); });
-
-            //Field-Width-Dropdown-Listener.
-            m_fieldDropdowns[0].onValueChanged.AddListener(delegate
-            { OnWidthDropdownValueChanged(m_fieldDropdowns[0]); });
-            //Field-Length-Dropdown-Listener.
-            m_fieldDropdowns[1].onValueChanged.AddListener(delegate
-            { OnLengthDropdownValueChanged(m_fieldDropdowns[1]); });
-
-            //Player-Set-Frontline-Listeners.
+            //Field-Width
+            m_matchSetupDropdowns[2].onValueChanged.AddListener(delegate
+            { OnWidthDropdownValueChanged(m_matchSetupDropdowns[2]); });
+            //Field-Length
+            m_matchSetupDropdowns[3].onValueChanged.AddListener(delegate
+            { OnLengthDropdownValueChanged(m_matchSetupDropdowns[3]); });
+            //Player-Set-Frontline
             m_frontLineDds[0].onValueChanged.AddListener(delegate
             { OnTeamOneFrontlineDropdownValueChanged(m_frontLineDds[0]); });
             m_frontLineDds[1].onValueChanged.AddListener(delegate
             { OnTeamTwoFrontlineDropdownValueChanged(m_frontLineDds[1]); });
-
-            //Player-Set-Backline-Listeners.
+            //Player-Set-Backline
             m_backLineDds[0].onValueChanged.AddListener(delegate
             { OnTeamOneBacklineDropdownValueChanged(m_backLineDds[0]); });
             m_backLineDds[1].onValueChanged.AddListener(delegate
@@ -179,24 +205,27 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void RemoveGroupListeners()
         {
-            m_roundsDropdown.onValueChanged.RemoveListener(delegate
-            { OnRoundDropdownValueChanged(m_roundsDropdown); });
-            m_maxPointsDropdown.onValueChanged.RemoveListener(delegate
-            { OnMaxPointDropdownValueChanged(m_maxPointsDropdown); });
+            //Rounds
+            m_matchSetupDropdowns[0].onValueChanged.RemoveListener(delegate
+            { OnRoundDropdownValueChanged(m_matchSetupDropdowns[0]); });
+            //MaxPoints
+            m_matchSetupDropdowns[1].onValueChanged.RemoveListener(delegate
+            { OnMaxPointDropdownValueChanged(m_matchSetupDropdowns[1]); });
 
             m_fixRatioToggle.onValueChanged.RemoveListener(delegate
             { OnRatioToggleValueChanged(m_fixRatioToggle); });
-
-            m_fieldDropdowns[0].onValueChanged.RemoveListener(delegate
-            { OnWidthDropdownValueChanged(m_fieldDropdowns[0]); });
-            m_fieldDropdowns[1].onValueChanged.RemoveListener(delegate
-            { OnLengthDropdownValueChanged(m_fieldDropdowns[1]); });
-
+            //Field-Width
+            m_matchSetupDropdowns[2].onValueChanged.RemoveListener(delegate
+            { OnWidthDropdownValueChanged(m_matchSetupDropdowns[2]); });
+            //Field-Length
+            m_matchSetupDropdowns[3].onValueChanged.RemoveListener(delegate
+            { OnLengthDropdownValueChanged(m_matchSetupDropdowns[3]); });
+            //Player-Set-Frontline
             m_frontLineDds[0].onValueChanged.RemoveListener(delegate
             { OnTeamOneFrontlineDropdownValueChanged(m_frontLineDds[0]); });
             m_frontLineDds[1].onValueChanged.RemoveListener(delegate
             { OnTeamTwoFrontlineDropdownValueChanged(m_frontLineDds[1]); });
-
+            //Player-Set-Backline
             m_backLineDds[0].onValueChanged.RemoveListener(delegate
             { OnTeamOneBacklineDropdownValueChanged(m_backLineDds[0]); });
             m_backLineDds[1].onValueChanged.RemoveListener(delegate
@@ -214,18 +243,16 @@ namespace ThreeDeePongProto.Offline.Settings
         /// <param name="_toggle"></param>
         private void OnRatioToggleValueChanged(Toggle _toggle)
         {
-switch (_toggle.isOn)
+            switch (_toggle.isOn)
             {
                 case true:
                 {
-                    m_fixRatioIfTrue = true;
-                    m_fieldDropdowns[1].value = m_fieldDropdowns[0].value * 2;
+                    m_matchSetupDropdowns[3].value = m_matchSetupDropdowns[2].value * 2;
                     m_matchUIStates.FixRatio = _toggle.isOn;
                     break;
                 }
                 case false:
                 {
-                    m_fixRatioIfTrue = false;
                     m_matchUIStates.FixRatio = _toggle.isOn;
                     break;
                 }
@@ -235,7 +262,6 @@ switch (_toggle.isOn)
         #endregion
 
         #region Dropdown-OnValueChanged-Methods
-        #region Round-Dropdown
         /// <summary>
         /// Listener-Method to set round-values, only while the corresponding dropdown is interactable.
         /// </summary>
@@ -243,20 +269,14 @@ switch (_toggle.isOn)
         private void OnRoundDropdownValueChanged(TMP_Dropdown _maxRoundsDropdown)
         {
             //DropdownValue is equal to DropdownIndex +1, without the infinity option at index 0.
-            m_matchValues.SetMaxRounds = _maxRoundsDropdown.value /*+ m_firstRoundOffset*/;
+            m_matchUIValues.SetMaxRounds = _maxRoundsDropdown.value /*+ m_firstRoundOffset*/;
             m_matchUIStates.LastRoundDdIndex = _maxRoundsDropdown.value;
-            //m_tempRoundDdValue = _maxRoundsDropdown.value;
-
-            //'m_firstRoundOffset' oversteps the Round 0 in the '_maxRoundsDropdown' + current '_maxRoundsDropdown.value' == m_roundsDdList.Count.
-            //if (m_firstRoundOffset + _maxRoundsDropdown.value == m_roundsDdList.Count)
             if (_maxRoundsDropdown.value == 0)
                 m_matchUIStates.InfiniteRounds = true;
             else
                 m_matchUIStates.InfiniteRounds = false;
         }
-        #endregion
 
-        #region MaxPoint-Dropdown
         /// <summary>
         /// Listener-Method to set maxPoint-values, only while the corresponding dropdown is interactable.
         /// </summary>
@@ -264,43 +284,39 @@ switch (_toggle.isOn)
         private void OnMaxPointDropdownValueChanged(TMP_Dropdown _maxPointsDropdown)
         {
             //DropdownValue is equal to DropdownIndex +1, without the infinity option at index 0.
-            m_matchValues.SetMaxPoints = _maxPointsDropdown.value/* + m_firstPointOffset*/;
+            m_matchUIValues.SetMaxPoints = _maxPointsDropdown.value/* + m_firstPointOffset*/;
             m_matchUIStates.LastMaxPointDdIndex = _maxPointsDropdown.value;
-
-            //'m_firstPointOffset' oversteps the Point 0 in the '_maxPointsDropdown' + current '_maxPointsDropdown.value' == m_maxPointsDdList.Count.
-            //if (m_firstPointOffset + _maxPointsDropdown.value == m_maxPointsDdList.Count)
             if (_maxPointsDropdown.value == 0)
                 m_matchUIStates.InfinitePoints = true;
             else
                 m_matchUIStates.InfinitePoints = false;
         }
-        #endregion
 
-        #region FieldDimension (Width & Length)
         private void OnWidthDropdownValueChanged(TMP_Dropdown _dropdown)
         {
-            if (m_fixRatioIfTrue)
+            if (m_fixRatioToggle.isOn)
             {
-                m_fieldDropdowns[1].value = _dropdown.value * 2;
+                //m_fixRatioToggle.isOn = true;
+                m_matchSetupDropdowns[3].value = _dropdown.value * 2;
             }
 
             m_tempWidthDdValue = _dropdown.value;
-            m_matchValues.SetGroundWidth = _dropdown.value + m_firstWidthOffset;
+            m_matchUIValues.SetGroundWidth = _dropdown.value + m_firstWidthOffset;
             m_matchUIStates.LastFieldWidthDdIndex = _dropdown.value;
         }
 
         private void OnLengthDropdownValueChanged(TMP_Dropdown _dropdown)
         {
-            if (m_fixRatioIfTrue)
+            if (m_fixRatioToggle.isOn)
             {
-                m_fieldDropdowns[0].value = (int)(_dropdown.value * 0.5f);
+                //m_fixRatioToggle.isOn = true;
+                m_matchSetupDropdowns[2].value = (int)(_dropdown.value * 0.5f);
             }
 
             m_tempLengthDdValue = _dropdown.value;
-            m_matchValues.SetGroundLength = _dropdown.value + m_firstLengthOffset;
+            m_matchUIValues.SetGroundLength = _dropdown.value + m_firstLengthOffset;
             m_matchUIStates.LastFieldLengthDdIndex = _dropdown.value;
         }
-        #endregion
 
         /// <summary>
         /// dropdownIndex-Changes set Booleans on playerData-Scriptables to set their goalDistance-Positions on Match-Start.
@@ -314,7 +330,7 @@ switch (_toggle.isOn)
                 {
                     //Frontline Player 1 (Team 1, ID 0) = Backline Player 3 (Team 1, ID 2).
                     m_backLineDds[0].value = 1;
-                    m_matchUIStates.TPOneFrontDdIndex = 0;
+                    m_matchUIStates.TPOneFrontlineDdIndex = 0;
                     UpdateFrontlineSetup(m_playerIDData[0].PlayerId);
                     break;
                 }
@@ -322,7 +338,7 @@ switch (_toggle.isOn)
                 {
                     //Frontline Player 3 (Team 1, ID 2) = Backline Player 1 (Team 1, ID 0).
                     m_backLineDds[0].value = 0;
-                    m_matchUIStates.TPOneFrontDdIndex = 1;
+                    m_matchUIStates.TPOneFrontlineDdIndex = 1;
                     UpdateFrontlineSetup(m_playerIDData[2].PlayerId);
                     break;
                 }
@@ -343,7 +359,7 @@ switch (_toggle.isOn)
                 {
                     //Frontline Player 2 (Team 2, ID 1) = Backline Player 4 (Team 2, ID 3).
                     m_backLineDds[1].value = 1;
-                    m_matchUIStates.TPTwoFrontDdIndex = 0;
+                    m_matchUIStates.TPTwoFrontlineDdIndex = 0;
                     UpdateFrontlineSetup(m_playerIDData[1].PlayerId);
                     break;
                 }
@@ -351,7 +367,7 @@ switch (_toggle.isOn)
                 {
                     //Frontline Player 4 (Team 2, ID 3) = Backline Player 2 (Team 2, ID 1).
                     m_backLineDds[1].value = 0;
-                    m_matchUIStates.TPTwoFrontDdIndex = 1;
+                    m_matchUIStates.TPTwoFrontlineDdIndex = 1;
                     UpdateFrontlineSetup(m_playerIDData[3].PlayerId);
                     break;
                 }
@@ -372,7 +388,7 @@ switch (_toggle.isOn)
                 {
                     //Backline Player 1 (Team 1, ID 0) = Frontline Player 3 (Team 1, ID 2).
                     m_frontLineDds[0].value = 1;
-                    m_matchUIStates.TPOneBacklineIndex = 0;
+                    m_matchUIStates.TPOneBacklineDdIndex = 0;
                     UpdateBacklineSetup(m_playerIDData[0].PlayerId);
                     break;
                 }
@@ -380,7 +396,7 @@ switch (_toggle.isOn)
                 {
                     //Backline Player 3 (Team 1, ID 2) = Frontline Player 1 (Team 1, ID 0).
                     m_frontLineDds[0].value = 0;
-                    m_matchUIStates.TPOneBacklineIndex = 1;
+                    m_matchUIStates.TPOneBacklineDdIndex = 1;
                     UpdateBacklineSetup(m_playerIDData[2].PlayerId);
                     break;
                 }
@@ -401,7 +417,7 @@ switch (_toggle.isOn)
                 {
                     //Backline Player 2 (Team 2, ID 1) = Frontline Player 4 (Team 2, ID 3).
                     m_frontLineDds[1].value = 1;
-                    m_matchUIStates.TPTwoBacklineIndex = 0;
+                    m_matchUIStates.TPTwoBacklineDdIndex = 0;
                     UpdateBacklineSetup(m_playerIDData[1].PlayerId);
                     break;
                 }
@@ -409,7 +425,7 @@ switch (_toggle.isOn)
                 {
                     //Backline Player 4 (Team 2, ID 3) = Frontline Player 2 (Team 2, ID 1).
                     m_frontLineDds[1].value = 0;
-                    m_matchUIStates.TPTwoBacklineIndex = 1;
+                    m_matchUIStates.TPTwoBacklineDdIndex = 1;
                     UpdateBacklineSetup(m_playerIDData[3].PlayerId);
                     break;
                 }
@@ -423,117 +439,115 @@ switch (_toggle.isOn)
         private void OnFrontlineSliderValueChanged(float _value)
         {
             m_distanceSliderValues[0].value = _value;
-            m_matchValues.FrontlineAdjustment = m_distanceSliderValues[0].minValue + _value;
+            m_matchUIValues.FrontlineAdjustment = m_distanceSliderValues[0].minValue + _value;
             m_updateLineText?.Invoke();
         }
 
         private void OnBacklineSliderValueChanged(float _value)
         {
             m_distanceSliderValues[1].value = _value;
-            m_matchValues.BacklineAdjustment = m_distanceSliderValues[1].minValue + _value;
+            m_matchUIValues.BacklineAdjustment = m_distanceSliderValues[1].minValue + _value;
             m_updateLineText?.Invoke();
         }
         #endregion
 
         #region Fill-Dropdowns-On-Start
-        /// <summary>
-        /// Method to fill the round-dropdown on Start. Also sets it's interactable-status.
-        /// </summary>
-        /// <param name="_toggle"></param>
-        private void FillRoundDropdown(TMP_Dropdown _maxRoundsDropdown)
+        private void SetupMatchDropdowns(int _dropdownID)
         {
-            _maxRoundsDropdown.ClearOptions();
-            m_roundsDdList = new List<string> { "\u221E" };
-            for (int i = m_firstRoundOffset; i < m_setMaxRound + 1; i++)
+            switch (_dropdownID)
             {
-                m_roundsDdList.Add(i.ToString());
+                //Rounds
+                case 0:
+                {
+                    m_matchSetupDropdowns[_dropdownID].ClearOptions();
+                    m_roundsDdList = new List<string> { "\u221E" };
+
+                    for (int i = m_firstRoundOffset; i < m_setMaxRound + 1; i++)
+                    {
+                        m_roundsDdList.Add(i.ToString());
+                    }
+
+                    m_matchSetupDropdowns[_dropdownID].AddOptions(m_roundsDdList);
+
+                    if (m_matchUIStates == null)
+                        m_matchSetupDropdowns[_dropdownID].value = m_maxRoundDdIndex;
+                    else
+                        m_matchSetupDropdowns[_dropdownID].value = m_matchUIStates.LastRoundDdIndex;
+
+                    m_matchSetupDropdowns[_dropdownID].RefreshShownValue();
+                    m_matchSetupDropdowns[_dropdownID].interactable = true;
+
+                    m_matchUIValues.SetMaxRounds = m_setMaxRound;
+                    break;
+                }
+                //MaxPoints
+                case 1:
+                {
+                    m_matchSetupDropdowns[_dropdownID].ClearOptions();
+                    m_maxPointsDdList = new List<string> { "\u221E" };
+
+                    for (int i = m_firstPointOffset; i < m_setMaxPoints + 1; i++)
+                    {
+                        //'m_maxPointsDropdown.options.Add (new Dropdown.OptionData() { text = variable });' in foreach-loops.
+                        m_maxPointsDdList.Add(i.ToString());
+                    }
+
+                    m_matchSetupDropdowns[_dropdownID].AddOptions(m_maxPointsDdList);
+
+                    if (m_matchUIStates == null)
+                        m_matchSetupDropdowns[_dropdownID].value = m_maxPointDdIndex;
+                    else
+                        m_matchSetupDropdowns[_dropdownID].value = m_matchUIStates.LastMaxPointDdIndex;
+
+                    m_matchSetupDropdowns[_dropdownID].RefreshShownValue();
+                    m_matchSetupDropdowns[_dropdownID].interactable = true;
+
+                    m_matchUIValues.SetMaxPoints = m_setMaxPoints;
+                    break;
+                }
+                //FieldWidth
+                case 2:
+                {
+                    m_widthList = new List<string>();
+
+                    for (int i = m_firstWidthOffset; i < m_maxFieldWidth + 1; i++)
+                    {
+                        m_widthList.Add(i.ToString());
+                    }
+
+                    m_matchSetupDropdowns[_dropdownID].ClearOptions();
+                    m_matchSetupDropdowns[_dropdownID].AddOptions(m_widthList);
+
+                    if (m_matchUIStates == null)
+                        m_matchSetupDropdowns[_dropdownID].value = m_fieldWidthDdIndex;
+                    else
+                        m_matchSetupDropdowns[_dropdownID].value = m_matchUIStates.LastFieldWidthDdIndex;
+
+                    m_matchSetupDropdowns[_dropdownID].RefreshShownValue();                    
+                    break;
+                }
+                //FieldLength
+                case 3:
+                {
+                    m_lengthList = new List<string>();
+
+                    for (int i = m_firstLengthOffset; i < m_maxFieldLength + 1; i++)
+                    {
+                        m_lengthList.Add(i.ToString());
+                    }
+
+                    m_matchSetupDropdowns[_dropdownID].ClearOptions();
+                    m_matchSetupDropdowns[_dropdownID].AddOptions(m_lengthList);
+
+                    if (m_matchUIStates == null)
+                        m_matchSetupDropdowns[_dropdownID].value = m_fieldLengthDdIndex;
+                    else
+                        m_matchSetupDropdowns[_dropdownID].value = m_matchUIStates.LastFieldLengthDdIndex;
+
+                    m_matchSetupDropdowns[_dropdownID].RefreshShownValue();
+                    break;
+                }
             }
-            _maxRoundsDropdown.AddOptions(m_roundsDdList);
-
-            if (m_matchUIStates != null)
-            {
-                _maxRoundsDropdown.value = m_matchUIStates.LastRoundDdIndex;
-            }
-            else
-            {
-                _maxRoundsDropdown.value = m_maxRoundDdIndex;
-            }
-
-            _maxRoundsDropdown.RefreshShownValue();
-            _maxRoundsDropdown.interactable = true;
-
-            m_matchValues.SetMaxRounds = m_setMaxRound;
-            m_matchValues.SetMaxPoints = m_setMaxPoints;
-        }
-
-        /// <summary>
-        /// Method to fill the maxPoint-dropdown on Start. Also sets it's interactable-status.
-        /// </summary>
-        /// <param name="_toggle"></param>
-        private void FillMaxPointsDropdown(TMP_Dropdown _maxPointsDropdown)
-        {
-            _maxPointsDropdown.ClearOptions();
-            m_maxPointsDdList = new List<string> {"\u221E"};
-            for (int i = m_firstPointOffset; i < m_setMaxPoints + 1; i++)
-            {
-                //'m_maxPointsDropdown.options.Add (new Dropdown.OptionData() { text = variable });' in foreach-loops.
-                m_maxPointsDdList.Add(i.ToString());
-            }
-            _maxPointsDropdown.AddOptions(m_maxPointsDdList);
-
-            if (m_matchUIStates != null)
-            {
-                _maxPointsDropdown.value = m_matchUIStates.LastMaxPointDdIndex;
-            }
-            else
-            {
-                _maxPointsDropdown.value = m_maxPointDdIndex;
-            }
-
-            _maxPointsDropdown.RefreshShownValue();
-            _maxPointsDropdown.interactable = true;
-
-            m_matchValues.SetMaxPoints = m_setMaxPoints;
-        }
-
-        private void FillWidthDropdown()
-        {
-            m_widthList = new List<string>();
-
-            for (int i = m_firstWidthOffset; i < m_maxFieldWidth + 1; i++)
-            {
-                m_widthList.Add(i.ToString());
-            }
-
-            m_fieldDropdowns[0].ClearOptions();
-            m_fieldDropdowns[0].AddOptions(m_widthList);
-
-            if (m_matchUIStates != null)
-                m_fieldDropdowns[0].value = m_matchUIStates.LastFieldWidthDdIndex;
-            else
-                m_fieldDropdowns[0].value = m_fieldWidthDdIndex;
-
-            m_fieldDropdowns[0].RefreshShownValue();
-        }
-
-        private void FillLengthDropdown()
-        {
-            m_lengthList = new List<string>();
-
-            for (int i = m_firstLengthOffset; i < m_maxFieldLength + 1; i++)
-            {
-                m_lengthList.Add(i.ToString());
-            }
-
-            m_fieldDropdowns[1].ClearOptions();
-            m_fieldDropdowns[1].AddOptions(m_lengthList);
-
-            if (m_matchUIStates != null)
-                m_fieldDropdowns[1].value = m_matchUIStates.LastFieldLengthDdIndex;
-            else
-                m_fieldDropdowns[1].value = m_fieldLengthDdIndex;
-
-            m_fieldDropdowns[1].RefreshShownValue();
         }
 
         private void FillFrontlineDropdowns()
@@ -553,7 +567,7 @@ switch (_toggle.isOn)
             m_frontLineDds[0].AddOptions(m_playersTeamOne);
 
             if (m_matchUIStates != null)
-                m_frontLineDds[0].value = m_matchUIStates.TPOneFrontDdIndex;
+                m_frontLineDds[0].value = m_matchUIStates.TPOneFrontlineDdIndex;
 
             m_frontLineDds[0].RefreshShownValue();
 
@@ -561,7 +575,7 @@ switch (_toggle.isOn)
             m_frontLineDds[1].AddOptions(m_playersTeamTwo);
 
             if (m_matchUIStates != null)
-                m_frontLineDds[1].value = m_matchUIStates.TPTwoFrontDdIndex;
+                m_frontLineDds[1].value = m_matchUIStates.TPTwoFrontlineDdIndex;
 
             m_frontLineDds[1].RefreshShownValue();
         }
@@ -583,7 +597,7 @@ switch (_toggle.isOn)
             m_backLineDds[0].AddOptions(m_playersTeamOne);
 
             if (m_matchUIStates != null)
-                m_backLineDds[0].value = m_matchUIStates.TPOneBacklineIndex;
+                m_backLineDds[0].value = m_matchUIStates.TPOneBacklineDdIndex;
 
             m_backLineDds[0].RefreshShownValue();
 
@@ -591,7 +605,7 @@ switch (_toggle.isOn)
             m_backLineDds[1].AddOptions(m_playersTeamTwo);
 
             if (m_matchUIStates != null)
-                m_backLineDds[1].value = m_matchUIStates.TPTwoBacklineIndex;
+                m_backLineDds[1].value = m_matchUIStates.TPTwoBacklineDdIndex;
 
             m_backLineDds[1].RefreshShownValue();
         }
@@ -626,21 +640,21 @@ switch (_toggle.isOn)
         private void SetupLineUpSliders()
         {
             //FrontSlider
-            m_distanceSliderValues[0].value = m_distanceSliderValues[0].minValue + m_matchValues.FrontlineAdjustment;
+            m_distanceSliderValues[0].value = m_distanceSliderValues[0].minValue + m_matchUIValues.FrontlineAdjustment;
             //BackSlider
-            m_distanceSliderValues[1].value = m_distanceSliderValues[1].minValue + m_matchValues.BacklineAdjustment;
+            m_distanceSliderValues[1].value = m_distanceSliderValues[1].minValue + m_matchUIValues.BacklineAdjustment;
         }
 
         private void UpdateLineUpTMPs()
         {
-            if (m_matchValues == null)
+            if (m_matchValues == null || m_matchUIValues == null)
             {
                 m_frontLineText.text = "No Data";
                 m_backLineText.text = "No Data";
                 return;
             }
 
-            m_frontLineText.SetText($"{m_distanceSliderValues[0].value + m_matchValues.MinFrontLineDistance + m_matchValues.BacklineAdjustment:N2}");
+            m_frontLineText.SetText($"{m_distanceSliderValues[0].value + m_matchValues.MinFrontLineDistance + m_matchUIValues.BacklineAdjustment:N2}");
             m_backLineText.text = $"{m_distanceSliderValues[1].value + m_matchValues.MinBackLineDistance:N2}";
         }
 
@@ -670,15 +684,16 @@ switch (_toggle.isOn)
 
         public void ReSetDefault()
         {
-            m_roundsDropdown.value = m_maxRoundDdIndex;
-            m_maxPointsDropdown.value = m_maxPointDdIndex;
-
             m_fixRatioToggle.isOn = m_fixAspectRatio;
-            m_fieldDropdowns[0].value = m_fieldWidthDdIndex;
-            m_fieldDropdowns[1].value = m_fieldLengthDdIndex;
+
+            m_matchSetupDropdowns[0].value = m_maxRoundDdIndex;
+            m_matchSetupDropdowns[1].value = m_maxPointDdIndex;
+            m_matchSetupDropdowns[2].value = m_fieldWidthDdIndex;
+            m_matchSetupDropdowns[3].value = m_fieldLengthDdIndex;
 
             m_distanceSliderValues[0].value = 0;
             m_distanceSliderValues[1].value = 0;
+
             m_backLineDds[0].value = 0;
             m_backLineDds[1].value = 0;
         }

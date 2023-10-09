@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
+using ThreeDeePongProto.Offline.Player.Inputs;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.InputSystem;
-using ThreeDeePongProto.Managers;
-using ThreeDeePongProto.Offline.Player.Inputs;
 
 namespace ThreeDeePongProto.Offline.UI
 {

@@ -39,7 +39,7 @@ namespace ThreeDeePongProto.Offline.Settings
         #region Serialization
         private string m_stateFolderPath = "/SaveData/UI-States";
         private string m_fileName = "/Graphic";
-        private string m_dataFormat = ".json";
+        private string m_fileFormat = ".json";
 
         private IPersistentData m_persistentData = new SerializingData();
         private bool m_encryptionEnabled = false;
@@ -69,12 +69,12 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void OnDisable()
         {
-            m_persistentData.SaveData(m_stateFolderPath, m_fileName, m_dataFormat, m_graphicUiStates, m_encryptionEnabled, true);
+            m_persistentData.SaveData(m_stateFolderPath, m_fileName, m_fileFormat, m_graphicUiStates, m_encryptionEnabled, true);
         }
 
         private void LoadGraphicSettings()
         {
-            GraphicUiSettingsStates uiIndices = m_persistentData.LoadData<GraphicUiSettingsStates>(m_stateFolderPath, m_fileName, m_dataFormat, m_encryptionEnabled);
+            GraphicUiSettingsStates uiIndices = m_persistentData.LoadData<GraphicUiSettingsStates>(m_stateFolderPath, m_fileName, m_fileFormat, m_encryptionEnabled);
             m_graphicUiStates.QualityLevelIndex = uiIndices.QualityLevelIndex;
             m_graphicUiStates.SelectedResolutionIndex = uiIndices.SelectedResolutionIndex;
             m_graphicUiStates.FullScreenMode = uiIndices.FullScreenMode;
