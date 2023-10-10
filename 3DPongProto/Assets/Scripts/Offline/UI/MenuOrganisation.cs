@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ThreeDeePongProto.Offline.Player.Inputs;
+using ThreeDeePongProto.Offline.Settings;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -48,9 +49,40 @@ namespace ThreeDeePongProto.Offline.UI
         //MatchManager unpauses the Game.
         public static event Action LoadMainScene;
 
+
+        #region Scriptable Variables
+        [Header("Scriptable Variables")]
+        [SerializeField] private VolumeUIStates m_volumeUIStates;
+        [SerializeField] private VolumeUIValues m_volumeUIValues;
+
+        [SerializeField] private GraphicUiStates m_graphicUiStates;
+        [SerializeField] private MatchUIStates m_matchUiStates;
+
+        [SerializeField] private MatchUIStates m_matchUIStates;
+        [SerializeField] private MatchValues m_matchValues;
+        [SerializeField] private BasicFieldValues m_basicFieldValues;
+        #endregion
+
+        #region Serialization
+        private readonly string m_settingStatesFolderPath = "/SaveData/Settings-States";
+        private readonly string m_settingsValuesFolderPath = "/SaveData/Settings-Values";
+        private readonly string m_fieldSettingsPath = "/SaveData/FieldSettings";
+        private readonly string m_volumeFileName = "/Volume";
+        private readonly string m_graphicFileName = "/Graphic";
+        private readonly string m_matchFileName = "/Match";
+        private readonly string m_fileFormat = ".json";
+
+
+        private IPersistentData m_persistentData = new SerializingData();
+        private bool m_encryptionEnabled = false;
+        #endregion
+
         private void Awake()
         {
             SetUIElements();
+            LoadVolumeSettings();
+            LoadGraphicSettings();
+            LoadMatchSettings();
         }
 
         /// <summary>
@@ -86,6 +118,56 @@ namespace ThreeDeePongProto.Offline.UI
                 m_selectedElement.Add(m_keyTransform[i], m_valueGameObject[i]);
 
             SetSelectedElement(m_firstElement);
+        }
+
+        private void LoadVolumeSettings()
+        {
+            VolumeUISettingsStates uiIndices = m_persistentData.LoadData<VolumeUISettingsStates>(m_settingStatesFolderPath, m_volumeFileName, m_fileFormat, m_encryptionEnabled);
+            VolumeUISettingsValues uiValues = m_persistentData.LoadData<VolumeUISettingsValues>(m_settingsValuesFolderPath, m_volumeFileName, m_fileFormat, m_encryptionEnabled);
+
+            m_volumeUIStates.MasterMuteIsOn = uiIndices.MasterMuteIsOn;
+            m_volumeUIStates.BGMMuteIsOn = uiIndices.BGMMuteIsOn;
+            m_volumeUIStates.SFXMuteIsOn = uiIndices.SFXMuteIsOn;
+
+            m_volumeUIValues.LatestMasterVolume = uiValues.LatestMasterVolume;
+            m_volumeUIValues.LatestBGMVolume = uiValues.LatestBGMVolume;
+            m_volumeUIValues.LatestSFXVolume = uiValues.LatestSFXVolume;
+        }
+
+        private void LoadGraphicSettings()
+        {
+            GraphicUiSettingsStates uiIndices = m_persistentData.LoadData<GraphicUiSettingsStates>(m_settingStatesFolderPath, m_graphicFileName, m_fileFormat, m_encryptionEnabled);
+            m_graphicUiStates.QualityLevelIndex = uiIndices.QualityLevelIndex;
+            m_graphicUiStates.SelectedResolutionIndex = uiIndices.SelectedResolutionIndex;
+            m_graphicUiStates.FullScreenMode = uiIndices.FullScreenMode;
+            m_graphicUiStates.SetCameraMode = uiIndices.SetCameraMode;
+        }
+
+        private void LoadMatchSettings()
+        {
+            MatchUISettingsStates uiIndices = m_persistentData.LoadData<MatchUISettingsStates>(m_settingStatesFolderPath, m_matchFileName, m_fileFormat, m_encryptionEnabled);
+            m_matchUIStates.InfiniteRounds = uiIndices.InfiniteRounds;
+            m_matchUIStates.InfinitePoints = uiIndices.InfinitePoints;
+            m_matchUIStates.LastRoundDdIndex = uiIndices.LastRoundDdIndex;
+            m_matchUIStates.LastMaxPointDdIndex = uiIndices.LastMaxPointDdIndex;
+            //In this special case, the DropdownIndex is equal to the set Rounds and MaxPoints, because Index 0 is set as "InfinityValue".
+            //m_matchUIStates.SetMaxRounds = uiIndices.SetMaxRounds;
+            //m_matchUIStates.SetMaxPoints = uiIndices.SetMaxPoints;
+
+            m_matchUIStates.FixRatio = uiIndices.FixRatio;
+            m_matchUIStates.LastFieldWidthDdIndex = uiIndices.LastFieldWidthDdIndex;
+            m_matchUIStates.LastFieldLengthDdIndex = uiIndices.LastFieldLengthDdIndex;
+
+            m_matchUIStates.TPOneBacklineDdIndex = uiIndices.TPOneBacklineDdIndex;
+            m_matchUIStates.TPTwoBacklineDdIndex = uiIndices.TPTwoBacklineDdIndex;
+            m_matchUIStates.TPOneFrontlineDdIndex = uiIndices.TPOneFrontlineDdIndex;
+            m_matchUIStates.TPTwoFrontlineDdIndex = uiIndices.TPTwoFrontlineDdIndex;
+
+            BasicFieldSetup basicFieldSetup = m_persistentData.LoadData<BasicFieldSetup>(m_fieldSettingsPath, m_matchFileName, m_fileFormat, m_encryptionEnabled);
+            m_basicFieldValues.SetGroundWidth = basicFieldSetup.SetGroundWidth;
+            m_basicFieldValues.SetGroundLength = basicFieldSetup.SetGroundLength;
+            m_basicFieldValues.FrontlineAdjustment = basicFieldSetup.FrontLineAdjustment;
+            m_basicFieldValues.BacklineAdjustment = basicFieldSetup.BackLineAdjustment;
         }
 
         public void ResumeGame()

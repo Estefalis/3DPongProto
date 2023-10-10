@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0031c70589cdc934ba37e0434f327f3a, type: 3}
-  m_Name: MatchUIValues
+  m_Script: {fileID: 11500000, guid: 856016cc82ab59243b8354176a832176, type: 3}
+  m_Name: Field Settings
   m_EditorClassIdentifier: 
-  SetMaxRounds: 5
-  SetMaxPoints: 25
   SetGroundWidth: 25
   SetGroundLength: 50
-  FrontlineAdjustment: 0
+  MinBackLineDistance: 1.5
   BacklineAdjustment: 0
+  MinFrontLineDistance: 6
+  FrontlineAdjustment: 0

@@ -36,17 +36,26 @@ namespace ThreeDeePongProto.Managers
 
         #region Scriptable Objects
         [SerializeField] private MatchUIStates m_matchUIStates;
-        [SerializeField] private MatchUIValues m_matchUIValues;
+        [SerializeField] private BasicFieldValues m_basicFieldValues;
         [SerializeField] private MatchValues m_matchValues;
         [SerializeField] private MatchConnection m_matchConnection;
         [SerializeField] private PlayerIDData[] m_playerIDData;
         #endregion
         #endregion
 
+        #region Serialization
+        private string m_fieldSettingsPath = "/SaveData/FieldSettings";
+        private string m_matchFileName = "/Match";
+        private string m_fileFormat = ".json";
+
+        private IPersistentData m_persistentData = new SerializingData();
+        private bool m_encryptionEnabled = false;
+        #endregion
+
         #region Non-SerializeField-Member-Variables
         #region Properties-Access
-        public float DefaultFrontLineDistance { get => m_minimalFrontLineDistance; }
         public float DefaultBackLineDistance { get => m_minimalBackLineDistance; }
+        public float DefaultFrontLineDistance { get => m_minimalFrontLineDistance; }
         public float DefaultFieldWidth { get => m_playGroundWidth; }
         public float DefaultFieldLength { get => m_playGroundLength; }
         public float MaxPushDistance { get => m_maxPushDistance; }
@@ -68,7 +77,9 @@ namespace ThreeDeePongProto.Managers
 
         private void Awake()
         {
-            SetScriptableDefaults();
+            PrepareMatchStart();
+            LoadMatchSettings();
+
             RegisterPlayerNames();
             ReSetMatch();
         }
@@ -109,35 +120,32 @@ namespace ThreeDeePongProto.Managers
             m_matchValues.TotalPointsTPTwo = 0;
         }
 
-        private void UseDefaultSettings()
-        {
-            m_playGround.transform.localScale = new Vector3(m_playGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_playGroundLength * m_playGroundLengthScale);
-        }
-
-        private void SetScriptableDefaults()
+        private void PrepareMatchStart()
         {
             if (m_matchValues != null)
             {
-#if UNITY_EDITOR
                 m_matchValues.CurrentRoundNr = m_startRound;
                 m_matchValues.WinPointDifference = m_winPointDifference;
-
-                m_matchValues.MinFrontLineDistance = m_minimalFrontLineDistance;
-                m_matchValues.MinBackLineDistance = m_minimalBackLineDistance;
-
                 m_matchValues.MaxPushDistance = m_maxPushDistance;
+
                 m_matchValues.XPaddleScale = m_defaultPaddleScale.x;
                 m_matchValues.YPaddleScale = m_defaultPaddleScale.y;
                 m_matchValues.ZPaddleScale = m_defaultPaddleScale.z;
-
-                //Needs to be uncommented to test Rect-Change on Restart Game-Scene.
-                //m_matchUIStates.SetCameraMode = m_eCameraMode;
             }
 
             m_gameIsPaused = false;
-#endif
-            //else
-            //TODO: Load settings with an active Save- and Load-System.
+        }
+
+        private void LoadMatchSettings()
+        {
+            BasicFieldSetup basicFieldSetup = m_persistentData.LoadData<BasicFieldSetup>(m_fieldSettingsPath, m_matchFileName, m_fileFormat, m_encryptionEnabled);
+
+            m_basicFieldValues.SetGroundWidth = basicFieldSetup.SetGroundWidth;
+            m_basicFieldValues.SetGroundLength = basicFieldSetup.SetGroundLength;
+            m_basicFieldValues.MinBackLineDistance = basicFieldSetup.MinBackLineDistance;
+            m_basicFieldValues.MinFrontLineDistance = basicFieldSetup.MinFrontLineDistance;
+            m_basicFieldValues.BacklineAdjustment = basicFieldSetup.BackLineAdjustment;
+            m_basicFieldValues.FrontlineAdjustment = basicFieldSetup.FrontLineAdjustment;
         }
 
         private void MatchStartValues()
@@ -223,17 +231,21 @@ namespace ThreeDeePongProto.Managers
             ResetPauseAndTimescale();
         }
 
+        private void UseDefaultSettings()
+        {
+            m_playGround.transform.localScale = new Vector3(m_playGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_playGroundLength * m_playGroundLengthScale);
+        }
+
         #region Match-Presets
         private void ResetPlayfield()
         {
-            m_playGround.transform.localScale = new Vector3(m_matchUIValues.SetGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_matchUIValues.SetGroundLength * m_playGroundLengthScale);
+            m_playGround.transform.localScale = new Vector3(m_basicFieldValues.SetGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_basicFieldValues.SetGroundLength * m_playGroundLengthScale);
         }
 
         private void ResetRoundValues()
         {
             if (m_matchValues != null)
             {
-                //Values for matches with a set point amount.
                 m_matchValues.MatchPointsTPOne = 0;
                 m_matchValues.MatchPointsTPTwo = 0;
             }
@@ -254,15 +266,15 @@ namespace ThreeDeePongProto.Managers
             else
             {
                 m_nextRoundConditionIsMet =
-                m_matchValues.MatchPointsTPOne >= m_matchUIValues.SetMaxPoints &&
+                m_matchValues.MatchPointsTPOne >= m_matchUIStates.LastMaxPointDdIndex &&
                 m_matchValues.MatchPointsTPOne >= m_matchValues.MatchPointsTPTwo + m_matchValues.WinPointDifference
                 ||
-                m_matchValues.MatchPointsTPTwo >= m_matchUIValues.SetMaxPoints &&
+                m_matchValues.MatchPointsTPTwo >= m_matchUIStates.LastMaxPointDdIndex &&
                 m_matchValues.MatchPointsTPTwo >= m_matchValues.MatchPointsTPOne + m_matchValues.WinPointDifference;
             }
 
             //WinCondition is true, when the current RoundNumber equals the max set roundAmount AND the winpointDifference (Player 1 <-> Player 2) triggers a new round.
-            bool winConditionIsMet = m_matchValues.CurrentRoundNr == m_matchUIValues.SetMaxRounds && m_nextRoundConditionIsMet;
+            bool winConditionIsMet = m_matchValues.CurrentRoundNr == m_matchUIStates.LastRoundDdIndex && m_nextRoundConditionIsMet;
 
             if (winConditionIsMet)
             {

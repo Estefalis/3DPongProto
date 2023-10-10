@@ -34,7 +34,8 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         #region Scriptable Variables
         [SerializeField] private GraphicUiStates m_graphicUiStates;
-        [SerializeField] private MatchUIValues m_matchUIValues;
+        //[SerializeField] private MatchUIValues m_matchUIValues;
+        [SerializeField] private BasicFieldValues m_basicFieldValues;
         //[SerializeField] private MatchValues m_matchValues;
         #endregion
 
@@ -48,7 +49,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
             m_playerId = m_playerMovement/*.GetComponent<PlayerMovement>()*/.PlayerId;
 
-            m_setGroundWidth = m_matchUIValues.SetGroundWidth;
+            m_setGroundWidth = m_basicFieldValues.SetGroundWidth;
             //TODO: Move Setting of 'm_enableSmoothFollow' boolean into UI-Settings.
             m_enableSmoothFollow = true;
         }

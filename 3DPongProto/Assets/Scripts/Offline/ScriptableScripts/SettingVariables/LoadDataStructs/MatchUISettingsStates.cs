@@ -7,6 +7,8 @@ public struct MatchUISettingsStates
     public bool InfinitePoints;
     public int LastRoundDdIndex;
     public int LastMaxPointDdIndex;
+    //public int SetMaxRounds;
+    //public int SetMaxPoints;
     public bool FixRatio;
     public int LastFieldWidthDdIndex;
     public int LastFieldLengthDdIndex;

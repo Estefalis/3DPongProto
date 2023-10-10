@@ -30,16 +30,15 @@ namespace ThreeDeePongProto.Offline.Settings
         #region Scriptable Variables
         [Header("Scriptable Variables")]
         [SerializeField] private GraphicUiStates m_graphicUiStates;
-        [SerializeField] private MatchUIStates m_matchUiStates;
         #endregion
 
         private Resolution[] m_screenResolutions;
         public ECameraModi ECameraMode { get => m_eCameraMode; }
 
         #region Serialization
-        private string m_stateFolderPath = "/SaveData/UI-States";
-        private string m_fileName = "/Graphic";
-        private string m_fileFormat = ".json";
+        private readonly string m_settingStatesFolderPath = "/SaveData/Settings-States";
+        private readonly string m_graphicFileName = "/Graphic";
+        private readonly string m_fileFormat = ".json";
 
         private IPersistentData m_persistentData = new SerializingData();
         private bool m_encryptionEnabled = false;
@@ -58,8 +57,8 @@ namespace ThreeDeePongProto.Offline.Settings
 #endif
                 ReSetDefault();
             }
-            else
-                LoadGraphicSettings();            
+            //else
+            //    LoadGraphicSettings();            
         }
 
         private void Start()
@@ -69,17 +68,17 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void OnDisable()
         {
-            m_persistentData.SaveData(m_stateFolderPath, m_fileName, m_fileFormat, m_graphicUiStates, m_encryptionEnabled, true);
+            m_persistentData.SaveData(m_settingStatesFolderPath, m_graphicFileName, m_fileFormat, m_graphicUiStates, m_encryptionEnabled, true);
         }
 
-        private void LoadGraphicSettings()
-        {
-            GraphicUiSettingsStates uiIndices = m_persistentData.LoadData<GraphicUiSettingsStates>(m_stateFolderPath, m_fileName, m_fileFormat, m_encryptionEnabled);
-            m_graphicUiStates.QualityLevelIndex = uiIndices.QualityLevelIndex;
-            m_graphicUiStates.SelectedResolutionIndex = uiIndices.SelectedResolutionIndex;
-            m_graphicUiStates.FullScreenMode = uiIndices.FullScreenMode;
-            m_graphicUiStates.SetCameraMode = uiIndices.SetCameraMode;
-        }
+        //private void LoadGraphicSettings()
+        //{
+        //    GraphicUiSettingsStates uiIndices = m_persistentData.LoadData<GraphicUiSettingsStates>(m_settingsStatesFolderPath, m_matchFileName, m_fileFormat, m_encryptionEnabled);
+        //    m_graphicUiStates.QualityLevelIndex = uiIndices.QualityLevelIndex;
+        //    m_graphicUiStates.SelectedResolutionIndex = uiIndices.SelectedResolutionIndex;
+        //    m_graphicUiStates.FullScreenMode = uiIndices.FullScreenMode;
+        //    m_graphicUiStates.SetCameraMode = uiIndices.SetCameraMode;
+        //}
 
         private void InitialUISetup()
         {

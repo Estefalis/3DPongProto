@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5fb24614f778d74e84f6d51abe4f095, type: 3}
   m_Name: MatchUIStates
   m_EditorClassIdentifier: 
-  LastRoundDdIndex: 5
   InfiniteRounds: 0
-  LastMaxPointDdIndex: 25
   InfinitePoints: 0
+  LastRoundDdIndex: 5
+  LastMaxPointDdIndex: 25
+  FixRatio: 0
   LastFieldWidthDdIndex: 0
   LastFieldLengthDdIndex: 0
-  FixRatio: 0
-  TPOneFrontDdIndex: 1
-  TPTwoFrontDdIndex: 1
-  TPOneBacklineIndex: 0
-  TPTwoBacklineIndex: 0
+  TPOneBacklineDdIndex: 0
+  TPTwoBacklineDdIndex: 0
+  TPOneFrontlineDdIndex: 1
+  TPTwoFrontlineDdIndex: 1

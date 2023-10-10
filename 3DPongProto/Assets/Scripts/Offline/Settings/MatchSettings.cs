@@ -49,8 +49,8 @@ namespace ThreeDeePongProto.Offline.Settings
 
         #region Scriptable-References
         [SerializeField] private MatchUIStates m_matchUIStates;
-        [SerializeField] private MatchUIValues m_matchUIValues;
-        [SerializeField] private MatchValues m_matchValues;
+        [SerializeField] private BasicFieldValues m_basicFieldValues;
+        //[SerializeField] private MatchValues m_matchValues;
         [SerializeField] private PlayerIDData[] m_playerIDData;
         #endregion
         #endregion
@@ -84,22 +84,25 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private event Action m_updateLineText;
 
-        private string m_uiStateFolderPath = "/SaveData/UI-States";
-        private string m_uiValueFolderPath = "/SaveData/UI-Values";
-        private string m_fieldSettingsPath = "/SaveData/FieldSettings";
-        private string m_fileName = "/Match";
-        private string m_fileFormat = ".json";
+        #region Serialization
+        private readonly string m_settingsStatesFolderPath = "/SaveData/Settings-States";
+        //private readonly string m_settingsValuesFolderPath = "/SaveData/Settings-Values";
+        private readonly string m_fieldSettingsPath = "/SaveData/FieldSettings";
+        private readonly string m_matchFileName = "/Match";
+        private readonly string m_fileFormat = ".json";
+        
         private IPersistentData m_persistentData = new SerializingData();
         private bool m_encryptionEnabled = false;
+        #endregion
 
         private void Awake()
         {
             SetupLineDictionaries();
 
-            if (m_matchUIStates == null || m_matchValues == null)
+            if (m_matchUIStates == null /*|| m_matchValues == null*/)
                 ReSetDefault();
-            else
-                LoadMatchSettings();
+            //else
+            //    LoadMatchSettings();
         }
 
         private void OnEnable()
@@ -115,37 +118,38 @@ namespace ThreeDeePongProto.Offline.Settings
         {
             RemoveGroupListeners();
 
-            m_persistentData.SaveData(m_uiStateFolderPath, m_fileName, m_fileFormat, m_matchUIStates, m_encryptionEnabled, true);
-            m_persistentData.SaveData(m_uiValueFolderPath, m_fileName, m_fileFormat, m_matchUIValues, m_encryptionEnabled, true);
-            m_persistentData.SaveData(m_fieldSettingsPath, m_fileName, m_fileFormat, m_matchValues, m_encryptionEnabled, true);
+            m_persistentData.SaveData(m_settingsStatesFolderPath, m_matchFileName, m_fileFormat, m_matchUIStates, m_encryptionEnabled, true);
+            //m_persistentData.SaveData(m_settingsValuesFolderPath, m_matchFileName, m_fileFormat, m_matchValues, m_encryptionEnabled, true);
+            m_persistentData.SaveData(m_fieldSettingsPath, m_matchFileName, m_fileFormat, m_basicFieldValues, m_encryptionEnabled, true);
         }
 
-        private void LoadMatchSettings()
-        {
-            MatchUISettingsStates uiIndices = m_persistentData.LoadData<MatchUISettingsStates>(m_uiStateFolderPath, m_fileName, m_fileFormat, m_encryptionEnabled);
-            m_matchUIStates.InfiniteRounds = uiIndices.InfiniteRounds;
-            m_matchUIStates.InfinitePoints = uiIndices.InfinitePoints;
-            m_matchUIStates.LastRoundDdIndex = uiIndices.LastRoundDdIndex;
-            m_matchUIStates.LastMaxPointDdIndex = uiIndices.LastMaxPointDdIndex;
+        //Moved to MenuOrganisation!!!
+        //private void LoadMatchSettings()
+        //{
+        //    MatchUISettingsStates uiIndices = m_persistentData.LoadData<MatchUISettingsStates>(m_settingsStatesFolderPath, m_matchFileName, m_fileFormat, m_encryptionEnabled);
+        //    m_matchUIStates.InfiniteRounds = uiIndices.InfiniteRounds;
+        //    m_matchUIStates.InfinitePoints = uiIndices.InfinitePoints;
+        //    m_matchUIStates.LastRoundDdIndex = uiIndices.LastRoundDdIndex;
+        //    m_matchUIStates.LastMaxPointDdIndex = uiIndices.LastMaxPointDdIndex;
 
-            m_matchUIStates.FixRatio = uiIndices.FixRatio;
-            m_matchUIStates.LastFieldWidthDdIndex = uiIndices.LastFieldWidthDdIndex;
-            m_matchUIStates.LastFieldLengthDdIndex = uiIndices.LastFieldLengthDdIndex;
+        //    m_matchUIStates.FixRatio = uiIndices.FixRatio;
+        //    m_matchUIStates.LastFieldWidthDdIndex = uiIndices.LastFieldWidthDdIndex;
+        //    m_matchUIStates.LastFieldLengthDdIndex = uiIndices.LastFieldLengthDdIndex;
 
-            m_matchUIStates.TPOneBacklineDdIndex = uiIndices.TPOneBacklineDdIndex;
-            m_matchUIStates.TPTwoBacklineDdIndex = uiIndices.TPTwoBacklineDdIndex;
-            m_matchUIStates.TPOneFrontlineDdIndex = uiIndices.TPOneFrontlineDdIndex;
-            m_matchUIStates.TPTwoFrontlineDdIndex = uiIndices.TPTwoFrontlineDdIndex;
+        //    m_matchUIStates.TPOneBacklineDdIndex = uiIndices.TPOneBacklineDdIndex;
+        //    m_matchUIStates.TPTwoBacklineDdIndex = uiIndices.TPTwoBacklineDdIndex;
+        //    m_matchUIStates.TPOneFrontlineDdIndex = uiIndices.TPOneFrontlineDdIndex;
+        //    m_matchUIStates.TPTwoFrontlineDdIndex = uiIndices.TPTwoFrontlineDdIndex;
 
-            MatchUISettingsValues uiValues = m_persistentData.LoadData<MatchUISettingsValues>(m_uiValueFolderPath, m_fileName, m_fileFormat, m_encryptionEnabled);
-            m_matchUIValues.SetMaxRounds = uiValues.SetMaxRounds;
-            m_matchUIValues.SetMaxPoints = uiValues.SetMaxPoints;
+        //    MatchSettingsValues uiValues = m_persistentData.LoadData<MatchSettingsValues>(m_SettingsValueFolderPath, m_matchFileName, m_fileFormat, m_encryptionEnabled);
+        //    m_matchUIValues.SetMaxRounds = uiValues.SetMaxRounds;
+        //    m_matchUIValues.SetMaxPoints = uiValues.SetMaxPoints;
 
-            m_matchUIValues.SetGroundWidth = uiValues.SetGroundWidth;
-            m_matchUIValues.SetGroundLength = uiValues.SetGroundLength;
-            m_matchUIValues.FrontlineAdjustment = uiValues.FrontlineAdjustment;
-            m_matchUIValues.BacklineAdjustment = uiValues.BacklineAdjustment;
-        }
+        //    m_matchUIValues.SetGroundWidth = uiValues.SetGroundWidth;
+        //    m_matchUIValues.SetGroundLength = uiValues.SetGroundLength;
+        //    m_matchUIValues.FrontLineAdjustment = uiValues.FrontLineAdjustment;
+        //    m_matchUIValues.BackLineAdjustment = uiValues.BackLineAdjustment;
+        //}
 
         private void InitializeUI()
         {
@@ -269,8 +273,8 @@ namespace ThreeDeePongProto.Offline.Settings
         private void OnRoundDropdownValueChanged(TMP_Dropdown _maxRoundsDropdown)
         {
             //DropdownValue is equal to DropdownIndex +1, without the infinity option at index 0.
-            m_matchUIValues.SetMaxRounds = _maxRoundsDropdown.value /*+ m_firstRoundOffset*/;
-            m_matchUIStates.LastRoundDdIndex = _maxRoundsDropdown.value;
+            m_matchUIStates.LastRoundDdIndex = _maxRoundsDropdown.value /*+ m_firstRoundOffset*/;
+            //m_matchUIStates.LastRoundDdIndex = _maxRoundsDropdown.value;
             if (_maxRoundsDropdown.value == 0)
                 m_matchUIStates.InfiniteRounds = true;
             else
@@ -284,8 +288,8 @@ namespace ThreeDeePongProto.Offline.Settings
         private void OnMaxPointDropdownValueChanged(TMP_Dropdown _maxPointsDropdown)
         {
             //DropdownValue is equal to DropdownIndex +1, without the infinity option at index 0.
-            m_matchUIValues.SetMaxPoints = _maxPointsDropdown.value/* + m_firstPointOffset*/;
-            m_matchUIStates.LastMaxPointDdIndex = _maxPointsDropdown.value;
+            m_matchUIStates.LastMaxPointDdIndex = _maxPointsDropdown.value/* + m_firstPointOffset*/;
+            //m_matchUIStates.LastMaxPointDdIndex = _maxPointsDropdown.value;
             if (_maxPointsDropdown.value == 0)
                 m_matchUIStates.InfinitePoints = true;
             else
@@ -301,7 +305,7 @@ namespace ThreeDeePongProto.Offline.Settings
             }
 
             m_tempWidthDdValue = _dropdown.value;
-            m_matchUIValues.SetGroundWidth = _dropdown.value + m_firstWidthOffset;
+            m_basicFieldValues.SetGroundWidth = _dropdown.value + m_firstWidthOffset;
             m_matchUIStates.LastFieldWidthDdIndex = _dropdown.value;
         }
 
@@ -314,7 +318,7 @@ namespace ThreeDeePongProto.Offline.Settings
             }
 
             m_tempLengthDdValue = _dropdown.value;
-            m_matchUIValues.SetGroundLength = _dropdown.value + m_firstLengthOffset;
+            m_basicFieldValues.SetGroundLength = _dropdown.value + m_firstLengthOffset;
             m_matchUIStates.LastFieldLengthDdIndex = _dropdown.value;
         }
 
@@ -439,14 +443,14 @@ namespace ThreeDeePongProto.Offline.Settings
         private void OnFrontlineSliderValueChanged(float _value)
         {
             m_distanceSliderValues[0].value = _value;
-            m_matchUIValues.FrontlineAdjustment = m_distanceSliderValues[0].minValue + _value;
+            m_basicFieldValues.FrontlineAdjustment = m_distanceSliderValues[0].minValue + _value;
             m_updateLineText?.Invoke();
         }
 
         private void OnBacklineSliderValueChanged(float _value)
         {
             m_distanceSliderValues[1].value = _value;
-            m_matchUIValues.BacklineAdjustment = m_distanceSliderValues[1].minValue + _value;
+            m_basicFieldValues.BacklineAdjustment = m_distanceSliderValues[1].minValue + _value;
             m_updateLineText?.Invoke();
         }
         #endregion
@@ -477,7 +481,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     m_matchSetupDropdowns[_dropdownID].RefreshShownValue();
                     m_matchSetupDropdowns[_dropdownID].interactable = true;
 
-                    m_matchUIValues.SetMaxRounds = m_setMaxRound;
+                    m_matchUIStates.LastRoundDdIndex = m_matchSetupDropdowns[_dropdownID].value;
                     break;
                 }
                 //MaxPoints
@@ -502,7 +506,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     m_matchSetupDropdowns[_dropdownID].RefreshShownValue();
                     m_matchSetupDropdowns[_dropdownID].interactable = true;
 
-                    m_matchUIValues.SetMaxPoints = m_setMaxPoints;
+                    m_matchUIStates.LastMaxPointDdIndex = m_matchSetupDropdowns[_dropdownID].value;
                     break;
                 }
                 //FieldWidth
@@ -640,22 +644,22 @@ namespace ThreeDeePongProto.Offline.Settings
         private void SetupLineUpSliders()
         {
             //FrontSlider
-            m_distanceSliderValues[0].value = m_distanceSliderValues[0].minValue + m_matchUIValues.FrontlineAdjustment;
+            m_distanceSliderValues[0].value = m_distanceSliderValues[0].minValue + m_basicFieldValues.FrontlineAdjustment;
             //BackSlider
-            m_distanceSliderValues[1].value = m_distanceSliderValues[1].minValue + m_matchUIValues.BacklineAdjustment;
+            m_distanceSliderValues[1].value = m_distanceSliderValues[1].minValue + m_basicFieldValues.BacklineAdjustment;
         }
 
         private void UpdateLineUpTMPs()
         {
-            if (m_matchValues == null || m_matchUIValues == null)
+            if (m_basicFieldValues == null)
             {
                 m_frontLineText.text = "No Data";
                 m_backLineText.text = "No Data";
                 return;
             }
 
-            m_frontLineText.SetText($"{m_distanceSliderValues[0].value + m_matchValues.MinFrontLineDistance + m_matchUIValues.BacklineAdjustment:N2}");
-            m_backLineText.text = $"{m_distanceSliderValues[1].value + m_matchValues.MinBackLineDistance:N2}";
+            m_frontLineText.SetText($"{m_distanceSliderValues[0].value + m_basicFieldValues.MinFrontLineDistance + m_basicFieldValues.BacklineAdjustment:N2}");
+            m_backLineText.text = $"{m_distanceSliderValues[1].value + m_basicFieldValues.MinBackLineDistance:N2}";
         }
 
         //Front = ID 0, Back = ID 1. Lists and UI are organized in the same scheme.

@@ -23,13 +23,9 @@ public class MatchValues : ScriptableObject
     public uint MatchPointsTPTwo;       //each Match
     public double TotalPointsTPTwo;     //each Match
 
-    [Header("Playfield-Setup")]
-    public float MinFrontLineDistance;  //each Match (MatchManager)
-    public float MinBackLineDistance;   //each Match (MatchManager)
-
     [Header("Player-Adjustments")]
-    public float PaddleWidthAdjustment; //each Match (Player)
-    public float MaxPushDistance;       //each Match (Player. MOVE into MatchManager?)
+    public float PaddleWidthAdjustment; //each Match (Match Manager sends Player)
+    public float MaxPushDistance;       //each Match
     public float XPaddleScale;          //each Match
     public float YPaddleScale;          //each Match
     public float ZPaddleScale;          //each Match

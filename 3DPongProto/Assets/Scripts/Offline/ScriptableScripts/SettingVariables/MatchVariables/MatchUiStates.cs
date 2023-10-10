@@ -10,6 +10,8 @@ public class MatchUIStates : ScriptableObject
     public bool InfinitePoints;
     public int LastRoundDdIndex;
     public int LastMaxPointDdIndex;
+    //public int SetMaxRounds;
+    //public int SetMaxPoints;
 
     [Header("Playfield-Dimensions")]
     public bool FixRatio;

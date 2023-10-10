@@ -1862,6 +1862,13 @@ MonoBehaviour:
   - {fileID: 7764365727902271496}
   - {fileID: 7764365726675507425}
   m_matchConnection: {fileID: 11400000, guid: a1c716385d30a6e428e0721cf9d35245, type: 2}
+  m_volumeUIStates: {fileID: 11400000, guid: 0b099063a6f6ebe45a293a2c06b6c6e8, type: 2}
+  m_volumeUIValues: {fileID: 11400000, guid: 4c48b9b8578164547b04a0d3d732e116, type: 2}
+  m_graphicUiStates: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11, type: 2}
+  m_matchUiStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
+  m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
+  m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
+  m_basicFieldValues: {fileID: 11400000, guid: b7c0516de58b3a240a6970d999010f71, type: 2}
 --- !u!1 &9044689168592634429
 GameObject:
   m_ObjectHideFlags: 0
@@ -2330,6 +2337,12 @@ PrefabInstance:
       propertyPath: m_maxPointDdIndex
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
+        type: 3}
+      propertyPath: m_basicFieldValues
+      value: 
+      objectReference: {fileID: 11400000, guid: b7c0516de58b3a240a6970d999010f71,
+        type: 2}
     - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
         type: 3}
       propertyPath: m_maxPointsDropdown

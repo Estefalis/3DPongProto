@@ -26,7 +26,6 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         [Header("Forward-Movement")]
         //PushDistance for 'Mathf.MoveTowards'.
-        [SerializeField] private float m_maxPushDistance;
         [SerializeField] private float m_moveDuration;
         [SerializeField] private float m_delayRetreat;
         [SerializeField] private float m_delayRepetition;
@@ -36,8 +35,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         #region Scriptable Objects
         [SerializeField] private PlayerIDData m_playerIDData;
-        [SerializeField] private MatchUIValues m_matchUIValues;
         [SerializeField] private MatchValues m_matchValues;
+        [SerializeField] private BasicFieldValues m_basicFieldValues;
         [SerializeField] private MatchConnection m_matchConnection;
         #endregion
         #endregion
@@ -54,6 +53,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         private float m_goalDistance;
         private float m_paddleWidthAdjustment;
 
+        private float m_maxPushDistance;
         private bool m_pushPlayerOne = false;
         private bool m_pushPlayerTwo = false;
         private bool m_tempBlocked = false;
@@ -164,8 +164,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             }
             else
             {
-                m_groundWidth = m_matchUIValues.SetGroundWidth;
-                m_groundLength = m_matchUIValues.SetGroundLength;
+                m_groundWidth = m_basicFieldValues.SetGroundWidth;
+                m_groundLength = m_basicFieldValues.SetGroundLength;
                 m_maxPushDistance = m_matchValues.MaxPushDistance;
             }
         }
@@ -191,10 +191,10 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
                 switch (m_playerIDData.PlayerOnFrontline)
                 {
                     case true:
-                        m_goalDistance = m_matchValues.MinFrontLineDistance + m_matchUIValues.FrontlineAdjustment + m_matchUIValues.BacklineAdjustment;
+                        m_goalDistance = m_basicFieldValues.MinFrontLineDistance + m_basicFieldValues.FrontlineAdjustment + m_basicFieldValues.BacklineAdjustment;
                         break;
                     case false:
-                        m_goalDistance = m_matchValues.MinBackLineDistance + m_matchUIValues.BacklineAdjustment;
+                        m_goalDistance = m_basicFieldValues.MinBackLineDistance + m_basicFieldValues.BacklineAdjustment;
                         break;
                 }
 

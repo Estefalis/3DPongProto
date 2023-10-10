@@ -18,10 +18,8 @@ MonoBehaviour:
   - Rayago
   - Mycandra
   StartTime: 15.5629015
-  WinPointDifference: 2
   CurrentRoundNr: 1
-  SetMaxRounds: 5
-  SetMaxPoints: 25
+  WinPointDifference: 2
   TotalPoints: 135
   WinningPlayer: Estefalis
   MatchWinDate: '29.09.2023
@@ -32,12 +30,6 @@ MonoBehaviour:
   TotalPointsTPOne: 0
   MatchPointsTPTwo: 0
   TotalPointsTPTwo: 0
-  SetGroundWidth: 25
-  SetGroundLength: 50
-  MinFrontLineDistance: 6
-  FrontlineAdjustment: 0
-  MinBackLineDistance: 1.5
-  BacklineAdjustment: 0
   PaddleWidthAdjustment: 0
   MaxPushDistance: 1.5
   XPaddleScale: 3.5
