@@ -22,7 +22,7 @@ namespace ThreeDeePongProto.Offline.UI
         // The stack of active (Transform-)elements for menu-navigation needs to have a Start-Transform to prevent an error. It gets set active in 'Awake()'.
         [Header("Select First Elements")]
         [SerializeField] private Transform m_firstElement;
-        private Stack<Transform> m_activeElement = new Stack<Transform>();
+        private Stack<Transform> m_activeElement = new();
 
         //Key-/Value-Pair component-arrays to set the selected GameObject for menu navigation with a dictionary.
         [SerializeField] private Transform[] m_keyTransform;
@@ -41,6 +41,7 @@ namespace ThreeDeePongProto.Offline.UI
         [SerializeField] private Transform[] m_subPageTransforms;
         #endregion
 
+        [SerializeField] private Button m_hiddenFinishButton;
         [SerializeField] private MatchConnection m_matchConnection;
         //MatchManager unpauses the Game. - PlayerMovement restarts Coroutines and Inputsystem.PlayerActions.
         public static event Action CloseInGameMenu;
@@ -48,7 +49,6 @@ namespace ThreeDeePongProto.Offline.UI
         public static event Action RestartGameLevel;
         //MatchManager unpauses the Game.
         public static event Action LoadMainScene;
-
 
         #region Scriptable Variables
         [Header("Scriptable Variables")]
@@ -72,6 +72,7 @@ namespace ThreeDeePongProto.Offline.UI
         private readonly string m_matchFileName = "/Match";
         private readonly string m_fileFormat = ".json";
 
+        public static event Action EndInfiniteMatch;
 
         private IPersistentData m_persistentData = new SerializingData();
         private bool m_encryptionEnabled = false;
@@ -83,6 +84,11 @@ namespace ThreeDeePongProto.Offline.UI
             LoadVolumeSettings();
             LoadGraphicSettings();
             LoadMatchSettings();
+
+            if (m_hiddenFinishButton != null)
+            {
+                InVisibleButton(m_matchUIStates.InfiniteMatch);
+            }
         }
 
         /// <summary>
@@ -146,13 +152,12 @@ namespace ThreeDeePongProto.Offline.UI
         private void LoadMatchSettings()
         {
             MatchUISettingsStates uiIndices = m_persistentData.LoadData<MatchUISettingsStates>(m_settingStatesFolderPath, m_matchFileName, m_fileFormat, m_encryptionEnabled);
-            m_matchUIStates.InfiniteRounds = uiIndices.InfiniteRounds;
-            m_matchUIStates.InfinitePoints = uiIndices.InfinitePoints;
+            m_matchUIStates.InfiniteMatch = uiIndices.InfiniteMatch;
+            //In this special case, the DropdownIndex is equal to the set Rounds and MaxPoints, because Index 0 is set as "InfinityValue".
             m_matchUIStates.LastRoundDdIndex = uiIndices.LastRoundDdIndex;
             m_matchUIStates.LastMaxPointDdIndex = uiIndices.LastMaxPointDdIndex;
-            //In this special case, the DropdownIndex is equal to the set Rounds and MaxPoints, because Index 0 is set as "InfinityValue".
-            //m_matchUIStates.SetMaxRounds = uiIndices.SetMaxRounds;
-            //m_matchUIStates.SetMaxPoints = uiIndices.SetMaxPoints;
+            m_matchUIStates.MaxRounds = uiIndices.MaxRounds;
+            m_matchUIStates.MaxPoints = uiIndices.MaxPoints;
 
             m_matchUIStates.FixRatio = uiIndices.FixRatio;
             m_matchUIStates.LastFieldWidthDdIndex = uiIndices.LastFieldWidthDdIndex;
@@ -203,6 +208,15 @@ namespace ThreeDeePongProto.Offline.UI
 #else
             Application.Quit();
 #endif
+        }
+
+        public void EndOfInfiniteMatch()
+        {
+            if (m_matchValues.TotalPointsTPOne > 0 || m_matchValues.TotalPointsTPTwo > 0)
+            {
+                EndInfiniteMatch?.Invoke();
+                m_keyTransform[0].gameObject.SetActive(false);
+            }
         }
 
         #region Methods to (de-)activate Menu-Transforms with a stack and to set the active Element in each UI-Window.
@@ -266,6 +280,19 @@ namespace ThreeDeePongProto.Offline.UI
                     tempAlpha05.a = m_reducedAlphaValue;
                     m_alphaButtons[i].image.color = tempAlpha05;
                 }
+            }
+        }
+
+        private void InVisibleButton(bool _infiniteMatch)
+        {
+            switch (_infiniteMatch)
+            {
+                case true:
+                    m_hiddenFinishButton.gameObject.SetActive(true);
+                    break;
+                case false:
+                    m_hiddenFinishButton.gameObject.SetActive(false);
+                    break;
             }
         }
     }

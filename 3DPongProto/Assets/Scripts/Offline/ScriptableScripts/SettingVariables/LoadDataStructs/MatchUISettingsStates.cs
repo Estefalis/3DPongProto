@@ -3,12 +3,11 @@ using System;
 [Serializable]
 public struct MatchUISettingsStates
 {
-    public bool InfiniteRounds;
-    public bool InfinitePoints;
+    public bool InfiniteMatch;
     public int LastRoundDdIndex;
     public int LastMaxPointDdIndex;
-    //public int SetMaxRounds;
-    //public int SetMaxPoints;
+    public int MaxRounds;
+    public int MaxPoints;
     public bool FixRatio;
     public int LastFieldWidthDdIndex;
     public int LastFieldLengthDdIndex;

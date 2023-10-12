@@ -98,20 +98,6 @@ namespace ThreeDeePongProto.Offline.Settings
             InitialUISetup();
         }
 
-        //private void LoadVolumeSettings()
-        //{
-        //    VolumeUISettingsStates uiIndices = m_persistentData.LoadData<VolumeUISettingsStates>(m_settingsStatesFolderPath, m_volumeFileName, m_fileFormat, m_encryptionEnabled);
-        //    VolumeUISettingsValues uiValues = m_persistentData.LoadData<VolumeUISettingsValues>(m_SettingsValueFolderPath, m_volumeFileName, m_fileFormat, m_encryptionEnabled);
-
-        //    m_volumeUIStates.MasterMuteIsOn = uiIndices.MasterMuteIsOn;
-        //    m_volumeUIStates.BGMMuteIsOn = uiIndices.BGMMuteIsOn;
-        //    m_volumeUIStates.SFXMuteIsOn = uiIndices.SFXMuteIsOn;
-
-        //    m_volumeUIValues.LatestMasterVolume = uiValues.LatestMasterVolume;
-        //    m_volumeUIValues.LatestBGMVolume = uiValues.LatestBGMVolume;
-        //    m_volumeUIValues.LatestSFXVolume = uiValues.LatestSFXVolume;
-        //}
-
         private void InitialUISetup()
         {
             switch (m_volumeUIStates.MasterMuteIsOn)

@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5fb24614f778d74e84f6d51abe4f095, type: 3}
   m_Name: MatchUIStates
   m_EditorClassIdentifier: 
-  InfiniteRounds: 0
-  InfinitePoints: 0
+  InfiniteMatch: 0
   LastRoundDdIndex: 5
   LastMaxPointDdIndex: 25
+  SetMaxRounds: 5
+  SetMaxPoints: 25
   FixRatio: 0
   LastFieldWidthDdIndex: 0
   LastFieldLengthDdIndex: 0

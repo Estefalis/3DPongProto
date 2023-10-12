@@ -6,12 +6,11 @@ using UnityEngine;
 public class MatchUIStates : ScriptableObject
 {
     [Header("Round-Details")]
-    public bool InfiniteRounds;
-    public bool InfinitePoints;
+    public bool InfiniteMatch;
     public int LastRoundDdIndex;
     public int LastMaxPointDdIndex;
-    //public int SetMaxRounds;
-    //public int SetMaxPoints;
+    public int MaxRounds;
+    public int MaxPoints;
 
     [Header("Playfield-Dimensions")]
     public bool FixRatio;

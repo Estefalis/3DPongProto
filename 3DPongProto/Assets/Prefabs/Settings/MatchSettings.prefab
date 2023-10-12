@@ -13806,9 +13806,7 @@ MonoBehaviour:
   m_playerIF: {fileID: 8735401617680716356}
   m_playerTwoIF: {fileID: 4062898983819358418}
   m_fixRatioToggle: {fileID: 0}
-  m_fieldDropdowns:
-  - {fileID: 4363816109254320946}
-  - {fileID: 8252733928910572295}
+  m_matchSetupDropdowns: []
   m_maxFieldWidth: 30
   m_maxFieldLength: 60
   m_fieldWidthDdIndex: 0
@@ -13823,14 +13821,10 @@ MonoBehaviour:
   m_frontLineText: {fileID: 1367669321889980843}
   m_backLineText: {fileID: 1367669323883341980}
   m_sliderAdjustStep: 0.05
-  m_setMaxRound: 5
   m_maxRoundDdIndex: 5
-  m_setMaxPoints: 25
   m_maxPointDdIndex: 5
-  m_roundsDropdown: {fileID: 0}
-  m_maxPointsDropdown: {fileID: 0}
   m_matchUIStates: {fileID: 0}
-  m_matchValues: {fileID: 0}
+  m_basicFieldValues: {fileID: 0}
   m_playerIDData:
   - {fileID: 11400000, guid: 533fe6eee149a3143aab50fbfb5541a8, type: 2}
   - {fileID: 11400000, guid: 21b573c09ff18ba4893ceecaaf9c5756, type: 2}
@@ -15360,11 +15354,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7223329201030510863, guid: 02c16b24836dc3143abdd3e2cf63ca91,
         type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 1273.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 7223329201030510863, guid: 02c16b24836dc3143abdd3e2cf63ca91,
-        type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -30
       objectReference: {fileID: 0}
@@ -15514,11 +15503,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255051338045885053, guid: 0ea92c8ff31bf4b4cb34c8b53cfba016,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 1273.75
       objectReference: {fileID: 0}
     - target: {fileID: 2255051338045885053, guid: 0ea92c8ff31bf4b4cb34c8b53cfba016,
         type: 3}

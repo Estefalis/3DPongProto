@@ -42,7 +42,7 @@ namespace ThreeDeePongProto.Offline.UI
 
             BallMovement.m_HitGoalOne += UpdateUserInterface;
             BallMovement.m_HitGoalTwo += UpdateUserInterface;
-            MatchManager.m_StartNextRound += UpdateUserInterface;
+            MatchManager.StartNextRound += UpdateUserInterface;
 
             if (m_matchValues == null)
                 return;
@@ -56,7 +56,7 @@ namespace ThreeDeePongProto.Offline.UI
         {
             BallMovement.m_HitGoalOne -= UpdateUserInterface;
             BallMovement.m_HitGoalTwo -= UpdateUserInterface;
-            MatchManager.m_StartNextRound -= UpdateUserInterface;
+            MatchManager.StartNextRound -= UpdateUserInterface;
         }
 
         private void Update()

@@ -71,15 +71,6 @@ namespace ThreeDeePongProto.Offline.Settings
             m_persistentData.SaveData(m_settingStatesFolderPath, m_graphicFileName, m_fileFormat, m_graphicUiStates, m_encryptionEnabled, true);
         }
 
-        //private void LoadGraphicSettings()
-        //{
-        //    GraphicUiSettingsStates uiIndices = m_persistentData.LoadData<GraphicUiSettingsStates>(m_settingsStatesFolderPath, m_matchFileName, m_fileFormat, m_encryptionEnabled);
-        //    m_graphicUiStates.QualityLevelIndex = uiIndices.QualityLevelIndex;
-        //    m_graphicUiStates.SelectedResolutionIndex = uiIndices.SelectedResolutionIndex;
-        //    m_graphicUiStates.FullScreenMode = uiIndices.FullScreenMode;
-        //    m_graphicUiStates.SetCameraMode = uiIndices.SetCameraMode;
-        //}
-
         private void InitialUISetup()
         {
             m_qualityDropdown.value = m_graphicUiStates.QualityLevelIndex;

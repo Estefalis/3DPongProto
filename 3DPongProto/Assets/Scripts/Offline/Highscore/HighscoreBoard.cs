@@ -4,7 +4,6 @@ using ThreeDeePongProto.Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -15,10 +14,8 @@ namespace ThreeDeePongProto.Offline.Highscores
         private enum EListSortMode
         {
             None = default,
-            //Rounds,
-            //MaxPoints,
             TotalPoints,
-            PlayerNames, //Sort- & Search-Option by PlayerNames.
+            PlayerNames, //Sort- & Search-Option by PlayerNames?
             MatchWinDate,
             TotalPlaytime
         }
@@ -44,7 +41,6 @@ namespace ThreeDeePongProto.Offline.Highscores
         private int m_firstRoundOffset = 1, m_firstPointOffset = 1;
 
         [SerializeField] private EListSortMode m_listSortMode;
-        private HighscoreList m_tempHighscoreList;
         private int m_parentChildCount;
         //private float m_slotHeight;
 
@@ -53,52 +49,37 @@ namespace ThreeDeePongProto.Offline.Highscores
 
         private void Awake()
         {
-
-            SetDropdowns();
-            LoadHighscoresFromFiles(m_roundsDropdown.value, m_maxPointsDropdown.value);
+            SetupDropdowns();
 
             //TODO: Action to join load these inside the game, so the highscore list can be used outside of matches.
             //m_slotHeight = m_highscoreEntryChildPrefab.GetComponent<RectTransform>().rect.height;
             m_parentChildCount = m_contentParentTransform.GetComponent<Transform>().childCount;
 
-            MatchManager.m_StartWinProcedure += DisplayHighscoreBoard;
             m_eventSystem.SetSelectedGameObject(m_finishButton.gameObject);
+
             if (m_disableTransform.gameObject.activeInHierarchy)
                 m_disableTransform.gameObject.SetActive(false);
         }
 
         private void OnEnable()
         {
+            //LoadHighscoresByDropdowns(m_matchUIStates.LastRoundDdIndex, m_matchUIStates.LastMaxPointDdIndex);
+            MatchManager.StartWinProcedure += DisplayHighscoreBoard;
+            MatchManager.LoadUpHighscores += LoadHighscoresOnGameEnd;
+
             m_roundsDropdown.onValueChanged.AddListener(OnRoundDropdownChanges);
             m_maxPointsDropdown.onValueChanged.AddListener(OnMaxPointDropdownChanges);
-        }
-
-        private void OnRoundDropdownChanges(int _roundValue)
-        {
-            LoadHighscoresFromFiles(_roundValue, m_maxPointsDropdown.value);
-        }
-
-        private void OnMaxPointDropdownChanges(int _maxPointValue)
-        {
-            LoadHighscoresFromFiles(m_roundsDropdown.value, _maxPointValue);
         }
 
         private void OnDisable()
         {
             gameObject.SetActive(false);
 
-            MatchManager.m_StartWinProcedure -= DisplayHighscoreBoard;
+            MatchManager.StartWinProcedure -= DisplayHighscoreBoard;
+            MatchManager.LoadUpHighscores -= LoadHighscoresOnGameEnd;
         }
 
-        private void Update()
-        {
-            if (Keyboard.current.numpadPlusKey.wasPressedThisFrame)
-            {
-                AddNewEntryDataSlot(m_tempHighscoreList);
-            }
-        }
-
-        private void SetDropdowns()
+        private void SetupDropdowns()
         {
             m_roundsDdList = new List<string>();
             m_maxPointsDdList = new List<string>();
@@ -106,35 +87,94 @@ namespace ThreeDeePongProto.Offline.Highscores
             m_roundsDropdown.ClearOptions();
             //m_roundsDdList.Add("?");
             m_roundsDdList.Add("\u221E");
-            for (int i = m_firstRoundOffset; i < m_matchUIStates.LastRoundDdIndex + 1; i++)
+            for (int i = m_firstRoundOffset; i < m_matchUIStates.MaxRounds + 1; i++)
             {
                 m_roundsDdList.Add(i.ToString());
             }
             m_roundsDropdown.AddOptions(m_roundsDdList);
             //TODO: Option to set this dropdown value, when people want to check Highscores from the mainmenu.
-            m_roundsDropdown.value = m_roundsDdList.Count;
+            m_roundsDropdown.value = m_matchUIStates.LastRoundDdIndex;
             m_roundsDropdown.RefreshShownValue();
 
             m_maxPointsDropdown.ClearOptions();
             //m_maxPointsDdList.Add("?");
             m_maxPointsDdList.Add("\u221E");
-            for (int i = m_firstPointOffset; i < m_matchUIStates.LastMaxPointDdIndex + 1; i++)
+            for (int i = m_firstPointOffset; i < m_matchUIStates.MaxPoints + 1; i++)
             {
                 //'m_maxPointsDropdown.options.Add (new Dropdown.OptionData() { text = variable });' in foreach-loops.
                 m_maxPointsDdList.Add(i.ToString());
             }
             m_maxPointsDropdown.AddOptions(m_maxPointsDdList);
             //TODO: Option to set this dropdown value, when people want to check Highscores from the mainmenu.
-            m_maxPointsDropdown.value = m_maxPointsDdList.Count;
+            m_maxPointsDropdown.value = m_matchUIStates.LastMaxPointDdIndex;
             m_maxPointsDropdown.RefreshShownValue();
         }
 
-        private void LoadHighscoresFromFiles(int _roundValue, int _maxPointValue)
+        /// <summary>
+        /// Loads the HighscoreList with the current WinValue after the game ended.
+        /// </summary>
+        private void LoadHighscoresOnGameEnd()
+        {
+            m_disableTransform.gameObject.SetActive(true);
+
+            foreach (Transform child in m_contentParentTransform)
+                Destroy(child.gameObject);
+
+            HighscoreList highscoreList = m_persistentData.LoadData<HighscoreList>($"/SaveData/Highscore Lists/{m_matchUIStates.LastRoundDdIndex}/{m_matchUIStates.LastMaxPointDdIndex}", "/Highscores", ".json", m_encryptionEnabled);
+
+            if (highscoreList == null)
+            {
+                highscoreList = new HighscoreList();
+                AddNewEntryDataSlot(highscoreList);
+                return;
+            }
+            else
+            {
+                //SortMode None on the first time. (Loaded as saved.)
+                SortListByEnum(highscoreList);
+
+                m_parentChildCount = 0;
+                foreach (HighscoreEntryData highscores in highscoreList.highscores)
+                {
+                    HighscoreEntryPrefab highscoreEntrySlot = Instantiate(m_highscoreEntryChildPrefab, m_contentParentTransform);
+
+                    int rank = +1 + m_parentChildCount++;
+                    string rankSuffix = rank switch
+                    {
+                        1 => $"{rank}st",
+                        2 => $"{rank}nd",
+                        3 => $"{rank}rd",
+                        _ => $"{rank}th",
+                    };
+
+                    highscoreEntrySlot.Initialize(rankSuffix, highscores.SetMaxRounds, highscores.SetMaxPoints, highscores.TotalPoints, highscores.WinningPlayer, highscores.MatchWinDate, highscores.TotalPlaytime);
+
+                }
+
+                AddNewEntryDataSlot(highscoreList);
+            }
+        }
+
+        private void OnRoundDropdownChanges(int _roundValue)
+        {
+            LoadHighscoresByDropdowns(_roundValue, m_maxPointsDropdown.value);
+        }
+
+        private void OnMaxPointDropdownChanges(int _maxPointValue)
+        {
+            LoadHighscoresByDropdowns(m_roundsDropdown.value, _maxPointValue);
+        }
+
+        /// <summary>
+        /// Manual HighscoreLists-Switch by DropdownChanges, after the Game ended, to see other HighscoreLists.
+        /// </summary>
+        /// <param name="_roundValue"></param>
+        /// <param name="_maxPointValue"></param>
+        private void LoadHighscoresByDropdowns(int _roundValue, int _maxPointValue)
         {
             foreach (Transform child in m_contentParentTransform)
                 Destroy(child.gameObject);
 
-            //TODO: Aufgerufene Liste bestimmen. Eventuell Suchfunktion als Wahl vorschalten, wenn der Aufruf ausserhalb des Spiels erfolgen soll.
             HighscoreList highscoreList = m_persistentData.LoadData<HighscoreList>($"/SaveData/Highscore Lists/{_roundValue}/{_maxPointValue}", "/Highscores", ".json", m_encryptionEnabled);
 
             if (highscoreList == null)
@@ -144,9 +184,8 @@ namespace ThreeDeePongProto.Offline.Highscores
                 return;
             }
 
-            m_tempHighscoreList = highscoreList;
             //SortMode None on the first time. (Loaded as saved.)
-            SortListByEnum(m_tempHighscoreList);
+            SortListByEnum(highscoreList);
 
             m_parentChildCount = 0;
             foreach (HighscoreEntryData highscores in highscoreList.highscores)
@@ -286,20 +325,20 @@ namespace ThreeDeePongProto.Offline.Highscores
         //public void SortByRounds()
         //{
         //    m_listSortMode = EListSortMode.Rounds;
-        //    LoadHighscoresFromFiles();
+        //    LoadHighscoresByDropdowns();
         //}
 
         //public void SortByMaxPoints()
         //{
         //    m_listSortMode = EListSortMode.MaxPoints;
-        //    LoadHighscoresFromFiles();
+        //    LoadHighscoresByDropdowns();
         //}
         #endregion
 
         public void SortByTotalPoints()
         {
             m_listSortMode = EListSortMode.TotalPoints;
-            LoadHighscoresFromFiles(m_roundsDropdown.value, m_maxPointsDropdown.value);
+            LoadHighscoresByDropdowns(m_roundsDropdown.value, m_maxPointsDropdown.value);
         }
 
         public void SortByPlayerNames()
@@ -313,12 +352,12 @@ namespace ThreeDeePongProto.Offline.Highscores
         public void SortByMatchWinDate()
         {
             m_listSortMode = EListSortMode.MatchWinDate;
-            LoadHighscoresFromFiles(m_roundsDropdown.value, m_maxPointsDropdown.value);
+            LoadHighscoresByDropdowns(m_roundsDropdown.value, m_maxPointsDropdown.value);
         }
         public void SortByTotalPlaytime()
         {
             m_listSortMode = EListSortMode.TotalPlaytime;
-            LoadHighscoresFromFiles(m_roundsDropdown.value, m_maxPointsDropdown.value);
+            LoadHighscoresByDropdowns(m_roundsDropdown.value, m_maxPointsDropdown.value);
         }
 
         public void BackToStartMenu()
@@ -338,7 +377,6 @@ namespace ThreeDeePongProto.Offline.Highscores
                 _ => $"{rank}th",
             };
 
-            //CopyScriptableDetails
             _highscoreList.highscores.Add(new HighscoreEntryData(m_matchUIStates.LastRoundDdIndex, m_matchUIStates.LastMaxPointDdIndex, m_matchValues.TotalPoints, m_matchValues.WinningPlayer, m_matchValues.MatchWinDate, m_matchValues.TotalPlaytime));
 
             HighscoreEntryPrefab highscoreEntrySlot = Instantiate(m_highscoreEntryChildPrefab, m_contentParentTransform);
@@ -348,8 +386,6 @@ namespace ThreeDeePongProto.Offline.Highscores
 
             //(/Folder/SubFolder/RoundInfinityFolder on 0/MaxPointsInfinityFolder on 0, /FileName, .format)
             m_persistentData.SaveData($"/SaveData/Highscore Lists/{m_roundsDropdown.value}/{m_maxPointsDropdown.value}", "/Highscores", ".json", _highscoreList, m_encryptionEnabled, true);
-
-            LoadHighscoresFromFiles(m_roundsDropdown.value, m_maxPointsDropdown.value);
         }
     }
 }

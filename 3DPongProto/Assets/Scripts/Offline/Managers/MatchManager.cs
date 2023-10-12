@@ -26,6 +26,8 @@ namespace ThreeDeePongProto.Managers
         [SerializeField] private float m_playGroundLength = 50.0f;
         [SerializeField] private float m_minimalFrontLineDistance = 6.0f;
         [SerializeField] private float m_minimalBackLineDistance = 1.5f;
+        [SerializeField] private int m_setMaxRounds = 5;
+        [SerializeField] private int m_setMaxPoints = 25;
         [SerializeField] private uint m_startRound = 1;
         [SerializeField] private int m_winPointDifference = 2;
         [SerializeField] private float m_maxPushDistance = 1.5f;
@@ -71,8 +73,9 @@ namespace ThreeDeePongProto.Managers
         private bool m_nextRoundConditionIsMet;
         public bool GameIsPaused { get => m_gameIsPaused; }
 
-        public static event Action m_StartNextRound;
-        public static event Action m_StartWinProcedure;
+        public static event Action StartNextRound;
+        public static event Action StartWinProcedure;
+        public static event Action LoadUpHighscores;
         #endregion
 
         private void Awake()
@@ -89,15 +92,16 @@ namespace ThreeDeePongProto.Managers
             PlayerMovement.InGameMenuOpens += PauseAndTimeScale;
 
             MenuOrganisation.CloseInGameMenu += ResetPauseAndTimescale;
-            MenuOrganisation.LoadMainScene += MainSceneRestartActions;
+            MenuOrganisation.LoadMainScene += SceneRestartActions;
             MenuOrganisation.RestartGameLevel += ReSetMatch;
+            MenuOrganisation.EndInfiniteMatch += LetsEndInfiniteMatch;
 
             BallMovement.m_RoundCountStarts += MatchStartValues;
             BallMovement.m_HitGoalOne += UpdateTPTwoPoints;
             BallMovement.m_HitGoalTwo += UpdateTPOnePoints;
 
-            m_StartNextRound += StartNextRound;
-            m_StartWinProcedure += StartWinProcedure;
+            StartNextRound += LetsStartNextRound;
+            StartWinProcedure += LetsStartWinProcedure;
         }
 
         private void OnDisable()
@@ -105,15 +109,16 @@ namespace ThreeDeePongProto.Managers
             PlayerMovement.InGameMenuOpens -= PauseAndTimeScale;
 
             MenuOrganisation.CloseInGameMenu -= ResetPauseAndTimescale;
-            MenuOrganisation.LoadMainScene -= MainSceneRestartActions;
+            MenuOrganisation.LoadMainScene -= SceneRestartActions;
             MenuOrganisation.RestartGameLevel -= ReSetMatch;
+            MenuOrganisation.EndInfiniteMatch -= LetsEndInfiniteMatch;
 
             BallMovement.m_RoundCountStarts -= MatchStartValues;
             BallMovement.m_HitGoalOne -= UpdateTPTwoPoints;
             BallMovement.m_HitGoalTwo -= UpdateTPOnePoints;
 
-            m_StartNextRound -= StartNextRound;
-            m_StartWinProcedure -= StartWinProcedure;
+            StartNextRound -= LetsStartNextRound;
+            StartWinProcedure -= LetsStartWinProcedure;
 
             //Useable for Infinite Matches.
             m_matchValues.TotalPointsTPOne = 0;
@@ -122,6 +127,11 @@ namespace ThreeDeePongProto.Managers
 
         private void PrepareMatchStart()
         {
+            m_matchUIStates.MaxRounds = m_setMaxRounds;
+            m_matchUIStates.MaxPoints = m_setMaxPoints;
+
+            m_gameIsPaused = false;
+
             if (m_matchValues != null)
             {
                 m_matchValues.CurrentRoundNr = m_startRound;
@@ -132,8 +142,6 @@ namespace ThreeDeePongProto.Managers
                 m_matchValues.YPaddleScale = m_defaultPaddleScale.y;
                 m_matchValues.ZPaddleScale = m_defaultPaddleScale.z;
             }
-
-            m_gameIsPaused = false;
         }
 
         private void LoadMatchSettings()
@@ -258,7 +266,7 @@ namespace ThreeDeePongProto.Managers
                 return;
 
             //If either no max Round or max Point amount is set, then there shall be no next Round.
-            if (m_matchUIStates.InfiniteRounds || m_matchUIStates.InfinitePoints)
+            if (m_matchUIStates.InfiniteMatch)
             {
                 m_nextRoundConditionIsMet = false;
                 return;
@@ -281,7 +289,7 @@ namespace ThreeDeePongProto.Managers
                 if (m_matchConnection.EGameConnectionModi == EGameModi.LocalPC)
                     SaveMatchDetails(_winningPlayer, _pointCount);
 
-                m_StartWinProcedure.Invoke();
+                StartWinProcedure?.Invoke();
                 return;
             };
 
@@ -289,7 +297,7 @@ namespace ThreeDeePongProto.Managers
             {
                 case true:
                 {
-                    m_StartNextRound?.Invoke();
+                    StartNextRound?.Invoke();
                     break;
                 }
                 case false:
@@ -311,16 +319,27 @@ namespace ThreeDeePongProto.Managers
             m_matchValues.TotalPlaytime = (float)timespan.TotalSeconds;
         }
 
-        //TODO: Player shall have the option to stop and save a match, without a set endcondition, with an ingame button.
-        public void SaveInfiniteDetails()
+        /// <summary>
+        /// Method called by a Button that is hidden in the 'Pause Menu', until the match is in "Infinity-Mode".
+        /// </summary>
+        private void LetsEndInfiniteMatch()
         {
+            if (m_matchValues.TotalPointsTPOne == 0 && m_matchValues.TotalPointsTPTwo == 0)
+            {
+                //TODO: PopUp-Window: "No points gained, yet.
+#if UNITY_EDITOR
+                Debug.Log("Noone gained any Points, yet!");
+#endif
+                return;
+            }
+
             //m_matchValues.WinningPlayer gets set while checking for GetHigherPlayerScore.
             m_matchValues.TotalPoints = GetHigherPlayerScore(m_matchValues.TotalPointsTPOne, m_matchValues.TotalPointsTPTwo);
             m_matchValues.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             TimeSpan timespan = TimeSpan.FromSeconds(Time.time - m_matchValues.StartTime);
             m_matchValues.TotalPlaytime = (float)timespan.TotalSeconds;
 
-            m_StartWinProcedure?.Invoke();
+            LoadUpHighscores?.Invoke();
         }
 
         /// <summary>
@@ -357,7 +376,7 @@ namespace ThreeDeePongProto.Managers
             }
         }
 
-        private void StartNextRound()
+        private void LetsStartNextRound()
         {
             if (m_matchValues == null)
                 return;
@@ -371,7 +390,7 @@ namespace ThreeDeePongProto.Managers
             ResetRoundValues();
         }
 
-        private void StartWinProcedure()
+        private void LetsStartWinProcedure()
         {
 #if UNITY_EDITOR
             Debug.Log("Won!");
@@ -391,7 +410,7 @@ namespace ThreeDeePongProto.Managers
             m_gameIsPaused = false;
         }
 
-        private void MainSceneRestartActions()
+        private void SceneRestartActions()
         {
             ResetPauseAndTimescale();
         }
