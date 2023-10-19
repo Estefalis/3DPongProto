@@ -63,7 +63,6 @@ namespace ThreeDeePongProto.Offline.Highscores
 
         private void OnEnable()
         {
-            //LoadHighscoresByDropdowns(m_matchUIStates.LastRoundDdIndex, m_matchUIStates.LastMaxPointDdIndex);
             MatchManager.StartWinProcedure += DisplayHighscoreBoard;
             MatchManager.LoadUpHighscores += LoadHighscoresOnGameEnd;
 

@@ -32,7 +32,7 @@ namespace ThreeDeePongProto.Managers
 
         //private void OnEnable()
         //{
-        //    PlayerMovement.InGameMenuOpens += PauseAndTimeScale;
+        //    PlayerController.InGameMenuOpens += PauseAndTimeScale;
         //    MenuOrganisation.CloseInGameMenu += ResetPauseAndTimescale;
         //    MenuOrganisation.RestartGameLevel += GameRestartActions;
         //    MenuOrganisation.LoadMainScene += SceneRestartActions;
@@ -40,7 +40,7 @@ namespace ThreeDeePongProto.Managers
 
         //private void OnDisable()
         //{
-        //    PlayerMovement.InGameMenuOpens -= PauseAndTimeScale;
+        //    PlayerController.InGameMenuOpens -= PauseAndTimeScale;
         //    MenuOrganisation.CloseInGameMenu -= ResetPauseAndTimescale;
         //    MenuOrganisation.RestartGameLevel -= GameRestartActions;
         //    MenuOrganisation.LoadMainScene -= SceneRestartActions;

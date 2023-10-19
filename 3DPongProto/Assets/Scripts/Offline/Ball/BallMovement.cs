@@ -16,10 +16,16 @@ public class BallMovement : MonoBehaviour
     [SerializeField] private float m_offWallAngle = 15.0f;
     [SerializeField] private float m_offPaddleAngle = 0.1f;
     [SerializeField] private MatchValues m_matchValues;
+    [SerializeField] private PlayerIDData[] m_playerIDData;
     //[SerializeField] float m_onContactAddUp = 1.10f;
 
-    private Vector3 m_ballPopPosition;
-    private Quaternion m_ballPopRotation;
+    [SerializeField] private readonly string m_goalOne = "GoalOne";
+    [SerializeField] private readonly string m_centerLine = "CenterLine";
+    [SerializeField] private readonly string m_goalTwo = "GoalTwo";
+    [SerializeField] private readonly string m_teamPlayerOne = "TpOne";
+    [SerializeField] private readonly string m_teamPlayerTwo = "TpTwo";
+    [SerializeField] private readonly string m_teamPlayerThree = "TpThree";
+    [SerializeField] private readonly string m_teamPlayerFour = "TpFour";
 
     /*TODO:
      * References:
@@ -28,8 +34,12 @@ public class BallMovement : MonoBehaviour
      *              - AudioClipArray/-List
      */
 
-    //These uint-Actions tell the MatchUserInterface class to update the corresponding TMP element.
+    private Vector3 m_ballPopPosition;
+    private Quaternion m_ballPopRotation;
+
+    public static event Action<int> m_UpdateHitPaddleId;
     public static event Action m_HitGoalOne;
+    public static event Action m_PassCenterLine;
     public static event Action m_HitGoalTwo;
     public static event Action m_RoundCountStarts;
 
@@ -65,54 +75,49 @@ public class BallMovement : MonoBehaviour
 
     private void ApplyForceOnBall()
     {
-        //TODO: Research, if 'UnityEngine.Random.insideUnitCircle' could replace 'UnityEngine.Random.Range'.
-        int sideChoice = 0;
-
+        int sideChoice;
         if (DateTime.Now.Millisecond < 500)
             sideChoice = Mathf.FloorToInt(UnityEngine.Random.Range(0, 4) + DateTime.Now.Millisecond / 1000);
         else
             sideChoice = Mathf.RoundToInt(UnityEngine.Random.Range(0, 4) + DateTime.Now.Millisecond / 1000);
-#if UNITY_EDITOR
-        //Debug.Log($"BallMovement Randomed Side: {sideChoice}");
-#endif
-        switch (sideChoice)
+
+        transform.eulerAngles = sideChoice switch
         {
-            case 0:
-                //0 = directly to the playerTwo-paddle, 90 = directly to the eastWall.
-                transform.eulerAngles = new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(0 + m_offPaddleAngle, 90 - m_offWallAngle), transform.eulerAngles.z);
-                break;
-            case 1:
-                //90 = directly to the eastWall, 180 = directly to the playerOne-paddle.
-                transform.eulerAngles = new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(90 + m_offWallAngle, 180 - m_offPaddleAngle), transform.eulerAngles.z);
-                break;
-            case 2:
-                //180 = directly to the playerOne-paddle, 270 = directly to the westWall.
-                transform.eulerAngles = new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(180 + m_offPaddleAngle, 270 - m_offWallAngle), transform.eulerAngles.z);
-                break;
-            case 3:
-                //270 = directly to the westWall, (36)0 = directly to the playerTwo-paddle.
-                transform.eulerAngles = new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(270 + m_offWallAngle, 360 - m_offPaddleAngle), transform.eulerAngles.z);
-                break;
-            default:
-                transform.eulerAngles = new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(0 + m_offPaddleAngle, 90 - m_offWallAngle), transform.eulerAngles.z);
-                break;
-        }
+            //0 = directly to the playerTwo-paddle, 90 = directly to the eastWall.
+            0 => new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(0 + m_offPaddleAngle, 90 - m_offWallAngle), transform.eulerAngles.z),
+            //90 = directly to the eastWall, 180 = directly to the playerOne-paddle.
+            1 => new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(90 + m_offWallAngle, 180 - m_offPaddleAngle), transform.eulerAngles.z),
+            //180 = directly to the playerOne-paddle, 270 = directly to the westWall.
+            2 => new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(180 + m_offPaddleAngle, 270 - m_offWallAngle), transform.eulerAngles.z),
+            //270 = directly to the westWall, (36)0 = directly to the playerTwo-paddle.
+            3 => new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(270 + m_offWallAngle, 360 - m_offPaddleAngle), transform.eulerAngles.z),
+            //Default case.
+            _ => new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(0 + m_offPaddleAngle, 90 - m_offWallAngle), transform.eulerAngles.z),
+        };
 
         m_rigidbody.AddRelativeForce(transform.forward * m_impulseForce, ForceMode.Impulse);
     }
 
     private void OnTriggerEnter(Collider _other)
     {
-        ResetBall();
-
-        if (_other.gameObject.CompareTag("GoalOne"))
+        if (_other.gameObject.CompareTag(m_goalOne))
         {
+            ResetBall();
             //Match-Points of Player/Team 2 are increasing.
             m_HitGoalOne?.Invoke();
         }
 
-        if (_other.gameObject.CompareTag("GoalTwo"))
+        if (_other.gameObject.CompareTag(m_centerLine))
         {
+            if (m_matchManager.MatchStarted)
+            {
+                m_PassCenterLine?.Invoke();
+            }
+        }
+
+        if (_other.gameObject.CompareTag(m_goalTwo))
+        {
+            ResetBall();
             //Match-Points of Player/Team 1 are increasing.
             m_HitGoalTwo?.Invoke();
         }
@@ -120,7 +125,6 @@ public class BallMovement : MonoBehaviour
 
     private void StartBallMovement(InputAction.CallbackContext _callbackContext)
     {
-        //if (!GameManager.Instance.GameIsPaused)
         if (!m_matchManager.GameIsPaused)
         {
             ResetBall();
@@ -135,11 +139,31 @@ public class BallMovement : MonoBehaviour
         }
     }
 
-    //private void OnCollisionEnter(Collision _collision)
-    //{
-    //    if (_collision.gameObject.CompareTag("Player"))
-    //    {
-    //        m_rigidbody.AddForce(_collision.GetContact(0).normal * m_onContactAddUp, ForceMode.Impulse);
-    //    }
-    //}
+    private void OnCollisionEnter(Collision _collision)
+    {
+        if (_collision.gameObject.CompareTag(m_teamPlayerOne))
+        {
+            m_UpdateHitPaddleId?.Invoke(m_playerIDData[0].PlayerId);
+        }
+
+        if (_collision.gameObject.CompareTag(m_teamPlayerTwo))
+        {
+            m_UpdateHitPaddleId?.Invoke(m_playerIDData[1].PlayerId);
+        }
+
+        if (_collision.gameObject.CompareTag(m_teamPlayerThree))
+        {
+            m_UpdateHitPaddleId?.Invoke(m_playerIDData[2].PlayerId);
+        }
+
+        if (_collision.gameObject.CompareTag(m_teamPlayerFour))
+        {
+            m_UpdateHitPaddleId?.Invoke(m_playerIDData[3].PlayerId);
+        }
+
+        //if (_collision.gameObject.CompareTag("Player"))
+        //{
+        //    m_rigidbody.AddForce(_collision.GetContact(0).normal * m_onContactAddUp, ForceMode.Impulse);
+        //}
+    }
 }

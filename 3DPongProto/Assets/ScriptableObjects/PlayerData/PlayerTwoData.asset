@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: PlayerTwoData
   m_EditorClassIdentifier: 
   PlayerName: Nyclia
+  StartYValue: 1
   PlayerId: 1
   Avatar: {fileID: 0}
   PlayerOnFrontline: 0

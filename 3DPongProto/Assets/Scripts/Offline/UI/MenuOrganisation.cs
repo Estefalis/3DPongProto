@@ -43,7 +43,7 @@ namespace ThreeDeePongProto.Offline.UI
 
         [SerializeField] private Button m_hiddenFinishButton;
         [SerializeField] private MatchConnection m_matchConnection;
-        //MatchManager unpauses the Game. - PlayerMovement restarts Coroutines and Inputsystem.PlayerActions.
+        //MatchManager unpauses the Game. - PlayerController restarts Coroutines and Inputsystem.PlayerActions.
         public static event Action CloseInGameMenu;
         //MatchManager unpauses the Game.
         public static event Action RestartGameLevel;
@@ -92,7 +92,7 @@ namespace ThreeDeePongProto.Offline.UI
         }
 
         /// <summary>
-        /// PlayerMovement and UIControls need to be moved into 'Start()' and the PlayerInputActions of the UserInputManager into 'Awake()', to prevent Exceptions.
+        /// PlayerController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the UserInputManager into 'Awake()', to prevent Exceptions.
         /// </summary>
         private void Start()
         {

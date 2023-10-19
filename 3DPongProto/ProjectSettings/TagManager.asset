@@ -10,6 +10,11 @@ TagManager:
   - WestWall
   - EastWall
   - Ball
+  - CenterLine
+  - TpOne
+  - TpTwo
+  - TpThree
+  - TpFour
   layers:
   - Default
   - TransparentFX

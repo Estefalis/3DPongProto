@@ -1,14 +1,14 @@
-using System;
 using ThreeDeePongProto.Offline.Player.Inputs;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace ThreeDeePongProto.Offline.CameraSetup
 {
-    public class CameraBehaviour : MonoBehaviour
+    public class CamPosZBehaviour : MonoBehaviour
     {
+        // Start is called before the first frame update
         private PlayerInputActions m_cameraInputActions;
-        [SerializeField] private PlayerController m_playerMovement;
+        [SerializeField] private PlayerControlSubPosZ m_playerControlSubPosZ;
         private CameraManager m_cameraManager;
 
         [Header("Camera-Positions")]
@@ -34,9 +34,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         #region Scriptable Variables
         [SerializeField] private GraphicUiStates m_graphicUiStates;
-        //[SerializeField] private MatchUIValues m_matchUIValues;
         [SerializeField] private BasicFieldValues m_basicFieldValues;
-        //[SerializeField] private MatchValues m_matchValues;
         #endregion
 
         private int m_playerId;
@@ -47,7 +45,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             if (m_RbPlayer == null)
                 m_RbPlayer = GetComponentInParent<Rigidbody>();
 
-            m_playerId = m_playerMovement/*.GetComponent<PlayerController>()*/.PlayerId;
+            m_playerId = m_playerControlSubPosZ.PlayerId;
 
             m_setGroundWidth = m_basicFieldValues.SetGroundWidth;
             //TODO: Move Setting of 'm_enableSmoothFollow' boolean into UI-Settings.
@@ -113,7 +111,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                 !(m_mousePosition.y < (m_cameraManager.RuntimeFullsizeRect.height - m_cameraManager.RuntimeFullsizeRect.height)) &&
                 !(m_mousePosition.y > m_cameraManager.RuntimeFullsizeRect.height))
             {
-                //switch ((uint)GameManager.Instance.ECameraMode)
                 switch ((int)m_graphicUiStates.SetCameraMode)
                 {
                     //SingleCamera
@@ -174,11 +171,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                         m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
                         break;
                     }
-
                 }
-#if UNITY_EDITOR
-                //Debug.Log("WindowId: " + m_playerWindowId);
-#endif
             }
         }
 

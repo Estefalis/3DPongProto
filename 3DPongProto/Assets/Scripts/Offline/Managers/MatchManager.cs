@@ -20,19 +20,28 @@ namespace ThreeDeePongProto.Managers
         [SerializeField] private GameObject m_playGround;
 
         [Header("Defaults")]
+        #region Playground-Variables
         [SerializeField] private float m_playGroundWidthScale = 0.1f;
         [SerializeField] private float m_playGroundLengthScale = 0.1f;
         [SerializeField] private float m_playGroundWidth = 25.0f;
         [SerializeField] private float m_playGroundLength = 50.0f;
         [SerializeField] private float m_minimalFrontLineDistance = 6.0f;
         [SerializeField] private float m_minimalBackLineDistance = 1.5f;
+        #endregion
+
+        #region Match-Variables
         [SerializeField] private int m_setMaxRounds = 5;
         [SerializeField] private int m_setMaxPoints = 25;
         [SerializeField] private uint m_startRound = 1;
         [SerializeField] private int m_winPointDifference = 2;
+        #endregion
+
+        #region Paddle-Variables
         [SerializeField] private float m_maxPushDistance = 1.5f;
         [SerializeField] private float m_paddleWidthAdjustStep = 0.25f;
         [SerializeField] private Vector3 m_defaultPaddleScale;
+        #endregion
+
         [SerializeField] private bool m_gameIsPaused;
         [Space]
 
@@ -45,17 +54,14 @@ namespace ThreeDeePongProto.Managers
         #endregion
         #endregion
 
-        #region Serialization
-        private string m_fieldSettingsPath = "/SaveData/FieldSettings";
-        private string m_matchFileName = "/Match";
-        private string m_fileFormat = ".json";
-
-        private IPersistentData m_persistentData = new SerializingData();
-        private bool m_encryptionEnabled = false;
-        #endregion
-
         #region Non-SerializeField-Member-Variables
         #region Properties-Access
+
+        private bool m_matchHasStarted = false;
+        private float m_matchStartTime;
+        private bool m_nextRoundConditionIsMet;
+        private string m_scoredPlayer;
+
         public float DefaultBackLineDistance { get => m_minimalBackLineDistance; }
         public float DefaultFrontLineDistance { get => m_minimalFrontLineDistance; }
         public float DefaultFieldWidth { get => m_playGroundWidth; }
@@ -65,17 +71,21 @@ namespace ThreeDeePongProto.Managers
         public bool MatchStarted { get => m_matchHasStarted; private set => m_matchHasStarted = value; }
         public float MatchStartTime { get => m_matchStartTime; private set => m_matchStartTime = value; }
         public float PaddleWidthAdjustStep { get => m_paddleWidthAdjustStep; }
-        #endregion
-
-        private string m_scoredPlayer;
-        private bool m_matchHasStarted = false;
-        private float m_matchStartTime;
-        private bool m_nextRoundConditionIsMet;
         public bool GameIsPaused { get => m_gameIsPaused; }
+        #endregion
 
         public static event Action StartNextRound;
         public static event Action StartWinProcedure;
         public static event Action LoadUpHighscores;
+        #endregion
+        
+        #region Serialization
+        private readonly string m_fieldSettingsPath = "/SaveData/FieldSettings";
+        private readonly string m_matchFileName = "/Match";
+        private readonly string m_fileFormat = ".json";
+
+        private IPersistentData m_persistentData = new SerializingData();
+        private bool m_encryptionEnabled = false;
         #endregion
 
         private void Awake()
@@ -89,7 +99,7 @@ namespace ThreeDeePongProto.Managers
 
         private void OnEnable()
         {
-            PlayerMovement.InGameMenuOpens += PauseAndTimeScale;
+            PlayerController.InGameMenuOpens += PauseAndTimeScale;
 
             MenuOrganisation.CloseInGameMenu += ResetPauseAndTimescale;
             MenuOrganisation.LoadMainScene += SceneRestartActions;
@@ -106,7 +116,7 @@ namespace ThreeDeePongProto.Managers
 
         private void OnDisable()
         {
-            PlayerMovement.InGameMenuOpens -= PauseAndTimeScale;
+            PlayerController.InGameMenuOpens -= PauseAndTimeScale;
 
             MenuOrganisation.CloseInGameMenu -= ResetPauseAndTimescale;
             MenuOrganisation.LoadMainScene -= SceneRestartActions;

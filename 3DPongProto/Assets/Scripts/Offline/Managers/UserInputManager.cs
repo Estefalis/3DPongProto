@@ -14,7 +14,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         public static event Action<InputActionMap> m_changeActiveActionMap;
 
         /// <summary>
-        /// PlayerMovement and UIControls need to be moved into 'Start()' and the PlayerInputActions of the UserInputManager into 'Awake()', to prevent Exceptions.
+        /// PlayerController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the UserInputManager into 'Awake()', to prevent Exceptions.
         /// </summary>
         private void Awake()
         {
