@@ -99,16 +99,17 @@ namespace ThreeDeePongProto.Managers
 
         private void OnEnable()
         {
-            PlayerController.InGameMenuOpens += PauseAndTimeScale;
+            PlayerControlSubNegZ.InGameMenuOpens += PauseAndTimeScale;
+            PlayerControlSubPosZ.InGameMenuOpens += PauseAndTimeScale;
 
             MenuOrganisation.CloseInGameMenu += ResetPauseAndTimescale;
             MenuOrganisation.LoadMainScene += SceneRestartActions;
             MenuOrganisation.RestartGameLevel += ReSetMatch;
             MenuOrganisation.EndInfiniteMatch += LetsEndInfiniteMatch;
 
-            BallMovement.m_RoundCountStarts += MatchStartValues;
-            BallMovement.m_HitGoalOne += UpdateTPTwoPoints;
-            BallMovement.m_HitGoalTwo += UpdateTPOnePoints;
+            BallMovement.RoundCountStarts += MatchStartValues;
+            BallMovement.HitGoalOne += UpdateTPTwoPoints;
+            BallMovement.HitGoalTwo += UpdateTPOnePoints;
 
             StartNextRound += LetsStartNextRound;
             StartWinProcedure += LetsStartWinProcedure;
@@ -116,16 +117,17 @@ namespace ThreeDeePongProto.Managers
 
         private void OnDisable()
         {
-            PlayerController.InGameMenuOpens -= PauseAndTimeScale;
+            PlayerControlSubNegZ.InGameMenuOpens -= PauseAndTimeScale;
+            PlayerControlSubPosZ.InGameMenuOpens -= PauseAndTimeScale;
 
             MenuOrganisation.CloseInGameMenu -= ResetPauseAndTimescale;
             MenuOrganisation.LoadMainScene -= SceneRestartActions;
             MenuOrganisation.RestartGameLevel -= ReSetMatch;
             MenuOrganisation.EndInfiniteMatch -= LetsEndInfiniteMatch;
 
-            BallMovement.m_RoundCountStarts -= MatchStartValues;
-            BallMovement.m_HitGoalOne -= UpdateTPTwoPoints;
-            BallMovement.m_HitGoalTwo -= UpdateTPOnePoints;
+            BallMovement.RoundCountStarts -= MatchStartValues;
+            BallMovement.HitGoalOne -= UpdateTPTwoPoints;
+            BallMovement.HitGoalTwo -= UpdateTPOnePoints;
 
             StartNextRound -= LetsStartNextRound;
             StartWinProcedure -= LetsStartWinProcedure;

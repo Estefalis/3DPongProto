@@ -16,16 +16,15 @@ public class BallMovement : MonoBehaviour
     [SerializeField] private float m_offWallAngle = 15.0f;
     [SerializeField] private float m_offPaddleAngle = 0.1f;
     [SerializeField] private MatchValues m_matchValues;
-    [SerializeField] private PlayerIDData[] m_playerIDData;
+    //[SerializeField] private PlayerIDData[] m_playerIDData;
     //[SerializeField] float m_onContactAddUp = 1.10f;
 
     [SerializeField] private readonly string m_goalOne = "GoalOne";
-    [SerializeField] private readonly string m_centerLine = "CenterLine";
     [SerializeField] private readonly string m_goalTwo = "GoalTwo";
-    [SerializeField] private readonly string m_teamPlayerOne = "TpOne";
-    [SerializeField] private readonly string m_teamPlayerTwo = "TpTwo";
-    [SerializeField] private readonly string m_teamPlayerThree = "TpThree";
-    [SerializeField] private readonly string m_teamPlayerFour = "TpFour";
+    //[SerializeField] private readonly string m_teamPlayerOne = "TpOne";
+    //[SerializeField] private readonly string m_teamPlayerTwo = "TpTwo";
+    //[SerializeField] private readonly string m_teamPlayerThree = "TpThree";
+    //[SerializeField] private readonly string m_teamPlayerFour = "TpFour";
 
     /*TODO:
      * References:
@@ -37,11 +36,9 @@ public class BallMovement : MonoBehaviour
     private Vector3 m_ballPopPosition;
     private Quaternion m_ballPopRotation;
 
-    public static event Action<int> m_UpdateHitPaddleId;
-    public static event Action m_HitGoalOne;
-    public static event Action m_PassCenterLine;
-    public static event Action m_HitGoalTwo;
-    public static event Action m_RoundCountStarts;
+    public static event Action HitGoalOne;
+    public static event Action HitGoalTwo;
+    public static event Action RoundCountStarts;
 
     private void Awake()
     {
@@ -102,24 +99,16 @@ public class BallMovement : MonoBehaviour
     {
         if (_other.gameObject.CompareTag(m_goalOne))
         {
-            ResetBall();
             //Match-Points of Player/Team 2 are increasing.
-            m_HitGoalOne?.Invoke();
-        }
-
-        if (_other.gameObject.CompareTag(m_centerLine))
-        {
-            if (m_matchManager.MatchStarted)
-            {
-                m_PassCenterLine?.Invoke();
-            }
+            HitGoalOne?.Invoke();
+            ResetBall();
         }
 
         if (_other.gameObject.CompareTag(m_goalTwo))
         {
-            ResetBall();
             //Match-Points of Player/Team 1 are increasing.
-            m_HitGoalTwo?.Invoke();
+            HitGoalTwo?.Invoke();
+            ResetBall();
         }
     }
 
@@ -132,38 +121,18 @@ public class BallMovement : MonoBehaviour
 
             if (!m_matchManager.MatchStarted)
             {
-                m_RoundCountStarts?.Invoke();
+                RoundCountStarts?.Invoke();
                 //m_matchValues.StartDateTime = DateTime.Now.Ticks;
                 m_matchValues.StartTime = Time.time;
             }
         }
     }
 
-    private void OnCollisionEnter(Collision _collision)
-    {
-        if (_collision.gameObject.CompareTag(m_teamPlayerOne))
-        {
-            m_UpdateHitPaddleId?.Invoke(m_playerIDData[0].PlayerId);
-        }
-
-        if (_collision.gameObject.CompareTag(m_teamPlayerTwo))
-        {
-            m_UpdateHitPaddleId?.Invoke(m_playerIDData[1].PlayerId);
-        }
-
-        if (_collision.gameObject.CompareTag(m_teamPlayerThree))
-        {
-            m_UpdateHitPaddleId?.Invoke(m_playerIDData[2].PlayerId);
-        }
-
-        if (_collision.gameObject.CompareTag(m_teamPlayerFour))
-        {
-            m_UpdateHitPaddleId?.Invoke(m_playerIDData[3].PlayerId);
-        }
-
-        //if (_collision.gameObject.CompareTag("Player"))
-        //{
-        //    m_rigidbody.AddForce(_collision.GetContact(0).normal * m_onContactAddUp, ForceMode.Impulse);
-        //}
-    }
+    //private void OnCollisionEnter(Collision _collision)
+    //{
+    //    //if (_collision.gameObject.CompareTag("Player"))
+    //    //{
+    //    //    m_rigidbody.AddForce(_collision.GetContact(0).normal * m_onContactAddUp, ForceMode.Impulse);
+    //    //}
+    //}
 }

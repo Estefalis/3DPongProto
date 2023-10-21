@@ -10,6 +10,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         private IEnumerator m_paddleTwoPushCoroutine, m_paddleFourPushCoroutine;
         protected bool m_pushPlayer2 = false, m_pushPlayer4 = false;
         private Vector3 m_axisRotPosZ;
+        private Quaternion m_paddleStartRotation;
 
         protected override void Awake()
         {
@@ -18,6 +19,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
                 m_rigidbody = GetComponentInChildren<Rigidbody>();
             }
 
+            m_paddleStartRotation = m_rigidbody.transform.localRotation;
             m_playerIDData.PlayerId = m_playerId;
             m_paddleTwoPushCoroutine = PushPaddleTwo(m_lerpDuration);
             m_paddleFourPushCoroutine = PushPaddleFour(m_lerpDuration);
@@ -26,6 +28,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         protected override void OnEnable()
         {
             base.OnEnable();
+            BallMovement.HitGoalOne += LetsResetPaddleRotation;
+            BallMovement.HitGoalTwo += LetsResetPaddleRotation;
         }
 
         protected override void OnDisable()
@@ -34,6 +38,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             StopAllCoroutines();
             InGameMenuOpens -= DisablePlayerActions;
             MenuOrganisation.CloseInGameMenu -= StartCoroutinesAndActions;
+            BallMovement.HitGoalOne -= LetsResetPaddleRotation;
+            BallMovement.HitGoalTwo -= LetsResetPaddleRotation;
         }
 
         protected override void Start()
@@ -53,18 +59,12 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         {
             base.Update();
 
-            switch (m_playerIDData.PlayerId)
+            m_axisRotPosZ = m_playerIDData.PlayerId switch
             {
-                case 1:
-                    m_axisRotPosZ = new Vector3(0, m_playerMovement.PlayerActions.TurnMovePosZP2.ReadValue<Vector2>().x, 0);  //Player2 ID = 1.
-                    break;
-                case 3:
-                    m_axisRotPosZ = new Vector3(0, m_playerMovement.PlayerActions.TurnMovePosZP4.ReadValue<Vector2>().x, 0);  //Player4 ID = 3.
-                    break;
-                default:
-                    m_axisRotPosZ = new Vector3(0, m_playerMovement.PlayerActions.TurnMovePosZP2.ReadValue<Vector2>().x, 0);  //Player2 ID = 1.
-                    break;
-            }
+                1 => new Vector3(0, m_playerMovement.PlayerActions.TurnMovePosZP2.ReadValue<Vector2>().x, 0),//Player2 ID = 1.
+                3 => new Vector3(0, m_playerMovement.PlayerActions.TurnMovePosZP4.ReadValue<Vector2>().x, 0),//Player4 ID = 3.
+                _ => new Vector3(0, m_playerMovement.PlayerActions.TurnMovePosZP2.ReadValue<Vector2>().x, 0),//Player2 ID = 1.
+            };
         }
 
         protected override void FixedUpdate()
@@ -248,6 +248,26 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
                 countdown -= Time.deltaTime;
                 yield return null;
             }
+        }
+
+        private void LetsResetPaddleRotation()
+        {
+            //float currentTime = 0;
+            //float endValue = 0;
+
+            //Quaternion currentValue =
+            //    Quaternion.Euler(m_rigidbody.transform.localRotation.x, m_rigidbody.transform.localRotation.y, m_rigidbody.transform.localRotation.z);
+            //Quaternion targetValue = Quaternion.Euler(m_rigidbody.transform.localRotation.x, endValue, m_rigidbody.transform.localRotation.z);
+
+            //while (currentTime < m_lerpDuration)
+            //{
+            //    m_rigidbody.transform.rotation =
+            //        Quaternion.Slerp(Quaternion.identity, Quaternion.Euler(m_rigidbody.transform.rotation.x, 0, m_rigidbody.transform.rotation.z), currentTime);
+            //    currentTime += Time.deltaTime * m_lerpDuration;
+            //}
+
+            //m_rigidbody.transform.localRotation = targetValue;
+            m_rigidbody.transform.localRotation = m_paddleStartRotation;
         }
         #endregion
 

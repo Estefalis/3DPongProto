@@ -40,8 +40,8 @@ namespace ThreeDeePongProto.Offline.UI
         {
             m_playerPointsConnection.Add(m_playerNamesTMPList, m_totalPointsTMPList);
 
-            BallMovement.m_HitGoalOne += UpdateUserInterface;
-            BallMovement.m_HitGoalTwo += UpdateUserInterface;
+            BallMovement.HitGoalOne += UpdateUserInterface;
+            BallMovement.HitGoalTwo += UpdateUserInterface;
             MatchManager.StartNextRound += UpdateUserInterface;
 
             if (m_matchValues == null)
@@ -54,8 +54,8 @@ namespace ThreeDeePongProto.Offline.UI
 
         private void OnDisable()
         {
-            BallMovement.m_HitGoalOne -= UpdateUserInterface;
-            BallMovement.m_HitGoalTwo -= UpdateUserInterface;
+            BallMovement.HitGoalOne -= UpdateUserInterface;
+            BallMovement.HitGoalTwo -= UpdateUserInterface;
             MatchManager.StartNextRound -= UpdateUserInterface;
         }
 

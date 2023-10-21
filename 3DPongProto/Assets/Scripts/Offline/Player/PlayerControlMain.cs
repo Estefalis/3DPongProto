@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using ThreeDeePongProto.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -47,7 +46,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         protected float m_goalDistance;
         private float m_paddleWidthAdjustment;
 
-        protected float m_maxPushDistance;        
+        protected float m_maxPushDistance;
         protected bool m_tempBlocked = false;
         //private int m_updatedPaddleId;
 
@@ -58,7 +57,6 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         //MatchManager pauses the Game. Coroutines and the Inputsystem.PlayerActions get disabled inside this class.
         public static event Action InGameMenuOpens;
-        protected IEnumerator /*m_paddleOnePushCoroutine,*/ m_turnBackPlayerPaddle;
 
         protected abstract void Awake();
 
@@ -71,17 +69,12 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, -m_groundLength * 0.5f - -m_goalDistance);
 
             ClampMoveRange();
-            //BallMovement.m_UpdateHitPaddleId += UpdatePaddleId;
-            //BallMovement.m_PassCenterLine += TurnBackPlayer;
         }
 
         protected virtual void OnDisable()
         {
             m_playerMovement.PlayerActions.Disable();
             m_playerMovement.PlayerActions.ToggleGameMenu.performed -= ToggleMenu;
-
-            //BallMovement.m_UpdateHitPaddleId -= UpdatePaddleId;
-            //BallMovement.m_PassCenterLine -= TurnBackPlayer;
         }
 
         /// <summary>
@@ -92,9 +85,6 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             m_playerMovement = UserInputManager.m_playerInputActions;
             m_playerMovement.PlayerActions.Enable();
             m_playerMovement.PlayerActions.ToggleGameMenu.performed += ToggleMenu;
-
-            //InGameMenuOpens += DisablePlayerActions;
-            //MenuOrganisation.CloseInGameMenu += StartCoroutinesAndActions;
         }
 
         protected virtual void Update()
@@ -218,8 +208,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         protected virtual void DisablePlayerActions()
         {
-            Debug.Log("Main - DisActions");
-            m_playerMovement.PlayerActions.Disable();            
+            m_playerMovement.PlayerActions.Disable();
         }
     }
 }
