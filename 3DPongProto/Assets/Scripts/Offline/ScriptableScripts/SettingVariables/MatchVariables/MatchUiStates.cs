@@ -5,6 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptable Objects/Match Settings/Indices and Boolean", fileName = "MatchUISettings")]
 public class MatchUIStates : ScriptableObject
 {
+    [Header("Player-States")]
+    public bool TpOneRotReset;
+    public bool TpTwoRotReset;
+
     [Header("Round-Details")]
     public bool InfiniteMatch;
     public int LastRoundDdIndex;

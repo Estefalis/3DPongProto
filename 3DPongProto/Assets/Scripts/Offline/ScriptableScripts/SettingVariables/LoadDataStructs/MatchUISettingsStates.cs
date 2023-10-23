@@ -3,6 +3,8 @@ using System;
 [Serializable]
 public struct MatchUISettingsStates
 {
+    public bool TpOneRotReset;
+    public bool TpTwoRotReset;
     public bool InfiniteMatch;
     public int LastRoundDdIndex;
     public int LastMaxPointDdIndex;

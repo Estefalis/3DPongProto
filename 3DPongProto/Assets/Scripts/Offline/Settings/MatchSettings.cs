@@ -11,10 +11,13 @@ namespace ThreeDeePongProto.Offline.Settings
         //TODO: Desired Inputfield-behaviour to select the gameObject without a blinking cursor and to enable editing on pressing Enter.
         #region SerializeField-Member-Variables
         #region Player-Names
-        [Header("Player-Names")]
+        [Header("Player-Details")]
         //OnEndEdit in Unity sets the PlayerNames from MatchSettings UI.
         [SerializeField] private TMP_InputField m_playerIF;
         [SerializeField] private TMP_InputField m_playerTwoIF;
+        [SerializeField] private Toggle[] m_rotationReset;
+        [SerializeField] private bool m_TpOneRotResetDefault = true;
+        [SerializeField] private bool m_TpTwoRotResetDefault = true;
         #endregion
 
         #region Field-Dimension
@@ -74,7 +77,6 @@ namespace ThreeDeePongProto.Offline.Settings
 
         #region Non-SerializeField-Member-Variables
         private int m_firstRoundOffset = 1, m_firstPointOffset = 1, m_firstWidthOffset = 25, m_firstLengthOffset = 50;
-
         //Set in OnValueChanged-Dropdown-Methods.
         private int m_tempWidthDdValue = 0, m_tempLengthDdValue = 0;
         #endregion
@@ -119,6 +121,8 @@ namespace ThreeDeePongProto.Offline.Settings
         private void InitializeUI()
         {
             m_fixRatioToggle.isOn = m_matchUIStates.FixRatio;
+            m_rotationReset[0].isOn = m_matchUIStates.TpOneRotReset;
+            m_rotationReset[1].isOn = m_matchUIStates.TpTwoRotReset;
 
             int roundDdIndex = Array.FindIndex(m_matchSetupDropdowns, (fn) => fn == m_matchSetupDropdowns[0]);
             int maxPointDdIndex = Array.FindIndex(m_matchSetupDropdowns, (fn) => fn == m_matchSetupDropdowns[1]);
@@ -167,6 +171,10 @@ namespace ThreeDeePongProto.Offline.Settings
             m_backLineDds[1].onValueChanged.AddListener(delegate
             { OnTeamTwoBacklineDropdownValueChanged(m_backLineDds[1]); });
 
+            //Toggles to allow or deny PaddleRotation-Resets on each Goal for TeamPlayerOne [0] and TeamPlayerTwo [1].
+            m_rotationReset[0].onValueChanged.AddListener(HandleTpOneToggleValueChanges);
+            m_rotationReset[1].onValueChanged.AddListener(HandleTpTwoToggleValueChanges);
+
             m_distanceSliderValues[0].onValueChanged.AddListener(OnFrontlineSliderValueChanged);
             m_distanceSliderValues[1].onValueChanged.AddListener(OnBacklineSliderValueChanged);
         }
@@ -199,12 +207,14 @@ namespace ThreeDeePongProto.Offline.Settings
             m_backLineDds[1].onValueChanged.RemoveListener(delegate
             { OnTeamTwoBacklineDropdownValueChanged(m_backLineDds[1]); });
 
+            m_rotationReset[0].onValueChanged.RemoveListener(HandleTpOneToggleValueChanges);
+            m_rotationReset[1].onValueChanged.RemoveListener(HandleTpTwoToggleValueChanges);
+
             m_distanceSliderValues[0].onValueChanged.RemoveListener(OnFrontlineSliderValueChanged);
             m_distanceSliderValues[1].onValueChanged.RemoveListener(OnBacklineSliderValueChanged);
         }
 
         #region Toggle-OnValueChanged-Methods
-        #region Fix Ratio-Toggle
         /// <summary>
         /// Enabling this Toggle shall fix changes of width and length of the playfield to 1:2 ratio, while changing values on one of the two dropdowns.
         /// </summary>
@@ -226,7 +236,16 @@ namespace ThreeDeePongProto.Offline.Settings
                 }
             }
         }
-        #endregion
+        
+        private void HandleTpOneToggleValueChanges(bool _toggle)
+        {
+            m_matchUIStates.TpOneRotReset = _toggle;
+        }
+
+        private void HandleTpTwoToggleValueChanges(bool _toggle)
+        {
+            m_matchUIStates.TpTwoRotReset = _toggle;
+        }
         #endregion
 
         #region Dropdown-OnValueChanged-Methods
@@ -679,6 +698,8 @@ namespace ThreeDeePongProto.Offline.Settings
         public void ReSetDefault()
         {
             m_fixRatioToggle.isOn = m_fixAspectRatio;
+            m_rotationReset[0].isOn = m_TpOneRotResetDefault;
+            m_rotationReset[1].isOn = m_TpTwoRotResetDefault;
 
             m_matchSetupDropdowns[0].value = m_maxRoundDdIndex;
             m_matchSetupDropdowns[1].value = m_maxPointDdIndex;

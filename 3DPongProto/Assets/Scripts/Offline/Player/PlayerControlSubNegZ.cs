@@ -253,6 +253,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         private void LetsResetPaddleRotation()
         {
+            //TODO: Ggf. eine public Methode hinzufuegen, damit man die PaddleRotation manuell reseten kann.
+            #region Saved for a potential Coroutine.
             //float currentTime = 0;
             //float endValue = 0;
 
@@ -268,7 +270,15 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             //}
 
             //m_rigidbody.transform.localRotation = targetValue;
-            m_rigidbody.transform.localRotation = m_paddleStartRotation;
+            #endregion
+            switch (m_matchUIStates.TpOneRotReset)
+            {
+                case true:
+                    m_rigidbody.transform.localRotation = m_paddleStartRotation;
+                    break;
+                case false:
+                    break;
+            }
         }
         #endregion
 

@@ -4303,10 +4303,11 @@ MonoBehaviour:
   m_resolutionDropdown: {fileID: 7313720337080708308}
   m_fullscreenToggle: {fileID: 7313720338822632169}
   m_screenSplitDropdown: {fileID: 7313720337404509127}
+  m_systemQualityLevel: 0
+  m_currentResolutionIndex: 0
   m_defaultFullscreen: 1
   m_eCameraMode: 1
-  m_graphicVariables: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11, type: 2}
-  m_matchVariables: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
+  m_graphicUiStates: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11, type: 2}
 --- !u!1 &7313720338224875717
 GameObject:
   m_ObjectHideFlags: 0
@@ -5390,7 +5391,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7313720338692904959}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7313720338195380833}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Settings.GraphicSettings,
+          Assembly-CSharp
+        m_MethodName: ReSetDefault
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7313720338693953367
 GameObject:
   m_ObjectHideFlags: 0
