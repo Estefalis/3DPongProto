@@ -64,7 +64,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             m_cameraInputActions.PlayerActions.Zoom.performed += Zooming;
 
             //Saved vector to keep the playerCamera-startposition.
-            CameraPositions(m_cameraManager.AvailableCameras[(int)m_playerId]);
+            CameraPositions(m_cameraManager.AvailableCameras[m_playerId]);
         }
 
         private void OnDisable()
@@ -106,10 +106,10 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private void SelectCameraToZoom()
         {
             //Sets camera only within the gameWindow. (If the mouse is not less width or height == 0 and not more than full width or height.)
-            if (!(m_mousePosition.x < (m_cameraManager.RuntimeFullsizeRect.width - m_cameraManager.RuntimeFullsizeRect.width)) &&
-                !(m_mousePosition.x > m_cameraManager.RuntimeFullsizeRect.width) &&
-                !(m_mousePosition.y < (m_cameraManager.RuntimeFullsizeRect.height - m_cameraManager.RuntimeFullsizeRect.height)) &&
-                !(m_mousePosition.y > m_cameraManager.RuntimeFullsizeRect.height))
+            if (!(m_mousePosition.x < (CameraManager.RuntimeFullsizeRect.width - CameraManager.RuntimeFullsizeRect.width)) &&
+                !(m_mousePosition.x > CameraManager.RuntimeFullsizeRect.width) &&
+                !(m_mousePosition.y < (CameraManager.RuntimeFullsizeRect.height - CameraManager.RuntimeFullsizeRect.height)) &&
+                !(m_mousePosition.y > CameraManager.RuntimeFullsizeRect.height))
             {
                 switch ((int)m_graphicUiStates.SetCameraMode)
                 {
@@ -220,10 +220,10 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private void Zooming(InputAction.CallbackContext _callbackContext)
         {
             //Zooming limited to the inside of the gameWindow.
-            if (!(m_mousePosition.x < (m_cameraManager.RuntimeFullsizeRect.width - m_cameraManager.RuntimeFullsizeRect.width)) &&
-                !(m_mousePosition.x > m_cameraManager.RuntimeFullsizeRect.width) &&
-                !(m_mousePosition.y < (m_cameraManager.RuntimeFullsizeRect.height - m_cameraManager.RuntimeFullsizeRect.height)) &&
-                !(m_mousePosition.y > m_cameraManager.RuntimeFullsizeRect.height))
+            if (!(m_mousePosition.x < (CameraManager.RuntimeFullsizeRect.width - CameraManager.RuntimeFullsizeRect.width)) &&
+                !(m_mousePosition.x > CameraManager.RuntimeFullsizeRect.width) &&
+                !(m_mousePosition.y < (CameraManager.RuntimeFullsizeRect.height - CameraManager.RuntimeFullsizeRect.height)) &&
+                !(m_mousePosition.y > CameraManager.RuntimeFullsizeRect.height))
             {
                 float zoomValue = -_callbackContext.ReadValue<Vector2>().y * m_zoomSpeed;
 

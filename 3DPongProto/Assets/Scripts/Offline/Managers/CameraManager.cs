@@ -17,7 +17,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         //public List<Rect> SeparatedDictsRects { get => m_dictRects; }
         private List<Rect> m_dictRects = new();
 
-        public Rect RuntimeFullsizeRect { get; set; }
+        public static Rect RuntimeFullsizeRect { get; set; }
 
         private void Awake()
         {
@@ -74,9 +74,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             m_cameraRectDict[_keyCamera] = _newValueRect;
             //And additionally clear and update the separated Lists of Camera and Rects. (It's easier to do/follow, if we do it here.)
             UpdateSplittedCamRectLists();
-#if UNITY_EDITOR
-            //Debug.Log("Adjustment in CameraManager: " + m_cameraRectDict[_keyCamera]);
-#endif
         }
 
         private void UpdateSplittedCamRectLists()

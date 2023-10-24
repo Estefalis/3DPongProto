@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ThreeDeePongProto.Managers;
+using ThreeDeePongProto.Offline.CameraSetup;
 using TMPro;
 using UnityEngine;
 
@@ -12,9 +13,13 @@ namespace ThreeDeePongProto.Offline.UI
         #endregion
 
         #region SerializeField-Member-Variables
+        [Header("Player-Informations")]
+        [SerializeField] private List<Transform> m_playerParentTransform;
         [SerializeField] private List<TextMeshProUGUI> m_playerNamesTMPList;
         [SerializeField] private List<TextMeshProUGUI> m_totalPointsTMPList;
-        [SerializeField] private List<GameObject> m_playerAvatarList = new List<GameObject>();
+        [SerializeField] private List<GameObject> m_playerAvatarList = new();
+        [SerializeField] private float m_AdjustxPos = 5f;
+        [SerializeField] private float m_AdjustyPos = -5f;
 
         [Header("Round-Details")]
         [SerializeField] private TextMeshProUGUI m_roundNrTMP;
@@ -31,13 +36,17 @@ namespace ThreeDeePongProto.Offline.UI
 
         #region Scriptable Variables
         [SerializeField] private MatchValues m_matchValues;
+        [SerializeField] private GraphicUiStates m_graphicUiStates;
         #endregion
         #endregion
+
+        List<Transform> m_tempVisibleTransform = new();
 
         private Dictionary<List<TextMeshProUGUI>, List<TextMeshProUGUI>> m_playerPointsConnection = new Dictionary<List<TextMeshProUGUI>, List<TextMeshProUGUI>>();
 
         private void OnEnable()
         {
+            //TODO: Eventually code to keep the 'source image width' equal to it's height.
             m_playerPointsConnection.Add(m_playerNamesTMPList, m_totalPointsTMPList);
 
             BallMovement.HitGoalOne += UpdateUserInterface;
@@ -59,10 +68,78 @@ namespace ThreeDeePongProto.Offline.UI
             MatchManager.StartNextRound -= UpdateUserInterface;
         }
 
+        private void Start()
+        {
+            SetPlayerInfoPositions(m_graphicUiStates.SetCameraMode);
+        }
+
         private void Update()
         {
             if (m_matchManager.MatchStarted)
                 DisplayTime(Time.time - m_matchManager.MatchStartTime);
+        }
+
+        private void SetPlayerInfoPositions(ECameraModi eCameraModi)
+        {
+            UpdatePlayerInfoPositions(eCameraModi, CameraManager.RuntimeFullsizeRect);
+        }
+
+        private void UpdatePlayerInfoPositions(ECameraModi _eCameraModi, Rect _runtimeFullsizeRect)
+        {
+            switch (_eCameraModi)
+            {
+                case ECameraModi.SingleCam:
+                {
+                    m_playerParentTransform[0].position = new Vector3(0, _runtimeFullsizeRect.height, 0);
+                    UpdateVisibleTransformList(m_playerParentTransform[0]);
+                    break;
+                }
+                case ECameraModi.TwoHorizontal:
+                {
+                    m_playerParentTransform[0].position = new Vector3(0 + m_AdjustxPos, _runtimeFullsizeRect.height * 0.5f + m_AdjustyPos, 0);
+                    m_playerParentTransform[1].position = new Vector3(0 + m_AdjustxPos, _runtimeFullsizeRect.height + m_AdjustyPos, 0);
+                    UpdateVisibleTransformList(m_playerParentTransform[0], m_playerParentTransform[1]);
+                    break;
+                }
+                case ECameraModi.TwoVertical:
+                {
+                    m_playerParentTransform[0].position = new Vector3(0 + m_AdjustxPos, _runtimeFullsizeRect.height + m_AdjustyPos, 0);
+                    m_playerParentTransform[1].position = new Vector3(_runtimeFullsizeRect.width * 0.5f + m_AdjustxPos, _runtimeFullsizeRect.height + m_AdjustyPos, 0);
+                    UpdateVisibleTransformList(m_playerParentTransform[0], m_playerParentTransform[1]);
+                    break;
+                }
+                case ECameraModi.FourSplit:
+                {
+                    m_playerParentTransform[0].position = new Vector3(0 + m_AdjustxPos, _runtimeFullsizeRect.height * 0.5f + m_AdjustyPos, 0);
+                    m_playerParentTransform[1].position = new Vector3(_runtimeFullsizeRect.width * 0.5f + m_AdjustxPos, _runtimeFullsizeRect.height * 0.5f + m_AdjustyPos, 0);
+                    m_playerParentTransform[2].position = new Vector3(0 + m_AdjustxPos, _runtimeFullsizeRect.height + m_AdjustyPos, 0);
+                    m_playerParentTransform[3].position = new Vector3(_runtimeFullsizeRect.width * 0.5f + m_AdjustxPos, _runtimeFullsizeRect.height + m_AdjustyPos, 0);
+                    UpdateVisibleTransformList(m_playerParentTransform[0], m_playerParentTransform[1], m_playerParentTransform[2], m_playerParentTransform[3]);
+                    break;
+                }
+            }
+
+            UpdatePlayerInfoVisibility();
+        }
+
+        private void UpdateVisibleTransformList(Transform _parent1, Transform _parent2 = null, Transform _parent3 = null, Transform _parent4 = null)
+        {
+            m_tempVisibleTransform.Clear();
+            m_tempVisibleTransform.Add(_parent1);
+            m_tempVisibleTransform.Add(_parent2);
+            m_tempVisibleTransform.Add(_parent3);
+            m_tempVisibleTransform.Add(_parent4);
+        }
+
+        private void UpdatePlayerInfoVisibility()
+        {
+            for (int i = 0; i < m_playerParentTransform.Count; i++)
+            {
+                if (m_playerParentTransform[i] == m_tempVisibleTransform[i])
+                    m_playerParentTransform[i].gameObject.SetActive(true);
+                else
+                    m_playerParentTransform[i].gameObject.SetActive(false);
+            }
         }
 
         private void UpdateUserInterface()
