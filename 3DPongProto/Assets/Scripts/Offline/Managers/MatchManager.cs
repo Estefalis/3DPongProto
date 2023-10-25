@@ -74,11 +74,13 @@ namespace ThreeDeePongProto.Managers
         public bool GameIsPaused { get => m_gameIsPaused; }
         #endregion
 
+        #region Actions
         public static event Action StartNextRound;
         public static event Action StartWinProcedure;
         public static event Action LoadUpHighscores;
         #endregion
-        
+        #endregion
+
         #region Serialization
         private readonly string m_fieldSettingsPath = "/SaveData/FieldSettings";
         private readonly string m_matchFileName = "/Match";
@@ -99,8 +101,7 @@ namespace ThreeDeePongProto.Managers
 
         private void OnEnable()
         {
-            PlayerControlSubNegZ.InGameMenuOpens += PauseAndTimeScale;
-            PlayerControlSubPosZ.InGameMenuOpens += PauseAndTimeScale;
+            PlayerControlMain.InGameMenuOpens += PauseAndTimeScale;
 
             MenuOrganisation.CloseInGameMenu += ResetPauseAndTimescale;
             MenuOrganisation.LoadMainScene += SceneRestartActions;
@@ -117,8 +118,7 @@ namespace ThreeDeePongProto.Managers
 
         private void OnDisable()
         {
-            PlayerControlSubNegZ.InGameMenuOpens -= PauseAndTimeScale;
-            PlayerControlSubPosZ.InGameMenuOpens -= PauseAndTimeScale;
+            PlayerControlMain.InGameMenuOpens -= PauseAndTimeScale;
 
             MenuOrganisation.CloseInGameMenu -= ResetPauseAndTimescale;
             MenuOrganisation.LoadMainScene -= SceneRestartActions;
@@ -172,6 +172,8 @@ namespace ThreeDeePongProto.Managers
         {
             m_matchHasStarted = true;
             m_matchStartTime = Time.time;
+            //m_matchValues.StartDateTime = DateTime.Now.Ticks;
+            m_matchValues.StartTime = Time.time;
         }
 
         private void RegisterPlayerNames()

@@ -11,20 +11,22 @@ public class BallMovement : MonoBehaviour
     private PlayerInputActions m_ballMovement;
     #endregion
 
+    #region #region SerializeField-Member-Variables
     [SerializeField] private Rigidbody m_rigidbody;
     [SerializeField] private float m_impulseForce;
     [SerializeField] private float m_offWallAngle = 15.0f;
     [SerializeField] private float m_offPaddleAngle = 0.1f;
-    [SerializeField] private MatchValues m_matchValues;
-    //[SerializeField] private PlayerIDData[] m_playerIDData;
     //[SerializeField] float m_onContactAddUp = 1.10f;
 
     [SerializeField] private readonly string m_goalOne = "GoalOne";
     [SerializeField] private readonly string m_goalTwo = "GoalTwo";
-    //[SerializeField] private readonly string m_teamPlayerOne = "TpOne";
-    //[SerializeField] private readonly string m_teamPlayerTwo = "TpTwo";
+    [SerializeField] private readonly string m_teamPlayerOne = "TpOne";
+    [SerializeField] private readonly string m_teamPlayerTwo = "TpTwo";
     //[SerializeField] private readonly string m_teamPlayerThree = "TpThree";
     //[SerializeField] private readonly string m_teamPlayerFour = "TpFour";
+    [SerializeField] private readonly string m_eastWall = "EastWall";
+    [SerializeField] private readonly string m_westWall = "WestWall";
+    #endregion
 
     /*TODO:
      * References:
@@ -33,12 +35,22 @@ public class BallMovement : MonoBehaviour
      *              - AudioClipArray/-List
      */
 
+    #region #region Non-SerializeField-Member-Variables
     private Vector3 m_ballPopPosition;
     private Quaternion m_ballPopRotation;
 
+    #region Actions
+    //TODO: Add parameter on Actions (<Mixergroup/Soundtype>, <AudioSource> (Ball), 2D/3D), so the Audiomanager basicly only has to "chose" a sound.
     public static event Action HitGoalOne;
     public static event Action HitGoalTwo;
+    public static event Action HitPaddleTpOne;
+    public static event Action HitPaddleTpTwo;
+    public static event Action HitEastWall;
+    public static event Action HitWestWall;
+    public static event Action PlayBallStartSound;
     public static event Action RoundCountStarts;
+    #endregion
+    #endregion
 
     private void Awake()
     {
@@ -121,18 +133,41 @@ public class BallMovement : MonoBehaviour
 
             if (!m_matchManager.MatchStarted)
             {
-                RoundCountStarts?.Invoke();
-                //m_matchValues.StartDateTime = DateTime.Now.Ticks;
-                m_matchValues.StartTime = Time.time;
+                //AudioManager shall play a certain sound on BallStart.
+                PlayBallStartSound?.Invoke();
+                //MatchManager saves values at GameStart.
+                RoundCountStarts?.Invoke();                
             }
         }
     }
 
-    //private void OnCollisionEnter(Collision _collision)
-    //{
-    //    //if (_collision.gameObject.CompareTag("Player"))
-    //    //{
-    //    //    m_rigidbody.AddForce(_collision.GetContact(0).normal * m_onContactAddUp, ForceMode.Impulse);
-    //    //}
-    //}
+    private void OnCollisionEnter(Collision _collision)
+    {
+        if(_collision.gameObject.CompareTag(m_teamPlayerOne))
+        {
+            //"Wireless" connection to tell the Audiomanager which (kind of) sound to play.
+            HitPaddleTpOne?.Invoke();
+        }
+
+        if (_collision.gameObject.CompareTag(m_teamPlayerTwo))
+        {
+            //"Wireless" connection to tell the Audiomanager which (kind of) sound to play.
+            HitPaddleTpTwo?.Invoke();
+        }
+
+        if (_collision.gameObject.CompareTag(m_eastWall))
+        {
+            HitEastWall?.Invoke();
+        }
+
+        if (_collision.gameObject.CompareTag(m_westWall))
+        {
+            HitWestWall?.Invoke();
+        }
+
+        //if (_collision.gameObject.CompareTag("Player"))
+        //{
+        //    m_rigidbody.AddForce(_collision.GetContact(0).normal * m_onContactAddUp, ForceMode.Impulse);
+        //}
+    }
 }

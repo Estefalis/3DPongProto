@@ -10867,6 +10867,11 @@ PrefabInstance:
       propertyPath: m_matchManager
       value: 
       objectReference: {fileID: 911050368}
+    - target: {fileID: 4887262735939388797, guid: 53549484812ff734d80002c639f02a41,
+        type: 3}
+      propertyPath: m_TagString
+      value: TpTwo
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53549484812ff734d80002c639f02a41, type: 3}
 --- !u!1001 &4899228495555184003
@@ -10940,6 +10945,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4899228497430727572, guid: 3f1c4213d4e0d8e4789aedee3de29d67,
+        type: 3}
+      propertyPath: m_TagString
+      value: TpOne
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f1c4213d4e0d8e4789aedee3de29d67, type: 3}
