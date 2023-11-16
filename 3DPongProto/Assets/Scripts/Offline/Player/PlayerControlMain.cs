@@ -1,5 +1,5 @@
 using System;
-using ThreeDeePongProto.Managers;
+using ThreeDeePongProto.Offline.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,6 +14,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         #region SerializeField-Member-Variables
         [SerializeField] protected Rigidbody m_rigidbody;
+        [SerializeField] protected AudioSource m_audioSource;
 
         [Header("Player Details")]
         [SerializeField] protected int m_playerId;
@@ -94,7 +95,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             ClampRotationAngle();
 
             //TODO: MUST be removed after testing is completed!!!_______________________________
-            //TODO: Move 'm_matchValues.PaddleWidthAdjustment' to each individual player.
+            //TODO: MatchManager shall pass PaddleWidthAdjustment-Changes after hitting objects to each individual player.
             if (Keyboard.current.pKey.wasPressedThisFrame)
             {
                 if (m_matchValues != null)

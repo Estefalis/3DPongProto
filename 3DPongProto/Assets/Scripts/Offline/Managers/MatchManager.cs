@@ -10,12 +10,10 @@ public enum EGameModi
     Internet
 }
 
-namespace ThreeDeePongProto.Managers
+namespace ThreeDeePongProto.Offline.Managers
 {
     public class MatchManager : MonoBehaviour
     {
-        //TODO EMatchCountOptions implementieren.
-
         #region SerializeField-Member-Variables
         [SerializeField] private GameObject m_playGround;
 
@@ -108,9 +106,9 @@ namespace ThreeDeePongProto.Managers
             MenuOrganisation.RestartGameLevel += ReSetMatch;
             MenuOrganisation.EndInfiniteMatch += LetsEndInfiniteMatch;
 
-            BallMovement.RoundCountStarts += MatchStartValues;
-            BallMovement.HitGoalOne += UpdateTPTwoPoints;
-            BallMovement.HitGoalTwo += UpdateTPOnePoints;
+            BallBehaviour.RoundCountStarts += MatchStartValues;
+            BallBehaviour.HitGoalOne += UpdateTPTwoPoints;
+            BallBehaviour.HitGoalTwo += UpdateTPOnePoints;
 
             StartNextRound += LetsStartNextRound;
             StartWinProcedure += LetsStartWinProcedure;
@@ -125,9 +123,9 @@ namespace ThreeDeePongProto.Managers
             MenuOrganisation.RestartGameLevel -= ReSetMatch;
             MenuOrganisation.EndInfiniteMatch -= LetsEndInfiniteMatch;
 
-            BallMovement.RoundCountStarts -= MatchStartValues;
-            BallMovement.HitGoalOne -= UpdateTPTwoPoints;
-            BallMovement.HitGoalTwo -= UpdateTPOnePoints;
+            BallBehaviour.RoundCountStarts -= MatchStartValues;
+            BallBehaviour.HitGoalOne -= UpdateTPTwoPoints;
+            BallBehaviour.HitGoalTwo -= UpdateTPOnePoints;
 
             StartNextRound -= LetsStartNextRound;
             StartWinProcedure -= LetsStartWinProcedure;

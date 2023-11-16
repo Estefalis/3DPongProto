@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using ThreeDeePongProto.Managers;
+using ThreeDeePongProto.Offline.Managers;
 using ThreeDeePongProto.Offline.CameraSetup;
 using TMPro;
 using UnityEngine;
@@ -46,11 +46,11 @@ namespace ThreeDeePongProto.Offline.UI
 
         private void OnEnable()
         {
-            //TODO: Eventually code to keep the 'source image width' equal to it's height.
+            //TODO: COULD HAVE - Eventually code to keep the 'source image width' equal to it's height.
             m_playerPointsConnection.Add(m_playerNamesTMPList, m_totalPointsTMPList);
 
-            BallMovement.HitGoalOne += UpdateUserInterface;
-            BallMovement.HitGoalTwo += UpdateUserInterface;
+            BallBehaviour.HitGoalOne += UpdateUserInterface;
+            BallBehaviour.HitGoalTwo += UpdateUserInterface;
             MatchManager.StartNextRound += UpdateUserInterface;
 
             if (m_matchValues == null)
@@ -63,8 +63,8 @@ namespace ThreeDeePongProto.Offline.UI
 
         private void OnDisable()
         {
-            BallMovement.HitGoalOne -= UpdateUserInterface;
-            BallMovement.HitGoalTwo -= UpdateUserInterface;
+            BallBehaviour.HitGoalOne -= UpdateUserInterface;
+            BallBehaviour.HitGoalTwo -= UpdateUserInterface;
             MatchManager.StartNextRound -= UpdateUserInterface;
         }
 

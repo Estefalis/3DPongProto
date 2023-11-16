@@ -7,8 +7,6 @@ using UnityEngine;
 
 public class SerializingData : IPersistentData
 {
-    //TODO: Path, m_KEY und m_IV exact neu definieren!!!
-
     private const string m_KEY = "Yx/P5QVTRuUt55p82QNnkI1LXbXM4/qsxM9P7eihc0o=";
     private const string m_IV = "L5j2EvGAywqpH86whhvjWA=="; //InitializationVector.
 
@@ -93,7 +91,7 @@ public class SerializingData : IPersistentData
             //Debug.LogError($"The file at {path} cannot be loaded, because it does not exist!");
             //throw new FileNotFoundException($"{path} does not exit!");
 
-            //The receiver can check for and react to 'Null'.
+            //The receiver can check for/and react to 'Null'.
             return default;
         }
 

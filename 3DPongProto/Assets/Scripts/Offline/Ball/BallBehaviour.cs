@@ -1,10 +1,11 @@
 using System;
-using ThreeDeePongProto.Managers;
+using ThreeDeePongProto.Offline.AudioManagement;
+using ThreeDeePongProto.Offline.Managers;
 using ThreeDeePongProto.Offline.Player.Inputs;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class BallMovement : MonoBehaviour
+public class BallBehaviour : MonoBehaviour
 {
     #region Script-References
     [SerializeField] private MatchManager m_matchManager;
@@ -18,6 +19,8 @@ public class BallMovement : MonoBehaviour
     [SerializeField] private float m_offPaddleAngle = 0.1f;
     //[SerializeField] float m_onContactAddUp = 1.10f;
 
+    [SerializeField] private AudioSource m_ballAudioSource;
+
     [SerializeField] private readonly string m_goalOne = "GoalOne";
     [SerializeField] private readonly string m_goalTwo = "GoalTwo";
     [SerializeField] private readonly string m_teamPlayerOne = "TpOne";
@@ -28,27 +31,18 @@ public class BallMovement : MonoBehaviour
     [SerializeField] private readonly string m_westWall = "WestWall";
     #endregion
 
-    /*TODO:
-     * References:
-     * Player:      - Player 1 & 2, if AdditionalSpeed (m_onContactAddUp) shall be applied
-     *              - AudioSource
-     *              - AudioClipArray/-List
-     */
+    private int m_trackId = 0;
 
     #region #region Non-SerializeField-Member-Variables
     private Vector3 m_ballPopPosition;
     private Quaternion m_ballPopRotation;
 
     #region Actions
-    //TODO: Add parameter on Actions (<Mixergroup/Soundtype>, <AudioSource> (Ball), 2D/3D), so the Audiomanager basicly only has to "chose" a sound.
-    public static event Action HitGoalOne;
-    public static event Action HitGoalTwo;
-    public static event Action HitPaddleTpOne;
-    public static event Action HitPaddleTpTwo;
-    public static event Action HitEastWall;
-    public static event Action HitWestWall;
-    public static event Action PlayBallStartSound;
-    public static event Action RoundCountStarts;
+    public static event Action HitGoalOne, HitGoalTwo;  //Updates UserInterface in MatchUserInterface.cs
+    public static event Action RoundCountStarts;        //MatchManager saves MatchStartTime and sets 'MatchHasStarted'-Bool to true.
+
+    //TODO: Audioplay-Structure: (Emitter, AudioSourceSettings (Diegetic/NonDiegetic), Track-ID (if not random), RandomBool);
+    public static event Action<ESoundEmittingObjects, EAudioType, int, bool> PlaySpecificAudio;
     #endregion
     #endregion
 
@@ -56,6 +50,8 @@ public class BallMovement : MonoBehaviour
     {
         if (m_rigidbody == null)
             m_rigidbody = GetComponentInChildren<Rigidbody>();
+        if(m_ballAudioSource !=  null)
+        m_ballAudioSource = GetComponent<AudioSource>();
 
         m_ballPopPosition = m_rigidbody.position;
         m_ballPopRotation = m_rigidbody.rotation;
@@ -63,6 +59,8 @@ public class BallMovement : MonoBehaviour
 
     private void Start()
     {
+        AudioManager.LetsRegisterAudioSources(m_ballAudioSource);
+
         m_ballMovement = UserInputManager.m_playerInputActions;
         m_ballMovement.PlayerActions.Enable();
         m_ballMovement.PlayerActions.PokeTheBall.performed += StartBallMovement;
@@ -111,15 +109,19 @@ public class BallMovement : MonoBehaviour
     {
         if (_other.gameObject.CompareTag(m_goalOne))
         {
-            //Match-Points of Player/Team 2 are increasing.
+            //MatchManager: WinCondition-Check & increases Match-Points of Player/Team 2 - MatchUserInterface: Updates MatchUI - PlayerControls: Resets Paddle on Goal.
             HitGoalOne?.Invoke();
+            //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
+            PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
             ResetBall();
         }
 
         if (_other.gameObject.CompareTag(m_goalTwo))
         {
-            //Match-Points of Player/Team 1 are increasing.
+            //MatchManager: WinCondition-Check & increases Match-Points of Player/Team 1 - MatchUserInterface: Updates MatchUI - PlayerControls: Resets Paddle on Goal.
             HitGoalTwo?.Invoke();
+            //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
+            PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
             ResetBall();
         }
     }
@@ -133,38 +135,40 @@ public class BallMovement : MonoBehaviour
 
             if (!m_matchManager.MatchStarted)
             {
-                //AudioManager shall play a certain sound on BallStart.
-                PlayBallStartSound?.Invoke();
-                //MatchManager saves values at GameStart.
-                RoundCountStarts?.Invoke();                
+                RoundCountStarts?.Invoke();
+                //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
+                PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);   //BallstartSound
             }
         }
     }
 
     private void OnCollisionEnter(Collision _collision)
     {
-        if(_collision.gameObject.CompareTag(m_teamPlayerOne))
+        if (_collision.gameObject.CompareTag(m_teamPlayerOne))
         {
-            //"Wireless" connection to tell the Audiomanager which (kind of) sound to play.
-            HitPaddleTpOne?.Invoke();
+            //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
+            PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
         }
 
         if (_collision.gameObject.CompareTag(m_teamPlayerTwo))
         {
-            //"Wireless" connection to tell the Audiomanager which (kind of) sound to play.
-            HitPaddleTpTwo?.Invoke();
+            //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
+            PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
         }
 
         if (_collision.gameObject.CompareTag(m_eastWall))
         {
-            HitEastWall?.Invoke();
+            //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
+            PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.Diegetic, m_trackId, false);
         }
 
         if (_collision.gameObject.CompareTag(m_westWall))
         {
-            HitWestWall?.Invoke();
+            //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
+            PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.Diegetic, m_trackId, false);
         }
 
+        //TODO: Player 1 & 2, if AdditionalSpeed (m_onContactAddUp) shall be applied?
         //if (_collision.gameObject.CompareTag("Player"))
         //{
         //    m_rigidbody.AddForce(_collision.GetContact(0).normal * m_onContactAddUp, ForceMode.Impulse);

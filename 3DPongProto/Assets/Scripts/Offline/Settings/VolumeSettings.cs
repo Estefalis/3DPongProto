@@ -295,7 +295,7 @@ namespace ThreeDeePongProto.Offline.Settings
         }
 
         /// <summary>
-        /// (Un)Sets SFX-&MasterVolume minValues/savedValues & Toggles on/off.
+        /// (Un)Sets Diegetic-&MasterVolume minValues/savedValues & Toggles on/off.
         /// </summary>
         /// <param name="_mute"></param>
         private void HandleSFXToggleValueChanges(bool _mute)

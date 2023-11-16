@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using ThreeDeePongProto.Managers;
+using ThreeDeePongProto.Offline.Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;

@@ -1,4 +1,5 @@
 using System.Collections;
+using ThreeDeePongProto.Offline.AudioManagement;
 using ThreeDeePongProto.Offline.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -28,8 +29,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         protected override void OnEnable()
         {
             base.OnEnable();
-            BallMovement.HitGoalOne += LetsResetPaddleRotation;
-            BallMovement.HitGoalTwo += LetsResetPaddleRotation;
+            BallBehaviour.HitGoalOne += LetsResetPaddleRotation;
+            BallBehaviour.HitGoalTwo += LetsResetPaddleRotation;
         }
 
         protected override void OnDisable()
@@ -38,8 +39,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             StopAllCoroutines();
             InGameMenuOpens -= DisablePlayerActions;
             MenuOrganisation.CloseInGameMenu -= StartCoroutinesAndActions;
-            BallMovement.HitGoalOne -= LetsResetPaddleRotation;
-            BallMovement.HitGoalTwo -= LetsResetPaddleRotation;
+            BallBehaviour.HitGoalOne -= LetsResetPaddleRotation;
+            BallBehaviour.HitGoalTwo -= LetsResetPaddleRotation;
         }
 
         protected override void Start()
@@ -53,6 +54,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             InGameMenuOpens += DisablePlayerActions;
             MenuOrganisation.CloseInGameMenu += StartCoroutinesAndActions;
             StartCoroutinesAndActions();
+            
+            AudioManager.LetsRegisterAudioSources(m_audioSource);
         }
 
         protected override void Update()

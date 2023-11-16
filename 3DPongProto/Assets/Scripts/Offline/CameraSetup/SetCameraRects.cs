@@ -45,7 +45,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                 m_lastSetCameraMode = (int)m_graphicsSettings.ECameraMode;
             }
             else
-                //m_lastSetCameraMode = (uint)GameManager.Instance.ECameraMode;
                 m_lastSetCameraMode = (int)m_graphicUiStates.SetCameraMode;
 
             SetCameraMode(m_lastSetCameraMode);

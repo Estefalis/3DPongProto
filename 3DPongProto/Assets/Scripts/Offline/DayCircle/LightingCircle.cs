@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace ThreeDeePongProto.Shared.DayCircle
@@ -10,7 +8,7 @@ namespace ThreeDeePongProto.Shared.DayCircle
         [SerializeField] private Light m_directionalLight;
         [SerializeField] private LightingConditions m_lightingConditions;
         [SerializeField, Range(0, 24)] private float m_timeOfDay;
-        [SerializeField, Min(0.1f)] private float m_adjustDayLength;
+        [SerializeField, Min(0.1f)] private float m_adjustDayLength;    //Ein höherer Float-Wert bei 'm_adjustDayLength' verlängert den Tag-/Nacht-Wechsel und umgekehrt.
 
         private void OnValidate()
         {
@@ -40,7 +38,6 @@ namespace ThreeDeePongProto.Shared.DayCircle
 
             if (Application.isPlaying)
             {
-                //Ein höherer Float-Wert bei 'm_adjustDayLength' verlängert den Tag-/Nacht-Wechsel und umgekehrt.
                 m_timeOfDay += Time.deltaTime / m_adjustDayLength;
                 m_timeOfDay %= 24;              //Clamp zw. 0-24
                 UpdateLighting(m_timeOfDay / 24f);

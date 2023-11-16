@@ -10,5 +10,5 @@ public class PlayerIDData : ScriptableObject
     public int PlayerId;
     public Image Avatar;
 
-    public bool PlayerOnFrontline;  //TODO: has to be saved and loaded!!!
+    public bool PlayerOnFrontline;
 }
