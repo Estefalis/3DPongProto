@@ -94,17 +94,17 @@ namespace ThreeDeePongProto.Offline.UI
                     UpdateVisibleTransformList(m_playerParentTransform[0]);
                     break;
                 }
-                case ECameraModi.TwoHorizontal:
-                {
-                    m_playerParentTransform[0].position = new Vector3(0 + m_AdjustxPos, _runtimeFullsizeRect.height * 0.5f + m_AdjustyPos, 0);
-                    m_playerParentTransform[1].position = new Vector3(0 + m_AdjustxPos, _runtimeFullsizeRect.height + m_AdjustyPos, 0);
-                    UpdateVisibleTransformList(m_playerParentTransform[0], m_playerParentTransform[1]);
-                    break;
-                }
                 case ECameraModi.TwoVertical:
                 {
                     m_playerParentTransform[0].position = new Vector3(0 + m_AdjustxPos, _runtimeFullsizeRect.height + m_AdjustyPos, 0);
                     m_playerParentTransform[1].position = new Vector3(_runtimeFullsizeRect.width * 0.5f + m_AdjustxPos, _runtimeFullsizeRect.height + m_AdjustyPos, 0);
+                    UpdateVisibleTransformList(m_playerParentTransform[0], m_playerParentTransform[1]);
+                    break;
+                }
+                case ECameraModi.TwoHorizontal:
+                {
+                    m_playerParentTransform[0].position = new Vector3(0 + m_AdjustxPos, _runtimeFullsizeRect.height * 0.5f + m_AdjustyPos, 0);
+                    m_playerParentTransform[1].position = new Vector3(0 + m_AdjustxPos, _runtimeFullsizeRect.height + m_AdjustyPos, 0);
                     UpdateVisibleTransformList(m_playerParentTransform[0], m_playerParentTransform[1]);
                     break;
                 }
@@ -160,7 +160,8 @@ namespace ThreeDeePongProto.Offline.UI
         {
             for (int i = 0; i < m_playerNamesTMPList.Count; i++)
             {
-                m_playerNamesTMPList[i].text = m_matchValues.PlayerInGame[i];
+                if (m_matchValues.PlayersInGame[i] != null)
+                m_playerNamesTMPList[i].text = m_matchValues.PlayersInGame[i].PlayerName;
             }
         }
 

@@ -6,9 +6,10 @@ using UnityEngine.UI;
 public enum ECameraModi
 {
     SingleCam,
-    TwoHorizontal,
     TwoVertical,
-    FourSplit
+    TwoHorizontal,
+    FourSplit,
+    EndCount
 }
 
 namespace ThreeDeePongProto.Offline.Settings
@@ -30,10 +31,14 @@ namespace ThreeDeePongProto.Offline.Settings
         #region Scriptable Variables
         [Header("Scriptable Variables")]
         [SerializeField] private GraphicUiStates m_graphicUiStates;
+        [SerializeField] private MatchValues m_matchValues;
         #endregion
 
         private Resolution[] m_screenResolutions;
         public ECameraModi ECameraMode { get => m_eCameraMode; }
+
+        private int m_screenSplitModi;
+        private List<string> m_splitscreenModi;
 
         #region Serialization
         private readonly string m_settingStatesFolderPath = "/SaveData/Settings-States";
@@ -47,8 +52,8 @@ namespace ThreeDeePongProto.Offline.Settings
         private void Awake()
         {
             m_systemQualityLevel = QualitySettings.GetQualityLevel();
-
             GetAvailableResolutions();
+            SetupSplitDropdown();
 
             if (m_graphicUiStates == null)
             {
@@ -57,8 +62,7 @@ namespace ThreeDeePongProto.Offline.Settings
 #endif
                 ReSetDefault();
             }
-            //else
-            //    LoadGraphicSettings();            
+            //else moved to StartMenuScene.       
         }
 
         private void Start()
@@ -108,6 +112,34 @@ namespace ThreeDeePongProto.Offline.Settings
             m_resolutionDropdown.AddOptions(resolutionOptionsList);
             m_resolutionDropdown.value = currentResolutionIndex;
             m_resolutionDropdown.RefreshShownValue();
+        }
+
+        private void SetupSplitDropdown()
+        {
+            m_splitscreenModi = new();
+            uint currentPlayer = m_matchValues.PlayerCountInGame;
+
+            //Automatize the shown ECameraModi in the 'm_screenSplitDropdown' based on the player in the match.
+            m_screenSplitModi = currentPlayer switch
+            {
+                2 => m_screenSplitModi = (int)ECameraModi.EndCount - 1,
+                4 => m_screenSplitModi = (int)ECameraModi.EndCount,
+                _ => m_screenSplitModi = (int)ECameraModi.EndCount,
+            };
+
+            for (int i = 0; i < m_screenSplitModi; i++)
+            {
+                m_splitscreenModi.Add($"{(ECameraModi)i}");
+            }
+
+            m_screenSplitDropdown.ClearOptions();
+            m_screenSplitDropdown.AddOptions(m_splitscreenModi);
+            m_screenSplitDropdown.RefreshShownValue();
+
+            if (m_graphicUiStates != null)
+                m_screenSplitDropdown.value = (int)m_graphicUiStates.SetCameraMode;
+            else
+                m_screenSplitDropdown.value = (int)m_eCameraMode;
         }
 
         public void SetActiveCameras()

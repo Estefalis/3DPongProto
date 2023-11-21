@@ -10,16 +10,17 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private CameraManager m_cameraManager;
         #endregion
 
-        private float m_fullWidthHor = 1.0f;
-        private float m_fullHeightVer = 1.0f;
-        private float m_halfHeightHor = 0.5f;
-        private float m_halfWidthVer = 0.5f;
+        private const float m_FULLWIDTHHOR = 1.0f;
+        private const float m_FULLHEIGHTVER = 1.0f;
+        private const float m_HALFHEIGHTHOR = 0.5f;
+        private const float m_HALFWIDTHVER = 0.5f;
 
         //private Rect m_fullsizeRect; //Moved to CameraManager.
-        private int m_lastSetCameraMode;
+        private ECameraModi m_lastSetCameraMode;
 
         #region Scriptable Variables
         [SerializeField] private GraphicUiStates m_graphicUiStates;
+        [SerializeField] private MatchValues m_matchValues;
         #endregion
 
         private void Awake()
@@ -29,12 +30,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void OnEnable()
         {
-            //Moved to CameraManager.
-            //Debug.Log(m_cameraManager.AvailableCameras[0]); //Old m_playerCam1
-            //Debug.Log(m_cameraManager.AvailableCameras[1]); //Old m_playerCam2
-            //Debug.Log(m_cameraManager.AvailableCameras[2]); //Old m_playerCam3
-            //Debug.Log(m_cameraManager.AvailableCameras[3]); //Old m_playerCam4
-
+            //AvailableCameras moved to CameraManager.
             UpdateFullsizeRect();
         }
 
@@ -42,44 +38,45 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         {
             if (m_graphicUiStates == null)
             {
-                m_lastSetCameraMode = (int)m_graphicsSettings.ECameraMode;
+                m_lastSetCameraMode = m_graphicsSettings.ECameraMode;
             }
             else
-                m_lastSetCameraMode = (int)m_graphicUiStates.SetCameraMode;
+                m_lastSetCameraMode = m_graphicUiStates.SetCameraMode;
 
             SetCameraMode(m_lastSetCameraMode);
         }
 
-        private void SetCameraMode(int _cameraMode)
+        private void SetCameraMode(ECameraModi _cameraMode)
         {
             switch (_cameraMode)
             {
-                case 0:
+                case ECameraModi.SingleCam:
                 {
                     SetSingleCamera();
                     break;
                 }
-                case 1:
+                case ECameraModi.TwoVertical:
                 {
-                    if (m_cameraManager.AvailableCameras[1] != null && m_lastSetCameraMode == (int)ECameraModi.TwoHorizontal)
-                        SetCamerasHorizontal(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
-                    break;
-                }
-                case 2:
-                {
-                    if (m_cameraManager.AvailableCameras[1] != null && m_lastSetCameraMode == (int)ECameraModi.TwoVertical)
+                    if (m_cameraManager.AvailableCameras[1] != null && m_lastSetCameraMode == ECameraModi.TwoVertical)
                         SetCamerasVertical(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
                     break;
                 }
-                case 3:
+                case ECameraModi.TwoHorizontal:
                 {
-                    if (m_cameraManager.AvailableCameras[2] != null && m_cameraManager.AvailableCameras[3] != null && m_lastSetCameraMode == (int)ECameraModi.FourSplit)
+                    if (m_cameraManager.AvailableCameras[1] != null && m_lastSetCameraMode == ECameraModi.TwoHorizontal)
+                        SetCamerasHorizontal(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
+                    break;
+                }
+                case ECameraModi.FourSplit:
+                {
+                    if (m_cameraManager.AvailableCameras[2] != null && m_cameraManager.AvailableCameras[3] != null && m_lastSetCameraMode == ECameraModi.FourSplit)
                         SetFourSplit(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1], m_cameraManager.AvailableCameras[2], m_cameraManager.AvailableCameras[3]);
                     break;
                 }
-                default:
-                    m_lastSetCameraMode = (int)ECameraModi.SingleCam;
-                    SetSingleCamera();
+                default:    //TwoHorizontal
+                    m_lastSetCameraMode = ECameraModi.TwoHorizontal;
+                    if (m_cameraManager.AvailableCameras[1] != null && m_lastSetCameraMode == ECameraModi.TwoHorizontal)
+                        SetCamerasHorizontal(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
                     break;
             }
         }
@@ -110,28 +107,29 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         {
             switch (m_lastSetCameraMode)
             {
-                //SingleCamera
-                case 0:
+                case ECameraModi.SingleCam:
                 {
                     CameraManager.RuntimeFullsizeRect = m_cameraManager.AvailableCameras[0].pixelRect;
                     break;
                 }
-                //TwoHorizontal
-                case 1:
-                {
-                    CameraManager.RuntimeFullsizeRect = new Rect(0, 0, m_cameraManager.AvailableCameras[0].pixelRect.width, m_cameraManager.AvailableCameras[0].pixelRect.height + m_cameraManager.AvailableCameras[1].pixelRect.height);
-                    break;
-                }
-                //TwoVertical
-                case 2:
+                case ECameraModi.TwoVertical:
                 {
                     CameraManager.RuntimeFullsizeRect = new Rect(0, 0, m_cameraManager.AvailableCameras[0].pixelRect.width + m_cameraManager.AvailableCameras[1].pixelRect.width, m_cameraManager.AvailableCameras[0].pixelRect.height);
                     break;
                 }
-                //FourSplit
-                case 3:
+                case ECameraModi.TwoHorizontal:
+                {
+                    CameraManager.RuntimeFullsizeRect = new Rect(0, 0, m_cameraManager.AvailableCameras[0].pixelRect.width, m_cameraManager.AvailableCameras[0].pixelRect.height + m_cameraManager.AvailableCameras[1].pixelRect.height);
+                    break;
+                }
+                case ECameraModi.FourSplit:
                 {
                     CameraManager.RuntimeFullsizeRect = new Rect(0, 0, m_cameraManager.AvailableCameras[0].pixelRect.width + m_cameraManager.AvailableCameras[1].pixelRect.width, m_cameraManager.AvailableCameras[0].pixelRect.height + m_cameraManager.AvailableCameras[1].pixelRect.height);
+                    break;
+                }
+                default:    //TwoHorizontal
+                {
+                    CameraManager.RuntimeFullsizeRect = new Rect(0, 0, m_cameraManager.AvailableCameras[0].pixelRect.width, m_cameraManager.AvailableCameras[0].pixelRect.height + m_cameraManager.AvailableCameras[1].pixelRect.height);
                     break;
                 }
             }
@@ -148,11 +146,11 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
             CamRectOut(_camera1, _camera2, out float Cam1X, out float Cam1Y, out float Cam1W, out float Cam1H, out float Cam2X, out float Cam2Y, out float Cam2W, out float Cam2H);
 
-            _camera1.pixelRect = new Rect(Cam1X, Cam1Y, Cam1W * m_fullWidthHor, Cam1H * m_halfHeightHor);
+            _camera1.pixelRect = new Rect(Cam1X, Cam1Y, Cam1W * m_FULLWIDTHHOR, Cam1H * m_HALFHEIGHTHOR);
             m_cameraManager.UpdateRectDimensions(_camera1, _camera1.pixelRect);
 
-            Cam2Y += Cam2H * m_halfHeightHor;
-            _camera2.pixelRect = new Rect(Cam2X, Cam2Y, Cam2W * m_fullWidthHor, Cam2H * m_halfHeightHor);
+            Cam2Y += Cam2H * m_HALFHEIGHTHOR;
+            _camera2.pixelRect = new Rect(Cam2X, Cam2Y, Cam2W * m_FULLWIDTHHOR, Cam2H * m_HALFHEIGHTHOR);
             m_cameraManager.UpdateRectDimensions(_camera2, _camera2.pixelRect);
         }
 
@@ -162,11 +160,11 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
             CamRectOut(_camera1, _camera2, out float Cam1X, out float Cam1Y, out float Cam1W, out float Cam1H, out float Cam2X, out float Cam2Y, out float Cam2W, out float Cam2H);
 
-            _camera1.pixelRect = new Rect(Cam1X, Cam1Y, Cam1W * m_halfWidthVer, Cam1H * m_fullHeightVer);
+            _camera1.pixelRect = new Rect(Cam1X, Cam1Y, Cam1W * m_HALFWIDTHVER, Cam1H * m_FULLHEIGHTVER);
             m_cameraManager.UpdateRectDimensions(_camera1, _camera1.pixelRect);
 
-            Cam2X += Cam2W * m_halfWidthVer;
-            _camera2.pixelRect = new Rect(Cam2X, Cam2Y, Cam2W * m_halfWidthVer, Cam2H * m_fullHeightVer);
+            Cam2X += Cam2W * m_HALFWIDTHVER;
+            _camera2.pixelRect = new Rect(Cam2X, Cam2Y, Cam2W * m_HALFWIDTHVER, Cam2H * m_FULLHEIGHTVER);
             m_cameraManager.UpdateRectDimensions(_camera2, _camera2.pixelRect);
         }
 
@@ -186,21 +184,21 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             float Cam4W = _camera4.pixelRect.width;
             float Cam4H = _camera4.pixelRect.height;
 
-            //Cam1W *= m_halfWidthVer;
-            _camera1.pixelRect = new Rect(Cam1X, Cam1Y, Cam1W * m_halfWidthVer, Cam1H * m_halfHeightHor);
+            //Cam1W *= m_HALFWIDTHVER;
+            _camera1.pixelRect = new Rect(Cam1X, Cam1Y, Cam1W * m_HALFWIDTHVER, Cam1H * m_HALFHEIGHTHOR);
             m_cameraManager.UpdateRectDimensions(_camera1, _camera1.pixelRect);
 
-            Cam2X += Cam2W * m_halfWidthVer;
-            _camera2.pixelRect = new Rect(Cam2X, Cam2Y, Cam2W * m_halfWidthVer, Cam2H * m_halfHeightHor);
+            Cam2X += Cam2W * m_HALFWIDTHVER;
+            _camera2.pixelRect = new Rect(Cam2X, Cam2Y, Cam2W * m_HALFWIDTHVER, Cam2H * m_HALFHEIGHTHOR);
             m_cameraManager.UpdateRectDimensions(_camera2, _camera2.pixelRect);
 
-            Cam3Y += Cam3H * m_halfHeightHor;
-            _camera3.pixelRect = new Rect(Cam3X, Cam3Y, Cam3W * m_halfWidthVer, Cam3H * m_halfHeightHor);
+            Cam3Y += Cam3H * m_HALFHEIGHTHOR;
+            _camera3.pixelRect = new Rect(Cam3X, Cam3Y, Cam3W * m_HALFWIDTHVER, Cam3H * m_HALFHEIGHTHOR);
             m_cameraManager.UpdateRectDimensions(_camera3, _camera3.pixelRect);
 
-            Cam4X += Cam4W * m_halfWidthVer;
-            Cam4Y += Cam4H * m_halfHeightHor;
-            _camera4.pixelRect = new Rect(Cam4X, Cam4Y, Cam4W * m_halfWidthVer, Cam4H * m_halfHeightHor);
+            Cam4X += Cam4W * m_HALFWIDTHVER;
+            Cam4Y += Cam4H * m_HALFHEIGHTHOR;
+            _camera4.pixelRect = new Rect(Cam4X, Cam4Y, Cam4W * m_HALFWIDTHVER, Cam4H * m_HALFHEIGHTHOR);
             m_cameraManager.UpdateRectDimensions(_camera4, _camera4.pixelRect);
         }
 
@@ -216,11 +214,11 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             Cam2H = _camera2.pixelRect.height;
         }
 
-        private void SetCamerasAndRects(int _cameraMode)
+        private void SetCamerasAndRects(ECameraModi _cameraMode)
         {
             switch (_cameraMode)
             {
-                case 0:
+                case ECameraModi.SingleCam:
                 {
                     m_cameraManager.AvailableCameras[1].gameObject.SetActive(false);
                     m_cameraManager.AvailableCameras[2].gameObject.SetActive(false);
@@ -228,7 +226,8 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                     ResetViewportRects(m_cameraManager.AvailableCameras[0]);
                     break;
                 }
-                case 1:
+                case ECameraModi.TwoVertical:
+                case ECameraModi.TwoHorizontal:
                 {
                     m_cameraManager.AvailableCameras[1].gameObject.SetActive(true);
                     m_cameraManager.AvailableCameras[2].gameObject.SetActive(false);
@@ -236,15 +235,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                     ResetViewportRects(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
                     break;
                 }
-                case 2:
-                {
-                    m_cameraManager.AvailableCameras[1].gameObject.SetActive(true);
-                    m_cameraManager.AvailableCameras[2].gameObject.SetActive(false);
-                    m_cameraManager.AvailableCameras[3].gameObject.SetActive(false);
-                    ResetViewportRects(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
-                    break;
-                }
-                case 3:
+                case ECameraModi.FourSplit:
                 {
                     m_cameraManager.AvailableCameras[1].gameObject.SetActive(true);
                     m_cameraManager.AvailableCameras[2].gameObject.SetActive(true);

@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 2849503855630572665}
   - component: {fileID: 367719091131127343}
   m_Layer: 3
-  m_Name: Body
+  m_Name: BodyTwo
   m_TagString: TpTwo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

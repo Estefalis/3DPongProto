@@ -14,7 +14,7 @@ namespace ThreeDeePongProto.Offline.Settings
         [Header("Player-Details")]
         //OnEndEdit in Unity sets the PlayerNames from MatchSettings UI.
         [SerializeField] private TMP_InputField m_playerIF;
-        [SerializeField] private TMP_InputField m_playerTwoIF;
+        [SerializeField] private TMP_InputField m_playerTwoIF;        
         [SerializeField] private Toggle[] m_rotationReset;
         [SerializeField] private bool m_TpOneRotResetDefault = true;
         [SerializeField] private bool m_TpTwoRotResetDefault = true;
@@ -45,13 +45,24 @@ namespace ThreeDeePongProto.Offline.Settings
         [Header("Rounds and Points")]
         [SerializeField] private int m_maxRoundDdIndex = 5;
         [SerializeField] private int m_maxPointDdIndex = 25;
+
+        #region Hiding
+        [Header("Hiding")]
+        [SerializeField] private Transform m_IFThreeParentTransform;
+        [SerializeField] private Transform m_IFFourParentTransform;
+        [SerializeField] private TMP_InputField m_playerThreeIF;
+        [SerializeField] private TMP_InputField m_playerFourIF;
+        [SerializeField] private Transform m_frontParentTransform;
+        [SerializeField] private Transform m_backPTwoDdGroup;
+        [SerializeField] private TextMeshProUGUI m_backLineUpText;
+        #endregion
         [Space]
         #endregion
 
         #region Scriptable-References
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private BasicFieldValues m_basicFieldValues;
-        [SerializeField] private PlayerIDData[] m_playerIDData;
+        [SerializeField] private MatchValues m_matchValues;
         #endregion
         #endregion
         [Space]
@@ -136,11 +147,32 @@ namespace ThreeDeePongProto.Offline.Settings
             SetupLineUpSliders();
             UpdateLineUpTMPs();
 
-            if (m_playerIDData.Length > 2)
+            switch (m_matchValues.PlayerCountInGame)
             {
-                SetupFrontlineDropdowns();
-                SetupBacklineDropdowns();
+                case 4:
+                {
+                    ObjectsToHide(true, true, true, true, 225.0f);
+                    SetupFrontlineDropdowns();
+                    SetupBacklineDropdowns();
+                    break;
+                }
+                default:
+                {
+                    //Was waer das Leben, wenn man nicht bescheissen koennt. ;P
+                    ObjectsToHide(false, false, false, false, 714.0f);
+                    SetupBacklineDropdowns();
+                    break;
+                }
             }
+        }
+
+        private void ObjectsToHide(bool _IFThree, bool _IFFour, bool _frontParent, bool _backDropdowns, float _backTextWidth)
+        {
+            m_IFThreeParentTransform.gameObject.SetActive(_IFThree);
+            m_IFFourParentTransform.gameObject.SetActive(_IFFour);
+            m_frontParentTransform.gameObject.SetActive(_frontParent);
+            m_backPTwoDdGroup.gameObject.SetActive(_backDropdowns);
+            m_backLineUpText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _backTextWidth);
         }
 
         private void AddGroupListeners()
@@ -160,23 +192,27 @@ namespace ThreeDeePongProto.Offline.Settings
             //Field-Length
             m_matchSetupDropdowns[3].onValueChanged.AddListener(delegate
             { OnLengthDropdownValueChanged(m_matchSetupDropdowns[3]); });
-            //Player-Set-Frontline
-            m_frontLineDds[0].onValueChanged.AddListener(delegate
-            { OnTeamOneFrontlineDropdownValueChanged(m_frontLineDds[0]); });
-            m_frontLineDds[1].onValueChanged.AddListener(delegate
-            { OnTeamTwoFrontlineDropdownValueChanged(m_frontLineDds[1]); });
+
+            if (m_matchValues.PlayerCountInGame == 4)
+            {
+                //Player-Set-Frontline
+                m_frontLineDds[0].onValueChanged.AddListener(delegate
+                { OnTeamOneFrontlineDropdownValueChanged(m_frontLineDds[0]); });
+                m_frontLineDds[1].onValueChanged.AddListener(delegate
+                { OnTeamTwoFrontlineDropdownValueChanged(m_frontLineDds[1]); });
+                m_distanceSliderValues[0].onValueChanged.AddListener(OnFrontlineSliderValueChanged);
+            }
+
             //Player-Set-Backline
             m_backLineDds[0].onValueChanged.AddListener(delegate
             { OnTeamOneBacklineDropdownValueChanged(m_backLineDds[0]); });
             m_backLineDds[1].onValueChanged.AddListener(delegate
             { OnTeamTwoBacklineDropdownValueChanged(m_backLineDds[1]); });
+            m_distanceSliderValues[1].onValueChanged.AddListener(OnBacklineSliderValueChanged);
 
             //Toggles to allow or deny PaddleRotation-Resets on each Goal for TeamPlayerOne [0] and TeamPlayerTwo [1].
             m_rotationReset[0].onValueChanged.AddListener(HandleTpOneToggleValueChanges);
             m_rotationReset[1].onValueChanged.AddListener(HandleTpTwoToggleValueChanges);
-
-            m_distanceSliderValues[0].onValueChanged.AddListener(OnFrontlineSliderValueChanged);
-            m_distanceSliderValues[1].onValueChanged.AddListener(OnBacklineSliderValueChanged);
         }
 
         private void RemoveGroupListeners()
@@ -196,22 +232,27 @@ namespace ThreeDeePongProto.Offline.Settings
             //Field-Length
             m_matchSetupDropdowns[3].onValueChanged.RemoveListener(delegate
             { OnLengthDropdownValueChanged(m_matchSetupDropdowns[3]); });
-            //Player-Set-Frontline
-            m_frontLineDds[0].onValueChanged.RemoveListener(delegate
-            { OnTeamOneFrontlineDropdownValueChanged(m_frontLineDds[0]); });
-            m_frontLineDds[1].onValueChanged.RemoveListener(delegate
-            { OnTeamTwoFrontlineDropdownValueChanged(m_frontLineDds[1]); });
+
+            if (m_matchValues.PlayersInGame.Length > 2)
+            {
+                //Player-Set-Frontline
+                m_frontLineDds[0].onValueChanged.RemoveListener(delegate
+                { OnTeamOneFrontlineDropdownValueChanged(m_frontLineDds[0]); });
+                m_frontLineDds[1].onValueChanged.RemoveListener(delegate
+                { OnTeamTwoFrontlineDropdownValueChanged(m_frontLineDds[1]); });
+                m_distanceSliderValues[0].onValueChanged.RemoveListener(OnFrontlineSliderValueChanged);
+            }
+
             //Player-Set-Backline
             m_backLineDds[0].onValueChanged.RemoveListener(delegate
             { OnTeamOneBacklineDropdownValueChanged(m_backLineDds[0]); });
             m_backLineDds[1].onValueChanged.RemoveListener(delegate
             { OnTeamTwoBacklineDropdownValueChanged(m_backLineDds[1]); });
+            m_distanceSliderValues[1].onValueChanged.RemoveListener(OnBacklineSliderValueChanged);
 
             m_rotationReset[0].onValueChanged.RemoveListener(HandleTpOneToggleValueChanges);
             m_rotationReset[1].onValueChanged.RemoveListener(HandleTpTwoToggleValueChanges);
 
-            m_distanceSliderValues[0].onValueChanged.RemoveListener(OnFrontlineSliderValueChanged);
-            m_distanceSliderValues[1].onValueChanged.RemoveListener(OnBacklineSliderValueChanged);
         }
 
         #region Toggle-OnValueChanged-Methods
@@ -236,7 +277,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 }
             }
         }
-        
+
         private void HandleTpOneToggleValueChanges(bool _toggle)
         {
             m_matchUIStates.TpOneRotReset = _toggle;
@@ -318,7 +359,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     //Frontline Player 1 (Team 1, ID 0) = Backline Player 3 (Team 1, ID 2).
                     m_backLineDds[0].value = 1;
                     m_matchUIStates.TPOneFrontlineDdIndex = 0;
-                    UpdateFrontlineSetup(m_playerIDData[0].PlayerId);
+                    UpdateFrontlineSetup(m_matchValues.PlayersInGame[0].PlayerId);
                     break;
                 }
                 case 1:
@@ -326,7 +367,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     //Frontline Player 3 (Team 1, ID 2) = Backline Player 1 (Team 1, ID 0).
                     m_backLineDds[0].value = 0;
                     m_matchUIStates.TPOneFrontlineDdIndex = 1;
-                    UpdateFrontlineSetup(m_playerIDData[2].PlayerId);
+                    UpdateFrontlineSetup(m_matchValues.PlayersInGame[2].PlayerId);
                     break;
                 }
                 default:
@@ -347,7 +388,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     //Frontline Player 2 (Team 2, ID 1) = Backline Player 4 (Team 2, ID 3).
                     m_backLineDds[1].value = 1;
                     m_matchUIStates.TPTwoFrontlineDdIndex = 0;
-                    UpdateFrontlineSetup(m_playerIDData[1].PlayerId);
+                    UpdateFrontlineSetup(m_matchValues.PlayersInGame[1].PlayerId);
                     break;
                 }
                 case 1:
@@ -355,7 +396,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     //Frontline Player 4 (Team 2, ID 3) = Backline Player 2 (Team 2, ID 1).
                     m_backLineDds[1].value = 0;
                     m_matchUIStates.TPTwoFrontlineDdIndex = 1;
-                    UpdateFrontlineSetup(m_playerIDData[3].PlayerId);
+                    UpdateFrontlineSetup(m_matchValues.PlayersInGame[3].PlayerId);
                     break;
                 }
                 default:
@@ -376,7 +417,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     //Backline Player 1 (Team 1, ID 0) = Frontline Player 3 (Team 1, ID 2).
                     m_frontLineDds[0].value = 1;
                     m_matchUIStates.TPOneBacklineDdIndex = 0;
-                    UpdateBacklineSetup(m_playerIDData[0].PlayerId);
+                    UpdateBacklineSetup(m_matchValues.PlayersInGame[0].PlayerId);
                     break;
                 }
                 case 1:
@@ -384,7 +425,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     //Backline Player 3 (Team 1, ID 2) = Frontline Player 1 (Team 1, ID 0).
                     m_frontLineDds[0].value = 0;
                     m_matchUIStates.TPOneBacklineDdIndex = 1;
-                    UpdateBacklineSetup(m_playerIDData[2].PlayerId);
+                    UpdateBacklineSetup(m_matchValues.PlayersInGame[2].PlayerId);
                     break;
                 }
                 default:
@@ -405,7 +446,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     //Backline Player 2 (Team 2, ID 1) = Frontline Player 4 (Team 2, ID 3).
                     m_frontLineDds[1].value = 1;
                     m_matchUIStates.TPTwoBacklineDdIndex = 0;
-                    UpdateBacklineSetup(m_playerIDData[1].PlayerId);
+                    UpdateBacklineSetup(m_matchValues.PlayersInGame[1].PlayerId);
                     break;
                 }
                 case 1:
@@ -413,7 +454,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     //Backline Player 4 (Team 2, ID 3) = Frontline Player 2 (Team 2, ID 1).
                     m_frontLineDds[1].value = 0;
                     m_matchUIStates.TPTwoBacklineDdIndex = 1;
-                    UpdateBacklineSetup(m_playerIDData[3].PlayerId);
+                    UpdateBacklineSetup(m_matchValues.PlayersInGame[3].PlayerId);
                     break;
                 }
                 default:
@@ -441,12 +482,22 @@ namespace ThreeDeePongProto.Offline.Settings
         #region Name-Inputfields
         public void PlayerOneInput(string _playernameOne)
         {
-            m_playerIDData[0].PlayerName = _playernameOne;
+            m_matchValues.PlayersInGame[0].PlayerName = _playernameOne;
         }
 
         public void PlayerTwoInput(string _playernameTwo)
         {
-            m_playerIDData[1].PlayerName = _playernameTwo;
+            m_matchValues.PlayersInGame[1].PlayerName = _playernameTwo;
+        }
+
+        public void PlayerThreeInput(string _playernameThree)
+        {
+            m_matchValues.PlayersInGame[2].PlayerName = _playernameThree;
+        }
+
+        public void PlayerFourInput(string _playernameFour)
+        {
+            m_matchValues.PlayersInGame[3].PlayerName = _playernameFour;
         }
         #endregion
 
@@ -554,11 +605,11 @@ namespace ThreeDeePongProto.Offline.Settings
             m_playersTeamOne = new List<string>();
             m_playersTeamTwo = new List<string>();
 
-            for (int i = 0; i < m_playerIDData.Length; i++)
+            for (int i = 0; i < m_matchValues.PlayersInGame.Length; i++)
             {
-                if (m_playerIDData[i].PlayerId % 2 == 0)
+                if (m_matchValues.PlayersInGame[i].PlayerId % 2 == 0)
                     m_playersTeamOne.Add($"Player {i + 1}");
-                if (m_playerIDData[i].PlayerId % 2 != 0)
+                if (m_matchValues.PlayersInGame[i].PlayerId % 2 != 0)
                     m_playersTeamTwo.Add($"Player {i + 1}");
             }
 
@@ -584,11 +635,11 @@ namespace ThreeDeePongProto.Offline.Settings
             m_playersTeamOne = new List<string>();
             m_playersTeamTwo = new List<string>();
 
-            for (int i = 0; i < m_playerIDData.Length; i++)
+            for (int i = 0; i < m_matchValues.PlayerCountInGame; i++)
             {
-                if (m_playerIDData[i].PlayerId % 2 == 0)
+                if (m_matchValues.PlayersInGame[i].PlayerId % 2 == 0)
                     m_playersTeamOne.Add($"Player {i + 1}");
-                if (m_playerIDData[i].PlayerId % 2 != 0)
+                if (m_matchValues.PlayersInGame[i].PlayerId % 2 != 0)
                     m_playersTeamTwo.Add($"Player {i + 1}");
             }
 
@@ -641,7 +692,17 @@ namespace ThreeDeePongProto.Offline.Settings
                 return;
             }
 
-            m_frontLineText.SetText($"{m_distanceSliderValues[0].value + m_basicFieldValues.MinFrontLineDistance + m_basicFieldValues.BacklineAdjustment:N2}");
+            switch (m_matchValues.PlayerCountInGame)
+            {
+                case 4:
+                {
+                    m_frontLineText.SetText($"{m_distanceSliderValues[0].value + m_basicFieldValues.MinFrontLineDistance + m_basicFieldValues.BacklineAdjustment:N2}");
+                    break;
+                }
+                default:
+                    break;
+            }
+
             m_backLineText.text = $"{m_distanceSliderValues[1].value + m_basicFieldValues.MinBackLineDistance:N2}";
         }
 
@@ -661,12 +722,12 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void UpdateFrontlineSetup(int _playerId)
         {
-            m_playerIDData[_playerId].PlayerOnFrontline = true;
+            m_matchValues.PlayersInGame[_playerId].PlayerOnFrontline = true;
         }
 
         private void UpdateBacklineSetup(int _playerId)
         {
-            m_playerIDData[_playerId].PlayerOnFrontline = false;
+            m_matchValues.PlayersInGame[_playerId].PlayerOnFrontline = false;
         }
 
         private void UpdateDropdowns(int _dropdownIndex)

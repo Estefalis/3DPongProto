@@ -111,29 +111,16 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                 !(m_mousePosition.y < (CameraManager.RuntimeFullsizeRect.height - CameraManager.RuntimeFullsizeRect.height)) &&
                 !(m_mousePosition.y > CameraManager.RuntimeFullsizeRect.height))
             {
-                switch ((int)m_graphicUiStates.SetCameraMode)
+                switch (m_graphicUiStates.SetCameraMode)
                 {
                     //SingleCamera
-                    case 0:
+                    case ECameraModi.SingleCam:
                     {
                         m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
                         break;
                     }
-                    //TwoHorizontal
-                    case 1:
-                    {
-                        if (m_mousePosition.y >= m_cameraManager.AvailableCameras[1].pixelRect.yMin)
-                        {
-                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1]);
-                        }
-                        else
-                        {
-                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
-                        }
-                        break;
-                    }
                     //TwoVertical
-                    case 2:
+                    case ECameraModi.TwoVertical:
                     {
                         if (m_mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin)
                         {
@@ -145,8 +132,21 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                         }
                         break;
                     }
+                    //TwoHorizontal
+                    case ECameraModi.TwoHorizontal:
+                    {
+                        if (m_mousePosition.y >= m_cameraManager.AvailableCameras[1].pixelRect.yMin)
+                        {
+                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1]);
+                        }
+                        else
+                        {
+                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
+                        }
+                        break;
+                    }
                     //FourSplit
-                    case 3:
+                    case ECameraModi.FourSplit:
                     {
                         if (m_mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin && m_mousePosition.y < m_cameraManager.AvailableCameras[3].pixelRect.yMin)
                         {

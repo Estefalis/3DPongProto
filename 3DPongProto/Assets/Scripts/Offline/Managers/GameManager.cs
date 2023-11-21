@@ -12,8 +12,8 @@ using UnityEngine;
 //public enum ECameraModi
 //{
 //    SingleCam,
-//    TwoHorizontal,
 //    TwoVertical,
+//    TwoHorizontal,
 //    FourSplit
 //}
 

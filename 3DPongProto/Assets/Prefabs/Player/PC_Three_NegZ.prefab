@@ -254,7 +254,7 @@ GameObject:
   - component: {fileID: 4899228497430727578}
   - component: {fileID: 7503135642632818544}
   m_Layer: 0
-  m_Name: Body
+  m_Name: BodyThree
   m_TagString: TpOne
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -6,8 +6,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptable Objects/Match Settings/Dimensions and Variables", fileName = "Match Variables")]
 public class MatchValues : ScriptableObject
 {
+    public PlayerIDData[] PlayersInGame = new PlayerIDData[4];
+    public uint PlayerCountInGame;
     [Header("Round-Details")]
-    public List<string> PlayerInGame = new();
     public float StartTime;             //each Match
     public uint CurrentRoundNr;         //each Match
     public int WinPointDifference;      //each Match (MatchManager)    
