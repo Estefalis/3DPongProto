@@ -6720,6 +6720,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb27f6df8599597429efd126aaa0215e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_levelCameras:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   m_availableCameras:
   - {fileID: 1911748176757534004}
   - {fileID: 7362120738695684692}

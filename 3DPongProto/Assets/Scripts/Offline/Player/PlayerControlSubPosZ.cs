@@ -31,8 +31,6 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             base.OnEnable();
             BallBehaviour.HitGoalOne += LetsResetPaddleRotation;
             BallBehaviour.HitGoalTwo += LetsResetPaddleRotation;
-            m_matchValues.PlayerCountInGame++;
-            m_matchValues.PlayersInGame[m_playerId] = m_playerIDData;
         }
 
         protected override void OnDisable()
@@ -43,8 +41,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             MenuOrganisation.CloseInGameMenu -= StartCoroutinesAndActions;
             BallBehaviour.HitGoalOne -= LetsResetPaddleRotation;
             BallBehaviour.HitGoalTwo -= LetsResetPaddleRotation;
-            m_matchValues.PlayerCountInGame--;
-            m_matchValues.PlayersInGame[m_playerId] = null;
+            
+            m_matchValues.PlayersInGame.Remove(m_playerIDData);
         }
 
         protected override void Start()

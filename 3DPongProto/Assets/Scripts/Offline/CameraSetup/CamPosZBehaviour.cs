@@ -24,6 +24,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         [SerializeField] private Vector3 m_desiredOffset;
         [Range(1.0f, 30.0f)]
         [SerializeField] private float m_smoothfactor;
+        //'m_maxSideMovement' set in method 'MaxSideMovement()'.
         private float m_maxSideMovement, m_setGroundWidth;
 
         [Header("Camera-Zoom")]
@@ -65,12 +66,14 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
             //Saved vector to keep the playerCamera-startposition.
             CameraPositions(m_cameraManager.AvailableCameras[m_playerId]);
+            CameraManager.LetsRegisterCameras(m_followCamera, m_playerId);
         }
 
         private void OnDisable()
         {
             m_cameraInputActions?.Disable();
             m_cameraInputActions.PlayerActions.Zoom.performed -= Zooming;
+            CameraManager.LetsRemoveCamera(m_followCamera, m_playerId);
         }
 
         private void Update()

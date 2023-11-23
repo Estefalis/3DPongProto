@@ -3212,6 +3212,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7313720338195380833, guid: 5d99c73a2379ef643b2423fb48c9661c,
         type: 3}
+      propertyPath: m_matchValues
+      value: 
+      objectReference: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b,
+        type: 2}
+    - target: {fileID: 7313720338195380833, guid: 5d99c73a2379ef643b2423fb48c9661c,
+        type: 3}
       propertyPath: m_graphicUiStates
       value: 
       objectReference: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11,

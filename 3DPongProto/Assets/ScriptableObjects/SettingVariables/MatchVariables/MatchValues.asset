@@ -12,12 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6c8efb4be29349478192d860c40c12e, type: 3}
   m_Name: MatchValues
   m_EditorClassIdentifier: 
-  PlayersInGame:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  PlayersCountInGame: 0
+  eGameConnectionMode: 0
+  PlayersInGame: []
+  PlayerAmountInGame: 0
   StartTime: 15.5629015
   CurrentRoundNr: 1
   WinPointDifference: 2

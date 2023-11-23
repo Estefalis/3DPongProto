@@ -7577,7 +7577,13 @@ MonoBehaviour:
   - {fileID: 395195819}
   - {fileID: 1633779088}
   - {fileID: 1884955036}
-  m_matchConnection: {fileID: 11400000, guid: a1c716385d30a6e428e0721cf9d35245, type: 2}
+  m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
+  m_playerIDData:
+  - {fileID: 11400000, guid: 533fe6eee149a3143aab50fbfb5541a8, type: 2}
+  - {fileID: 11400000, guid: 21b573c09ff18ba4893ceecaaf9c5756, type: 2}
+  - {fileID: 11400000, guid: 862bfec20d10c5049a46b7b03f906cd9, type: 2}
+  - {fileID: 11400000, guid: 0a4b44b7dfa182243ab981955eda3e67, type: 2}
+  m_playersAmount: 2
 --- !u!114 &975557205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7625,7 +7631,6 @@ MonoBehaviour:
   m_volumeUIStates: {fileID: 11400000, guid: 0b099063a6f6ebe45a293a2c06b6c6e8, type: 2}
   m_volumeUIValues: {fileID: 11400000, guid: 4c48b9b8578164547b04a0d3d732e116, type: 2}
   m_graphicUiStates: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11, type: 2}
-  m_matchUiStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
   m_basicFieldValues: {fileID: 11400000, guid: b7c0516de58b3a240a6970d999010f71, type: 2}

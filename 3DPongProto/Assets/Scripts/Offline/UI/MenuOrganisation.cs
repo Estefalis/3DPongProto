@@ -48,7 +48,7 @@ namespace ThreeDeePongProto.Offline.UI
         //MatchManager unpauses the Game.
         public static event Action RestartGameLevel;
         //MatchManager unpauses the Game.
-        public static event Action LoadMainScene;
+        public static event Action OnLoadMainScene;
 
         #region Scriptable Variables
         [Header("Scriptable Variables")]
@@ -56,8 +56,6 @@ namespace ThreeDeePongProto.Offline.UI
         [SerializeField] private VolumeUIValues m_volumeUIValues;
 
         [SerializeField] private GraphicUiStates m_graphicUiStates;
-        [SerializeField] private MatchUIStates m_matchUiStates;
-
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
         [SerializeField] private BasicFieldValues m_basicFieldValues;
@@ -81,8 +79,8 @@ namespace ThreeDeePongProto.Offline.UI
         private void Awake()
         {
             SetUIElements();
-            LoadVolumeSettings();
             LoadGraphicSettings();
+            LoadVolumeSettings();
             LoadMatchSettings();
 
             if (m_hiddenFinishButton != null)
@@ -126,6 +124,15 @@ namespace ThreeDeePongProto.Offline.UI
             SetSelectedElement(m_firstElement);
         }
 
+        private void LoadGraphicSettings()
+        {
+            GraphicUiSettingsStates uiIndices = m_persistentData.LoadData<GraphicUiSettingsStates>(m_settingStatesFolderPath, m_graphicFileName, m_fileFormat, m_encryptionEnabled);
+            m_graphicUiStates.QualityLevelIndex = uiIndices.QualityLevelIndex;
+            m_graphicUiStates.SelectedResolutionIndex = uiIndices.SelectedResolutionIndex;
+            m_graphicUiStates.FullScreenMode = uiIndices.FullScreenMode;
+            m_graphicUiStates.SetCameraMode = uiIndices.SetCameraMode;
+        }
+
         private void LoadVolumeSettings()
         {
             VolumeUISettingsStates uiIndices = m_persistentData.LoadData<VolumeUISettingsStates>(m_settingStatesFolderPath, m_volumeFileName, m_fileFormat, m_encryptionEnabled);
@@ -138,15 +145,6 @@ namespace ThreeDeePongProto.Offline.UI
             m_volumeUIValues.LatestMasterVolume = uiValues.LatestMasterVolume;
             m_volumeUIValues.LatestBGMVolume = uiValues.LatestBGMVolume;
             m_volumeUIValues.LatestSFXVolume = uiValues.LatestSFXVolume;
-        }
-
-        private void LoadGraphicSettings()
-        {
-            GraphicUiSettingsStates uiIndices = m_persistentData.LoadData<GraphicUiSettingsStates>(m_settingStatesFolderPath, m_graphicFileName, m_fileFormat, m_encryptionEnabled);
-            m_graphicUiStates.QualityLevelIndex = uiIndices.QualityLevelIndex;
-            m_graphicUiStates.SelectedResolutionIndex = uiIndices.SelectedResolutionIndex;
-            m_graphicUiStates.FullScreenMode = uiIndices.FullScreenMode;
-            m_graphicUiStates.SetCameraMode = uiIndices.SetCameraMode;
         }
 
         private void LoadMatchSettings()
@@ -191,7 +189,8 @@ namespace ThreeDeePongProto.Offline.UI
 
         public void ReturnToMainScene()
         {
-            LoadMainScene?.Invoke();
+            //Action to reset timescale inside the Matchmanager. And other possible settings on returning to the main menu scene.
+            OnLoadMainScene?.Invoke();
 
             //if (m_startMenuScene == "StartMenuScene" && GameManager.Instance.EGameConnectionModi == EGameModi.LocalPC)
             if (m_startMenuScene == "StartMenuScene" && m_matchConnection.EGameConnectionModi == EGameModi.LocalPC)

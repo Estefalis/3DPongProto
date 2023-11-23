@@ -69,7 +69,7 @@ namespace ThreeDeePongProto.Offline.AudioManagement
         private void Awake()
         {
             m_ActionRegisterAudioSource += AddIncomingAudioSource;
-            m_ActionRemoveAudioSource += RemoveIncomingAudioSources;
+            m_ActionRemoveAudioSource += RemoveAddedAudioSources;
 
             m_QueueRegisterAudioSource = new();
             m_QueueRemoveAudioSource = new();
@@ -78,7 +78,7 @@ namespace ThreeDeePongProto.Offline.AudioManagement
         private void OnDisable()
         {
             m_ActionRegisterAudioSource -= AddIncomingAudioSource;
-            m_ActionRemoveAudioSource -= RemoveIncomingAudioSources;
+            m_ActionRemoveAudioSource -= RemoveAddedAudioSources;
         }
 
         #region Add AudioSources
@@ -108,13 +108,14 @@ namespace ThreeDeePongProto.Offline.AudioManagement
             m_ActionRemoveAudioSource?.Invoke(m_QueueRemoveAudioSource);
         }
 
-        private void RemoveIncomingAudioSources(Queue<AudioSource> _queue)
+        private void RemoveAddedAudioSources(Queue<AudioSource> _queue)
         {
             AudioSource audioSource = _queue.Peek();
 
             if (m_availableAudiosources.Contains(audioSource))
             {
                 m_availableAudiosources.Remove(audioSource);
+                _queue.Dequeue();
             }
         }
         #endregion

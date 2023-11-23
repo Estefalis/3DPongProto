@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23ae38de6bc0d3f4aaa8718fe9de0dee, type: 3}
   m_Name: PlayerTwoData
   m_EditorClassIdentifier: 
+  Prefab: {fileID: 2849503855690960358, guid: 314f7651877d7c649b85b4b9396b3140, type: 3}
   PlayerName: Nyclia
-  StartYValue: 1
   PlayerId: 1
   Avatar: {fileID: 0}
   PlayerOnFrontline: 0

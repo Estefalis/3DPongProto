@@ -99,7 +99,7 @@ namespace ThreeDeePongProto.Offline.Managers
             PlayerControlMain.InGameMenuOpens += PauseAndTimeScale;
 
             MenuOrganisation.CloseInGameMenu += ResetPauseAndTimescale;
-            MenuOrganisation.LoadMainScene += SceneRestartActions;
+            MenuOrganisation.OnLoadMainScene += SceneRestartActions;
             MenuOrganisation.RestartGameLevel += ReSetMatch;
             MenuOrganisation.EndInfiniteMatch += LetsEndInfiniteMatch;
 
@@ -116,7 +116,7 @@ namespace ThreeDeePongProto.Offline.Managers
             PlayerControlMain.InGameMenuOpens -= PauseAndTimeScale;
 
             MenuOrganisation.CloseInGameMenu -= ResetPauseAndTimescale;
-            MenuOrganisation.LoadMainScene -= SceneRestartActions;
+            MenuOrganisation.OnLoadMainScene -= SceneRestartActions;
             MenuOrganisation.RestartGameLevel -= ReSetMatch;
             MenuOrganisation.EndInfiniteMatch -= LetsEndInfiniteMatch;
 
@@ -130,6 +130,7 @@ namespace ThreeDeePongProto.Offline.Managers
             //Useable for Infinite Matches.
             m_matchValues.TotalPointsTPOne = 0;
             m_matchValues.TotalPointsTPTwo = 0;
+            m_matchValues.PlayerAmountInGame = 0;
         }
 
         private void PrepareMatchStart()
@@ -186,7 +187,7 @@ namespace ThreeDeePongProto.Offline.Managers
             //Reset only on Disable.
             ++m_matchValues.TotalPointsTPOne;
 
-            switch (m_matchValues.PlayerCountInGame)
+            switch (m_matchValues.PlayerAmountInGame)
             {
                 //Solo
                 case 2:
@@ -224,7 +225,7 @@ namespace ThreeDeePongProto.Offline.Managers
             //Reset only on Disable.
             ++m_matchValues.TotalPointsTPTwo;
 
-            switch (m_matchValues.PlayerCountInGame)
+            switch (m_matchValues.PlayerAmountInGame)
             {
                 //Solo
                 case 2:

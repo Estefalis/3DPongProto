@@ -6,8 +6,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptable Objects/Match Settings/Dimensions and Variables", fileName = "Match Variables")]
 public class MatchValues : ScriptableObject
 {
-    public PlayerIDData[] PlayersInGame = new PlayerIDData[4];
-    public uint PlayerCountInGame;
+    public EGameModi EGameConnectionModi { get => eGameConnectionMode; set => eGameConnectionMode = value; }
+    [SerializeField] private EGameModi eGameConnectionMode;
+    public List<PlayerIDData> PlayersInGame;
+    public uint PlayerAmountInGame;
     [Header("Round-Details")]
     public float StartTime;             //each Match
     public uint CurrentRoundNr;         //each Match

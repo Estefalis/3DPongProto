@@ -1,10 +1,14 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace ThreeDeePongProto.Offline.CameraSetup
 {
     public class CameraManager : MonoBehaviour
     {
+        public Camera[] LevelCameras { get => m_levelCameras; }
+        [SerializeField] private Camera[] m_levelCameras = new Camera[4];
         public List<Camera> AvailableCameras { get => m_availableCameras; }
         [SerializeField] private List<Camera> m_availableCameras = new();
 
@@ -16,6 +20,11 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         //public List<Rect> SeparatedDictsRects { get => m_dictRects; }
         private List<Rect> m_dictRects = new();
+
+        private static Queue<Camera> m_QueueRegisterCamera;
+        private static Queue<Camera> m_QueueRemoveCamera;
+        private static event Action<Queue<Camera>, int> m_ActionRegisterCamera;
+        private static event Action<Queue<Camera>, int> m_ActionRemoveCamera;
 
         public static Rect RuntimeFullsizeRect { get; set; }
 
@@ -31,6 +40,18 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
                 UpdateSplittedCamRectLists();
             }
+
+            m_ActionRegisterCamera += AddIncomingCamera;
+            m_ActionRemoveCamera += RemoveAddedCameras;
+
+            m_QueueRegisterCamera = new();
+            m_QueueRemoveCamera = new();
+        }
+
+        private void OnDisable()
+        {
+            m_ActionRegisterCamera -= AddIncomingCamera;
+            m_ActionRemoveCamera -= RemoveAddedCameras;
         }
 
 #if UNITY_EDITOR
@@ -67,6 +88,39 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         //Rect2(x:0.00,   y:142.50, width:253.00, height:142.50)  -  Halfsize width and halfsize height
         //Rect3(x:253.00, y:142.50, width:253.00, height:142.50)  -  Halfsize width and halfsize height
         #endregion
+
+        public static void LetsRegisterCameras(Camera _camera, int _cameraID)
+        {
+            m_QueueRegisterCamera.Enqueue(_camera);
+            m_ActionRegisterCamera?.Invoke(m_QueueRegisterCamera, _cameraID);
+        }
+
+        private void AddIncomingCamera(Queue<Camera> _queue, int _cameraID)
+        {
+            if (_queue.Count > 0)
+            {
+                Camera camera = _queue.Peek();
+                m_levelCameras[_cameraID] = camera;
+                _queue.Dequeue();
+            }
+        }
+
+        public static void LetsRemoveCamera(Camera _camera, int _cameraID)
+        {
+            m_QueueRemoveCamera.Enqueue(_camera);
+            m_ActionRemoveCamera?.Invoke(m_QueueRemoveCamera, _cameraID);
+        }
+
+        private void RemoveAddedCameras(Queue<Camera> _queue, int _cameraID)
+        {
+            Camera camera = _queue.Peek();
+
+            if (m_levelCameras.Contains(camera))
+            {
+                m_levelCameras[_cameraID] = null;
+                _queue.Dequeue();
+            }
+        }
 
         public void UpdateRectDimensions(Camera _keyCamera, Rect _newValueRect)
         {

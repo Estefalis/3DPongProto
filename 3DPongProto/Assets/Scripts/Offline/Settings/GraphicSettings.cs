@@ -117,7 +117,7 @@ namespace ThreeDeePongProto.Offline.Settings
         private void SetupSplitDropdown()
         {
             m_splitscreenModi = new();
-            uint currentPlayer = m_matchValues.PlayerCountInGame;
+            uint currentPlayer = m_matchValues.PlayerAmountInGame;
 
             //Automatize the shown ECameraModi in the 'm_screenSplitDropdown' based on the player in the match.
             m_screenSplitModi = currentPlayer switch

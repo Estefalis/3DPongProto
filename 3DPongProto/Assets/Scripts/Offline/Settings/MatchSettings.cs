@@ -14,7 +14,7 @@ namespace ThreeDeePongProto.Offline.Settings
         [Header("Player-Details")]
         //OnEndEdit in Unity sets the PlayerNames from MatchSettings UI.
         [SerializeField] private TMP_InputField m_playerIF;
-        [SerializeField] private TMP_InputField m_playerTwoIF;        
+        [SerializeField] private TMP_InputField m_playerTwoIF;
         [SerializeField] private Toggle[] m_rotationReset;
         [SerializeField] private bool m_TpOneRotResetDefault = true;
         [SerializeField] private bool m_TpTwoRotResetDefault = true;
@@ -147,7 +147,7 @@ namespace ThreeDeePongProto.Offline.Settings
             SetupLineUpSliders();
             UpdateLineUpTMPs();
 
-            switch (m_matchValues.PlayerCountInGame)
+            switch (m_matchValues.PlayerAmountInGame)
             {
                 case 4:
                 {
@@ -193,7 +193,7 @@ namespace ThreeDeePongProto.Offline.Settings
             m_matchSetupDropdowns[3].onValueChanged.AddListener(delegate
             { OnLengthDropdownValueChanged(m_matchSetupDropdowns[3]); });
 
-            if (m_matchValues.PlayerCountInGame == 4)
+            if (m_matchValues.PlayerAmountInGame == 4)
             {
                 //Player-Set-Frontline
                 m_frontLineDds[0].onValueChanged.AddListener(delegate
@@ -233,7 +233,7 @@ namespace ThreeDeePongProto.Offline.Settings
             m_matchSetupDropdowns[3].onValueChanged.RemoveListener(delegate
             { OnLengthDropdownValueChanged(m_matchSetupDropdowns[3]); });
 
-            if (m_matchValues.PlayersInGame.Length > 2)
+            if (m_matchValues.PlayersInGame.Count > 2)
             {
                 //Player-Set-Frontline
                 m_frontLineDds[0].onValueChanged.RemoveListener(delegate
@@ -605,7 +605,7 @@ namespace ThreeDeePongProto.Offline.Settings
             m_playersTeamOne = new List<string>();
             m_playersTeamTwo = new List<string>();
 
-            for (int i = 0; i < m_matchValues.PlayersInGame.Length; i++)
+            for (int i = 0; i < m_matchValues.PlayersInGame.Count; i++)
             {
                 if (m_matchValues.PlayersInGame[i].PlayerId % 2 == 0)
                     m_playersTeamOne.Add($"Player {i + 1}");
@@ -635,12 +635,15 @@ namespace ThreeDeePongProto.Offline.Settings
             m_playersTeamOne = new List<string>();
             m_playersTeamTwo = new List<string>();
 
-            for (int i = 0; i < m_matchValues.PlayerCountInGame; i++)
+            if (m_matchValues.PlayerAmountInGame > 0)
             {
-                if (m_matchValues.PlayersInGame[i].PlayerId % 2 == 0)
-                    m_playersTeamOne.Add($"Player {i + 1}");
-                if (m_matchValues.PlayersInGame[i].PlayerId % 2 != 0)
-                    m_playersTeamTwo.Add($"Player {i + 1}");
+                for (int i = 0; i < m_matchValues.PlayerAmountInGame; i++)
+                {
+                    if (m_matchValues.PlayersInGame[i].PlayerId % 2 == 0)
+                        m_playersTeamOne.Add($"Player {i + 1}");
+                    if (m_matchValues.PlayersInGame[i].PlayerId % 2 != 0)
+                        m_playersTeamTwo.Add($"Player {i + 1}");
+                }
             }
 
             m_backLineDds[0].ClearOptions();
@@ -692,7 +695,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 return;
             }
 
-            switch (m_matchValues.PlayerCountInGame)
+            switch (m_matchValues.PlayerAmountInGame)
             {
                 case 4:
                 {

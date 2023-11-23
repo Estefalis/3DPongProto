@@ -158,7 +158,7 @@ namespace ThreeDeePongProto.Offline.UI
 
         private void DisplayPlayerNames()
         {
-            for (int i = 0; i < m_playerNamesTMPList.Count; i++)
+            for (int i = 0; i < m_matchValues.PlayersInGame.Count; i++)
             {
                 if (m_matchValues.PlayersInGame[i] != null)
                 m_playerNamesTMPList[i].text = m_matchValues.PlayersInGame[i].PlayerName;
