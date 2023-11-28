@@ -18,28 +18,30 @@ namespace ThreeDeePongProto.Shared.UI
 
         public void SetGameModi(Button _sender)
         {
-            m_matchValues.PlayerDataInGame.Clear();
-            m_matchValues.PlayerDataInGame = new();
-            m_matchValues.PlayersInGame.Clear();
-            m_matchValues.PlayersInGame = new();
+            m_matchValues.PlayerData.Clear();
+            m_matchValues.PlayerData = new();
+            m_matchValues.PlayerPrefabs.Clear();
+            m_matchValues.PlayerPrefabs = new();
 
             if (_sender == m_modiButtons[0])
             {
-                m_matchValues.EGameConnectionModi = EGameModi.LocalPC;
+                m_matchValues.EGameConnectModi = EGameModi.LocalPC;
                 SetMaxPlayerAmount(m_maxPlayersAmount /*- 2*/);
             }
-            else if (_sender == m_modiButtons[1])
+            
+            if (_sender == m_modiButtons[1])
             {
-                m_matchValues.EGameConnectionModi = EGameModi.LAN;
+                m_matchValues.EGameConnectModi = EGameModi.LAN;
                 SetMaxPlayerAmount(m_maxPlayersAmount);
             }
-            else if (_sender == m_modiButtons[2])
+            
+            if (_sender == m_modiButtons[2])
             {
-                m_matchValues.EGameConnectionModi = EGameModi.Internet;
+                m_matchValues.EGameConnectModi = EGameModi.Internet;
                 SetMaxPlayerAmount(m_maxPlayersAmount);
             }
 #if UNITY_EDITOR
-            Debug.Log("Meldung für Spiel-Modus: " + m_matchValues.EGameConnectionModi);
+            Debug.Log("Meldung für Spiel-Modus: " + m_matchValues.EGameConnectModi);
 #endif
         }
 
@@ -47,8 +49,8 @@ namespace ThreeDeePongProto.Shared.UI
         {
             for (int i = 0; i < _maxPlayersAmount; i++)
             {
-                m_matchValues.PlayerDataInGame.Add(m_playerIDData[i]);
-                m_matchValues.PlayersInGame.Add(m_playerPrefabs[i]);
+                m_matchValues.PlayerData.Add(m_playerIDData[i]);
+                m_matchValues.PlayerPrefabs.Add(m_playerPrefabs[i]);
             }
                         
             m_matchValues.PlayerInGame = _maxPlayersAmount;

@@ -3,6 +3,7 @@ using ThreeDeePongProto.Offline.Managers;
 using ThreeDeePongProto.Offline.CameraSetup;
 using TMPro;
 using UnityEngine;
+using System.Collections;
 
 namespace ThreeDeePongProto.Offline.UI
 {
@@ -10,6 +11,7 @@ namespace ThreeDeePongProto.Offline.UI
     {
         #region Script-References
         [SerializeField] private MatchManager m_matchManager;
+        [SerializeField] private CameraManager m_cameraManager;
         #endregion
 
         #region SerializeField-Member-Variables
@@ -52,13 +54,6 @@ namespace ThreeDeePongProto.Offline.UI
             BallBehaviour.HitGoalOne += UpdateUserInterface;
             BallBehaviour.HitGoalTwo += UpdateUserInterface;
             MatchManager.StartNextRound += UpdateUserInterface;
-
-            if (m_matchValues == null)
-                return;
-
-            DisplayPlayerNames();
-            UpdateRoundTMPs();
-            UpdatePlayerTMPs();
         }
 
         private void OnDisable()
@@ -68,9 +63,32 @@ namespace ThreeDeePongProto.Offline.UI
             MatchManager.StartNextRound -= UpdateUserInterface;
         }
 
-        private void Start()
+        private IEnumerator Start()
         {
+            //if (m_matchValues == null)
+            //    return;
+
+            yield return new WaitUntil(DelegateBool);
+            DisplayPlayerNames();
+            UpdateRoundTMPs();
+            UpdatePlayerTMPs();
+
+            yield return new WaitForSeconds(0.0000000000001f);  //Minimal delay to give the 'm_playerParentTransforms' time to get set on the correct position.
             SetPlayerInfoPositions(m_graphicUiStates.SetCameraMode);
+        }
+
+        /// <summary>
+        /// Only returns true, after the activated PlayerCameras added themselves to the 'AvailableCameras'-List equal to the registered PlayerIDData.
+        /// </summary>
+        /// <returns></returns>
+        private bool DelegateBool()
+        {
+            if (m_cameraManager.AvailableCameras.Count == m_matchValues.PlayerData.Count)
+                return true;
+            else if (m_matchValues == null)
+                return false;
+            else
+                return false;
         }
 
         private void Update()
@@ -158,10 +176,10 @@ namespace ThreeDeePongProto.Offline.UI
 
         private void DisplayPlayerNames()
         {
-            for (int i = 0; i < m_matchValues.PlayerDataInGame.Count; i++)
+            for (int i = 0; i < m_matchValues.PlayerData.Count; i++)
             {
-                if (m_matchValues.PlayerDataInGame[i] != null)
-                m_playerNamesTMPList[i].text = m_matchValues.PlayerDataInGame[i].PlayerName;
+                if (m_matchValues.PlayerData[i] != null)
+                m_playerNamesTMPList[i].text = m_matchValues.PlayerData[i].PlayerName;
             }
         }
 

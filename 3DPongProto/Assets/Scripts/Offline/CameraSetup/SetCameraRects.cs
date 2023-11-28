@@ -1,5 +1,6 @@
 using UnityEngine;
 using ThreeDeePongProto.Offline.Settings;
+using System.Collections;
 
 namespace ThreeDeePongProto.Offline.CameraSetup
 {
@@ -23,13 +24,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         [SerializeField] private MatchValues m_matchValues;
         #endregion
 
-        private void OnEnable()
-        {
-            //AvailableCameras moved to CameraManager.
-            UpdateFullsizeRect();
-        }
-
-        private void Start()
+        private IEnumerator Start()
         {
             if (m_graphicUiStates == null)
             {
@@ -38,7 +33,24 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             else
                 m_lastSetCameraMode = m_graphicUiStates.SetCameraMode;
 
+            yield return new WaitUntil(DelegateBool);
+
             SetCameraMode(m_lastSetCameraMode);
+
+            //AvailableCameras moved to CameraManager.
+            UpdateFullsizeRect();
+        }
+
+        /// <summary>
+        /// Only returns true, after the activated PlayerCameras added themselves to the 'AvailableCameras'-List equal to the registered PlayerIDData.
+        /// </summary>
+        /// <returns></returns>
+        private bool DelegateBool()
+        {
+            if (m_cameraManager.AvailableCameras.Count == m_matchValues.PlayerData.Count)
+                return true;
+            else
+                return false;
         }
 
         private void SetCameraMode(ECameraModi _cameraMode)
@@ -80,6 +92,12 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         {
             UpdateFullsizeRect();
 
+#if UNITY_EDITOR
+            //Debug.Log($"Cam1 Height {m_cameraManager.AvailableCameras[0].pixelRect.height} -  Width {m_cameraManager.AvailableCameras[0].pixelRect.width}");
+            //Debug.Log($"Cam2 Height {m_cameraManager.AvailableCameras[1].pixelRect.height} -  Width {m_cameraManager.AvailableCameras[1].pixelRect.width}");
+            //Debug.Log($"Cam3 Height {m_cameraManager.AvailableCameras[2].pixelRect.height} -  Width {m_cameraManager.AvailableCameras[2].pixelRect.width}");
+            //Debug.Log($"Cam4 Height {m_cameraManager.AvailableCameras[3].pixelRect.height} -  Width {m_cameraManager.AvailableCameras[3].pixelRect.width}");
+#endif
             //SetRectSplit();
         }
 

@@ -6,10 +6,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptable Objects/Match Settings/Dimensions and Variables", fileName = "Match Variables")]
 public class MatchValues : ScriptableObject
 {
-    public EGameModi EGameConnectionModi { get => eGameConnectionMode; set => eGameConnectionMode = value; }
-    [SerializeField] private EGameModi eGameConnectionMode;
-    public List<PlayerIDData> PlayerDataInGame;
-    public List<GameObject> PlayersInGame;
+    public EGameModi EGameConnectModi { get => eGameConnectModi; set => eGameConnectModi = value; }
+    [SerializeField] private EGameModi eGameConnectModi;
+    public List<PlayerIDData> PlayerData;
+    public List<GameObject> PlayerPrefabs;
     public uint PlayerInGame;
     public uint MaxPlayerInGame;
     [Header("Round-Details")]

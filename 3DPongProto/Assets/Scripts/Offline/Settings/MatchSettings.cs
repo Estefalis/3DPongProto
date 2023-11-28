@@ -233,7 +233,7 @@ namespace ThreeDeePongProto.Offline.Settings
             m_matchSetupDropdowns[3].onValueChanged.RemoveListener(delegate
             { OnLengthDropdownValueChanged(m_matchSetupDropdowns[3]); });
 
-            if (m_matchValues.PlayerDataInGame.Count > 2)
+            if (m_matchValues.PlayerData.Count > 2)
             {
                 //Player-Set-Frontline
                 m_frontLineDds[0].onValueChanged.RemoveListener(delegate
@@ -359,7 +359,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     //Frontline Player 1 (Team 1, ID 0) = Backline Player 3 (Team 1, ID 2).
                     m_backLineDds[0].value = 1;
                     m_matchUIStates.TPOneFrontlineDdIndex = 0;
-                    UpdateFrontlineSetup(m_matchValues.PlayerDataInGame[0].PlayerId);
+                    UpdateFrontlineSetup(m_matchValues.PlayerData[0].PlayerId);
                     break;
                 }
                 case 1:
@@ -367,7 +367,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     //Frontline Player 3 (Team 1, ID 2) = Backline Player 1 (Team 1, ID 0).
                     m_backLineDds[0].value = 0;
                     m_matchUIStates.TPOneFrontlineDdIndex = 1;
-                    UpdateFrontlineSetup(m_matchValues.PlayerDataInGame[2].PlayerId);
+                    UpdateFrontlineSetup(m_matchValues.PlayerData[2].PlayerId);
                     break;
                 }
                 default:
@@ -388,7 +388,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     //Frontline Player 2 (Team 2, ID 1) = Backline Player 4 (Team 2, ID 3).
                     m_backLineDds[1].value = 1;
                     m_matchUIStates.TPTwoFrontlineDdIndex = 0;
-                    UpdateFrontlineSetup(m_matchValues.PlayerDataInGame[1].PlayerId);
+                    UpdateFrontlineSetup(m_matchValues.PlayerData[1].PlayerId);
                     break;
                 }
                 case 1:
@@ -396,7 +396,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     //Frontline Player 4 (Team 2, ID 3) = Backline Player 2 (Team 2, ID 1).
                     m_backLineDds[1].value = 0;
                     m_matchUIStates.TPTwoFrontlineDdIndex = 1;
-                    UpdateFrontlineSetup(m_matchValues.PlayerDataInGame[3].PlayerId);
+                    UpdateFrontlineSetup(m_matchValues.PlayerData[3].PlayerId);
                     break;
                 }
                 default:
@@ -417,7 +417,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     //Backline Player 1 (Team 1, ID 0) = Frontline Player 3 (Team 1, ID 2).
                     m_frontLineDds[0].value = 1;
                     m_matchUIStates.TPOneBacklineDdIndex = 0;
-                    UpdateBacklineSetup(m_matchValues.PlayerDataInGame[0].PlayerId);
+                    UpdateBacklineSetup(m_matchValues.PlayerData[0].PlayerId);
                     break;
                 }
                 case 1:
@@ -425,7 +425,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     //Backline Player 3 (Team 1, ID 2) = Frontline Player 1 (Team 1, ID 0).
                     m_frontLineDds[0].value = 0;
                     m_matchUIStates.TPOneBacklineDdIndex = 1;
-                    UpdateBacklineSetup(m_matchValues.PlayerDataInGame[2].PlayerId);
+                    UpdateBacklineSetup(m_matchValues.PlayerData[2].PlayerId);
                     break;
                 }
                 default:
@@ -446,7 +446,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     //Backline Player 2 (Team 2, ID 1) = Frontline Player 4 (Team 2, ID 3).
                     m_frontLineDds[1].value = 1;
                     m_matchUIStates.TPTwoBacklineDdIndex = 0;
-                    UpdateBacklineSetup(m_matchValues.PlayerDataInGame[1].PlayerId);
+                    UpdateBacklineSetup(m_matchValues.PlayerData[1].PlayerId);
                     break;
                 }
                 case 1:
@@ -454,7 +454,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     //Backline Player 4 (Team 2, ID 3) = Frontline Player 2 (Team 2, ID 1).
                     m_frontLineDds[1].value = 0;
                     m_matchUIStates.TPTwoBacklineDdIndex = 1;
-                    UpdateBacklineSetup(m_matchValues.PlayerDataInGame[3].PlayerId);
+                    UpdateBacklineSetup(m_matchValues.PlayerData[3].PlayerId);
                     break;
                 }
                 default:
@@ -484,28 +484,28 @@ namespace ThreeDeePongProto.Offline.Settings
         {
             if (string.IsNullOrWhiteSpace(_playername))
                 return;
-            m_matchValues.PlayerDataInGame[0].PlayerName = _playername;
+            m_matchValues.PlayerData[0].PlayerName = _playername;
         }
 
         public void PlayerTwoInput(string _playername)
         {
             if (string.IsNullOrWhiteSpace(_playername))
                 return;
-            m_matchValues.PlayerDataInGame[1].PlayerName = _playername;
+            m_matchValues.PlayerData[1].PlayerName = _playername;
         }
 
         public void PlayerThreeInput(string _playername)
         {
             if (string.IsNullOrWhiteSpace(_playername))
                 return;
-            m_matchValues.PlayerDataInGame[2].PlayerName = _playername;
+            m_matchValues.PlayerData[2].PlayerName = _playername;
         }
 
         public void PlayerFourInput(string _playername)
         {
             if (string.IsNullOrWhiteSpace(_playername))
                 return;
-            m_matchValues.PlayerDataInGame[3].PlayerName = _playername;
+            m_matchValues.PlayerData[3].PlayerName = _playername;
         }
         #endregion
 
@@ -613,11 +613,11 @@ namespace ThreeDeePongProto.Offline.Settings
             m_playersTeamOne = new List<string>();
             m_playersTeamTwo = new List<string>();
 
-            for (int i = 0; i < m_matchValues.PlayerDataInGame.Count; i++)
+            for (int i = 0; i < m_matchValues.PlayerData.Count; i++)
             {
-                if (m_matchValues.PlayerDataInGame[i].PlayerId % 2 == 0)
+                if (m_matchValues.PlayerData[i].PlayerId % 2 == 0)
                     m_playersTeamOne.Add($"Player {i + 1}");
-                if (m_matchValues.PlayerDataInGame[i].PlayerId % 2 != 0)
+                if (m_matchValues.PlayerData[i].PlayerId % 2 != 0)
                     m_playersTeamTwo.Add($"Player {i + 1}");
             }
 
@@ -647,9 +647,9 @@ namespace ThreeDeePongProto.Offline.Settings
             {
                 for (int i = 0; i < m_matchValues.PlayerInGame; i++)
                 {
-                    if (m_matchValues.PlayerDataInGame[i].PlayerId % 2 == 0)
+                    if (m_matchValues.PlayerData[i].PlayerId % 2 == 0)
                         m_playersTeamOne.Add($"Player {i + 1}");
-                    if (m_matchValues.PlayerDataInGame[i].PlayerId % 2 != 0)
+                    if (m_matchValues.PlayerData[i].PlayerId % 2 != 0)
                         m_playersTeamTwo.Add($"Player {i + 1}");
                 }
             }
@@ -733,12 +733,12 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void UpdateFrontlineSetup(int _playerId)
         {
-            m_matchValues.PlayerDataInGame[_playerId].PlayerOnFrontline = true;
+            m_matchValues.PlayerData[_playerId].PlayerOnFrontline = true;
         }
 
         private void UpdateBacklineSetup(int _playerId)
         {
-            m_matchValues.PlayerDataInGame[_playerId].PlayerOnFrontline = false;
+            m_matchValues.PlayerData[_playerId].PlayerOnFrontline = false;
         }
 
         private void UpdateDropdowns(int _dropdownIndex)

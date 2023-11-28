@@ -42,7 +42,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             BallBehaviour.HitGoalOne -= LetsResetPaddleRotation;
             BallBehaviour.HitGoalTwo -= LetsResetPaddleRotation;
 
-            m_matchValues.PlayerDataInGame.Remove(m_playerIDData);
+            //m_matchValues.PlayerData.Remove(m_playerIDData);
         }
 
         protected override void Start()

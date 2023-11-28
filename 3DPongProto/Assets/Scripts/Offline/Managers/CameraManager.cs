@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,12 +12,13 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         //public List<Camera> AvailableCameras { get => m_availableCameras; }
         //[SerializeField] private List<Camera> m_availableCameras = new();
 
+        [SerializeField] private MatchValues m_matchValues;
+
         public Dictionary<Camera, Rect> CameraRectDict { get => m_cameraRectDict; }
         private Dictionary<Camera, Rect> m_cameraRectDict = new();
 
         //public List<Camera> SeparatedDictCameras { get => m_dictCameras; }
         private List<Camera> m_dictCameras = new();
-
         //public List<Rect> SeparatedDictsRects { get => m_dictRects; }
         private List<Rect> m_dictRects = new();
 
@@ -25,15 +27,23 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private static event Action<Queue<Camera>, int> m_ActionRegisterCamera;
         private static event Action<Queue<Camera>, int> m_ActionRemoveCamera;
 
+        //private bool m_canAddCameras = false;
+
         public static Rect RuntimeFullsizeRect { get; set; }
 
         private void Awake()
         {
+            //MatchManager.AddCamerasNow += AddCameras;
             m_ActionRegisterCamera += AddIncomingCamera;
             m_ActionRemoveCamera += RemoveAddedCameras;
 
             m_QueueRegisterCamera = new();
             m_QueueRemoveCamera = new();
+        }
+
+        private IEnumerator Start()
+        {
+            yield return new WaitUntil(DelegateBool);
 
             if (m_availableCameras.Count > 0)
             {
@@ -45,10 +55,25 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
                 UpdateSplittedCamRectLists();
             }
+
+            //return null;
+        }
+
+        /// <summary>
+        /// Only returns true, after the activated PlayerCameras added themselves to the 'AvailableCameras'-List equal to the registered PlayerIDData.
+        /// </summary>
+        /// <returns></returns>
+        private bool DelegateBool()
+        {
+            if (AvailableCameras.Count == m_matchValues.PlayerData.Count)
+                return true;
+            else
+                return false;
         }
 
         private void OnDisable()
         {
+            //MatchManager.AddCamerasNow -= AddCameras;
             m_ActionRegisterCamera -= AddIncomingCamera;
             m_ActionRemoveCamera -= RemoveAddedCameras;
         }

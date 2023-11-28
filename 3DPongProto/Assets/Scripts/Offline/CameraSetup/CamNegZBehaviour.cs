@@ -1,3 +1,5 @@
+using System.Collections;
+using ThreeDeePongProto.Offline.Managers;
 using ThreeDeePongProto.Offline.Player.Inputs;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -44,6 +46,9 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void Awake()
         {
+            //3. After Players are instantiated and the MatchManager invokes the Event, the Camera can add itself to the availableCamera-List in the CameraManager.
+            MatchManager.AddCamerasNow += AddCameras;
+
             if (m_RbPlayer == null)
                 m_RbPlayer = GetComponentInParent<Rigidbody>();
 
@@ -52,20 +57,18 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             m_setGroundWidth = m_basicFieldValues.SetGroundWidth;
             //TODO: Move Setting of 'm_enableSmoothFollow' boolean into UI-Settings.
             m_enableSmoothFollow = true;
-
-            //CameraManager.LetsRegisterCameras(m_followCamera, m_playerId);
         }
 
         private void Start()
         {
-            m_cameraManager = FindObjectOfType<CameraManager>();
-
             MaxSideMovement();
 
             //CameraActions need to be in Start to prevent NullReferenceExceptions due to relation to the UserInputManager.
             m_cameraInputActions = UserInputManager.m_playerInputActions;
             m_cameraInputActions.Enable();
             m_cameraInputActions.PlayerActions.Zoom.performed += Zooming;
+
+            m_cameraManager = FindObjectOfType<CameraManager>();
 
             //Saved vector to keep the playerCamera-startposition.
             CameraPositions(m_cameraManager.AvailableCameras[m_playerId]);
@@ -75,13 +78,18 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         {
             m_cameraInputActions?.Disable();
             m_cameraInputActions.PlayerActions.Zoom.performed -= Zooming;
+            MatchManager.AddCamerasNow -= AddCameras;
             CameraManager.LetsRemoveCamera(m_followCamera, m_playerId);
+        }
+
+        private void AddCameras()
+        {
+            CameraManager.LetsRegisterCameras(m_followCamera, m_playerId);
         }
 
         private void Update()
         {
             GetMousePosition();
-
             SelectCameraToZoom();
         }
 

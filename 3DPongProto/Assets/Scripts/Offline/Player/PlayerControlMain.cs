@@ -61,10 +61,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         //MatchManager pauses the Game. Coroutines and the Inputsystem.PlayerActions get disabled inside this class.
         public static event Action InGameMenuOpens;
 
-        protected virtual void Awake()
-        {
-            m_matchManager = FindObjectOfType<MatchManager>();
-        }
+        protected abstract void Awake();
 
         protected virtual void OnEnable()
         {
@@ -103,13 +100,19 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             if (Keyboard.current.pKey.wasPressedThisFrame)
             {
                 if (m_matchValues != null)
+                {
+                    m_matchManager = FindObjectOfType<MatchManager>();
                     m_matchValues.PaddleWidthAdjustment += m_matchManager.PaddleWidthAdjustStep;
+                }
             }
 
             if (Keyboard.current.pKey.wasReleasedThisFrame)
             {
                 if (m_matchValues != null)
+                {
+                    m_matchManager = FindObjectOfType<MatchManager>();
                     m_matchValues.PaddleWidthAdjustment -= m_matchManager.PaddleWidthAdjustStep;
+                }
             }
             //__________________________________________________________________________________
         }
@@ -203,7 +206,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         #region CallbackContext Methods
         protected void ToggleMenu(InputAction.CallbackContext _callbackContext)
         {
-            m_matchManager = FindObjectOfType<MatchManager>();  //Required, if not catched '[SerializeField]'.
+            m_matchManager = FindObjectOfType<MatchManager>();  //Required, if not catched with '[SerializeField]'.
 
             if (!m_matchManager.GameIsPaused && m_playerMovement.PlayerActions.enabled)
             {

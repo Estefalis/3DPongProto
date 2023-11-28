@@ -191,8 +191,8 @@ namespace ThreeDeePongProto.Offline.UI
             //Action to reset timescale inside the Matchmanager. And other possible settings on returning to the main menu scene.
             OnLoadMainScene?.Invoke();
 
-            //if (m_startMenuScene == "StartMenuScene" && GameManager.Instance.EGameConnectionModi == EGameModi.LocalPC)
-            if (m_startMenuScene == "StartMenuScene" && m_matchValues.EGameConnectionModi == EGameModi.LocalPC)
+            //if (m_startMenuScene == "StartMenuScene" && GameManager.Instance.EGameConnectModi == EGameModi.LocalPC)
+            if (m_startMenuScene == "StartMenuScene" && m_matchValues.EGameConnectModi == EGameModi.LocalPC)
                 SceneManager.LoadScene(m_startMenuScene);
             else
                 Debug.Log("Der SzenenName ist nicht mehr aktuell. Bitte aktualisieren! Danke~.");   /*Ggf. SzenenName eingeben lassen.*/
