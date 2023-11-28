@@ -47,7 +47,6 @@ namespace ThreeDeePongProto.Offline.Managers
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private BasicFieldValues m_basicFieldValues;
         [SerializeField] private MatchValues m_matchValues;
-        [SerializeField] private MatchConnection m_matchConnection;
         #endregion
         #endregion
 
@@ -130,7 +129,6 @@ namespace ThreeDeePongProto.Offline.Managers
             //Useable for Infinite Matches.
             m_matchValues.TotalPointsTPOne = 0;
             m_matchValues.TotalPointsTPTwo = 0;
-            m_matchValues.PlayerAmountInGame = 0;
         }
 
         private void PrepareMatchStart()
@@ -167,14 +165,13 @@ namespace ThreeDeePongProto.Offline.Managers
         private void MatchStartValues()
         {
             m_matchHasStarted = true;
-            m_matchStartTime = Time.time;
-            //m_matchValues.StartDateTime = DateTime.Now.Ticks;
-            m_matchValues.StartTime = Time.time;
+            m_matchStartTime = Time.time;            
+            m_matchValues.StartTime = Time.time;    //OR m_matchValues.StartDateTime = DateTime.Now.Ticks;
         }
 
         private void UpdateTPOnePoints()
         {
-            if (m_matchValues.PlayersInGame == null || m_matchValues == null)
+            if (m_matchValues.PlayerDataInGame == null || m_matchValues == null)
             {
 #if UNITY_EDITOR
                 Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
@@ -187,20 +184,20 @@ namespace ThreeDeePongProto.Offline.Managers
             //Reset only on Disable.
             ++m_matchValues.TotalPointsTPOne;
 
-            switch (m_matchValues.PlayerAmountInGame)
+            switch (m_matchValues.PlayerInGame)
             {
                 //Solo
                 case 2:
                 {
                     if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
-                        m_scoredPlayer = m_matchValues.PlayersInGame[0].PlayerName;
+                        m_scoredPlayer = m_matchValues.PlayerDataInGame[0].PlayerName;
                     break;
                 }
                 //Team
                 case 4:
                 {
                     if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
-                        m_scoredPlayer = $"{m_matchValues.PlayersInGame[0].PlayerName} & {m_matchValues.PlayersInGame[2].PlayerName}";
+                        m_scoredPlayer = $"{m_matchValues.PlayerDataInGame[0].PlayerName} & {m_matchValues.PlayerDataInGame[2].PlayerName}";
                     break;
                 }
                 default:
@@ -212,7 +209,7 @@ namespace ThreeDeePongProto.Offline.Managers
 
         private void UpdateTPTwoPoints()
         {
-            if (m_matchValues.PlayersInGame == null || m_matchValues == null)
+            if (m_matchValues.PlayerDataInGame == null || m_matchValues == null)
             {
 #if UNITY_EDITOR
                 Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
@@ -225,20 +222,20 @@ namespace ThreeDeePongProto.Offline.Managers
             //Reset only on Disable.
             ++m_matchValues.TotalPointsTPTwo;
 
-            switch (m_matchValues.PlayerAmountInGame)
+            switch (m_matchValues.PlayerInGame)
             {
                 //Solo
                 case 2:
                 {
                     if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
-                        m_scoredPlayer = m_matchValues.PlayersInGame[1].PlayerName;
+                        m_scoredPlayer = m_matchValues.PlayerDataInGame[1].PlayerName;
                     break;
                 }
                 //Team
                 case 4:
                 {
                     if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
-                        m_scoredPlayer = $"{m_matchValues.PlayersInGame[1].PlayerName} & {m_matchValues.PlayersInGame[3].PlayerName}";
+                        m_scoredPlayer = $"{m_matchValues.PlayerDataInGame[1].PlayerName} & {m_matchValues.PlayerDataInGame[3].PlayerName}";
                     break;
                 }
                 default:
@@ -311,7 +308,7 @@ namespace ThreeDeePongProto.Offline.Managers
 
             if (winConditionIsMet)
             {
-                if (m_matchConnection.EGameConnectionModi == EGameModi.LocalPC)
+                if (m_matchValues.EGameConnectionModi == EGameModi.LocalPC)
                     SaveMatchDetails(_winningPlayer, _pointCount);
 
                 StartWinProcedure?.Invoke();
@@ -342,6 +339,8 @@ namespace ThreeDeePongProto.Offline.Managers
             m_matchValues.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             TimeSpan timespan = TimeSpan.FromSeconds(Time.time - m_matchValues.StartTime);
             m_matchValues.TotalPlaytime = (float)timespan.TotalSeconds;
+
+            LoadUpHighscores?.Invoke();
         }
 
         /// <summary>
@@ -383,20 +382,20 @@ namespace ThreeDeePongProto.Offline.Managers
                     case true:
                     {
                         //Team One.
-                        m_matchValues.WinningPlayer = $"{m_matchValues.PlayersInGame[0].PlayerName} & {m_matchValues.PlayersInGame[2].PlayerName}";
+                        m_matchValues.WinningPlayer = $"{m_matchValues.PlayerDataInGame[0].PlayerName} & {m_matchValues.PlayerDataInGame[2].PlayerName}";
                         return _infinitePointsTPOne;
                     }
                     case false:
                     {
                         //Team Two.
-                        m_matchValues.WinningPlayer = $"{m_matchValues.PlayersInGame[1].PlayerName} & {m_matchValues.PlayersInGame[3].PlayerName}";
+                        m_matchValues.WinningPlayer = $"{m_matchValues.PlayerDataInGame[1].PlayerName} & {m_matchValues.PlayerDataInGame[3].PlayerName}";
                         return _infinitePointsTPTwo;
                     }
                 }
             }
             else
             {
-                m_matchValues.WinningPlayer = $"{m_matchValues.PlayersInGame[0].PlayerName} & {m_matchValues.PlayersInGame[2].PlayerName} draw \nto {m_matchValues.PlayersInGame[1].PlayerName} & {m_matchValues.PlayersInGame[3].PlayerName}";
+                m_matchValues.WinningPlayer = $"{m_matchValues.PlayerDataInGame[0].PlayerName} & {m_matchValues.PlayerDataInGame[2].PlayerName} draw \nto {m_matchValues.PlayerDataInGame[1].PlayerName} & {m_matchValues.PlayerDataInGame[3].PlayerName}";
                 return _infinitePointsTPOne;
             }
         }

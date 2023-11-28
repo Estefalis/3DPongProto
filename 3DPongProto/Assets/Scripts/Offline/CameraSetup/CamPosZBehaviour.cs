@@ -9,7 +9,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         // Start is called before the first frame update
         private PlayerInputActions m_cameraInputActions;
         [SerializeField] private PlayerControlSubPosZ m_playerControlSubPosZ;
-        private CameraManager m_cameraManager;
 
         [Header("Camera-Positions")]
         [SerializeField] private float m_lowestHeight;
@@ -33,6 +32,8 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         [SerializeField] private float m_zoomDampening;
         private Vector3 m_mousePosition, m_zoomTarget;
 
+        private CameraManager m_cameraManager;
+
         #region Scriptable Variables
         [SerializeField] private GraphicUiStates m_graphicUiStates;
         [SerializeField] private BasicFieldValues m_basicFieldValues;
@@ -51,6 +52,8 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             m_setGroundWidth = m_basicFieldValues.SetGroundWidth;
             //TODO: Move Setting of 'm_enableSmoothFollow' boolean into UI-Settings.
             m_enableSmoothFollow = true;
+
+            //CameraManager.LetsRegisterCameras(m_followCamera, m_playerId);
         }
 
         private void Start()
@@ -66,7 +69,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
             //Saved vector to keep the playerCamera-startposition.
             CameraPositions(m_cameraManager.AvailableCameras[m_playerId]);
-            CameraManager.LetsRegisterCameras(m_followCamera, m_playerId);
         }
 
         private void OnDisable()

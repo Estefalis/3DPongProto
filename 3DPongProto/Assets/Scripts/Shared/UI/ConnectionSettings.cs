@@ -10,19 +10,23 @@ namespace ThreeDeePongProto.Shared.UI
         //[SerializeField] private string m_lanScene = "LanScene";
         //[SerializeField] private string m_internetScene = "InternetScene";
         [SerializeField] private Button[] m_modiButtons;
-        [SerializeField] private MatchValues m_matchValues;
         [SerializeField] private PlayerIDData[] m_playerIDData;
+        [SerializeField] private GameObject[] m_playerPrefabs;
+        [SerializeField] private MatchValues m_matchValues;
+
         [SerializeField] private uint m_maxPlayersAmount = 4;
 
         public void SetGameModi(Button _sender)
         {
+            m_matchValues.PlayerDataInGame.Clear();
+            m_matchValues.PlayerDataInGame = new();
             m_matchValues.PlayersInGame.Clear();
             m_matchValues.PlayersInGame = new();
 
             if (_sender == m_modiButtons[0])
             {
                 m_matchValues.EGameConnectionModi = EGameModi.LocalPC;
-                SetMaxPlayerAmount(m_maxPlayersAmount/* - 2*/);
+                SetMaxPlayerAmount(m_maxPlayersAmount /*- 2*/);
             }
             else if (_sender == m_modiButtons[1])
             {
@@ -41,12 +45,14 @@ namespace ThreeDeePongProto.Shared.UI
 
         private void SetMaxPlayerAmount(uint _maxPlayersAmount)
         {
-            for (int j = 0; j < _maxPlayersAmount; j++)
+            for (int i = 0; i < _maxPlayersAmount; i++)
             {
-                m_matchValues.PlayersInGame.Add(m_playerIDData[j]);
+                m_matchValues.PlayerDataInGame.Add(m_playerIDData[i]);
+                m_matchValues.PlayersInGame.Add(m_playerPrefabs[i]);
             }
-
-            m_matchValues.PlayerAmountInGame = _maxPlayersAmount;
+                        
+            m_matchValues.PlayerInGame = _maxPlayersAmount;
+            m_matchValues.MaxPlayerInGame = m_maxPlayersAmount;
         }
 
         public void StartLocalGame()

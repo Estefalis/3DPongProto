@@ -9,7 +9,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
     {
         #region Script-References
         protected PlayerInputActions m_playerMovement;
-        [SerializeField] protected MatchManager m_matchManager;
+        //[SerializeField] protected MatchManager m_matchManager;
         #endregion
 
         #region SerializeField-Member-Variables
@@ -50,17 +50,21 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         protected float m_maxPushDistance;
         protected bool m_tempBlocked = false;
-        //private int m_updatedPaddleId;
 
         protected Vector3 m_localPaddleScale;                               //Saved PaddleScale for all.
         protected Vector3 m_rbPosition, m_readValueVector;
         protected Quaternion m_deltaRotation;
+
+        protected MatchManager m_matchManager;
         #endregion
 
         //MatchManager pauses the Game. Coroutines and the Inputsystem.PlayerActions get disabled inside this class.
         public static event Action InGameMenuOpens;
 
-        protected abstract void Awake();
+        protected virtual void Awake()
+        {
+            m_matchManager = FindObjectOfType<MatchManager>();
+        }
 
         protected virtual void OnEnable()
         {
@@ -199,7 +203,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         #region CallbackContext Methods
         protected void ToggleMenu(InputAction.CallbackContext _callbackContext)
         {
-            //if (!GameManager.Instance.GameIsPaused && m_playerMovement.PlayerActions.enabled)
+            m_matchManager = FindObjectOfType<MatchManager>();  //Required, if not catched '[SerializeField]'.
+
             if (!m_matchManager.GameIsPaused && m_playerMovement.PlayerActions.enabled)
             {
                 InGameMenuOpens?.Invoke();

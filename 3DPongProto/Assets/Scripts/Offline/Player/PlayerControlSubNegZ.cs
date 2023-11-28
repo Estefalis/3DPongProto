@@ -12,7 +12,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         private bool m_pushPlayerOne = false, m_pushPlayerThree = false;
         private Vector3 m_axisRotNegZ;
         private Quaternion m_paddleStartRotation;
-
+        
         protected override void Awake()
         {
             if (m_rigidbody == null)
@@ -42,7 +42,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             BallBehaviour.HitGoalOne -= LetsResetPaddleRotation;
             BallBehaviour.HitGoalTwo -= LetsResetPaddleRotation;
 
-            m_matchValues.PlayersInGame.Remove(m_playerIDData);
+            m_matchValues.PlayerDataInGame.Remove(m_playerIDData);
         }
 
         protected override void Start()

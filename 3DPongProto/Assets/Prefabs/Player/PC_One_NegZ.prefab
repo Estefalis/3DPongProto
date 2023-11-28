@@ -315,7 +315,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac88edb739f9a0947bedf3ab1494bcdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_matchManager: {fileID: 0}
   m_rigidbody: {fileID: 5985516158061479606}
   m_audioSource: {fileID: 7321893045784808035}
   m_playerId: 0

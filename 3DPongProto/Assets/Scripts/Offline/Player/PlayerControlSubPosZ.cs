@@ -41,8 +41,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             MenuOrganisation.CloseInGameMenu -= StartCoroutinesAndActions;
             BallBehaviour.HitGoalOne -= LetsResetPaddleRotation;
             BallBehaviour.HitGoalTwo -= LetsResetPaddleRotation;
-            
-            m_matchValues.PlayersInGame.Remove(m_playerIDData);
+
+            m_matchValues.PlayerDataInGame.Remove(m_playerIDData);
         }
 
         protected override void Start()

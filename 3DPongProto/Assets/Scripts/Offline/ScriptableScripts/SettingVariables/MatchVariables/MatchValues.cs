@@ -8,8 +8,10 @@ public class MatchValues : ScriptableObject
 {
     public EGameModi EGameConnectionModi { get => eGameConnectionMode; set => eGameConnectionMode = value; }
     [SerializeField] private EGameModi eGameConnectionMode;
-    public List<PlayerIDData> PlayersInGame;
-    public uint PlayerAmountInGame;
+    public List<PlayerIDData> PlayerDataInGame;
+    public List<GameObject> PlayersInGame;
+    public uint PlayerInGame;
+    public uint MaxPlayerInGame;
     [Header("Round-Details")]
     public float StartTime;             //each Match
     public uint CurrentRoundNr;         //each Match

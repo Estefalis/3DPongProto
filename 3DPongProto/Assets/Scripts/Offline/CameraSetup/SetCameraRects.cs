@@ -7,7 +7,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
     {
         #region Script-References
         [SerializeField] private GraphicSettings m_graphicsSettings;
-        private CameraManager m_cameraManager;
+        [SerializeField] private CameraManager m_cameraManager;
         #endregion
 
         private const float m_FULLWIDTHHOR = 1.0f;
@@ -22,11 +22,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         [SerializeField] private GraphicUiStates m_graphicUiStates;
         [SerializeField] private MatchValues m_matchValues;
         #endregion
-
-        private void Awake()
-        {
-            m_cameraManager = GetComponent<CameraManager>();
-        }
 
         private void OnEnable()
         {

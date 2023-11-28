@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace ThreeDeePongProto.Offline.CameraSetup
 {
     public class CameraManager : MonoBehaviour
     {
-        public Camera[] LevelCameras { get => m_levelCameras; }
-        [SerializeField] private Camera[] m_levelCameras = new Camera[4];
         public List<Camera> AvailableCameras { get => m_availableCameras; }
         [SerializeField] private List<Camera> m_availableCameras = new();
+        //public List<Camera> AvailableCameras { get => m_availableCameras; }
+        //[SerializeField] private List<Camera> m_availableCameras = new();
 
         public Dictionary<Camera, Rect> CameraRectDict { get => m_cameraRectDict; }
         private Dictionary<Camera, Rect> m_cameraRectDict = new();
@@ -30,6 +29,12 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void Awake()
         {
+            m_ActionRegisterCamera += AddIncomingCamera;
+            m_ActionRemoveCamera += RemoveAddedCameras;
+
+            m_QueueRegisterCamera = new();
+            m_QueueRemoveCamera = new();
+
             if (m_availableCameras.Count > 0)
             {
                 for (int i = 0; i < m_availableCameras.Count; i++)
@@ -40,12 +45,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
                 UpdateSplittedCamRectLists();
             }
-
-            m_ActionRegisterCamera += AddIncomingCamera;
-            m_ActionRemoveCamera += RemoveAddedCameras;
-
-            m_QueueRegisterCamera = new();
-            m_QueueRemoveCamera = new();
         }
 
         private void OnDisable()
@@ -100,7 +99,8 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             if (_queue.Count > 0)
             {
                 Camera camera = _queue.Peek();
-                m_levelCameras[_cameraID] = camera;
+                //m_availableCameras[_cameraID] = camera;
+                m_availableCameras.Add(camera);
                 _queue.Dequeue();
             }
         }
@@ -115,9 +115,10 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         {
             Camera camera = _queue.Peek();
 
-            if (m_levelCameras.Contains(camera))
+            if (m_availableCameras.Contains(camera))
             {
-                m_levelCameras[_cameraID] = null;
+                //m_availableCameras[_cameraID] = null;
+                m_availableCameras.Remove(camera);
                 _queue.Dequeue();
             }
         }
