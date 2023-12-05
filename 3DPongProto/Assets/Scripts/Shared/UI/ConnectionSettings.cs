@@ -13,8 +13,7 @@ namespace ThreeDeePongProto.Shared.UI
         [SerializeField] private PlayerIDData[] m_playerIDData;
         [SerializeField] private GameObject[] m_playerPrefabs;
         [SerializeField] private MatchValues m_matchValues;
-
-        [SerializeField] private uint m_maxPlayersAmount = 4;
+        [SerializeField] private MatchUIStates m_matchUIStates;
 
         public void SetGameModi(Button _sender)
         {
@@ -25,23 +24,23 @@ namespace ThreeDeePongProto.Shared.UI
 
             if (_sender == m_modiButtons[0])
             {
-                m_matchValues.EGameConnectModi = EGameModi.LocalPC;
-                SetMaxPlayerAmount(m_maxPlayersAmount /*- 2*/);
+                m_matchUIStates.EGameConnectModi = EGameModi.LocalPC;
+                SetMaxPlayerAmount(m_matchUIStates.PlayerInGameIndex);
             }
             
             if (_sender == m_modiButtons[1])
             {
-                m_matchValues.EGameConnectModi = EGameModi.LAN;
-                SetMaxPlayerAmount(m_maxPlayersAmount);
+                m_matchUIStates.EGameConnectModi = EGameModi.LAN;
+                SetMaxPlayerAmount(m_matchUIStates.PlayerInGameIndex);
             }
             
             if (_sender == m_modiButtons[2])
             {
-                m_matchValues.EGameConnectModi = EGameModi.Internet;
-                SetMaxPlayerAmount(m_maxPlayersAmount);
+                m_matchUIStates.EGameConnectModi = EGameModi.Internet;
+                SetMaxPlayerAmount(m_matchUIStates.PlayerInGameIndex);
             }
 #if UNITY_EDITOR
-            Debug.Log("Meldung für Spiel-Modus: " + m_matchValues.EGameConnectModi);
+            Debug.Log("Meldung für Spiel-Modus: " + m_matchUIStates.EGameConnectModi);
 #endif
         }
 
@@ -53,8 +52,7 @@ namespace ThreeDeePongProto.Shared.UI
                 m_matchValues.PlayerPrefabs.Add(m_playerPrefabs[i]);
             }
                         
-            m_matchValues.PlayerInGame = _maxPlayersAmount;
-            m_matchValues.MaxPlayerInGame = m_maxPlayersAmount;
+            m_matchUIStates.PlayerInGameIndex = _maxPlayersAmount;
         }
 
         public void StartLocalGame()

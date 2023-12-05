@@ -6,6 +6,9 @@ using UnityEngine;
 public class MatchUIStates : ScriptableObject
 {
     [Header("Player-States")]
+    public uint PlayerInGameIndex;
+    public EGameModi EGameConnectModi { get => eGameConnectModi; set => eGameConnectModi = value; }
+    [SerializeField] private EGameModi eGameConnectModi;
     public bool TpOneRotReset;
     public bool TpTwoRotReset;
 

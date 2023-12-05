@@ -32,6 +32,7 @@ namespace ThreeDeePongProto.Offline.Settings
         [Header("Scriptable Variables")]
         [SerializeField] private GraphicUiStates m_graphicUiStates;
         [SerializeField] private MatchValues m_matchValues;
+        [SerializeField] private MatchUIStates m_matchUIStates;
         #endregion
 
         private Resolution[] m_screenResolutions;
@@ -117,7 +118,7 @@ namespace ThreeDeePongProto.Offline.Settings
         private void SetupSplitDropdown()
         {
             m_splitscreenModi = new();
-            uint currentPlayer = m_matchValues.PlayerInGame;
+            uint currentPlayer = m_matchUIStates.PlayerInGameIndex;
 
             //Automatize the shown ECameraModi in the 'm_screenSplitDropdown' based on the player in the match.
             m_screenSplitModi = currentPlayer switch

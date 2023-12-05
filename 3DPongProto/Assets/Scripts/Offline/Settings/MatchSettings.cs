@@ -8,13 +8,22 @@ namespace ThreeDeePongProto.Offline.Settings
 {
     public class MatchSettings : MonoBehaviour
     {
+        /// <summary>
+        /// Indices set equal to the desired amount of players participating in matches of int 2 and/or 4.
+        /// </summary>
+        private enum EPlayerAmount
+        {
+            Two = 2,
+            Four = 4
+        }
+
         //TODO: Desired Inputfield-behaviour to select the gameObject without a blinking cursor and to enable editing on pressing Enter.
         #region SerializeField-Member-Variables
         #region Player-Names
         [Header("Player-Details")]
         //OnEndEdit in Unity sets the PlayerNames from MatchSettings UI.
-        //[SerializeField] private TMP_InputField m_playerIF;
-        //[SerializeField] private TMP_InputField m_playerTwoIF;
+        [SerializeField] TMP_Dropdown m_playerAmountDd;
+        [SerializeField] private uint m_playersAmount = 4;
         [SerializeField] private Toggle[] m_rotationReset;
         [SerializeField] private bool m_TpOneRotResetDefault = true;
         [SerializeField] private bool m_TpTwoRotResetDefault = true;
@@ -147,7 +156,7 @@ namespace ThreeDeePongProto.Offline.Settings
             SetupLineUpSliders();
             UpdateLineUpTMPs();
 
-            switch (m_matchValues.PlayerInGame)
+            switch (m_matchUIStates.PlayerInGameIndex)
             {
                 case 4:
                 {
@@ -193,7 +202,7 @@ namespace ThreeDeePongProto.Offline.Settings
             m_matchSetupDropdowns[3].onValueChanged.AddListener(delegate
             { OnLengthDropdownValueChanged(m_matchSetupDropdowns[3]); });
 
-            if (m_matchValues.PlayerInGame > 2)
+            if (m_matchUIStates.PlayerInGameIndex > 3)
             {
                 //Player-Set-Frontline
                 m_frontLineDds[0].onValueChanged.AddListener(delegate
@@ -233,7 +242,7 @@ namespace ThreeDeePongProto.Offline.Settings
             m_matchSetupDropdowns[3].onValueChanged.RemoveListener(delegate
             { OnLengthDropdownValueChanged(m_matchSetupDropdowns[3]); });
 
-            if (m_matchValues.PlayerData.Count > 2)
+            if (m_matchValues.PlayerData.Count > 3)
             {
                 //Player-Set-Frontline
                 m_frontLineDds[0].onValueChanged.RemoveListener(delegate
@@ -643,9 +652,9 @@ namespace ThreeDeePongProto.Offline.Settings
             m_playersTeamOne = new List<string>();
             m_playersTeamTwo = new List<string>();
 
-            if (m_matchValues.PlayerInGame > 0)
+            if (m_matchUIStates.PlayerInGameIndex > 0)
             {
-                for (int i = 0; i < m_matchValues.PlayerInGame; i++)
+                for (int i = 0; i < m_matchUIStates.PlayerInGameIndex; i++)
                 {
                     if (m_matchValues.PlayerData[i].PlayerId % 2 == 0)
                         m_playersTeamOne.Add($"Player {i + 1}");
@@ -703,7 +712,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 return;
             }
 
-            switch (m_matchValues.PlayerInGame)
+            switch (m_matchUIStates.PlayerInGameIndex)
             {
                 case 4:
                 {

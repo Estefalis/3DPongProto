@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using ThreeDeePongProto.Offline.Player.Inputs;
 using ThreeDeePongProto.Offline.UI;
 using UnityEngine;
@@ -121,8 +120,8 @@ namespace ThreeDeePongProto.Offline.Managers
             //m_idGameObjectDict = new();
             //GameObject player;
 
-            //1. Instantiate all Players related to the PlayerIDData in ListAmount.
-            for (int i = 0; i < m_matchValues.PlayerData.Count; i++)
+            //1. Instantiate all Players related to the PlayerCount in game.
+            for (int i = 0; i < m_matchUIStates.PlayerInGameIndex; i++)
             {
                 //m_idGameObjectDict.Add(m_matchValues.PlayerData[i], m_matchValues.PlayerPrefabs[i]);
                 if (i % 2 == 0)
@@ -217,7 +216,7 @@ namespace ThreeDeePongProto.Offline.Managers
             //Reset only on Disable.
             ++m_matchValues.TotalPointsTPOne;
 
-            switch (m_matchValues.PlayerInGame)
+            switch (m_matchUIStates.PlayerInGameIndex)
             {
                 //Solo
                 case 2:
@@ -255,7 +254,7 @@ namespace ThreeDeePongProto.Offline.Managers
             //Reset only on Disable.
             ++m_matchValues.TotalPointsTPTwo;
 
-            switch (m_matchValues.PlayerInGame)
+            switch (m_matchUIStates.PlayerInGameIndex)
             {
                 //Solo
                 case 2:
@@ -341,7 +340,7 @@ namespace ThreeDeePongProto.Offline.Managers
 
             if (winConditionIsMet)
             {
-                if (m_matchValues.EGameConnectModi == EGameModi.LocalPC)
+                if (m_matchUIStates.EGameConnectModi == EGameModi.LocalPC)
                     SaveMatchDetails(_winningPlayer, _pointCount);
 
                 StartWinProcedure?.Invoke();
