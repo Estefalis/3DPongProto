@@ -1,3 +1,4 @@
+using ThreeDeePongProto.Offline.Settings;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -25,34 +26,35 @@ namespace ThreeDeePongProto.Shared.UI
             if (_sender == m_modiButtons[0])
             {
                 m_matchUIStates.EGameConnectModi = EGameModi.LocalPC;
-                SetMaxPlayerAmount(m_matchUIStates.PlayerInGameIndex);
+                SetUpPlayerInGame(m_matchUIStates.EPlayerAmount);
             }
             
             if (_sender == m_modiButtons[1])
             {
                 m_matchUIStates.EGameConnectModi = EGameModi.LAN;
-                SetMaxPlayerAmount(m_matchUIStates.PlayerInGameIndex);
+                SetUpPlayerInGame(m_matchUIStates.EPlayerAmount);
             }
             
             if (_sender == m_modiButtons[2])
             {
                 m_matchUIStates.EGameConnectModi = EGameModi.Internet;
-                SetMaxPlayerAmount(m_matchUIStates.PlayerInGameIndex);
+                SetUpPlayerInGame(m_matchUIStates.EPlayerAmount);
             }
 #if UNITY_EDITOR
             Debug.Log("Meldung für Spiel-Modus: " + m_matchUIStates.EGameConnectModi);
 #endif
         }
 
-        private void SetMaxPlayerAmount(uint _maxPlayersAmount)
+        private void SetUpPlayerInGame(EPlayerAmount _playerInGame)
         {
-            for (int i = 0; i < _maxPlayersAmount; i++)
+            uint playerAmount = (uint)_playerInGame;    //EPlayerAmount.Four => int 4 || EPlayerAmount.Two => int 2
+            for (uint i = 0; i < playerAmount; i++)
             {
-                m_matchValues.PlayerData.Add(m_playerIDData[i]);
-                m_matchValues.PlayerPrefabs.Add(m_playerPrefabs[i]);
+                m_matchValues.PlayerData.Add(m_playerIDData[(int)i]);
+                m_matchValues.PlayerPrefabs.Add(m_playerPrefabs[(int)i]);
             }
-                        
-            m_matchUIStates.PlayerInGameIndex = _maxPlayersAmount;
+
+            m_matchUIStates.EPlayerAmount = _playerInGame;
         }
 
         public void StartLocalGame()

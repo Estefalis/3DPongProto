@@ -33,7 +33,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void Awake()
         {
-            //MatchManager.AddCamerasNow += AddCameras;
             m_ActionRegisterCamera += AddIncomingCamera;
             m_ActionRemoveCamera += RemoveAddedCameras;
 
@@ -73,7 +72,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void OnDisable()
         {
-            //MatchManager.AddCamerasNow -= AddCameras;
             m_ActionRegisterCamera -= AddIncomingCamera;
             m_ActionRemoveCamera -= RemoveAddedCameras;
         }
@@ -124,7 +122,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             if (_queue.Count > 0)
             {
                 Camera camera = _queue.Peek();
-                //m_availableCameras[_cameraID] = camera;
                 m_availableCameras.Add(camera);
                 _queue.Dequeue();
             }
@@ -142,7 +139,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
             if (m_availableCameras.Contains(camera))
             {
-                //m_availableCameras[_cameraID] = null;
                 m_availableCameras.Remove(camera);
                 _queue.Dequeue();
             }

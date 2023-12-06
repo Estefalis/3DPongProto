@@ -38,8 +38,8 @@ namespace ThreeDeePongProto.Offline.Settings
         private Resolution[] m_screenResolutions;
         public ECameraModi ECameraMode { get => m_eCameraMode; }
 
-        private int m_screenSplitModi;
-        private List<string> m_splitscreenModi;
+        private int m_maxScreenModiIndex;
+        private List<string> m_screenModiList;
 
         #region Serialization
         private readonly string m_settingStatesFolderPath = "/SaveData/Settings-States";
@@ -54,6 +54,7 @@ namespace ThreeDeePongProto.Offline.Settings
         {
             m_systemQualityLevel = QualitySettings.GetQualityLevel();
             GetAvailableResolutions();
+
             SetupSplitDropdown();
 
             if (m_graphicUiStates == null)
@@ -117,32 +118,33 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void SetupSplitDropdown()
         {
-            m_splitscreenModi = new();
-            uint currentPlayer = m_matchUIStates.PlayerInGameIndex;
-
+            m_screenModiList = new();
+            uint currentPlayer = (uint)m_matchUIStates.EPlayerAmount;
             //Automatize the shown ECameraModi in the 'm_screenSplitDropdown' based on the player in the match.
-            m_screenSplitModi = currentPlayer switch
+            m_maxScreenModiIndex = currentPlayer switch
             {
-                2 => m_screenSplitModi = (int)ECameraModi.EndCount - 1,
-                4 => m_screenSplitModi = (int)ECameraModi.EndCount,
-                _ => m_screenSplitModi = (int)ECameraModi.EndCount,
+                2 => m_maxScreenModiIndex = (int)ECameraModi.EndCount - 1,  //m_maxScreenModiIndex = EPlayerAmount.Four
+                4 => m_maxScreenModiIndex = (int)ECameraModi.EndCount,     //m_maxScreenModiIndex = EPlayerAmount.EndCount
+                _ => m_maxScreenModiIndex = (int)ECameraModi.EndCount,
             };
 
-            for (int i = 0; i < m_screenSplitModi; i++)
+            for (int i = 0; i < m_maxScreenModiIndex; i++)
             {
-                m_splitscreenModi.Add($"{(ECameraModi)i}");
+                m_screenModiList.Add($"{(ECameraModi)i}");
             }
 
             m_screenSplitDropdown.ClearOptions();
-            m_screenSplitDropdown.AddOptions(m_splitscreenModi);
-            m_screenSplitDropdown.RefreshShownValue();
+            m_screenSplitDropdown.AddOptions(m_screenModiList);
 
             if (m_graphicUiStates != null)
                 m_screenSplitDropdown.value = (int)m_graphicUiStates.SetCameraMode;
             else
                 m_screenSplitDropdown.value = (int)m_eCameraMode;
+
+            m_screenSplitDropdown.RefreshShownValue();
         }
 
+        //Set by UI-SplitscreenDropdown.
         public void SetActiveCameras()
         {
             m_graphicUiStates.SetCameraMode = (ECameraModi)m_screenSplitDropdown.value;

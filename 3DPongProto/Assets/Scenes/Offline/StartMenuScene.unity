@@ -7660,7 +7660,7 @@ MonoBehaviour:
   - {fileID: 4899228495849827101, guid: 3f1c4213d4e0d8e4789aedee3de29d67, type: 3}
   - {fileID: 4887262735936627534, guid: 53549484812ff734d80002c639f02a41, type: 3}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
-  m_maxPlayersAmount: 4
+  m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
 --- !u!114 &975557205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16222,18 +16222,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: ThreeDeePongProto.Offline.UI.MenuOrganisation, Assembly-CSharp
       objectReference: {fileID: 0}
-    - target: {fileID: 7313720338195380833, guid: 5d99c73a2379ef643b2423fb48c9661c,
-        type: 3}
-      propertyPath: m_matchValues
-      value: 
-      objectReference: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b,
-        type: 2}
-    - target: {fileID: 7313720338195380833, guid: 5d99c73a2379ef643b2423fb48c9661c,
-        type: 3}
-      propertyPath: m_graphicUiStates
-      value: 
-      objectReference: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11,
-        type: 2}
     - target: {fileID: 7313720338195380836, guid: 5d99c73a2379ef643b2423fb48c9661c,
         type: 3}
       propertyPath: m_Pivot.x
@@ -20840,6 +20828,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MatchSettings
+      objectReference: {fileID: 0}
+    - target: {fileID: 8962449740322870822, guid: d5d526be9fc149148aeb5951486723ed,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 18
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5d526be9fc149148aeb5951486723ed, type: 3}

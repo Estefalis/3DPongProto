@@ -6,24 +6,24 @@ using UnityEngine.UI;
 
 namespace ThreeDeePongProto.Offline.Settings
 {
+    /// <summary>
+    /// Indices set equal to the desired amount of players participating in matches of int 2 and/or 4.
+    /// </summary>
+    public enum EPlayerAmount
+    {
+        Two = 2,
+        Four = 4
+    }
+
     public class MatchSettings : MonoBehaviour
     {
-        /// <summary>
-        /// Indices set equal to the desired amount of players participating in matches of int 2 and/or 4.
-        /// </summary>
-        private enum EPlayerAmount
-        {
-            Two = 2,
-            Four = 4
-        }
 
         //TODO: Desired Inputfield-behaviour to select the gameObject without a blinking cursor and to enable editing on pressing Enter.
         #region SerializeField-Member-Variables
         #region Player-Names
         [Header("Player-Details")]
         //OnEndEdit in Unity sets the PlayerNames from MatchSettings UI.
-        [SerializeField] TMP_Dropdown m_playerAmountDd;
-        [SerializeField] private uint m_playersAmount = 4;
+        [SerializeField] private EPlayerAmount m_defaultPlayerAmount;
         [SerializeField] private Toggle[] m_rotationReset;
         [SerializeField] private bool m_TpOneRotResetDefault = true;
         [SerializeField] private bool m_TpTwoRotResetDefault = true;
@@ -58,10 +58,9 @@ namespace ThreeDeePongProto.Offline.Settings
 
         #region Hiding
         [Header("Hiding")]
+        [SerializeField] private Transform m_playerGroup;
         [SerializeField] private Transform m_GroupThreeTransform;
         [SerializeField] private Transform m_GroupFourTransform;
-        //[SerializeField] private TMP_InputField m_playerThreeIF;
-        //[SerializeField] private TMP_InputField m_playerFourIF;
         [SerializeField] private Transform m_frontParentTransform;
         [SerializeField] private Transform m_backPTwoDdGroup;
         [SerializeField] private TextMeshProUGUI m_backLineUpText;
@@ -69,9 +68,10 @@ namespace ThreeDeePongProto.Offline.Settings
         [Space]
 
         #region Scriptable-References
-        [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private BasicFieldValues m_basicFieldValues;
+        [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
+        [SerializeField] private GraphicUiStates m_graphicUiStates;
         #endregion
         #endregion
         [Space]
@@ -88,6 +88,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private List<string> m_playersTeamOne;
         private List<string> m_playersTeamTwo;
+        private List<string> m_maxPlayerAmount;
 
         #region Key-Value-Connection
         private Dictionary<Button, Slider> m_reduceLineSlider = new Dictionary<Button, Slider>();
@@ -96,12 +97,12 @@ namespace ThreeDeePongProto.Offline.Settings
         #endregion
 
         #region Non-SerializeField-Member-Variables
-        private int m_firstRoundOffset = 1, m_firstPointOffset = 1, m_firstWidthOffset = 25, m_firstLengthOffset = 50;
-        //Set in OnValueChanged-Dropdown-Methods.
-        private int m_tempWidthDdValue = 0, m_tempLengthDdValue = 0;
+        private readonly int m_firstRoundOffset = 1, m_firstPointOffset = 1, m_firstWidthOffset = 25, m_firstLengthOffset = 50;
+        private readonly uint m_minPlayerInGame = 2;
         #endregion
 
         private event Action m_updateLineText;
+        private event Action<EPlayerAmount> PlayerAmountUpdated;
 
         #region Serialization
         private readonly string m_settingsStatesFolderPath = "/SaveData/Settings-States";
@@ -115,6 +116,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void Awake()
         {
+            PlayerAmountUpdated += UpdateObjectsVisibility;
             SetupLineDictionaries();
 
             if (m_matchUIStates == null)
@@ -132,6 +134,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void OnDisable()
         {
+            PlayerAmountUpdated -= UpdateObjectsVisibility;
             RemoveGroupListeners();
 
             m_persistentData.SaveData(m_settingsStatesFolderPath, m_matchFileName, m_fileFormat, m_matchUIStates, m_encryptionEnabled, true);
@@ -148,40 +151,78 @@ namespace ThreeDeePongProto.Offline.Settings
             int maxPointDdIndex = Array.FindIndex(m_matchSetupDropdowns, (fn) => fn == m_matchSetupDropdowns[1]);
             int fieldWidthDdIndex = Array.FindIndex(m_matchSetupDropdowns, (fn) => fn == m_matchSetupDropdowns[2]);
             int fieldLengthDdIndex = Array.FindIndex(m_matchSetupDropdowns, (fn) => fn == m_matchSetupDropdowns[3]);
+            int playerAmountDdIndex = Array.FindIndex(m_matchSetupDropdowns, (fn) => fn == m_matchSetupDropdowns[4]);
             SetupMatchDropdowns(roundDdIndex);
             SetupMatchDropdowns(maxPointDdIndex);
             SetupMatchDropdowns(fieldWidthDdIndex);
             SetupMatchDropdowns(fieldLengthDdIndex);
+            SetupMatchDropdowns(playerAmountDdIndex);
 
             SetupLineUpSliders();
             UpdateLineUpTMPs();
 
-            switch (m_matchUIStates.PlayerInGameIndex)
+            UpdateObjectsVisibility(m_matchUIStates.EPlayerAmount);
+            //switch ((int)m_matchUIStates.EPlayerAmount)
+            //{
+            //    case 4:
+            //    {
+            //        ObjectsToHide(true, true, true, true, 225.0f);
+            //        SetupFrontlineDropdowns();
+            //        SetupBacklineDropdowns();
+            //        break;
+            //    }
+            //    default:
+            //    {
+            //        //Was waer das Leben, wenn man nicht bescheissen koennt. ;P
+            //        ObjectsToHide(false, false, false, false, 714.0f);
+            //        SetupBacklineDropdowns();
+            //        break;
+            //    }
+            //}
+        }
+
+        private void UpdateObjectsVisibility(EPlayerAmount _ePlayerAmount)
+        {
+            if (m_matchUIStates.GameRuns)
+                m_playerGroup.gameObject.SetActive(false);
+            else
+                m_playerGroup.gameObject.SetActive(true);
+
+            uint switchPlayerAmount = (uint)_ePlayerAmount;
+
+            switch (switchPlayerAmount)
             {
                 case 4:
                 {
-                    ObjectsToHide(true, true, true, true, 225.0f);
+                    ////In case 4 Player shall play, set the Splitscreen Mode to load to ECameraModi.FourSplit.
+                    m_graphicUiStates.SetCameraMode = ECameraModi.FourSplit;
+                    ObjectsToHide(true, true, true, true, 25f, 225.0f);
                     SetupFrontlineDropdowns();
-                    SetupBacklineDropdowns();
                     break;
                 }
-                default:
+                case 2:
                 {
-                    //Was waer das Leben, wenn man nicht bescheissen koennt. ;P
-                    ObjectsToHide(false, false, false, false, 714.0f);
-                    SetupBacklineDropdowns();
+                    ////In case 2 Player shall play, set the Splitscreen Mode to load to ECameraModi.TwoHorizontal.
+                    m_graphicUiStates.SetCameraMode = ECameraModi.TwoHorizontal;
+                    ObjectsToHide(false, false, false, false, 285.3f, 714.0f);
                     break;
                 }
             }
+
+            SetupBacklineDropdowns();
         }
 
-        private void ObjectsToHide(bool _IFThree, bool _IFFour, bool _frontParent, bool _backDropdowns, float _backTextWidth)
+        private void ObjectsToHide(bool _IFThree, bool _IFFour, bool _frontParent, bool _backDropdowns, float _playerGroupWidth, float _backTextWidth)
         {
             m_GroupThreeTransform.gameObject.SetActive(_IFThree);
             m_GroupFourTransform.gameObject.SetActive(_IFFour);
             m_frontParentTransform.gameObject.SetActive(_frontParent);
             m_backPTwoDdGroup.gameObject.SetActive(_backDropdowns);
             m_backLineUpText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _backTextWidth);
+
+            if (m_matchUIStates.GameRuns)
+                return;
+            m_playerGroup.GetComponent<HorizontalLayoutGroup>().spacing = _playerGroupWidth;
         }
 
         private void AddGroupListeners()
@@ -201,8 +242,11 @@ namespace ThreeDeePongProto.Offline.Settings
             //Field-Length
             m_matchSetupDropdowns[3].onValueChanged.AddListener(delegate
             { OnLengthDropdownValueChanged(m_matchSetupDropdowns[3]); });
+            //PlayerAmount
+            m_matchSetupDropdowns[4].onValueChanged.AddListener(delegate
+            { OnPlayerAmountChanged(m_matchSetupDropdowns[4]); });
 
-            if (m_matchUIStates.PlayerInGameIndex > 3)
+            if ((int)m_matchUIStates.EPlayerAmount > 3)
             {
                 //Player-Set-Frontline
                 m_frontLineDds[0].onValueChanged.AddListener(delegate
@@ -241,6 +285,9 @@ namespace ThreeDeePongProto.Offline.Settings
             //Field-Length
             m_matchSetupDropdowns[3].onValueChanged.RemoveListener(delegate
             { OnLengthDropdownValueChanged(m_matchSetupDropdowns[3]); });
+            //PlayerAmount
+            m_matchSetupDropdowns[4].onValueChanged.RemoveListener(delegate
+            { OnPlayerAmountChanged(m_matchSetupDropdowns[4]); });
 
             if (m_matchValues.PlayerData.Count > 3)
             {
@@ -261,7 +308,6 @@ namespace ThreeDeePongProto.Offline.Settings
 
             m_rotationReset[0].onValueChanged.RemoveListener(HandleTpOneToggleValueChanges);
             m_rotationReset[1].onValueChanged.RemoveListener(HandleTpTwoToggleValueChanges);
-
         }
 
         #region Toggle-OnValueChanged-Methods
@@ -305,8 +351,8 @@ namespace ThreeDeePongProto.Offline.Settings
         /// <param name="_toggle"></param>
         private void OnRoundDropdownValueChanged(TMP_Dropdown _maxRoundsDropdown)
         {
-            //Without the infinity-option at Index 0, DropdownValue is equal to DropdownIndex +1.
-            m_matchUIStates.LastRoundDdIndex = _maxRoundsDropdown.value /*+ m_firstRoundOffset*/;
+            //With the infinity-option at Index 0, Round-Value is equal to DropdownIndex.
+            m_matchUIStates.LastRoundDdIndex = _maxRoundsDropdown.value;
 
             if (!m_matchUIStates.InfiniteMatch && _maxRoundsDropdown.value == 0)
                 UpdateDropdowns(_maxRoundsDropdown.value);
@@ -320,8 +366,8 @@ namespace ThreeDeePongProto.Offline.Settings
         /// <param name="_toggle"></param>
         private void OnMaxPointDropdownValueChanged(TMP_Dropdown _maxPointsDropdown)
         {
-            //Without the infinity-option at Index 0, DropdownValue is equal to DropdownIndex +1.
-            m_matchUIStates.LastMaxPointDdIndex = _maxPointsDropdown.value/* + m_firstPointOffset*/;
+            //With the infinity-option at Index 0, MaxPoint-Value is equal to DropdownIndex.
+            m_matchUIStates.LastMaxPointDdIndex = _maxPointsDropdown.value;
 
             if (!m_matchUIStates.InfiniteMatch && _maxPointsDropdown.value == 0)
                 UpdateDropdowns(_maxPointsDropdown.value);
@@ -337,7 +383,6 @@ namespace ThreeDeePongProto.Offline.Settings
                 m_matchSetupDropdowns[3].value = _dropdown.value * 2;
             }
 
-            m_tempWidthDdValue = _dropdown.value;
             m_basicFieldValues.SetGroundWidth = _dropdown.value + m_firstWidthOffset;
             m_matchUIStates.LastFieldWidthDdIndex = _dropdown.value;
         }
@@ -350,9 +395,31 @@ namespace ThreeDeePongProto.Offline.Settings
                 m_matchSetupDropdowns[2].value = (int)(_dropdown.value * 0.5f);
             }
 
-            m_tempLengthDdValue = _dropdown.value;
             m_basicFieldValues.SetGroundLength = _dropdown.value + m_firstLengthOffset;
             m_matchUIStates.LastFieldLengthDdIndex = _dropdown.value;
+        }
+
+        private void OnPlayerAmountChanged(TMP_Dropdown _dropdown)
+        {
+            switch (_dropdown.value)
+            {
+                case 0:
+                {
+                    m_matchUIStates.EPlayerAmount = EPlayerAmount.Two;
+                    m_graphicUiStates.SetCameraMode = ECameraModi.TwoHorizontal;
+                    PlayerAmountUpdated?.Invoke(EPlayerAmount.Two);
+                    break;
+                }
+                case 1:
+                {
+                    m_matchUIStates.EPlayerAmount = EPlayerAmount.Four;
+                    m_graphicUiStates.SetCameraMode = ECameraModi.FourSplit;
+                    PlayerAmountUpdated?.Invoke(EPlayerAmount.Four);
+                    break;
+                }
+                default:
+                    break;
+            }
         }
 
         /// <summary>
@@ -536,10 +603,14 @@ namespace ThreeDeePongProto.Offline.Settings
 
                     m_matchSetupDropdowns[_dropdownID].AddOptions(m_roundsDdList);
 
-                    if (m_matchUIStates == null)
-                        m_matchSetupDropdowns[_dropdownID].value = m_maxRoundDdIndex;
-                    else
+                    if (m_matchUIStates != null)
+                    {
                         m_matchSetupDropdowns[_dropdownID].value = m_matchUIStates.LastRoundDdIndex;
+                    }
+                    else
+                    {
+                        DefaultMatchDdValue(_dropdownID);
+                    }
 
                     m_matchSetupDropdowns[_dropdownID].RefreshShownValue();
                     m_matchSetupDropdowns[_dropdownID].interactable = true;
@@ -561,10 +632,14 @@ namespace ThreeDeePongProto.Offline.Settings
 
                     m_matchSetupDropdowns[_dropdownID].AddOptions(m_maxPointsDdList);
 
-                    if (m_matchUIStates == null)
-                        m_matchSetupDropdowns[_dropdownID].value = m_maxPointDdIndex;
-                    else
+                    if (m_matchUIStates != null)
+                    {
                         m_matchSetupDropdowns[_dropdownID].value = m_matchUIStates.LastMaxPointDdIndex;
+                    }
+                    else
+                    {
+                        DefaultMatchDdValue(_dropdownID);
+                    }
 
                     m_matchSetupDropdowns[_dropdownID].RefreshShownValue();
                     m_matchSetupDropdowns[_dropdownID].interactable = true;
@@ -585,10 +660,14 @@ namespace ThreeDeePongProto.Offline.Settings
                     m_matchSetupDropdowns[_dropdownID].ClearOptions();
                     m_matchSetupDropdowns[_dropdownID].AddOptions(m_widthList);
 
-                    if (m_matchUIStates == null)
-                        m_matchSetupDropdowns[_dropdownID].value = m_fieldWidthDdIndex;
-                    else
+                    if (m_matchUIStates != null)
+                    {
                         m_matchSetupDropdowns[_dropdownID].value = m_matchUIStates.LastFieldWidthDdIndex;
+                    }
+                    else
+                    {
+                        DefaultMatchDdValue(_dropdownID);
+                    }
 
                     m_matchSetupDropdowns[_dropdownID].RefreshShownValue();
                     break;
@@ -606,14 +685,48 @@ namespace ThreeDeePongProto.Offline.Settings
                     m_matchSetupDropdowns[_dropdownID].ClearOptions();
                     m_matchSetupDropdowns[_dropdownID].AddOptions(m_lengthList);
 
-                    if (m_matchUIStates == null)
-                        m_matchSetupDropdowns[_dropdownID].value = m_fieldLengthDdIndex;
-                    else
+                    if (m_matchUIStates != null)
+                    {
                         m_matchSetupDropdowns[_dropdownID].value = m_matchUIStates.LastFieldLengthDdIndex;
+                    }
+                    else
+                    {
+                        DefaultMatchDdValue(_dropdownID);
+                    }
 
                     m_matchSetupDropdowns[_dropdownID].RefreshShownValue();
                     break;
                 }
+                //PlayerAmount
+                case 4:
+                {
+                    m_maxPlayerAmount = new();
+
+                    for (uint i = m_minPlayerInGame; i < m_matchValues.MaxPlayerInGame + m_minPlayerInGame; i++)
+                    {
+                        if (i % 2 == 0)
+                            m_maxPlayerAmount.Add($"{i}");
+                    }
+
+                    m_matchSetupDropdowns[_dropdownID].ClearOptions();
+                    m_matchSetupDropdowns[_dropdownID].AddOptions(m_maxPlayerAmount);
+
+                    if (m_matchUIStates != null)
+                    {
+                        //Modifier to ensure that values EPlayerAmount.Two & EPlayerAmount:Four set the correct dropdownIndex.
+                        int dropdownValueModifier = (int)m_matchUIStates.EPlayerAmount / 2 - 1;
+                        m_matchSetupDropdowns[4].value = dropdownValueModifier;
+                    }
+                    else
+                    {
+                        DefaultMatchDdValue(_dropdownID);
+                    }
+
+                    m_matchSetupDropdowns[_dropdownID].RefreshShownValue();
+                    break;
+                }
+                default:
+                    break;
             }
         }
 
@@ -635,6 +748,8 @@ namespace ThreeDeePongProto.Offline.Settings
 
             if (m_matchUIStates != null)
                 m_frontLineDds[0].value = m_matchUIStates.TPOneFrontlineDdIndex;
+            else
+                DefaultFrontlineDdValue(0);
 
             m_frontLineDds[0].RefreshShownValue();
 
@@ -643,6 +758,8 @@ namespace ThreeDeePongProto.Offline.Settings
 
             if (m_matchUIStates != null)
                 m_frontLineDds[1].value = m_matchUIStates.TPTwoFrontlineDdIndex;
+            else
+                DefaultFrontlineDdValue(1);
 
             m_frontLineDds[1].RefreshShownValue();
         }
@@ -652,15 +769,12 @@ namespace ThreeDeePongProto.Offline.Settings
             m_playersTeamOne = new List<string>();
             m_playersTeamTwo = new List<string>();
 
-            if (m_matchUIStates.PlayerInGameIndex > 0)
+            for (int i = 0; i < m_matchValues.PlayerData.Count; i++)
             {
-                for (int i = 0; i < m_matchUIStates.PlayerInGameIndex; i++)
-                {
-                    if (m_matchValues.PlayerData[i].PlayerId % 2 == 0)
-                        m_playersTeamOne.Add($"Player {i + 1}");
-                    if (m_matchValues.PlayerData[i].PlayerId % 2 != 0)
-                        m_playersTeamTwo.Add($"Player {i + 1}");
-                }
+                if (m_matchValues.PlayerData[i].PlayerId % 2 % 2 == 0)
+                    m_playersTeamOne.Add($"Player {i + 1}");
+                if (m_matchValues.PlayerData[i].PlayerId % 2 % 2 != 0)
+                    m_playersTeamTwo.Add($"Player {i + 1}");
             }
 
             m_backLineDds[0].ClearOptions();
@@ -668,6 +782,8 @@ namespace ThreeDeePongProto.Offline.Settings
 
             if (m_matchUIStates != null)
                 m_backLineDds[0].value = m_matchUIStates.TPOneBacklineDdIndex;
+            else
+                DefaultBacklineDdValue(0);
 
             m_backLineDds[0].RefreshShownValue();
 
@@ -676,6 +792,8 @@ namespace ThreeDeePongProto.Offline.Settings
 
             if (m_matchUIStates != null)
                 m_backLineDds[1].value = m_matchUIStates.TPTwoBacklineDdIndex;
+            else
+                DefaultBacklineDdValue(1);
 
             m_backLineDds[1].RefreshShownValue();
         }
@@ -712,7 +830,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 return;
             }
 
-            switch (m_matchUIStates.PlayerInGameIndex)
+            switch ((int)m_matchUIStates.EPlayerAmount)
             {
                 case 4:
                 {
@@ -792,6 +910,72 @@ namespace ThreeDeePongProto.Offline.Settings
 
             m_backLineDds[0].value = 0;
             m_backLineDds[1].value = 0;
+        }
+
+        public void DefaultMatchDdValue(int _tmpDropdownIndex)
+        {
+            switch (_tmpDropdownIndex)
+            {
+                case 0:
+                {
+                    m_matchSetupDropdowns[0].value = m_maxRoundDdIndex;
+                    break;
+                }
+                case 1:
+                {
+                    m_matchSetupDropdowns[1].value = m_maxPointDdIndex;
+                    break;
+                }
+                case 2:
+                {
+                    m_matchSetupDropdowns[2].value = m_fieldWidthDdIndex;
+                    break;
+                }
+                case 3:
+                {
+                    m_matchSetupDropdowns[3].value = m_fieldLengthDdIndex;
+                    break;
+                }
+                case 4:
+                {
+                    //Modifier to ensure that values EPlayerAmount.Two & EPlayerAmount:Four set the correct dropdownIndex.
+                    int dropdownValueModifier = (int)m_defaultPlayerAmount / 2 - 1;
+                    m_matchSetupDropdowns[4].value = dropdownValueModifier;
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+
+        private void DefaultBacklineDdValue(int _index)
+        {
+            switch (_index)
+            {
+                case 0:
+                    m_backLineDds[0].value = 0;
+                    break;
+                case 1:
+                    m_backLineDds[1].value = 0;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void DefaultFrontlineDdValue(int _index)
+        {
+            switch (_index)
+            {
+                case 0:
+                    m_frontLineDds[0].value = 0;
+                    break;
+                case 1:
+                    m_frontLineDds[1].value = 0;
+                    break;
+                default:
+                    break;
+            }
         }
         #endregion
     }

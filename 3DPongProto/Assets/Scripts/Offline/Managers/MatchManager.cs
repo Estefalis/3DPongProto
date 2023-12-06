@@ -93,6 +93,7 @@ namespace ThreeDeePongProto.Offline.Managers
 
         private void Awake()
         {
+            m_matchUIStates.GameRuns = true;
             PrepareMatchStart();
             LoadMatchSettings();
             ReSetMatch();
@@ -120,8 +121,9 @@ namespace ThreeDeePongProto.Offline.Managers
             //m_idGameObjectDict = new();
             //GameObject player;
 
+            uint setPlayerByEnum = (uint)m_matchUIStates.EPlayerAmount;
             //1. Instantiate all Players related to the PlayerCount in game.
-            for (int i = 0; i < m_matchUIStates.PlayerInGameIndex; i++)
+            for (int i = 0; i < setPlayerByEnum; i++)
             {
                 //m_idGameObjectDict.Add(m_matchValues.PlayerData[i], m_matchValues.PlayerPrefabs[i]);
                 if (i % 2 == 0)
@@ -161,6 +163,7 @@ namespace ThreeDeePongProto.Offline.Managers
             //Useable for Infinite Matches.
             m_matchValues.TotalPointsTPOne = 0;
             m_matchValues.TotalPointsTPTwo = 0;
+            m_matchUIStates.GameRuns = false;
         }
 
         private void PrepareMatchStart()
@@ -216,7 +219,7 @@ namespace ThreeDeePongProto.Offline.Managers
             //Reset only on Disable.
             ++m_matchValues.TotalPointsTPOne;
 
-            switch (m_matchUIStates.PlayerInGameIndex)
+            switch ((int)m_matchUIStates.EPlayerAmount)
             {
                 //Solo
                 case 2:
@@ -254,7 +257,7 @@ namespace ThreeDeePongProto.Offline.Managers
             //Reset only on Disable.
             ++m_matchValues.TotalPointsTPTwo;
 
-            switch (m_matchUIStates.PlayerInGameIndex)
+            switch ((int)m_matchUIStates.EPlayerAmount)
             {
                 //Solo
                 case 2:

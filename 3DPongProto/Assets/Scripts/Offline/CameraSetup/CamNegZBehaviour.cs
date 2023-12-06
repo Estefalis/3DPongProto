@@ -1,4 +1,3 @@
-using System.Collections;
 using ThreeDeePongProto.Offline.Managers;
 using ThreeDeePongProto.Offline.Player.Inputs;
 using UnityEngine;
