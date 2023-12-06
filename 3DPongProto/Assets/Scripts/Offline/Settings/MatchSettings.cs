@@ -162,23 +162,6 @@ namespace ThreeDeePongProto.Offline.Settings
             UpdateLineUpTMPs();
 
             UpdateObjectsVisibility(m_matchUIStates.EPlayerAmount);
-            //switch ((int)m_matchUIStates.EPlayerAmount)
-            //{
-            //    case 4:
-            //    {
-            //        ObjectsToHide(true, true, true, true, 225.0f);
-            //        SetupFrontlineDropdowns();
-            //        SetupBacklineDropdowns();
-            //        break;
-            //    }
-            //    default:
-            //    {
-            //        //Was waer das Leben, wenn man nicht bescheissen koennt. ;P
-            //        ObjectsToHide(false, false, false, false, 714.0f);
-            //        SetupBacklineDropdowns();
-            //        break;
-            //    }
-            //}
         }
 
         private void UpdateObjectsVisibility(EPlayerAmount _ePlayerAmount)
