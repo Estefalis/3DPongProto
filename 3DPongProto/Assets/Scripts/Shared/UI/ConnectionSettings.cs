@@ -26,36 +26,36 @@ namespace ThreeDeePongProto.Shared.UI
             if (_sender == m_modiButtons[0])
             {
                 m_matchUIStates.EGameConnectModi = EGameModi.LocalPC;
-                SetUpPlayerInGame(m_matchUIStates.EPlayerAmount);
+                //SetUpPlayerInGame(m_matchUIStates.EPlayerAmount);
             }
             
             if (_sender == m_modiButtons[1])
             {
                 m_matchUIStates.EGameConnectModi = EGameModi.LAN;
-                SetUpPlayerInGame(m_matchUIStates.EPlayerAmount);
+                //SetUpPlayerInGame(m_matchUIStates.EPlayerAmount);
             }
             
             if (_sender == m_modiButtons[2])
             {
                 m_matchUIStates.EGameConnectModi = EGameModi.Internet;
-                SetUpPlayerInGame(m_matchUIStates.EPlayerAmount);
+                //SetUpPlayerInGame(m_matchUIStates.EPlayerAmount);
             }
 #if UNITY_EDITOR
             Debug.Log("Meldung für Spiel-Modus: " + m_matchUIStates.EGameConnectModi);
 #endif
         }
 
-        private void SetUpPlayerInGame(EPlayerAmount _playerInGame)
-        {
-            uint playerAmount = (uint)_playerInGame;    //EPlayerAmount.Four => int 4 || EPlayerAmount.Two => int 2
-            for (uint i = 0; i < playerAmount; i++)
-            {
-                m_matchValues.PlayerData.Add(m_playerIDData[(int)i]);
-                m_matchValues.PlayerPrefabs.Add(m_playerPrefabs[(int)i]);
-            }
+        //private void SetUpPlayerInGame(EPlayerAmount _playerInGame)
+        //{
+        //    uint playerAmount = (uint)_playerInGame;    //EPlayerAmount.Four => int 4 || EPlayerAmount.Two => int 2
+        //    for (uint i = 0; i < playerAmount; i++)
+        //    {
+        //        m_matchValues.PlayerData.Add(m_playerIDData[(int)i]);
+        //        m_matchValues.PlayerPrefabs.Add(m_playerPrefabs[(int)i]);
+        //    }
 
-            m_matchUIStates.EPlayerAmount = _playerInGame;
-        }
+        //    m_matchUIStates.EPlayerAmount = _playerInGame;
+        //}
 
         public void StartLocalGame()
         {

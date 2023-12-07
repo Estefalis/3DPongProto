@@ -6,24 +6,13 @@ using UnityEngine.UI;
 
 namespace ThreeDeePongProto.Offline.Settings
 {
-    /// <summary>
-    /// Indices set equal to the desired amount of players participating in matches of int 2 and/or 4.
-    /// </summary>
-    public enum EPlayerAmount
-    {
-        Two = 2,
-        Four = 4
-    }
-
     public class MatchSettings : MonoBehaviour
     {
-
         //TODO: Desired Inputfield-behaviour to select the gameObject without a blinking cursor and to enable editing on pressing Enter.
         #region SerializeField-Member-Variables
         #region Player-Names
         [Header("Player-Details")]
-        //OnEndEdit in Unity sets the PlayerNames from MatchSettings UI.
-        [SerializeField] private EPlayerAmount m_defaultPlayerAmount;
+        //OnEndEdit in Unity sets the PlayerNames from MatchSettings UI.        
         [SerializeField] private Toggle[] m_rotationReset;
         [SerializeField] private bool m_TpOneRotResetDefault = true;
         [SerializeField] private bool m_TpTwoRotResetDefault = true;
@@ -45,8 +34,8 @@ namespace ThreeDeePongProto.Offline.Settings
         [Header("Line-Up")]
         [SerializeField] private TMP_Dropdown[] m_frontLineDds;
         [SerializeField] private TMP_Dropdown[] m_backLineDds;
-        [SerializeField] private TextMeshProUGUI m_frontLineText;
-        [SerializeField] private TextMeshProUGUI m_backLineText;
+        [SerializeField] private TextMeshProUGUI m_backFloatText;
+        [SerializeField] private TextMeshProUGUI m_frontFloatText;
         [SerializeField] private float m_sliderAdjustStep = 0.01f;
         #endregion
 
@@ -58,9 +47,6 @@ namespace ThreeDeePongProto.Offline.Settings
 
         #region Hiding
         [Header("Hiding")]
-        [SerializeField] private Transform m_playerGroup;
-        [SerializeField] private Transform m_GroupThreeTransform;
-        [SerializeField] private Transform m_GroupFourTransform;
         [SerializeField] private Transform m_frontParentTransform;
         [SerializeField] private Transform m_backPTwoDdGroup;
         [SerializeField] private TextMeshProUGUI m_backLineUpText;
@@ -88,7 +74,6 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private List<string> m_playersTeamOne;
         private List<string> m_playersTeamTwo;
-        private List<string> m_maxPlayerAmount;
 
         #region Key-Value-Connection
         private Dictionary<Button, Slider> m_reduceLineSlider = new Dictionary<Button, Slider>();
@@ -98,12 +83,10 @@ namespace ThreeDeePongProto.Offline.Settings
 
         #region Non-SerializeField-Member-Variables
         private readonly int m_firstRoundOffset = 1, m_firstPointOffset = 1, m_firstWidthOffset = 25, m_firstLengthOffset = 50;
-        private readonly uint m_minPlayerInGame = 2;
         #endregion
 
         private event Action m_updateLineText;
-        private event Action<EPlayerAmount> PlayerAmountUpdated;
-
+        
         #region Serialization
         private readonly string m_settingsStatesFolderPath = "/SaveData/Settings-States";
         private readonly string m_fieldSettingsPath = "/SaveData/FieldSettings";
@@ -116,7 +99,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void Awake()
         {
-            PlayerAmountUpdated += UpdateObjectsVisibility;
+            //PreparationWindow.PlayerAmountUpdated += UpdateObjectsVisibility;
             SetupLineDictionaries();
 
             if (m_matchUIStates == null)
@@ -134,7 +117,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void OnDisable()
         {
-            PlayerAmountUpdated -= UpdateObjectsVisibility;
+            //PreparationWindow.PlayerAmountUpdated -= UpdateObjectsVisibility;
             RemoveGroupListeners();
 
             m_persistentData.SaveData(m_settingsStatesFolderPath, m_matchFileName, m_fileFormat, m_matchUIStates, m_encryptionEnabled, true);
@@ -151,12 +134,10 @@ namespace ThreeDeePongProto.Offline.Settings
             int maxPointDdIndex = Array.FindIndex(m_matchSetupDropdowns, (fn) => fn == m_matchSetupDropdowns[1]);
             int fieldWidthDdIndex = Array.FindIndex(m_matchSetupDropdowns, (fn) => fn == m_matchSetupDropdowns[2]);
             int fieldLengthDdIndex = Array.FindIndex(m_matchSetupDropdowns, (fn) => fn == m_matchSetupDropdowns[3]);
-            int playerAmountDdIndex = Array.FindIndex(m_matchSetupDropdowns, (fn) => fn == m_matchSetupDropdowns[4]);
             SetupMatchDropdowns(roundDdIndex);
             SetupMatchDropdowns(maxPointDdIndex);
             SetupMatchDropdowns(fieldWidthDdIndex);
             SetupMatchDropdowns(fieldLengthDdIndex);
-            SetupMatchDropdowns(playerAmountDdIndex);
 
             SetupLineUpSliders();
             UpdateLineUpTMPs();
@@ -166,11 +147,6 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void UpdateObjectsVisibility(EPlayerAmount _ePlayerAmount)
         {
-            if (m_matchUIStates.GameRuns)
-                m_playerGroup.gameObject.SetActive(false);
-            else
-                m_playerGroup.gameObject.SetActive(true);
-
             uint switchPlayerAmount = (uint)_ePlayerAmount;
 
             switch (switchPlayerAmount)
@@ -179,7 +155,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 {
                     ////In case 4 Player shall play, set the Splitscreen Mode to load to ECameraModi.FourSplit.
                     m_graphicUiStates.SetCameraMode = ECameraModi.FourSplit;
-                    ObjectsToHide(true, true, true, true, 25f, 225.0f);
+                    ObjectsToHide(true, true, 225.0f);
                     SetupFrontlineDropdowns();
                     break;
                 }
@@ -187,7 +163,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 {
                     ////In case 2 Player shall play, set the Splitscreen Mode to load to ECameraModi.TwoHorizontal.
                     m_graphicUiStates.SetCameraMode = ECameraModi.TwoHorizontal;
-                    ObjectsToHide(false, false, false, false, 285.3f, 714.0f);
+                    ObjectsToHide(false, false, 714.0f);
                     break;
                 }
             }
@@ -195,17 +171,11 @@ namespace ThreeDeePongProto.Offline.Settings
             SetupBacklineDropdowns();
         }
 
-        private void ObjectsToHide(bool _IFThree, bool _IFFour, bool _frontParent, bool _backDropdowns, float _playerGroupWidth, float _backTextWidth)
+        private void ObjectsToHide(bool _frontParent, bool _backDropdowns, float _backTextWidth)
         {
-            m_GroupThreeTransform.gameObject.SetActive(_IFThree);
-            m_GroupFourTransform.gameObject.SetActive(_IFFour);
             m_frontParentTransform.gameObject.SetActive(_frontParent);
             m_backPTwoDdGroup.gameObject.SetActive(_backDropdowns);
             m_backLineUpText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _backTextWidth);
-
-            if (m_matchUIStates.GameRuns)
-                return;
-            m_playerGroup.GetComponent<HorizontalLayoutGroup>().spacing = _playerGroupWidth;
         }
 
         private void AddGroupListeners()
@@ -225,10 +195,7 @@ namespace ThreeDeePongProto.Offline.Settings
             //Field-Length
             m_matchSetupDropdowns[3].onValueChanged.AddListener(delegate
             { OnLengthDropdownValueChanged(m_matchSetupDropdowns[3]); });
-            //PlayerAmount
-            m_matchSetupDropdowns[4].onValueChanged.AddListener(delegate
-            { OnPlayerAmountChanged(m_matchSetupDropdowns[4]); });
-
+            
             if ((int)m_matchUIStates.EPlayerAmount > 3)
             {
                 //Player-Set-Frontline
@@ -268,10 +235,7 @@ namespace ThreeDeePongProto.Offline.Settings
             //Field-Length
             m_matchSetupDropdowns[3].onValueChanged.RemoveListener(delegate
             { OnLengthDropdownValueChanged(m_matchSetupDropdowns[3]); });
-            //PlayerAmount
-            m_matchSetupDropdowns[4].onValueChanged.RemoveListener(delegate
-            { OnPlayerAmountChanged(m_matchSetupDropdowns[4]); });
-
+            
             if (m_matchValues.PlayerData.Count > 3)
             {
                 //Player-Set-Frontline
@@ -380,29 +344,6 @@ namespace ThreeDeePongProto.Offline.Settings
 
             m_basicFieldValues.SetGroundLength = _dropdown.value + m_firstLengthOffset;
             m_matchUIStates.LastFieldLengthDdIndex = _dropdown.value;
-        }
-
-        private void OnPlayerAmountChanged(TMP_Dropdown _dropdown)
-        {
-            switch (_dropdown.value)
-            {
-                case 0:
-                {
-                    m_matchUIStates.EPlayerAmount = EPlayerAmount.Two;
-                    m_graphicUiStates.SetCameraMode = ECameraModi.TwoHorizontal;
-                    PlayerAmountUpdated?.Invoke(EPlayerAmount.Two);
-                    break;
-                }
-                case 1:
-                {
-                    m_matchUIStates.EPlayerAmount = EPlayerAmount.Four;
-                    m_graphicUiStates.SetCameraMode = ECameraModi.FourSplit;
-                    PlayerAmountUpdated?.Invoke(EPlayerAmount.Four);
-                    break;
-                }
-                default:
-                    break;
-            }
         }
 
         /// <summary>
@@ -538,36 +479,6 @@ namespace ThreeDeePongProto.Offline.Settings
         }
         #endregion
 
-        #region Name-Inputfields
-        public void PlayerOneInput(string _playername)  //TODO: Optional Random a playername, or set Player 1-4.
-        {
-            if (string.IsNullOrWhiteSpace(_playername))
-                return;
-            m_matchValues.PlayerData[0].PlayerName = _playername;
-        }
-
-        public void PlayerTwoInput(string _playername)
-        {
-            if (string.IsNullOrWhiteSpace(_playername))
-                return;
-            m_matchValues.PlayerData[1].PlayerName = _playername;
-        }
-
-        public void PlayerThreeInput(string _playername)
-        {
-            if (string.IsNullOrWhiteSpace(_playername))
-                return;
-            m_matchValues.PlayerData[2].PlayerName = _playername;
-        }
-
-        public void PlayerFourInput(string _playername)
-        {
-            if (string.IsNullOrWhiteSpace(_playername))
-                return;
-            m_matchValues.PlayerData[3].PlayerName = _playername;
-        }
-        #endregion
-
         #region Fill-Dropdowns-On-Start
         private void SetupMatchDropdowns(int _dropdownID)
         {
@@ -679,35 +590,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
                     m_matchSetupDropdowns[_dropdownID].RefreshShownValue();
                     break;
-                }
-                //PlayerAmount
-                case 4:
-                {
-                    m_maxPlayerAmount = new();
-
-                    for (uint i = m_minPlayerInGame; i < m_matchValues.MaxPlayerInGame + m_minPlayerInGame; i++)
-                    {
-                        if (i % 2 == 0)
-                            m_maxPlayerAmount.Add($"{i}");
-                    }
-
-                    m_matchSetupDropdowns[_dropdownID].ClearOptions();
-                    m_matchSetupDropdowns[_dropdownID].AddOptions(m_maxPlayerAmount);
-
-                    if (m_matchUIStates != null)
-                    {
-                        //Modifier to ensure that values EPlayerAmount.Two & EPlayerAmount:Four set the correct dropdownIndex.
-                        int dropdownValueModifier = (int)m_matchUIStates.EPlayerAmount / 2 - 1;
-                        m_matchSetupDropdowns[4].value = dropdownValueModifier;
-                    }
-                    else
-                    {
-                        DefaultMatchDdValue(_dropdownID);
-                    }
-
-                    m_matchSetupDropdowns[_dropdownID].RefreshShownValue();
-                    break;
-                }
+                }                
                 default:
                     break;
             }
@@ -808,8 +691,8 @@ namespace ThreeDeePongProto.Offline.Settings
         {
             if (m_basicFieldValues == null)
             {
-                m_frontLineText.text = "No Data";
-                m_backLineText.text = "No Data";
+                m_frontFloatText.text = "No Data";
+                m_backFloatText.text = "No Data";
                 return;
             }
 
@@ -817,14 +700,14 @@ namespace ThreeDeePongProto.Offline.Settings
             {
                 case 4:
                 {
-                    m_frontLineText.SetText($"{m_distanceSliderValues[0].value + m_basicFieldValues.MinFrontLineDistance + m_basicFieldValues.BacklineAdjustment:N2}");
+                    m_frontFloatText.SetText($"{m_distanceSliderValues[0].value + m_basicFieldValues.MinFrontLineDistance + m_basicFieldValues.BacklineAdjustment:N2}");
                     break;
                 }
                 default:
                     break;
             }
 
-            m_backLineText.text = $"{m_distanceSliderValues[1].value + m_basicFieldValues.MinBackLineDistance:N2}";
+            m_backFloatText.text = $"{m_distanceSliderValues[1].value + m_basicFieldValues.MinBackLineDistance:N2}";
         }
 
         //Front = ID 0, Back = ID 1. Lists and UI are organized in the same scheme.
@@ -918,14 +801,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 {
                     m_matchSetupDropdowns[3].value = m_fieldLengthDdIndex;
                     break;
-                }
-                case 4:
-                {
-                    //Modifier to ensure that values EPlayerAmount.Two & EPlayerAmount:Four set the correct dropdownIndex.
-                    int dropdownValueModifier = (int)m_defaultPlayerAmount / 2 - 1;
-                    m_matchSetupDropdowns[4].value = dropdownValueModifier;
-                    break;
-                }
+                }                
                 default:
                     break;
             }
