@@ -60,6 +60,11 @@ namespace ThreeDeePongProto.Offline.UI
         [SerializeField] private BasicFieldValues m_basicFieldValues;
         #endregion
 
+        #region Scriptable-References
+        [SerializeField] private PlayerIDData[] m_playerIDData;
+        [SerializeField] private GameObject[] m_playerPrefabs;
+        #endregion
+
         #region Serialization
         private readonly string m_settingStatesFolderPath = "/SaveData/Settings-States";
         private readonly string m_settingsValuesFolderPath = "/SaveData/Settings-Values";
@@ -96,6 +101,8 @@ namespace ThreeDeePongProto.Offline.UI
             m_menuActions = UserInputManager.m_playerInputActions;
             m_menuActions?.Enable();
             m_menuActions.PlayerActions.ToggleGameMenu.performed += EnableNavigation;
+
+            PreSetUpPlayerAmount(m_matchUIStates.EPlayerAmount);
         }
 
         private void OnDisable()
@@ -149,6 +156,7 @@ namespace ThreeDeePongProto.Offline.UI
         private void LoadMatchSettings()
         {
             MatchUISettingsStates uiIndices = m_persistentData.LoadData<MatchUISettingsStates>(m_settingStatesFolderPath, m_matchFileName, m_fileFormat, m_encryptionEnabled);
+            m_matchUIStates.EPlayerAmount = uiIndices.EPlayerAmount;
             m_matchUIStates.InfiniteMatch = uiIndices.InfiniteMatch;
             //In this special case, the DropdownIndex is equal to the set Rounds and MaxPoints, because Index 0 is set as "InfinityValue".
             m_matchUIStates.LastRoundDdIndex = uiIndices.LastRoundDdIndex;
@@ -170,6 +178,28 @@ namespace ThreeDeePongProto.Offline.UI
             m_basicFieldValues.SetGroundLength = basicFieldSetup.SetGroundLength;
             m_basicFieldValues.FrontlineAdjustment = basicFieldSetup.FrontLineAdjustment;
             m_basicFieldValues.BacklineAdjustment = basicFieldSetup.BackLineAdjustment;
+        }
+
+        /// <summary>
+        /// Required, so MatchSettings right at start can fill the Front-/Backline-Dropdowns.
+        /// </summary>
+        /// <param name="_ePlayerAmount"></param>
+        private void PreSetUpPlayerAmount(EPlayerAmount _ePlayerAmount)
+        {
+            if (m_matchUIStates.GameRuns)
+                return;
+
+            m_matchValues.PlayerData.Clear();
+            m_matchValues.PlayerData = new();
+            m_matchValues.PlayerPrefabs.Clear();
+            m_matchValues.PlayerPrefabs = new();
+
+            uint playerAmount = (uint)_ePlayerAmount;    //EPlayerAmount.Four => int 4 || EPlayerAmount.Two => int 2
+            for (uint i = 0; i < playerAmount; i++)
+            {
+                m_matchValues.PlayerData.Add(m_playerIDData[(int)i]);
+                m_matchValues.PlayerPrefabs.Add(m_playerPrefabs[(int)i]);
+            }
         }
 
         public void ResumeGame()

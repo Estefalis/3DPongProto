@@ -16,6 +16,7 @@ MonoBehaviour:
   eGameConnectModi: 0
   TpOneRotReset: 0
   TpTwoRotReset: 0
+  GameRuns: 0
   InfiniteMatch: 0
   LastRoundDdIndex: 5
   LastMaxPointDdIndex: 25

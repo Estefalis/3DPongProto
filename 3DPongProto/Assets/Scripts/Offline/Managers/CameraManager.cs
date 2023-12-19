@@ -9,8 +9,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
     {
         public List<Camera> AvailableCameras { get => m_availableCameras; }
         [SerializeField] private List<Camera> m_availableCameras = new();
-        //public List<Camera> AvailableCameras { get => m_availableCameras; }
-        //[SerializeField] private List<Camera> m_availableCameras = new();
 
         [SerializeField] private MatchValues m_matchValues;
 
@@ -26,8 +24,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private static Queue<Camera> m_QueueRemoveCamera;
         private static event Action<Queue<Camera>, int> m_ActionRegisterCamera;
         private static event Action<Queue<Camera>, int> m_ActionRemoveCamera;
-
-        //private bool m_canAddCameras = false;
 
         public static Rect RuntimeFullsizeRect { get; set; }
 
@@ -75,21 +71,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             m_ActionRegisterCamera -= AddIncomingCamera;
             m_ActionRemoveCamera -= RemoveAddedCameras;
         }
-
-#if UNITY_EDITOR
-        private void Update()
-        {
-            //Debug.Log("Dictionary Rect 0: " + m_cameraRectDict[m_availableCameras[0]]);
-            //Debug.Log("Dictionary Rect 1: " + m_cameraRectDict[m_availableCameras[1]]);
-            //Debug.Log("Dictionary Rect 2: " + m_cameraRectDict[m_availableCameras[2]]);
-            //Debug.Log("Dictionary Rect 3: " + m_cameraRectDict[m_availableCameras[3]]);
-
-            //Debug.Log($"DictCamera 0 {m_dictCameras[0]} + DictRects 0 {m_dictRects[0]}");
-            //Debug.Log($"DictCamera 1 {m_dictCameras[1]} + DictRects 1 {m_dictRects[1]}");
-            //Debug.Log($"DictCamera 2 {m_dictCameras[2]} + DictRects 2 {m_dictRects[2]}");
-            //Debug.Log($"DictCamera 3 {m_dictCameras[3]} + DictRects 3 {m_dictRects[3]}");
-        }
-#endif
 
         #region CameraRect Stats Example
         //Single Camera
@@ -166,11 +147,5 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                 m_dictRects.Add(rect);
             }
         }
-
-        //Methode-Variant of the public 'CameraRectDict'-property.
-        //public Dictionary<Camera, Rect> GetDictionary()
-        //{
-        //    return m_cameraRectDict;
-        //}
     }
 }

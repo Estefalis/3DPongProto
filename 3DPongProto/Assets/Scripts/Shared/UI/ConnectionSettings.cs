@@ -9,18 +9,16 @@ namespace ThreeDeePongProto.Shared.UI
         [SerializeField] private string m_localGameScene = "LocalGameScene";
         //[SerializeField] private string m_lanScene = "LanScene";
         //[SerializeField] private string m_internetScene = "InternetScene";
-        [SerializeField] private Button[] m_modiButtons;
-        [SerializeField] private PlayerIDData[] m_playerIDData;
-        [SerializeField] private GameObject[] m_playerPrefabs;
-        [SerializeField] private MatchValues m_matchValues;
+        [SerializeField] private Button[] m_modiButtons;        
+        //[SerializeField] private MatchValues m_matchValues;
         [SerializeField] private MatchUIStates m_matchUIStates;
 
         public void SetGameModi(Button _sender)
         {
-            m_matchValues.PlayerData.Clear();
-            m_matchValues.PlayerData = new();
-            m_matchValues.PlayerPrefabs.Clear();
-            m_matchValues.PlayerPrefabs = new();
+            //m_matchValues.PlayerData.Clear();
+            //m_matchValues.PlayerData = new();
+            //m_matchValues.PlayerPrefabs.Clear();
+            //m_matchValues.PlayerPrefabs = new();
 
             if (_sender == m_modiButtons[0])
             {

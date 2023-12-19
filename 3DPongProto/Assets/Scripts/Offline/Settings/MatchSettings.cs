@@ -109,9 +109,7 @@ namespace ThreeDeePongProto.Offline.Settings
         private void OnEnable()
         {
             InitializeUI();
-
             m_updateLineText += UpdateLineUpTMPs;
-
             AddGroupListeners();
         }
 
@@ -145,7 +143,7 @@ namespace ThreeDeePongProto.Offline.Settings
             UpdateObjectsVisibility(m_matchUIStates.EPlayerAmount);
         }
 
-        private void UpdateObjectsVisibility(EPlayerMatchLimit _ePlayerAmount)
+        private void UpdateObjectsVisibility(EPlayerAmount _ePlayerAmount)
         {
             uint switchPlayerAmount = (uint)_ePlayerAmount;
 

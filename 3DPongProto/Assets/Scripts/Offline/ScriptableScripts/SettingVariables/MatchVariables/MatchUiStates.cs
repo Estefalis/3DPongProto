@@ -1,13 +1,12 @@
 using System;
 using UnityEngine;
-using ThreeDeePongProto.Offline.Settings;
 
 [Serializable]
 [CreateAssetMenu(menuName = "Scriptable Objects/Match Settings/Indices and Boolean", fileName = "MatchUISettings")]
 public class MatchUIStates : ScriptableObject
 {
     [Header("Player-States")]
-    public EPlayerMatchLimit EPlayerAmount;
+    public EPlayerAmount EPlayerAmount;
     public EGameModi EGameConnectModi { get => eGameConnectModi; set => eGameConnectModi = value; }
     [SerializeField] private EGameModi eGameConnectModi;
     public bool TpOneRotReset;

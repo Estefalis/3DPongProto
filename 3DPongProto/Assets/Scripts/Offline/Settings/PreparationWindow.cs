@@ -2,21 +2,21 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// Indices set equal to the desired amount of players participating in matches of int 2 and/or 4.
+/// </summary>
+public enum EPlayerAmount
+{
+    Two = 2,
+    Four = 4
+}
+
 namespace ThreeDeePongProto.Offline.Settings
 {
-    /// <summary>
-    /// Indices set equal to the desired amount of players participating in matches of int 2 and/or 4.
-    /// </summary>
-    public enum EPlayerMatchLimit
-    {
-        Two = 2,
-        Four = 4
-    }
-
     public class PreparationWindow : MonoBehaviour
     {
         #region SerializeField-Member-Variables
-        [SerializeField] private EPlayerMatchLimit m_defaultPlayerAmount;
+        [SerializeField] private EPlayerAmount m_defaultPlayerAmount;
 
         [SerializeField] private TextMeshProUGUI m_playerTextOne;
         [SerializeField] private TextMeshProUGUI m_playerTextTwo;
@@ -27,7 +27,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
-        [SerializeField] private GraphicUiStates m_graphicUiStates; 
+        [SerializeField] private GraphicUiStates m_graphicUiStates;
         #endregion
 
         #region Scriptable-References
@@ -35,7 +35,6 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private GameObject[] m_playerPrefabs;
         #endregion
 
-        //public static event Action<EPlayerMatchLimit> PlayerAmountUpdated;
         private readonly uint m_minPlayerInGame = 2;
         private List<string> m_maxPlayerAmount;
 
@@ -60,7 +59,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void Start()
         {
-            SetupMatchDropdowns();            
+            SetupMatchDropdowns();
         }
 
         private void AddGroupListener()
@@ -93,7 +92,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
             if (m_matchUIStates != null)
             {
-                //Modifier to ensure that values EPlayerMatchLimit.Two & EPlayerMatchLimit:Four set the correct dropdownIndex.
+                //Modifier to ensure that values EPlayerAmount.Two & EPlayerAmount:Four set the correct dropdownIndex.
                 int dropdownValueModifier = (int)m_matchUIStates.EPlayerAmount / 2 - 1;
                 m_playerInGame.value = dropdownValueModifier;
             }
@@ -113,14 +112,14 @@ namespace ThreeDeePongProto.Offline.Settings
             {
                 case 0:
                 {
-                    m_matchUIStates.EPlayerAmount = EPlayerMatchLimit.Two;
+                    m_matchUIStates.EPlayerAmount = EPlayerAmount.Two;
                     m_graphicUiStates.SetCameraMode = ECameraModi.TwoHorizontal;
                     ObjectsToHide(false, false, true, 437.0f);
                     break;
                 }
                 case 1:
                 {
-                    m_matchUIStates.EPlayerAmount = EPlayerMatchLimit.Four;
+                    m_matchUIStates.EPlayerAmount = EPlayerAmount.Four;
                     m_graphicUiStates.SetCameraMode = ECameraModi.FourSplit;
                     ObjectsToHide(true, true, true, 110.0f);
                     break;
@@ -134,14 +133,18 @@ namespace ThreeDeePongProto.Offline.Settings
             SetUpPlayerAmount(m_matchUIStates.EPlayerAmount);
         }
 
-        private void SetUpPlayerAmount(EPlayerMatchLimit _ePlayerAmount)
+        private void SetUpPlayerAmount(EPlayerAmount _ePlayerAmount)
         {
+            //Shall no reset the Lists, if the amount is equal.
+            if (m_matchUIStates.EPlayerAmount == _ePlayerAmount)
+                return;
+
             m_matchValues.PlayerData.Clear();
             m_matchValues.PlayerData = new();
             m_matchValues.PlayerPrefabs.Clear();
             m_matchValues.PlayerPrefabs = new();
 
-            uint playerAmount = (uint)_ePlayerAmount;    //EPlayerMatchLimit.Four => int 4 || EPlayerMatchLimit.Two => int 2
+            uint playerAmount = (uint)_ePlayerAmount;    //EPlayerAmount.Four => int 4 || EPlayerAmount.Two => int 2
             for (uint i = 0; i < playerAmount; i++)
             {
                 m_matchValues.PlayerData.Add(m_playerIDData[(int)i]);
@@ -190,7 +193,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void ResetDefault()
         {
-            //Modifier to ensure that values EPlayerMatchLimit.Two & EPlayerMatchLimit:Four set the correct dropdownIndex.
+            //Modifier to ensure that values EPlayerAmount.Two & EPlayerAmount:Four set the correct dropdownIndex.
             int dropdownValueModifier = (int)m_defaultPlayerAmount / 2 - 1;
             m_playerInGame.value = dropdownValueModifier;
         }

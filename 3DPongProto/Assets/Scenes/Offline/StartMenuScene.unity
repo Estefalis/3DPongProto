@@ -5438,17 +5438,6 @@ MonoBehaviour:
   - {fileID: 395195819}
   - {fileID: 1633779088}
   - {fileID: 1884955036}
-  m_playerIDData:
-  - {fileID: 11400000, guid: 533fe6eee149a3143aab50fbfb5541a8, type: 2}
-  - {fileID: 11400000, guid: 21b573c09ff18ba4893ceecaaf9c5756, type: 2}
-  - {fileID: 11400000, guid: 862bfec20d10c5049a46b7b03f906cd9, type: 2}
-  - {fileID: 11400000, guid: 0a4b44b7dfa182243ab981955eda3e67, type: 2}
-  m_playerPrefabs:
-  - {fileID: 5985516158134654762, guid: 840e92d4a9372544b9571a59a3063d11, type: 3}
-  - {fileID: 2849503855690960358, guid: 314f7651877d7c649b85b4b9396b3140, type: 3}
-  - {fileID: 4899228495849827101, guid: 3f1c4213d4e0d8e4789aedee3de29d67, type: 3}
-  - {fileID: 4887262735936627534, guid: 53549484812ff734d80002c639f02a41, type: 3}
-  m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
 --- !u!114 &975557205
 MonoBehaviour:
@@ -5497,6 +5486,16 @@ MonoBehaviour:
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
   m_basicFieldValues: {fileID: 11400000, guid: b7c0516de58b3a240a6970d999010f71, type: 2}
+  m_playerIDData:
+  - {fileID: 11400000, guid: 533fe6eee149a3143aab50fbfb5541a8, type: 2}
+  - {fileID: 11400000, guid: 21b573c09ff18ba4893ceecaaf9c5756, type: 2}
+  - {fileID: 11400000, guid: 862bfec20d10c5049a46b7b03f906cd9, type: 2}
+  - {fileID: 11400000, guid: 0a4b44b7dfa182243ab981955eda3e67, type: 2}
+  m_playerPrefabs:
+  - {fileID: 5985516158134654762, guid: 840e92d4a9372544b9571a59a3063d11, type: 3}
+  - {fileID: 2849503855690960358, guid: 314f7651877d7c649b85b4b9396b3140, type: 3}
+  - {fileID: 4899228495849827101, guid: 3f1c4213d4e0d8e4789aedee3de29d67, type: 3}
+  - {fileID: 4887262735936627534, guid: 53549484812ff734d80002c639f02a41, type: 3}
 --- !u!1 &993877450
 GameObject:
   m_ObjectHideFlags: 0

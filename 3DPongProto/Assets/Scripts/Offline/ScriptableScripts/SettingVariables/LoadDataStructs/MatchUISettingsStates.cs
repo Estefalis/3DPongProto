@@ -3,6 +3,7 @@ using System;
 [Serializable]
 public struct MatchUISettingsStates
 {
+    public EPlayerAmount EPlayerAmount;
     public bool TpOneRotReset;
     public bool TpTwoRotReset;
     public bool InfiniteMatch;
