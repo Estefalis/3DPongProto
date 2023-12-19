@@ -145,7 +145,7 @@ namespace ThreeDeePongProto.Offline.Settings
             UpdateObjectsVisibility(m_matchUIStates.EPlayerAmount);
         }
 
-        private void UpdateObjectsVisibility(EPlayerAmount _ePlayerAmount)
+        private void UpdateObjectsVisibility(EPlayerMatchLimit _ePlayerAmount)
         {
             uint switchPlayerAmount = (uint)_ePlayerAmount;
 

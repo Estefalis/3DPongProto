@@ -7,7 +7,7 @@ using ThreeDeePongProto.Offline.Settings;
 public class MatchUIStates : ScriptableObject
 {
     [Header("Player-States")]
-    public EPlayerAmount EPlayerAmount;
+    public EPlayerMatchLimit EPlayerAmount;
     public EGameModi EGameConnectModi { get => eGameConnectModi; set => eGameConnectModi = value; }
     [SerializeField] private EGameModi eGameConnectModi;
     public bool TpOneRotReset;

@@ -123,8 +123,8 @@ namespace ThreeDeePongProto.Offline.Settings
             //Automatize the shown ECameraModi in the 'm_screenSplitDropdown' based on the player in the match.
             m_maxScreenModiIndex = currentPlayer switch
             {
-                2 => m_maxScreenModiIndex = (int)ECameraModi.EndCount - 1,  //m_maxScreenModiIndex = EPlayerAmount.Four
-                4 => m_maxScreenModiIndex = (int)ECameraModi.EndCount,     //m_maxScreenModiIndex = EPlayerAmount.EndCount
+                2 => m_maxScreenModiIndex = (int)ECameraModi.EndCount - 1,  //m_maxScreenModiIndex = EPlayerMatchLimit.Four
+                4 => m_maxScreenModiIndex = (int)ECameraModi.EndCount,     //m_maxScreenModiIndex = EPlayerMatchLimit.EndCount
                 _ => m_maxScreenModiIndex = (int)ECameraModi.EndCount,
             };
 

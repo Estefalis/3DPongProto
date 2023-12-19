@@ -2521,7 +2521,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Shared-Game-Settings
+  m_text: Game-Settings
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5780,7 +5780,7 @@ GameObject:
   - component: {fileID: 1013239779}
   - component: {fileID: 1013239778}
   m_Layer: 5
-  m_Name: SharedSettings
+  m_Name: Settings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9401,6 +9401,7 @@ MonoBehaviour:
   m_playerTextTwo: {fileID: 1997090703}
   m_playerThreeGroup: {fileID: 8076181414138080564}
   m_playerFourGroup: {fileID: 571580611}
+  m_playerGroupTwo: {fileID: 1182001763}
   m_playerInGame: {fileID: 289912908918396312}
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
