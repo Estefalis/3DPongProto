@@ -5,9 +5,9 @@ using UnityEngine;
 [Serializable]
 [CreateAssetMenu(menuName = "Scriptable Objects/Match Settings/Dimensions and Variables", fileName = "Match Variables")]
 public class MatchValues : ScriptableObject
-{    
+{
     public List<PlayerIDData> PlayerData;
-    public List<GameObject> PlayerPrefabs;    
+    //public List<GameObject> PlayerPrefabs;
     public uint MaxPlayerInGame;
     [Header("Round-Details")]
     public float StartTime;             //each Match

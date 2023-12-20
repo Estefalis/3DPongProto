@@ -6,7 +6,7 @@ using UnityEngine.UI;
 [CreateAssetMenu(menuName = "Scriptable Objects/Player Data/Player Customization", fileName = "Player Information")]
 public class PlayerIDData : ScriptableObject
 {
-    [SerializeField] private GameObject Prefab;
+    public GameObject Prefab;
     public string PlayerName;
     public int PlayerId;
     public Image Avatar;

@@ -18,6 +18,7 @@ namespace ThreeDeePongProto.Offline.Settings
         #region SerializeField-Member-Variables
         [SerializeField] private EPlayerAmount m_defaultPlayerAmount;
 
+        [SerializeField] private TMP_InputField[] m_playerIFs;
         [SerializeField] private TextMeshProUGUI m_playerTextOne;
         [SerializeField] private TextMeshProUGUI m_playerTextTwo;
         [SerializeField] private Transform m_playerThreeGroup;
@@ -32,7 +33,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
         #region Scriptable-References
         [SerializeField] private PlayerIDData[] m_playerIDData;
-        [SerializeField] private GameObject[] m_playerPrefabs;
+        //[SerializeField] private GameObject[] m_playerPrefabs;
         #endregion
 
         private readonly uint m_minPlayerInGame = 2;
@@ -141,14 +142,14 @@ namespace ThreeDeePongProto.Offline.Settings
 
             m_matchValues.PlayerData.Clear();
             m_matchValues.PlayerData = new();
-            m_matchValues.PlayerPrefabs.Clear();
-            m_matchValues.PlayerPrefabs = new();
+            //m_matchValues.PlayerPrefabs.Clear();
+            //m_matchValues.PlayerPrefabs = new();
 
             uint playerAmount = (uint)_ePlayerAmount;    //EPlayerAmount.Four => int 4 || EPlayerAmount.Two => int 2
             for (uint i = 0; i < playerAmount; i++)
             {
                 m_matchValues.PlayerData.Add(m_playerIDData[(int)i]);
-                m_matchValues.PlayerPrefabs.Add(m_playerPrefabs[(int)i]);
+                //m_matchValues.PlayerPrefabs.Add(m_playerPrefabs[(int)i]);
             }
         }
 
@@ -167,6 +168,7 @@ namespace ThreeDeePongProto.Offline.Settings
             if (string.IsNullOrWhiteSpace(_playername))
                 return;
             m_matchValues.PlayerData[0].PlayerName = _playername;
+            m_matchValues.PlayerData[0].PlayerId = 0;
         }
 
         public void PlayerTwoInput(string _playername)
@@ -174,6 +176,7 @@ namespace ThreeDeePongProto.Offline.Settings
             if (string.IsNullOrWhiteSpace(_playername))
                 return;
             m_matchValues.PlayerData[1].PlayerName = _playername;
+            m_matchValues.PlayerData[1].PlayerId = 1;
         }
 
         public void PlayerThreeInput(string _playername)
@@ -181,6 +184,7 @@ namespace ThreeDeePongProto.Offline.Settings
             if (string.IsNullOrWhiteSpace(_playername))
                 return;
             m_matchValues.PlayerData[2].PlayerName = _playername;
+            m_matchValues.PlayerData[2].PlayerId = 2;
         }
 
         public void PlayerFourInput(string _playername)
@@ -188,6 +192,7 @@ namespace ThreeDeePongProto.Offline.Settings
             if (string.IsNullOrWhiteSpace(_playername))
                 return;
             m_matchValues.PlayerData[3].PlayerName = _playername;
+            m_matchValues.PlayerData[3].PlayerId = 3;
         }
         #endregion
 

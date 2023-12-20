@@ -129,13 +129,13 @@ namespace ThreeDeePongProto.Offline.Managers
                 if (i % 2 == 0)
                 {
                     //player = m_idGameObjectDict[m_matchValues.PlayerData[i]];
-                    Instantiate(m_matchValues.PlayerPrefabs[i], Vector3.zero, Quaternion.Euler(0, 0, 0), m_prefabParent);
+                    Instantiate(m_matchValues.PlayerData[i].Prefab, Vector3.zero, Quaternion.Euler(0, 0, 0), m_prefabParent);
                 }
 
                 if (i % 2 != 0)
                 {
                     //player = m_idGameObjectDict[m_matchValues.PlayerData[i]];
-                    Instantiate(m_matchValues.PlayerPrefabs[i], Vector3.zero, Quaternion.Euler(0, 180, 0), m_prefabParent);
+                    Instantiate(m_matchValues.PlayerData[i].Prefab, Vector3.zero, Quaternion.Euler(0, 180, 0), m_prefabParent);
                 }
             }
 

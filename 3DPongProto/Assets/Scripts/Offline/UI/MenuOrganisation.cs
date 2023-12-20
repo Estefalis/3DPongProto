@@ -62,7 +62,7 @@ namespace ThreeDeePongProto.Offline.UI
 
         #region Scriptable-References
         [SerializeField] private PlayerIDData[] m_playerIDData;
-        [SerializeField] private GameObject[] m_playerPrefabs;
+        //[SerializeField] private GameObject[] m_playerPrefabs;
         #endregion
 
         #region Serialization
@@ -191,14 +191,14 @@ namespace ThreeDeePongProto.Offline.UI
 
             m_matchValues.PlayerData.Clear();
             m_matchValues.PlayerData = new();
-            m_matchValues.PlayerPrefabs.Clear();
-            m_matchValues.PlayerPrefabs = new();
+            //m_matchValues.PlayerPrefabs.Clear();
+            //m_matchValues.PlayerPrefabs = new();
 
             uint playerAmount = (uint)_ePlayerAmount;    //EPlayerAmount.Four => int 4 || EPlayerAmount.Two => int 2
             for (uint i = 0; i < playerAmount; i++)
             {
                 m_matchValues.PlayerData.Add(m_playerIDData[(int)i]);
-                m_matchValues.PlayerPrefabs.Add(m_playerPrefabs[(int)i]);
+                //m_matchValues.PlayerPrefabs.Add(m_playerPrefabs[(int)i]);
             }
         }
 
