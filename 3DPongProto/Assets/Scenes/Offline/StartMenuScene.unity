@@ -445,10 +445,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 366048203}
+    m_SelectOnDown: {fileID: 9083832537206187951}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -493,7 +493,19 @@ MonoBehaviour:
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
@@ -1792,7 +1804,7 @@ GameObject:
   - component: {fileID: 366048204}
   - component: {fileID: 366048203}
   m_Layer: 5
-  m_Name: StartJoinButton
+  m_Name: StartButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1866,7 +1878,7 @@ MonoBehaviour:
       - m_Target: {fileID: 975557204}
         m_TargetAssemblyTypeName: ThreeDeePongProto.Shared.UI.ConnectionSettings,
           Assembly-CSharp
-        m_MethodName: StartLocalGame
+        m_MethodName: StartMatch
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5434,6 +5446,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_localGameScene: LocalGameScene
+  m_lanGameScene: LanGameScene
+  m_internetGameScene: InternetGameScene
   m_modiButtons:
   - {fileID: 395195819}
   - {fileID: 1633779088}
@@ -5491,11 +5505,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 21b573c09ff18ba4893ceecaaf9c5756, type: 2}
   - {fileID: 11400000, guid: 862bfec20d10c5049a46b7b03f906cd9, type: 2}
   - {fileID: 11400000, guid: 0a4b44b7dfa182243ab981955eda3e67, type: 2}
-  m_playerPrefabs:
-  - {fileID: 5985516158134654762, guid: 840e92d4a9372544b9571a59a3063d11, type: 3}
-  - {fileID: 2849503855690960358, guid: 314f7651877d7c649b85b4b9396b3140, type: 3}
-  - {fileID: 4899228495849827101, guid: 3f1c4213d4e0d8e4789aedee3de29d67, type: 3}
-  - {fileID: 4887262735936627534, guid: 53549484812ff734d80002c639f02a41, type: 3}
 --- !u!1 &993877450
 GameObject:
   m_ObjectHideFlags: 0
@@ -6735,11 +6744,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnUp: {fileID: 6664980750212737084}
+    m_SelectOnDown: {fileID: 366048203}
+    m_SelectOnLeft: {fileID: 1836388316}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
@@ -9396,11 +9405,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_defaultPlayerAmount: 4
-  m_playerIFs:
-  - {fileID: 9083832537206187951}
-  - {fileID: 1836388316}
-  - {fileID: 6664980750212737084}
-  - {fileID: 1222346216}
   m_playerTextOne: {fileID: 9083832536312321607}
   m_playerTextTwo: {fileID: 1997090703}
   m_playerThreeGroup: {fileID: 8076181414138080564}
@@ -9415,11 +9419,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 21b573c09ff18ba4893ceecaaf9c5756, type: 2}
   - {fileID: 11400000, guid: 862bfec20d10c5049a46b7b03f906cd9, type: 2}
   - {fileID: 11400000, guid: 0a4b44b7dfa182243ab981955eda3e67, type: 2}
-  m_playerPrefabs:
-  - {fileID: 5985516158134654762, guid: 840e92d4a9372544b9571a59a3063d11, type: 3}
-  - {fileID: 2849503855690960358, guid: 314f7651877d7c649b85b4b9396b3140, type: 3}
-  - {fileID: 4899228495849827101, guid: 3f1c4213d4e0d8e4789aedee3de29d67, type: 3}
-  - {fileID: 4887262735936627534, guid: 53549484812ff734d80002c639f02a41, type: 3}
 --- !u!1 &1669759278
 GameObject:
   m_ObjectHideFlags: 0
@@ -11102,12 +11101,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 9083832537206187951}
+    m_SelectOnDown: {fileID: 366048203}
     m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnRight: {fileID: 1222346216}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -19146,11 +19145,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnUp: {fileID: 52941452}
+    m_SelectOnDown: {fileID: 1222346216}
+    m_SelectOnLeft: {fileID: 9083832537206187951}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
@@ -21988,12 +21987,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 52941452}
+    m_SelectOnDown: {fileID: 1836388316}
     m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnRight: {fileID: 6664980750212737084}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
