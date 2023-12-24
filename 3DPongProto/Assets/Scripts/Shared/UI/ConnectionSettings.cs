@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,7 +12,13 @@ namespace ThreeDeePongProto.Shared.UI
         [SerializeField] private string m_lanGameScene = "LanGameScene";
         [SerializeField] private string m_internetGameScene = "InternetGameScene";
         [SerializeField] private Button[] m_modiButtons;
+
+        //[SerializeField] private uint m_maxPlayers = 4;
         #endregion
+
+        //public static event Action LocalGameAnnounced;
+        //public static event Action LANGameAnnounced;
+        //public static event Action InternetGameAnnounced;
 
         #region Scriptable Objects
         [SerializeField] private MatchUIStates m_matchUIStates;
@@ -21,21 +28,27 @@ namespace ThreeDeePongProto.Shared.UI
         {
             if (_sender == m_modiButtons[0])
             {
-                m_matchUIStates.EGameConnectModi = EGameModi.LocalPC;
+                SetConnectionInfo(EGameModi.LocalPC/*, LocalGameAnnounced*/);
             }
 
             if (_sender == m_modiButtons[1])
             {
-                m_matchUIStates.EGameConnectModi = EGameModi.LAN;
+                SetConnectionInfo(EGameModi.LAN/*, LANGameAnnounced*/);
             }
 
             if (_sender == m_modiButtons[2])
             {
-                m_matchUIStates.EGameConnectModi = EGameModi.Internet;
+                SetConnectionInfo(EGameModi.Internet/*, InternetGameAnnounced*/);
             }
 #if UNITY_EDITOR
             Debug.Log("Meldung für Spiel-Modus: " + m_matchUIStates.EGameConnectModi);
 #endif
+        }
+
+        private void SetConnectionInfo(EGameModi _eGameModi/*, Action _action*/)
+        {
+            m_matchUIStates.EGameConnectModi = _eGameModi;
+            //_action?.Invoke();
         }
 
         public void StartMatch()
@@ -63,16 +76,6 @@ namespace ThreeDeePongProto.Shared.UI
                 }
             }
         }
-
-        //public void StartLanGame()
-        //{
-        //    SceneManager.LoadScene(m_lanGameScene);
-        //}
-
-        //public void StartInternetGame()
-        //{
-        //    SceneManager.LoadScene(m_internetGameScene);
-        //}
 
         public void QuitGame()
         {

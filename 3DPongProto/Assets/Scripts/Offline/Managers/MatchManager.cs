@@ -16,6 +16,7 @@ namespace ThreeDeePongProto.Offline.Managers
     public class MatchManager : MonoBehaviour
     {
         #region SerializeField-Member-Variables
+        [SerializeField] private string m_NPCName = "Some Test-NPC";
         [SerializeField] private GameObject m_playGround;
         [SerializeField] private Transform m_prefabParent;
 
@@ -53,12 +54,12 @@ namespace ThreeDeePongProto.Offline.Managers
         #endregion
 
         #region Non-SerializeField-Member-Variables
-        #region Properties-Access
-
-        private bool m_matchHasStarted = false;
-        private float m_matchStartTime;
         private bool m_nextRoundConditionIsMet;
         private string m_scoredPlayer;
+
+        #region Properties-Access
+        private bool m_matchHasStarted = false;
+        private float m_matchStartTime;        
 
         public float DefaultBackLineDistance { get => m_minimalBackLineDistance; }
         public float DefaultFrontLineDistance { get => m_minimalFrontLineDistance; }
@@ -221,6 +222,15 @@ namespace ThreeDeePongProto.Offline.Managers
 
             switch ((int)m_matchUIStates.EPlayerAmount)
             {
+                //TODO: Include AI NPC + Multiplayer.
+                case 1:
+                {
+                    if (m_scoredPlayer == null)
+                        m_scoredPlayer = $"{m_NPCName} from Team 1";
+                    else
+                        m_scoredPlayer = m_matchValues.PlayerData[0].PlayerName;
+                    break;
+                }
                 //Solo
                 case 2:
                 {
@@ -259,6 +269,15 @@ namespace ThreeDeePongProto.Offline.Managers
 
             switch ((int)m_matchUIStates.EPlayerAmount)
             {
+                //TODO: Include AI NPC + Multiplayer.
+                case 1:
+                {
+                    if (m_scoredPlayer == null)
+                        m_scoredPlayer = $"{m_NPCName} from Team 2";
+                    else
+                        m_scoredPlayer = m_matchValues.PlayerData[1].PlayerName;
+                    break;
+                }
                 //Solo
                 case 2:
                 {
