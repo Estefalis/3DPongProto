@@ -51,15 +51,15 @@ namespace ThreeDeePongProto.Offline.UI
             //TODO: COULD HAVE - Eventually code to keep the 'source image width' equal to it's height.
             m_playerPointsConnection.Add(m_playerNamesTMPList, m_totalPointsTMPList);
 
-            BallBehaviour.HitGoalOne += UpdateUserInterface;
-            BallBehaviour.HitGoalTwo += UpdateUserInterface;
+            BallBehavOff.HitGoalOne += UpdateUserInterface;
+            BallBehavOff.HitGoalTwo += UpdateUserInterface;
             MatchManager.StartNextRound += UpdateUserInterface;
         }
 
         private void OnDisable()
         {
-            BallBehaviour.HitGoalOne -= UpdateUserInterface;
-            BallBehaviour.HitGoalTwo -= UpdateUserInterface;
+            BallBehavOff.HitGoalOne -= UpdateUserInterface;
+            BallBehavOff.HitGoalTwo -= UpdateUserInterface;
             MatchManager.StartNextRound -= UpdateUserInterface;
         }
 

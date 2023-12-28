@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using ThreeDeePongProto.Offline.Player.Inputs;
+using ThreeDeePongProto.Shared.InputActions;
 using ThreeDeePongProto.Offline.Settings;
 using UnityEngine;
 using UnityEngine.EventSystems;

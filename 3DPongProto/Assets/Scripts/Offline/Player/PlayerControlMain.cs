@@ -1,5 +1,6 @@
 using System;
 using ThreeDeePongProto.Offline.Managers;
+using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,7 +10,6 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
     {
         #region Script-References
         protected PlayerInputActions m_playerMovement;
-        //[SerializeField] protected MatchManager m_matchManager;
         #endregion
 
         #region SerializeField-Member-Variables

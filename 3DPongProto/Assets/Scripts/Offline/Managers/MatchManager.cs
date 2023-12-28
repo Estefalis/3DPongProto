@@ -109,9 +109,9 @@ namespace ThreeDeePongProto.Offline.Managers
             MenuOrganisation.RestartGameLevel += ReSetMatch;
             MenuOrganisation.EndInfiniteMatch += LetsEndInfiniteMatch;
 
-            BallBehaviour.RoundCountStarts += MatchStartValues;
-            BallBehaviour.HitGoalOne += UpdateTPTwoPoints;
-            BallBehaviour.HitGoalTwo += UpdateTPOnePoints;
+            BallBehavOff.RoundCountStarts += MatchStartValues;
+            BallBehavOff.HitGoalOne += UpdateTPTwoPoints;
+            BallBehavOff.HitGoalTwo += UpdateTPOnePoints;
 
             StartNextRound += LetsStartNextRound;
             StartWinProcedure += LetsStartWinProcedure;
@@ -154,9 +154,9 @@ namespace ThreeDeePongProto.Offline.Managers
             MenuOrganisation.RestartGameLevel -= ReSetMatch;
             MenuOrganisation.EndInfiniteMatch -= LetsEndInfiniteMatch;
 
-            BallBehaviour.RoundCountStarts -= MatchStartValues;
-            BallBehaviour.HitGoalOne -= UpdateTPTwoPoints;
-            BallBehaviour.HitGoalTwo -= UpdateTPOnePoints;
+            BallBehavOff.RoundCountStarts -= MatchStartValues;
+            BallBehavOff.HitGoalOne -= UpdateTPTwoPoints;
+            BallBehavOff.HitGoalTwo -= UpdateTPOnePoints;
 
             StartNextRound -= LetsStartNextRound;
             StartWinProcedure -= LetsStartWinProcedure;
