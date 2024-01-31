@@ -1,6 +1,8 @@
+using Sirenix.Utilities;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Indices set equal to the desired amount of players participating in matches of int 2 and/or 4.
@@ -19,15 +21,20 @@ namespace ThreeDeePongProto.Offline.Settings
         #region SerializeField-Member-Variables
         [SerializeField] private Transform m_playerTwoGroup;
         [SerializeField] private TMP_Dropdown m_playerAmountDd;
-        [SerializeField] private EPlayerAmount m_defaultPlayerAmount;
+        [SerializeField] private EPlayerAmount m_registeredPlayers = EPlayerAmount.Two;
 
         [Header("Textfields")]
         [SerializeField] private TextMeshProUGUI m_playerTextOne;
         [SerializeField] private TextMeshProUGUI m_playerTextTwo;
 
         [Header("Inputfield-Group")]
+        [SerializeField] private TMP_InputField[] m_inputFields;
         [SerializeField] private Transform m_playerThreeIFGroup;
         [SerializeField] private Transform m_playerFourIFGroup;
+
+        //[SerializeField] private Button[] m_startJoinButtons;
+        [SerializeField] private Button m_startButton;
+        [SerializeField] private Button m_joinButton;
 
         #region Scriptable-References
         [Header("Scriptable Objects")]
@@ -53,6 +60,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void OnEnable()
         {
+            ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
             AddGroupListener();
         }
 
@@ -203,6 +211,23 @@ namespace ThreeDeePongProto.Offline.Settings
             m_playerTextTwo.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _textWidth);
         }
 
+        private void ObjectsToInteractOn(EPlayerAmount _ePlayerAmount)
+        {
+            for (int i = 0; i < (int)_ePlayerAmount; i++)
+            {
+                if (m_inputFields[i].text.IsNullOrWhitespace())
+                {
+                    //TODO: Set a PopUp here!!!                    
+                    m_startButton.interactable = false; //StartButton
+                    m_joinButton.interactable = false; //JoinButton
+                    return;
+                }
+            }
+
+            m_startButton.interactable = true;  //StartButton
+            m_joinButton.interactable = true;  //JoinButton
+        }
+
         #region OnValueChanged
         private void OnPlayerAmountChanged(TMP_Dropdown _dropdown)
         {
@@ -214,6 +239,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     m_matchUIStates.EPlayerAmount = EPlayerAmount.One;
                     m_graphicUiStates.SetCameraMode = ECameraModi.SingleCam;
                     ObjectsToHide(false, false, false, 437.0f);
+                    ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
                     break;
                 }
                 case 1:
@@ -221,6 +247,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     m_matchUIStates.EPlayerAmount = EPlayerAmount.Two;
                     m_graphicUiStates.SetCameraMode = ECameraModi.TwoHorizontal;
                     ObjectsToHide(false, false, true, 437.0f);
+                    ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
                     break;
                 }
                 case 2:
@@ -228,6 +255,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     m_matchUIStates.EPlayerAmount = EPlayerAmount.Four;
                     m_graphicUiStates.SetCameraMode = ECameraModi.FourSplit;
                     ObjectsToHide(true, true, true, 110.0f);
+                    ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
                     break;
                 }
                 default:
@@ -250,51 +278,76 @@ namespace ThreeDeePongProto.Offline.Settings
             for (uint i = 0; i < playerAmount; i++)
             {
                 m_matchValues.PlayerData.Add(m_playerIDData[(int)i]);
+                m_inputFields[i].text = m_playerIDData[i].PlayerName;
             }
         }
 
         #region Name-Inputfields
-        public void PlayerOneInput(string _playername)  //TODO: Optional Random a playername, or set Player 1-4.
+        public void PlayerOneInput()  //TODO: Optional Random a playername, or set Player 1-4.
         {
             m_matchValues.PlayerData[0].PlayerId = 0;
 
-            if (string.IsNullOrWhiteSpace(_playername))
+            if (m_inputFields[0].text.IsNullOrWhitespace())
+            {
+                Debug.Log($"PlayerName for Player {m_playerIDData[0].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for Player 1-4.
+                ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
                 return;
-            m_matchValues.PlayerData[0].PlayerName = _playername;
+            }
+
+            m_matchValues.PlayerData[0].PlayerName = m_inputFields[0].text;
+            ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
         }
 
-        public void PlayerTwoInput(string _playername)
+        public void PlayerTwoInput()
         {
             m_matchValues.PlayerData[1].PlayerId = 1;
 
-            if (string.IsNullOrWhiteSpace(_playername))
+            if (m_inputFields[1].text.IsNullOrWhitespace())
+            {
+                Debug.Log($"PlayerName for Player {m_playerIDData[1].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for Player 1-4.
+                ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
                 return;
-            m_matchValues.PlayerData[1].PlayerName = _playername;
+            }
+
+            m_matchValues.PlayerData[1].PlayerName = m_inputFields[1].text;
+            ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
         }
 
-        public void PlayerThreeInput(string _playername)
+        public void PlayerThreeInput()
         {
             m_matchValues.PlayerData[2].PlayerId = 2;
 
-            if (string.IsNullOrWhiteSpace(_playername))
+            if (m_inputFields[2].text.IsNullOrWhitespace())
+            {
+                Debug.Log($"PlayerName for Player {m_playerIDData[2].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for Player 1-4.
+                ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
                 return;
-            m_matchValues.PlayerData[2].PlayerName = _playername;
+            }
+
+            m_matchValues.PlayerData[2].PlayerName = m_inputFields[2].text;
+            ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
         }
 
-        public void PlayerFourInput(string _playername)
+        public void PlayerFourInput()
         {
             m_matchValues.PlayerData[3].PlayerId = 3;
 
-            if (string.IsNullOrWhiteSpace(_playername))
+            if (m_inputFields[3].text.IsNullOrWhitespace())
+            {
+                Debug.Log($"PlayerName for Player {m_playerIDData[3].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for Player 1-4.
+                ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
                 return;
-            m_matchValues.PlayerData[3].PlayerName = _playername;
+            }
+
+            m_matchValues.PlayerData[3].PlayerName = m_inputFields[3].text;
+            ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
         }
         #endregion
 
         private void ResetDefault()
         {
             //Modifier to ensure that values EPlayerAmount.Two & EPlayerAmount:Four set the correct dropdownIndex.
-            int dropdownValueModifier = (int)m_defaultPlayerAmount / 2 /*- 1*/;
+            int dropdownValueModifier = (int)m_registeredPlayers / 2 /*- 1*/;
             m_playerAmountDd.value = dropdownValueModifier;
         }
     }

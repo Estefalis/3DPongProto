@@ -3386,7 +3386,7 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Settings.PreparationWindow,
           Assembly-CSharp
         m_MethodName: PlayerTwoInput
-        m_Mode: 5
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3895,7 +3895,7 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Settings.PreparationWindow,
           Assembly-CSharp
         m_MethodName: PlayerFourInput
-        m_Mode: 5
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -7863,7 +7863,7 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Settings.PreparationWindow,
           Assembly-CSharp
         m_MethodName: PlayerThreeInput
-        m_Mode: 5
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -9190,7 +9190,7 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Settings.PreparationWindow,
           Assembly-CSharp
         m_MethodName: PlayerOneInput
-        m_Mode: 5
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -10929,7 +10929,7 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Settings.PreparationWindow,
           Assembly-CSharp
         m_MethodName: PlayerTwoInput
-        m_Mode: 5
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -13484,7 +13484,7 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Settings.PreparationWindow,
           Assembly-CSharp
         m_MethodName: PlayerFourInput
-        m_Mode: 5
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -13875,11 +13875,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_playerTwoGroup: {fileID: 1637796746}
   m_playerAmountDd: {fileID: 1060233655}
-  m_defaultPlayerAmount: 2
+  m_registeredPlayers: 2
   m_playerTextOne: {fileID: 741030161}
   m_playerTextTwo: {fileID: 77083684}
+  m_inputFields:
+  - {fileID: 937708043}
+  - {fileID: 381882948}
+  - {fileID: 2041194042}
+  - {fileID: 1682251863}
   m_playerThreeIFGroup: {fileID: 938507830}
   m_playerFourIFGroup: {fileID: 2011434704}
+  m_startButton: {fileID: 1392629919}
+  m_joinButton: {fileID: 2146547065}
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
   m_graphicUiStates: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11, type: 2}
@@ -14793,7 +14800,7 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Settings.PreparationWindow,
           Assembly-CSharp
         m_MethodName: PlayerOneInput
-        m_Mode: 5
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -19171,11 +19178,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_playerTwoGroup: {fileID: 1182001763}
   m_playerAmountDd: {fileID: 289912908918396312}
-  m_defaultPlayerAmount: 2
+  m_registeredPlayers: 2
   m_playerTextOne: {fileID: 9083832536312321607}
   m_playerTextTwo: {fileID: 1997090703}
+  m_inputFields:
+  - {fileID: 9083832537206187951}
+  - {fileID: 1836388316}
+  - {fileID: 6664980750212737084}
+  - {fileID: 1222346216}
   m_playerThreeIFGroup: {fileID: 8076181414138080564}
   m_playerFourIFGroup: {fileID: 571580611}
+  m_startButton: {fileID: 366048203}
+  m_joinButton: {fileID: 1469619344}
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
   m_graphicUiStates: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11, type: 2}
@@ -19625,7 +19639,7 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Settings.PreparationWindow,
           Assembly-CSharp
         m_MethodName: PlayerFourInput
-        m_Mode: 5
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -21854,7 +21868,7 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Settings.PreparationWindow,
           Assembly-CSharp
         m_MethodName: PlayerTwoInput
-        m_Mode: 5
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -22239,11 +22253,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_playerTwoGroup: {fileID: 2032319608}
   m_playerAmountDd: {fileID: 1289758633}
-  m_defaultPlayerAmount: 2
+  m_registeredPlayers: 2
   m_playerTextOne: {fileID: 28471635}
   m_playerTextTwo: {fileID: 1312322714}
+  m_inputFields:
+  - {fileID: 1358232675}
+  - {fileID: 1017734011}
+  - {fileID: 818934105}
+  - {fileID: 416499970}
   m_playerThreeIFGroup: {fileID: 1296536675}
   m_playerFourIFGroup: {fileID: 737607786}
+  m_startButton: {fileID: 2100956299}
+  m_joinButton: {fileID: 1043546478}
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
   m_graphicUiStates: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11, type: 2}
@@ -24072,7 +24093,7 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Settings.PreparationWindow,
           Assembly-CSharp
         m_MethodName: PlayerThreeInput
-        m_Mode: 5
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -31238,7 +31259,7 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Settings.PreparationWindow,
           Assembly-CSharp
         m_MethodName: PlayerThreeInput
-        m_Mode: 5
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -34080,7 +34101,7 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Settings.PreparationWindow,
           Assembly-CSharp
         m_MethodName: PlayerOneInput
-        m_Mode: 5
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
