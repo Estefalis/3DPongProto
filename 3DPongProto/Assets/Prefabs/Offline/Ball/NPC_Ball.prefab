@@ -130,7 +130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_matchManager: {fileID: 0}
   m_rigidbody: {fileID: 0}
-  m_impulseForce: 0
+  m_impulseForce: 10
   m_offWallAngle: 15
   m_offPaddleAngle: 0.1
   m_ballAudioSource: {fileID: 5041537838636795438}
