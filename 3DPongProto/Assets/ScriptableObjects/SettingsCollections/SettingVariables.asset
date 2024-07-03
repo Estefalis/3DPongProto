@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24b3835482a51354f89c5f24dbc5978d, type: 3}
+  m_Name: SettingVariables
+  m_EditorClassIdentifier: 
+  m_XAxisInversion: 0
+  m_YAxisInversion: 0
+  m_XAxisSensitivity: 0.6
+  m_YAxisSensitivity: 0.75
+  m_LatestMasterVolume: 1
+  m_LatestBGMVolume: 0.8
+  m_LatestSFXVolume: 0.8
+  m_QualityLevel: 2
+  m_SelectedResolutionIndex: 5
+  m_ScreenMode: 1

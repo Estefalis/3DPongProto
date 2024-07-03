@@ -4220,7 +4220,7 @@ GameObject:
   - component: {fileID: 7313720338195380835}
   - component: {fileID: 7313720338195380833}
   m_Layer: 5
-  m_Name: GraphicsSettings
+  m_Name: GraphicSettings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
