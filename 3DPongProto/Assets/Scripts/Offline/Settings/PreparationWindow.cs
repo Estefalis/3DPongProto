@@ -40,7 +40,7 @@ namespace ThreeDeePongProto.Offline.Settings
         [Header("Scriptable Objects")]
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
-        [SerializeField] private GraphicUiStates m_graphicUiStates;
+        [SerializeField] private GraphicUIStates m_graphicUiStates;
         [SerializeField] private PlayerIDData[] m_playerIDData;
         #endregion
         #endregion

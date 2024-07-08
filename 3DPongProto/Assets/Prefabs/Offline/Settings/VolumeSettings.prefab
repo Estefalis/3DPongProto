@@ -474,8 +474,8 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 5575190015518512105}
-    m_SelectOnDown: {fileID: 5575190014678580627}
-    m_SelectOnLeft: {fileID: 5575190014736844607}
+    m_SelectOnDown: {fileID: 5575190015316456851}
+    m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 5575190015095014120}
   m_Transition: 1
   m_Colors:
@@ -1419,7 +1419,7 @@ MonoBehaviour:
     m_SelectOnUp: {fileID: 5575190014736844607}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 5575190015316456851}
-    m_SelectOnRight: {fileID: 5575190015316456851}
+    m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -1550,7 +1550,7 @@ MonoBehaviour:
     m_SelectOnUp: {fileID: 5575190014975233292}
     m_SelectOnDown: {fileID: 5575190014678580627}
     m_SelectOnLeft: {fileID: 5575190015095014120}
-    m_SelectOnRight: {fileID: 5575190014343478976}
+    m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -2419,7 +2419,7 @@ MonoBehaviour:
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 5575190014975233292}
     m_SelectOnLeft: {fileID: 5575190014951411620}
-    m_SelectOnRight: {fileID: 5575190014566886445}
+    m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -2851,7 +2851,7 @@ MonoBehaviour:
     m_SelectOnUp: {fileID: 5575190014900076001}
     m_SelectOnDown: {fileID: 5575190014736844607}
     m_SelectOnLeft: {fileID: 5575190014290685973}
-    m_SelectOnRight: {fileID: 5575190015518512105}
+    m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -4242,7 +4242,7 @@ MonoBehaviour:
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 5575190014736844607}
     m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 5575190014678580627}
+    m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 5575190014678580627}
   m_Transition: 1
   m_Colors:

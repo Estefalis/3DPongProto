@@ -38,7 +38,7 @@ namespace ThreeDeePongProto.Offline.UI
 
         #region Scriptable Variables
         [SerializeField] private MatchValues m_matchValues;
-        [SerializeField] private GraphicUiStates m_graphicUiStates;
+        [SerializeField] private GraphicUIStates m_graphicUiStates;
         #endregion
         #endregion
 

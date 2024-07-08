@@ -18,8 +18,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         [Header("Player Details")]
         [SerializeField] protected int m_playerId;
-        [SerializeField] protected float m_movementSpeed;
-        [SerializeField, Range(1, 5)] protected float m_rotationSpeed;
+        [SerializeField, Range(1, 20)] protected float m_movementSpeed = 10.0f;
+        [SerializeField, Range(1, 5)] protected float m_rotationSpeed = 2.5f;
         [SerializeField] private float m_maxRotationAngle;
         [SerializeField] protected bool m_defaultFrontLineUp;
 

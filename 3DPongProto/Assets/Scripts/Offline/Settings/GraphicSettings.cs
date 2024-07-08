@@ -28,18 +28,18 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private bool m_defaultFullscreen = true;
         [SerializeField] private ECameraModi m_eCameraMode;
 
-        #region Scriptable Variables
-        [Header("Scriptable Variables")]
-        [SerializeField] private GraphicUiStates m_graphicUiStates;
-        [SerializeField] private MatchValues m_matchValues;
-        [SerializeField] private MatchUIStates m_matchUIStates;
-        #endregion
-
         private Resolution[] m_screenResolutions;
         public ECameraModi ECameraMode { get => m_eCameraMode; }
 
         private int m_maxScreenModiIndex;
         private List<string> m_screenModiList;
+
+        #region Scriptable Variables
+        [Header("Scriptable Objects")]
+        [SerializeField] private GraphicUIStates m_graphicUIStates;
+        [SerializeField] private MatchValues m_matchValues;
+        [SerializeField] private MatchUIStates m_matchUIStates;
+        #endregion
 
         #region Serialization
         private readonly string m_settingStatesFolderPath = "/SaveData/Settings-States";
@@ -57,32 +57,33 @@ namespace ThreeDeePongProto.Offline.Settings
 
             SetupSplitDropdown();
 
-            if (m_graphicUiStates == null)
+            if (m_graphicUIStates == null)
             {
 #if UNITY_EDITOR
                 Debug.LogWarning("GraphicSettings: Forgot to add a Scriptable Object in the Editor!");
 #endif
                 ReSetDefault();
             }
-            //else moved to StartMenuScene.       
+            //else LoadGraphicSettings(); moved to 'MenuOrganisation.cs'.       
         }
 
         private void Start()
         {
+            //TODO: InitialUISetup check for nulled Scriptables.
             InitialUISetup();
         }
 
         private void OnDisable()
         {
-            m_persistentData.SaveData(m_settingStatesFolderPath, m_graphicFileName, m_fileFormat, m_graphicUiStates, m_encryptionEnabled, true);
+            m_persistentData.SaveData(m_settingStatesFolderPath, m_graphicFileName, m_fileFormat, m_graphicUIStates, m_encryptionEnabled, true);
         }
 
         private void InitialUISetup()
         {
-            m_qualityDropdown.value = m_graphicUiStates.QualityLevelIndex;
-            m_resolutionDropdown.value = m_graphicUiStates.SelectedResolutionIndex;
-            m_fullscreenToggle.isOn = m_graphicUiStates.FullScreenMode;
-            m_screenSplitDropdown.value = (int)m_graphicUiStates.SetCameraMode;
+            m_qualityDropdown.value = m_graphicUIStates.QualityLevelIndex;
+            m_resolutionDropdown.value = m_graphicUIStates.SelectedResolutionIndex;
+            m_fullscreenToggle.isOn = m_graphicUIStates.FullScreenMode;
+            m_screenSplitDropdown.value = (int)m_graphicUIStates.SetCameraMode;
         }
 
         private void GetAvailableResolutions()
@@ -136,8 +137,8 @@ namespace ThreeDeePongProto.Offline.Settings
             m_screenSplitDropdown.ClearOptions();
             m_screenSplitDropdown.AddOptions(m_screenModiList);
 
-            if (m_graphicUiStates != null)
-                m_screenSplitDropdown.value = (int)m_graphicUiStates.SetCameraMode;
+            if (m_graphicUIStates != null)
+                m_screenSplitDropdown.value = (int)m_graphicUIStates.SetCameraMode;
             else
                 m_screenSplitDropdown.value = (int)m_eCameraMode;
 
@@ -147,7 +148,7 @@ namespace ThreeDeePongProto.Offline.Settings
         //Set by UI-SplitscreenDropdown.
         public void SetActiveCameras()
         {
-            m_graphicUiStates.SetCameraMode = (ECameraModi)m_screenSplitDropdown.value;
+            m_graphicUIStates.SetCameraMode = (ECameraModi)m_screenSplitDropdown.value;
         }
 
         public void SetGraphicQuality(int _qualityIndex)
@@ -155,8 +156,8 @@ namespace ThreeDeePongProto.Offline.Settings
             QualitySettings.SetQualityLevel(_qualityIndex);
             m_qualityDropdown.value = _qualityIndex;
 
-            if (m_graphicUiStates != null)
-                m_graphicUiStates.QualityLevelIndex = _qualityIndex;
+            if (m_graphicUIStates != null)
+                m_graphicUIStates.QualityLevelIndex = _qualityIndex;
         }
 
         public void SetResolution(int _resolutionIndex)
@@ -165,8 +166,8 @@ namespace ThreeDeePongProto.Offline.Settings
             Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
             m_resolutionDropdown.value = _resolutionIndex;
 
-            if (m_graphicUiStates != null)
-                m_graphicUiStates.SelectedResolutionIndex = _resolutionIndex;
+            if (m_graphicUIStates != null)
+                m_graphicUIStates.SelectedResolutionIndex = _resolutionIndex;
         }
 
         public void SetFullscreen(bool _setFullscreen)
@@ -174,8 +175,8 @@ namespace ThreeDeePongProto.Offline.Settings
             Screen.fullScreen = _setFullscreen;
             m_fullscreenToggle.isOn = _setFullscreen;
 
-            if (m_graphicUiStates != null)
-                m_graphicUiStates.FullScreenMode = _setFullscreen;
+            if (m_graphicUIStates != null)
+                m_graphicUIStates.FullScreenMode = _setFullscreen;
         }
 
         public void ReSetDefault()

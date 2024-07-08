@@ -3953,7 +3953,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 3797581810002044666}
+    m_SelectOnUp: {fileID: 8252733928910572295}
     m_SelectOnDown: {fileID: 8735401617698262590}
     m_SelectOnLeft: {fileID: 1367669322142191046}
     m_SelectOnRight: {fileID: 1367669323232174590}
@@ -7607,7 +7607,7 @@ MonoBehaviour:
     m_SelectOnUp: {fileID: 571694991182665236}
     m_SelectOnDown: {fileID: 8735401617698262590}
     m_SelectOnLeft: {fileID: 1367669321984922000}
-    m_SelectOnRight: {fileID: 8735401617698262590}
+    m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -8893,7 +8893,7 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 8735401617139430611}
-    m_SelectOnDown: {fileID: 1367669322948184829}
+    m_SelectOnDown: {fileID: 1367669322142191046}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 4363816109254320946}
   m_Transition: 1
@@ -10319,7 +10319,7 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 8735401617139430611}
-    m_SelectOnDown: {fileID: 1367669323232174590}
+    m_SelectOnDown: {fileID: 1367669322142191046}
     m_SelectOnLeft: {fileID: 3797581810002044666}
     m_SelectOnRight: {fileID: 8252733928910572295}
   m_Transition: 1
@@ -12269,7 +12269,7 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 8735401617139430611}
-    m_SelectOnDown: {fileID: 571694991182665236}
+    m_SelectOnDown: {fileID: 1367669322948184829}
     m_SelectOnLeft: {fileID: 4363816109254320946}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -13540,10 +13540,10 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 571694991182665236}
+    m_SelectOnUp: {fileID: 1367669322948184829}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 8735401617956983807}
-    m_SelectOnRight: {fileID: 8735401617956983807}
+    m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -13696,18 +13696,17 @@ MonoBehaviour:
   m_backLineDds:
   - {fileID: 1367669323232174590}
   - {fileID: 571694991182665236}
+  m_frontLineDefaultValue: 0
+  m_backLineDefaultValue: 0
   m_backFloatText: {fileID: 1367669323883341980}
   m_frontFloatText: {fileID: 1367669321889980843}
+  m_distanceSliderDefaults: 0
   m_sliderAdjustStep: 0.05
   m_maxRoundDdIndex: 5
   m_maxPointDdIndex: 25
   m_frontParentTransform: {fileID: 7762060751508476310}
   m_backPTwoDdGroup: {fileID: 4789025208575074380}
   m_backLineUpText: {fileID: 1367669322072770392}
-  m_basicFieldValues: {fileID: 11400000, guid: b7c0516de58b3a240a6970d999010f71, type: 2}
-  m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
-  m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
-  m_graphicUiStates: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11, type: 2}
   m_reduceButtonKeys:
   - {fileID: 6712688706315974030}
   - {fileID: 1367669322142191046}
@@ -13717,6 +13716,10 @@ MonoBehaviour:
   m_distanceSliderValues:
   - {fileID: 6712688706947295126}
   - {fileID: 1367669323696623060}
+  m_basicFieldValues: {fileID: 11400000, guid: b7c0516de58b3a240a6970d999010f71, type: 2}
+  m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
+  m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
+  m_graphicUiStates: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11, type: 2}
 --- !u!1 &8735401617956983793
 GameObject:
   m_ObjectHideFlags: 0
@@ -13810,9 +13813,9 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 1367669323232174590}
+    m_SelectOnUp: {fileID: 1367669322142191046}
     m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 8735401617698262590}
+    m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 8735401617698262590}
   m_Transition: 1
   m_Colors:
@@ -15309,7 +15312,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 5848741482369656005}
+      objectReference: {fileID: 1737116095492769620}
     - target: {fileID: 2255051338045885050, guid: 0ea92c8ff31bf4b4cb34c8b53cfba016,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown

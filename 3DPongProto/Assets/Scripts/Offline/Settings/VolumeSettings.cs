@@ -63,8 +63,11 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private Slider[] m_volumeSliderValues;
         private Dictionary<Toggle, Slider> m_toggleSliderConnection = new Dictionary<Toggle, Slider>();
 
+        #region Scriptable-References
+        [Header("Scriptable Objects")]
         [SerializeField] private VolumeUIStates m_volumeUIStates;
         [SerializeField] private VolumeUIValues m_volumeUIValues;
+        #endregion
 
         #region Serialization
         private readonly string m_settingsStatesFolderPath = "/SaveData/Settings-States";
@@ -84,51 +87,12 @@ namespace ThreeDeePongProto.Offline.Settings
 
             if (m_volumeUIStates == null || m_volumeUIValues == null)
                 ReSetDefault();
-            //else
-            //    LoadVolumeSettings();
+            //else LoadVolumeSettings(); moved to 'MenuOrganisation.cs'.
         }
 
         private void OnEnable()
         {
             AddSliderAndToggleListener();
-        }
-
-        private void Start()
-        {
-            InitialUISetup();
-        }
-
-        private void InitialUISetup()
-        {
-            switch (m_volumeUIStates.MasterMuteIsOn)
-            {
-                case true:
-                    HandleMasterSliderValueChanges(m_volumeSliderValues[0].minValue);
-                    break;
-                case false:
-                    HandleMasterSliderValueChanges(m_volumeUIValues.LatestMasterVolume);
-                    break;
-            }
-
-            switch (m_volumeUIStates.BGMMuteIsOn)
-            {
-                case true:
-                    HandleBGMSliderValueChanges(m_volumeSliderValues[1].minValue);
-                    break;
-                case false:
-                    HandleBGMSliderValueChanges(m_volumeUIValues.LatestBGMVolume);
-                    break;
-            }
-
-            switch (m_volumeUIStates.SFXMuteIsOn)
-            {
-                case true:
-                    HandleSFXSliderValueChanges(m_volumeSliderValues[2].minValue);
-                    break;
-                case false:
-                    HandleSFXSliderValueChanges(m_volumeUIValues.LatestSFXVolume);
-                    break;
-            }
         }
 
         private void OnDisable()
@@ -139,10 +103,16 @@ namespace ThreeDeePongProto.Offline.Settings
             m_persistentData.SaveData(m_settingsValuesFolderPath, m_volumeFileName, m_fileFormat, m_volumeUIValues, m_encryptionEnabled, true);
         }
 
+        private void Start()
+        {
+            //TODO: InitialUISetup check for nulled Scriptables.
+            InitialUISetup();
+        }
+
         /// <summary>
         /// Subscribe VolumeControl-Elements to UnityEvents.
         /// </summary>
-        #region Listener-Region
+        #region UnRegister-Listener-Region
         private void AddSliderAndToggleListener()
         {
             m_volumeSliderValues[0].onValueChanged.AddListener(HandleMasterSliderValueChanges);
@@ -169,7 +139,7 @@ namespace ThreeDeePongProto.Offline.Settings
         }
         #endregion
 
-        #region Listener-Methods
+        #region Listener Methods
         #region SlidersChanges
         private void HandleMasterSliderValueChanges(float _value)
         {
@@ -238,7 +208,7 @@ namespace ThreeDeePongProto.Offline.Settings
         }
         #endregion
 
-        #region MuteChanges
+        #region Mute Listener Changes
         /// <summary>
         /// Sets and Unsets All Slider to their minValue/lastestSavedValue and Toggles on/off.
         /// </summary>
@@ -320,6 +290,41 @@ namespace ThreeDeePongProto.Offline.Settings
             }
         }
         #endregion
+        #endregion
+
+        #region Custom Methods
+        private void InitialUISetup()
+        {
+            switch (m_volumeUIStates.MasterMuteIsOn)
+            {
+                case true:
+                    HandleMasterSliderValueChanges(m_volumeSliderValues[0].minValue);
+                    break;
+                case false:
+                    HandleMasterSliderValueChanges(m_volumeUIValues.LatestMasterVolume);
+                    break;
+            }
+
+            switch (m_volumeUIStates.BGMMuteIsOn)
+            {
+                case true:
+                    HandleBGMSliderValueChanges(m_volumeSliderValues[1].minValue);
+                    break;
+                case false:
+                    HandleBGMSliderValueChanges(m_volumeUIValues.LatestBGMVolume);
+                    break;
+            }
+
+            switch (m_volumeUIStates.SFXMuteIsOn)
+            {
+                case true:
+                    HandleSFXSliderValueChanges(m_volumeSliderValues[2].minValue);
+                    break;
+                case false:
+                    HandleSFXSliderValueChanges(m_volumeUIValues.LatestSFXVolume);
+                    break;
+            }
+        }
 
         public void LowerSliderValue(Toggle _connectedMute)
         {
@@ -340,9 +345,7 @@ namespace ThreeDeePongProto.Offline.Settings
             //if (!_connectedMute.isOn)
             connectedSlider.value += m_adjustSliderStep;
         }
-        #endregion
 
-        #region Non-Listener-Methods
         public void ReSetDefault()
         {
             m_muteToggleKeys[0].isOn = m_defaultMasterMuteIsOn;

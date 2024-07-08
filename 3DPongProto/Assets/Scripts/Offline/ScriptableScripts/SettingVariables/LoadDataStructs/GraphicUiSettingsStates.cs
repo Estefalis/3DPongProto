@@ -1,7 +1,7 @@
 using System;
 
 [Serializable]
-public struct GraphicUiSettingsStates
+public struct GraphicUISettingsStates
 {
     //LoadStructure for GraphicSettingsUI.
     public int QualityLevelIndex;

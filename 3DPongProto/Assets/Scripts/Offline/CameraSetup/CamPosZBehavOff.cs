@@ -37,7 +37,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private CameraManager m_cameraManager;
 
         #region Scriptable Variables
-        [SerializeField] private GraphicUiStates m_graphicUiStates;
+        [SerializeField] private GraphicUIStates m_graphicUiStates;
         [SerializeField] private BasicFieldValues m_basicFieldValues;
         #endregion
 

@@ -20,7 +20,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private ECameraModi m_lastSetCameraMode;
 
         #region Scriptable Variables
-        [SerializeField] private GraphicUiStates m_graphicUiStates;
+        [SerializeField] private GraphicUIStates m_graphicUiStates;
         [SerializeField] private MatchValues m_matchValues;
         #endregion
 

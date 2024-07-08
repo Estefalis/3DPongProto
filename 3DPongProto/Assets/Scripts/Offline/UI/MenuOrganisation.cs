@@ -53,11 +53,12 @@ namespace ThreeDeePongProto.Offline.UI
         [Header("Scriptable Variables")]
         [SerializeField] private VolumeUIStates m_volumeUIStates;
         [SerializeField] private VolumeUIValues m_volumeUIValues;
-
-        [SerializeField] private GraphicUiStates m_graphicUiStates;
+        [SerializeField] private GraphicUIStates m_graphicUiStates;
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
         [SerializeField] private BasicFieldValues m_basicFieldValues;
+        [SerializeField] private ControlUIStates m_controlUIStates;
+        [SerializeField] private ControlUIValues m_controlUIValues;
         #endregion
 
         #region Scriptable-References
@@ -71,6 +72,7 @@ namespace ThreeDeePongProto.Offline.UI
         private readonly string m_fieldSettingsPath = "/SaveData/FieldSettings";
         private readonly string m_volumeFileName = "/Volume";
         private readonly string m_graphicFileName = "/Graphic";
+        private readonly string m_controlFileName = "/Control";
         private readonly string m_matchFileName = "/Match";
         private readonly string m_fileFormat = ".json";
 
@@ -83,9 +85,12 @@ namespace ThreeDeePongProto.Offline.UI
         private void Awake()
         {
             SetUIElements();
+            #region Fill Scriptable Objects with Information
             LoadGraphicSettings();
             LoadVolumeSettings();
             LoadMatchSettings();
+            LoadControlSettings();
+            #endregion
 
             if (m_hiddenFinishButton != null)
             {
@@ -100,7 +105,7 @@ namespace ThreeDeePongProto.Offline.UI
         {
             m_menuActions = UserInputManager.m_playerInputActions;
             m_menuActions?.Enable();
-            m_menuActions.PlayerActions.ToggleGameMenu.performed += EnableNavigation;
+            m_menuActions.PlayerActions.ToggleGameMenu.performed += EnableMenuNavigation;
 
             PreSetUpPlayerAmount(m_matchUIStates.EPlayerAmount);
         }
@@ -108,10 +113,10 @@ namespace ThreeDeePongProto.Offline.UI
         private void OnDisable()
         {
             m_menuActions?.Disable();
-            m_menuActions.PlayerActions.ToggleGameMenu.performed -= EnableNavigation;
+            m_menuActions.PlayerActions.ToggleGameMenu.performed -= EnableMenuNavigation;
         }
 
-        private void EnableNavigation(InputAction.CallbackContext _callbackContext)
+        private void EnableMenuNavigation(InputAction.CallbackContext _callbackContext)
         {
             if (!m_firstElement.gameObject.activeInHierarchy)
             {
@@ -132,7 +137,7 @@ namespace ThreeDeePongProto.Offline.UI
 
         private void LoadGraphicSettings()
         {
-            GraphicUiSettingsStates uiIndices = m_persistentData.LoadData<GraphicUiSettingsStates>(m_settingStatesFolderPath, m_graphicFileName, m_fileFormat, m_encryptionEnabled);
+            GraphicUISettingsStates uiIndices = m_persistentData.LoadData<GraphicUISettingsStates>(m_settingStatesFolderPath, m_graphicFileName, m_fileFormat, m_encryptionEnabled);
             m_graphicUiStates.QualityLevelIndex = uiIndices.QualityLevelIndex;
             m_graphicUiStates.SelectedResolutionIndex = uiIndices.SelectedResolutionIndex;
             m_graphicUiStates.FullScreenMode = uiIndices.FullScreenMode;
@@ -179,6 +184,26 @@ namespace ThreeDeePongProto.Offline.UI
             m_basicFieldValues.FrontlineAdjustment = basicFieldSetup.FrontLineAdjustment;
             m_basicFieldValues.BacklineAdjustment = basicFieldSetup.BackLineAdjustment;
         }
+
+        private void LoadControlSettings()
+        {
+            ControlUISettingsStates uiIndices = m_persistentData.LoadData<ControlUISettingsStates>(m_settingStatesFolderPath, m_controlFileName, m_fileFormat, m_encryptionEnabled);
+            m_controlUIStates.InvertXAxis = uiIndices.InvertXAxis;
+            m_controlUIStates.InvertXAxis = uiIndices.InvertYAxis;
+            m_controlUIStates.CustomXSensitivity = uiIndices.CustomXSensitivity;
+            m_controlUIStates.CustomYSensitivity = uiIndices.CustomYSensitivity;
+            m_controlUIStates.ShownPlayerIndex = uiIndices.ShownPlayerIndex;
+#if UNITY_EDITOR
+            //Debug.Log($"{m_controlUIStates.InvertXAxis} {m_controlUIStates.InvertXAxis} {m_controlUIStates.CustomXSensitivity} {m_controlUIStates.CustomYSensitivity} {m_controlUIStates.ShownPlayerIndex}");
+#endif
+
+            ControlUISettingsValues uiValues = m_persistentData.LoadData<ControlUISettingsValues>(m_settingsValuesFolderPath, m_controlFileName, m_fileFormat, m_encryptionEnabled);
+            m_controlUIValues.LastXMoveSpeed = uiValues.LastXMoveSpeed;
+            m_controlUIValues.LastYRotSpeed = uiValues.LastYRotSpeed;
+#if UNITY_EDITOR
+            //Debug.Log($"{m_controlUIValues.LastXMoveSpeed} {m_controlUIValues.LastYRotSpeed}");
+        }
+#endif
 
         /// <summary>
         /// Required, so MatchSettings right at start can fill the Front-/Backline-Dropdowns.

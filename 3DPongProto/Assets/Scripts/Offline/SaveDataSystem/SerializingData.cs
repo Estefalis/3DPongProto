@@ -75,20 +75,20 @@ public class SerializingData : IPersistentData
     public T LoadData<T>(string _subFolder, string _fileName, string _fileFormat, bool _encrypted)
     {
         #region Directory Check
-        if (!Directory.Exists(Application.persistentDataPath + _subFolder))
-        {
-#if UNITY_EDITOR
-            Debug.Log("SubFolder(s) do(es) not exist. Creating... .");
-#endif
-            Directory.CreateDirectory(Application.persistentDataPath + _subFolder);
-        }
+//        if (!Directory.Exists(Application.persistentDataPath + _subFolder))
+//        {
+//#if UNITY_EDITOR
+//            Debug.Log("SubFolder(s) do(es) not exist. Creating... .");
+//#endif
+//            Directory.CreateDirectory(Application.persistentDataPath + _subFolder);
+//        }
         #endregion
 
         string path = Application.persistentDataPath + _subFolder + _fileName + _fileFormat;
 
         if (!File.Exists(path))
         {
-            //Debug.LogError($"The file at {path} cannot be loaded, because it does not exist!");
+            Debug.LogError($"The file at {path} cannot be loaded, because it does not exist!");
             //throw new FileNotFoundException($"{path} does not exit!");
 
             //The receiver can check for/and react to 'Null'.

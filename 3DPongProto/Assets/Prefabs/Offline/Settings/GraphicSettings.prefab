@@ -1128,7 +1128,7 @@ MonoBehaviour:
     m_SelectOnUp: {fileID: 7313720337404509127}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 7313720338692904928}
-    m_SelectOnRight: {fileID: 7313720338692904928}
+    m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -4307,7 +4307,7 @@ MonoBehaviour:
   m_currentResolutionIndex: 0
   m_defaultFullscreen: 1
   m_eCameraMode: 2
-  m_graphicUiStates: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11, type: 2}
+  m_graphicUIStates: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
 --- !u!1 &7313720338224875717
@@ -5367,7 +5367,7 @@ MonoBehaviour:
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 7313720337404509127}
     m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 7313720337061845682}
+    m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 7313720337061845682}
   m_Transition: 1
   m_Colors:
