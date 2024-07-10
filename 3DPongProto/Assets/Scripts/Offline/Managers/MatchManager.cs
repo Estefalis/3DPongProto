@@ -16,7 +16,7 @@ namespace ThreeDeePongProto.Offline.Managers
     public class MatchManager : MonoBehaviour
     {
         #region SerializeField-Member-Variables
-        [SerializeField] private string m_NPCName = "Some Test-NPC";
+        [SerializeField] private string m_NPCName = "Some Test-NPC";    //TODO: Implement NPC for solo play!
         [SerializeField] private GameObject m_playGround;
         [SerializeField] private Transform m_prefabParent;
 

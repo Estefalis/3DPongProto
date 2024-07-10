@@ -7,11 +7,20 @@ namespace ThreeDeePongProto.Offline.Settings
 {
     public class ControlSettings : MonoBehaviour
     {
+        [Header("Content Views")]
+        [SerializeField] private Transform[] m_viewportContentArray;
+
         [Header("Axis Inversion")]
+        [SerializeField] private Toggle[] m_playerXRotInvertToggles;
+        [SerializeField] private Toggle[] m_playerYRotInvertToggles;
+
+        [SerializeField] private bool[] m_xRotInvertDefaults;
+        [SerializeField] private bool[] m_yRotInvertDefaults;
+        [Space]
         [SerializeField] private Toggle m_xRotInvertToggle;
         [SerializeField] private Toggle m_yRotInvertToggle;
-        [SerializeField] private bool m_xAxisInversion = false;
-        [SerializeField] private bool m_yAxisInversion = false;
+        [SerializeField] private bool m_xAxisDefault = false;
+        [SerializeField] private bool m_yAxisDefault = false;
 
         [Header("Axis Sensitivity")]
         [SerializeField] private Toggle[] m_customToggleKeys;
@@ -23,10 +32,6 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private TextMeshProUGUI m_xAxisValueText;
         [SerializeField] private TextMeshProUGUI m_yAxisValueText;
         [SerializeField] private bool m_customDefaults = false;
-
-        [Header("Player Amount")]
-        [SerializeField] private TMP_Dropdown m_playerDropdown;
-        [SerializeField] private int m_playerIndex = 1;
 
         private Dictionary<Toggle, Slider> m_toggleSliderConnection = new Dictionary<Toggle, Slider>();
 
@@ -180,6 +185,48 @@ namespace ThreeDeePongProto.Offline.Settings
                 }
             }
         }
+
+        //private void ViewportContentUpdater(int _dropdownValue)
+        //{
+        //    foreach (Transform content in m_viewportContentArray)
+        //    {
+        //        switch (m_viewportContentArray[_dropdownValue] == content)
+        //        {
+        //            case true:
+        //            {
+        //                content.gameObject.SetActive(true);
+        //                m_controlUIStates.ShownPlayerIndex = _dropdownValue;
+        //                break;
+        //            }
+        //            case false:
+        //            {
+        //                content.gameObject.SetActive(false);
+        //                break;
+        //            }
+        //        }
+        //    }
+        //}
+
+        public void SetActivePlayerView(int _buttonIndex)
+        {
+            foreach (Transform content in m_viewportContentArray)
+            {
+                switch (m_viewportContentArray[_buttonIndex] == content)
+                {
+                    case true:
+                    {
+                        content.gameObject.SetActive(true);
+                        m_controlUIStates.ShownPlayerIndex = _buttonIndex;
+                        break;
+                    }
+                    case false:
+                    {
+                        content.gameObject.SetActive(false);
+                        break;
+                    }
+                }
+            }
+        }
         #endregion
 
         #region Custom Methods
@@ -189,7 +236,6 @@ namespace ThreeDeePongProto.Offline.Settings
             m_yRotInvertToggle.isOn = m_controlUIStates.InvertYAxis;
             m_customToggleKeys[0].isOn = m_controlUIStates.CustomXSensitivity;
             m_customToggleKeys[1].isOn = m_controlUIStates.CustomYSensitivity;
-            m_playerDropdown.value = m_controlUIStates.ShownPlayerIndex;
 
             switch (m_controlUIStates.CustomXSensitivity)
             {
@@ -240,12 +286,11 @@ namespace ThreeDeePongProto.Offline.Settings
 
         public void ReSetDefault()
         {
-            m_xRotInvertToggle.isOn = m_xAxisInversion;
-            m_yRotInvertToggle.isOn = m_yAxisInversion;
+            m_xRotInvertToggle.isOn = m_xAxisDefault;
+            m_yRotInvertToggle.isOn = m_yAxisDefault;
             m_customToggleKeys[0].isOn = m_customDefaults;
             m_customToggleKeys[1].isOn = m_customDefaults;
 
-            m_playerDropdown.value = m_playerIndex;
             m_sensitivitySliderValues[0].value = m_xMovespeedDefault;
             m_sensitivitySliderValues[1].value = m_yRotationDefault;
         }

@@ -62,13 +62,13 @@ namespace ThreeDeePongProto.Shared.UI
                 }
                 case EGameModi.LAN:
                 {
-                    Debug.Log("Implement the lan scene, once the local scene is completed!");
+                    Debug.Log($"Implement the {m_lanGameScene}, once the local scene is completed!");
                     //SceneManager.LoadScene(m_lanGameScene);
                     break;
                 }
                 case EGameModi.Internet:
                 {
-                    Debug.Log("Implement the internet scene, once the local scene is completed!");
+                    Debug.Log($"Implement the {m_internetGameScene}, once the local scene is completed!");
                     //SceneManager.LoadScene(m_internetGameScene);
                     break;
                 }
