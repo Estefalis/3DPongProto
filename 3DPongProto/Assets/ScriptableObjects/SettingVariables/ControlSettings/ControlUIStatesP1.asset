@@ -9,8 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95d1c296ff87d2b4392994cc0780ce3a, type: 3}
-  m_Name: ControlUIValues
+  m_Script: {fileID: 11500000, guid: fad3f802ff8d8bd41b10c6e0979abd18, type: 3}
+  m_Name: ControlUIStatesP1
   m_EditorClassIdentifier: 
-  LastXMoveSpeed: 10
-  LastYRotSpeed: 2.25
+  InvertXAxis: 0
+  InvertYAxis: 0
+  CustomXSensitivity: 1
+  CustomYSensitivity: 1
+  ShownPlayerIndex: 0

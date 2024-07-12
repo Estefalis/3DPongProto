@@ -1146,7 +1146,7 @@ GameObject:
   - component: {fileID: 223752529821808925}
   - component: {fileID: 223752529821808924}
   m_Layer: 5
-  m_Name: SliderSensitivityY
+  m_Name: SliderSensitivityYP1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1932,7 +1932,7 @@ GameObject:
   - component: {fileID: 223752530373406450}
   - component: {fileID: 223752530373406449}
   m_Layer: 5
-  m_Name: ToggleSensitivityY
+  m_Name: ToggleSensitivityYP1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2354,7 +2354,7 @@ GameObject:
   - component: {fileID: 223752530509606927}
   - component: {fileID: 223752530509606926}
   m_Layer: 5
-  m_Name: ToggleXAxis
+  m_Name: ToggleXAxisP1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2770,7 +2770,7 @@ GameObject:
   - component: {fileID: 223752530695443159}
   - component: {fileID: 223752530695443158}
   m_Layer: 5
-  m_Name: ToggleYAxis
+  m_Name: ToggleYAxisP1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3261,7 +3261,7 @@ GameObject:
   - component: {fileID: 223752531082487383}
   - component: {fileID: 223752531082487376}
   m_Layer: 5
-  m_Name: YAxisValueText
+  m_Name: YAxisValueTextP1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4355,7 +4355,7 @@ GameObject:
   - component: {fileID: 1486118106605703384}
   - component: {fileID: 2113175657693374647}
   m_Layer: 5
-  m_Name: XAxisValueText
+  m_Name: XAxisValueTextP4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6904,7 +6904,7 @@ GameObject:
   - component: {fileID: 3258418902822316918}
   - component: {fileID: 8081721255886169264}
   m_Layer: 5
-  m_Name: SliderSensitivityY
+  m_Name: SliderSensitivityYP3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7694,7 +7694,7 @@ GameObject:
   - component: {fileID: 6001371181941039609}
   - component: {fileID: 1035079226493155751}
   m_Layer: 5
-  m_Name: YAxisValueText
+  m_Name: YAxisValueTextP4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13981,7 +13981,7 @@ GameObject:
   - component: {fileID: 790357467256417347}
   - component: {fileID: 8490871283402353303}
   m_Layer: 5
-  m_Name: ToggleSensitivityX
+  m_Name: ToggleSensitivityXP4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14067,7 +14067,7 @@ GameObject:
   - component: {fileID: 5978695846003214685}
   - component: {fileID: 3436227072306346402}
   m_Layer: 5
-  m_Name: ToggleSensitivityX
+  m_Name: ToggleSensitivityXP3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16197,29 +16197,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef8133f4baeadf143b821d9dfaf05d30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_xRotInvertToggle: {fileID: 223752530509606926}
-  m_yRotInvertToggle: {fileID: 223752530695443158}
-  m_xAxisInversion: 0
-  m_yAxisInversion: 0
-  m_customToggleKeys:
-  - {fileID: 4188416749030909871}
-  - {fileID: 223752530373406449}
-  m_sensitivitySliderValues:
-  - {fileID: 4188416749937845371}
-  - {fileID: 223752529821808924}
+  m_playerButtons: []
+  m_contentSubTransforms: []
+  m_reducedAlphaValue: 0.25
+  m_maxAlphaValue: 1
+  m_playerXRotInvertToggles: []
+  m_playerYRotInvertToggles: []
+  m_xRotInvertDefaults: 
+  m_yRotInvertDefaults: 
+  m_sensitivitySliderValuesP1: []
+  m_sensitivitySliderValuesP2: []
+  m_sensitivitySliderValuesP3: []
+  m_sensitivitySliderValuesP4: []
+  m_xAxisValueTextPs: []
+  m_yAxisValueTextPs: []
+  m_customToggleKeysP1: []
+  m_customToggleKeysP2: []
+  m_customToggleKeysP3: []
+  m_customToggleKeysP4: []
+  m_customToggleDefaults: 
   m_xMovespeedDefault: 10
   m_yRotationDefault: 2.5
   m_adjustSliderStep: 2
-  m_xAxisValueText: {fileID: 7769847457789051626}
-  m_yAxisValueText: {fileID: 223752531082487376}
-  m_customDefaults: 1
-  m_viewportContentArray:
-  - {fileID: 4188416749256729449}
-  - {fileID: 7809209394239002630}
-  - {fileID: 2956522146252403559}
-  - {fileID: 1469395235576907667}
-  m_controlUIStates: {fileID: 11400000, guid: 6f73ed489a50771489b477142348bfd6, type: 2}
-  m_controlUIValues: {fileID: 11400000, guid: 89d7e5fb5393a2a4fbaa05059af3fa6c, type: 2}
+  m_controlUIStatesEP: []
+  m_controlUIValuesEP: []
 --- !u!1 &1706178050241685944
 GameObject:
   m_ObjectHideFlags: 0
@@ -16955,7 +16956,7 @@ GameObject:
   - component: {fileID: 9204383898171653999}
   - component: {fileID: 7509686451099530143}
   m_Layer: 5
-  m_Name: SliderSensitivityY
+  m_Name: SliderSensitivityYP2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18872,7 +18873,7 @@ GameObject:
   - component: {fileID: 3317478118554933811}
   - component: {fileID: 8428676026884147044}
   m_Layer: 5
-  m_Name: SliderSensitivityY
+  m_Name: SliderSensitivityYP4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22422,7 +22423,7 @@ GameObject:
   - component: {fileID: 497938450993056088}
   - component: {fileID: 2644055884155124427}
   m_Layer: 5
-  m_Name: YAxisValueText
+  m_Name: YAxisValueTextP2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22954,7 +22955,7 @@ GameObject:
   - component: {fileID: 6785727232464406316}
   - component: {fileID: 475304313087814511}
   m_Layer: 5
-  m_Name: ToggleYAxis
+  m_Name: ToggleYAxisP2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23316,7 +23317,7 @@ GameObject:
   - component: {fileID: 1730126677294149667}
   - component: {fileID: 4026133281650704598}
   m_Layer: 5
-  m_Name: SliderSensitivityX
+  m_Name: SliderSensitivityXP4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26500,7 +26501,7 @@ GameObject:
   - component: {fileID: 1449796248887046142}
   - component: {fileID: 3737966579805440904}
   m_Layer: 5
-  m_Name: ToggleSensitivityY
+  m_Name: ToggleSensitivityYP2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27309,7 +27310,7 @@ GameObject:
   - component: {fileID: 4165513070154756135}
   - component: {fileID: 7769847457789051626}
   m_Layer: 5
-  m_Name: XAxisValueText
+  m_Name: XAxisValueTextP1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27981,7 +27982,7 @@ GameObject:
   - component: {fileID: 4188416749030909868}
   - component: {fileID: 4188416749030909871}
   m_Layer: 5
-  m_Name: ToggleSensitivityX
+  m_Name: ToggleSensitivityXP1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28784,7 +28785,7 @@ GameObject:
   - component: {fileID: 4188416749937845368}
   - component: {fileID: 4188416749937845371}
   m_Layer: 5
-  m_Name: SliderSensitivityX
+  m_Name: SliderSensitivityXP1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31080,7 +31081,7 @@ GameObject:
   - component: {fileID: 7480660612215969822}
   - component: {fileID: 6160056959533223482}
   m_Layer: 5
-  m_Name: ToggleXAxis
+  m_Name: ToggleXAxisP2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33484,7 +33485,7 @@ GameObject:
   - component: {fileID: 5328578921362742753}
   - component: {fileID: 1869038709958556485}
   m_Layer: 5
-  m_Name: SliderSensitivityX
+  m_Name: SliderSensitivityXP3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36609,7 +36610,7 @@ GameObject:
   - component: {fileID: 4291084208755060226}
   - component: {fileID: 284747306004233393}
   m_Layer: 5
-  m_Name: ToggleXAxis
+  m_Name: ToggleXAxisP3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36696,7 +36697,7 @@ GameObject:
   - component: {fileID: 7149124900435350222}
   - component: {fileID: 3999263008989824780}
   m_Layer: 5
-  m_Name: XAxisValueText
+  m_Name: XAxisValueTextP2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36830,7 +36831,7 @@ GameObject:
   - component: {fileID: 6652832980045201049}
   - component: {fileID: 6067532940366969380}
   m_Layer: 5
-  m_Name: ToggleXAxis
+  m_Name: ToggleXAxisP4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37712,7 +37713,7 @@ GameObject:
   - component: {fileID: 113131106478769320}
   - component: {fileID: 782906307643457194}
   m_Layer: 5
-  m_Name: ToggleSensitivityY
+  m_Name: ToggleSensitivityYP4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -39349,7 +39350,7 @@ GameObject:
   - component: {fileID: 2399493647355206865}
   - component: {fileID: 3057497331261058065}
   m_Layer: 5
-  m_Name: ToggleSensitivityY
+  m_Name: ToggleSensitivityYP3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40338,7 +40339,7 @@ GameObject:
   - component: {fileID: 3517145463761261496}
   - component: {fileID: 5643456751237369979}
   m_Layer: 5
-  m_Name: YAxisValueText
+  m_Name: YAxisValueTextP3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40776,7 +40777,7 @@ GameObject:
   - component: {fileID: 4397477183774760800}
   - component: {fileID: 5976689600643615760}
   m_Layer: 5
-  m_Name: XAxisValueText
+  m_Name: XAxisValueTextP3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41483,7 +41484,7 @@ GameObject:
   - component: {fileID: 4578661159933052005}
   - component: {fileID: 3063065811421018559}
   m_Layer: 5
-  m_Name: SensitivityYText
+  m_Name: SensitivityYTextP4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44024,7 +44025,7 @@ GameObject:
   - component: {fileID: 8125292343099141261}
   - component: {fileID: 126364958602256423}
   m_Layer: 5
-  m_Name: ToggleYAxis
+  m_Name: ToggleYAxisP3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44110,7 +44111,7 @@ GameObject:
   - component: {fileID: 1254278410378588504}
   - component: {fileID: 7621373479895029730}
   m_Layer: 5
-  m_Name: ToggleSensitivityX
+  m_Name: ToggleSensitivityXP2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46662,7 +46663,7 @@ GameObject:
   - component: {fileID: 1279020170629883230}
   - component: {fileID: 5224136788744506795}
   m_Layer: 5
-  m_Name: ToggleYAxis
+  m_Name: ToggleYAxisP4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47434,7 +47435,7 @@ GameObject:
   - component: {fileID: 945208600315909442}
   - component: {fileID: 9062491959253630649}
   m_Layer: 5
-  m_Name: SliderSensitivityX
+  m_Name: SliderSensitivityXP2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48489,7 +48490,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 0.5019608}
+  m_Color: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -48624,7 +48625,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 0.5019608}
+  m_Color: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -48759,7 +48760,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 0.5019608}
+  m_Color: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

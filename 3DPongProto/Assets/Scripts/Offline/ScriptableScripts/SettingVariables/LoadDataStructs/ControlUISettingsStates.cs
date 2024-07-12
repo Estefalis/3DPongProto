@@ -7,5 +7,5 @@ public struct ControlUISettingsStates
     public bool InvertYAxis;
     public bool CustomXSensitivity;
     public bool CustomYSensitivity;
-    public int ShownPlayerIndex;
+    //public int ShownPlayerIndex;
 }

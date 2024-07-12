@@ -616,6 +616,16 @@ MonoBehaviour:
   m_basicFieldValues: {fileID: 11400000, guid: b7c0516de58b3a240a6970d999010f71, type: 2}
   m_controlUIStates: {fileID: 11400000, guid: 6f73ed489a50771489b477142348bfd6, type: 2}
   m_controlUIValues: {fileID: 11400000, guid: 89d7e5fb5393a2a4fbaa05059af3fa6c, type: 2}
+  m_controlUIStatesEP:
+  - {fileID: 11400000, guid: 6f73ed489a50771489b477142348bfd6, type: 2}
+  - {fileID: 11400000, guid: 54413e7450817894b8e68e7cdba2b443, type: 2}
+  - {fileID: 11400000, guid: 6f1f5be09badd8a41a258137bec38537, type: 2}
+  - {fileID: 11400000, guid: f6f6fb46c1b1cba498f333455bdf34aa, type: 2}
+  m_controlUIValuesEP:
+  - {fileID: 11400000, guid: 89d7e5fb5393a2a4fbaa05059af3fa6c, type: 2}
+  - {fileID: 11400000, guid: e825f2f6f761104468ca0e58d4ca9a6a, type: 2}
+  - {fileID: 11400000, guid: 14003bf4faa01cd4ea4a72bb9ae959d9, type: 2}
+  - {fileID: 11400000, guid: 60351461f53e287428ae533872def51a, type: 2}
   m_playerIDData: []
 --- !u!1 &203844586
 GameObject:
@@ -750,18 +760,6 @@ MonoBehaviour:
     type: 2}
   m_timeOfDay: 6
   m_adjustDayLength: 96
---- !u!114 &209731802 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 209731802, guid: cf067c36ec1381742a9398a8cf109ae8,
-    type: 3}
-  m_PrefabInstance: {fileID: 1609723482893348529}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &272630528
 GameObject:
   m_ObjectHideFlags: 0
@@ -6685,7 +6683,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 209731802}
+      objectReference: {fileID: 0}
     - target: {fileID: 1699730964772215649, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -6815,7 +6813,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_playerDropdown
       value: 
-      objectReference: {fileID: 209731802}
+      objectReference: {fileID: 0}
     - target: {fileID: 1730126677294149667, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_AnchorMax.y

@@ -57,8 +57,12 @@ namespace ThreeDeePongProto.Offline.UI
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
         [SerializeField] private BasicFieldValues m_basicFieldValues;
-        [SerializeField] private ControlUIStates m_controlUIStates;
-        [SerializeField] private ControlUIValues m_controlUIValues;
+        [Space]
+        //[SerializeField] private ControlUIStates m_controlUIStates;
+        //[SerializeField] private ControlUIValues m_controlUIValues;
+        [SerializeField] private ControlUIStates[] m_controlUIStatesEP;
+        [SerializeField] private ControlUIValues[] m_controlUIValuesEP;
+
         #endregion
 
         #region Scriptable-References
@@ -187,23 +191,42 @@ namespace ThreeDeePongProto.Offline.UI
 
         private void LoadControlSettings()
         {
-            ControlUISettingsStates uiIndices = m_persistentData.LoadData<ControlUISettingsStates>(m_settingStatesFolderPath, m_controlFileName, m_fileFormat, m_encryptionEnabled);
-            m_controlUIStates.InvertXAxis = uiIndices.InvertXAxis;
-            m_controlUIStates.InvertXAxis = uiIndices.InvertYAxis;
-            m_controlUIStates.CustomXSensitivity = uiIndices.CustomXSensitivity;
-            m_controlUIStates.CustomYSensitivity = uiIndices.CustomYSensitivity;
-            m_controlUIStates.ShownPlayerIndex = uiIndices.ShownPlayerIndex;
-#if UNITY_EDITOR
-            //Debug.Log($"{m_controlUIStates.InvertXAxis} {m_controlUIStates.InvertXAxis} {m_controlUIStates.CustomXSensitivity} {m_controlUIStates.CustomYSensitivity} {m_controlUIStates.ShownPlayerIndex}");
-#endif
+            for (int i = 0; i < m_controlUIStatesEP.Length; i++)
+            {
+                ControlUISettingsStates controlUISettingsStates = m_persistentData.LoadData<ControlUISettingsStates>(m_settingStatesFolderPath + $"{i}", m_controlFileName, m_fileFormat, m_encryptionEnabled);
 
-            ControlUISettingsValues uiValues = m_persistentData.LoadData<ControlUISettingsValues>(m_settingsValuesFolderPath, m_controlFileName, m_fileFormat, m_encryptionEnabled);
-            m_controlUIValues.LastXMoveSpeed = uiValues.LastXMoveSpeed;
-            m_controlUIValues.LastYRotSpeed = uiValues.LastYRotSpeed;
-#if UNITY_EDITOR
-            //Debug.Log($"{m_controlUIValues.LastXMoveSpeed} {m_controlUIValues.LastYRotSpeed}");
+                m_controlUIStatesEP[i].InvertXAxis = controlUISettingsStates.InvertXAxis;
+                m_controlUIStatesEP[i].InvertXAxis = controlUISettingsStates.InvertYAxis;
+                m_controlUIStatesEP[i].CustomXSensitivity = controlUISettingsStates.CustomXSensitivity;
+                m_controlUIStatesEP[i].CustomYSensitivity = controlUISettingsStates.CustomYSensitivity;
+                //m_controlUIStatesEP[i].ShownPlayerIndex = controlUISettingsStates.ShownPlayerIndex;
+            }
+
+            //            ControlUISettingsStates uiIndices = m_persistentData.LoadData<ControlUISettingsStates>(m_settingStatesFolderPath, m_controlFileName, m_fileFormat, m_encryptionEnabled);
+            //            m_controlUIStates.InvertXAxis = uiIndices.InvertXAxis;
+            //            m_controlUIStates.InvertXAxis = uiIndices.InvertYAxis;
+            //            m_controlUIStates.CustomXSensitivity = uiIndices.CustomXSensitivity;
+            //            m_controlUIStates.CustomYSensitivity = uiIndices.CustomYSensitivity;
+            //            m_controlUIStates.ShownPlayerIndex = uiIndices.ShownPlayerIndex;
+            //#if UNITY_EDITOR
+            //            //Debug.Log($"{m_controlUIStates.InvertXAxis} {m_controlUIStates.InvertXAxis} {m_controlUIStates.CustomXSensitivity} {m_controlUIStates.CustomYSensitivity} {m_controlUIStates.ShownPlayerIndex}");
+            //#endif
+
+            for (int i = 0; i < m_controlUIValuesEP.Length; i++)
+            {
+                ControlUISettingsValues controlUISettingsValues = m_persistentData.LoadData<ControlUISettingsValues>(m_settingsValuesFolderPath + $"{i}", m_controlFileName, m_fileFormat, m_encryptionEnabled);
+
+                m_controlUIValuesEP[i].LastXMoveSpeed = controlUISettingsValues.LastXMoveSpeed;
+                m_controlUIValuesEP[i].LastYRotSpeed = controlUISettingsValues.LastYRotSpeed;
+            }
+
+            //            ControlUISettingsValues uiValues = m_persistentData.LoadData<ControlUISettingsValues>(m_settingsValuesFolderPath, m_controlFileName, m_fileFormat, m_encryptionEnabled);
+            //            m_controlUIValues.LastXMoveSpeed = uiValues.LastXMoveSpeed;
+            //            m_controlUIValues.LastYRotSpeed = uiValues.LastYRotSpeed;
+            //#if UNITY_EDITOR
+            //            //Debug.Log($"{m_controlUIValues.LastXMoveSpeed} {m_controlUIValues.LastYRotSpeed}");
+            //#endif
         }
-#endif
 
         /// <summary>
         /// Required, so MatchSettings right at start can fill the Front-/Backline-Dropdowns.
