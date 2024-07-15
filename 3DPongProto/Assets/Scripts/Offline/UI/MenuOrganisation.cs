@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using ThreeDeePongProto.Shared.InputActions;
 using ThreeDeePongProto.Offline.Settings;
+using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -13,9 +13,9 @@ namespace ThreeDeePongProto.Offline.UI
     public class MenuOrganisation : MonoBehaviour
     {
         private PlayerInputActions m_menuActions;
-        //[SerializeField] private string m_loadWinScene;
-        //[SerializeField] private string m_loadLoseScene;
+
         [SerializeField] private EventSystem m_eventSystem;
+        [SerializeField] private GameObject m_currentSelectedGO;
         private readonly string m_startMenuScene = "StartMenuScene";
 
         #region Select First Elements by using the EventSystem.
@@ -58,8 +58,6 @@ namespace ThreeDeePongProto.Offline.UI
         [SerializeField] private MatchValues m_matchValues;
         [SerializeField] private BasicFieldValues m_basicFieldValues;
         [Space]
-        //[SerializeField] private ControlUIStates m_controlUIStates;
-        //[SerializeField] private ControlUIValues m_controlUIValues;
         [SerializeField] private ControlUIStates[] m_controlUIStatesEP;
         [SerializeField] private ControlUIValues[] m_controlUIValuesEP;
 
@@ -67,7 +65,6 @@ namespace ThreeDeePongProto.Offline.UI
 
         #region Scriptable-References
         [SerializeField] private PlayerIDData[] m_playerIDData;
-        //[SerializeField] private GameObject[] m_playerPrefabs;
         #endregion
 
         #region Serialization
@@ -89,6 +86,7 @@ namespace ThreeDeePongProto.Offline.UI
         private void Awake()
         {
             SetUIElements();
+
             #region Fill Scriptable Objects with Information
             LoadGraphicSettings();
             LoadVolumeSettings();
@@ -102,22 +100,27 @@ namespace ThreeDeePongProto.Offline.UI
             }
         }
 
+        private void OnDisable()
+        {
+            m_menuActions?.Disable();
+            m_menuActions.PlayerActions.ToggleGameMenu.performed -= EnableMenuNavigation;
+        }
+
         /// <summary>
-        /// PlayerController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the UserInputManager into 'Awake()', to prevent Exceptions.
+        /// PlayerController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the InputManager into 'Awake()', to prevent Exceptions.
         /// </summary>
         private void Start()
         {
-            m_menuActions = UserInputManager.m_playerInputActions;
+            m_menuActions = InputManager.m_playerInputActions;
             m_menuActions?.Enable();
             m_menuActions.PlayerActions.ToggleGameMenu.performed += EnableMenuNavigation;
 
             PreSetUpPlayerAmount(m_matchUIStates.EPlayerAmount);
         }
 
-        private void OnDisable()
+        private void Update()
         {
-            m_menuActions?.Disable();
-            m_menuActions.PlayerActions.ToggleGameMenu.performed -= EnableMenuNavigation;
+            m_currentSelectedGO = EventSystem.current.currentSelectedGameObject;
         }
 
         private void EnableMenuNavigation(InputAction.CallbackContext _callbackContext)
@@ -193,39 +196,27 @@ namespace ThreeDeePongProto.Offline.UI
         {
             for (int i = 0; i < m_controlUIStatesEP.Length; i++)
             {
-                ControlUISettingsStates controlUISettingsStates = m_persistentData.LoadData<ControlUISettingsStates>(m_settingStatesFolderPath + $"{i}", m_controlFileName, m_fileFormat, m_encryptionEnabled);
+                if (m_controlUIStatesEP[i] != null)
+                {
+                    ControlUISettingsStates controlUISettingsStates = m_persistentData.LoadData<ControlUISettingsStates>(m_settingStatesFolderPath + $"{i}", m_controlFileName, m_fileFormat, m_encryptionEnabled);
 
-                m_controlUIStatesEP[i].InvertXAxis = controlUISettingsStates.InvertXAxis;
-                m_controlUIStatesEP[i].InvertXAxis = controlUISettingsStates.InvertYAxis;
-                m_controlUIStatesEP[i].CustomXSensitivity = controlUISettingsStates.CustomXSensitivity;
-                m_controlUIStatesEP[i].CustomYSensitivity = controlUISettingsStates.CustomYSensitivity;
-                //m_controlUIStatesEP[i].ShownPlayerIndex = controlUISettingsStates.ShownPlayerIndex;
+                    m_controlUIStatesEP[i].InvertXAxis = controlUISettingsStates.InvertXAxis;
+                    m_controlUIStatesEP[i].InvertXAxis = controlUISettingsStates.InvertYAxis;
+                    m_controlUIStatesEP[i].CustomXSensitivity = controlUISettingsStates.CustomXSensitivity;
+                    m_controlUIStatesEP[i].CustomYSensitivity = controlUISettingsStates.CustomYSensitivity;
+                }
             }
-
-            //            ControlUISettingsStates uiIndices = m_persistentData.LoadData<ControlUISettingsStates>(m_settingStatesFolderPath, m_controlFileName, m_fileFormat, m_encryptionEnabled);
-            //            m_controlUIStates.InvertXAxis = uiIndices.InvertXAxis;
-            //            m_controlUIStates.InvertXAxis = uiIndices.InvertYAxis;
-            //            m_controlUIStates.CustomXSensitivity = uiIndices.CustomXSensitivity;
-            //            m_controlUIStates.CustomYSensitivity = uiIndices.CustomYSensitivity;
-            //            m_controlUIStates.ShownPlayerIndex = uiIndices.ShownPlayerIndex;
-            //#if UNITY_EDITOR
-            //            //Debug.Log($"{m_controlUIStates.InvertXAxis} {m_controlUIStates.InvertXAxis} {m_controlUIStates.CustomXSensitivity} {m_controlUIStates.CustomYSensitivity} {m_controlUIStates.ShownPlayerIndex}");
-            //#endif
 
             for (int i = 0; i < m_controlUIValuesEP.Length; i++)
             {
-                ControlUISettingsValues controlUISettingsValues = m_persistentData.LoadData<ControlUISettingsValues>(m_settingsValuesFolderPath + $"{i}", m_controlFileName, m_fileFormat, m_encryptionEnabled);
+                if (m_controlUIValuesEP[i] != null)
+                {
+                    ControlUISettingsValues controlUISettingsValues = m_persistentData.LoadData<ControlUISettingsValues>(m_settingsValuesFolderPath + $"{i}", m_controlFileName, m_fileFormat, m_encryptionEnabled);
 
-                m_controlUIValuesEP[i].LastXMoveSpeed = controlUISettingsValues.LastXMoveSpeed;
-                m_controlUIValuesEP[i].LastYRotSpeed = controlUISettingsValues.LastYRotSpeed;
+                    m_controlUIValuesEP[i].LastXMoveSpeed = controlUISettingsValues.LastXMoveSpeed;
+                    m_controlUIValuesEP[i].LastYRotSpeed = controlUISettingsValues.LastYRotSpeed;
+                }
             }
-
-            //            ControlUISettingsValues uiValues = m_persistentData.LoadData<ControlUISettingsValues>(m_settingsValuesFolderPath, m_controlFileName, m_fileFormat, m_encryptionEnabled);
-            //            m_controlUIValues.LastXMoveSpeed = uiValues.LastXMoveSpeed;
-            //            m_controlUIValues.LastYRotSpeed = uiValues.LastYRotSpeed;
-            //#if UNITY_EDITOR
-            //            //Debug.Log($"{m_controlUIValues.LastXMoveSpeed} {m_controlUIValues.LastYRotSpeed}");
-            //#endif
         }
 
         /// <summary>
@@ -239,14 +230,11 @@ namespace ThreeDeePongProto.Offline.UI
 
             m_matchValues.PlayerData.Clear();
             m_matchValues.PlayerData = new();
-            //m_matchValues.PlayerPrefabs.Clear();
-            //m_matchValues.PlayerPrefabs = new();
 
             uint playerAmount = (uint)_ePlayerAmount;    //EPlayerAmount.Four => int 4 || EPlayerAmount.Two => int 2
             for (uint i = 0; i < playerAmount; i++)
             {
                 m_matchValues.PlayerData.Add(m_playerIDData[(int)i]);
-                //m_matchValues.PlayerPrefabs.Add(m_playerPrefabs[(int)i]);
             }
         }
 
@@ -254,14 +242,14 @@ namespace ThreeDeePongProto.Offline.UI
         {
             CloseInGameMenu?.Invoke();
             m_firstElement.gameObject.SetActive(false);
-            UserInputManager.ToggleActionMaps(UserInputManager.m_playerInputActions.PlayerActions);
+            InputManager.ToggleActionMaps(InputManager.m_playerInputActions.PlayerActions);
         }
 
         public void RestartLevel()
         {
             RestartGameLevel?.Invoke();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            UserInputManager.ToggleActionMaps(UserInputManager.m_playerInputActions.PlayerActions);
+            InputManager.ToggleActionMaps(InputManager.m_playerInputActions.PlayerActions);
         }
 
         public void ReturnToMainScene()

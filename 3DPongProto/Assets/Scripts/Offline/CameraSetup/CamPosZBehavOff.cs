@@ -63,8 +63,8 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         {
             MaxSideMovement();
 
-            //CameraActions need to be in Start to prevent NullReferenceExceptions due to relation to the UserInputManager.
-            m_cameraInputActions = UserInputManager.m_playerInputActions;
+            //CameraActions need to be in Start to prevent NullReferenceExceptions due to relation to the InputManager.
+            m_cameraInputActions = InputManager.m_playerInputActions;
             m_cameraInputActions.Enable();
             m_cameraInputActions.PlayerActions.Zoom.performed += Zooming;
 

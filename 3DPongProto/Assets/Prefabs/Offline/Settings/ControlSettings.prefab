@@ -1146,7 +1146,7 @@ GameObject:
   - component: {fileID: 223752529821808925}
   - component: {fileID: 223752529821808924}
   m_Layer: 5
-  m_Name: SliderSensitivityYP1
+  m_Name: RotSpeedSliderYP1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1722,7 +1722,7 @@ GameObject:
   - component: {fileID: 223752530112229026}
   - component: {fileID: 223752530112229027}
   m_Layer: 5
-  m_Name: SensitivityYText
+  m_Name: RotSpeedYText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2730,8 +2730,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 891.25, y: -30}
-  m_SizeDelta: {x: 825, y: 50}
+  m_AnchoredPosition: {x: 933.0625, y: -30}
+  m_SizeDelta: {x: 750, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &223752530686441812
 MonoBehaviour:
@@ -2751,7 +2751,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 150.5
+  m_Spacing: 88
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -4626,6 +4626,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -6750,6 +6751,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -6904,7 +6906,7 @@ GameObject:
   - component: {fileID: 3258418902822316918}
   - component: {fileID: 8081721255886169264}
   m_Layer: 5
-  m_Name: SliderSensitivityYP3
+  m_Name: RotSpeedSliderYP3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7132,6 +7134,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -8470,6 +8473,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -8695,6 +8699,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -8732,7 +8737,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 819.3334, y: -25}
+  m_AnchoredPosition: {x: 736, y: -25}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!1 &1181165523473369822
@@ -9124,6 +9129,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -9717,6 +9723,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -10234,7 +10241,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 267.5, y: -25}
+  m_AnchoredPosition: {x: 230, y: -25}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!1 &1181165524182428530
@@ -10520,6 +10527,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -11248,6 +11256,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -11534,6 +11543,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -11685,6 +11695,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -11873,6 +11884,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 1
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -12497,6 +12509,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -12648,6 +12661,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -13061,8 +13075,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 201.25, y: -30}
-  m_SizeDelta: {x: 250, y: 50}
+  m_AnchoredPosition: {x: 243.0625, y: -30}
+  m_SizeDelta: {x: 342.25, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1181165525045289385
 CanvasRenderer:
@@ -14824,6 +14838,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -16715,6 +16730,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -16866,6 +16882,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -16956,7 +16973,7 @@ GameObject:
   - component: {fileID: 9204383898171653999}
   - component: {fileID: 7509686451099530143}
   m_Layer: 5
-  m_Name: SliderSensitivityYP2
+  m_Name: RotSpeedSliderYP2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18525,6 +18542,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -18621,7 +18639,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40.1
+  m_fontSize: 44.05
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -18873,7 +18891,7 @@ GameObject:
   - component: {fileID: 3317478118554933811}
   - component: {fileID: 8428676026884147044}
   m_Layer: 5
-  m_Name: SliderSensitivityYP4
+  m_Name: RotSpeedSliderYP4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21644,6 +21662,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -23317,7 +23336,7 @@ GameObject:
   - component: {fileID: 1730126677294149667}
   - component: {fileID: 4026133281650704598}
   m_Layer: 5
-  m_Name: SliderSensitivityXP4
+  m_Name: MoveSpeedSliderXP4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23756,6 +23775,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -23973,6 +23993,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -25584,6 +25605,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -25735,6 +25757,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -25870,7 +25893,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Movespeed X
+  m_text: MoveSpeed X
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -27258,6 +27281,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -27713,7 +27737,7 @@ GameObject:
   - component: {fileID: 4188416749016003864}
   - component: {fileID: 4188416749016003865}
   m_Layer: 5
-  m_Name: SensitivityXText
+  m_Name: MoveSpeedXText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27767,7 +27791,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Movespeed X
+  m_text: MoveSpeed X
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -28785,7 +28809,7 @@ GameObject:
   - component: {fileID: 4188416749937845368}
   - component: {fileID: 4188416749937845371}
   m_Layer: 5
-  m_Name: SliderSensitivityXP1
+  m_Name: MoveSpeedSliderXP1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30310,6 +30334,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -30866,6 +30891,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -32355,7 +32381,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Movespeed X
+  m_text: MoveSpeed X
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -33485,7 +33511,7 @@ GameObject:
   - component: {fileID: 5328578921362742753}
   - component: {fileID: 1869038709958556485}
   m_Layer: 5
-  m_Name: SliderSensitivityXP3
+  m_Name: MoveSpeedSliderXP3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34580,6 +34606,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -34807,6 +34834,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -35112,7 +35140,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Movespeed X
+  m_text: MoveSpeed X
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -35943,6 +35971,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -37054,6 +37083,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -37340,6 +37370,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -37556,6 +37587,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -38282,6 +38314,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -40610,6 +40643,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -41392,6 +41426,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -43316,6 +43351,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -43467,6 +43503,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -44982,7 +45019,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 58.166668, y: -25}
+  m_AnchoredPosition: {x: 66.5, y: -25}
   m_SizeDelta: {x: 115, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4562128977708216399
@@ -45527,6 +45564,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -46196,6 +46234,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -47435,7 +47474,7 @@ GameObject:
   - component: {fileID: 945208600315909442}
   - component: {fileID: 9062491959253630649}
   m_Layer: 5
-  m_Name: SliderSensitivityXP2
+  m_Name: MoveSpeedSliderXP2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47663,6 +47702,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -48002,6 +48042,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -48291,6 +48332,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -49665,6 +49707,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}
@@ -50463,6 +50506,7 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
+  m_buttonControlScheme: 0
   m_rebindButton: {fileID: 0}
   m_rebindText: {fileID: 0}
   m_resetButton: {fileID: 0}

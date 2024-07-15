@@ -19,6 +19,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         [SerializeField] private InputBinding m_inputBinding;
 
         [Header("UI-Fields")]
+        [SerializeField] private EButtonControlScheme m_buttonControlScheme;
         //[SerializeField] private TextMeshProUGUI m_actionTitle;
         [SerializeField] private Button m_rebindButton;
         [SerializeField] private TextMeshProUGUI m_rebindText;
@@ -37,13 +38,13 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             if (m_InputActionReference != null)
             {
-                UserInputManager.LoadKeyBindingOverride(m_actionName);
+                InputManager.LoadKeyBindingOverride(m_actionName);
                 GetBindingInfomation();
                 UpdateUI();
             }
 
-            UserInputManager.m_RebindComplete += UpdateUI;
-            UserInputManager.m_RebindCanceled += UpdateUI;
+            InputManager.m_RebindComplete += UpdateUI;
+            InputManager.m_RebindCanceled += UpdateUI;
         }
 
         /// <summary>
@@ -51,8 +52,8 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void OnDisable()
         {
-            UserInputManager.m_RebindComplete -= UpdateUI;
-            UserInputManager.m_RebindCanceled -= UpdateUI;
+            InputManager.m_RebindComplete -= UpdateUI;
+            InputManager.m_RebindCanceled -= UpdateUI;
         }
 
         private void OnValidate()
@@ -86,33 +87,34 @@ namespace ThreeDeePongProto.Shared.InputActions
         {
             if (m_rebindText != null)
             {
-                //Informationen des InputManagers abfragen und setzen des jeweiligen Buttontextes, entsprechend getaetigter Einstellungen.
+                //Set the buttonText.
                 if (Application.isPlaying)
                 {
-                    m_rebindText.text = InputControlPath.ToHumanReadableString(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, InputControlPath.HumanReadableStringOptions.OmitDevice);
-                    //m_rebindText.text = UserInputManager.GetBindingName(m_actionName, m_bindingIndex);
+                    //m_rebindText.text = InputControlPath.ToHumanReadableString(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, InputControlPath.HumanReadableStringOptions.OmitDevice);
+                    m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex);
                 }
                 else
                 {
-                    m_rebindText.text = m_InputActionReference.action.GetBindingDisplayString(m_bindingIndex);
+                    m_rebindText.text = InputControlPath.ToHumanReadableString(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, InputControlPath.HumanReadableStringOptions.OmitDevice);
+                    //m_rebindText.text = m_InputActionReference.action.GetBindingDisplayString(m_bindingIndex);
                 }
             }
         }
 
         /// <summary>
-        /// Ausfuehren des KeyRebindings durch jeweiligen UI-Button. 
+        /// Execute rebind on each UI-Button. 
         /// </summary>
         private void ExecuteKeyRebind()
         {
-            UserInputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse);
+            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse, m_buttonControlScheme);
         }
 
         /// <summary>
-        /// Reset des letzten KeyRebindings durch UI-ResetButton.
+        /// Reset keyRebinding by the corresponding UI-ResetButton.
         /// </summary>
         private void ResetRebinding()
         {
-            UserInputManager.ResetRebinding(m_actionName, m_bindingIndex);
+            InputManager.ResetRebinding(m_actionName, m_bindingIndex);
             UpdateUI();
         }
     } 

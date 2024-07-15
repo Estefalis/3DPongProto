@@ -168,7 +168,7 @@
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "SideMoveNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -179,7 +179,7 @@
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "SideMoveNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -190,7 +190,7 @@
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "StickDeadzone",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "SideMoveNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -201,7 +201,7 @@
                     "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "ToggleGameMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -212,7 +212,29 @@
                     "path": "<Gamepad>/start",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepads",
+                    "action": "ToggleGameMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d11dbea8-bbbf-455a-8403-b9827f08aa22",
+                    "path": "<DualShockGamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepads",
+                    "action": "ToggleGameMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a6c8c838-05db-4fa5-a092-5e3e97f2c981",
+                    "path": "<XInputController>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepads",
                     "action": "ToggleGameMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -223,7 +245,7 @@
                     "path": "<Mouse>/scroll",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "Zoom",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -245,7 +267,7 @@
                     "path": "<Gamepad>/dpad/up",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "Zoom",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -256,7 +278,7 @@
                     "path": "<Gamepad>/dpad/down",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "Zoom",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -278,7 +300,7 @@
                     "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "TurnMoveNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -289,21 +311,10 @@
                     "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "TurnMoveNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "53937661-6c69-40d5-94db-8d523aaa3704",
-                    "path": "<Gamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "StickDeadzone",
-                    "groups": "",
-                    "action": "TurnMoveNegZP1",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 },
                 {
                     "name": "GamePadButtons",
@@ -322,7 +333,7 @@
                     "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "TurnMoveNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -333,7 +344,7 @@
                     "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "TurnMoveNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -355,7 +366,7 @@
                     "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "SideMovePosZP2",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -366,7 +377,7 @@
                     "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "SideMovePosZP2",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -377,7 +388,7 @@
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "StickDeadzone",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "SideMovePosZP2",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -388,7 +399,7 @@
                     "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "PushMoveNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -399,7 +410,7 @@
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "PushMoveNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -410,7 +421,7 @@
                     "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "PushMovePosZP2",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -421,7 +432,7 @@
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "PushMovePosZP2",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -432,7 +443,7 @@
                     "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "MousePosition",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -443,7 +454,7 @@
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "MousePosition",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -465,7 +476,7 @@
                     "path": "<Keyboard>/rightShift",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "TurnMovePosZP2",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -476,7 +487,7 @@
                     "path": "<Keyboard>/numpad1",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "TurnMovePosZP2",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -498,7 +509,7 @@
                     "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "TurnMovePosZP2",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -509,7 +520,7 @@
                     "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "TurnMovePosZP2",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -520,7 +531,7 @@
                     "path": "<Keyboard>/b",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "PokeTheBall",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -531,7 +542,7 @@
                     "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "PokeTheBall",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -553,7 +564,7 @@
                     "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "SideMoveNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -564,7 +575,7 @@
                     "path": "<Keyboard>/h",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "SideMoveNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -575,7 +586,7 @@
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "StickDeadzone",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "SideMoveNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -597,7 +608,7 @@
                     "path": "<Keyboard>/j",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "SideMovePosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -608,7 +619,7 @@
                     "path": "<Keyboard>/l",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "SideMovePosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -619,7 +630,7 @@
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "StickDeadzone",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "SideMovePosZP4",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -630,7 +641,7 @@
                     "path": "<Keyboard>/t",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "PushMoveNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -641,7 +652,7 @@
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "PushMoveNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -652,7 +663,7 @@
                     "path": "<Keyboard>/i",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "PushMovePosZP4",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -663,7 +674,7 @@
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "PushMovePosZP4",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -685,7 +696,7 @@
                     "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "TurnMoveNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -696,7 +707,7 @@
                     "path": "<Keyboard>/z",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "TurnMoveNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -707,7 +718,7 @@
                     "path": "<Keyboard>/y",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "TurnMoveNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -729,7 +740,7 @@
                     "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "TurnMoveNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -740,7 +751,7 @@
                     "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "TurnMoveNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -762,7 +773,7 @@
                     "path": "<Keyboard>/u",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "TurnMovePosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -773,7 +784,7 @@
                     "path": "<Keyboard>/o",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "TurnMovePosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -795,7 +806,7 @@
                     "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "TurnMovePosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -806,7 +817,7 @@
                     "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepads",
                     "action": "TurnMovePosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -1416,5 +1427,43 @@
             ]
         }
     ],
-    "controlSchemes": []
+    "controlSchemes": [
+        {
+            "name": "KeyboardMouse",
+            "bindingGroup": "KeyboardMouse",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": true,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "Gamepads",
+            "bindingGroup": "Gamepads",
+            "devices": [
+                {
+                    "devicePath": "<Gamepad>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<DualShockGamepad>",
+                    "isOptional": true,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<XInputController>",
+                    "isOptional": true,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
 }

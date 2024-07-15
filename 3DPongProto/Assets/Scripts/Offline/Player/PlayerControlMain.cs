@@ -81,11 +81,11 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         }
 
         /// <summary>
-        /// PlayerController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the UserInputManager into 'Awake()', to prevent Exceptions.
+        /// PlayerController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the InputManager into 'Awake()', to prevent Exceptions.
         /// </summary>
         protected virtual void Start()
         {
-            m_playerMovement = UserInputManager.m_playerInputActions;
+            m_playerMovement = InputManager.m_playerInputActions;
             m_playerMovement.PlayerActions.Enable();
             m_playerMovement.PlayerActions.ToggleGameMenu.performed += ToggleMenu;
         }
@@ -211,7 +211,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             if (!m_matchManager.GameIsPaused && m_playerMovement.PlayerActions.enabled)
             {
                 InGameMenuOpens?.Invoke();
-                UserInputManager.ToggleActionMaps(UserInputManager.m_playerInputActions.UI);
+                InputManager.ToggleActionMaps(InputManager.m_playerInputActions.UI);
             }
         }
         #endregion

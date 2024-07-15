@@ -9,5 +9,4 @@ public class ControlUIStates : ScriptableObject
     public bool InvertYAxis;
     public bool CustomXSensitivity;
     public bool CustomYSensitivity;
-    //public int ShownPlayerIndex;
 }

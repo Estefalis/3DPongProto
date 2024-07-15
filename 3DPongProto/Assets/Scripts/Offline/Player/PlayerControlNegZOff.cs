@@ -88,16 +88,16 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             {
                 case 0:
                 {
-                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_playerMovement.PlayerActions.SideMoveNegZP1.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMoveNegZP1.ReadValue<Vector2>().y);   //Player1 ID
+                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_playerMovement.PlayerActions.SideMoveNegZP1.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMoveNegZP1.ReadValue<Vector2>().y).normalized;   //Player1 ID
                     break;
                 }
                 case 2:
                 {
-                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_playerMovement.PlayerActions.SideMoveNegZP3.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMoveNegZP3.ReadValue<Vector2>().y);   //Player3 ID
+                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_playerMovement.PlayerActions.SideMoveNegZP3.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMoveNegZP3.ReadValue<Vector2>().y).normalized;   //Player3 ID
                     break;
                 }
                 default:
-                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_playerMovement.PlayerActions.SideMoveNegZP1.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMoveNegZP1.ReadValue<Vector2>().y);   //Player1 ID
+                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_playerMovement.PlayerActions.SideMoveNegZP1.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMoveNegZP1.ReadValue<Vector2>().y).normalized;   //Player1 ID
                     break;
             }
 
@@ -109,7 +109,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         /// </summary>
         private void TurnPaddleByPlayer()
         {
-            m_deltaRotation = Quaternion.Euler(m_axisRotNegZ * m_rotationSpeed * m_baseRotationSpeed * Time.fixedDeltaTime);
+            m_deltaRotation = Quaternion.Euler(m_axisRotNegZ * m_rotationSpeed * m_baseRotationSpeed * Time.fixedDeltaTime).normalized;
             m_rigidbody.MoveRotation(m_rigidbody.rotation * m_deltaRotation);
         }
 

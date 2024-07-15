@@ -4,9 +4,15 @@ using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using TMPro;
 
+public enum EButtonControlScheme
+{
+    KeyboardMouse,
+    Gamepad
+}
+
 namespace ThreeDeePongProto.Shared.InputActions
 {
-    public class UserInputManager : MonoBehaviour
+    public class InputManager : MonoBehaviour
     {
         //Reference to the PlayerAction-InputAsset.
         public static PlayerInputActions m_playerInputActions;
@@ -29,7 +35,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         /// <summary>
-        /// PlayerController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the UserInputManager into 'Awake()', to prevent Exceptions.
+        /// PlayerController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the InputManager into 'Awake()', to prevent Exceptions.
         /// </summary>
         private void Awake()
         {
@@ -41,12 +47,14 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private void OnEnable()
         {
-            SceneManager.sceneLoaded += OnSceneFinishedLoading;            
+            SceneManager.sceneLoaded += OnSceneFinishedLoading;
+            //InputSystem.onDeviceChange += OnDeviceChange;
         }
 
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneFinishedLoading;
+            //InputSystem.onDeviceChange -= OnDeviceChange;
         }
 
         #region Change Action Maps
@@ -77,7 +85,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     break;
             }
         }
-          
+
         /// <summary>
         /// Switches ActionMaps, if the active actionMap isn't equal to the submitted one. But does not disable the old actionMaps!
         /// </summary>
@@ -93,18 +101,18 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_changeActiveActionMap?.Invoke(_actionMap);
             _actionMap.Enable();
 #if UNITY_EDITOR
-            //Debug.Log($"UserInputManager while debugging: {_actionMap.name} loaded.");
+            //Debug.Log($"InputManager while debugging: {_actionMap.name} loaded.");
 #endif
         }
         #endregion
 
         #region KeyRebinding
-        public static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, bool _excludeMouse)
+        public static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, bool _excludeMouse, EButtonControlScheme _ebuttonControlScheme)
         {
-            //Hier wird Bezug auf das durch 'Apply' generierte C#-Script in Unity genommen, nicht auf die Action-Tabelle selbst.
+            //Look up the action name of the inputAction in the generated C#-Script, not the Scriptable Object.
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
 
-            //Absicherung gegen falsche Input-Assets.
+            //Check for null references and valid indices.
             if (inputAction == null || inputAction.bindings.Count <= _bindingIndex)
             {
 #if UNITY_EDITOR
@@ -113,94 +121,94 @@ namespace ThreeDeePongProto.Shared.InputActions
                 return;
             }
 
-            //isComposite: Ansammlung einer Sammlung von Bindings, entsprechend des WASD-Composites.
-            //isPartOfComposite: Childs/Bindings des Composite. Muessen daher so benannt sein.
+            //isComposite: Corresponds to WASD's Actions Properties. (WASD itself.)
             if (inputAction.bindings[_bindingIndex].isComposite)
             {
-                var firstParentSubIndex = _bindingIndex + 1;
+                var firstParentSubIndex = _bindingIndex + 1;    //Examples: First entry after WASD.
 
+                //isPartOfComposite: Corresponds to WASD's W for example. (Childs/Binding Properties of the Composite.)
                 if (firstParentSubIndex < inputAction.bindings.Count && inputAction.bindings[firstParentSubIndex].isPartOfComposite)
                 {
-                    ExecuteKeyRebind(inputAction, firstParentSubIndex, _statusText, true, _excludeMouse);
+                    ExecuteKeyRebind(inputAction, firstParentSubIndex, _statusText, true, _excludeMouse, _ebuttonControlScheme);
                 }
             }
             else
-                ExecuteKeyRebind(inputAction, _bindingIndex, _statusText, false, _excludeMouse);
+                ExecuteKeyRebind(inputAction, _bindingIndex, _statusText, false, _excludeMouse, _ebuttonControlScheme);
         }
 
         /// <summary>
-        /// Ausfuehren des Key-Rebindings mittels uebergebener Parameter, entsprechend der ActionMap und des Binding-Indices.
+        /// Execusion of the Key-Rebindings with the submitted parameters, related to ActionMap and Binding-Indices.
         /// </summary>
         /// <param name="_actionToRebind"></param>
         /// <param name="_bindingIndex"></param>
         /// <param name="_statusText"></param>
         /// <param name="_allCompositeParts"></param>
         /// <param name="_excludeMouse"></param>
-        private static void ExecuteKeyRebind(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI _statusText, bool _allCompositeParts, bool _excludeMouse)
+        private static void ExecuteKeyRebind(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI _statusText, bool _allCompositeParts, bool _excludeMouse, EButtonControlScheme _ebuttonControlScheme)
         {
             if (_actionToRebind == null || _bindingIndex < 0)
                 return;
 
-            //TODO: Hier ggf. '$"Please press a Button."; oder '$"Press a {_actionToRebind.expectedControlType}"'.
-            _statusText.text = $"Please press a Button";
-            //Eine eher menschenuntypische Schreibweise der erwarteten Aktion. Daher ersetzt.
-            //_statusText.text = $"Press a {_actionToRebind.expectedControlType}";
+            _statusText.text = $"Please press a Button"; //old: _statusText.text = $"Press a {_actionToRebind.expectedControlType}";
 
-            //Wichtig, das hier fuer die Dauer der Aenderung zu blockieren.
-            _actionToRebind.Disable();
+            _actionToRebind.Disable();  //Required while rebinding!
 
-            //Erzeugung einer Instanz des Rebind-Action-Prozesses.
+            //Instance creation for the Rebind-Action-Process.
             InputActionRebindingExtensions.RebindingOperation rebind = _actionToRebind.PerformInteractiveRebinding(_bindingIndex);
 
+            //assignment of the OnComplete'operation' delegate.
             rebind.OnComplete(operation =>
             {
-                //Disabled!!! (Moeglicher) Konflikt mit nachtraeglich implementierter 'ToggleActionMaps'-Methode.
-                //_actionToRebind.Enable();
+                _actionToRebind.Enable();   //Was disabled, after conflicts with the later implemented 'ToggleActionMaps'-Method.
+                operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
-                //Verhindern eines Memory-Leaks. Garbage Collection wird hier nicht aufraeumen.
-                operation.Dispose();
-
-                //Abarbeiten der Baum-Struktur, wie bei WASD.
-                if (_allCompositeParts)
+                if (_allCompositeParts) //If the Index has compositeParts/children.
                 {
                     var nextBindingIndex = _bindingIndex + 1;
 
                     if (nextBindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[nextBindingIndex].isPartOfComposite)
-                        ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _allCompositeParts, _excludeMouse);
+                        ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _allCompositeParts, _excludeMouse, _ebuttonControlScheme);
                 }
 
-                SaveKeyBindingOverride(_actionToRebind);
-                //Invoken bei erfolgreich abgeschlossenem Rebinding.
-                m_RebindComplete?.Invoke();
+                SaveKeyBindingOverride(_actionToRebind);    //TODO: replace this with the save system interface.
+
+                m_RebindComplete?.Invoke(); //Invoke on finished rebinding.
             });
 
+            //assignment of the OnCancel'operation' delegate.
             rebind.OnCancel(operation =>
             {
-                //Disabled!!! (Moeglicher) Konflikt mit nachtraeglich implementierter 'ToggleActionMaps'-Methode.
-                //_actionToRebind.Enable();
+                _actionToRebind.Enable(); //Was disabled, after conflicts with the later implemented 'ToggleActionMaps'-Method.
+                operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
-                //Verhindern eines Memory-Leaks. Garbage Collection wird hier nicht aufraeumen.
-                operation.Dispose();
-
-                //Invoken bei abgebrochenem Rebinding.
-                m_RebindCanceled?.Invoke();
+                m_RebindCanceled?.Invoke(); //Invoke on canceled rebinding.
             });
 
-            //Falls zusaetzliche Devices Key-Rebinding "canceln" sollen, hier die entsprechenden Commands implementieren.
-            rebind.WithCancelingThrough(m_cancelWithKeyboardButton);
-            rebind.WithCancelingThrough(m_cancelWithGamepadButton);
+            switch (_ebuttonControlScheme)  //ONLY ONE cancelButton gets recognized in code at a time.
+            {
+                case EButtonControlScheme.KeyboardMouse:
+                    rebind.WithCancelingThrough(m_cancelWithKeyboardButton);
+                    break;
+                case EButtonControlScheme.Gamepad:
+                    rebind.WithCancelingThrough(m_cancelWithGamepadButton);
+                    break;
+                default:
+                    break;
+            }
 
-            //Devices, wie Maus (oder Andere) hier herausnehmen, sonst wird ein Mausklick bei Aenderungen der Steuerung auch beruecksichtigt!
-            if (_excludeMouse)
+            #region Exclude controls from the rebind process
+            rebind.WithControlsExcluding("<Keyboard>/escape");  //Else ESC gets set on beyboard button rebinds.
+            if (_excludeMouse)  //Ignore the mouse on redinds.
                 rebind.WithControlsExcluding("Mouse");
+            #endregion
 
             m_rebindStarted?.Invoke(_actionToRebind, _bindingIndex);
-            //Hier wird der eigentliche "Ueberschreibungs-Prozess gestartet.
-            rebind.Start();
+
+            rebind.Start(); //Real Start of the rebind process.
         }
 
         /// <summary>
-        /// Methode gibt Informationen fuer den jeweiligen Buttontext zurueck, entsprechend getaetigter Einstellungen und ubermittelter Parameter.
+        /// Returns button infos according to the submitted Parameter.
         /// </summary>
         /// <param name="_actionName"></param>
         /// <param name="_bindingIndex"></param>
@@ -214,25 +222,17 @@ namespace ThreeDeePongProto.Shared.InputActions
             return inputAction.GetBindingDisplayString(_bindingIndex);
         }
 
-        /// <summary>
-        /// Methode zur Sicherung der KeyRebinding-Aenderungen im Entwicklungsprozess. Muss ggf. noch ersetzt/debugged werden.
-        /// </summary>
-        /// <param name="_inputAction"></param>
+        #region Save / Load Binding Override
         private static void SaveKeyBindingOverride(InputAction _inputAction)
         {
             for (int i = 0; i < _inputAction.bindings.Count; i++)
             {
-                //Unity hat sowohl einen 'Default-Path' fuer die gesetzten InputActions-Values im 'InputAction-Asset', als auch einen Pfad fuer 'Overrides' waehrend der Runtime.
+                //Possible input system paths: 'path', 'effectivePath' and 'overridePath' during Runtime in the 'InputAction-Asset'.
                 PlayerPrefs.SetString(_inputAction.actionMap + _inputAction.name + i, _inputAction.bindings[i].overridePath);
             }
         }
 
-        /// <summary>
-        /// Methode zum Laden der KeyRebinding-Aenderungen im Entwicklungsprozess. Muss ggf. noch ersetzt/debugged werden.
-        /// Public, da es vom 'Rebind-UI' aufgerufen wird.
-        /// </summary>
-        /// <param name="_actionName"></param>
-        public static void LoadKeyBindingOverride(string _actionName)
+        internal static void LoadKeyBindingOverride(string _actionName)
         {
             if (m_playerInputActions == null)
                 m_playerInputActions = new PlayerInputActions();
@@ -245,9 +245,10 @@ namespace ThreeDeePongProto.Shared.InputActions
                     inputAction.ApplyBindingOverride(i, PlayerPrefs.GetString(inputAction.actionMap + inputAction.name + i));
             }
         }
+        #endregion
 
         /// <summary>
-        /// Fuer jedes Binding, muss eine 'Remove-Override-Binding-Extension-Function' aufgerufen werden.
+        /// Each binding requires getting called by an own 'Remove-Override-Binding-Extension-Function'.
         /// </summary>
         /// <param name="_actionName"></param>
         /// <param name="_bindingIndex"></param>

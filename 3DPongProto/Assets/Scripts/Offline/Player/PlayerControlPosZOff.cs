@@ -83,20 +83,21 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         protected virtual void MovePaddleByPlayer()
         {
             m_rbPosition = -m_rigidbody.transform.localPosition;
+
             switch (m_playerIDData.PlayerId)
             {
                 case 1:
                 {
-                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActions.SideMovePosZP2.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMovePosZP2.ReadValue<Vector2>().y);  //Player2 ID
+                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActions.SideMovePosZP2.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMovePosZP2.ReadValue<Vector2>().y).normalized;  //Player2 ID
                     break;
                 }
                 case 3:
                 {
-                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActions.SideMovePosZP4.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMovePosZP4.ReadValue<Vector2>().y);  //Player4 ID
+                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActions.SideMovePosZP4.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMovePosZP4.ReadValue<Vector2>().y).normalized;  //Player4 ID
                     break;
                 }
                 default:
-                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActions.SideMovePosZP2.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMovePosZP2.ReadValue<Vector2>().y);  //Player2 ID
+                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActions.SideMovePosZP2.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMovePosZP2.ReadValue<Vector2>().y).normalized;  //Player2 ID
                     break;
             }
 
