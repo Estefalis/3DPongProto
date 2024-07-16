@@ -7,13 +7,12 @@ namespace ThreeDeePongProto.Shared.InputActions
 {
     public class KeybindingSettings : MonoBehaviour
     {
-        [SerializeField] private InputActionReference m_InputActionReference;   //Befindet sich auf dem ScriptableObject.
-                                                                                //Exkludieren der Maus beim Rebind-Prozess.
-        [SerializeField] private bool m_excludeMouse = true;
+        [SerializeField] private InputActionReference m_InputActionReference; //ScriptableObject.
 
         //Einstellungen und DisplayOptionen im Inspector, die fuer den Rebind-Prozess erforderlich sind. Inklusive der UI-Elemente.
         [Range(0f, 10), SerializeField] private int m_selectedBinding;
         [SerializeField] private InputBinding.DisplayStringOptions m_displayStringOptions;
+        [SerializeField] private bool m_excludeMouse = true; //Exclude the Mouse on the Rebind-Prozess.
 
         [Header("Binding-Informations - DON'T CHANGE ANYTHING HERE!")]
         [SerializeField] private InputBinding m_inputBinding;
@@ -73,9 +72,11 @@ namespace ThreeDeePongProto.Shared.InputActions
             if (m_InputActionReference.action != null)
                 m_actionName = m_InputActionReference.action.name;
 
+            m_selectedBinding = Mathf.Clamp(m_selectedBinding, 0, m_InputActionReference.action.bindings.Count);
+
             if (this.gameObject.activeInHierarchy)
             {
-                if (m_InputActionReference.action.bindings.Count > m_selectedBinding)
+                if (m_InputActionReference.action.bindings.Count > m_selectedBinding)   //prevents ArgumentOutOfRangeException.
                 {
                     m_inputBinding = m_InputActionReference.action.bindings[m_selectedBinding];
                     m_bindingIndex = m_selectedBinding;
