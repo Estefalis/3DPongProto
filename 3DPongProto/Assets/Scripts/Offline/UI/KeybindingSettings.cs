@@ -108,6 +108,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             if (gameObject.activeInHierarchy && m_buttonImage != null)
                 m_buttonImage.sprite = InputManager.GetControllerIcons(m_buttonControlScheme, m_inputBinding.effectivePath);
+            //m_inputBinding.effectivePath or m_InputActionReference.action.bindings[m_bindingIndex].effectivePath
         }
 
         /// <summary>
