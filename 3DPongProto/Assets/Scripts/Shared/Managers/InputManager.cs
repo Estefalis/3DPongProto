@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using TMPro;
+using ThreeDeePongProto.Offline.UI;
 
 public enum EButtonControlScheme
 {
@@ -17,7 +18,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         //Reference to the PlayerAction-InputAsset.
         public static PlayerInputActions m_playerInputActions;
 
-        #region Change Action Maps Member
+        #region Change Action Maps
         //ActionEvent to switch between ActionMaps within the new InputActionAsset.
         public static event Action<InputActionMap> m_changeActiveActionMap;
 
@@ -25,13 +26,19 @@ namespace ThreeDeePongProto.Shared.InputActions
         private string m_currentSceneName;
         #endregion
 
-        #region KeyRebinding Member
+        #region KeyRebinding
         public static event Action m_RebindComplete;
         public static event Action m_RebindCanceled;
         public static event Action<InputAction, int> m_rebindStarted;
+        private static event Func<EButtonControlScheme, string, Sprite> m_extractButtonImage;
 
         private const string m_cancelWithKeyboardButton = "<Keyboard>/escape";
         private const string m_cancelWithGamepadButton = "<Gamepad>/buttonEast";
+
+        #region KeyBinding Icons
+        [SerializeField] public GamepadIcons m_pS;
+        [SerializeField] public GamepadIcons m_xbox;
+        #endregion
         #endregion
 
         /// <summary>
@@ -43,18 +50,55 @@ namespace ThreeDeePongProto.Shared.InputActions
             {
                 m_playerInputActions = new PlayerInputActions();
             }
+            //Alternative: m_playerInputActions ??= new PlayerInputActions();
         }
 
         private void OnEnable()
         {
             SceneManager.sceneLoaded += OnSceneFinishedLoading;
+            m_extractButtonImage += ExtractImage;
             //InputSystem.onDeviceChange += OnDeviceChange;
         }
 
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneFinishedLoading;
+            m_extractButtonImage -= ExtractImage;
             //InputSystem.onDeviceChange -= OnDeviceChange;
+        }
+
+        public static Sprite GetControllerIcons(EButtonControlScheme _controlScheme, string _controlPath)
+        {
+            switch (_controlScheme)
+            {
+                case EButtonControlScheme.KeyboardMouse:
+                { break; }
+                case EButtonControlScheme.Gamepad:
+                {
+                    Sprite buttonImage = m_extractButtonImage?.Invoke(_controlScheme, _controlPath);
+                    return buttonImage;
+                }
+                default:
+                { break; }
+            }
+            return null;
+        }
+
+        private Sprite ExtractImage(EButtonControlScheme _controlScheme, string _controlPath)
+        {
+            //Debug.Log($"Scheme: {_controlScheme} - Path: {_controlPath}"); //WORKED!
+            //Sprite buttonImage = null;
+            switch (_controlScheme)
+            {
+                case EButtonControlScheme.KeyboardMouse:
+                { break; }
+                case EButtonControlScheme.Gamepad:
+                {
+                    Sprite buttonImage = m_pS.GetSprite(_controlPath);
+                    return buttonImage;
+                }
+            }
+            return null;
         }
 
         #region Change Action Maps
@@ -92,7 +136,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// <param name="_actionMap"></param>
         public static void ToggleActionMaps(InputActionMap _actionMap)
         {
-            //If you try to change to the same ActionMap skip the rest.
+            //if you try to change to the same ActionMap skip the rest.
             if (_actionMap.enabled)
                 return;
 
@@ -197,7 +241,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
 
             #region Exclude controls from the rebind process
-            rebind.WithControlsExcluding("<Keyboard>/escape");  //Else ESC gets set on beyboard button rebinds.
+            rebind.WithControlsExcluding("<Keyboard>/escape");  //Else ESC gets set on keyboard button rebinds on cancellation.
             if (_excludeMouse)  //Ignore the mouse on redinds.
                 rebind.WithControlsExcluding("Mouse");
             #endregion
@@ -221,31 +265,6 @@ namespace ThreeDeePongProto.Shared.InputActions
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
             return inputAction.GetBindingDisplayString(_bindingIndex);
         }
-
-        #region Save / Load Binding Override
-        private static void SaveKeyBindingOverride(InputAction _inputAction)
-        {
-            for (int i = 0; i < _inputAction.bindings.Count; i++)
-            {
-                //Possible input system paths: 'path', 'effectivePath' and 'overridePath' during Runtime in the 'InputAction-Asset'.
-                PlayerPrefs.SetString(_inputAction.actionMap + _inputAction.name + i, _inputAction.bindings[i].overridePath);
-            }
-        }
-
-        internal static void LoadKeyBindingOverride(string _actionName)
-        {
-            if (m_playerInputActions == null)
-                m_playerInputActions = new PlayerInputActions();
-
-            InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
-
-            for (int i = 0; i < inputAction.bindings.Count; i++)
-            {
-                if (!string.IsNullOrEmpty(PlayerPrefs.GetString(inputAction.actionMap + inputAction.name + i)))
-                    inputAction.ApplyBindingOverride(i, PlayerPrefs.GetString(inputAction.actionMap + inputAction.name + i));
-            }
-        }
-        #endregion
 
         /// <summary>
         /// Each binding requires getting called by an own 'Remove-Override-Binding-Extension-Function'.
@@ -273,6 +292,31 @@ namespace ThreeDeePongProto.Shared.InputActions
                 inputAction.RemoveBindingOverride(_bindingIndex);
 
             SaveKeyBindingOverride(inputAction);
+        }
+        #endregion
+
+        #region Save / Load Binding Override
+        private static void SaveKeyBindingOverride(InputAction _inputAction)
+        {
+            for (int i = 0; i < _inputAction.bindings.Count; i++)
+            {
+                //Possible input system paths: 'path', 'effectivePath' and 'overridePath' during Runtime in the 'InputAction-Asset'.
+                PlayerPrefs.SetString(_inputAction.actionMap + _inputAction.name + i, _inputAction.bindings[i].overridePath);
+            }
+        }
+
+        internal static void LoadKeyBindingOverride(string _actionName)
+        {
+            if (m_playerInputActions == null)
+                m_playerInputActions = new PlayerInputActions();
+
+            InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
+
+            for (int i = 0; i < inputAction.bindings.Count; i++)
+            {
+                if (!string.IsNullOrEmpty(PlayerPrefs.GetString(inputAction.actionMap + inputAction.name + i)))
+                    inputAction.ApplyBindingOverride(i, PlayerPrefs.GetString(inputAction.actionMap + inputAction.name + i));
+            }
         }
         #endregion
     }

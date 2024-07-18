@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using ThreeDeePongProto.Offline.Settings;
 
 namespace ThreeDeePongProto.Shared.InputActions
 {
@@ -20,12 +21,15 @@ namespace ThreeDeePongProto.Shared.InputActions
         [Header("UI-Fields")]
         [SerializeField] private EButtonControlScheme m_buttonControlScheme;
         //[SerializeField] private TextMeshProUGUI m_actionTitle;
+        [SerializeField] private Image m_buttonImage;
         [SerializeField] private Button m_rebindButton;
         [SerializeField] private TextMeshProUGUI m_rebindText;
         [SerializeField] private Button m_resetButton;
 
         private int m_bindingIndex;
         private string m_actionName;
+
+        private ControlSettings m_controlSettings;
 
         /// <summary>
         /// Hinzufuegen von Listenern, die bei UI-Button-Klicks Methoden ausfuehren und einschreiben auf Actions des Rebind-Prozesses im InputManager, um das UI zu aktualisieren.
@@ -86,6 +90,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private void UpdateUI()
         {
+            //TODO: Update Button Image also.
             if (m_rebindText != null)
             {
                 //Set the buttonText.
@@ -100,6 +105,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                     //m_rebindText.text = m_InputActionReference.action.GetBindingDisplayString(m_bindingIndex);
                 }
             }
+
+            if (gameObject.activeInHierarchy && m_buttonImage != null)
+                m_buttonImage.sprite = InputManager.GetControllerIcons(m_buttonControlScheme, m_inputBinding.effectivePath);
         }
 
         /// <summary>
@@ -118,5 +126,5 @@ namespace ThreeDeePongProto.Shared.InputActions
             InputManager.ResetRebinding(m_actionName, m_bindingIndex);
             UpdateUI();
         }
-    } 
+    }
 }

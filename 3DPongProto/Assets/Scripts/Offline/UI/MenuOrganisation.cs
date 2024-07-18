@@ -23,6 +23,7 @@ namespace ThreeDeePongProto.Offline.UI
         [Header("Select First Elements")]
         [SerializeField] private Transform m_firstElement;
         private Stack<Transform> m_activeElement = new();
+        private Transform m_lastSelectedTransform;
 
         //Key-/Value-Pair component-arrays to set the selected GameObject for menu navigation with a dictionary.
         [SerializeField] private Transform[] m_keyTransform;
@@ -121,6 +122,9 @@ namespace ThreeDeePongProto.Offline.UI
         private void Update()
         {
             m_currentSelectedGO = EventSystem.current.currentSelectedGameObject;
+
+            if (m_currentSelectedGO == null && InputManager.m_playerInputActions.UI.enabled)
+                SetSelectedElement(m_lastSelectedTransform);
         }
 
         private void EnableMenuNavigation(InputAction.CallbackContext _callbackContext)
@@ -257,7 +261,6 @@ namespace ThreeDeePongProto.Offline.UI
             //Action to reset timescale inside the Matchmanager. And other possible settings on returning to the main menu scene.
             OnLoadMainScene?.Invoke();
             SceneManager.LoadScene(m_startMenuScene);
-            //TODO: Also disconnect from Network in Online-Seasons.
         }
 
         public void QuitGameIngame()
@@ -307,6 +310,7 @@ namespace ThreeDeePongProto.Offline.UI
         /// <param name="_activeTransform"></param>
         protected void SetSelectedElement(Transform _activeTransform)
         {
+            m_lastSelectedTransform = _activeTransform; //Update reselects first selected Button once, if none is selected anymore.
             GameObject selectElement = m_selectedElement[_activeTransform];
             m_eventSystem.SetSelectedGameObject(selectElement);
         }
