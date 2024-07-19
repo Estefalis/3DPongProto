@@ -30,7 +30,6 @@ namespace ThreeDeePongProto.Shared.InputActions
         public static event Action m_RebindComplete;
         public static event Action m_RebindCanceled;
         public static event Action<InputAction, int> m_rebindStarted;
-        private static event Func<EButtonControlScheme, string, Sprite> m_extractButtonImage;
 
         private const string m_cancelWithKeyboardButton = "<Keyboard>/escape";
         private const string m_cancelWithGamepadButton = "<Gamepad>/buttonEast";
@@ -38,6 +37,8 @@ namespace ThreeDeePongProto.Shared.InputActions
         #region KeyBinding Icons
         [SerializeField] public GamepadIcons m_pS;
         [SerializeField] public GamepadIcons m_xbox;
+        private static event Func<EButtonControlScheme, string, Sprite> m_extractButtonImage;
+        public static event Action<InputAction, int, string> m_refreshRebindIcon;
         #endregion
         #endregion
 
@@ -46,11 +47,11 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void Awake()
         {
+            //Alternative: m_playerInputActions ??= new PlayerInputActions();
             if (m_playerInputActions == null)
             {
                 m_playerInputActions = new PlayerInputActions();
             }
-            //Alternative: m_playerInputActions ??= new PlayerInputActions();
         }
 
         private void OnEnable()
@@ -203,7 +204,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             //assignment of the OnComplete'operation' delegate.
             rebind.OnComplete(operation =>
             {
-                _actionToRebind.Enable();   //Was disabled, after conflicts with the later implemented 'ToggleActionMaps'-Method.
+                _actionToRebind.Enable();
                 operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
                 if (_allCompositeParts) //If the Index has compositeParts/children.
@@ -217,12 +218,13 @@ namespace ThreeDeePongProto.Shared.InputActions
                 SaveKeyBindingOverride(_actionToRebind);    //TODO: replace this with the save system interface.
 
                 m_RebindComplete?.Invoke(); //Invoke on finished rebinding.
+                m_refreshRebindIcon?.Invoke(_actionToRebind, _bindingIndex, _actionToRebind.bindings[_bindingIndex].effectivePath);
             });
 
             //assignment of the OnCancel'operation' delegate.
             rebind.OnCancel(operation =>
             {
-                _actionToRebind.Enable(); //Was disabled, after conflicts with the later implemented 'ToggleActionMaps'-Method.
+                _actionToRebind.Enable();
                 operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
                 m_RebindCanceled?.Invoke(); //Invoke on canceled rebinding.
@@ -234,8 +236,10 @@ namespace ThreeDeePongProto.Shared.InputActions
                     rebind.WithCancelingThrough(m_cancelWithKeyboardButton);
                     break;
                 case EButtonControlScheme.Gamepad:
+                {
                     rebind.WithCancelingThrough(m_cancelWithGamepadButton);
                     break;
+                }
                 default:
                     break;
             }

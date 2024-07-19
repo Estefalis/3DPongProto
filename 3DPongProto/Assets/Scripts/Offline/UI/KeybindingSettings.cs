@@ -1,8 +1,10 @@
+using System;
+using System.Collections.Generic;
+using ThreeDeePongProto.Offline.Settings;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using ThreeDeePongProto.Offline.Settings;
 
 namespace ThreeDeePongProto.Shared.InputActions
 {
@@ -30,12 +32,15 @@ namespace ThreeDeePongProto.Shared.InputActions
         private string m_actionName;
 
         private ControlSettings m_controlSettings;
+        Dictionary<Button, Image> m_rebindImages = new Dictionary<Button, Image>();
 
         /// <summary>
         /// Hinzufuegen von Listenern, die bei UI-Button-Klicks Methoden ausfuehren und einschreiben auf Actions des Rebind-Prozesses im InputManager, um das UI zu aktualisieren.
         /// </summary>
         private void OnEnable()
         {
+            m_rebindImages.Add(m_rebindButton, m_buttonImage);
+
             m_rebindButton.onClick.AddListener(() => ExecuteKeyRebind());
             m_resetButton.onClick.AddListener(() => ResetRebinding());
 
@@ -48,6 +53,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             InputManager.m_RebindComplete += UpdateUI;
             InputManager.m_RebindCanceled += UpdateUI;
+            InputManager.m_refreshRebindIcon += UpdateIcon;
         }
 
         /// <summary>
@@ -57,6 +63,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         {
             InputManager.m_RebindComplete -= UpdateUI;
             InputManager.m_RebindCanceled -= UpdateUI;
+            InputManager.m_refreshRebindIcon -= UpdateIcon;
         }
 
         private void OnValidate()
@@ -98,17 +105,32 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     //m_rebindText.text = InputControlPath.ToHumanReadableString(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, InputControlPath.HumanReadableStringOptions.OmitDevice);
                     m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex);
+                    //m_rebindText.text = m_InputActionReference.action.GetBindingDisplayString(m_bindingIndex);
                 }
                 else
                 {
                     m_rebindText.text = InputControlPath.ToHumanReadableString(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, InputControlPath.HumanReadableStringOptions.OmitDevice);
+                    //m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex);
                     //m_rebindText.text = m_InputActionReference.action.GetBindingDisplayString(m_bindingIndex);
                 }
             }
 
             if (gameObject.activeInHierarchy && m_buttonImage != null)
-                m_buttonImage.sprite = InputManager.GetControllerIcons(m_buttonControlScheme, m_inputBinding.effectivePath);
-            //m_inputBinding.effectivePath or m_InputActionReference.action.bindings[m_bindingIndex].effectivePath
+            {
+                UpdatePadSprite(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath);
+            }
+        }
+
+        private void UpdatePadSprite(string _effectivePath)
+        {
+            Image rebindImage = m_rebindImages[m_rebindButton];
+            Sprite padSprite = InputManager.GetControllerIcons(m_buttonControlScheme, _effectivePath);
+            rebindImage.sprite = padSprite;
+        }
+
+        private void UpdateIcon(InputAction _inputAction, int _bindingIndex, string _effectivePath)
+        {
+            Debug.Log($"IA {_inputAction} - bIndex {_bindingIndex} - eString {_effectivePath}");
         }
 
         /// <summary>
