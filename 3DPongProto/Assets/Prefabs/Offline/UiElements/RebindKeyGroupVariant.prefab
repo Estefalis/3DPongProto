@@ -150,7 +150,7 @@ PrefabInstance:
     - target: {fileID: 2509531060579204855, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
       propertyPath: m_Name
-      value: MoveLeftKeyGroup
+      value: RebindKeyGroupVariant
       objectReference: {fileID: 0}
     - target: {fileID: 2509531061419505452, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
@@ -236,6 +236,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5684215142808822363, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_Name
+      value: PadImageML
       objectReference: {fileID: 0}
     - target: {fileID: 8509824160315786169, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}

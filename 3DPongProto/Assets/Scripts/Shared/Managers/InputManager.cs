@@ -38,7 +38,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         [SerializeField] public GamepadIcons m_pS;
         [SerializeField] public GamepadIcons m_xbox;
         private static event Func<EButtonControlScheme, string, Sprite> m_extractButtonImage;
-        public static event Action<InputAction, int, string> m_refreshRebindIcon;
+        public static event Action<string, Transform> m_refreshRebindIcon;
         #endregion
         #endregion
 
@@ -88,7 +88,6 @@ namespace ThreeDeePongProto.Shared.InputActions
         private Sprite ExtractImage(EButtonControlScheme _controlScheme, string _controlPath)
         {
             //Debug.Log($"Scheme: {_controlScheme} - Path: {_controlPath}"); //WORKED!
-            //Sprite buttonImage = null;
             switch (_controlScheme)
             {
                 case EButtonControlScheme.KeyboardMouse:
@@ -99,6 +98,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     return buttonImage;
                 }
             }
+
             return null;
         }
 
@@ -152,7 +152,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region KeyRebinding
-        public static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, bool _excludeMouse, EButtonControlScheme _ebuttonControlScheme)
+        public static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, bool _excludeMouse, EButtonControlScheme _ebuttonControlScheme, Transform _startTransform)
         {
             //Look up the action name of the inputAction in the generated C#-Script, not the Scriptable Object.
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
@@ -174,11 +174,11 @@ namespace ThreeDeePongProto.Shared.InputActions
                 //isPartOfComposite: Corresponds to WASD's W for example. (Childs/Binding Properties of the Composite.)
                 if (firstParentSubIndex < inputAction.bindings.Count && inputAction.bindings[firstParentSubIndex].isPartOfComposite)
                 {
-                    ExecuteKeyRebind(inputAction, firstParentSubIndex, _statusText, true, _excludeMouse, _ebuttonControlScheme);
+                    ExecuteKeyRebind(inputAction, firstParentSubIndex, _statusText, true, _excludeMouse, _ebuttonControlScheme, _startTransform);
                 }
             }
             else
-                ExecuteKeyRebind(inputAction, _bindingIndex, _statusText, false, _excludeMouse, _ebuttonControlScheme);
+                ExecuteKeyRebind(inputAction, _bindingIndex, _statusText, false, _excludeMouse, _ebuttonControlScheme, _startTransform);
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// <param name="_statusText"></param>
         /// <param name="_allCompositeParts"></param>
         /// <param name="_excludeMouse"></param>
-        private static void ExecuteKeyRebind(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI _statusText, bool _allCompositeParts, bool _excludeMouse, EButtonControlScheme _ebuttonControlScheme)
+        private static void ExecuteKeyRebind(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI _statusText, bool _allCompositeParts, bool _excludeMouse, EButtonControlScheme _ebuttonControlScheme, Transform _startTransform)
         {
             if (_actionToRebind == null || _bindingIndex < 0)
                 return;
@@ -200,6 +200,9 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             //Instance creation for the Rebind-Action-Process.
             InputActionRebindingExtensions.RebindingOperation rebind = _actionToRebind.PerformInteractiveRebinding(_bindingIndex);
+#if UNITY_EDITOR
+            Debug.Log($"ExpectedControlType: {_actionToRebind.expectedControlType}");
+#endif
 
             //assignment of the OnComplete'operation' delegate.
             rebind.OnComplete(operation =>
@@ -212,13 +215,13 @@ namespace ThreeDeePongProto.Shared.InputActions
                     var nextBindingIndex = _bindingIndex + 1;
 
                     if (nextBindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[nextBindingIndex].isPartOfComposite)
-                        ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _allCompositeParts, _excludeMouse, _ebuttonControlScheme);
+                        ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _allCompositeParts, _excludeMouse, _ebuttonControlScheme, _startTransform);
                 }
 
                 SaveKeyBindingOverride(_actionToRebind);    //TODO: replace this with the save system interface.
 
                 m_RebindComplete?.Invoke(); //Invoke on finished rebinding.
-                m_refreshRebindIcon?.Invoke(_actionToRebind, _bindingIndex, _actionToRebind.bindings[_bindingIndex].effectivePath);
+                m_refreshRebindIcon?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _startTransform);
             });
 
             //assignment of the OnCancel'operation' delegate.

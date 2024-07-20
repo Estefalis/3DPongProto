@@ -12,7 +12,6 @@ namespace ThreeDeePongProto.Shared.InputActions
     {
         [SerializeField] private InputActionReference m_InputActionReference; //ScriptableObject.
 
-        //Einstellungen und DisplayOptionen im Inspector, die fuer den Rebind-Prozess erforderlich sind. Inklusive der UI-Elemente.
         [Range(0f, 10), SerializeField] private int m_selectedBinding;
         [SerializeField] private InputBinding.DisplayStringOptions m_displayStringOptions;
         [SerializeField] private bool m_excludeMouse = true; //Exclude the Mouse on the Rebind-Prozess.
@@ -30,16 +29,15 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private int m_bindingIndex;
         private string m_actionName;
+        private Transform m_initialRebindTransform;
 
         private ControlSettings m_controlSettings;
-        Dictionary<Button, Image> m_rebindImages = new Dictionary<Button, Image>();
+        Dictionary<Transform, Image> m_rebindImages = new Dictionary<Transform, Image>();
 
-        /// <summary>
-        /// Hinzufuegen von Listenern, die bei UI-Button-Klicks Methoden ausfuehren und einschreiben auf Actions des Rebind-Prozesses im InputManager, um das UI zu aktualisieren.
-        /// </summary>
         private void OnEnable()
         {
-            m_rebindImages.Add(m_rebindButton, m_buttonImage);
+            m_rebindImages.Clear(); //Clears on another script start.
+            m_rebindImages.Add(transform, m_buttonImage);
 
             m_rebindButton.onClick.AddListener(() => ExecuteKeyRebind());
             m_resetButton.onClick.AddListener(() => ResetRebinding());
@@ -56,9 +54,6 @@ namespace ThreeDeePongProto.Shared.InputActions
             InputManager.m_refreshRebindIcon += UpdateIcon;
         }
 
-        /// <summary>
-        /// Ausschreiben aus Actions des Rebind-Prozesses im InputManager.
-        /// </summary>
         private void OnDisable()
         {
             InputManager.m_RebindComplete -= UpdateUI;
@@ -75,9 +70,6 @@ namespace ThreeDeePongProto.Shared.InputActions
             UpdateUI();
         }
 
-        /// <summary>
-        /// Methode zur Aktualisierung der InputBindings und Indices der m_InputActionReference, sobald die UI-Elemente in der Hierarchie aktiv sind.
-        /// </summary>
         private void GetBindingInfomation()
         {
             if (m_InputActionReference.action != null)
@@ -97,10 +89,8 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private void UpdateUI()
         {
-            //TODO: Update Button Image also.
             if (m_rebindText != null)
             {
-                //Set the buttonText.
                 if (Application.isPlaying)
                 {
                     //m_rebindText.text = InputControlPath.ToHumanReadableString(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, InputControlPath.HumanReadableStringOptions.OmitDevice);
@@ -123,14 +113,13 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private void UpdatePadSprite(string _effectivePath)
         {
-            Image rebindImage = m_rebindImages[m_rebindButton];
-            Sprite padSprite = InputManager.GetControllerIcons(m_buttonControlScheme, _effectivePath);
-            rebindImage.sprite = padSprite;
+            m_buttonImage.sprite = InputManager.GetControllerIcons(m_buttonControlScheme, _effectivePath);
         }
 
-        private void UpdateIcon(InputAction _inputAction, int _bindingIndex, string _effectivePath)
+        private void UpdateIcon(string _effectivePath, Transform _startTransform)
         {
-            Debug.Log($"IA {_inputAction} - bIndex {_bindingIndex} - eString {_effectivePath}");
+            if (transform == m_initialRebindTransform)
+                UpdatePadSprite(_effectivePath);
         }
 
         /// <summary>
@@ -138,7 +127,8 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ExecuteKeyRebind()
         {
-            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse, m_buttonControlScheme);
+            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse, m_buttonControlScheme, transform);
+            m_initialRebindTransform = transform;
         }
 
         /// <summary>
@@ -146,6 +136,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ResetRebinding()
         {
+            m_initialRebindTransform = null;
             InputManager.ResetRebinding(m_actionName, m_bindingIndex);
             UpdateUI();
         }
