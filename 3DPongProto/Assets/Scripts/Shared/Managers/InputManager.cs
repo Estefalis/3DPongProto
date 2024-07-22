@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using TMPro;
 using ThreeDeePongProto.Offline.UI;
+using UnityEngine.UI;
 
 public enum EButtonControlScheme
 {
@@ -27,8 +28,8 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region KeyRebinding
-        public static event Action m_RebindComplete;
-        public static event Action m_RebindCanceled;
+        public static event Action<string, Image> m_RebindComplete;
+        public static event Action<string, Image> m_RebindCanceled;
         public static event Action<InputAction, int> m_rebindStarted;
 
         private const string m_cancelWithKeyboardButton = "<Keyboard>/escape";
@@ -38,7 +39,6 @@ namespace ThreeDeePongProto.Shared.InputActions
         [SerializeField] public GamepadIcons m_pS;
         [SerializeField] public GamepadIcons m_xbox;
         private static event Func<EButtonControlScheme, string, Sprite> m_extractButtonImage;
-        public static event Action<string, Transform> m_refreshRebindIcon;
         #endregion
         #endregion
 
@@ -152,7 +152,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region KeyRebinding
-        public static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, bool _excludeMouse, EButtonControlScheme _ebuttonControlScheme, Transform _startTransform)
+        public static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, bool _excludeMouse, EButtonControlScheme _ebuttonControlScheme, Image _targetImage)
         {
             //Look up the action name of the inputAction in the generated C#-Script, not the Scriptable Object.
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
@@ -174,11 +174,11 @@ namespace ThreeDeePongProto.Shared.InputActions
                 //isPartOfComposite: Corresponds to WASD's W for example. (Childs/Binding Properties of the Composite.)
                 if (firstParentSubIndex < inputAction.bindings.Count && inputAction.bindings[firstParentSubIndex].isPartOfComposite)
                 {
-                    ExecuteKeyRebind(inputAction, firstParentSubIndex, _statusText, true, _excludeMouse, _ebuttonControlScheme, _startTransform);
+                    ExecuteKeyRebind(inputAction, firstParentSubIndex, _statusText, true, _excludeMouse, _ebuttonControlScheme, _targetImage);
                 }
             }
             else
-                ExecuteKeyRebind(inputAction, _bindingIndex, _statusText, false, _excludeMouse, _ebuttonControlScheme, _startTransform);
+                ExecuteKeyRebind(inputAction, _bindingIndex, _statusText, false, _excludeMouse, _ebuttonControlScheme, _targetImage);
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// <param name="_statusText"></param>
         /// <param name="_allCompositeParts"></param>
         /// <param name="_excludeMouse"></param>
-        private static void ExecuteKeyRebind(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI _statusText, bool _allCompositeParts, bool _excludeMouse, EButtonControlScheme _ebuttonControlScheme, Transform _startTransform)
+        private static void ExecuteKeyRebind(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI _statusText, bool _allCompositeParts, bool _excludeMouse, EButtonControlScheme _ebuttonControlScheme, Image _targetImage)
         {
             if (_actionToRebind == null || _bindingIndex < 0)
                 return;
@@ -215,13 +215,13 @@ namespace ThreeDeePongProto.Shared.InputActions
                     var nextBindingIndex = _bindingIndex + 1;
 
                     if (nextBindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[nextBindingIndex].isPartOfComposite)
-                        ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _allCompositeParts, _excludeMouse, _ebuttonControlScheme, _startTransform);
+                        ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _allCompositeParts, _excludeMouse, _ebuttonControlScheme, _targetImage);
                 }
 
                 SaveKeyBindingOverride(_actionToRebind);    //TODO: replace this with the save system interface.
 
-                m_RebindComplete?.Invoke(); //Invoke on finished rebinding.
-                m_refreshRebindIcon?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _startTransform);
+                //m_refreshRebindIcon?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _targetImage);
+                m_RebindComplete?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _targetImage); //Invoke on finished rebinding.
             });
 
             //assignment of the OnCancel'operation' delegate.
@@ -230,7 +230,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 _actionToRebind.Enable();
                 operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
-                m_RebindCanceled?.Invoke(); //Invoke on canceled rebinding.
+                m_RebindCanceled?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _targetImage); //Invoke on canceled rebinding.
             });
 
             switch (_ebuttonControlScheme)  //ONLY ONE cancelButton gets recognized in code at a time.
