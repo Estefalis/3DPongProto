@@ -74,7 +74,7 @@ namespace ThreeDeePongProto.Offline.UI
         private readonly string m_fieldSettingsPath = "/SaveData/FieldSettings";
         private readonly string m_volumeFileName = "/Volume";
         private readonly string m_graphicFileName = "/Graphic";
-        private readonly string m_controlFileName = "/Control";
+        private readonly string m_controlFileName = "/ControlPlayer";
         private readonly string m_matchFileName = "/Match";
         private readonly string m_fileFormat = ".json";
 
@@ -202,7 +202,7 @@ namespace ThreeDeePongProto.Offline.UI
             {
                 if (m_controlUIStatesEP[i] != null)
                 {
-                    ControlUISettingsStates controlUISettingsStates = m_persistentData.LoadData<ControlUISettingsStates>(m_settingStatesFolderPath + $"{i}", m_controlFileName, m_fileFormat, m_encryptionEnabled);
+                    ControlUISettingsStates controlUISettingsStates = m_persistentData.LoadData<ControlUISettingsStates>(m_settingStatesFolderPath, m_controlFileName + $"{i}", m_fileFormat, m_encryptionEnabled);
 
                     m_controlUIStatesEP[i].InvertXAxis = controlUISettingsStates.InvertXAxis;
                     m_controlUIStatesEP[i].InvertXAxis = controlUISettingsStates.InvertYAxis;
@@ -215,7 +215,7 @@ namespace ThreeDeePongProto.Offline.UI
             {
                 if (m_controlUIValuesEP[i] != null)
                 {
-                    ControlUISettingsValues controlUISettingsValues = m_persistentData.LoadData<ControlUISettingsValues>(m_settingsValuesFolderPath + $"{i}", m_controlFileName, m_fileFormat, m_encryptionEnabled);
+                    ControlUISettingsValues controlUISettingsValues = m_persistentData.LoadData<ControlUISettingsValues>(m_settingsValuesFolderPath, m_controlFileName + $"{i}", m_fileFormat, m_encryptionEnabled);
 
                     m_controlUIValuesEP[i].LastXMoveSpeed = controlUISettingsValues.LastXMoveSpeed;
                     m_controlUIValuesEP[i].LastYRotSpeed = controlUISettingsValues.LastYRotSpeed;

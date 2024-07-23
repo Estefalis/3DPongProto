@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -7,13 +8,17 @@ namespace ThreeDeePongProto.Offline.Settings
 {
     public class ControlSettings : MonoBehaviour
     {
+        #region Content Views
         [Header("Content Views")]
         [SerializeField] private Button[] m_playerButtons;
         [SerializeField] private Transform[] m_contentSubTransforms;
         [SerializeField, Range(0.1f, 0.9f)] private float m_reducedAlphaValue = 0.5f;
         [SerializeField, Range(0.5f, 1f)] private float m_maxAlphaValue = 1f;
         private int m_currentViewIndex;
+        public static event Action<int> PlayerViewIndex;
+        #endregion
 
+        #region Axis Inversion
         [Header("Axis Inversion")]
         [SerializeField] private Toggle[] m_playerXRotInvertToggles;
         [SerializeField] private Toggle[] m_playerYRotInvertToggles;
@@ -21,7 +26,9 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private bool[] m_xRotInvertDefaults;
         [SerializeField] private bool[] m_yRotInvertDefaults;
         [Space]
+        #endregion
 
+        #region Axis Sensitivity
         [Header("Axis Sensitivity")]
         [SerializeField] private Slider[] m_MoveValueSliderXEP;
         [SerializeField] private Slider[] m_RotValueSliderYEP;
@@ -47,6 +54,7 @@ namespace ThreeDeePongProto.Offline.Settings
         //    new Dictionary<Toggle, Slider>()
         //};
         #endregion
+        #endregion
 
         #region Scriptable-References
         [Header("Scriptable Objects")]
@@ -57,7 +65,7 @@ namespace ThreeDeePongProto.Offline.Settings
         #region Serialization
         private readonly string m_settingsStatesFolderPath = "/SaveData/Settings-States";
         private readonly string m_settingsValuesFolderPath = "/SaveData/Settings-Values";
-        private readonly string m_controlFileName = "/Control";
+        private readonly string m_controlFileName = "/ControlPlayer";
         private readonly string m_fileFormat = ".json";
 
         private IPersistentData m_persistentData = new SerializingData();
@@ -102,12 +110,12 @@ namespace ThreeDeePongProto.Offline.Settings
 
             for (int i = 0; i < m_controlUIStatesEP.Length; i++)
             {
-                m_persistentData.SaveData(m_settingsStatesFolderPath + $"{i}", m_controlFileName, m_fileFormat, m_controlUIStatesEP[i], m_encryptionEnabled, true);
+                m_persistentData.SaveData(m_settingsStatesFolderPath, m_controlFileName + $"{i}", m_fileFormat, m_controlUIStatesEP[i], m_encryptionEnabled, true);
             }
 
             for (int j = 0; j < m_controlUIValuesEP.Length; j++)
             {
-                m_persistentData.SaveData(m_settingsValuesFolderPath + $"{j}", m_controlFileName, m_fileFormat, m_controlUIValuesEP[j], m_encryptionEnabled, true);
+                m_persistentData.SaveData(m_settingsValuesFolderPath, m_controlFileName + $"{j}", m_fileFormat, m_controlUIValuesEP[j], m_encryptionEnabled, true);
             }
         }
 
@@ -516,6 +524,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     tempAlpha1.a = m_maxAlphaValue;
                     m_playerButtons[i].image.color = tempAlpha1;
                     m_currentViewIndex = i; //Routes the Default Button Resets.
+                    PlayerViewIndex?.Invoke(m_currentViewIndex);
                 }
                 else
                 {

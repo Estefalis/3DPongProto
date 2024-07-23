@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace ThreeDeePongProto.Offline.UI
 {
@@ -24,11 +23,14 @@ namespace ThreeDeePongProto.Offline.UI
         public Sprite dpadRight;
         public Sprite leftStick;
         public Sprite leftStickX;
+        public Sprite leftStickY;
         public Sprite rightStick;
+        public Sprite rightStickX;
+        public Sprite rightStickY;
         public Sprite leftStickPress;
         public Sprite rightStickPress;
 
-        public Sprite GetSprite(string controlPath)
+        public Sprite GetGamepadSprite(string controlPath)
         {
             // From the input system, we get the path of the control on device. So we can just
             // map from that to the sprites we have for gamepads.
@@ -68,14 +70,53 @@ namespace ThreeDeePongProto.Offline.UI
                     return leftStick;
                 case "<Gamepad>/leftStick/x":
                     return leftStickX;
+                case "<Gamepad>/leftStick/y":
+                    return leftStickY;
                 case "<Gamepad>/rightStick":
                     return rightStick;
+                case "<Gamepad>/rightStick/x":
+                    return rightStickX;
+                case "<Gamepad>/rightStick/y":
+                    return rightStickY;
                 case "<Gamepad>/leftStickPress":
                     return leftStickPress;
                 case "<Gamepad>/rightStickPress":
                     return rightStickPress;
+                default:
+                    return null;
             }
-            return null;
+        }
+
+        public Sprite GetDualShockGamepadSprite(string controlPath)
+        {
+            // From the input system, we get the path of the control on device. So we can just
+            // map from that to the sprites we have for gamepads.
+            switch (controlPath)
+            {
+                case "<DualShockGamepad>/touchpadButton":
+                    return dpad;    //Until I get PS5 icons. If ever.
+                default:
+                    return null;
+            }
+        }
+
+        public Sprite GetDualSenseGamepadHIDSprite(string controlPath)
+        {
+            // From the input system, we get the path of the control on device. So we can just
+            // map from that to the sprites we have for gamepads.
+            switch (controlPath)
+            {
+                case "<DualSenseGamepadHID>/leftTriggerButton":
+                    return leftTrigger;
+                case "<DualSenseGamepadHID>/rightTriggerButton":
+                    return rightTrigger;
+                case "<DualSenseGamepadHID>/systemButton":
+                    return dpad;    //Until I get PS5 icons. If ever.
+                case "<DualSenseGamepadHID>/micButton":
+                    return dpad;    //Until I get PS5 icons. If ever.
+                default:
+                    return null;
+            }
         }
     }
 }

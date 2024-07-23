@@ -44,8 +44,14 @@ namespace ThreeDeePongProto.Offline.Highscores
         private int m_parentChildCount;
         //private float m_slotHeight;
 
+        #region Serialization
+        private readonly string m_highscoreListFolderPath = "/SaveData/Highscore Lists";
+        private readonly string m_highscoresFileName = "/Highscores";
+        private readonly string m_fileFormat = ".json";
+
         private IPersistentData m_persistentData = new SerializingData();
         [SerializeField] private bool m_encryptionEnabled = false;
+        #endregion
 
         private void Awake()
         {
@@ -119,7 +125,7 @@ namespace ThreeDeePongProto.Offline.Highscores
             foreach (Transform child in m_contentParentTransform)
                 Destroy(child.gameObject);
 
-            HighscoreList highscoreList = m_persistentData.LoadData<HighscoreList>($"/SaveData/Highscore Lists/{m_matchUIStates.LastRoundDdIndex}/{m_matchUIStates.LastMaxPointDdIndex}", "/Highscores", ".json", m_encryptionEnabled);
+            HighscoreList highscoreList = m_persistentData.LoadData<HighscoreList>($"{m_highscoreListFolderPath}/{m_matchUIStates.LastRoundDdIndex}/{m_matchUIStates.LastMaxPointDdIndex}", m_highscoresFileName, m_fileFormat, m_encryptionEnabled);
 
             if (highscoreList == null)
             {
@@ -147,7 +153,6 @@ namespace ThreeDeePongProto.Offline.Highscores
                     };
 
                     highscoreEntrySlot.Initialize(rankSuffix, highscores.SetMaxRounds, highscores.SetMaxPoints, highscores.TotalPoints, highscores.WinningPlayer, highscores.MatchWinDate, highscores.TotalPlaytime);
-
                 }
 
                 AddNewEntryDataSlot(highscoreList);
@@ -174,7 +179,7 @@ namespace ThreeDeePongProto.Offline.Highscores
             foreach (Transform child in m_contentParentTransform)
                 Destroy(child.gameObject);
 
-            HighscoreList highscoreList = m_persistentData.LoadData<HighscoreList>($"/SaveData/Highscore Lists/{_roundValue}/{_maxPointValue}", "/Highscores", ".json", m_encryptionEnabled);
+            HighscoreList highscoreList = m_persistentData.LoadData<HighscoreList>($"{m_highscoreListFolderPath}/{_roundValue}/{_maxPointValue}", m_highscoresFileName, m_fileFormat, m_encryptionEnabled);
 
             if (highscoreList == null)
             {
@@ -384,7 +389,7 @@ namespace ThreeDeePongProto.Offline.Highscores
             SortListByTotalPoints(_highscoreList);
 
             //(/Folder/SubFolder/RoundInfinityFolder on 0/MaxPointsInfinityFolder on 0, /FileName, .format)
-            m_persistentData.SaveData($"/SaveData/Highscore Lists/{m_roundsDropdown.value}/{m_maxPointsDropdown.value}", "/Highscores", ".json", _highscoreList, m_encryptionEnabled, true);
+            m_persistentData.SaveData($"{m_highscoreListFolderPath}/{m_roundsDropdown.value}/{m_maxPointsDropdown.value}", m_highscoresFileName, m_fileFormat, _highscoreList, m_encryptionEnabled, true);
         }
     }
 }

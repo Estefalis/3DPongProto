@@ -5,11 +5,14 @@ using UnityEngine.InputSystem;
 using TMPro;
 using ThreeDeePongProto.Offline.UI;
 using UnityEngine.UI;
+using ThreeDeePongProto.Offline.Settings;
 
 public enum EButtonControlScheme
 {
     KeyboardMouse,
-    Gamepad
+    Gamepad,
+    PSGamepad,
+    XBoxGamepad
 }
 
 namespace ThreeDeePongProto.Shared.InputActions
@@ -40,6 +43,16 @@ namespace ThreeDeePongProto.Shared.InputActions
         [SerializeField] public GamepadIcons m_xbox;
         private static event Func<EButtonControlScheme, string, Sprite> m_extractButtonImage;
         #endregion
+
+        #region Serialization
+        private static int m_playerSaveIndex;
+        private static readonly string m_keyBindingOverrideFolderPath = "/SaveData/KeyBindingOverride";
+        private static readonly string m_playerFileName = "/Player";
+        private static readonly string m_fileFormat = ".json";
+
+        private static IPersistentData m_persistentData = new SerializingData();
+        private static bool m_encryptionEnabled = false;
+        #endregion
         #endregion
 
         /// <summary>
@@ -58,6 +71,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         {
             SceneManager.sceneLoaded += OnSceneFinishedLoading;
             m_extractButtonImage += ExtractImage;
+            ControlSettings.PlayerViewIndex += PlayerIndex;
             //InputSystem.onDeviceChange += OnDeviceChange;
         }
 
@@ -65,24 +79,23 @@ namespace ThreeDeePongProto.Shared.InputActions
         {
             SceneManager.sceneLoaded -= OnSceneFinishedLoading;
             m_extractButtonImage -= ExtractImage;
+            ControlSettings.PlayerViewIndex -= PlayerIndex;
             //InputSystem.onDeviceChange -= OnDeviceChange;
         }
 
+        private static void PlayerIndex(int _playerIndex)
+        {
+            m_playerSaveIndex = _playerIndex;
+#if UNITY_EDITOR
+            //Debug.Log($"{m_playerSaveIndex}");
+#endif
+        }
+
+        #region Get and Return Sprites
         public static Sprite GetControllerIcons(EButtonControlScheme _controlScheme, string _controlPath)
         {
-            switch (_controlScheme)
-            {
-                case EButtonControlScheme.KeyboardMouse:
-                { break; }
-                case EButtonControlScheme.Gamepad:
-                {
-                    Sprite buttonImage = m_extractButtonImage?.Invoke(_controlScheme, _controlPath);
-                    return buttonImage;
-                }
-                default:
-                { break; }
-            }
-            return null;
+            Sprite buttonImage = m_extractButtonImage?.Invoke(_controlScheme, _controlPath);
+            return buttonImage;
         }
 
         private Sprite ExtractImage(EButtonControlScheme _controlScheme, string _controlPath)
@@ -91,16 +104,64 @@ namespace ThreeDeePongProto.Shared.InputActions
             switch (_controlScheme)
             {
                 case EButtonControlScheme.KeyboardMouse:
-                { break; }
-                case EButtonControlScheme.Gamepad:
                 {
-                    Sprite buttonImage = m_pS.GetSprite(_controlPath);
+                    break;
+                }
+                case EButtonControlScheme.Gamepad:
+                case EButtonControlScheme.PSGamepad:
+                {
+                    string wordBetween = GetWordInBetween(_controlPath, "<", ">");
+#if UNITY_EDITOR
+                    //Debug.Log($"Start-{wordBetween}-End");
+#endif
+                    switch (wordBetween)
+                    {
+                        case "Gamepad":
+                        {
+                            Sprite buttonImage = m_pS.GetGamepadSprite(_controlPath);
+                            return buttonImage;
+                        }
+                        case "DualShockGamepad":
+                        {
+                            Sprite buttonImage = m_pS.GetDualShockGamepadSprite(_controlPath);
+                            return buttonImage;
+
+                        }
+                        case "DualSenseGamepadHID":
+                        {
+                            Sprite buttonImage = m_pS.GetDualSenseGamepadHIDSprite(_controlPath);
+                            return buttonImage;
+                        }
+                    }
+                    break;
+                }
+                case EButtonControlScheme.XBoxGamepad:
+                {
+                    Sprite buttonImage = m_xbox.GetGamepadSprite(_controlPath);
+                    return buttonImage;
+                }
+                default:
+                {
+                    Sprite buttonImage = m_pS.GetGamepadSprite(_controlPath);
                     return buttonImage;
                 }
             }
 
             return null;
         }
+
+        public static string GetWordInBetween(string _source, string _firstArg, string _secondArg)
+        {
+            if (_source.Contains(_firstArg) && _source.Contains(_secondArg))
+            {
+                int start = _source.IndexOf(_firstArg, 0) + _firstArg.Length;
+                int end = _source.IndexOf(_secondArg, start);
+                return _source.Substring(start, end - start);
+            }
+
+            return "";
+        }
+        #endregion
 
         #region Change Action Maps
         private void OnSceneFinishedLoading(Scene _scene, LoadSceneMode _mode)
@@ -201,7 +262,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             //Instance creation for the Rebind-Action-Process.
             InputActionRebindingExtensions.RebindingOperation rebind = _actionToRebind.PerformInteractiveRebinding(_bindingIndex);
 #if UNITY_EDITOR
-            Debug.Log($"ExpectedControlType: {_actionToRebind.expectedControlType}");
+            //Debug.Log($"ExpectedControlType: {_actionToRebind.expectedControlType}");
 #endif
 
             //assignment of the OnComplete'operation' delegate.
@@ -219,7 +280,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 }
 
                 SaveKeyBindingOverride(_actionToRebind);    //TODO: replace this with the save system interface.
-
+                Debug.Log(_actionToRebind.bindings[_bindingIndex].effectivePath);
                 //m_refreshRebindIcon?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _targetImage);
                 m_RebindComplete?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _targetImage); //Invoke on finished rebinding.
             });
