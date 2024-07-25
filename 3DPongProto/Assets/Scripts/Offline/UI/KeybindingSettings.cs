@@ -28,9 +28,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         private int m_bindingIndex;
         private string m_actionName;
 
-        private event Action<string, Image> m_updateTargetComponent;
         private string m_targetPath;
-        private Transform m_initialTransform;
         private Image m_targetImage;
 
         private void OnEnable()
@@ -38,26 +36,22 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_rebindButton.onClick.AddListener(() => ExecuteKeyRebind());
             m_resetButton.onClick.AddListener(() => ResetRebinding());
 
+            InputManager.m_RebindComplete += UpdateUI;
+            InputManager.m_RebindCanceled += UpdateUI;
+
             if (m_InputActionReference != null)
             {
                 GetBindingInfomation();
                 InputManager.LoadKeyBindingOverride(m_actionName);  //MUST be below 'GetBindingInfomation()'! Else Exception!
-                UpdateInvolvedTargets(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_buttonImage);
+
                 UpdateUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_buttonImage);
             }
-
-            InputManager.m_RebindComplete += UpdateUI;
-            InputManager.m_RebindCanceled += UpdateUI;
-
-            m_updateTargetComponent += UpdateInvolvedTargets;
         }
 
         private void OnDisable()
         {
             InputManager.m_RebindComplete -= UpdateUI;
             InputManager.m_RebindCanceled -= UpdateUI;
-
-            m_updateTargetComponent -= UpdateInvolvedTargets;
         }
 
         //private void OnValidate()
@@ -88,6 +82,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private void UpdateUI(string _effectivePath, Image _targetImage)
         {
+
             if (m_rebindText != null)
             {
                 if (Application.isPlaying)
@@ -112,17 +107,12 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private void UpdatePadSprite(string _effectivePath, Image _targetImage)
         {
-            if (m_buttonImage == _targetImage)
+            if (m_buttonImage == _targetImage && m_buttonImage.gameObject.activeInHierarchy)
+            {
+                m_targetPath = _effectivePath;
+                m_targetImage = _targetImage;
                 m_buttonImage.sprite = InputManager.GetControllerIcons(m_buttonControlScheme, _effectivePath);
-        }
-
-        private void UpdateInvolvedTargets(string _effectivepath, Image _targetImage)
-        {
-#if UNITY_EDITOR
-            //Debug.Log($"Path: {_effectivepath} - Image: {_targetImage}");
-#endif
-            m_targetPath = _effectivepath;
-            m_targetImage = _targetImage;
+            }
         }
 
         /// <summary>
@@ -130,7 +120,6 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ExecuteKeyRebind()
         {
-            m_updateTargetComponent?.Invoke(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_targetImage);
             InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse, m_buttonControlScheme, m_targetImage);
         }
 

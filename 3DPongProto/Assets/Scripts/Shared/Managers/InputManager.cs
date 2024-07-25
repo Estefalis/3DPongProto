@@ -374,7 +374,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
         }
 
-        internal static InputBinding LoadKeyBindingOverride(string _actionName)
+        internal static void LoadKeyBindingOverride(string _actionName)
         {
             if (m_playerInputActions == null)
                 m_playerInputActions = new PlayerInputActions();
@@ -386,10 +386,10 @@ namespace ThreeDeePongProto.Shared.InputActions
                 if (!string.IsNullOrEmpty(PlayerPrefs.GetString(inputAction.actionMap + inputAction.name + i)))
                 {
                     inputAction.ApplyBindingOverride(i, PlayerPrefs.GetString(inputAction.actionMap + inputAction.name + i));
-                    return inputAction.bindings[i]/*.overridePath*/;
+                    //return inputAction.bindings[i]/*.overridePath*/;  //InputBinding
                 }
             }
-            return default;
+            //return default;
         }
         #endregion
     }
