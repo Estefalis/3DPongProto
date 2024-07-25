@@ -87,7 +87,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         {
             m_playerSaveIndex = _playerIndex;
 #if UNITY_EDITOR
-            //Debug.Log($"{m_playerSaveIndex}");
+            Debug.Log($"PlayerIndex {m_playerSaveIndex}");
 #endif
         }
 
@@ -280,8 +280,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 }
 
                 SaveKeyBindingOverride(_actionToRebind);    //TODO: replace this with the save system interface.
-                Debug.Log(_actionToRebind.bindings[_bindingIndex].effectivePath);
-                //m_refreshRebindIcon?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _targetImage);
+#if UNITY_EDITOR
+                //Debug.Log($"effectivePath: {_actionToRebind.bindings[_bindingIndex].effectivePath}");
+#endif
                 m_RebindComplete?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _targetImage); //Invoke on finished rebinding.
             });
 
@@ -373,7 +374,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
         }
 
-        internal static void LoadKeyBindingOverride(string _actionName)
+        internal static InputBinding LoadKeyBindingOverride(string _actionName)
         {
             if (m_playerInputActions == null)
                 m_playerInputActions = new PlayerInputActions();
@@ -383,8 +384,12 @@ namespace ThreeDeePongProto.Shared.InputActions
             for (int i = 0; i < inputAction.bindings.Count; i++)
             {
                 if (!string.IsNullOrEmpty(PlayerPrefs.GetString(inputAction.actionMap + inputAction.name + i)))
+                {
                     inputAction.ApplyBindingOverride(i, PlayerPrefs.GetString(inputAction.actionMap + inputAction.name + i));
+                    return inputAction.bindings[i]/*.overridePath*/;
+                }
             }
+            return default;
         }
         #endregion
     }

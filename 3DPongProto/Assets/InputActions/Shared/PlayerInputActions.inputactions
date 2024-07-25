@@ -6,7 +6,7 @@
             "id": "526c9e06-ccf1-4cdc-8f6c-76780cdabe0a",
             "actions": [
                 {
-                    "name": "SideMoveNegZP1",
+                    "name": "SideMovementNegZP1",
                     "type": "Value",
                     "id": "7c6a3161-3337-423d-8b1e-29133147bf87",
                     "expectedControlType": "Vector2",
@@ -15,7 +15,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "SideMoveNegZP3",
+                    "name": "SideMovementNegZP3",
                     "type": "Value",
                     "id": "00221cf1-9ad0-48de-9eaa-41a40d602e9c",
                     "expectedControlType": "Vector2",
@@ -24,7 +24,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "SideMovePosZP2",
+                    "name": "SideMovementPosZP2",
                     "type": "Value",
                     "id": "bda9284c-275a-4ee4-a6f6-f64b8000ffe8",
                     "expectedControlType": "Vector2",
@@ -33,7 +33,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "SideMovePosZP4",
+                    "name": "SideMovementPosZP4",
                     "type": "Value",
                     "id": "f2ccb687-f651-4255-bb33-e012e8c4b6b5",
                     "expectedControlType": "Vector2",
@@ -42,7 +42,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "PushMoveNegZP1",
+                    "name": "PushPaddleNegZP1",
                     "type": "Button",
                     "id": "4ad07715-00a1-4463-9d52-fd9c38b9cb23",
                     "expectedControlType": "Button",
@@ -51,7 +51,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "PushMoveNegZP3",
+                    "name": "PushPaddleNegZP3",
                     "type": "Button",
                     "id": "ec6f2552-ba29-48b8-8dcd-2a97253b5004",
                     "expectedControlType": "Button",
@@ -60,7 +60,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "PushMovePosZP2",
+                    "name": "PushPaddlePosZP2",
                     "type": "Button",
                     "id": "2e5937d5-e90c-4a9a-b68f-1ba0e46cab7f",
                     "expectedControlType": "Button",
@@ -69,7 +69,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "PushMovePosZP4",
+                    "name": "PushPaddlePosZP4",
                     "type": "Button",
                     "id": "1afcce65-a650-4c61-90dc-ecf8475e3e88",
                     "expectedControlType": "Button",
@@ -78,7 +78,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "TurnMoveNegZP1",
+                    "name": "RotatePaddleNegZP1",
                     "type": "Value",
                     "id": "e97003bb-4773-4c8e-aecb-922c50060b22",
                     "expectedControlType": "Vector2",
@@ -87,7 +87,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "TurnMoveNegZP3",
+                    "name": "RotatePaddleNegZP3",
                     "type": "Value",
                     "id": "771cdf08-abbb-4bea-b47f-fa95c3da499f",
                     "expectedControlType": "Vector2",
@@ -96,7 +96,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "TurnMovePosZP2",
+                    "name": "RotatePaddlePosZP2",
                     "type": "Value",
                     "id": "ae0c2b93-ec9c-476d-9710-e69871ba6a55",
                     "expectedControlType": "Vector2",
@@ -105,7 +105,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "TurnMovePosZP4",
+                    "name": "RotatePaddlePosZP4",
                     "type": "Value",
                     "id": "fc8217a4-dfac-400d-9a50-a2cca8b64d9f",
                     "expectedControlType": "Vector2",
@@ -158,7 +158,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMoveNegZP1",
+                    "action": "SideMovementNegZP1",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -169,7 +169,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "SideMoveNegZP1",
+                    "action": "SideMovementNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -180,7 +180,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "SideMoveNegZP1",
+                    "action": "SideMovementNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -191,7 +191,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMoveNegZP1",
+                    "action": "SideMovementNegZP1",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -202,7 +202,7 @@
                     "interactions": "",
                     "processors": "AxisDeadzone",
                     "groups": "Gamepads",
-                    "action": "SideMoveNegZP1",
+                    "action": "SideMovementNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -213,7 +213,7 @@
                     "interactions": "",
                     "processors": "AxisDeadzone",
                     "groups": "Gamepads",
-                    "action": "SideMoveNegZP1",
+                    "action": "SideMovementNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -312,7 +312,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TurnMoveNegZP1",
+                    "action": "RotatePaddleNegZP1",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -323,7 +323,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "TurnMoveNegZP1",
+                    "action": "RotatePaddleNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -334,7 +334,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "TurnMoveNegZP1",
+                    "action": "RotatePaddleNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -345,7 +345,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TurnMoveNegZP1",
+                    "action": "RotatePaddleNegZP1",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -356,7 +356,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepads",
-                    "action": "TurnMoveNegZP1",
+                    "action": "RotatePaddleNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -367,7 +367,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepads",
-                    "action": "TurnMoveNegZP1",
+                    "action": "RotatePaddleNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -378,7 +378,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMovePosZP2",
+                    "action": "SideMovementPosZP2",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -389,7 +389,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "SideMovePosZP2",
+                    "action": "SideMovementPosZP2",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -400,7 +400,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "SideMovePosZP2",
+                    "action": "SideMovementPosZP2",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -411,7 +411,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMovePosZP2",
+                    "action": "SideMovementPosZP2",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -422,7 +422,7 @@
                     "interactions": "",
                     "processors": "AxisDeadzone",
                     "groups": "Gamepads",
-                    "action": "SideMovePosZP2",
+                    "action": "SideMovementPosZP2",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -433,7 +433,7 @@
                     "interactions": "",
                     "processors": "AxisDeadzone",
                     "groups": "Gamepads",
-                    "action": "SideMovePosZP2",
+                    "action": "SideMovementPosZP2",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -444,7 +444,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "PushMoveNegZP1",
+                    "action": "PushPaddleNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -455,7 +455,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepads",
-                    "action": "PushMoveNegZP1",
+                    "action": "PushPaddleNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -466,7 +466,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "PushMovePosZP2",
+                    "action": "PushPaddlePosZP2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -477,7 +477,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepads",
-                    "action": "PushMovePosZP2",
+                    "action": "PushPaddlePosZP2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -510,7 +510,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TurnMovePosZP2",
+                    "action": "RotatePaddlePosZP2",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -521,7 +521,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "TurnMovePosZP2",
+                    "action": "RotatePaddlePosZP2",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -532,7 +532,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "TurnMovePosZP2",
+                    "action": "RotatePaddlePosZP2",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -543,7 +543,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TurnMovePosZP2",
+                    "action": "RotatePaddlePosZP2",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -554,7 +554,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepads",
-                    "action": "TurnMovePosZP2",
+                    "action": "RotatePaddlePosZP2",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -565,7 +565,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepads",
-                    "action": "TurnMovePosZP2",
+                    "action": "RotatePaddlePosZP2",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -598,7 +598,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMoveNegZP3",
+                    "action": "SideMovementNegZP3",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -609,7 +609,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "SideMoveNegZP3",
+                    "action": "SideMovementNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -620,7 +620,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "SideMoveNegZP3",
+                    "action": "SideMovementNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -631,7 +631,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMoveNegZP3",
+                    "action": "SideMovementNegZP3",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -642,7 +642,7 @@
                     "interactions": "",
                     "processors": "AxisDeadzone",
                     "groups": "Gamepads",
-                    "action": "SideMoveNegZP3",
+                    "action": "SideMovementNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -653,7 +653,7 @@
                     "interactions": "",
                     "processors": "AxisDeadzone",
                     "groups": "Gamepads",
-                    "action": "SideMoveNegZP3",
+                    "action": "SideMovementNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -664,7 +664,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMovePosZP4",
+                    "action": "SideMovementPosZP4",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -675,7 +675,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "SideMovePosZP4",
+                    "action": "SideMovementPosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -686,7 +686,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "SideMovePosZP4",
+                    "action": "SideMovementPosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -697,7 +697,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMovePosZP4",
+                    "action": "SideMovementPosZP4",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -708,7 +708,7 @@
                     "interactions": "",
                     "processors": "AxisDeadzone",
                     "groups": "Gamepads",
-                    "action": "SideMovePosZP4",
+                    "action": "SideMovementPosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -719,7 +719,7 @@
                     "interactions": "",
                     "processors": "AxisDeadzone",
                     "groups": "Gamepads",
-                    "action": "SideMovePosZP4",
+                    "action": "SideMovementPosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -730,7 +730,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "PushMoveNegZP3",
+                    "action": "PushPaddleNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -741,7 +741,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepads",
-                    "action": "PushMoveNegZP3",
+                    "action": "PushPaddleNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -752,7 +752,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "PushMovePosZP4",
+                    "action": "PushPaddlePosZP4",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -763,7 +763,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepads",
-                    "action": "PushMovePosZP4",
+                    "action": "PushPaddlePosZP4",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -774,7 +774,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TurnMoveNegZP3",
+                    "action": "RotatePaddleNegZP3",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -785,7 +785,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "TurnMoveNegZP3",
+                    "action": "RotatePaddleNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -796,7 +796,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "TurnMoveNegZP3",
+                    "action": "RotatePaddleNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -807,7 +807,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "TurnMoveNegZP3",
+                    "action": "RotatePaddleNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -818,7 +818,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TurnMoveNegZP3",
+                    "action": "RotatePaddleNegZP3",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -829,7 +829,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepads",
-                    "action": "TurnMoveNegZP3",
+                    "action": "RotatePaddleNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -840,7 +840,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepads",
-                    "action": "TurnMoveNegZP3",
+                    "action": "RotatePaddleNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -851,7 +851,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TurnMovePosZP4",
+                    "action": "RotatePaddlePosZP4",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -862,7 +862,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "TurnMovePosZP4",
+                    "action": "RotatePaddlePosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -873,7 +873,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "TurnMovePosZP4",
+                    "action": "RotatePaddlePosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -884,7 +884,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TurnMovePosZP4",
+                    "action": "RotatePaddlePosZP4",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -895,7 +895,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepads",
-                    "action": "TurnMovePosZP4",
+                    "action": "RotatePaddlePosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -906,7 +906,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepads",
-                    "action": "TurnMovePosZP4",
+                    "action": "RotatePaddlePosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }

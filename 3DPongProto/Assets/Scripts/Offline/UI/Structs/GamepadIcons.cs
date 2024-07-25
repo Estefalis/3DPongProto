@@ -69,14 +69,22 @@ namespace ThreeDeePongProto.Offline.UI
                 case "<Gamepad>/leftStick":
                     return leftStick;
                 case "<Gamepad>/leftStick/x":
+                case "<Gamepad>/leftStick/left":
+                case "<Gamepad>/leftStick/right":
                     return leftStickX;
                 case "<Gamepad>/leftStick/y":
+                case "<Gamepad>/leftStick/up":
+                case "<Gamepad>/leftStick/down":
                     return leftStickY;
                 case "<Gamepad>/rightStick":
                     return rightStick;
                 case "<Gamepad>/rightStick/x":
+                case "<Gamepad>/rightStick/left":
+                case "<Gamepad>/rightStick/right":
                     return rightStickX;
                 case "<Gamepad>/rightStick/y":
+                case "<Gamepad>/rightStick/up":
+                case "<Gamepad>/rightStick/down":
                     return rightStickY;
                 case "<Gamepad>/leftStickPress":
                     return leftStickPress;
