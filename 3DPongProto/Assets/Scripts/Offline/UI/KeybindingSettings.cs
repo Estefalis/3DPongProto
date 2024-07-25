@@ -27,9 +27,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private int m_bindingIndex;
         private string m_actionName;
-
-        private string m_targetPath;
-        private Image m_targetImage;
+        private Guid m_bindingId;
 
         private void OnEnable()
         {
@@ -43,8 +41,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             {
                 GetBindingInfomation();
                 InputManager.LoadKeyBindingOverride(m_actionName);  //MUST be below 'GetBindingInfomation()'! Else Exception!
-
-                UpdateUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_buttonImage);
+                UpdateUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
             }
         }
 
@@ -54,14 +51,14 @@ namespace ThreeDeePongProto.Shared.InputActions
             InputManager.m_RebindCanceled -= UpdateUI;
         }
 
-        //private void OnValidate()
-        //{
-        //    if (m_InputActionReference == null)
-        //        return;
+        private void OnValidate()
+        {
+            if (m_InputActionReference == null)
+                return;
 
-        //    GetBindingInfomation();
-        //    UpdateUI();
-        //}
+            GetBindingInfomation();
+            UpdateUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
+        }
 
         private void GetBindingInfomation()
         {
@@ -76,13 +73,13 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     m_inputBinding = m_InputActionReference.action.bindings[m_selectedBinding];
                     m_bindingIndex = m_selectedBinding;
+                    m_bindingId = m_InputActionReference.action.bindings[m_selectedBinding].id;
                 }
             }
         }
 
-        private void UpdateUI(string _effectivePath, Image _targetImage)
+        private void UpdateUI(string _effectivePath, Guid _bindingId)
         {
-
             if (m_rebindText != null)
             {
                 if (Application.isPlaying)
@@ -101,17 +98,8 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             if (gameObject.activeInHierarchy && m_buttonImage != null)
             {
-                UpdatePadSprite(_effectivePath, _targetImage);
-            }
-        }
-
-        private void UpdatePadSprite(string _effectivePath, Image _targetImage)
-        {
-            if (m_buttonImage == _targetImage && m_buttonImage.gameObject.activeInHierarchy)
-            {
-                m_targetPath = _effectivePath;
-                m_targetImage = _targetImage;
-                m_buttonImage.sprite = InputManager.GetControllerIcons(m_buttonControlScheme, _effectivePath);
+                if (_bindingId == m_bindingId)  //UpdatePadSprite ONLY for the specific Binding (each Script).
+                    m_buttonImage.sprite = InputManager.GetControllerIcons(m_buttonControlScheme, _effectivePath);
             }
         }
 
@@ -120,7 +108,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ExecuteKeyRebind()
         {
-            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse, m_buttonControlScheme, m_targetImage);
+            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse, m_buttonControlScheme, m_bindingId);
         }
 
         /// <summary>
@@ -129,7 +117,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         private void ResetRebinding()
         {
             InputManager.ResetRebinding(m_actionName, m_bindingIndex);
-            UpdateUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_buttonImage);
+            UpdateUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
         }
     }
 }

@@ -28281,6 +28281,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -25
       objectReference: {fileID: 0}
+    - target: {fileID: 4327656571971115467, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
+      propertyPath: m_buttonControlScheme
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4327656572219697060, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -28345,6 +28350,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_inputBinding.m_Id
       value: c317ba89-aad1-45b1-b8eb-eb72c9106c65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4327656572681281344, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
+      propertyPath: m_buttonControlScheme
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4327656572681281344, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
@@ -28456,6 +28466,11 @@ PrefabInstance:
       propertyPath: m_text
       value: Q
       objectReference: {fileID: 0}
+    - target: {fileID: 5478894758263539526, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
+      propertyPath: m_buttonControlScheme
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5478894758413845485, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_IsActive
@@ -28501,6 +28516,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -25
       objectReference: {fileID: 0}
+    - target: {fileID: 5478894759717634509, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
+      propertyPath: m_buttonControlScheme
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5478894759966359458, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -28530,6 +28550,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: CloseToPreviousElement
+      objectReference: {fileID: 0}
+    - target: {fileID: 5573360974468803553, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
+      propertyPath: m_buttonControlScheme
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5573360974619045705, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
@@ -28630,6 +28655,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5573360976587697514, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
+      propertyPath: m_buttonControlScheme
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5700013855410116095, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
@@ -28831,6 +28861,11 @@ PrefabInstance:
       propertyPath: m_text
       value: Button South
       objectReference: {fileID: 0}
+    - target: {fileID: 6657514396569833816, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
+      propertyPath: m_buttonControlScheme
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6657514396720666096, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -28876,6 +28911,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -25
       objectReference: {fileID: 0}
+    - target: {fileID: 6657514397938505683, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
+      propertyPath: m_buttonControlScheme
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6657514398256425404, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -29051,10 +29091,20 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -25
       objectReference: {fileID: 0}
+    - target: {fileID: 7452388351916463183, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
+      propertyPath: m_buttonControlScheme
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7452388352022090436, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_inputBinding.m_Id
       value: c67e4f7d-bd39-429a-8dd7-51e1c44bfebd
+      objectReference: {fileID: 0}
+    - target: {fileID: 7452388352022090436, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
+      propertyPath: m_buttonControlScheme
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7452388352022090436, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
@@ -29191,6 +29241,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -25
       objectReference: {fileID: 0}
+    - target: {fileID: 7767605167035996642, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
+      propertyPath: m_buttonControlScheme
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7767605167411862465, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -29215,6 +29270,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7767605167530123113, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
+      propertyPath: m_buttonControlScheme
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7767605167736390460, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}

@@ -1,14 +1,14 @@
 using System;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
-using TMPro;
-using ThreeDeePongProto.Offline.UI;
-using UnityEngine.UI;
 using ThreeDeePongProto.Offline.Settings;
+using ThreeDeePongProto.Offline.UI;
+using TMPro;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public enum EButtonControlScheme
 {
+    None,
     KeyboardMouse,
     Gamepad,
     PSGamepad,
@@ -31,8 +31,8 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region KeyRebinding
-        public static event Action<string, Image> m_RebindComplete;
-        public static event Action<string, Image> m_RebindCanceled;
+        public static event Action<string, Guid/*, Image*/> m_RebindComplete;
+        public static event Action<string, Guid/*, Image*/> m_RebindCanceled;
         public static event Action<InputAction, int> m_rebindStarted;
 
         private const string m_cancelWithKeyboardButton = "<Keyboard>/escape";
@@ -213,7 +213,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region KeyRebinding
-        public static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, bool _excludeMouse, EButtonControlScheme _ebuttonControlScheme, Image _targetImage)
+        public static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, bool _excludeMouse, EButtonControlScheme _ebuttonControlScheme, Guid _bindingId)
         {
             //Look up the action name of the inputAction in the generated C#-Script, not the Scriptable Object.
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
@@ -222,7 +222,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             if (inputAction == null || inputAction.bindings.Count <= _bindingIndex)
             {
 #if UNITY_EDITOR
-                Debug.LogError("InputManager: Could not find action or binding.");
+                Debug.LogError("InputManager could not find action or binding.");
 #endif
                 return;
             }
@@ -235,11 +235,11 @@ namespace ThreeDeePongProto.Shared.InputActions
                 //isPartOfComposite: Corresponds to WASD's W for example. (Childs/Binding Properties of the Composite.)
                 if (firstParentSubIndex < inputAction.bindings.Count && inputAction.bindings[firstParentSubIndex].isPartOfComposite)
                 {
-                    ExecuteKeyRebind(inputAction, firstParentSubIndex, _statusText, true, _excludeMouse, _ebuttonControlScheme, _targetImage);
+                    ExecuteKeyRebind(inputAction, firstParentSubIndex, _statusText, true, _excludeMouse, _ebuttonControlScheme, _bindingId);
                 }
             }
             else
-                ExecuteKeyRebind(inputAction, _bindingIndex, _statusText, false, _excludeMouse, _ebuttonControlScheme, _targetImage);
+                ExecuteKeyRebind(inputAction, _bindingIndex, _statusText, false, _excludeMouse, _ebuttonControlScheme, _bindingId);
         }
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// <param name="_statusText"></param>
         /// <param name="_allCompositeParts"></param>
         /// <param name="_excludeMouse"></param>
-        private static void ExecuteKeyRebind(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI _statusText, bool _allCompositeParts, bool _excludeMouse, EButtonControlScheme _ebuttonControlScheme, Image _targetImage)
+        private static void ExecuteKeyRebind(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI _statusText, bool _allCompositeParts, bool _excludeMouse, EButtonControlScheme _ebuttonControlScheme, Guid _bindingId)
         {
             if (_actionToRebind == null || _bindingIndex < 0)
                 return;
@@ -276,14 +276,14 @@ namespace ThreeDeePongProto.Shared.InputActions
                     var nextBindingIndex = _bindingIndex + 1;
 
                     if (nextBindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[nextBindingIndex].isPartOfComposite)
-                        ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _allCompositeParts, _excludeMouse, _ebuttonControlScheme, _targetImage);
+                        ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _allCompositeParts, _excludeMouse, _ebuttonControlScheme, _bindingId);
                 }
 
                 SaveKeyBindingOverride(_actionToRebind);    //TODO: replace this with the save system interface.
 #if UNITY_EDITOR
                 //Debug.Log($"effectivePath: {_actionToRebind.bindings[_bindingIndex].effectivePath}");
 #endif
-                m_RebindComplete?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _targetImage); //Invoke on finished rebinding.
+                m_RebindComplete?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _bindingId); //Invoke on finished rebinding.
             });
 
             //assignment of the OnCancel'operation' delegate.
@@ -292,7 +292,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 _actionToRebind.Enable();
                 operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
-                m_RebindCanceled?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _targetImage); //Invoke on canceled rebinding.
+                m_RebindCanceled?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _bindingId); //Invoke on canceled rebinding.
             });
 
             switch (_ebuttonControlScheme)  //ONLY ONE cancelButton gets recognized in code at a time.
