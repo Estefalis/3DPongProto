@@ -210,7 +210,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": ""LeftStickLR"",
-                    ""id"": ""e9c8422b-86df-4d76-b881-21899ef6e3da"",
+                    ""id"": ""61dd5c02-a594-4e19-a484-d3c4a077c362"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -221,8 +221,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""c317ba89-aad1-45b1-b8eb-eb72c9106c65"",
-                    ""path"": ""<Gamepad>/leftStick/x"",
+                    ""id"": ""c7b5aced-a238-444a-b4d6-faa0f79c3891"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
                     ""groups"": ""Gamepads"",
@@ -232,8 +232,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""c67e4f7d-bd39-429a-8dd7-51e1c44bfebd"",
-                    ""path"": ""<Gamepad>/leftStick/x"",
+                    ""id"": ""c7199799-5008-4999-9649-755df45f2deb"",
+                    ""path"": ""<Gamepad>/leftStick/right"",
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
                     ""groups"": ""Gamepads"",
@@ -442,7 +442,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""name"": ""left"",
                     ""id"": ""1bd09f5f-e241-4703-8d07-d378bf829e14"",
-                    ""path"": ""<Gamepad>/leftStick/x"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
                     ""groups"": ""Gamepads"",
@@ -453,7 +453,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""name"": ""right"",
                     ""id"": ""d5ddaca1-01c8-41ae-955c-d7e0f6823afc"",
-                    ""path"": ""<Gamepad>/leftStick/x"",
+                    ""path"": ""<Gamepad>/leftStick/right"",
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
                     ""groups"": ""Gamepads"",
@@ -662,7 +662,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""name"": ""left"",
                     ""id"": ""5729fe3e-a38a-4e6d-8249-0ce3ace06e5b"",
-                    ""path"": ""<Gamepad>/leftStick/x"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
                     ""groups"": ""Gamepads"",
@@ -673,7 +673,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""name"": ""right"",
                     ""id"": ""e4c12aa1-a8fb-44e5-b9ba-0d04ca0a1e38"",
-                    ""path"": ""<Gamepad>/leftStick/x"",
+                    ""path"": ""<Gamepad>/leftStick/right"",
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
                     ""groups"": ""Gamepads"",
@@ -728,7 +728,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""name"": ""left"",
                     ""id"": ""ce0a913a-f108-4b96-af90-f4c9368de6c5"",
-                    ""path"": ""<Gamepad>/leftStick/x"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
                     ""groups"": ""Gamepads"",
@@ -739,7 +739,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""name"": ""right"",
                     ""id"": ""fb797f68-c7a5-420a-811f-298e193f5143"",
-                    ""path"": ""<Gamepad>/leftStick/x"",
+                    ""path"": ""<Gamepad>/leftStick/right"",
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
                     ""groups"": ""Gamepads"",

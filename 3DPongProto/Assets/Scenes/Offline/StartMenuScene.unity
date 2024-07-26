@@ -28334,7 +28334,7 @@ PrefabInstance:
     - target: {fileID: 4327656572467458007, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_text
-      value: Left Stick/X
+      value: 2DVector
       objectReference: {fileID: 0}
     - target: {fileID: 4327656572467458007, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
@@ -28344,12 +28344,17 @@ PrefabInstance:
     - target: {fileID: 4327656572549555209, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_text
-      value: A
+      value: 2DVector
+      objectReference: {fileID: 0}
+    - target: {fileID: 4327656572681281344, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
+      propertyPath: m_selectedBinding
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4327656572681281344, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_inputBinding.m_Id
-      value: c317ba89-aad1-45b1-b8eb-eb72c9106c65
+      value: c7b5aced-a238-444a-b4d6-faa0f79c3891
       objectReference: {fileID: 0}
     - target: {fileID: 4327656572681281344, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
@@ -28364,12 +28369,17 @@ PrefabInstance:
     - target: {fileID: 4327656572681281344, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_inputBinding.m_Path
-      value: <Gamepad>/leftStick/x
+      value: <Gamepad>/leftStick/left
       objectReference: {fileID: 0}
     - target: {fileID: 4327656572681281344, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_inputBinding.m_Flags
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4327656572681281344, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
+      propertyPath: m_inputBinding.m_Action
+      value: SideMovementNegZP1
       objectReference: {fileID: 0}
     - target: {fileID: 4327656572681281344, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
@@ -28459,12 +28469,12 @@ PrefabInstance:
     - target: {fileID: 5478894758049855441, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_text
-      value: Left Shoulder
+      value: 2DVector
       objectReference: {fileID: 0}
     - target: {fileID: 5478894758131825679, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_text
-      value: Q
+      value: 2DVector
       objectReference: {fileID: 0}
     - target: {fileID: 5478894758263539526, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
@@ -28584,7 +28594,7 @@ PrefabInstance:
     - target: {fileID: 5573360974791908214, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_text
-      value: Right Shoulder
+      value: 2DVector
       objectReference: {fileID: 0}
     - target: {fileID: 5573360974805170100, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
@@ -28614,7 +28624,7 @@ PrefabInstance:
     - target: {fileID: 5573360974867648680, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_text
-      value: E
+      value: 2DVector
       objectReference: {fileID: 0}
     - target: {fileID: 5573360976061228689, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
@@ -28859,7 +28869,7 @@ PrefabInstance:
     - target: {fileID: 6657514396289065423, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_text
-      value: Button South
+      value: B
       objectReference: {fileID: 0}
     - target: {fileID: 6657514396569833816, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
@@ -29098,8 +29108,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7452388352022090436, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
+      propertyPath: m_selectedBinding
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7452388352022090436, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
       propertyPath: m_inputBinding.m_Id
-      value: c67e4f7d-bd39-429a-8dd7-51e1c44bfebd
+      value: c7199799-5008-4999-9649-755df45f2deb
       objectReference: {fileID: 0}
     - target: {fileID: 7452388352022090436, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
@@ -29114,7 +29129,27 @@ PrefabInstance:
     - target: {fileID: 7452388352022090436, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_inputBinding.m_Path
-      value: <Gamepad>/leftStick/x
+      value: <Gamepad>/leftStick/right
+      objectReference: {fileID: 0}
+    - target: {fileID: 7452388352022090436, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
+      propertyPath: m_inputBinding.m_Flags
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7452388352022090436, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
+      propertyPath: m_inputBinding.m_Action
+      value: SideMovementNegZP1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7452388352022090436, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
+      propertyPath: m_inputBinding.m_Groups
+      value: Gamepads
+      objectReference: {fileID: 0}
+    - target: {fileID: 7452388352022090436, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
+        type: 3}
+      propertyPath: m_inputBinding.m_Processors
+      value: AxisDeadzone
       objectReference: {fileID: 0}
     - target: {fileID: 7452388352172791404, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
@@ -29144,7 +29179,7 @@ PrefabInstance:
     - target: {fileID: 7452388352278061651, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_text
-      value: Left Stick/X
+      value: 2DVector
       objectReference: {fileID: 0}
     - target: {fileID: 7452388352278061651, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
@@ -29179,7 +29214,7 @@ PrefabInstance:
     - target: {fileID: 7452388352427764109, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_text
-      value: D
+      value: 2DVector
       objectReference: {fileID: 0}
     - target: {fileID: 7549649746781660837, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
@@ -29304,7 +29339,7 @@ PrefabInstance:
     - target: {fileID: 7767605167785832446, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}
       propertyPath: m_text
-      value: Right Trigger
+      value: W
       objectReference: {fileID: 0}
     - target: {fileID: 8237671937784442620, guid: 1f12576a32b3d2c45a9ac427d9495f5a,
         type: 3}

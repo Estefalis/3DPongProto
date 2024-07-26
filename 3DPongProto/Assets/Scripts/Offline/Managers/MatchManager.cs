@@ -121,7 +121,7 @@ namespace ThreeDeePongProto.Offline.Managers
         {
             //m_idGameObjectDict = new();
             //GameObject player;
-
+            
             uint setPlayerByEnum = (uint)m_matchUIStates.EPlayerAmount;
             //1. Instantiate all Players related to the PlayerCount in game.
             for (int i = 0; i < setPlayerByEnum; i++)
@@ -306,24 +306,29 @@ namespace ThreeDeePongProto.Offline.Managers
 #if UNITY_EDITOR
                 Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
 #endif
-                UseDefaultSettings();
+                DefaultPlayfield();
+                ResetPauseAndTimescale();
                 return;
             }
 
-            ResetPlayfield();
+            ReSetPlayfield();
             ResetRoundValues();
             ResetPauseAndTimescale();
         }
 
-        private void UseDefaultSettings()
+        private void DefaultPlayfield()
         {
+            m_playGround.GetComponent<Transform>();
             m_playGround.transform.localScale = new Vector3(m_playGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_playGroundLength * m_playGroundLengthScale);
         }
 
         #region Match-Presets
-        private void ResetPlayfield()
+        private void ReSetPlayfield()
         {
+            m_playGround.GetComponent<Transform>();
             m_playGround.transform.localScale = new Vector3(m_basicFieldValues.SetGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_basicFieldValues.SetGroundLength * m_playGroundLengthScale);
+
+            Instantiate(m_playGround, Vector3.zero, Quaternion.Euler(0, 0, 0), m_prefabParent);
         }
 
         private void ResetRoundValues()
