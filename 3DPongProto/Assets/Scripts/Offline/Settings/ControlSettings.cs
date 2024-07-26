@@ -15,7 +15,7 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField, Range(0.1f, 0.9f)] private float m_reducedAlphaValue = 0.5f;
         [SerializeField, Range(0.5f, 1f)] private float m_maxAlphaValue = 1f;
         private int m_currentViewIndex;
-        public static event Action<int> PlayerViewIndex;
+        //public static event Action<int> PlayerViewIndex;
         #endregion
 
         #region Axis Inversion
@@ -524,7 +524,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     tempAlpha1.a = m_maxAlphaValue;
                     m_playerButtons[i].image.color = tempAlpha1;
                     m_currentViewIndex = i; //Routes the Default Button Resets.
-                    PlayerViewIndex?.Invoke(m_currentViewIndex);
+                    //PlayerViewIndex?.Invoke(m_currentViewIndex);
                 }
                 else
                 {

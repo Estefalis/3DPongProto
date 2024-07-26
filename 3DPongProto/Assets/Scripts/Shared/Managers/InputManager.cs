@@ -45,13 +45,13 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region Serialization
-        private static int m_playerSaveIndex;
-        private static readonly string m_keyBindingOverrideFolderPath = "/SaveData/KeyBindingOverride";
-        private static readonly string m_playerFileName = "/Player";
-        private static readonly string m_fileFormat = ".json";
+        //private static int m_playerSaveIndex;
+        //private static readonly string m_keyBindingOverrideFolderPath = "/SaveData/KeyBindingOverride";
+        //private static readonly string m_playerFileName = "/Player";
+        //private static readonly string m_fileFormat = ".json";
 
-        private static IPersistentData m_persistentData = new SerializingData();
-        private static bool m_encryptionEnabled = false;
+        //private static IPersistentData m_persistentData = new SerializingData();
+        //private static bool m_encryptionEnabled = false;
         #endregion
         #endregion
 
@@ -71,7 +71,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         {
             SceneManager.sceneLoaded += OnSceneFinishedLoading;
             m_extractButtonImage += ExtractImage;
-            ControlSettings.PlayerViewIndex += PlayerIndex;
+            //ControlSettings.PlayerViewIndex += PlayerIndex;
             //InputSystem.onDeviceChange += OnDeviceChange;
         }
 
@@ -79,17 +79,17 @@ namespace ThreeDeePongProto.Shared.InputActions
         {
             SceneManager.sceneLoaded -= OnSceneFinishedLoading;
             m_extractButtonImage -= ExtractImage;
-            ControlSettings.PlayerViewIndex -= PlayerIndex;
+            //ControlSettings.PlayerViewIndex -= PlayerIndex;
             //InputSystem.onDeviceChange -= OnDeviceChange;
         }
 
-        private static void PlayerIndex(int _playerIndex)
-        {
-            m_playerSaveIndex = _playerIndex;
-#if UNITY_EDITOR
-            Debug.Log($"PlayerIndex {m_playerSaveIndex}");
-#endif
-        }
+//        private static void PlayerIndex(int _playerIndex)
+//        {
+//            m_playerSaveIndex = _playerIndex;
+//#if UNITY_EDITOR
+//            Debug.Log($"PlayerIndex {m_playerSaveIndex}");
+//#endif
+//        }
 
         #region Get and Return Sprites
         public static Sprite GetControllerIcons(EButtonControlScheme _controlScheme, string _controlPath)

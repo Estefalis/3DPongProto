@@ -96,7 +96,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 }
             }
 
-            if (gameObject.activeInHierarchy && m_buttonImage != null)
+            if (gameObject.activeInHierarchy && m_buttonImage != null && m_buttonImage.isActiveAndEnabled)
             {
                 if (_bindingId == m_bindingId)  //UpdatePadSprite ONLY for the specific Binding (each Script).
                     m_buttonImage.sprite = InputManager.GetControllerIcons(m_buttonControlScheme, _effectivePath);
