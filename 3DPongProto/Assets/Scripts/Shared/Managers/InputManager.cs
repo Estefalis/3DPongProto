@@ -71,7 +71,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         }
 
         private void OnEnable()
-        {            
+        {
             SceneManager.sceneLoaded += OnSceneFinishedLoading;
             m_extractButtonImage += ExtractImage;
             //ControlSettings.PlayerViewIndex += PlayerIndex;
@@ -91,6 +91,55 @@ namespace ThreeDeePongProto.Shared.InputActions
         //            Debug.Log($"PlayerIndex {m_playerSaveIndex}");
         //#endif
         //        }
+
+        #region Change Action Maps
+        private void OnSceneFinishedLoading(Scene _scene, LoadSceneMode _mode)
+        {
+            m_currentSceneIndex = _scene.buildIndex; //TODO: Change to SceneIndex after development.
+            m_currentSceneName = _scene.name;
+
+            switch (m_currentSceneName)
+            {
+                case "StartMenuScene":
+                    ToggleActionMaps(m_playerInputActions.UI);
+                    break;
+                case "LocalGameScene":
+                    ToggleActionMaps(m_playerInputActions.PlayerActions);
+                    break;
+                case "LanGameScene":
+                    ToggleActionMaps(m_playerInputActions.PlayerActions);
+                    break;
+                case "NetGameScene":
+                    ToggleActionMaps(m_playerInputActions.PlayerActions);
+                    break;
+                case "WinScene":
+                    ToggleActionMaps(m_playerInputActions.UI);
+                    break;
+                default:
+                    ToggleActionMaps(m_playerInputActions.UI);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Switches ActionMaps, if the active actionMap isn't equal to the submitted one. But does not disable the old actionMaps!
+        /// </summary>
+        /// <param name="_actionMap"></param>
+        public static void ToggleActionMaps(InputActionMap _actionMap)
+        {
+            //if you try to change to the same ActionMap skip the rest.
+            if (_actionMap.enabled)
+                return;
+
+            //else disable the current ActionMap to switch to the next.
+            m_playerInputActions.Disable();
+            m_changeActiveActionMap?.Invoke(_actionMap);
+            _actionMap.Enable();
+#if UNITY_EDITOR
+            //Debug.Log($"InputManager while debugging: {_actionMap.name} loaded.");
+#endif
+        }
+        #endregion
 
         #region Get and Return Sprites
         public static Sprite GetControllerIcons(EButtonControlScheme _controlScheme, string _controlPath)
@@ -168,52 +217,54 @@ namespace ThreeDeePongProto.Shared.InputActions
         }
         #endregion
 
-        #region Change Action Maps
-        private void OnSceneFinishedLoading(Scene _scene, LoadSceneMode _mode)
+        #region Replace Icons
+        private static void SaveRebindIconByKey(Guid _uniqueGuid, string _overridePath)
         {
-            m_currentSceneIndex = _scene.buildIndex; //TODO: Change to SceneIndex after development.
-            m_currentSceneName = _scene.name;
+            bool dictHasKey = m_iconPaths.ContainsKey($"{_uniqueGuid}");
 
-            switch (m_currentSceneName)
+            switch (dictHasKey)
             {
-                case "StartMenuScene":
-                    ToggleActionMaps(m_playerInputActions.UI);
+                case true:
+                    m_iconPaths[$"{_uniqueGuid}"] = _overridePath;
                     break;
-                case "LocalGameScene":
-                    ToggleActionMaps(m_playerInputActions.PlayerActions);
+                case false:
+                    m_iconPaths.Add($"{_uniqueGuid}", _overridePath);
                     break;
-                case "LanGameScene":
-                    ToggleActionMaps(m_playerInputActions.PlayerActions);
-                    break;
-                case "NetGameScene":
-                    ToggleActionMaps(m_playerInputActions.PlayerActions);
-                    break;
-                case "WinScene":
-                    ToggleActionMaps(m_playerInputActions.UI);
-                    break;
-                default:
-                    ToggleActionMaps(m_playerInputActions.UI);
-                    break;
+            }
+
+            m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_buttonIconFileName, m_fileFormat, m_iconPaths, m_encryptionEnabled, true);
+        }
+
+        internal static string LoadRebindIconByKey(Guid _uniqueGuid)
+        {
+            m_iconPaths = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_buttonIconFileName, m_fileFormat, m_encryptionEnabled);
+
+            bool dictHasKey = m_iconPaths.ContainsKey($"{_uniqueGuid}");
+
+            switch (dictHasKey)
+            {
+                case true:
+                    return m_iconPaths[$"{_uniqueGuid}"];
+                case false:
+                    return default;
             }
         }
 
-        /// <summary>
-        /// Switches ActionMaps, if the active actionMap isn't equal to the submitted one. But does not disable the old actionMaps!
-        /// </summary>
-        /// <param name="_actionMap"></param>
-        public static void ToggleActionMaps(InputActionMap _actionMap)
+        internal static void ResetIconByKey(Guid _uniqueGuid)
         {
-            //if you try to change to the same ActionMap skip the rest.
-            if (_actionMap.enabled)
-                return;
+            bool dictHasKey = m_iconPaths.ContainsKey($"{_uniqueGuid}");
 
-            //else disable the current ActionMap to switch to the next.
-            m_playerInputActions.Disable();
-            m_changeActiveActionMap?.Invoke(_actionMap);
-            _actionMap.Enable();
-#if UNITY_EDITOR
-            //Debug.Log($"InputManager while debugging: {_actionMap.name} loaded.");
-#endif
+            switch (dictHasKey)
+            {
+                case true:
+                {
+                    m_iconPaths.Remove($"{_uniqueGuid}");
+                    break;
+                }
+                case false:
+                    break;
+            }
+
         }
         #endregion
 
@@ -283,7 +334,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                     if (nextBindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[nextBindingIndex].isPartOfComposite)
                         ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _allCompositeParts, _excludeMouse, _ebuttonControlScheme, _bindingId);
                 }
-
 #if UNITY_EDITOR
                 //Debug.Log($"effectivePath: {_actionToRebind.bindings[_bindingIndex].effectivePath}");
 #endif
@@ -328,21 +378,6 @@ namespace ThreeDeePongProto.Shared.InputActions
         }
 
         /// <summary>
-        /// Returns button infos according to the submitted Parameter.
-        /// </summary>
-        /// <param name="_actionName"></param>
-        /// <param name="_bindingIndex"></param>
-        /// <returns></returns>
-        public static string GetBindingName(string _actionName, int _bindingIndex)
-        {
-            if (m_playerInputActions == null)
-                m_playerInputActions = new PlayerInputActions();
-
-            InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
-            return inputAction.GetBindingDisplayString(_bindingIndex);
-        }
-
-        /// <summary>
         /// Each binding requires getting called by an own 'Remove-Override-Binding-Extension-Function'.
         /// </summary>
         /// <param name="_actionName"></param>
@@ -369,64 +404,30 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             SaveKeyBindingOverride(inputAction);
         }
-
-        internal static void ResetIconByKey(Guid _uniqueGuid)
-        {
-            bool dictHasKey = m_iconPaths.ContainsKey($"{_uniqueGuid}");
-
-            switch (dictHasKey)
-            {
-                case true:
-                {
-                    m_iconPaths.Remove($"{_uniqueGuid}");
-                    break;
-                }
-                case false:
-                    break;
-            }
-
-        }
         #endregion
 
         #region Save / Load Binding Override
+        /// <summary>
+        /// Returns button infos according to the submitted Parameter.
+        /// </summary>
+        /// <param name="_actionName"></param>
+        /// <param name="_bindingIndex"></param>
+        /// <returns></returns>
+        public static string GetBindingName(string _actionName, int _bindingIndex)
+        {
+            if (m_playerInputActions == null)
+                m_playerInputActions = new PlayerInputActions();
+
+            InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
+            return inputAction.GetBindingDisplayString(_bindingIndex);
+        }
+
         private static void SaveKeyBindingOverride(InputAction _inputAction)
         {
             for (int i = 0; i < _inputAction.bindings.Count; i++)
             {
                 //Possible input system paths: 'path', 'effectivePath' and 'overridePath' during Runtime in the 'InputAction-Asset'.
                 PlayerPrefs.SetString(_inputAction.actionMap + _inputAction.name + i, _inputAction.bindings[i].overridePath);
-            }
-        }
-
-        private static void SaveRebindIconByKey(Guid _uniqueGuid, string _overridePath)
-        {
-            bool dictHasKey = m_iconPaths.ContainsKey($"{_uniqueGuid}");
-
-            switch (dictHasKey)
-            {
-                case true:
-                    m_iconPaths[$"{_uniqueGuid}"] = _overridePath;
-                    break;
-                case false:
-                    m_iconPaths.Add($"{_uniqueGuid}", _overridePath);
-                    break;
-            }
-
-            m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_buttonIconFileName, m_fileFormat, m_iconPaths, m_encryptionEnabled, true);
-        }
-
-        internal static string LoadRebindIconByKey(Guid _uniqueGuid)
-        {
-            m_iconPaths = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_buttonIconFileName, m_fileFormat, m_encryptionEnabled);
-
-            bool dictHasKey = m_iconPaths.ContainsKey($"{_uniqueGuid}");
-
-            switch (dictHasKey)
-            {
-                case true:
-                    return m_iconPaths[$"{_uniqueGuid}"];
-                case false:
-                    return default;
             }
         }
 
