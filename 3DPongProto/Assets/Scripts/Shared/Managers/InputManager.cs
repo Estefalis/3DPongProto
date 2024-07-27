@@ -48,9 +48,9 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region Serialization
-        private static int m_playerSaveIndex;
-        private static readonly string m_keyBindingOverrideFolderPath = "/SaveData/ActionBindingDetails";
-        //private static readonly string m_playerFileName = "/Player";
+        private static int m_playerIndex;
+        private static readonly string m_keyBindingOverrideFolderPath = "/SaveData/ReBindActionDetails";
+        private static readonly string m_playerActionMapFileName = "/InputActionMap/PlayerActions";
         private static readonly string m_buttonIconFileName = "/ButtonIcon";
         private static readonly string m_fileFormat = ".json";
 
@@ -58,6 +58,8 @@ namespace ThreeDeePongProto.Shared.InputActions
         private static bool m_encryptionEnabled = false;
         #endregion
 
+        private static ActionMapParent uniqueActionMap = new ActionMapParent();
+        private static Dictionary<InputAction, ActionMapParent> m_keyRebindDict = new Dictionary<InputAction, ActionMapParent>();
         /// <summary>
         /// PlayerController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the InputManager into 'Awake()', to prevent Exceptions.
         /// </summary>
@@ -74,23 +76,23 @@ namespace ThreeDeePongProto.Shared.InputActions
         {
             SceneManager.sceneLoaded += OnSceneFinishedLoading;
             m_extractButtonImage += ExtractImage;
-            //ControlSettings.PlayerViewIndex += PlayerIndex;
+            ControlSettings.PlayerViewIndex += PlayerIndex;
         }
 
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneFinishedLoading;
             m_extractButtonImage -= ExtractImage;
-            //ControlSettings.PlayerViewIndex -= PlayerIndex;
+            ControlSettings.PlayerViewIndex -= PlayerIndex;
         }
 
-        //        private static void PlayerIndex(int _playerIndex)
-        //        {
-        //            m_playerSaveIndex = _playerIndex;
-        //#if UNITY_EDITOR
-        //            Debug.Log($"PlayerIndex {m_playerSaveIndex}");
-        //#endif
-        //        }
+        private static void PlayerIndex(int _playerIndex)
+        {
+            m_playerIndex = _playerIndex;
+            //#if UNITY_EDITOR
+            //            Debug.Log($"PlayerIndex {m_playerIndex}");
+            //#endif
+        }
 
         #region Change Action Maps
         private void OnSceneFinishedLoading(Scene _scene, LoadSceneMode _mode)
@@ -428,7 +430,25 @@ namespace ThreeDeePongProto.Shared.InputActions
             {
                 //Possible input system paths: 'path', 'effectivePath' and 'overridePath' during Runtime in the 'InputAction-Asset'.
                 PlayerPrefs.SetString(_inputAction.actionMap + _inputAction.name + i, _inputAction.bindings[i].overridePath);
+                uniqueActionMap.ActionMapEntries.Add(new ActionMapBindings(_inputAction.bindings[i].name, _inputAction.bindings[i].overridePath, _inputAction.bindings[i].id));
+
+                bool dictHasKey = m_keyRebindDict.ContainsKey(_inputAction);
+                switch (dictHasKey)
+                {
+                    case true:
+                    {
+                        m_keyRebindDict[_inputAction] = uniqueActionMap;
+                        break;
+                    }
+                    case false:
+                    {
+                        m_keyRebindDict.Add(_inputAction, uniqueActionMap);
+                        break;
+                    }
+                }
             }
+
+            m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_playerActionMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyRebindDict, m_encryptionEnabled, true);
         }
 
         internal static void LoadKeyBindingOverride(string _actionName)
