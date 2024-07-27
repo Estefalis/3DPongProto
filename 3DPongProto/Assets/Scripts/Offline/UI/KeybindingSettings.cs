@@ -41,7 +41,14 @@ namespace ThreeDeePongProto.Shared.InputActions
             {
                 GetBindingInfomation();
                 InputManager.LoadKeyBindingOverride(m_actionName);  //MUST be below 'GetBindingInfomation()'! Else Exception!
-                UpdateUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
+                string overridePath = InputManager.LoadRebindIconByKey(m_bindingId);
+                if (overridePath != null)
+                {
+                    //Debug.Log(overridePath);
+                    UpdateUI(overridePath, m_bindingId);
+                }
+                else
+                    UpdateUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
             }
         }
 
@@ -99,7 +106,11 @@ namespace ThreeDeePongProto.Shared.InputActions
             if (gameObject.activeInHierarchy && m_buttonImage != null && m_buttonImage.isActiveAndEnabled)
             {
                 if (_bindingId == m_bindingId)  //UpdatePadSprite ONLY for the specific Binding (each Script).
-                    m_buttonImage.sprite = InputManager.GetControllerIcons(m_buttonControlScheme, _effectivePath);
+                {
+                    Image buttonImage = m_buttonImage.GetComponent<Image>();
+                    buttonImage.sprite = InputManager.GetControllerIcons(m_buttonControlScheme, _effectivePath);
+                    m_buttonImage.sprite = buttonImage.sprite;
+                }
             }
         }
 
@@ -116,6 +127,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ResetRebinding()
         {
+            InputManager.ResetIconByKey(m_bindingId);
             InputManager.ResetRebinding(m_actionName, m_bindingIndex);
             UpdateUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
         }

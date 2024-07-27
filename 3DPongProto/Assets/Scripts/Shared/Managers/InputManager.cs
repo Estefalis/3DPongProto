@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ThreeDeePongProto.Offline.Settings;
 using ThreeDeePongProto.Offline.UI;
 using TMPro;
@@ -34,9 +35,11 @@ namespace ThreeDeePongProto.Shared.InputActions
         public static event Action<string, Guid/*, Image*/> m_RebindComplete;
         public static event Action<string, Guid/*, Image*/> m_RebindCanceled;
         public static event Action<InputAction, int> m_rebindStarted;
+        private static Dictionary<string, string> m_iconPaths = new Dictionary<string, string>();
 
         private const string m_cancelWithKeyboardButton = "<Keyboard>/escape";
         private const string m_cancelWithGamepadButton = "<Gamepad>/buttonEast";
+        #endregion
 
         #region KeyBinding Icons
         [SerializeField] public GamepadIcons m_pS;
@@ -45,14 +48,14 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region Serialization
-        //private static int m_playerSaveIndex;
-        //private static readonly string m_keyBindingOverrideFolderPath = "/SaveData/KeyBindingOverride";
+        private static int m_playerSaveIndex;
+        private static readonly string m_keyBindingOverrideFolderPath = "/SaveData/ActionBindingDetails";
         //private static readonly string m_playerFileName = "/Player";
-        //private static readonly string m_fileFormat = ".json";
+        private static readonly string m_buttonIconFileName = "/ButtonIcon";
+        private static readonly string m_fileFormat = ".json";
 
-        //private static IPersistentData m_persistentData = new SerializingData();
-        //private static bool m_encryptionEnabled = false;
-        #endregion
+        private static IPersistentData m_persistentData = new SerializingData();
+        private static bool m_encryptionEnabled = false;
         #endregion
 
         /// <summary>
@@ -68,11 +71,10 @@ namespace ThreeDeePongProto.Shared.InputActions
         }
 
         private void OnEnable()
-        {
+        {            
             SceneManager.sceneLoaded += OnSceneFinishedLoading;
             m_extractButtonImage += ExtractImage;
             //ControlSettings.PlayerViewIndex += PlayerIndex;
-            //InputSystem.onDeviceChange += OnDeviceChange;
         }
 
         private void OnDisable()
@@ -80,27 +82,30 @@ namespace ThreeDeePongProto.Shared.InputActions
             SceneManager.sceneLoaded -= OnSceneFinishedLoading;
             m_extractButtonImage -= ExtractImage;
             //ControlSettings.PlayerViewIndex -= PlayerIndex;
-            //InputSystem.onDeviceChange -= OnDeviceChange;
         }
 
-//        private static void PlayerIndex(int _playerIndex)
-//        {
-//            m_playerSaveIndex = _playerIndex;
-//#if UNITY_EDITOR
-//            Debug.Log($"PlayerIndex {m_playerSaveIndex}");
-//#endif
-//        }
+        //        private static void PlayerIndex(int _playerIndex)
+        //        {
+        //            m_playerSaveIndex = _playerIndex;
+        //#if UNITY_EDITOR
+        //            Debug.Log($"PlayerIndex {m_playerSaveIndex}");
+        //#endif
+        //        }
 
         #region Get and Return Sprites
         public static Sprite GetControllerIcons(EButtonControlScheme _controlScheme, string _controlPath)
         {
+            if (string.IsNullOrEmpty($"{_controlScheme}") || string.IsNullOrEmpty(_controlPath))
+                return null;
+
             Sprite buttonImage = m_extractButtonImage?.Invoke(_controlScheme, _controlPath);
             return buttonImage;
         }
 
         private Sprite ExtractImage(EButtonControlScheme _controlScheme, string _controlPath)
         {
-            //Debug.Log($"Scheme: {_controlScheme} - Path: {_controlPath}"); //WORKED!
+            Sprite buttonImage = default;
+
             switch (_controlScheme)
             {
                 case EButtonControlScheme.KeyboardMouse:
@@ -118,18 +123,18 @@ namespace ThreeDeePongProto.Shared.InputActions
                     {
                         case "Gamepad":
                         {
-                            Sprite buttonImage = m_pS.GetGamepadSprite(_controlPath);
+                            buttonImage = m_pS.GetGamepadSprite(_controlPath);
                             return buttonImage;
                         }
                         case "DualShockGamepad":
                         {
-                            Sprite buttonImage = m_pS.GetDualShockGamepadSprite(_controlPath);
+                            buttonImage = m_pS.GetDualShockGamepadSprite(_controlPath);
                             return buttonImage;
 
                         }
                         case "DualSenseGamepadHID":
                         {
-                            Sprite buttonImage = m_pS.GetDualSenseGamepadHIDSprite(_controlPath);
+                            buttonImage = m_pS.GetDualSenseGamepadHIDSprite(_controlPath);
                             return buttonImage;
                         }
                     }
@@ -137,12 +142,12 @@ namespace ThreeDeePongProto.Shared.InputActions
                 }
                 case EButtonControlScheme.XBoxGamepad:
                 {
-                    Sprite buttonImage = m_xbox.GetGamepadSprite(_controlPath);
+                    buttonImage = m_xbox.GetGamepadSprite(_controlPath);
                     return buttonImage;
                 }
                 default:
                 {
-                    Sprite buttonImage = m_pS.GetGamepadSprite(_controlPath);
+                    buttonImage = m_pS.GetGamepadSprite(_controlPath);
                     return buttonImage;
                 }
             }
@@ -279,11 +284,13 @@ namespace ThreeDeePongProto.Shared.InputActions
                         ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _allCompositeParts, _excludeMouse, _ebuttonControlScheme, _bindingId);
                 }
 
-                SaveKeyBindingOverride(_actionToRebind);    //TODO: replace this with the save system interface.
 #if UNITY_EDITOR
                 //Debug.Log($"effectivePath: {_actionToRebind.bindings[_bindingIndex].effectivePath}");
 #endif
                 m_RebindComplete?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _bindingId); //Invoke on finished rebinding.
+
+                SaveKeyBindingOverride(_actionToRebind);    //TODO: replace this with the save system interface.
+                SaveRebindIconByKey(_bindingId, _actionToRebind.bindings[_bindingIndex].effectivePath);   //NOCH NUR ICON-SAVE!
             });
 
             //assignment of the OnCancel'operation' delegate.
@@ -362,6 +369,23 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             SaveKeyBindingOverride(inputAction);
         }
+
+        internal static void ResetIconByKey(Guid _uniqueGuid)
+        {
+            bool dictHasKey = m_iconPaths.ContainsKey($"{_uniqueGuid}");
+
+            switch (dictHasKey)
+            {
+                case true:
+                {
+                    m_iconPaths.Remove($"{_uniqueGuid}");
+                    break;
+                }
+                case false:
+                    break;
+            }
+
+        }
         #endregion
 
         #region Save / Load Binding Override
@@ -371,6 +395,38 @@ namespace ThreeDeePongProto.Shared.InputActions
             {
                 //Possible input system paths: 'path', 'effectivePath' and 'overridePath' during Runtime in the 'InputAction-Asset'.
                 PlayerPrefs.SetString(_inputAction.actionMap + _inputAction.name + i, _inputAction.bindings[i].overridePath);
+            }
+        }
+
+        private static void SaveRebindIconByKey(Guid _uniqueGuid, string _overridePath)
+        {
+            bool dictHasKey = m_iconPaths.ContainsKey($"{_uniqueGuid}");
+
+            switch (dictHasKey)
+            {
+                case true:
+                    m_iconPaths[$"{_uniqueGuid}"] = _overridePath;
+                    break;
+                case false:
+                    m_iconPaths.Add($"{_uniqueGuid}", _overridePath);
+                    break;
+            }
+
+            m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_buttonIconFileName, m_fileFormat, m_iconPaths, m_encryptionEnabled, true);
+        }
+
+        internal static string LoadRebindIconByKey(Guid _uniqueGuid)
+        {
+            m_iconPaths = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_buttonIconFileName, m_fileFormat, m_encryptionEnabled);
+
+            bool dictHasKey = m_iconPaths.ContainsKey($"{_uniqueGuid}");
+
+            switch (dictHasKey)
+            {
+                case true:
+                    return m_iconPaths[$"{_uniqueGuid}"];
+                case false:
+                    return default;
             }
         }
 
@@ -386,10 +442,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                 if (!string.IsNullOrEmpty(PlayerPrefs.GetString(inputAction.actionMap + inputAction.name + i)))
                 {
                     inputAction.ApplyBindingOverride(i, PlayerPrefs.GetString(inputAction.actionMap + inputAction.name + i));
-                    //return inputAction.bindings[i]/*.overridePath*/;  //InputBinding
                 }
             }
-            //return default;
         }
         #endregion
     }
