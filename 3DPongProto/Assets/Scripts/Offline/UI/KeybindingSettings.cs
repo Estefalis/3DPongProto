@@ -34,28 +34,21 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_rebindButton.onClick.AddListener(() => ExecuteKeyRebind());
             m_resetButton.onClick.AddListener(() => ResetRebinding());
 
-            InputManager.m_RebindComplete += UpdateUI;
-            InputManager.m_RebindCanceled += UpdateUI;
+            InputManager.m_RebindComplete += UpdateRebindUI;
+            InputManager.m_RebindCanceled += UpdateRebindUI;
 
             if (m_InputActionReference != null)
             {
                 GetBindingInfomation();
                 InputManager.LoadKeyBindingOverride(m_actionName);  //MUST be below 'GetBindingInfomation()'! Else Exception!
-                string overridePath = InputManager.LoadRebindIconByKey(m_bindingId);
-                if (overridePath != null)
-                {
-                    //Debug.Log(overridePath);
-                    UpdateUI(overridePath, m_bindingId);
-                }
-                else
-                    UpdateUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
+                SetRebindUI();
             }
         }
 
         private void OnDisable()
         {
-            InputManager.m_RebindComplete -= UpdateUI;
-            InputManager.m_RebindCanceled -= UpdateUI;
+            InputManager.m_RebindComplete -= UpdateRebindUI;
+            InputManager.m_RebindCanceled -= UpdateRebindUI;
         }
 
         private void OnValidate()
@@ -64,7 +57,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 return;
 
             GetBindingInfomation();
-            UpdateUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
+            UpdateRebindUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
         }
 
         private void GetBindingInfomation()
@@ -85,7 +78,18 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
         }
 
-        private void UpdateUI(string _effectivePath, Guid _bindingId)
+        private void SetRebindUI()
+        {
+            string overridePath = InputManager.LoadRebindIconByKey(m_bindingId);
+            if (overridePath != null)
+            {
+                UpdateRebindUI(overridePath, m_bindingId);
+            }
+            else
+                UpdateRebindUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
+        }
+
+        private void UpdateRebindUI(string _effectivePath, Guid _bindingId)
         {
             if (m_rebindText != null)
             {
@@ -103,14 +107,14 @@ namespace ThreeDeePongProto.Shared.InputActions
                 }
             }
 
-            if (gameObject.activeInHierarchy && m_buttonImage != null && m_buttonImage.isActiveAndEnabled)
+            //if (/*gameObject.activeInHierarchy && */m_buttonImage != null/* && m_buttonImage.enabled*/)
+            //{
+            //}
+            if (m_buttonImage != null && _bindingId == m_bindingId)  //UpdatePadSprite ONLY for the specific Binding (each Script).
             {
-                if (_bindingId == m_bindingId)  //UpdatePadSprite ONLY for the specific Binding (each Script).
-                {
-                    Image buttonImage = m_buttonImage.GetComponent<Image>();
-                    buttonImage.sprite = InputManager.GetControllerIcons(m_buttonControlScheme, _effectivePath);
-                    m_buttonImage.sprite = buttonImage.sprite;
-                }
+                Image buttonImage = m_buttonImage.GetComponent<Image>();
+                buttonImage.sprite = InputManager.GetControllerIcons(m_buttonControlScheme, _effectivePath);
+                m_buttonImage.sprite = buttonImage.sprite;
             }
         }
 
@@ -129,7 +133,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         {
             InputManager.ResetIconByKey(m_bindingId);
             InputManager.ResetRebinding(m_actionName, m_bindingIndex);
-            UpdateUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
+            UpdateRebindUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
         }
     }
 }
