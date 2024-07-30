@@ -14,6 +14,7 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private Transform[] m_contentSubTransforms;
         [SerializeField, Range(0.1f, 0.9f)] private float m_reducedAlphaValue = 0.5f;
         [SerializeField, Range(0.5f, 1f)] private float m_maxAlphaValue = 1f;
+
         private int m_currentViewIndex;
         public static event Action<int> PlayerViewIndex;
         #endregion

@@ -32,8 +32,8 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region KeyRebinding
-        public static event Action<string, Guid/*, Image*/> m_RebindComplete;
-        public static event Action<string, Guid/*, Image*/> m_RebindCanceled;
+        public static event Action<string, Guid> m_RebindComplete;
+        public static event Action<string, Guid> m_RebindCanceled;
         public static event Action<InputAction, int> m_rebindStarted;
         private static Dictionary<string, string> m_iconPaths = new Dictionary<string, string>();
 
@@ -58,13 +58,16 @@ namespace ThreeDeePongProto.Shared.InputActions
         private static bool m_encryptionEnabled = false;
         #endregion
 
-        private static ActionMapParent uniqueActionMap = new ActionMapParent();
-        private static Dictionary<InputAction, ActionMapParent> m_keyRebindDict = new Dictionary<InputAction, ActionMapParent>();
+        private static ActionMap uniqueActionMap = new ActionMap();
+        private static Dictionary<InputAction, ActionMap> m_keyRebindDict = new Dictionary<InputAction, ActionMap>();
+
         /// <summary>
         /// PlayerController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the InputManager into 'Awake()', to prevent Exceptions.
         /// </summary>
         private void Awake()
         {
+            m_playerIndex = 0;
+
             //Alternative: m_playerInputActions ??= new PlayerInputActions();
             if (m_playerInputActions == null)
             {
@@ -341,7 +344,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 #endif
                 m_RebindComplete?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _bindingId); //Invoke on finished rebinding.
 
-                SaveKeyBindingOverride(_actionToRebind);    //TODO: replace this with the save system interface.
+                SaveKeyBindingOverride(_actionToRebind);
                 SaveRebindIconByKey(_bindingId, _actionToRebind.bindings[_bindingIndex].effectivePath);   //NOCH NUR ICON-SAVE!
             });
 
@@ -430,9 +433,13 @@ namespace ThreeDeePongProto.Shared.InputActions
             {
                 //Possible input system paths: 'path', 'effectivePath' and 'overridePath' during Runtime in the 'InputAction-Asset'.
                 PlayerPrefs.SetString(_inputAction.actionMap + _inputAction.name + i, _inputAction.bindings[i].overridePath);
+
                 uniqueActionMap.ActionMapEntries.Add(new ActionMapBindings(_inputAction.bindings[i].name, _inputAction.bindings[i].overridePath, _inputAction.bindings[i].id));
 
+                //Check the dictionary for the '_inputAction' key.
                 bool dictHasKey = m_keyRebindDict.ContainsKey(_inputAction);
+
+                //If the dictionary has the key, save the entry. Else create a new entry with the new informations. 
                 switch (dictHasKey)
                 {
                     case true:

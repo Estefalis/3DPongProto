@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ThreeDeePongProto.Shared.InputActions
 {
 	[Serializable]
-	public class ActionMapParent
+	public class ActionMap
 	{
 		public List<ActionMapBindings> ActionMapEntries = new ();
 	}
