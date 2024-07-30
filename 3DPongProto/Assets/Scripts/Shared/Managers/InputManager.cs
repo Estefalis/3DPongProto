@@ -434,7 +434,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 //Possible input system paths: 'path', 'effectivePath' and 'overridePath' during Runtime in the 'InputAction-Asset'.
                 PlayerPrefs.SetString(_inputAction.actionMap + _inputAction.name + i, _inputAction.bindings[i].overridePath);
 
-                uniqueActionMap.ActionMapEntries.Add(new ActionMapBindings(_inputAction.bindings[i].name, _inputAction.bindings[i].overridePath, _inputAction.bindings[i].id));
+                uniqueActionMap.ActionMapBindings.Add(new ActionMapBindings(_inputAction.bindings[i].name, _inputAction.bindings[i].overridePath, _inputAction.bindings[i].id));
 
                 //Check the dictionary for the '_inputAction' key.
                 bool dictHasKey = m_keyRebindDict.ContainsKey(_inputAction);
