@@ -4,7 +4,7 @@ using UnityEngine;
 namespace ThreeDeePongProto.Offline.UI
 {
     [Serializable]
-    public struct GamepadIcons
+    public struct GamepadIcons  //struct and Sprites NEVER readonly! Because that RESETS the button-assignments in the inspector! :(
     {
         public Sprite buttonNorth;
         public Sprite buttonSouth;
@@ -12,10 +12,10 @@ namespace ThreeDeePongProto.Offline.UI
         public Sprite buttonEast;
         public Sprite startButton;
         public Sprite selectButton;
-        public Sprite leftTrigger;
-        public Sprite rightTrigger;
         public Sprite leftShoulder;
         public Sprite rightShoulder;
+        public Sprite leftTrigger;
+        public Sprite rightTrigger;
         public Sprite dpad;
         public Sprite dpadUp;
         public Sprite dpadDown;
@@ -23,12 +23,22 @@ namespace ThreeDeePongProto.Offline.UI
         public Sprite dpadRight;
         public Sprite leftStick;
         public Sprite leftStickX;
+        public Sprite leftStickLeft;
+        public Sprite leftStickRight;
         public Sprite leftStickY;
+        public Sprite leftStickUp;
+        public Sprite leftStickDown;
         public Sprite rightStick;
         public Sprite rightStickX;
+        public Sprite rightStickLeft;
+        public Sprite rightStickRight;
         public Sprite rightStickY;
+        public Sprite rightStickUp;
+        public Sprite rightStickDown;
         public Sprite leftStickPress;
         public Sprite rightStickPress;
+        public Sprite touchpadButtonPress;
+        //public Sprite home;
 
         public Sprite GetGamepadSprite(string controlPath)
         {
@@ -69,23 +79,31 @@ namespace ThreeDeePongProto.Offline.UI
                 case "<Gamepad>/leftStick":
                     return leftStick;
                 case "<Gamepad>/leftStick/x":
-                case "<Gamepad>/leftStick/left":
-                case "<Gamepad>/leftStick/right":
                     return leftStickX;
+                case "<Gamepad>/leftStick/left":
+                    return leftStickLeft;
+                case "<Gamepad>/leftStick/right":
+                    return leftStickRight;
                 case "<Gamepad>/leftStick/y":
-                case "<Gamepad>/leftStick/up":
-                case "<Gamepad>/leftStick/down":
                     return leftStickY;
+                case "<Gamepad>/leftStick/up":
+                    return leftStickUp;
+                case "<Gamepad>/leftStick/down":
+                    return leftStickDown;
                 case "<Gamepad>/rightStick":
                     return rightStick;
                 case "<Gamepad>/rightStick/x":
-                case "<Gamepad>/rightStick/left":
-                case "<Gamepad>/rightStick/right":
                     return rightStickX;
+                case "<Gamepad>/rightStick/left":
+                    return rightStickLeft;
+                case "<Gamepad>/rightStick/right":
+                    return rightStickRight;
                 case "<Gamepad>/rightStick/y":
-                case "<Gamepad>/rightStick/up":
-                case "<Gamepad>/rightStick/down":
                     return rightStickY;
+                case "<Gamepad>/rightStick/up":
+                    return rightStickUp;
+                case "<Gamepad>/rightStick/down":
+                    return rightStickDown;
                 case "<Gamepad>/leftStickPress":
                     return leftStickPress;
                 case "<Gamepad>/rightStickPress":
@@ -102,7 +120,7 @@ namespace ThreeDeePongProto.Offline.UI
             switch (controlPath)
             {
                 case "<DualShockGamepad>/touchpadButton":
-                    return dpad;    //Until I get PS5 icons. If ever.
+                    return touchpadButtonPress;    //Until I get PS5 icons. If ever.
                 default:
                     return null;
             }
@@ -118,10 +136,10 @@ namespace ThreeDeePongProto.Offline.UI
                     return leftTrigger;
                 case "<DualSenseGamepadHID>/rightTriggerButton":
                     return rightTrigger;
-                case "<DualSenseGamepadHID>/systemButton":
-                    return dpad;    //Until I get PS5 icons. If ever.
-                case "<DualSenseGamepadHID>/micButton":
-                    return dpad;    //Until I get PS5 icons. If ever.
+                //case "<DualSenseGamepadHID>/systemButton":
+                //    return home;  //Disabled for ControlRebinds.
+                //case "<DualSenseGamepadHID>/micButton":
+                //    return dpad;  //Disabled for ControlRebinds. (And no icon available at the moment.)
                 default:
                     return null;
             }

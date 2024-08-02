@@ -67,15 +67,15 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             m_selectedBinding = Mathf.Clamp(m_selectedBinding, 0, m_InputActionReference.action.bindings.Count - 1);
 
-            //if (this.gameObject.activeInHierarchy)
-            //{
+            if (this.gameObject.activeInHierarchy)
+            {
                 if (m_InputActionReference.action.bindings.Count > m_selectedBinding)   //prevents ArgumentOutOfRangeException.
                 {
                     m_inputBinding = m_InputActionReference.action.bindings[m_selectedBinding];
                     m_bindingIndex = m_selectedBinding;
                     m_bindingId = m_InputActionReference.action.bindings[m_selectedBinding].id;
                 }
-            //}
+            }
         }
 
         private void SetRebindUI()
@@ -120,6 +120,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ExecuteKeyRebind()
         {
+            //May rename to m_eKeyControlScheme. (Including resetting the Inspector value.)
             InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse, m_buttonControlScheme, m_bindingId);
         }
 

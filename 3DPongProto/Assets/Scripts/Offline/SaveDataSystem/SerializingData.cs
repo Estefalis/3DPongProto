@@ -16,7 +16,7 @@ public class SerializingData : IPersistentData
         if (!Directory.Exists(Application.persistentDataPath + _subFolder))
         {
 #if UNITY_EDITOR
-            Debug.Log("SubFolder(s) do(es) not exist. Creating... .");
+            Debug.Log(" The folder-path does not exist. Creating it now.");
 #endif
             Directory.CreateDirectory(Application.persistentDataPath + _subFolder);
         }
@@ -46,7 +46,7 @@ public class SerializingData : IPersistentData
             else
             {
 #if UNITY_EDITOR
-                Debug.Log("Creating a new file. Gimme the amount of milliseconds needed for it. Thank you!");
+                Debug.Log("Creating a new file. Just a moment, please.");
 #endif
             }
 
@@ -74,15 +74,24 @@ public class SerializingData : IPersistentData
 
     public T LoadData<T>(string _subFolder, string _fileName, string _fileFormat, bool _encrypted)
     {
+        #region Directory Check
+        if (!Directory.Exists(Application.persistentDataPath + _subFolder))
+        {
+#if UNITY_EDITOR
+            Debug.Log($"Path to load the data does not exist. Creating it for the next time... .");
+#endif
+            Directory.CreateDirectory(Application.persistentDataPath + _subFolder);
+        }
+        #endregion
+
         string path = Application.persistentDataPath + _subFolder + _fileName + _fileFormat;
 
         if (!File.Exists(path))
         {
-            Debug.LogError($"The file at {path} cannot be loaded, because it does not exist!");
+            Debug.LogError($"The file at {path} cannot be loaded, because it does not exist.");
             //throw new FileNotFoundException($"{path} does not exit!");
 
-            //The receiver can check for/and react to 'Null'.
-            return default;
+            return default; //The receiver can check for/and react to 'Null'.
         }
 
         try
@@ -124,7 +133,7 @@ public class SerializingData : IPersistentData
         //Debug.Log($"InitializeBasic Vector: {Convert.ToBase64String(aesEncryptionProvider.IV)}");
         //___________________________________________________________________________________________
 
-        //Encoding.ASCII in the Tutorial 'https://www.youtube.com/watch?v=mntS45g8OK4'.
+        //Encoding.ASCII from the Tutorial 'https://www.youtube.com/watch?v=mntS45g8OK4'.
         //TODO: Place to add more Serialize options. (switch with _fileFormat?)
         cryptoStream.Write(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(_data, Formatting.Indented)));
     }

@@ -1531,7 +1531,7 @@ MonoBehaviour:
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 1781797229513421299}
-    m_SelectOnRight: {fileID: 8749116869265433581}
+    m_SelectOnRight: {fileID: 3749569951361677026}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
