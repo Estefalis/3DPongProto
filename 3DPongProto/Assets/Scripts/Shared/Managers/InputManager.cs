@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 public enum EKeyControlScheme
 {
     None,
-    KeyboardMouse,
+    Keyboard,
     Gamepad,
     PSGamepad,
     XBoxGamepad
@@ -21,6 +21,11 @@ namespace ThreeDeePongProto.Shared.InputActions
     public class InputManager : MonoBehaviour
     {
         public static PlayerInputActions m_playerInputActions;  //Reference to the PlayerAction-InputAsset.
+#if UNITY_EDITOR
+        [SerializeField] private bool m_deleteAllPlayerPrefs = false;
+#endif
+        [SerializeField] private bool m_clearDictsAtStart = true;
+        [SerializeField] private bool m_LoadRebindDicts = true;
 
         #region Change Action Maps
         //ActionEvent to switch between ActionMaps within the new InputActionAsset.
@@ -38,6 +43,11 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private const string m_cancelWithKeyboardButton = "<Keyboard>/escape";
         private const string m_cancelWithGamepadButton = "<Gamepad>/buttonEast";
+
+        //private const string m_keyboardString = "Keyboard";
+        //private const string m_gamePadString = "Gamepad";
+        //private const string m_dualShockGamepadString = "DualShockGamepad";
+        //private const string m_dualSenseGamepadHIDString = "DualSenseGamepadHID";
         #endregion
 
         #region KeyBinding Icons
@@ -67,8 +77,18 @@ namespace ThreeDeePongProto.Shared.InputActions
         private void Awake()
         {
             m_playerIndex = 0;
-            m_keyboardRebindDict.Clear();
-            m_gamepadRebindDict.Clear();
+#if UNITY_EDITOR
+            if (m_deleteAllPlayerPrefs)
+            {
+                PlayerPrefs.DeleteAll();
+            }
+#endif
+
+            if (m_clearDictsAtStart)
+            {
+                m_keyboardRebindDict.Clear();
+                m_gamepadRebindDict.Clear();
+            }
 
             //Alternative: m_playerInputActions ??= new PlayerInputActions();
             if (m_playerInputActions == null)
@@ -79,8 +99,11 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private void OnEnable()
         {
-            //m_keyboardRebindDict = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_encryptionEnabled);
-            //m_gamepadRebindDict = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_encryptionEnabled);
+            if (m_LoadRebindDicts)
+            {
+                m_keyboardRebindDict = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_encryptionEnabled);
+                m_gamepadRebindDict = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_encryptionEnabled);
+            }
 
             SceneManager.sceneLoaded += OnSceneFinishedLoading;
             m_extractButtonImage += ExtractImage;
@@ -167,14 +190,14 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             switch (_controlScheme)
             {
-                case EKeyControlScheme.KeyboardMouse:
+                case EKeyControlScheme.Keyboard:
                 {
                     break;
                 }
                 case EKeyControlScheme.Gamepad:
                 case EKeyControlScheme.PSGamepad:
                 {
-                    string wordBetween = GetWordInBetween(_controlPath, "<", ">");
+                    string wordBetween = GetWordBetweenArgs(_controlPath, "<", ">");
 #if UNITY_EDITOR
                     //Debug.Log($"Start-{wordBetween}-End");
 #endif
@@ -214,7 +237,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             return null;
         }
 
-        public static string GetWordInBetween(string _source, string _firstArg, string _secondArg)
+        public static string GetWordBetweenArgs(string _source, string _firstArg, string _secondArg)
         {
             if (_source.Contains(_firstArg) && _source.Contains(_secondArg))
             {
@@ -242,12 +265,12 @@ namespace ThreeDeePongProto.Shared.InputActions
                     break;
             }
 
-            m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_buttonIconFileName, m_fileFormat, m_iconPaths, m_encryptionEnabled, true);
+            m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_buttonIconFileName + $"{m_playerIndex}", m_fileFormat, m_iconPaths, m_encryptionEnabled, true);
         }
 
         internal static string LoadRebindIconByKey(Guid _uniqueGuid)
         {
-            m_iconPaths = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_buttonIconFileName, m_fileFormat, m_encryptionEnabled);
+            m_iconPaths = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_buttonIconFileName + $"{m_playerIndex}", m_fileFormat, m_encryptionEnabled);
 
             bool dictHasKey = m_iconPaths.ContainsKey($"{_uniqueGuid}");
 
@@ -349,7 +372,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 #endif
                 m_RebindComplete?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _bindingId); //Invoke on finished rebinding.
 
-                SaveKeyBindingOverride(_actionToRebind, _eKeyControlScheme, _bindingIndex, _bindingId);
+                SaveKeyBindingOverride(_eKeyControlScheme, _actionToRebind, _bindingIndex, _bindingId);
                 SaveRebindIconByKey(_bindingId, _actionToRebind.bindings[_bindingIndex].effectivePath);   //NOCH NUR ICON-SAVE!
             });
 
@@ -364,7 +387,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             switch (_eKeyControlScheme)  //ONLY ONE cancelButton gets recognized in code at a time.
             {
-                case EKeyControlScheme.KeyboardMouse:
+                case EKeyControlScheme.Keyboard:
                     rebind.WithCancelingThrough(m_cancelWithKeyboardButton);
                     break;
                 case EKeyControlScheme.Gamepad:
@@ -378,6 +401,8 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             #region Exclude controls from the rebind process
             rebind.WithControlsExcluding("<Keyboard>/escape");  //Else ESC gets set on keyboard button rebinds on cancellation.
+            rebind.WithControlsExcluding("<DualSenseGamepadHID>/systemButton");
+            rebind.WithControlsExcluding("<DualSenseGamepadHID>/micButton");
             if (_excludeMouse)  //Ignore the mouse on redinds.
                 rebind.WithControlsExcluding("Mouse");
             #endregion
@@ -412,7 +437,8 @@ namespace ThreeDeePongProto.Shared.InputActions
             else
                 inputAction.RemoveBindingOverride(_bindingIndex);
 
-            SaveKeyBindingOverride(inputAction, _eKeyControlScheme, _bindingIndex, _guid);
+            SaveKeyBindingOverride(_eKeyControlScheme, inputAction, _bindingIndex, _guid);
+            SaveRebindIconByKey(_guid, inputAction.bindings[_bindingIndex].effectivePath);   //NOCH NUR ICON-SAVE!
         }
         #endregion
 
@@ -432,9 +458,9 @@ namespace ThreeDeePongProto.Shared.InputActions
             return inputAction.GetBindingDisplayString(_bindingIndex);
         }
 
-        private static void SaveKeyBindingOverride(InputAction _inputAction, EKeyControlScheme _eKeyControlScheme, int _bindingIndex, Guid _uniqueGuid/* = default*/)
+        private static void SaveKeyBindingOverride(EKeyControlScheme _eKeyControlScheme, InputAction _inputAction, int _bindingIndex, Guid _uniqueGuid/* = default*/)
         {
-            //bool dictHasKey = false;
+            bool dictHasKey = false;
 
             for (int i = 0; i < _inputAction.bindings.Count; i++)
             {
@@ -443,64 +469,66 @@ namespace ThreeDeePongProto.Shared.InputActions
                 #endregion
 
                 #region Unique Guid
-                //if (_inputAction.bindings[i].overridePath != null)
-                //{
-                //    string dictKey = $"{_uniqueGuid}";
+                if (_inputAction.bindings[i].overridePath != null)
+                {
+                    string dictKey = $"{_uniqueGuid}";
 
-                //    //Check the dictionary for the '_inputAction' guidKey.
-                //    switch (_eKeyControlScheme)
-                //    {
-                //        case EKeyControlScheme.KeyboardMouse:
-                //        {
-                //            dictHasKey = m_keyboardRebindDict.ContainsKey(dictKey);
-                //            _inputAction.bindings[i].overridePath.Replace("<Gamepad>", "<Keyboard>");
+                    //Check the dictionary for the '_inputAction' guidKey.
+                    switch (_eKeyControlScheme)
+                    {
+                        case EKeyControlScheme.Keyboard:
+                        {
+                            dictHasKey = m_keyboardRebindDict.ContainsKey(dictKey);
 
-                //            //If the dictionary has the guidKey, save the entry. Else create a new entry with the new informations. 
-                //            switch (dictHasKey)
-                //            {
-                //                case true:
-                //                {
-                //                    m_keyboardRebindDict[dictKey] = $"[{_bindingIndex}] .{_inputAction.bindings[i].overridePath}!";
-                //                    break;
-                //                }
-                //                case false:
-                //                {
-                //                    m_keyboardRebindDict.Add(dictKey, $"[{_bindingIndex}] .{_inputAction.bindings[i].overridePath}!");
-                //                    break;
-                //                }
-                //            }
+                            //if (_inputAction.bindings[i].overridePath.Contains("<Gamepad>"))
+                            _inputAction.bindings[i].overridePath.Replace("<Gamepad>", "<Keyboard>");
 
-                //            m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
-                //            break;
-                //        }
-                //        case EKeyControlScheme.Gamepad:
-                //        case EKeyControlScheme.PSGamepad:
-                //        case EKeyControlScheme.XBoxGamepad:
-                //        {
-                //            dictHasKey = m_gamepadRebindDict.ContainsKey(dictKey);
+                            //If the dictionary has the guidKey, save the entry. Else create a new entry with the new informations. 
+                            switch (dictHasKey)
+                            {
+                                case true:
+                                {
+                                    m_keyboardRebindDict[dictKey] = $"[{_inputAction.actionMap}]{_bindingIndex}.{_inputAction.bindings[i].overridePath}!";
+                                    break;
+                                }
+                                case false:
+                                {
+                                    m_keyboardRebindDict.Add(dictKey, $"[{_inputAction.actionMap}]{_bindingIndex}.{_inputAction.bindings[i].overridePath}!");
+                                    break;
+                                }
+                            }
 
-                //            //If the dictionary has the guidKey, save the entry. Else create a new entry with the new informations. 
-                //            switch (dictHasKey)
-                //            {
-                //                case true:
-                //                {
-                //                    m_gamepadRebindDict[dictKey] = $"[{_bindingIndex}] .{_inputAction.bindings[i].overridePath}!";
-                //                    break;
-                //                }
-                //                case false:
-                //                {
-                //                    m_gamepadRebindDict.Add(dictKey, $"[{_bindingIndex}] .{_inputAction.bindings[i].overridePath}!");
-                //                    break;
-                //                }
-                //            }
+                            m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
+                            break;
+                        }
+                        case EKeyControlScheme.Gamepad:
+                        case EKeyControlScheme.PSGamepad:
+                        case EKeyControlScheme.XBoxGamepad:
+                        {
+                            dictHasKey = m_gamepadRebindDict.ContainsKey(dictKey);
 
-                //            m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
-                //            break;
-                //        }
-                //        default:
-                //            break;
-                //    }
-                //}
+                            //If the dictionary has the guidKey, save the entry. Else create a new entry with the new informations. 
+                            switch (dictHasKey)
+                            {
+                                case true:
+                                {
+                                    m_gamepadRebindDict[dictKey] = $"[{_inputAction.actionMap}]{_bindingIndex}.{_inputAction.bindings[i].overridePath}!";
+                                    break;
+                                }
+                                case false:
+                                {
+                                    m_gamepadRebindDict.Add(dictKey, $"[{_inputAction.actionMap}]{_bindingIndex}.{_inputAction.bindings[i].overridePath}!");
+                                    break;
+                                }
+                            }
+
+                            m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
+                            break;
+                        }
+                        default:
+                            break;
+                    }
+                }
                 #endregion
             }
         }
@@ -510,9 +538,9 @@ namespace ThreeDeePongProto.Shared.InputActions
             if (m_playerInputActions == null)
                 m_playerInputActions = new PlayerInputActions();
 
+            #region PlayerPref Example
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
 
-            #region PlayerPref Example
             for (int i = 0; i < inputAction.bindings.Count; i++)
             {
                 if (!string.IsNullOrEmpty(PlayerPrefs.GetString(inputAction.actionMap + inputAction.name + i)))
@@ -524,19 +552,18 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             #region Unique Guid
             //Guid uniqueGuid;
-            //string guidKey, bindingIndex, overridePath;
+            //string guidKey,/* actionMap,*/ bindingIndex, overridePath;
             ////InputAction test4, test5, test6;
 
             //foreach (var entry in m_keyboardRebindDict)
             //{
             //    guidKey = entry.Key;
             //    uniqueGuid = Guid.Parse(guidKey);
-
-            //    bindingIndex = GetWordInBetween(entry.Value, "[", "]");
+            //    //actionMap = GetWordBetweenArgs(entry.Value, "[", "]");
+            //    bindingIndex = GetWordBetweenArgs(entry.Value, "]", ".");
             //    int bindingIndexAsInt = int.Parse(bindingIndex);
+            //    overridePath = GetWordBetweenArgs(entry.Value, ".", "!");
 
-            //    overridePath = GetWordInBetween(entry.Value, ".", "!");
-            //    //overridePath.Replace("<Gamepad>", "<Keyboard>");
             //    //if (uniqueGuid != null)
             //    //{
             //    //    test4 = m_playerInputActions.asset.FindAction(_actionName);
@@ -555,9 +582,9 @@ namespace ThreeDeePongProto.Shared.InputActions
             if (m_playerInputActions == null)
                 m_playerInputActions = new PlayerInputActions();
 
+            #region PlayerPref Example
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
 
-            #region PlayerPref Example
             for (int i = 0; i < inputAction.bindings.Count; i++)
             {
                 if (!string.IsNullOrEmpty(PlayerPrefs.GetString(inputAction.actionMap + inputAction.name + i)))
@@ -569,18 +596,17 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             #region Unique Guid
             //Guid uniqueGuid;
-            //string guidKey, bindingIndex, overridePath;
+            //string guidKey,/* actionMap,*/ bindingIndex, overridePath;
             ////InputAction test4, test5, test6;
 
             //foreach (var entry in m_gamepadRebindDict)
             //{
             //    guidKey = entry.Key;
             //    uniqueGuid = Guid.Parse(guidKey);
-
-            //    bindingIndex = GetWordInBetween(entry.Value, "[", "]");
+            //    //actionMap = GetWordBetweenArgs(entry.Value, "[", "]");
+            //    bindingIndex = GetWordBetweenArgs(entry.Value, "]", ".");
             //    int bindingIndexAsInt = int.Parse(bindingIndex);
-
-            //    overridePath = GetWordInBetween(entry.Value, ".", "!");
+            //    overridePath = GetWordBetweenArgs(entry.Value, ".", "!");
 
             //    //if (uniqueGuid != null)
             //    //{
@@ -613,25 +639,22 @@ namespace ThreeDeePongProto.Shared.InputActions
             #endregion
 
             //Guid uniqueGuid;
-            //string guidKey, bindingIndex, overridePath;
+            //string guidKey,/* actionMap,*/ bindingIndex, overridePath;
             ////InputAction test4, test5, test6;
 
             //switch (_eKeyControlScheme)
             //{
-            //    case EKeyControlScheme.KeyboardMouse:
+            //    case EKeyControlScheme.Keyboard:
             //    {
             //        foreach (var entry in m_keyboardRebindDict)
             //        {
             //            guidKey = entry.Key;
             //            uniqueGuid = Guid.Parse(guidKey);
-
-            //            bindingIndex = GetWordInBetween(entry.Value, "[", "]");
+            //            //actionMap = GetWordBetweenArgs(entry.Value, "[", "]");
+            //            bindingIndex = GetWordBetweenArgs(entry.Value, "]", ".");
             //            int bindingIndexAsInt = int.Parse(bindingIndex);
+            //            overridePath = GetWordBetweenArgs(entry.Value, ".", "!");
 
-            //            overridePath = GetWordInBetween(entry.Value, ".", "!");
-
-            //            //Debug.Log($"Key: {guidKey} - Guid: {uniqueGuid} Index: {bindingIndex} - Value: {overridePath}");
-            //            //Debug.Log($"DictID: {uniqueGuid} - InputActionID: {inputAction.id}");
             //            //if (uniqueGuid != null)
             //            //{
             //            //    test4 = m_playerInputActions.asset.FindAction(_actionName);
@@ -640,7 +663,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             //            //    Debug.Log($"Test4 {test4} Test5 {test5} Test6 {test6}");
             //            //}
 
-            //            m_playerInputActions.asset.FindAction(_actionName).ApplyBindingOverride(bindingIndexAsInt, overridePath);
+            //            m_playerInputActions.asset.FindAction(uniqueGuid).ApplyBindingOverride(bindingIndexAsInt, overridePath);
             //        }
             //        break;
             //    }
@@ -652,14 +675,11 @@ namespace ThreeDeePongProto.Shared.InputActions
             //        {
             //            guidKey = entry.Key;
             //            uniqueGuid = Guid.Parse(guidKey);
-
-            //            bindingIndex = GetWordInBetween(entry.Value, "[", "]");
+            //            //actionMap = GetWordBetweenArgs(entry.Value, "[", "]");
+            //            bindingIndex = GetWordBetweenArgs(entry.Value, "]", ".");
             //            int bindingIndexAsInt = int.Parse(bindingIndex);
+            //            overridePath = GetWordBetweenArgs(entry.Value, ".", "!");
 
-            //            overridePath = GetWordInBetween(entry.Value, ".", "!");
-
-            //            //Debug.Log($"Key: {guidKey} - Guid: {uniqueGuid} Index: {bindingIndex} - Value: {overridePath}");
-            //            //Debug.Log($"DictID: {uniqueGuid} - InputActionID: {inputAction.id}");
             //            //if (uniqueGuid != null)
             //            //{
             //            //    test4 = m_playerInputActions.asset.FindAction(_actionName);
@@ -668,11 +688,10 @@ namespace ThreeDeePongProto.Shared.InputActions
             //            //    Debug.Log($"Test4 {test4} Test5 {test5} Test6 {test6}");
             //            //}
 
-            //            m_playerInputActions.asset.FindAction(_actionName).ApplyBindingOverride(bindingIndexAsInt, overridePath);
+            //            m_playerInputActions.asset.FindAction(uniqueGuid).ApplyBindingOverride(bindingIndexAsInt, overridePath);
             //        }
             //        break;
             //    }
-            //}
         }
         #endregion
     }

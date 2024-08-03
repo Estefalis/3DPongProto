@@ -374,8 +374,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""ArrowLeftStickLR"",
-                    ""id"": ""7e053f50-7114-45d1-9b0f-b55e4cc40471"",
+                    ""name"": ""ArrowKeys"",
+                    ""id"": ""11a45712-597f-4abc-8705-57ba34595b33"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -396,23 +396,34 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""left"",
-                    ""id"": ""1bd09f5f-e241-4703-8d07-d378bf829e14"",
-                    ""path"": ""<Gamepad>/leftStick/left"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""SideMovementPosZP2"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": ""right"",
                     ""id"": ""d758c9bd-0abf-4e0b-8463-30fed5d77148"",
                     ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
+                    ""action"": ""SideMovementPosZP2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""LeftStickLR"",
+                    ""id"": ""7e053f50-7114-45d1-9b0f-b55e4cc40471"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SideMovementPosZP2"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""1bd09f5f-e241-4703-8d07-d378bf829e14"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""SideMovementPosZP2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -506,7 +517,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""GamepadShoulders"",
+                    ""name"": ""GamepadLR"",
                     ""id"": ""99196118-49ba-4601-ae59-9f99efba25d5"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
@@ -561,8 +572,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""RZYShoulderLR"",
-                    ""id"": ""e698161d-8bd5-4938-8e32-a7bd84509594"",
+                    ""name"": ""RZ"",
+                    ""id"": ""38da1830-85b2-47a4-a4a3-6015150a4ad3"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -583,17 +594,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""left"",
-                    ""id"": ""aa64db46-cc0f-4cab-9b07-f8b7ca84bfa5"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""RotatePaddleNegZP3"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": ""right"",
                     ""id"": ""285977cb-1698-4c70-b07c-d40096a4fc4c"",
                     ""path"": ""<Keyboard>/z"",
@@ -605,12 +605,23 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""right"",
-                    ""id"": ""695b7ed2-aa53-4cef-b884-ec29665be421"",
-                    ""path"": ""<Keyboard>/y"",
+                    ""name"": ""GamepadLR"",
+                    ""id"": ""e698161d-8bd5-4938-8e32-a7bd84509594"",
+                    ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": """",
+                    ""action"": ""RotatePaddleNegZP3"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""aa64db46-cc0f-4cab-9b07-f8b7ca84bfa5"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""RotatePaddleNegZP3"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -627,8 +638,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""FHLeftStickLR"",
-                    ""id"": ""52a8004e-77e7-4ffe-9726-95eb45740690"",
+                    ""name"": ""FH"",
+                    ""id"": ""5732022e-c19c-4c78-8558-4e54eb309b85"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -649,23 +660,34 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""left"",
-                    ""id"": ""5729fe3e-a38a-4e6d-8249-0ce3ace06e5b"",
-                    ""path"": ""<Gamepad>/leftStick/left"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""SideMovementNegZP3"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": ""right"",
                     ""id"": ""0e9bac8a-5617-4952-89e2-7db7aba2c111"",
                     ""path"": ""<Keyboard>/h"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
+                    ""action"": ""SideMovementNegZP3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""LeftStickLR"",
+                    ""id"": ""52a8004e-77e7-4ffe-9726-95eb45740690"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SideMovementNegZP3"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""5729fe3e-a38a-4e6d-8249-0ce3ace06e5b"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""SideMovementNegZP3"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -682,8 +704,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""RShiftNum1ShoulderLR"",
-                    ""id"": ""238dea74-ac4b-4da7-acca-a01a07343420"",
+                    ""name"": ""RightShiftNumPad"",
+                    ""id"": ""b5d65584-69bf-4fd0-9c2c-0f7bb4c3886c"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -704,23 +726,34 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""left"",
-                    ""id"": ""a5bcb7f4-5a2e-4d21-ad1d-931b39b3a17e"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""RotatePaddlePosZP2"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": ""right"",
                     ""id"": ""757c1a7b-443a-41d0-afa6-2498919c34b8"",
                     ""path"": ""<Keyboard>/numpad1"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
+                    ""action"": ""RotatePaddlePosZP2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""GamepadLR"",
+                    ""id"": ""238dea74-ac4b-4da7-acca-a01a07343420"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotatePaddlePosZP2"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""a5bcb7f4-5a2e-4d21-ad1d-931b39b3a17e"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""RotatePaddlePosZP2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -759,8 +792,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""UOShoulderLR"",
-                    ""id"": ""31112d1f-64ba-4b9b-9643-49c5396984ae"",
+                    ""name"": ""UO"",
+                    ""id"": ""e48fd7ed-af48-49da-8ced-5cf505d4c3f0"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -781,23 +814,34 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""left"",
-                    ""id"": ""89061e91-f681-4700-9ee7-2b531a827f1c"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""RotatePaddlePosZP4"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": ""right"",
                     ""id"": ""63a35378-ac7d-4916-8bdb-0e33d34b8235"",
                     ""path"": ""<Keyboard>/o"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
+                    ""action"": ""RotatePaddlePosZP4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""GamepadLR"",
+                    ""id"": ""31112d1f-64ba-4b9b-9643-49c5396984ae"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotatePaddlePosZP4"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""89061e91-f681-4700-9ee7-2b531a827f1c"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""RotatePaddlePosZP4"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -814,8 +858,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""JLLeftStickLR"",
-                    ""id"": ""63bc878c-e7f0-4372-a4b1-d2f350a6f24f"",
+                    ""name"": ""JL"",
+                    ""id"": ""245ebcfa-b997-40cb-ada2-f000f2d1d96b"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -836,23 +880,34 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""left"",
-                    ""id"": ""ce0a913a-f108-4b96-af90-f4c9368de6c5"",
-                    ""path"": ""<Gamepad>/leftStick/left"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""SideMovementPosZP4"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": ""right"",
                     ""id"": ""5303d9a4-fa8f-44c2-bae3-8a3d248f4468"",
                     ""path"": ""<Keyboard>/l"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
+                    ""action"": ""SideMovementPosZP4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""LeftStickLR"",
+                    ""id"": ""63bc878c-e7f0-4372-a4b1-d2f350a6f24f"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SideMovementPosZP4"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""ce0a913a-f108-4b96-af90-f4c9368de6c5"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""SideMovementPosZP4"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
