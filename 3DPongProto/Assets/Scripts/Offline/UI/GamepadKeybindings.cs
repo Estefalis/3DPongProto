@@ -40,8 +40,17 @@ namespace ThreeDeePongProto.Shared.InputActions
             if (m_InputActionReference != null)
             {
                 GetBindingInfomation();
-                InputManager.LoadGamepadOverrides(m_actionName, m_bindingId);  //MUST be below 'GetBindingInfomation()'! Else Exception!
-                SetRebindUI();
+                //'overridePath' MUST be below 'GetBindingInfomation()'! Else Exception!
+                string overridePath = InputManager.LoadGamepadOverrides(m_actionName, m_bindingId);  
+                //SetRebindUI();
+
+                //string overridePath = InputManager.LoadGampadIconsByKey(m_bindingId);
+                if (overridePath != null)
+                {
+                    UpdateRebindUI(overridePath, m_bindingId);
+                }
+                else
+                    UpdateRebindUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
             }
         }
 
@@ -78,16 +87,17 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
         }
 
-        private void SetRebindUI()
-        {
-            string overridePath = InputManager.LoadRebindIconByKey(m_bindingId);
-            if (overridePath != null)
-            {
-                UpdateRebindUI(overridePath, m_bindingId);
-            }
-            else
-                UpdateRebindUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
-        }
+        //private void SetRebindUI()
+        //{
+        //    //string overridePath = InputManager.LoadRebindIconByKey(m_bindingId);
+        //    string overridePath = InputManager.LoadGampadIconsByKey(m_bindingId);
+        //    if (overridePath != null)
+        //    {
+        //        UpdateRebindUI(overridePath, m_bindingId);
+        //    }
+        //    else
+        //        UpdateRebindUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
+        //}
 
         private void UpdateRebindUI(string _effectivePath, Guid _bindingId)
         {
@@ -127,8 +137,9 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ResetRebinding()
         {
-            InputManager.ResetIconByKey(m_bindingId);
-            InputManager.ResetRebinding(m_actionName, m_buttonControlScheme, m_bindingIndex, m_bindingId);
+            //InputManager.ResetIconByKey(m_bindingId);
+            //InputManager.ResetGamepadIcons(m_bindingId);
+            InputManager.ResetRebinding(m_actionName, m_bindingIndex, m_buttonControlScheme, m_bindingId);
             UpdateRebindUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
         }
     }
