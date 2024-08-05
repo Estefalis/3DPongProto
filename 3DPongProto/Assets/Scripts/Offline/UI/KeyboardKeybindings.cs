@@ -40,7 +40,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             if (m_InputActionReference != null)
             {
                 GetBindingInfomation();
-                InputManager.LoadKeyboardOverrides(m_actionName);  //MUST be below 'GetBindingInfomation()'! Else Exception!
+                InputManager.LoadKeyboardOverrides(m_actionName, m_bindingId);  //MUST be below 'GetBindingInfomation()'! Else Exception!
                 SetRebindUI();
             }
         }
@@ -91,19 +91,17 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private void UpdateRebindUI(string _effectivePath, Guid _bindingId)
         {
-            if (m_rebindText != null)
+            if (m_rebindText != null && _bindingId == m_bindingId)
             {
                 if (Application.isPlaying)
                 {
-                    //m_rebindText.text = InputControlPath.ToHumanReadableString(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, InputControlPath.HumanReadableStringOptions.OmitDevice);
-                    m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex);
-                    //m_rebindText.text = m_InputActionReference.action.GetBindingDisplayString(m_bindingIndex);
+                    m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex).ToUpper();
+                    //m_rebindText.text = InputControlPath.ToHumanReadableString(_effectivePath, options: InputControlPath.HumanReadableStringOptions.OmitDevice).ToUpper();
                 }
                 else
                 {
-                    m_rebindText.text = InputControlPath.ToHumanReadableString(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, InputControlPath.HumanReadableStringOptions.OmitDevice);
-                    //m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex);
-                    //m_rebindText.text = m_InputActionReference.action.GetBindingDisplayString(m_bindingIndex);
+                    //m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex).ToUpper();
+                    m_rebindText.text = InputControlPath.ToHumanReadableString(_effectivePath, options: InputControlPath.HumanReadableStringOptions.OmitDevice).ToUpper();
                 }
             }
 

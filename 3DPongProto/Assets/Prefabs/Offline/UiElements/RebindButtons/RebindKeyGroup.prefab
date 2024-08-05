@@ -617,7 +617,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_InputActionReference: {fileID: 0}
-  m_controlScheme: []
   m_selectedBinding: 0
   m_displayStringOptions: 0
   m_excludeMouse: 1
@@ -750,7 +749,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2509531061419505452}
   m_Layer: 0
-  m_Name: InputButtonKeyboard
+  m_Name: InputButtonKbGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -790,7 +789,7 @@ GameObject:
   - component: {fileID: 2509531061962685652}
   - component: {fileID: 2509531061962685657}
   - component: {fileID: 2509531061962685656}
-  - component: {fileID: 2509531061962685655}
+  - component: {fileID: 5080058665339896214}
   m_Layer: 0
   m_Name: KbButtonLeft
   m_TagString: Untagged
@@ -875,7 +874,7 @@ MonoBehaviour:
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 4828572829453772869}
-    m_SelectOnRight: {fileID: 2509531060462451291}
+    m_SelectOnRight: {fileID: 8048381432050610004}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -901,7 +900,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &2509531061962685655
+--- !u!114 &5080058665339896214
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -910,27 +909,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 2509531061962685659}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15db174d644ed8649a99956158c81a0d, type: 3}
+  m_Script: {fileID: 11500000, guid: bf14a1b24c2919d428c05af24f831138, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_InputActionReference: {fileID: -5699508247800797802, guid: 10bcd34be915850428dc91a0ac6c1a9f,
-    type: 3}
-  m_controlScheme:
-  - m_Name: 
-    m_BindingGroup: 
-    m_DeviceRequirements: []
-  m_selectedBinding: 1
+  m_InputActionReference: {fileID: 0}
+  m_selectedBinding: 0
   m_displayStringOptions: 0
   m_excludeMouse: 1
   m_inputBinding:
-    m_Name: left
-    m_Id: acdd2802-7549-44b3-ac8f-ebed1a79c266
-    m_Path: <Keyboard>/a
+    m_Name: 
+    m_Id: 
+    m_Path: 
     m_Interactions: 
     m_Processors: 
-    m_Groups: KeyboardMouse
-    m_Action: SideMovementNegZP1
-    m_Flags: 8
+    m_Groups: 
+    m_Action: 
+    m_Flags: 0
   m_buttonControlScheme: 0
   m_buttonImage: {fileID: 5202953337551828031}
   m_rebindButton: {fileID: 2509531061962685656}
@@ -946,7 +940,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2509531062249128632}
   m_Layer: 0
-  m_Name: InputButtonPad
+  m_Name: InputButtonGpGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
