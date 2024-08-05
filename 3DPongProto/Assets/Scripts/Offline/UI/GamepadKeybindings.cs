@@ -18,7 +18,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         [SerializeField] private InputBinding m_inputBinding;
 
         [Header("UI-Fields")]
-        [SerializeField] private EKeyControlScheme m_buttonControlScheme;
+        [SerializeField] private EKeyControlScheme m_eKeyControlScheme;
         //[SerializeField] private TextMeshProUGUI m_actionTitle;
         [SerializeField] private Image m_buttonImage;
         [SerializeField] private Button m_rebindButton;
@@ -42,9 +42,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 GetBindingInfomation();
                 //'overridePath' MUST be below 'GetBindingInfomation()'! Else Exception!
                 string overridePath = InputManager.LoadGamepadOverrides(m_actionName, m_bindingId);  
-                //SetRebindUI();
-
-                //string overridePath = InputManager.LoadGampadIconsByKey(m_bindingId);
+                
                 if (overridePath != null)
                 {
                     UpdateRebindUI(overridePath, m_bindingId);
@@ -87,18 +85,6 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
         }
 
-        //private void SetRebindUI()
-        //{
-        //    //string overridePath = InputManager.LoadRebindIconByKey(m_bindingId);
-        //    string overridePath = InputManager.LoadGampadIconsByKey(m_bindingId);
-        //    if (overridePath != null)
-        //    {
-        //        UpdateRebindUI(overridePath, m_bindingId);
-        //    }
-        //    else
-        //        UpdateRebindUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
-        //}
-
         private void UpdateRebindUI(string _effectivePath, Guid _bindingId)
         {
             if (m_rebindText != null && _bindingId == m_bindingId)
@@ -118,7 +104,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             if (m_buttonImage != null && m_buttonImage.enabled && _bindingId == m_bindingId)  //UpdatePadSprite ONLY for the specific Binding (each Script).
             {
                 Image buttonImage = m_buttonImage.GetComponent<Image>();
-                buttonImage.sprite = InputManager.GetControllerIcons(m_buttonControlScheme, _effectivePath);
+                buttonImage.sprite = InputManager.GetControllerIcons(m_eKeyControlScheme, _effectivePath);
                 m_buttonImage.sprite = buttonImage.sprite;
             }
         }
@@ -128,8 +114,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ExecuteKeyRebind()
         {
-            //May rename to m_eKeyControlScheme. (Including resetting the Inspector value.)
-            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse, m_buttonControlScheme, m_bindingId);
+            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse, m_eKeyControlScheme, m_bindingId);
         }
 
         /// <summary>
@@ -137,9 +122,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ResetRebinding()
         {
-            //InputManager.ResetIconByKey(m_bindingId);
-            //InputManager.ResetGamepadIcons(m_bindingId);
-            InputManager.ResetRebinding(m_actionName, m_bindingIndex, m_buttonControlScheme, m_bindingId);
+            InputManager.ResetRebinding(m_actionName, m_bindingIndex, m_eKeyControlScheme, m_bindingId);
             UpdateRebindUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
         }
     }
