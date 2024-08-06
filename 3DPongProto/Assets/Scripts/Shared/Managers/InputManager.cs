@@ -317,11 +317,19 @@ namespace ThreeDeePongProto.Shared.InputActions
                 m_RebindComplete?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _bindingId); //Invoke on finished rebinding.
 
                 #region New Rebind Save
-                if (_eKeyControlScheme == EKeyControlScheme.Keyboard)
-                    SaveKeyboardOverrides(_actionToRebind, _bindingIndex, _bindingId);
-
-                if (_eKeyControlScheme == EKeyControlScheme.Gamepad || _eKeyControlScheme == EKeyControlScheme.PSGamepad || _eKeyControlScheme == EKeyControlScheme.XBoxGamepad)
-                    SaveGamepadOverrides(_actionToRebind, _bindingIndex, _bindingId);
+                switch (_eKeyControlScheme)
+                {
+                    case EKeyControlScheme.Keyboard:
+                        SaveKeyboardOverrides(_actionToRebind, _bindingIndex, _bindingId);
+                        break;
+                    case EKeyControlScheme.Gamepad:
+                    case EKeyControlScheme.PSGamepad:
+                    case EKeyControlScheme.XBoxGamepad:
+                        SaveGamepadOverrides(_actionToRebind, _bindingIndex, _bindingId);
+                        break;
+                    default:
+                        break;
+                }
                 #endregion
             });
 
@@ -424,23 +432,20 @@ namespace ThreeDeePongProto.Shared.InputActions
                 #region Unique Guid
                 if (_inputAction.bindings[i].overridePath != null)
                 {
-                    string dictKey = $"{_uniqueGuid}";
-                    bool dictHasKey = m_keyboardRebindDict.ContainsKey(dictKey);
-
-                    //if (_inputAction.bindings[i].overridePath.Contains("<Gamepad>"))
-                    //    _inputAction.bindings[i].overridePath.Replace("<Gamepad>", "<Keyboard>");
+                    //string dictKey = $"{_uniqueGuid}";
+                    bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{_uniqueGuid}");
 
                     //If the dictionary has the guidKey, save the entry. Else create a new entry with the new informations. 
                     switch (dictHasKey)
                     {
                         case true:
                         {
-                            m_keyboardRebindDict[dictKey] = $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!";
+                            m_keyboardRebindDict[$"{_uniqueGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!";
                             break;
                         }
                         case false:
                         {
-                            m_keyboardRebindDict.Add(dictKey, $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!");
+                            m_keyboardRebindDict.Add($"{_uniqueGuid}", $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!");
                             break;
                         }
                     }
@@ -462,23 +467,20 @@ namespace ThreeDeePongProto.Shared.InputActions
                 #region Unique Guid
                 if (_inputAction.bindings[i].overridePath != null)
                 {
-                    string dictKey = $"{_uniqueGuid}";
-                    bool dictHasKey = m_gamepadRebindDict.ContainsKey(dictKey);
-
-                    //if (_inputAction.bindings[i].overridePath.Contains("<Keyboard>"))
-                    //    _inputAction.bindings[i].overridePath.Replace("<Keyboard>", "<Gamepad>");
+                    //string dictKey = $"{_uniqueGuid}";
+                    bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{_uniqueGuid}");
 
                     //If the dictionary has the guidKey, save the entry. Else create a new entry with the new informations. 
                     switch (dictHasKey)
                     {
                         case true:
                         {
-                            m_gamepadRebindDict[dictKey] = $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!";
+                            m_gamepadRebindDict[$"{_uniqueGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!";
                             break;
                         }
                         case false:
                         {
-                            m_gamepadRebindDict.Add(dictKey, $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!");
+                            m_gamepadRebindDict.Add($"{_uniqueGuid}", $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!");
                             break;
                         }
                     }
@@ -601,16 +603,9 @@ namespace ThreeDeePongProto.Shared.InputActions
         {
             for (int i = 0; i < _inputAction.bindings.Count; i++)
             {
-                #region PlayerPref Example
-                //PlayerPrefs.SetString(_inputAction.actionMap + _inputAction.name + i, _inputAction.bindings[i].overridePath);
-                #endregion
-
                 #region Unique Guid
-                string dictKey = $"{_uniqueGuid}";
-                bool dictHasKey = m_keyboardRebindDict.ContainsKey(dictKey);
-
-                if (_inputAction.bindings[i].effectivePath.Contains("<Gamepad>"))
-                    _inputAction.bindings[i].effectivePath.Replace("<Gamepad>", "<Keyboard>");
+                //string dictKey = $"{_uniqueGuid}";
+                bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{_uniqueGuid}");
 
                 //If the dictionary has the guidKey, save the entry. Else create a new entry with the new informations. 
                 switch (dictHasKey)
@@ -635,16 +630,9 @@ namespace ThreeDeePongProto.Shared.InputActions
         {
             for (int i = 0; i < _inputAction.bindings.Count; i++)
             {
-                #region PlayerPref Example
-                //PlayerPrefs.SetString(_inputAction.actionMap + _inputAction.name + i, _inputAction.bindings[i].overridePath);
-                #endregion
-
                 #region Unique Guid
-                string dictKey = $"{_uniqueGuid}";
-                bool dictHasKey = m_gamepadRebindDict.ContainsKey(dictKey);
-
-                if (_inputAction.bindings[i].effectivePath.Contains("<Keyboard>"))
-                    _inputAction.bindings[i].effectivePath.Replace("<Keyboard>", "<Gamepad>");
+                //string dictKey = $"{_uniqueGuid}";
+                bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{_uniqueGuid}");
 
                 //If the dictionary has the guidKey, save the entry. Else create a new entry with the new informations. 
                 switch (dictHasKey)
