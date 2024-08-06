@@ -74,6 +74,8 @@ namespace ThreeDeePongProto.Shared.InputActions
         private void Awake()
         {
             m_playerIndex = 0;
+            m_keyboardRebindDict.Clear();
+            m_gamepadRebindDict.Clear();
 
 #if UNITY_EDITOR
             if (m_deleteAllPlayerPrefs)
@@ -425,8 +427,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                     string dictKey = $"{_uniqueGuid}";
                     bool dictHasKey = m_keyboardRebindDict.ContainsKey(dictKey);
 
-                    if (_inputAction.bindings[i].overridePath.Contains("<Gamepad>"))
-                        _inputAction.bindings[i].overridePath.Replace("<Gamepad>", "<Keyboard>");
+                    //if (_inputAction.bindings[i].overridePath.Contains("<Gamepad>"))
+                    //    _inputAction.bindings[i].overridePath.Replace("<Gamepad>", "<Keyboard>");
 
                     //If the dictionary has the guidKey, save the entry. Else create a new entry with the new informations. 
                     switch (dictHasKey)
@@ -463,8 +465,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                     string dictKey = $"{_uniqueGuid}";
                     bool dictHasKey = m_gamepadRebindDict.ContainsKey(dictKey);
 
-                    if (_inputAction.bindings[i].overridePath.Contains("<Keyboard>"))
-                        _inputAction.bindings[i].overridePath.Replace("<Keyboard>", "<Gamepad>");
+                    //if (_inputAction.bindings[i].overridePath.Contains("<Keyboard>"))
+                    //    _inputAction.bindings[i].overridePath.Replace("<Keyboard>", "<Gamepad>");
 
                     //If the dictionary has the guidKey, save the entry. Else create a new entry with the new informations. 
                     switch (dictHasKey)

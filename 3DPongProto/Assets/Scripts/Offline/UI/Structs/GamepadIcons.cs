@@ -44,73 +44,41 @@ namespace ThreeDeePongProto.Offline.UI
         {
             // From the input system, we get the path of the control on device. So we can just
             // map from that to the sprites we have for gamepads.
-            switch (controlPath)
+            return controlPath switch
             {
-                case "<Gamepad>/buttonNorth":
-                    return buttonNorth;
-                case "<Gamepad>/buttonSouth":
-                    return buttonSouth;
-                case "<Gamepad>/buttonWest":
-                    return buttonWest;
-                case "<Gamepad>/buttonEast":
-                    return buttonEast;
-                case "<Gamepad>/start":
-                    return startButton;
-                case "<Gamepad>/select":
-                    return selectButton;
-                case "<Gamepad>/leftTrigger":
-                    return leftTrigger;
-                case "<Gamepad>/rightTrigger":
-                    return rightTrigger;
-                case "<Gamepad>/leftShoulder":
-                    return leftShoulder;
-                case "<Gamepad>/rightShoulder":
-                    return rightShoulder;
-                case "<Gamepad>/dpad":
-                    return dpad;
-                case "<Gamepad>/dpad/up":
-                    return dpadUp;
-                case "<Gamepad>/dpad/down":
-                    return dpadDown;
-                case "<Gamepad>/dpad/left":
-                    return dpadLeft;
-                case "<Gamepad>/dpad/right":
-                    return dpadRight;
-                case "<Gamepad>/leftStick":
-                    return leftStick;
-                case "<Gamepad>/leftStick/x":
-                    return leftStickX;
-                case "<Gamepad>/leftStick/left":
-                    return leftStickLeft;
-                case "<Gamepad>/leftStick/right":
-                    return leftStickRight;
-                case "<Gamepad>/leftStick/y":
-                    return leftStickY;
-                case "<Gamepad>/leftStick/up":
-                    return leftStickUp;
-                case "<Gamepad>/leftStick/down":
-                    return leftStickDown;
-                case "<Gamepad>/rightStick":
-                    return rightStick;
-                case "<Gamepad>/rightStick/x":
-                    return rightStickX;
-                case "<Gamepad>/rightStick/left":
-                    return rightStickLeft;
-                case "<Gamepad>/rightStick/right":
-                    return rightStickRight;
-                case "<Gamepad>/rightStick/y":
-                    return rightStickY;
-                case "<Gamepad>/rightStick/up":
-                    return rightStickUp;
-                case "<Gamepad>/rightStick/down":
-                    return rightStickDown;
-                case "<Gamepad>/leftStickPress":
-                    return leftStickPress;
-                case "<Gamepad>/rightStickPress":
-                    return rightStickPress;
-                default:
-                    return null;
-            }
+                "<Gamepad>/buttonNorth" => buttonNorth,
+                "<Gamepad>/buttonSouth" => buttonSouth,
+                "<Gamepad>/buttonWest" => buttonWest,
+                "<Gamepad>/buttonEast" => buttonEast,
+                "<Gamepad>/start" => startButton,
+                "<Gamepad>/select" => selectButton,
+                "<Gamepad>/leftTrigger" => leftTrigger,
+                "<Gamepad>/rightTrigger" => rightTrigger,
+                "<Gamepad>/leftShoulder" => leftShoulder,
+                "<Gamepad>/rightShoulder" => rightShoulder,
+                "<Gamepad>/dpad" => dpad,
+                "<Gamepad>/dpad/up" => dpadUp,
+                "<Gamepad>/dpad/down" => dpadDown,
+                "<Gamepad>/dpad/left" => dpadLeft,
+                "<Gamepad>/dpad/right" => dpadRight,
+                "<Gamepad>/leftStick" => leftStick,
+                "<Gamepad>/leftStick/x" => leftStickX,
+                "<Gamepad>/leftStick/left" => leftStickLeft,
+                "<Gamepad>/leftStick/right" => leftStickRight,
+                "<Gamepad>/leftStick/y" => leftStickY,
+                "<Gamepad>/leftStick/up" => leftStickUp,
+                "<Gamepad>/leftStick/down" => leftStickDown,
+                "<Gamepad>/rightStick" => rightStick,
+                "<Gamepad>/rightStick/x" => rightStickX,
+                "<Gamepad>/rightStick/left" => rightStickLeft,
+                "<Gamepad>/rightStick/right" => rightStickRight,
+                "<Gamepad>/rightStick/y" => rightStickY,
+                "<Gamepad>/rightStick/up" => rightStickUp,
+                "<Gamepad>/rightStick/down" => rightStickDown,
+                "<Gamepad>/leftStickPress" => leftStickPress,
+                "<Gamepad>/rightStickPress" => rightStickPress,
+                _ => null,
+            };
         }
 
         public Sprite GetDualShockGamepadSprite(string controlPath)
