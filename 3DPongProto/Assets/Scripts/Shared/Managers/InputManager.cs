@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 public enum EKeyControlScheme
 {
     None,
-    Keyboard,
+    KeyboardMouse,
     Gamepad,
     PSGamepad,
     XBoxGamepad
@@ -45,7 +45,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         private const string m_cancelWithKeyboardButton = "<Keyboard>/escape";
         private const string m_cancelWithGamepadButton = "<Gamepad>/select";
 
-        //private const string m_keyboardString = "Keyboard";
+        //private const string m_keyboardString = "KeyboardMouse";
         //private const string m_gamePadString = "Gamepad";
         //private const string m_dualShockGamepadString = "DualShockGamepad";
         //private const string m_dualSenseGamepadHIDString = "DualSenseGamepadHID";
@@ -185,7 +185,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             switch (_controlScheme)
             {
-                case EKeyControlScheme.Keyboard:
+                case EKeyControlScheme.KeyboardMouse:
                 {
                     break;
                 }
@@ -304,6 +304,15 @@ namespace ThreeDeePongProto.Shared.InputActions
                 _actionToRebind.Enable();
                 operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
+                if (CheckForDuplicateBinding(_actionToRebind, _bindingIndex, _allCompositeParts))
+                {
+                    _actionToRebind.RemoveBindingOverride(_bindingIndex);
+                    //Place another 'ExecuteKeyRebind()' here, if you want to continue setting an alternative ButtonBinding.
+
+                    m_RebindCanceled?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _bindingId); //Invoke on canceled rebinding.
+                    return;
+                }
+
                 if (_allCompositeParts) //If the Index has compositeParts/children.
                 {
                     var nextBindingIndex = _bindingIndex + 1;
@@ -319,7 +328,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 #region New Rebind Save
                 switch (_eKeyControlScheme)
                 {
-                    case EKeyControlScheme.Keyboard:
+                    case EKeyControlScheme.KeyboardMouse:
                         SaveKeyboardOverrides(_actionToRebind, _bindingIndex, _bindingId);
                         break;
                     case EKeyControlScheme.Gamepad:
@@ -344,7 +353,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             switch (_eKeyControlScheme)  //ONLY ONE cancelButton gets recognized in code at a time.
             {
-                case EKeyControlScheme.Keyboard:
+                case EKeyControlScheme.KeyboardMouse:
                     rebind.WithCancelingThrough(m_cancelWithKeyboardButton);
                     break;
                 case EKeyControlScheme.Gamepad:
@@ -368,6 +377,40 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_rebindStarted?.Invoke(_actionToRebind, _bindingIndex);
 
             rebind.Start(); //Real Start of the rebind process.
+        }
+
+        private static bool CheckForDuplicateBinding(InputAction _actionToRebind, int _bindingIndex, bool _allCompositeParts)
+        {
+            InputBinding newBinding = _actionToRebind.bindings[_bindingIndex];
+            InputActionMap inputActionMap = _actionToRebind.actionMap;
+
+            #region Check all actionBindings in the actionMap.
+            foreach (InputBinding binding in inputActionMap.bindings)
+            {
+                if (binding.id == newBinding.id)
+                {
+#if UNITY_EDITOR
+                    Debug.Log("Same Binding. Continue.");
+#endif
+                    continue;
+                }
+
+                if (binding.effectivePath == newBinding.effectivePath)
+                {
+#if UNITY_EDITOR
+                    Debug.Log($"Desired BindingPath >{newBinding.effectivePath}< found in Action: {binding.action}.");
+#endif
+                    return true;
+                }
+            }
+            #endregion
+
+            return false;
+
+            //C# Unity New Input System Check for Duplicate Bindings
+            //https://discussions.unity.com/t/new-input-system-check-if-binding-already-exists-in-input-action-asset/874954/2
+            //samyam Persistent Control Rebinding
+            //https://youtu.be/csqVa2Vimao?si=4LTu3gUp0nVn8Hk4 
         }
 
         /// <summary>
@@ -396,7 +439,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 inputAction.RemoveBindingOverride(_bindingIndex);
 
             #region New Rebind Save
-            if (_eKeyControlScheme == EKeyControlScheme.Keyboard)
+            if (_eKeyControlScheme == EKeyControlScheme.KeyboardMouse)
                 ResetKeyboardOverrides(inputAction, _bindingIndex, _uniqueGuid);
 
             if (_eKeyControlScheme == EKeyControlScheme.Gamepad || _eKeyControlScheme == EKeyControlScheme.PSGamepad || _eKeyControlScheme == EKeyControlScheme.XBoxGamepad)
