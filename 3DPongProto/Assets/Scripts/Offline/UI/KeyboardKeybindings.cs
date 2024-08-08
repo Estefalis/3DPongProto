@@ -28,6 +28,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         private int m_bindingIndex;
         private string m_actionName;
         private Guid m_bindingId;
+        private string m_fallbackIconPath;
 
         private void OnEnable()
         {
@@ -42,13 +43,15 @@ namespace ThreeDeePongProto.Shared.InputActions
                 GetBindingInfomation();
                 //'overridePath' MUST be below 'GetBindingInfomation()'! Else Exception!
                 string overridePath = InputManager.LoadKeyboardOverrides(m_actionName, m_bindingId);
-                
+
                 if (overridePath != null)
                 {
                     UpdateRebindUI(overridePath, m_bindingId);
                 }
                 else
+                {
                     UpdateRebindUI(m_InputActionReference.action.bindings[m_bindingIndex].effectivePath, m_bindingId);
+                }
             }
         }
 
@@ -104,6 +107,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             {
                 Image buttonImage = m_buttonImage.GetComponent<Image>();
                 buttonImage.sprite = InputManager.GetControllerIcons(m_eKeyControlScheme, _effectivePath);
+                m_fallbackIconPath = _effectivePath;
                 m_buttonImage.sprite = buttonImage.sprite;
             }
         }
@@ -113,7 +117,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ExecuteKeyRebind()
         {
-            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse, m_eKeyControlScheme, m_bindingId);
+            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse, m_eKeyControlScheme, m_fallbackIconPath, m_bindingId);
         }
 
         /// <summary>
