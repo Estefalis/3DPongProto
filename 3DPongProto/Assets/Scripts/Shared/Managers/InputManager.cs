@@ -306,10 +306,10 @@ namespace ThreeDeePongProto.Shared.InputActions
 
                 if (CheckForDuplicateBinding(_actionToRebind, _bindingIndex, _allCompositeParts))
                 {
-                    _actionToRebind.RemoveBindingOverride(_bindingIndex);
+                    //_actionToRebind.RemoveBindingOverride(_bindingIndex); //MAYBE not necessary HERE without another 'ExecuteKeyRebind()'.
                     //Place another 'ExecuteKeyRebind()' here, if you want to continue setting an alternative ButtonBinding.
+                    rebind.Cancel();    //Invokes the ' rebind.OnCancel' operation from here.
 
-                    m_RebindCanceled?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _bindingId); //Invoke on canceled rebinding.
                     return;
                 }
 
@@ -323,9 +323,9 @@ namespace ThreeDeePongProto.Shared.InputActions
 #if UNITY_EDITOR
                 //Debug.Log($"effectivePath: {_actionToRebind.bindings[_bindingIndex].effectivePath}");
 #endif
-                m_RebindComplete?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _bindingId); //Invoke on finished rebinding.
+                m_RebindComplete?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _bindingId); //Subscribers update to new state.
 
-                #region New Rebind Save
+                #region Rebind Save
                 switch (_eKeyControlScheme)
                 {
                     case EKeyControlScheme.KeyboardMouse:
@@ -348,7 +348,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                 _actionToRebind.Enable();
                 operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
-                m_RebindCanceled?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _bindingId); //Invoke on canceled rebinding.
+                string onCancelPath = GetWordBetweenArgs(m_gamepadRebindDict[$"{_bindingId}"], ".", "!");
+                m_RebindCanceled?.Invoke(onCancelPath, _bindingId); //Subscribers reset to old state.
             });
 
             switch (_eKeyControlScheme)  //ONLY ONE cancelButton gets recognized in code at a time.
@@ -387,18 +388,49 @@ namespace ThreeDeePongProto.Shared.InputActions
             #region Check all actionBindings in the actionMap.
             foreach (InputBinding binding in inputActionMap.bindings)
             {
-                if (binding.id == newBinding.id)
+                if (newBinding.action == binding.action)
                 {
+                    switch (newBinding.id == binding.id)
+                    {
+                        case true:
+                        {
 #if UNITY_EDITOR
-                    Debug.Log("Same Binding. Continue.");
+                            Debug.Log("Same Binding. Continue.");
 #endif
-                    continue;
+                            continue;
+                        }
+                        case false:
+                        {
+#if UNITY_EDITOR
+                            Debug.Log($"Desired BindingPath [{newBinding.effectivePath}] found in Action: {binding.action}.");
+#endif
+                            return true;
+                        }
+                    }
+
+                    #region Both if version
+                    //                    if (newBinding.id == binding.id)
+                    //                    {
+                    //#if UNITY_EDITOR
+                    //                        Debug.Log("Same Binding. Continue.");
+                    //#endif
+                    //                        continue;
+                    //                    }
+
+                    //                    if (newBinding.id != binding.id)
+                    //                    {
+                    //#if UNITY_EDITOR
+                    //                        Debug.Log($"Desired BindingPath >{newBinding.effectivePath}< found in Action: {binding.action}.");
+                    //#endif
+                    //                        return true;
+                    //                    }
+                    #endregion
                 }
 
-                if (binding.effectivePath == newBinding.effectivePath)
+                if (newBinding.effectivePath == binding.effectivePath)
                 {
 #if UNITY_EDITOR
-                    Debug.Log($"Desired BindingPath >{newBinding.effectivePath}< found in Action: {binding.action}.");
+                    Debug.Log($"Desired BindingPath [{newBinding.effectivePath}] found in Action: {binding.action}.");
 #endif
                     return true;
                 }
