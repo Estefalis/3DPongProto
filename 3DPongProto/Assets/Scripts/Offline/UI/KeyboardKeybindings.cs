@@ -91,13 +91,12 @@ namespace ThreeDeePongProto.Shared.InputActions
             {
                 if (Application.isPlaying)
                 {
-                    m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex).ToUpper();
-                    //m_rebindText.text = InputControlPath.ToHumanReadableString(_effectivePath, options: InputControlPath.HumanReadableStringOptions.OmitDevice).ToUpper();
+                    m_rebindText.text = InputControlPath.ToHumanReadableString(_effectivePath, options: InputControlPath.HumanReadableStringOptions.OmitDevice).ToUpper();
                 }
                 else
                 {
-                    //m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex).ToUpper();
-                    m_rebindText.text = InputControlPath.ToHumanReadableString(_effectivePath, options: InputControlPath.HumanReadableStringOptions.OmitDevice).ToUpper();
+                    m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex).ToUpper();
+                    //m_rebindText.text = InputControlPath.ToHumanReadableString(_effectivePath, options: InputControlPath.HumanReadableStringOptions.OmitDevice).ToUpper();
                 }
             }
 

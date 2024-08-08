@@ -28267,12 +28267,12 @@ PrefabInstance:
     - target: {fileID: 3300070613374702439, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_text
-      value: 2DVECTOR
+      value: <Keyboard>/d
       objectReference: {fileID: 0}
     - target: {fileID: 3300070613453527225, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_text
-      value: ' /A/ /D'
+      value: LS Right
       objectReference: {fileID: 0}
     - target: {fileID: 3300070613497706676, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
@@ -28427,7 +28427,7 @@ PrefabInstance:
     - target: {fileID: 3300070613927879708, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_text
-      value: W
+      value: R2
       objectReference: {fileID: 0}
     - target: {fileID: 3300070613943120016, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
@@ -28492,7 +28492,7 @@ PrefabInstance:
     - target: {fileID: 3300070614127041646, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_text
-      value: 2DVECTOR
+      value: <Keyboard>/e
       objectReference: {fileID: 0}
     - target: {fileID: 3300070614143691973, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
@@ -28522,7 +28522,7 @@ PrefabInstance:
     - target: {fileID: 3300070614224273415, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_text
-      value: B
+      value: Cross
       objectReference: {fileID: 0}
     - target: {fileID: 3300070614242661515, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
@@ -28552,7 +28552,7 @@ PrefabInstance:
     - target: {fileID: 3300070614311802800, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_text
-      value: ' /Q/ /E'
+      value: R1
       objectReference: {fileID: 0}
     - target: {fileID: 3300070614331882354, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
@@ -28782,7 +28782,7 @@ PrefabInstance:
     - target: {fileID: 3300070615288443079, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_text
-      value: ' /Q/ /E'
+      value: L1
       objectReference: {fileID: 0}
     - target: {fileID: 3300070615295119562, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
@@ -28847,7 +28847,7 @@ PrefabInstance:
     - target: {fileID: 3300070615431854873, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_text
-      value: 2DVECTOR
+      value: <Keyboard>/q
       objectReference: {fileID: 0}
     - target: {fileID: 3700401388406427493, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
@@ -29137,7 +29137,7 @@ PrefabInstance:
     - target: {fileID: 5200013950055589521, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_text
-      value: ' /A/ /D'
+      value: LS Left
       objectReference: {fileID: 0}
     - target: {fileID: 5200013950172121683, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
@@ -29167,7 +29167,7 @@ PrefabInstance:
     - target: {fileID: 5200013950243990863, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_text
-      value: 2DVECTOR
+      value: <Keyboard>/a
       objectReference: {fileID: 0}
     - target: {fileID: 5200013950378333702, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}

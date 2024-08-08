@@ -91,7 +91,6 @@ namespace ThreeDeePongProto.Shared.InputActions
             {
                 if (Application.isPlaying)
                 {
-                    //m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex);
                     m_rebindText.text = InputControlPath.ToHumanReadableString(_effectivePath, options: InputControlPath.HumanReadableStringOptions.OmitDevice);
                 }
                 else
