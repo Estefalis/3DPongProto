@@ -117,7 +117,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ExecuteKeyRebind()
         {
-            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse, m_eKeyControlScheme, m_fallbackIconPath, m_bindingId);
+            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse, m_eKeyControlScheme, /*m_fallbackIconPath,*/ m_bindingId);
         }
 
         /// <summary>
