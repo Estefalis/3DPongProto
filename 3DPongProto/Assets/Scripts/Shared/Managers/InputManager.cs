@@ -536,7 +536,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 #endregion
 
                 #region Unique Guid
-                if (_inputAction.bindings[i].overridePath != null && _inputAction.bindings[_bindingIndex].groups == $"{EKeyControlScheme.Gamepad};{EKeyControlScheme.PSGamepad}")
+                if (_inputAction.bindings[i].overridePath != null && _inputAction.bindings[_bindingIndex].groups == $"{EKeyControlScheme.Gamepad}") //InputBinding Group in Inspector, NOT the enum options!
                 {
                     //string dictKey = $"{_uniqueGuid}";
                     bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{_uniqueGuid}");
