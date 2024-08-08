@@ -28,14 +28,16 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         [SerializeField] protected float m_lerpDuration = 1.5f;
         [SerializeField] protected float m_delayRetreat;
         [SerializeField] protected float m_delayRepetition;
-        [SerializeField] protected bool m_enablePushDelay = false;
         [SerializeField] protected bool m_blockPushInput;
+        [SerializeField] protected bool m_enablePushDelay = false;
 
         #region Scriptable Objects
         [SerializeField] protected PlayerIDData m_playerIDData;
         [SerializeField] protected MatchUIStates m_matchUIStates;
         [SerializeField] protected MatchValues m_matchValues;
         [SerializeField] protected BasicFieldValues m_basicFieldValues;
+        [SerializeField] protected ControlUIStates m_controlUIStates;
+        [SerializeField] protected ControlUIValues m_controlUIValues;
         #endregion
         #endregion
 

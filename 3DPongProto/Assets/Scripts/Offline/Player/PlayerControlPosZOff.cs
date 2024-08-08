@@ -83,21 +83,22 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         protected virtual void MovePaddleByPlayer()
         {
             m_rbPosition = -m_rigidbody.transform.localPosition;
+            var xInvert = m_controlUIStates.InvertXAxis ? -1 : 1;   //Also possible: ReadValue.x * (m_controlUIStates.InvertXAxis ? -1 : 1)
 
             switch (m_playerIDData.PlayerId)
             {
                 case 1:
                 {
-                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActions.SideMovementPosZP2.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMovementPosZP2.ReadValue<Vector2>().y).normalized;  //Player2 ID
+                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActions.SideMovementPosZP2.ReadValue<Vector2>().x * xInvert, 0, m_playerMovement.PlayerActions.SideMovementPosZP2.ReadValue<Vector2>().y).normalized;  //Player2 ID
                     break;
                 }
                 case 3:
                 {
-                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActions.SideMovementPosZP4.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMovementPosZP4.ReadValue<Vector2>().y).normalized;  //Player4 ID
+                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActions.SideMovementPosZP4.ReadValue<Vector2>().x * xInvert, 0, m_playerMovement.PlayerActions.SideMovementPosZP4.ReadValue<Vector2>().y).normalized;  //Player4 ID
                     break;
                 }
                 default:
-                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActions.SideMovementPosZP2.ReadValue<Vector2>().x, 0, m_playerMovement.PlayerActions.SideMovementPosZP2.ReadValue<Vector2>().y).normalized;  //Player2 ID
+                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActions.SideMovementPosZP2.ReadValue<Vector2>().x * xInvert, 0, m_playerMovement.PlayerActions.SideMovementPosZP2.ReadValue<Vector2>().y).normalized;  //Player2 ID
                     break;
             }
 
@@ -109,7 +110,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         /// </summary>
         private void TurnPaddleByPlayer()
         {
-            m_deltaRotation = Quaternion.Euler(m_axisRotPosZ * m_rotationSpeed * m_baseRotationSpeed * Time.fixedDeltaTime);
+            var yInvert = m_controlUIStates.InvertYAxis ? -1 : 1;
+            m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (m_axisRotPosZ * yInvert));
             m_rigidbody.MoveRotation(m_rigidbody.rotation * m_deltaRotation);
         }
 

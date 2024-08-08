@@ -62,6 +62,8 @@ MonoBehaviour:
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
   m_basicFieldValues: {fileID: 11400000, guid: b7c0516de58b3a240a6970d999010f71, type: 2}
+  m_controlUIStates: {fileID: 11400000, guid: f6f6fb46c1b1cba498f333455bdf34aa, type: 2}
+  m_controlUIValues: {fileID: 11400000, guid: 60351461f53e287428ae533872def51a, type: 2}
 --- !u!1 &4887262735939388797
 GameObject:
   m_ObjectHideFlags: 0
