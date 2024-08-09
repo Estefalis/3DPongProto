@@ -416,17 +416,17 @@ namespace ThreeDeePongProto.Shared.InputActions
                                         continue;                                                   //And continues.
                                     }
 
-                                    if (binding.effectivePath == newBinding.effectivePath)      //Compare paths on different IDs.
+                                    if (binding.effectivePath == newBinding.effectivePath)          //Compare paths on (different) actions & IDs.
                                     {
 #if UNITY_EDITOR
-                                        Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {newBinding.action}. Canceling rebind.");
+                                        Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
 #endif
-                                        return true;                                            //Call out a duplicate, if one if found.
+                                        return true;                                                //Call out a duplicate, if one if found.
                                     }
                                 }
                             }
 
-                            if (binding.action != newBinding.action)                                 //If actions are different.
+                            if (binding.action != newBinding.action)                                //If actions are different.
                             {
                                 if (binding.effectivePath == newBinding.effectivePath)              //Compare paths on (different) actions & IDs.
                                 {
