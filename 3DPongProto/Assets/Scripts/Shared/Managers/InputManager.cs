@@ -47,8 +47,8 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private static string m_onCancelIconPath;
 
-        private const string m_keyboardMouseString = "KeyboardMouse";   //KeyboardMouse scheme, NOT Keyboard (only)!
-        private const string m_gamePadString = "Gamepad";
+        private const string m_keyboardMouseScheme = "KeyboardMouse";   //KeyboardMouse scheme, NOT Keyboard (only)!
+        private const string m_gamePadScheme = "Gamepad";
         //private const string m_dualShockGamepadString = "DualShockGamepad";
         //private const string m_dualSenseGamepadHIDString = "DualSenseGamepadHID";
         #endregion
@@ -394,11 +394,14 @@ namespace ThreeDeePongProto.Shared.InputActions
                     #region Check Keyboard actionBindings in the actionMap.
                     foreach (InputBinding binding in _actionToRebind.actionMap.bindings)
                     {
-                        if(binding.groups == m_keyboardMouseString && !binding.isComposite)  //Exclude Composites and Gamepad-Scheme.
+                        if (binding.groups == m_keyboardMouseScheme && !binding.isComposite)  //Exclude Composites and Gamepad-Scheme.
                         {
-                            Debug.Log(binding.effectivePath);
-                            continue;
+                            if (!binding.isPartOfComposite)
+                                Debug.Log($"'None' flag {binding.effectivePath} in {binding.action}.");
+                            if (binding.isPartOfComposite)
+                                Debug.Log($"'isPartOfComposite' flag {binding.effectivePath} in {binding.action}.");
                         }
+                        //continue;
                     }
                     #endregion
                     break;
@@ -410,14 +413,17 @@ namespace ThreeDeePongProto.Shared.InputActions
                     #region Check Gamepad actionBindings in the actionMap.
                     foreach (InputBinding binding in _actionToRebind.actionMap.bindings)
                     {
-                        if (binding.groups == m_gamePadString && !binding.isComposite) //Exclude Composites and Keyboard-Scheme.
+                        if (binding.groups == m_gamePadScheme && !binding.isComposite) //Exclude Composites and Keyboard-Scheme.
                         {
-                            Debug.Log(binding.effectivePath);
-                            continue;
+                            if (!binding.isPartOfComposite)
+                                Debug.Log($"'None' flag {binding.effectivePath} in {binding.action}.");
+                            if (binding.isPartOfComposite)
+                                Debug.Log($"'isPartOfComposite' flag {binding.effectivePath} in {binding.action}.");
                         }
+                        //continue;
                     }
                     #endregion
-                    break;
+                    return true;
                 }
             }
 
