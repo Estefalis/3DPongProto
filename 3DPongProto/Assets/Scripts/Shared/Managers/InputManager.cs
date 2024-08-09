@@ -391,15 +391,20 @@ namespace ThreeDeePongProto.Shared.InputActions
             {
                 case EKeyControlScheme.KeyboardMouse:
                 {
-                    #region Check Keyboard actionBindings in the actionMap.
+                    #region Compare Keyboard actionBindings in the actionMap.
                     foreach (InputBinding binding in _actionToRebind.actionMap.bindings)
                     {
                         if (binding.groups == m_keyboardMouseScheme && !binding.isComposite)  //Exclude Composites and Gamepad-Scheme.
                         {
-                            if (!binding.isPartOfComposite)
-                                Debug.Log($"'None' flag {binding.effectivePath} in {binding.action}.");
-                            if (binding.isPartOfComposite)
-                                Debug.Log($"'isPartOfComposite' flag {binding.effectivePath} in {binding.action}.");
+#if UNITY_EDITOR
+                            #region Keyboard Debug Logs
+                            //if (!binding.isPartOfComposite)
+                            //    Debug.Log($"'None' flag {binding.effectivePath} in {binding.action}.");
+                            //if (binding.isPartOfComposite)
+                            //    Debug.Log($"'isPartOfComposite' flag {binding.effectivePath} in {binding.action}.");
+                            #endregion
+#endif
+
                         }
                         //continue;
                     }
@@ -410,24 +415,63 @@ namespace ThreeDeePongProto.Shared.InputActions
                 case EKeyControlScheme.PSGamepad:
                 case EKeyControlScheme.XBoxGamepad:
                 {
-                    #region Check Gamepad actionBindings in the actionMap.
+                    #region Compare Gamepad actionBindings in the actionMap.
                     foreach (InputBinding binding in _actionToRebind.actionMap.bindings)
                     {
                         if (binding.groups == m_gamePadScheme && !binding.isComposite) //Exclude Composites and Keyboard-Scheme.
                         {
-                            if (!binding.isPartOfComposite)
-                                Debug.Log($"'None' flag {binding.effectivePath} in {binding.action}.");
-                            if (binding.isPartOfComposite)
-                                Debug.Log($"'isPartOfComposite' flag {binding.effectivePath} in {binding.action}.");
+#if UNITY_EDITOR
+                            #region Gamepad Debug Logs
+                            //if (!binding.isPartOfComposite)
+                            //    Debug.Log($"'None' flag {binding.effectivePath} in {binding.action}.");
+                            //if (binding.isPartOfComposite)
+                            //    Debug.Log($"'isPartOfComposite' flag {binding.effectivePath} in {binding.action}.");
+                            #endregion
+#endif
+                            if (binding.action == newBinding.action)                                //If actions are the same.
+                            {
+                                switch (binding.id == newBinding.id)                                //Act by binding ID.
+                                {
+                                    case true:
+                                    {
+#if UNITY_EDITOR
+                                        Debug.Log($"Own binding.");                                 //Skips itself on same ID. (Can set binding.)
+#endif
+                                        continue;                                                   //And continues.
+                                    }
+                                    case false:
+                                    {
+                                        if (binding.effectivePath == newBinding.effectivePath)      //Compare paths on different IDs.
+                                        {
+#if UNITY_EDITOR
+                                            Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
+#endif
+                                            return true;                                            //Call out a duplicate, if one if found.
+                                        }
+                                        else
+                                            continue;                                               //Else continues the search.
+                                    }
+                                }
+                            }
+
+                            if(binding.action != newBinding.action)                                 //If actions are different.
+                            {
+                                if (binding.effectivePath == newBinding.effectivePath)              //Compare paths on (different) actions & IDs.
+                                {
+#if UNITY_EDITOR
+                                    Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
+#endif
+                                    return true;                                                    //Call out a duplicate, if one if found.
+                                }
+                            }
                         }
-                        //continue;
                     }
+                    return false;                                                                   //Exiting Gamepad Search w/o a discovery.
                     #endregion
-                    return true;
                 }
             }
 
-            return false;
+            return false;                                                                       //End of '_eKeyControlScheme' switch.
         }
 
         /// <summary>
