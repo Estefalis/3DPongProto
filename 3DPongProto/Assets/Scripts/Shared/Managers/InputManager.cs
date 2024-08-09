@@ -24,7 +24,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 #if UNITY_EDITOR
         [SerializeField] private bool m_deleteAllPlayerPrefs = false;
 #endif
-        [SerializeField] private bool m_LoadRebindDicts = true;
+        [SerializeField] private bool m_loadRebindDicts = true;
 
         #region Change Action Maps
         //ActionEvent to switch between ActionMaps within the new InputActionAsset.
@@ -96,7 +96,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private void OnEnable()
         {
-            if (m_LoadRebindDicts)
+            if (m_loadRebindDicts)
             {
                 m_keyboardRebindDict = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_encryptionEnabled);
                 m_gamepadRebindDict = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_encryptionEnabled);
@@ -305,9 +305,13 @@ namespace ThreeDeePongProto.Shared.InputActions
                 _actionToRebind.Enable();
                 operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
-                if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _eKeyControlScheme, _allCompositeParts)) //Duplicate Check Slot.
+                if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _eKeyControlScheme, _allCompositeParts)) //if DuplicateCheck true.
                 {
                     //TODO: Redo Duplicate checks.
+                    //_actionToRebind.RemoveBindingOverride(_bindingIndex);
+                    //ExecuteKeyRebind(_actionToRebind, _bindingIndex, _statusText, _allCompositeParts, _excludeMouse, _eKeyControlScheme, _uniqueGuid);
+                    rebind.Cancel();
+                    return;
                 }
 
                 if (_allCompositeParts) //If the Index has compositeParts/children.
@@ -390,7 +394,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     #region Check Keyboard actionBindings in the actionMap.
                     foreach (InputBinding binding in _actionToRebind.actionMap.bindings)
                     {
-                        if(binding.groups == m_keyboardMouseString && !binding.isComposite)  //Exclude Composites and Gamepad-Scheme.
+                        if(binding.groups == m_keyboardMouseString && binding.isPartOfComposite)  //Exclude Composites and Gamepad-Scheme.
                         {
                             Debug.Log(binding.effectivePath);
                             //return false;
@@ -407,7 +411,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     #region Check Gamepad actionBindings in the actionMap.
                     foreach (InputBinding binding in _actionToRebind.actionMap.bindings)
                     {
-                        if (binding.groups == m_gamePadString && !binding.isComposite) //Exclude Composites and Keyboard-Scheme.
+                        if (binding.groups == m_gamePadString && binding.isPartOfComposite) //Exclude Composites and Keyboard-Scheme.
                         {
                             Debug.Log(binding.effectivePath);
                             //return false;
