@@ -394,10 +394,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                     #region Check Keyboard actionBindings in the actionMap.
                     foreach (InputBinding binding in _actionToRebind.actionMap.bindings)
                     {
-                        if(binding.groups == m_keyboardMouseString && binding.isPartOfComposite)  //Exclude Composites and Gamepad-Scheme.
+                        if(binding.groups == m_keyboardMouseString && !binding.isComposite)  //Exclude Composites and Gamepad-Scheme.
                         {
                             Debug.Log(binding.effectivePath);
-                            //return false;
                             continue;
                         }
                     }
@@ -411,10 +410,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                     #region Check Gamepad actionBindings in the actionMap.
                     foreach (InputBinding binding in _actionToRebind.actionMap.bindings)
                     {
-                        if (binding.groups == m_gamePadString && binding.isPartOfComposite) //Exclude Composites and Keyboard-Scheme.
+                        if (binding.groups == m_gamePadString && !binding.isComposite) //Exclude Composites and Keyboard-Scheme.
                         {
                             Debug.Log(binding.effectivePath);
-                            //return false;
                             continue;
                         }
                     }

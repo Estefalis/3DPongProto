@@ -14111,7 +14111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_deleteAllPlayerPrefs: 0
-  m_LoadRebindDicts: 1
+  m_loadRebindDicts: 0
   m_pS:
     buttonNorth: {fileID: 21300000, guid: ef777ca7e49ce7b4181aa11dfc3eb009, type: 3}
     buttonSouth: {fileID: 21300000, guid: 0c803c782b4eaf248bd9269523985833, type: 3}
