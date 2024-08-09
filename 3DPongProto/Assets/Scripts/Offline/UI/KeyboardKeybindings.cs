@@ -28,7 +28,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         private int m_bindingIndex;
         private string m_actionName;
         private Guid m_bindingId;
-        private string m_fallbackIconPath;
+        private string m_onCancelIconPath;
 
         private void OnEnable()
         {
@@ -107,7 +107,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             {
                 Image buttonImage = m_buttonImage.GetComponent<Image>();
                 buttonImage.sprite = InputManager.GetControllerIcons(m_eKeyControlScheme, _effectivePath);
-                m_fallbackIconPath = _effectivePath;
+                m_onCancelIconPath = _effectivePath;
                 m_buttonImage.sprite = buttonImage.sprite;
             }
         }
@@ -117,7 +117,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ExecuteKeyRebind()
         {
-            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse, m_eKeyControlScheme, /*m_fallbackIconPath,*/ m_bindingId);
+            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse, m_eKeyControlScheme, m_onCancelIconPath, m_bindingId);
         }
 
         /// <summary>

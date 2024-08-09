@@ -45,8 +45,10 @@ namespace ThreeDeePongProto.Shared.InputActions
         private const string m_cancelWithKeyboardButton = "<Keyboard>/escape";
         private const string m_cancelWithGamepadButton = "<Gamepad>/select";
 
-        //private const string m_keyboardString = "KeyboardMouse";
-        //private const string m_gamePadString = "Gamepad";
+        private static string m_onCancelIconPath;
+
+        private const string m_keyboardMouseString = "KeyboardMouse";   //KeyboardMouse scheme, NOT Keyboard (only)!
+        private const string m_gamePadString = "Gamepad";
         //private const string m_dualShockGamepadString = "DualShockGamepad";
         //private const string m_dualSenseGamepadHIDString = "DualSenseGamepadHID";
         #endregion
@@ -163,9 +165,6 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_playerInputActions.Disable();
             m_changeActiveActionMap?.Invoke(_actionMap);
             _actionMap.Enable();
-#if UNITY_EDITOR
-            //Debug.Log($"InputManager while debugging: {_actionMap.name} loaded.");
-#endif
         }
         #endregion
 
@@ -246,10 +245,12 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region KeyRebinding
-        public static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, bool _excludeMouse, EKeyControlScheme _eKeyControlScheme, Guid _uniqueGuid)
+        public static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, bool _excludeMouse, EKeyControlScheme _eKeyControlScheme, string _onCancelIconPath, Guid _uniqueGuid)
         {
             //Look up the action name of the inputAction in the generated C#-Script, not the Scriptable Object.
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
+
+            m_onCancelIconPath = _onCancelIconPath;
 
             //Check for null references and valid indices.
             if (inputAction == null || inputAction.bindings.Count <= _bindingIndex)
@@ -304,15 +305,10 @@ namespace ThreeDeePongProto.Shared.InputActions
                 _actionToRebind.Enable();
                 operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
-                //if (CheckForDuplicateBinding(_actionToRebind, _bindingIndex, _allCompositeParts))
-                //{
-                //    _actionToRebind.RemoveBindingOverride(_bindingIndex);
-                //    ExecuteKeyRebind(_actionToRebind, _bindingIndex, _statusText, _allCompositeParts, _excludeMouse, _eKeyControlScheme, _uniqueGuid);
-                //    //Place another 'ExecuteKeyRebind()' here, if you want to continue setting an alternative ButtonBinding.
-                //    rebind.Cancel();    //Invokes the ' rebind.OnCancel' operation from here.
-
-                //    return;
-                //}
+                if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _eKeyControlScheme, _allCompositeParts)) //Duplicate Check Slot.
+                {
+                    //TODO: Redo Duplicate checks.
+                }
 
                 if (_allCompositeParts) //If the Index has compositeParts/children.
                 {
@@ -349,7 +345,10 @@ namespace ThreeDeePongProto.Shared.InputActions
                 _actionToRebind.Enable();
                 operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
-                m_RebindCanceled?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _uniqueGuid); //Subscribers reset to old state.
+                if (m_onCancelIconPath != null)
+                    m_RebindCanceled?.Invoke(m_onCancelIconPath, _uniqueGuid); //Subscribers reset to old state.
+                else
+                    m_RebindCanceled?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _uniqueGuid);
             });
 
             switch (_eKeyControlScheme)  //ONLY ONE cancelButton gets recognized in code at a time.
@@ -380,66 +379,48 @@ namespace ThreeDeePongProto.Shared.InputActions
             rebind.Start(); //Real Start of the rebind process.
         }
 
-        //        private static bool CheckForDuplicateBinding(InputAction _actionToRebind, int _bindingIndex, bool _allCompositeParts)
-        //        {
-        //            InputBinding newBinding = _actionToRebind.bindings[_bindingIndex];
+        private static bool DuplicateBindingCheck(InputAction _actionToRebind, int _bindingIndex, EKeyControlScheme _eKeyControlScheme, bool _allCompositeParts)
+        {
+            InputBinding newBinding = _actionToRebind.bindings[_bindingIndex];
 
-        //            #region Check all actionBindings in the actionMap.
-        //            foreach (InputBinding binding in _actionToRebind.actionMap.bindings)
-        //            {
-        //                if (newBinding.action == binding.action)
-        //                {
-        //                    switch (newBinding.id == binding.id)
-        //                    {
-        //                        case true:
-        //                        {
-        //#if UNITY_EDITOR
-        //                            Debug.Log("Same Binding. Continue.");
-        //#endif
-        //                            continue;
-        //                        }
-        //                        case false:
-        //                        {
-        //#if UNITY_EDITOR
-        //                            Debug.Log($"Desired BindingPath [{newBinding.effectivePath}] found in Action: {binding.action}.");
-        //#endif
-        //                            return true;
-        //                        }
-        //                    }
-        //                }
+            switch (_eKeyControlScheme)
+            {
+                case EKeyControlScheme.KeyboardMouse:
+                {
+                    #region Check Keyboard actionBindings in the actionMap.
+                    foreach (InputBinding binding in _actionToRebind.actionMap.bindings)
+                    {
+                        if(binding.groups == m_keyboardMouseString && !binding.isComposite)  //Exclude Composites and Gamepad-Scheme.
+                        {
+                            Debug.Log(binding.effectivePath);
+                            //return false;
+                            continue;
+                        }
+                    }
+                    #endregion
+                    break;
+                }
+                case EKeyControlScheme.Gamepad:
+                case EKeyControlScheme.PSGamepad:
+                case EKeyControlScheme.XBoxGamepad:
+                {
+                    #region Check Gamepad actionBindings in the actionMap.
+                    foreach (InputBinding binding in _actionToRebind.actionMap.bindings)
+                    {
+                        if (binding.groups == m_gamePadString && !binding.isComposite) //Exclude Composites and Keyboard-Scheme.
+                        {
+                            Debug.Log(binding.effectivePath);
+                            //return false;
+                            continue;
+                        }
+                    }
+                    #endregion
+                    break;
+                }
+            }
 
-        //                if (newBinding.effectivePath == binding.effectivePath)
-        //                {
-        //#if UNITY_EDITOR
-        //                    Debug.Log($"Desired BindingPath [{newBinding.effectivePath}] found in Action: {binding.action}.");
-        //#endif
-        //                    return true;
-        //                }
-        //            }
-
-        //            //Check for duplicate composite bindings.
-        //            if (_allCompositeParts)
-        //            {
-        //                var nextBindingIndex = _bindingIndex + 1;
-
-        //                for (int i = nextBindingIndex; i < _actionToRebind.bindings.Count && _actionToRebind.bindings[nextBindingIndex].isPartOfComposite; i++)
-        //                {
-        //                    if (_actionToRebind.bindings[i].effectivePath == newBinding.effectivePath)
-        //                    {
-        //                        Debug.Log($"Desired BindingPath [{newBinding.effectivePath}] found in a composite.");
-        //                        return true;
-        //                    }
-        //                }
-        //            }
-
-        //            return false;
-        //            #endregion
-
-        //            //C# Unity New Input System Check for Duplicate Bindings
-        //            //https://discussions.unity.com/t/new-input-system-check-if-binding-already-exists-in-input-action-asset/874954/2
-        //            //samyam Persistent Control Rebinding
-        //            //https://youtu.be/csqVa2Vimao?si=4LTu3gUp0nVn8Hk4 
-        //        }
+            return false;
+        }
 
         /// <summary>
         /// Each binding requires getting called by an own 'Remove-Override-Binding-Extension-Function'.
@@ -501,7 +482,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 #endregion
 
                 #region Unique Guid
-                if (_inputAction.bindings[i].overridePath != null && _inputAction.bindings[_bindingIndex].groups == $"{EKeyControlScheme.KeyboardMouse}")
+                if (_inputAction.bindings[i].overridePath != null)
                 {
                     //string dictKey = $"{_uniqueGuid}";
                     bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{_uniqueGuid}");
@@ -536,7 +517,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 #endregion
 
                 #region Unique Guid
-                if (_inputAction.bindings[i].overridePath != null && _inputAction.bindings[_bindingIndex].groups == $"{EKeyControlScheme.Gamepad}") //InputBinding Group in Inspector, NOT the enum options!
+                if (_inputAction.bindings[i].overridePath != null)
                 {
                     //string dictKey = $"{_uniqueGuid}";
                     bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{_uniqueGuid}");

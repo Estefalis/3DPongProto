@@ -14111,7 +14111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_deleteAllPlayerPrefs: 0
-  m_LoadRebindDicts: 1
+  m_LoadRebindDicts: 0
   m_pS:
     buttonNorth: {fileID: 21300000, guid: ef777ca7e49ce7b4181aa11dfc3eb009, type: 3}
     buttonSouth: {fileID: 21300000, guid: 0c803c782b4eaf248bd9269523985833, type: 3}
@@ -28426,8 +28426,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3300070613943120016, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
+      propertyPath: m_selectedBinding
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3300070613943120016, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
       propertyPath: m_eKeyControlScheme
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3300070613943120016, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_inputBinding.m_Id
+      value: d7bbe063-46b8-41e1-b083-20a8255c6a5a
+      objectReference: {fileID: 0}
+    - target: {fileID: 3300070613943120016, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_inputBinding.m_Path
+      value: <Gamepad>/buttonSouth
+      objectReference: {fileID: 0}
+    - target: {fileID: 3300070613943120016, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_inputBinding.m_Groups
+      value: Gamepad
       objectReference: {fileID: 0}
     - target: {fileID: 3300070613988763431, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
@@ -28521,8 +28541,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3300070614242661515, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
+      propertyPath: m_selectedBinding
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3300070614242661515, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
       propertyPath: m_eKeyControlScheme
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3300070614242661515, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_inputBinding.m_Id
+      value: 0522a671-2e1d-4549-95e1-01dca37610f7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3300070614242661515, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_inputBinding.m_Path
+      value: <Gamepad>/rightTrigger
+      objectReference: {fileID: 0}
+    - target: {fileID: 3300070614242661515, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_inputBinding.m_Groups
+      value: Gamepad
       objectReference: {fileID: 0}
     - target: {fileID: 3300070614276017440, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
@@ -29820,6 +29860,46 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5287349081572105453, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_inputBinding.m_Groups
+      value: KeyboardMouse
+      objectReference: {fileID: 0}
+    - target: {fileID: 5287349081794825050, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_selectedBinding
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5287349081794825050, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_inputBinding.m_Id
+      value: 7519f93b-d874-42b4-acca-04cbf931f577
+      objectReference: {fileID: 0}
+    - target: {fileID: 5287349081794825050, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_inputBinding.m_Path
+      value: <Keyboard>/b
+      objectReference: {fileID: 0}
+    - target: {fileID: 5287349081794825050, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_inputBinding.m_Groups
+      value: KeyboardMouse
+      objectReference: {fileID: 0}
+    - target: {fileID: 5287349082027011905, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_selectedBinding
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5287349082027011905, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_inputBinding.m_Id
+      value: 8e316275-ed43-4791-819c-8d332385a840
+      objectReference: {fileID: 0}
+    - target: {fileID: 5287349082027011905, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_inputBinding.m_Path
+      value: <Keyboard>/w
+      objectReference: {fileID: 0}
+    - target: {fileID: 5287349082027011905, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_inputBinding.m_Groups
       value: KeyboardMouse
