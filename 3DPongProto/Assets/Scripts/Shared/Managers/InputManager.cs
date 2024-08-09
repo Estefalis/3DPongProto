@@ -45,8 +45,6 @@ namespace ThreeDeePongProto.Shared.InputActions
         private const string m_cancelWithKeyboardButton = "<Keyboard>/escape";
         private const string m_cancelWithGamepadButton = "<Gamepad>/select";
 
-        private static string m_onCancelIconPath;
-
         private const string m_keyboardMouseScheme = "KeyboardMouse";   //KeyboardMouse scheme, NOT Keyboard (only)!
         private const string m_gamePadScheme = "Gamepad";
         //private const string m_dualShockGamepadString = "DualShockGamepad";
@@ -245,12 +243,10 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region KeyRebinding
-        public static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, bool _excludeMouse, EKeyControlScheme _eKeyControlScheme, string _onCancelIconPath, Guid _uniqueGuid)
+        public static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, bool _excludeMouse, EKeyControlScheme _eKeyControlScheme, Guid _uniqueGuid)
         {
             //Look up the action name of the inputAction in the generated C#-Script, not the Scriptable Object.
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
-
-            m_onCancelIconPath = _onCancelIconPath;
 
             //Check for null references and valid indices.
             if (inputAction == null || inputAction.bindings.Count <= _bindingIndex)
@@ -349,10 +345,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 _actionToRebind.Enable();
                 operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
-                if (m_onCancelIconPath != null)
-                    m_RebindCanceled?.Invoke(m_onCancelIconPath, _uniqueGuid); //Subscribers reset to old state.
-                else
-                    m_RebindCanceled?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _uniqueGuid);
+                m_RebindCanceled?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _uniqueGuid);
             });
 
             switch (_eKeyControlScheme)  //ONLY ONE cancelButton gets recognized in code at a time.
@@ -460,31 +453,27 @@ namespace ThreeDeePongProto.Shared.InputActions
 #endif
                             if (binding.action == newBinding.action)                                //If actions are the same.
                             {
-                                switch (binding.id == newBinding.id)                                //Act by binding ID.
+                                for (int i = 0; i < binding.action.Length; i++)
                                 {
-                                    case true:
+                                    if (binding.id == newBinding.id)                                //Act by binding ID.
                                     {
 #if UNITY_EDITOR
                                         Debug.Log($"Own binding.");                                 //Skips itself on same ID. (Can set binding.)
 #endif
                                         continue;                                                   //And continues.
                                     }
-                                    case false:
+
+                                    if (binding.effectivePath == newBinding.effectivePath)          //Compare paths on (different) actions & IDs.
                                     {
-                                        if (binding.effectivePath == newBinding.effectivePath)      //Compare paths on different IDs.
-                                        {
 #if UNITY_EDITOR
-                                            Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
+                                        Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
 #endif
-                                            return true;                                            //Call out a duplicate, if one if found.
-                                        }
-                                        else
-                                            continue;                                               //Else continues the search.
+                                        return true;                                                //Call out a duplicate, if one if found.
                                     }
                                 }
                             }
 
-                            if (binding.action != newBinding.action)                                 //If actions are different.
+                            if (binding.action != newBinding.action)                                //If actions are different.
                             {
                                 if (binding.effectivePath == newBinding.effectivePath)              //Compare paths on (different) actions & IDs.
                                 {
@@ -501,7 +490,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 }
             }
 
-            return false;                                                                       //End of '_eKeyControlScheme' switch.
+            return false;                                                                           //End of '_eKeyControlScheme' switch.
         }
 
         /// <summary>
