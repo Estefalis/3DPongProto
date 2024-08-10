@@ -35,8 +35,8 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region KeyRebinding
-        public static event Action<string, Guid> m_RebindComplete;
-        public static event Action<string, Guid> m_RebindCanceled;
+        public static event Action<Guid> m_RebindComplete;
+        public static event Action<Guid> m_RebindCanceled;
         public static event Action<InputAction, int> m_rebindStarted;
 
         private static Dictionary<string, string> m_keyboardRebindDict = new Dictionary<string, string>();
@@ -320,7 +320,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 #if UNITY_EDITOR
                 //Debug.Log($"effectivePath: {_actionToRebind.bindings[_bindingIndex].effectivePath}");
 #endif
-                m_RebindComplete?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _uniqueGuid); //Subscribers update to new state.
+                m_RebindComplete?.Invoke(_uniqueGuid); //Subscribers update to new state.
 
                 #region Rebind Save
                 switch (_eKeyControlScheme)
@@ -345,7 +345,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 _actionToRebind.Enable();
                 operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
-                m_RebindCanceled?.Invoke(_actionToRebind.bindings[_bindingIndex].effectivePath, _uniqueGuid);
+                m_RebindCanceled?.Invoke(_uniqueGuid);
             });
 
             switch (_eKeyControlScheme)  //ONLY ONE cancelButton gets recognized in code at a time.
@@ -542,6 +542,15 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
             return inputAction.GetBindingDisplayString(_bindingIndex);
+        }
+
+        public static string GetEffectiveBindingPath(string _actionName, int _bindingIndex)
+        {
+            if (m_playerInputActions == null)
+                m_playerInputActions = new PlayerInputActions();
+
+            InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
+            return inputAction.bindings[_bindingIndex].effectivePath;
         }
 
         private static void SaveKeyboardOverrides(InputAction _inputAction, int _bindingIndex, Guid _uniqueGuid/* = default*/)
