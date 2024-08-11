@@ -564,7 +564,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 #region Unique Guid
                 if (_inputAction.bindings[i].overridePath != null && _inputAction.bindings[i].groups == m_keyboardMouseScheme)
                 {
-                    Debug.Log($"EP {_inputAction.bindings[i].effectivePath} Guid {_uniqueGuid}");
                     //string dictKey = $"{_uniqueGuid}";
                     bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{_uniqueGuid}");
 
