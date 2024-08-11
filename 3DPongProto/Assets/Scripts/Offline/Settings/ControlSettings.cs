@@ -69,8 +69,8 @@ namespace ThreeDeePongProto.Offline.Settings
         private readonly string m_controlFileName = "/ControlPlayer";
         private readonly string m_fileFormat = ".json";
 
-        private IPersistentData m_persistentData = new SerializingData();
-        private bool m_encryptionEnabled = false;
+        private readonly IPersistentData m_persistentData = new SerializingData();
+        private readonly bool m_encryptionEnabled = false;
         #endregion
 
         private void Awake()
@@ -100,14 +100,13 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void OnEnable()
         {
+            InitialUISetup();
             AddSliderAndToggleListener();
         }
 
         private void OnDisable()
         {
             RemoveSliderAndToggleListener();
-
-            SetActivePlayerView(m_playerButtons[0]);
 
             for (int i = 0; i < m_controlUIStatesEP.Length; i++)
             {
@@ -118,11 +117,6 @@ namespace ThreeDeePongProto.Offline.Settings
             {
                 m_persistentData.SaveData(m_settingsValuesFolderPath, m_controlFileName + $"{j}", m_fileFormat, m_controlUIValuesEP[j], m_encryptionEnabled, true);
             }
-        }
-
-        private void Start()
-        {
-            InitialUISetup();
         }
 
         /// <summary>
@@ -554,13 +548,13 @@ namespace ThreeDeePongProto.Offline.Settings
                     {
                         case false:
                         {
-                            m_MoveValueSliderXEP[i].value = m_xMovespeedDefault; //MoveSlider X
+                            m_MoveValueSliderXEP[i].value = m_xMovespeedDefault;    //MoveSlider X
                             m_xAxisValueTextPs[i].text = $"{m_xMovespeedDefault:N2}";
                             break;
                         }
                         case true:
                         {
-                            m_MoveValueSliderXEP[i].value = m_controlUIValuesEP[i].LastXMoveSpeed;
+                            m_MoveValueSliderXEP[i].value = m_controlUIValuesEP[i].LastXMoveSpeed;   //MoveSlider X
                             m_xAxisValueTextPs[i].text = $"{m_controlUIValuesEP[i].LastXMoveSpeed:N2}";
                             break;
                         }
@@ -576,7 +570,7 @@ namespace ThreeDeePongProto.Offline.Settings
                         }
                         case true:
                         {
-                            m_RotValueSliderYEP[i].value = m_controlUIValuesEP[i].LastYRotSpeed;
+                            m_RotValueSliderYEP[i].value = m_controlUIValuesEP[i].LastYRotSpeed;  //RotSlider Y
                             m_yAxisValueTextPs[i].text = $"{m_controlUIValuesEP[i].LastYRotSpeed:N2}";
                             break;
                         }

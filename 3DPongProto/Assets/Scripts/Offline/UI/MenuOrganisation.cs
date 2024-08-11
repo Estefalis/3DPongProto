@@ -205,7 +205,7 @@ namespace ThreeDeePongProto.Offline.UI
                     ControlUISettingsStates controlUISettingsStates = m_persistentData.LoadData<ControlUISettingsStates>(m_settingStatesFolderPath, m_controlFileName + $"{i}", m_fileFormat, m_encryptionEnabled);
 
                     m_controlUIStatesEP[i].InvertXAxis = controlUISettingsStates.InvertXAxis;
-                    m_controlUIStatesEP[i].InvertXAxis = controlUISettingsStates.InvertYAxis;
+                    m_controlUIStatesEP[i].InvertYAxis = controlUISettingsStates.InvertYAxis;
                     m_controlUIStatesEP[i].CustomXSensitivity = controlUISettingsStates.CustomXSensitivity;
                     m_controlUIStatesEP[i].CustomYSensitivity = controlUISettingsStates.CustomYSensitivity;
                 }

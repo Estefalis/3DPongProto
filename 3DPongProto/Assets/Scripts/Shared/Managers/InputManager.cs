@@ -562,7 +562,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 #endregion
 
                 #region Unique Guid
-                if (_inputAction.bindings[i].overridePath != null)
+                if (!_inputAction.bindings[i].isComposite)
                 {
                     //string dictKey = $"{_uniqueGuid}";
                     bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{_uniqueGuid}");
@@ -597,7 +597,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 #endregion
 
                 #region Unique Guid
-                if (_inputAction.bindings[i].overridePath != null)
+                if (!_inputAction.bindings[i].isComposite)
                 {
                     //string dictKey = $"{_uniqueGuid}";
                     bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{_uniqueGuid}");
