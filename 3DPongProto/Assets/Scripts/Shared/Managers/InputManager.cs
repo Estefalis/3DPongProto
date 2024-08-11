@@ -562,8 +562,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 #endregion
 
                 #region Unique Guid
-                if (!_inputAction.bindings[i].isComposite)
+                if (_inputAction.bindings[i].overridePath != null && _inputAction.bindings[i].groups == m_keyboardMouseScheme)
                 {
+                    Debug.Log($"EP {_inputAction.bindings[i].effectivePath} Guid {_uniqueGuid}");
                     //string dictKey = $"{_uniqueGuid}";
                     bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{_uniqueGuid}");
 
@@ -597,7 +598,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 #endregion
 
                 #region Unique Guid
-                if (!_inputAction.bindings[i].isComposite)
+                if (_inputAction.bindings[i].overridePath != null && _inputAction.bindings[i].groups == m_gamePadScheme)
                 {
                     //string dictKey = $"{_uniqueGuid}";
                     bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{_uniqueGuid}");
@@ -623,7 +624,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
         }
 
-        internal static string LoadKeyboardOverrides(string _actionName, Guid _uiGuid)
+        internal static void LoadKeyboardOverrides(string _actionName, Guid _uiGuid)
         {
             if (m_playerInputActions == null)
             {
@@ -631,7 +632,6 @@ namespace ThreeDeePongProto.Shared.InputActions
 #if UNITY_EDITOR
                 Debug.Log("Keyboard-InputAction is null");
 #endif
-                return null;
             }
 
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
@@ -664,7 +664,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     case true:
                     {
                         inputAction.ApplyBindingOverride(bindingIndexAsInt, overridePath);
-                        return overridePath;
+                        break;
                     }
                     case false:
                     {
@@ -673,8 +673,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 }
             }
             #endregion
-
-            return null;
         }
 
         internal static void LoadGamepadOverrides(string _actionName, Guid _uiGuid)
@@ -717,7 +715,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     case true:
                     {
                         inputAction.ApplyBindingOverride(bindingIndexAsInt, overridePath);
-                        continue;
+                        break;
                     }
                     case false:
                     {
