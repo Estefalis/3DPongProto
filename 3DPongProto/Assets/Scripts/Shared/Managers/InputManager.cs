@@ -677,7 +677,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             return null;
         }
 
-        internal static string LoadGamepadOverrides(string _actionName, Guid _uiGuid)
+        internal static void LoadGamepadOverrides(string _actionName, Guid _uiGuid)
         {
             if (m_playerInputActions == null)
             {
@@ -685,7 +685,6 @@ namespace ThreeDeePongProto.Shared.InputActions
 #if UNITY_EDITOR
                 Debug.Log("Gamepad-InputAction is null");
 #endif
-                return null;
             }
 
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
@@ -718,7 +717,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     case true:
                     {
                         inputAction.ApplyBindingOverride(bindingIndexAsInt, overridePath);
-                        return overridePath;
+                        continue;
                     }
                     case false:
                     {
@@ -727,8 +726,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 }
             }
             #endregion
-
-            return null;
         }
 
         private static void ResetKeyboardOverrides(InputAction _inputAction, int _bindingIndex, Guid _uniqueGuid/* = default*/)
