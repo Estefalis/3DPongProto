@@ -18,7 +18,6 @@ namespace ThreeDeePongProto.Shared.InputActions
         [SerializeField] private InputBinding m_inputBinding;
 
         [Header("UI-Fields")]
-        [SerializeField] private EKeyControlScheme m_eKeyControlScheme;
         //[SerializeField] private TextMeshProUGUI m_actionTitle;
         [SerializeField] private Image m_buttonImage;
         [SerializeField] private Button m_rebindButton;
@@ -26,7 +25,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         [SerializeField] private Button m_resetButton;
 
         private int m_bindingIndex;
-        private string m_actionName;
+        private string m_actionName, m_controlScheme;
         private Guid m_bindingId;
 
         private void OnEnable()
@@ -74,6 +73,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     m_inputBinding = m_InputActionReference.action.bindings[m_selectedBinding];
                     m_bindingIndex = m_selectedBinding;
                     m_bindingId = m_InputActionReference.action.bindings[m_bindingIndex].id;
+                    m_controlScheme = m_InputActionReference.action.bindings[m_bindingIndex].groups;
                 }
             }
         }
@@ -96,7 +96,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             if (m_buttonImage != null && m_buttonImage.gameObject.activeInHierarchy)
             {
                 Image buttonImage = m_buttonImage.GetComponent<Image>();
-                buttonImage.sprite = InputManager.GetControllerIcons(m_eKeyControlScheme, InputManager.GetEffectiveBindingPath(m_actionName, m_bindingIndex).ToUpper());
+                buttonImage.sprite = InputManager.GetControllerIcons(m_controlScheme, InputManager.GetEffectiveBindingPath(m_actionName, m_bindingIndex).ToUpper());
                 m_buttonImage.sprite = buttonImage.sprite;
             }
         }
@@ -106,7 +106,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ExecuteKeyRebind()
         {
-            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse, m_eKeyControlScheme, m_bindingId);
+            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse, m_controlScheme, m_bindingId);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ResetRebinding()
         {
-            InputManager.ResetRebinding(m_actionName, m_bindingIndex, m_eKeyControlScheme, m_bindingId);
+            InputManager.ResetRebinding(m_actionName, m_bindingIndex, m_controlScheme, m_bindingId);
             UpdateRebindUI();
         }
     }

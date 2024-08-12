@@ -78,8 +78,8 @@ namespace ThreeDeePongProto.Offline.UI
         private readonly string m_matchFileName = "/Match";
         private readonly string m_fileFormat = ".json";
 
-        private IPersistentData m_persistentData = new SerializingData();
-        private bool m_encryptionEnabled = false;
+        private readonly IPersistentData m_persistentData = new SerializingData();
+        private readonly bool m_encryptionEnabled = false;
         #endregion
 
         public static event Action EndInfiniteMatch;
