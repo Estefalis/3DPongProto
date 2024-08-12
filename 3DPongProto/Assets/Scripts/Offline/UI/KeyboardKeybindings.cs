@@ -41,7 +41,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             {
                 GetBindingInfomation();                
                 InputManager.LoadKeyboardOverrides(m_actionName, m_bindingId);    //MUST be below 'GetBindingInfomation()'! Else Exception!
-                UpdateRebindUI(m_bindingId);
+                UpdateRebindUI();
             }
         }
 
@@ -57,7 +57,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 return;
 
             GetBindingInfomation();
-            UpdateRebindUI(m_bindingId);
+            UpdateRebindUI();
         }
 
         private void GetBindingInfomation()
@@ -78,9 +78,9 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
         }
 
-        private void UpdateRebindUI(Guid _bindingId)
+        private void UpdateRebindUI()
         {
-            if (m_rebindText != null && _bindingId == m_bindingId)
+            if (m_rebindText != null)
             {
                 if (Application.isPlaying)
                 {
@@ -93,7 +93,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 }
             }
 
-            if (m_buttonImage != null && m_buttonImage.enabled && _bindingId == m_bindingId)  //UpdatePadSprite ONLY for the specific Binding (each Script).
+            if (m_buttonImage != null && m_buttonImage.gameObject.activeInHierarchy)
             {
                 Image buttonImage = m_buttonImage.GetComponent<Image>();
                 buttonImage.sprite = InputManager.GetControllerIcons(m_eKeyControlScheme, InputManager.GetEffectiveBindingPath(m_actionName, m_bindingIndex).ToUpper());
@@ -115,7 +115,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         private void ResetRebinding()
         {
             InputManager.ResetRebinding(m_actionName, m_bindingIndex, m_eKeyControlScheme, m_bindingId);
-            UpdateRebindUI(m_bindingId);
+            UpdateRebindUI();
         }
     }
 }

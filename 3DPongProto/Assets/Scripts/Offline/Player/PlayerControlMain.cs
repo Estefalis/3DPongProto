@@ -78,8 +78,10 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         protected virtual void OnDisable()
         {
-            m_playerMovement.PlayerActions.Disable();
-            m_playerMovement.PlayerActions.ToggleGameMenu.performed -= ToggleMenu;
+            m_playerMovement.PlayerActionsNeg.Disable();
+            m_playerMovement.PlayerActionsPos.Disable();
+            m_playerMovement.PlayerActionsNeg.ToggleGameMenu.performed -= ToggleMenu;
+            m_playerMovement.PlayerActionsPos.ToggleGameMenu.performed -= ToggleMenu;
         }
 
         /// <summary>
@@ -88,8 +90,10 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         protected virtual void Start()
         {
             m_playerMovement = InputManager.m_playerInputActions;
-            m_playerMovement.PlayerActions.Enable();
-            m_playerMovement.PlayerActions.ToggleGameMenu.performed += ToggleMenu;
+            m_playerMovement.PlayerActionsNeg.Enable();
+            m_playerMovement.PlayerActionsPos.Enable();
+            m_playerMovement.PlayerActionsNeg.ToggleGameMenu.performed += ToggleMenu;
+            m_playerMovement.PlayerActionsPos.ToggleGameMenu.performed += ToggleMenu;
         }
 
         protected virtual void Update()
@@ -202,7 +206,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         protected virtual void StartCoroutinesAndActions()
         {
-            m_playerMovement.PlayerActions.Enable();
+            m_playerMovement.PlayerActionsNeg.Enable();
+            m_playerMovement.PlayerActionsPos.Enable();
         }
 
         #region CallbackContext Methods
@@ -210,7 +215,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         {
             m_matchManager = FindObjectOfType<MatchManager>();  //Required, if not catched with '[SerializeField]'.
 
-            if (!m_matchManager.GameIsPaused && m_playerMovement.PlayerActions.enabled)
+            if (!m_matchManager.GameIsPaused && m_playerMovement.PlayerActionsNeg.enabled ^ m_playerMovement.PlayerActionsPos.enabled)
             {
                 InGameMenuOpens?.Invoke();
                 InputManager.ToggleActionMaps(InputManager.m_playerInputActions.UI);
@@ -220,7 +225,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         protected virtual void DisablePlayerActions()
         {
-            m_playerMovement.PlayerActions.Disable();
+            m_playerMovement.PlayerActionsNeg.Disable();
+            m_playerMovement.PlayerActionsPos.Disable();
         }
     }
 }

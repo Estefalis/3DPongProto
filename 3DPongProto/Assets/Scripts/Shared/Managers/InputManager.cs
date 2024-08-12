@@ -35,8 +35,8 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region KeyRebinding
-        public static event Action<Guid> m_RebindComplete;
-        public static event Action<Guid> m_RebindCanceled;
+        public static event Action m_RebindComplete;
+        public static event Action m_RebindCanceled;
         public static event Action<InputAction, int> m_rebindStarted;
 
         private static Dictionary<string, string> m_keyboardRebindDict = new Dictionary<string, string>();
@@ -132,14 +132,23 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ToggleActionMaps(m_playerInputActions.UI);
                     break;
                 case "LocalGameScene":
-                    ToggleActionMaps(m_playerInputActions.PlayerActions);
+                {
+                    ToggleActionMaps(m_playerInputActions.PlayerActionsNeg);
+                    ToggleActionMaps(m_playerInputActions.PlayerActionsPos);
                     break;
+                }
                 case "LanGameScene":
-                    ToggleActionMaps(m_playerInputActions.PlayerActions);
+                {
+                    ToggleActionMaps(m_playerInputActions.PlayerActionsNeg);
+                    ToggleActionMaps(m_playerInputActions.PlayerActionsPos);
                     break;
+                }
                 case "NetGameScene":
-                    ToggleActionMaps(m_playerInputActions.PlayerActions);
+                {
+                    ToggleActionMaps(m_playerInputActions.PlayerActionsNeg);
+                    ToggleActionMaps(m_playerInputActions.PlayerActionsPos);
                     break;
+                }
                 case "WinScene":
                     ToggleActionMaps(m_playerInputActions.UI);
                     break;
@@ -301,11 +310,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                 _actionToRebind.Enable();
                 operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
-                if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _eKeyControlScheme, _allCompositeParts)) //if DuplicateCheck true.
+                if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _eKeyControlScheme)) //if DuplicateCheck true.
                 {
-                    //TODO: Redo Duplicate checks.
-                    //_actionToRebind.RemoveBindingOverride(_bindingIndex);
-                    //ExecuteKeyRebind(_actionToRebind, _bindingIndex, _statusText, _allCompositeParts, _excludeMouse, _eKeyControlScheme, _uniqueGuid);
                     rebind.Cancel();
                     return;
                 }
@@ -320,7 +326,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 #if UNITY_EDITOR
                 //Debug.Log($"effectivePath: {_actionToRebind.bindings[_bindingIndex].effectivePath}");
 #endif
-                m_RebindComplete?.Invoke(_uniqueGuid); //Subscribers update to new state.
+                m_RebindComplete?.Invoke(); //Subscribers update to new state.
 
                 #region Rebind Save
                 switch (_eKeyControlScheme)
@@ -345,7 +351,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 _actionToRebind.Enable();
                 operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
-                m_RebindCanceled?.Invoke(_uniqueGuid);
+                m_RebindCanceled?.Invoke();
             });
 
             switch (_eKeyControlScheme)  //ONLY ONE cancelButton gets recognized in code at a time.
@@ -376,7 +382,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             rebind.Start(); //Real Start of the rebind process.
         }
 
-        private static bool DuplicateBindingCheck(InputAction _actionToRebind, int _bindingIndex, EKeyControlScheme _eKeyControlScheme, bool _allCompositeParts)
+        private static bool DuplicateBindingCheck(InputAction _actionToRebind, int _bindingIndex, EKeyControlScheme _eKeyControlScheme)
         {
             InputBinding newBinding = _actionToRebind.bindings[_bindingIndex];
 
@@ -387,7 +393,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     #region Compare Keyboard actionBindings in the actionMap.
                     foreach (InputBinding binding in _actionToRebind.actionMap.bindings)
                     {
-                        if (binding.groups == m_keyboardMouseScheme && !binding.isComposite) //Exclude Composites and Gamepad-Scheme.
+                        if (binding.groups == m_keyboardMouseScheme && !binding.isComposite)        //Exclude Composites and Gamepad-Scheme.
                         {
 #if UNITY_EDITOR
                             #region Keyboard Debug Logs
@@ -421,12 +427,15 @@ namespace ThreeDeePongProto.Shared.InputActions
 
                             if (binding.action != newBinding.action)                                //If actions are different.
                             {
-                                if (binding.effectivePath == newBinding.effectivePath)              //Compare paths on (different) actions & IDs.
+                                for (int j = 0; j < _actionToRebind.actionMap.bindings.Count; j++)
                                 {
+                                    if (binding.effectivePath == newBinding.effectivePath)          //Compare paths on (different) actions & IDs.
+                                    {
 #if UNITY_EDITOR
-                                    Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
+                                        Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
 #endif
-                                    return true;                                                    //Call out a duplicate, if one if found.
+                                        return true;                                                //Call out a duplicate, if one if found.
+                                    }
                                 }
                             }
                         }
@@ -441,7 +450,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     #region Compare Gamepad actionBindings in the actionMap.
                     foreach (InputBinding binding in _actionToRebind.actionMap.bindings)
                     {
-                        if (binding.groups == m_gamePadScheme && !binding.isComposite) //Exclude Composites and Keyboard-Scheme.
+                        if (binding.groups == m_gamePadScheme && !binding.isComposite)              //Exclude Composites and Keyboard-Scheme.
                         {
 #if UNITY_EDITOR
                             #region Gamepad Debug Logs
@@ -475,12 +484,15 @@ namespace ThreeDeePongProto.Shared.InputActions
 
                             if (binding.action != newBinding.action)                                //If actions are different.
                             {
-                                if (binding.effectivePath == newBinding.effectivePath)              //Compare paths on (different) actions & IDs.
+                                for (int j = 0; j < _actionToRebind.actionMap.bindings.Count; j++)
                                 {
+                                    if (binding.effectivePath == newBinding.effectivePath)          //Compare paths on (different) actions & IDs.
+                                    {
 #if UNITY_EDITOR
-                                    Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
+                                        Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
 #endif
-                                    return true;                                                    //Call out a duplicate, if one if found.
+                                        return true;                                                //Call out a duplicate, if one if found.
+                                    }
                                 }
                             }
                         }
