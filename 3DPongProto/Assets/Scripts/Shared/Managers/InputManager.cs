@@ -550,25 +550,28 @@ namespace ThreeDeePongProto.Shared.InputActions
                     //string dictKey = $"{_uniqueGuid}";
                     bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{_uniqueGuid}");
 
-                    //If the dictionary has the guidKey, save the entry. Else create a new entry with the new informations. 
-                    switch (dictHasKey)
+                    //Only check and save, if iteration index equals inputAction index. Else more than the target index gets saved.
+                    if (i == _bindingIndex)
                     {
-                        case true:
+                        switch (dictHasKey)
                         {
-                            m_keyboardRebindDict[$"{_uniqueGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!";
-                            break;
-                        }
-                        case false:
-                        {
-                            m_keyboardRebindDict.Add($"{_uniqueGuid}", $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!");
-                            break;
+                            case true:
+                            {
+                                m_keyboardRebindDict[$"{_uniqueGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!";
+                                break;
+                            }
+                            case false:
+                            {
+                                m_keyboardRebindDict.Add($"{_uniqueGuid}", $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!");
+                                break;
+                            }
                         }
                     }
-
-                    m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
                 }
                 #endregion
             }
+
+            m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
         }
 
         private static void SaveGamepadOverrides(InputAction _inputAction, int _bindingIndex, Guid _uniqueGuid/* = default*/)
@@ -585,25 +588,28 @@ namespace ThreeDeePongProto.Shared.InputActions
                     //string dictKey = $"{_uniqueGuid}";
                     bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{_uniqueGuid}");
 
-                    //If the dictionary has the guidKey, save the entry. Else create a new entry with the new informations. 
-                    switch (dictHasKey)
+                    //Only check and save, if iteration index equals inputAction index. Else more than the target index gets saved.
+                    if (i == _bindingIndex)
                     {
-                        case true:
+                        switch (dictHasKey)
                         {
-                            m_gamepadRebindDict[$"{_uniqueGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!";
-                            break;
-                        }
-                        case false:
-                        {
-                            m_gamepadRebindDict.Add($"{_uniqueGuid}", $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!");
-                            break;
+                            case true:
+                            {
+                                m_gamepadRebindDict[$"{_uniqueGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!";
+                                break;
+                            }
+                            case false:
+                            {
+                                m_gamepadRebindDict.Add($"{_uniqueGuid}", $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!");
+                                break;
+                            }
                         }
                     }
-
-                    m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
                 }
                 #endregion
             }
+
+            m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
         }
 
         internal static void LoadKeyboardOverrides(string _actionName, Guid _uiGuid)
