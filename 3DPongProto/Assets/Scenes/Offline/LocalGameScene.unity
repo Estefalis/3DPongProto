@@ -4937,6 +4937,8 @@ MonoBehaviour:
   m_NPCName: Some Test-NPC
   m_playGround: {fileID: 5980709644925271523, guid: 81c764eba9528904fa09f522c6f6fba7,
     type: 3}
+  m_ballPrefab: {fileID: 7808031586811152375, guid: 9d7ade183afbd1840b3e2bdce92d679f,
+    type: 3}
   m_prefabParent: {fileID: 1061313409}
   m_playGroundWidthScale: 0.1
   m_playGroundLengthScale: 0.1
@@ -5369,8 +5371,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5041537838636795437}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13312,51 +13313,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &5041537838636795436
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1061313409}
-    m_Modifications:
-    - target: {fileID: 5041537836607581332, guid: 0128b9a642ea2bc47926a20e2a5ced79,
-        type: 3}
-      propertyPath: m_Name
-      value: NPC_Ball
-      objectReference: {fileID: 0}
-    - target: {fileID: 5041537836607581333, guid: 0128b9a642ea2bc47926a20e2a5ced79,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5041537836607581333, guid: 0128b9a642ea2bc47926a20e2a5ced79,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5041537836607581333, guid: 0128b9a642ea2bc47926a20e2a5ced79,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5041537836607581333, guid: 0128b9a642ea2bc47926a20e2a5ced79,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5041537836607581334, guid: 0128b9a642ea2bc47926a20e2a5ced79,
-        type: 3}
-      propertyPath: m_matchManager
-      value: 
-      objectReference: {fileID: 911050368}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 0128b9a642ea2bc47926a20e2a5ced79, type: 3}
---- !u!4 &5041537838636795437 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5041537836607581333, guid: 0128b9a642ea2bc47926a20e2a5ced79,
-    type: 3}
-  m_PrefabInstance: {fileID: 5041537838636795436}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5258602198036560004
 GameObject:
   m_ObjectHideFlags: 0

@@ -18,6 +18,7 @@ namespace ThreeDeePongProto.Offline.Managers
         #region SerializeField-Member-Variables
         [SerializeField] private string m_NPCName = "Some Test-NPC";    //TODO: Implement NPC for solo play!
         [SerializeField] private GameObject m_playGround;
+        [SerializeField] private GameObject m_ballPrefab;
         [SerializeField] private Transform m_prefabParent;
 
         [Header("Defaults")]
@@ -119,9 +120,6 @@ namespace ThreeDeePongProto.Offline.Managers
 
         private IEnumerator Start()
         {
-            //m_idGameObjectDict = new();
-            //GameObject player;
-            
             uint setPlayerByEnum = (uint)m_matchUIStates.EPlayerAmount;
             //1. Instantiate all Players related to the PlayerCount in game.
             for (int i = 0; i < setPlayerByEnum; i++)
@@ -329,6 +327,7 @@ namespace ThreeDeePongProto.Offline.Managers
             m_playGround.transform.localScale = new Vector3(m_basicFieldValues.SetGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_basicFieldValues.SetGroundLength * m_playGroundLengthScale);
 
             Instantiate(m_playGround, Vector3.zero, Quaternion.Euler(0, 0, 0), m_prefabParent);
+            Instantiate(m_ballPrefab, Vector3.zero, Quaternion.Euler(0, 0, 0), m_prefabParent);
         }
 
         private void ResetRoundValues()
