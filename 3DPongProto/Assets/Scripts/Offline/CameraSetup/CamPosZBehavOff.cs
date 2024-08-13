@@ -119,11 +119,10 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void SelectCameraToZoom()
         {
-            //Sets camera only within the gameWindow. (If the mouse is not less width or height == 0 and not more than full width or height.)
-            if (!(m_mousePosition.x < (CameraManager.RuntimeFullsizeRect.width - CameraManager.RuntimeFullsizeRect.width)) &&
-                !(m_mousePosition.x > CameraManager.RuntimeFullsizeRect.width) &&
-                !(m_mousePosition.y < (CameraManager.RuntimeFullsizeRect.height - CameraManager.RuntimeFullsizeRect.height)) &&
-                !(m_mousePosition.y > CameraManager.RuntimeFullsizeRect.height))
+            //Sets the camera only, if the mouse is within the gameWindow. width/height > 0 and not more than max width/height.)
+            //xMin (Rect.width - Rect.width), yMin (Rect.height - Rect.height). xMax Rect.width, yMax Rect.height.
+            if (!(m_mousePosition.x < CameraManager.RuntimeFullsizeRect.xMin) && !(m_mousePosition.x > CameraManager.RuntimeFullsizeRect.xMax) &&
+                !(m_mousePosition.y < CameraManager.RuntimeFullsizeRect.yMin) && !(m_mousePosition.y > CameraManager.RuntimeFullsizeRect.yMax))
             {
                 switch (m_graphicUiStates.SetCameraMode)
                 {
@@ -136,27 +135,19 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                     //TwoVertical
                     case ECameraModi.TwoVertical:
                     {
-                        if (m_mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin)
-                        {
-                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1]);
-                        }
-                        else
-                        {
-                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
-                        }
+                        //if m_mousePosition.x > Cam1.xMin m_playerWindowId = IndexOf Cam1, else IndexOf Cam0.
+                        m_playerWindowId = m_mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin 
+                            ? m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1]) 
+                            : m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
                         break;
                     }
                     //TwoHorizontal
                     case ECameraModi.TwoHorizontal:
                     {
-                        if (m_mousePosition.y >= m_cameraManager.AvailableCameras[1].pixelRect.yMin)
-                        {
-                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1]);
-                        }
-                        else
-                        {
-                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
-                        }
+                        //if m_mousePosition.y > Cam1.yMin m_playerWindowId = IndexOf Cam1, else IndexOf Cam0.
+                        m_playerWindowId = m_mousePosition.y >= m_cameraManager.AvailableCameras[1].pixelRect.yMin 
+                            ? m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1]) 
+                            : m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
                         break;
                     }
                     //FourSplit
@@ -234,10 +225,9 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private void Zooming(InputAction.CallbackContext _callbackContext)
         {
             //Zooming limited to the inside of the gameWindow.
-            if (!(m_mousePosition.x < (CameraManager.RuntimeFullsizeRect.width - CameraManager.RuntimeFullsizeRect.width)) &&
-                !(m_mousePosition.x > CameraManager.RuntimeFullsizeRect.width) &&
-                !(m_mousePosition.y < (CameraManager.RuntimeFullsizeRect.height - CameraManager.RuntimeFullsizeRect.height)) &&
-                !(m_mousePosition.y > CameraManager.RuntimeFullsizeRect.height))
+            //x/yMin == (Rect.width - Rect.width) or (Rect.height - Rect.height). x/yMax == Rect.width or Rect.height.
+            if (!(m_mousePosition.x < CameraManager.RuntimeFullsizeRect.xMin) && !(m_mousePosition.x > CameraManager.RuntimeFullsizeRect.xMax) &&
+                !(m_mousePosition.y < CameraManager.RuntimeFullsizeRect.yMin) && !(m_mousePosition.y > CameraManager.RuntimeFullsizeRect.yMax))
             {
                 float zoomValue = -_callbackContext.ReadValue<Vector2>().y * m_zoomSpeed;
 

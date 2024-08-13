@@ -5,37 +5,36 @@ using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class BallBehavOff : MonoBehaviour
+public class Ball : MonoBehaviour
 {
-    #region Script-References
-    [SerializeField] private MatchManager m_matchManager;
-    private PlayerInputActions m_ballMovement;
-    #endregion
-
     #region #region SerializeField-Member-Variables
     [SerializeField] private Rigidbody m_rigidbody;
     [SerializeField] private float m_impulseForce;
     [SerializeField] private float m_offWallAngle = 15.0f;
     [SerializeField] private float m_offPaddleAngle = 0.1f;
     //[SerializeField] float m_onContactAddUp = 1.10f;
-
-    [SerializeField] private AudioSource m_ballAudioSource;
-
-    [SerializeField] private readonly string m_goalOne = "GoalOne";
-    [SerializeField] private readonly string m_goalTwo = "GoalTwo";
-    [SerializeField] private readonly string m_teamPlayerOne = "TpOne";
-    [SerializeField] private readonly string m_teamPlayerTwo = "TpTwo";
-    //[SerializeField] private readonly string m_teamPlayerThree = "TpThree";
-    //[SerializeField] private readonly string m_teamPlayerFour = "TpFour";
-    [SerializeField] private readonly string m_eastWall = "EastWall";
-    [SerializeField] private readonly string m_westWall = "WestWall";
     #endregion
 
+    #region Script-References
+    private MatchManager m_matchManager;
+    private PlayerInputActions m_ballMovement;
+    [SerializeField] private AudioSource m_ballAudioSource;
     private int m_trackId = 0;
+    #endregion
 
     #region #region Non-SerializeField-Member-Variables
     private Vector3 m_ballPopPosition;
     private Quaternion m_ballPopRotation;
+
+    private readonly string m_goalOne = "GoalOne";
+    private readonly string m_goalTwo = "GoalTwo";
+    private readonly string m_teamPlayerOne = "TpOne";
+    private readonly string m_teamPlayerTwo = "TpTwo";
+    //[SerializeField] private readonly string m_teamPlayerThree = "TpThree";
+    //[SerializeField] private readonly string m_teamPlayerFour = "TpFour";
+    private readonly string m_eastWall = "EastWall";
+    private readonly string m_westWall = "WestWall";
+    #endregion
 
     #region Actions
     public static event Action HitGoalOne, HitGoalTwo;  //Updates UserInterface in MatchUserInterface.cs
@@ -44,14 +43,16 @@ public class BallBehavOff : MonoBehaviour
     //TODO: Audioplay-Structure: (Emitter, AudioSourceSettings (Diegetic/NonDiegetic), Track-ID (if not random), RandomBool);
     public static event Action<ESoundEmittingObjects, EAudioType, int, bool> PlaySpecificAudio;
     #endregion
-    #endregion
 
     private void Awake()
     {
+        m_matchManager = FindObjectOfType<MatchManager>();
+
         if (m_rigidbody == null)
-            m_rigidbody = GetComponentInChildren<Rigidbody>();
-        if(m_ballAudioSource !=  null)
-        m_ballAudioSource = GetComponent<AudioSource>();
+            m_rigidbody = GetComponent<Rigidbody>();
+
+        if (m_ballAudioSource == null)
+            m_ballAudioSource = GetComponent<AudioSource>();
 
         m_ballPopPosition = m_rigidbody.position;
         m_ballPopRotation = m_rigidbody.rotation;
@@ -109,27 +110,6 @@ public class BallBehavOff : MonoBehaviour
         m_rigidbody.AddRelativeForce(transform.forward * m_impulseForce, ForceMode.Impulse);
     }
 
-    private void OnTriggerEnter(Collider _other)
-    {
-        if (_other.gameObject.CompareTag(m_goalOne))
-        {
-            //MatchManager: WinCondition-Check & increases Match-Points of Player/Team 2 - MatchUserInterface: Updates MatchUI - PlayerControls: Resets Paddle on Goal.
-            HitGoalOne?.Invoke();
-            //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
-            PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
-            ResetBall();
-        }
-
-        if (_other.gameObject.CompareTag(m_goalTwo))
-        {
-            //MatchManager: WinCondition-Check & increases Match-Points of Player/Team 1 - MatchUserInterface: Updates MatchUI - PlayerControls: Resets Paddle on Goal.
-            HitGoalTwo?.Invoke();
-            //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
-            PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
-            ResetBall();
-        }
-    }
-
     private void StartBallMovement(InputAction.CallbackContext _callbackContext)
     {
         if (!m_matchManager.GameIsPaused)
@@ -143,6 +123,29 @@ public class BallBehavOff : MonoBehaviour
                 //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
                 PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);   //BallstartSound
             }
+        }
+    }
+
+    private void OnTriggerEnter(Collider _other)
+    {
+        if (_other.gameObject.CompareTag(m_goalOne))
+        {
+            //MatchManager: WinCondition-Check & increases Match-Points of Player/Team 2 - MatchUserInterface: Updates MatchUI - PlayerControls: Resets Paddle on Goal.
+            HitGoalOne?.Invoke();
+            Debug.Log("One");
+            //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
+            PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
+            ResetBall();
+        }
+
+        if (_other.gameObject.CompareTag(m_goalTwo))
+        {
+            //MatchManager: WinCondition-Check & increases Match-Points of Player/Team 1 - MatchUserInterface: Updates MatchUI - PlayerControls: Resets Paddle on Goal.
+            HitGoalTwo?.Invoke();
+            Debug.Log("Two");
+            //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
+            PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
+            ResetBall();
         }
     }
 

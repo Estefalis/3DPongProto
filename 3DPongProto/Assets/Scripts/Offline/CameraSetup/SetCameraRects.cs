@@ -33,7 +33,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             else
                 m_lastSetCameraMode = m_graphicUiStates.SetCameraMode;
 
-            yield return new WaitUntil(DelegateBool);
+            yield return new WaitUntil(CamerasEqualPlayerCount);
 
             SetCameraMode(m_lastSetCameraMode);
 
@@ -45,7 +45,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         /// Only returns true, after the activated PlayerCameras added themselves to the 'AvailableCameras'-List equal to the registered PlayerIDData.
         /// </summary>
         /// <returns></returns>
-        private bool DelegateBool()
+        private bool CamerasEqualPlayerCount()
         {
             if (m_cameraManager.AvailableCameras.Count == m_matchValues.PlayerData.Count)
                 return true;
@@ -91,7 +91,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private void Update()
         {
             UpdateFullsizeRect();
-
 #if UNITY_EDITOR
             //Debug.Log($"Cam1 Height {m_cameraManager.AvailableCameras[0].pixelRect.height} -  Width {m_cameraManager.AvailableCameras[0].pixelRect.width}");
             //Debug.Log($"Cam2 Height {m_cameraManager.AvailableCameras[1].pixelRect.height} -  Width {m_cameraManager.AvailableCameras[1].pixelRect.width}");
@@ -241,26 +240,17 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             {
                 case ECameraModi.SingleCam:
                 {
-                    //m_cameraManager.AvailableCameras[1].gameObject.SetActive(false);
-                    //m_cameraManager.AvailableCameras[2].gameObject.SetActive(false);
-                    //m_cameraManager.AvailableCameras[3].gameObject.SetActive(false);
                     ResetViewportRects(m_cameraManager.AvailableCameras[0]);
                     break;
                 }
                 case ECameraModi.TwoVertical:
                 case ECameraModi.TwoHorizontal:
                 {
-                    //m_cameraManager.AvailableCameras[1].gameObject.SetActive(true);
-                    //m_cameraManager.AvailableCameras[2].gameObject.SetActive(false);
-                    //m_cameraManager.AvailableCameras[3].gameObject.SetActive(false);
                     ResetViewportRects(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
                     break;
                 }
                 case ECameraModi.FourSplit:
                 {
-                    //m_cameraManager.AvailableCameras[1].gameObject.SetActive(true);
-                    //m_cameraManager.AvailableCameras[2].gameObject.SetActive(true);
-                    //m_cameraManager.AvailableCameras[3].gameObject.SetActive(true);
                     ResetViewportRects(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1], m_cameraManager.AvailableCameras[2], m_cameraManager.AvailableCameras[3]);
                     break;
                 }

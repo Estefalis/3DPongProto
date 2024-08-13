@@ -4937,7 +4937,7 @@ MonoBehaviour:
   m_NPCName: Some Test-NPC
   m_playGround: {fileID: 5980709644925271523, guid: 81c764eba9528904fa09f522c6f6fba7,
     type: 3}
-  m_ballPrefab: {fileID: 7808031586811152375, guid: 9d7ade183afbd1840b3e2bdce92d679f,
+  m_ballPrefab: {fileID: 6371200284859616814, guid: 9d7ade183afbd1840b3e2bdce92d679f,
     type: 3}
   m_prefabParent: {fileID: 1061313409}
   m_playGroundWidthScale: 0.1

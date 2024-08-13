@@ -89,8 +89,8 @@ namespace ThreeDeePongProto.Offline.Managers
         private readonly string m_matchFileName = "/Match";
         private readonly string m_fileFormat = ".json";
 
-        private IPersistentData m_persistentData = new SerializingData();
-        private bool m_encryptionEnabled = false;
+        private readonly IPersistentData m_persistentData = new SerializingData();
+        private readonly bool m_encryptionEnabled = false;
         #endregion
 
         private void Awake()
@@ -110,9 +110,9 @@ namespace ThreeDeePongProto.Offline.Managers
             MenuOrganisation.RestartGameLevel += ReSetMatch;
             MenuOrganisation.EndInfiniteMatch += LetsEndInfiniteMatch;
 
-            BallBehavOff.RoundCountStarts += MatchStartValues;
-            BallBehavOff.HitGoalOne += UpdateTPTwoPoints;
-            BallBehavOff.HitGoalTwo += UpdateTPOnePoints;
+            Ball.RoundCountStarts += MatchStartValues;
+            Ball.HitGoalOne += UpdateTPTwoPoints;
+            Ball.HitGoalTwo += UpdateTPOnePoints;
 
             StartNextRound += LetsStartNextRound;
             StartWinProcedure += LetsStartWinProcedure;
@@ -152,9 +152,9 @@ namespace ThreeDeePongProto.Offline.Managers
             MenuOrganisation.RestartGameLevel -= ReSetMatch;
             MenuOrganisation.EndInfiniteMatch -= LetsEndInfiniteMatch;
 
-            BallBehavOff.RoundCountStarts -= MatchStartValues;
-            BallBehavOff.HitGoalOne -= UpdateTPTwoPoints;
-            BallBehavOff.HitGoalTwo -= UpdateTPOnePoints;
+            Ball.RoundCountStarts -= MatchStartValues;
+            Ball.HitGoalOne -= UpdateTPTwoPoints;
+            Ball.HitGoalTwo -= UpdateTPOnePoints;
 
             StartNextRound -= LetsStartNextRound;
             StartWinProcedure -= LetsStartWinProcedure;

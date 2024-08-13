@@ -12,7 +12,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         [SerializeField] private MatchValues m_matchValues;
 
-        public Dictionary<Camera, Rect> CameraRectDict { get => m_cameraRectDict; }
+        //public Dictionary<Camera, Rect> CameraRectDict { get => m_cameraRectDict; }
         private Dictionary<Camera, Rect> m_cameraRectDict = new();
 
         //public List<Camera> SeparatedDictCameras { get => m_dictCameras; }
@@ -20,25 +20,25 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         //public List<Rect> SeparatedDictsRects { get => m_dictRects; }
         private List<Rect> m_dictRects = new();
 
-        private static Queue<Camera> m_QueueRegisterCamera;
-        private static Queue<Camera> m_QueueRemoveCamera;
-        private static event Action<Queue<Camera>, int> m_ActionRegisterCamera;
-        private static event Action<Queue<Camera>, int> m_ActionRemoveCamera;
+        private static Queue<Camera> m_QRegisterCamera;
+        private static Queue<Camera> m_QRemoveCamera;
+        private static event Action<Queue<Camera>, int> m_ARegisterCamera;
+        private static event Action<Queue<Camera>, int> m_ARemoveCamera;
 
         public static Rect RuntimeFullsizeRect { get; set; }
 
         private void Awake()
         {
-            m_ActionRegisterCamera += AddIncomingCamera;
-            m_ActionRemoveCamera += RemoveAddedCameras;
+            m_ARegisterCamera += AddIncomingCamera;
+            m_ARemoveCamera += RemoveAddedCameras;
 
-            m_QueueRegisterCamera = new();
-            m_QueueRemoveCamera = new();
+            m_QRegisterCamera = new();
+            m_QRemoveCamera = new();
         }
 
         private IEnumerator Start()
         {
-            yield return new WaitUntil(DelegateBool);
+            yield return new WaitUntil(CamerasEqualPlayerCount);
 
             if (m_availableCameras.Count > 0)
             {
@@ -58,7 +58,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         /// Only returns true, after the activated PlayerCameras added themselves to the 'AvailableCameras'-List equal to the registered PlayerIDData.
         /// </summary>
         /// <returns></returns>
-        private bool DelegateBool()
+        private bool CamerasEqualPlayerCount()
         {
             if (AvailableCameras.Count == m_matchValues.PlayerData.Count)
                 return true;
@@ -68,8 +68,8 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void OnDisable()
         {
-            m_ActionRegisterCamera -= AddIncomingCamera;
-            m_ActionRemoveCamera -= RemoveAddedCameras;
+            m_ARegisterCamera -= AddIncomingCamera;
+            m_ARemoveCamera -= RemoveAddedCameras;
         }
 
         #region CameraRect Stats Example
@@ -94,8 +94,8 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         public static void LetsRegisterCameras(Camera _camera, int _cameraID)
         {
-            m_QueueRegisterCamera.Enqueue(_camera);
-            m_ActionRegisterCamera?.Invoke(m_QueueRegisterCamera, _cameraID);
+            m_QRegisterCamera.Enqueue(_camera);
+            m_ARegisterCamera?.Invoke(m_QRegisterCamera, _cameraID);
         }
 
         private void AddIncomingCamera(Queue<Camera> _queue, int _cameraID)
@@ -110,8 +110,8 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         public static void LetsRemoveCamera(Camera _camera, int _cameraID)
         {
-            m_QueueRemoveCamera.Enqueue(_camera);
-            m_ActionRemoveCamera?.Invoke(m_QueueRemoveCamera, _cameraID);
+            m_QRemoveCamera.Enqueue(_camera);
+            m_ARemoveCamera?.Invoke(m_QRemoveCamera, _cameraID);
         }
 
         private void RemoveAddedCameras(Queue<Camera> _queue, int _cameraID)

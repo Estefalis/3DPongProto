@@ -30,8 +30,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         protected override void OnEnable()
         {
             base.OnEnable();
-            BallBehavOff.HitGoalOne += LetsResetPaddleRotation;
-            BallBehavOff.HitGoalTwo += LetsResetPaddleRotation;
+            Ball.HitGoalOne += LetsResetPaddleRotation;
+            Ball.HitGoalTwo += LetsResetPaddleRotation;
         }
 
         protected override void OnDisable()
@@ -40,8 +40,8 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             StopAllCoroutines();
             InGameMenuOpens -= DisablePlayerActions;
             MenuOrganisation.CloseInGameMenu -= StartCoroutinesAndActions;
-            BallBehavOff.HitGoalOne -= LetsResetPaddleRotation;
-            BallBehavOff.HitGoalTwo -= LetsResetPaddleRotation;
+            Ball.HitGoalOne -= LetsResetPaddleRotation;
+            Ball.HitGoalTwo -= LetsResetPaddleRotation;
         }
 
         protected override void Start()
