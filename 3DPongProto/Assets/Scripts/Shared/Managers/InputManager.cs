@@ -299,7 +299,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 _actionToRebind.Enable();
                 operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
-                if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _controlScheme)) //if DuplicateCheck true. (No composite check needed.)
+                if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _controlScheme, _allCompositeParts)) //if DuplicateCheck true. (No composite check needed.)
                 {
                     rebind.Cancel();
                     return;
@@ -367,7 +367,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             rebind.Start(); //Real Start of the rebind process.
         }
 
-        private static bool DuplicateBindingCheck(InputAction _actionToRebind, int _bindingIndex, string _controlScheme)
+        private static bool DuplicateBindingCheck(InputAction _actionToRebind, int _bindingIndex, string _controlScheme, bool _allCompositeParts = false)
         {
             InputBinding newBinding = _actionToRebind.bindings[_bindingIndex];
 
@@ -386,24 +386,27 @@ namespace ThreeDeePongProto.Shared.InputActions
 #endif
                     if (binding.action == newBinding.action)                                //If actions are the same.
                     {
-                        for (int i = 0; i < binding.action.Length; i++)
+                        if (binding.id == newBinding.id)                                    //Act by binding ID.
                         {
-                            if (binding.id == newBinding.id)                                //Act by binding ID.
-                            {
 #if UNITY_EDITOR
-                                Debug.Log($"Same binding skipped.");                        //Skips itself on same ID. (Can set binding.)
+                            Debug.Log("Same binding skipped.");                             //Skips itself on same ID. (Can set binding.)
 #endif
-                                continue;                                                   //And continues.
-                            }
+                            continue;                                                       //And continues.
+                        }
 
-                            if (binding.effectivePath == newBinding.effectivePath)          //Compare paths on (different) actions & IDs.
+                        //if (binding.id != newBinding.id)
+                        //{
+                        for (int i = 0; i < binding.action.Length; i++) //if (_allCompositeParts)-Part //Not Composite like WSAD.
+                        {
+                            if (binding.effectivePath == newBinding.effectivePath)
                             {
 #if UNITY_EDITOR
-                                Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
+                                Debug.Log($"Duplicate binding {newBinding.effectivePath} found. Canceling rebind.");
 #endif
                                 return true;                                                //Call out a duplicate, if one if found.
                             }
                         }
+                        //}
                     }
 
                     if (binding.action != newBinding.action)                                //If actions are different.
@@ -435,24 +438,27 @@ namespace ThreeDeePongProto.Shared.InputActions
 #endif
                     if (binding.action == newBinding.action)                                //If actions are the same.
                     {
-                        for (int i = 0; i < binding.action.Length; i++)
+                        if (binding.id == newBinding.id)                                    //Act by binding ID.
                         {
-                            if (binding.id == newBinding.id)                                //Act by binding ID.
-                            {
 #if UNITY_EDITOR
-                                Debug.Log($"Same binding skipped.");                        //Skips itself on same ID. (Can set binding.)
+                            Debug.Log("Same binding skipped.");                             //Skips itself on same ID. (Can set binding.)
 #endif
-                                continue;                                                   //And continues.
-                            }
+                            continue;                                                       //And continues.
+                        }
 
-                            if (binding.effectivePath == newBinding.effectivePath)          //Compare paths on (different) actions & IDs.
+                        //if (binding.id != newBinding.id)
+                        //{
+                        for (int i = 0; i < binding.action.Length; i++) //if (_allCompositeParts)-Part //Not Composite like WSAD.
+                        {
+                            if (binding.effectivePath == newBinding.effectivePath)
                             {
 #if UNITY_EDITOR
-                                Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
+                                Debug.Log($"Duplicate binding {newBinding.effectivePath} found. Canceling rebind.");
 #endif
                                 return true;                                                //Call out a duplicate, if one if found.
                             }
                         }
+                        //}
                     }
 
                     if (binding.action != newBinding.action)                                //If actions are different.
