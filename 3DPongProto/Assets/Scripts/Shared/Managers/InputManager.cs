@@ -211,6 +211,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     }
                     break;
                 }
+                //XBox case currently not in use.
                 //case EKeyControlScheme.XBoxGamepad:
                 //{
                 //    buttonImage = m_xbox.GetGamepadSprite(_controlPath);
@@ -298,22 +299,20 @@ namespace ThreeDeePongProto.Shared.InputActions
                 _actionToRebind.Enable();
                 operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
-                if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _controlScheme)) //if DuplicateCheck true.
+                if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _controlScheme)) //if DuplicateCheck true. (No composite check needed.)
                 {
                     rebind.Cancel();
                     return;
                 }
 
-                if (_allCompositeParts) //If the Index has compositeParts/children.
+                if (_allCompositeParts) //If the Index has compositeParts/children. (On rebinding a composite-button with multiple bindings.)
                 {
                     var nextBindingIndex = _bindingIndex + 1;
 
                     if (nextBindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[nextBindingIndex].isPartOfComposite)
                         ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _controlScheme, _allCompositeParts, _excludeMouse, _uniqueGuid);
                 }
-#if UNITY_EDITOR
-                //Debug.Log($"effectivePath: {_actionToRebind.bindings[_bindingIndex].effectivePath}");
-#endif
+
                 m_RebindComplete?.Invoke(); //Subscribers update to new state.
 
                 #region Rebind Save
@@ -392,7 +391,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                             if (binding.id == newBinding.id)                                //Act by binding ID.
                             {
 #if UNITY_EDITOR
-                                Debug.Log($"Own binding.");                                 //Skips itself on same ID. (Can set binding.)
+                                Debug.Log($"Same binding skipped.");                        //Skips itself on same ID. (Can set binding.)
 #endif
                                 continue;                                                   //And continues.
                             }
@@ -441,7 +440,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                             if (binding.id == newBinding.id)                                //Act by binding ID.
                             {
 #if UNITY_EDITOR
-                                Debug.Log($"Own binding.");                                 //Skips itself on same ID. (Can set binding.)
+                                Debug.Log($"Same binding skipped.");                        //Skips itself on same ID. (Can set binding.)
 #endif
                                 continue;                                                   //And continues.
                             }
