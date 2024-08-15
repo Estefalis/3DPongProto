@@ -301,6 +301,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
                 if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _controlScheme, _allCompositeParts)) //if DuplicateCheck true. (No composite check needed.)
                 {
+                    _actionToRebind.RemoveBindingOverride(_bindingIndex);   //Don't forget this, or the new effectivePath gets displayed still.
                     rebind.Cancel();
                     return;
                 }
@@ -672,10 +673,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         {
             if (m_playerInputActions == null)
             {
-                //m_playerInputActions = new PlayerInputActions();
-#if UNITY_EDITOR
-                Debug.Log("Gamepad-InputAction is null");
-#endif
+                m_playerInputActions = new PlayerInputActions();
             }
 
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
