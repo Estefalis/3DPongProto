@@ -308,39 +308,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""DPadZoom"",
-                    ""id"": ""3cc02747-30e6-430c-9acc-5fdac92953f6"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": ""ScaleVector2"",
-                    ""groups"": """",
-                    ""action"": ""Zoom"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""d44b8f28-715b-4190-905e-b12e15505966"",
-                    ""path"": ""<Gamepad>/dpad/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Zoom"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""e9bbbbd5-62ef-4e38-a5a1-cf51129809f4"",
-                    ""path"": ""<Gamepad>/dpad/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Zoom"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": """",
                     ""id"": ""7519f93b-d874-42b4-acca-04cbf931f577"",
                     ""path"": ""<Keyboard>/b"",
@@ -933,6 +900,341 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""action"": ""SideMovementPosZP4"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                }
+            ]
+        },
+        {
+            ""name"": ""PlayerActionsOn"",
+            ""id"": ""36d29194-0dbc-402a-8420-17c674cffbd3"",
+            ""actions"": [
+                {
+                    ""name"": ""SideMovementNegZP1"",
+                    ""type"": ""Value"",
+                    ""id"": ""33d53fcf-b41f-4979-b93d-cb3ab6b6ce06"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RotatePaddleNegZP1"",
+                    ""type"": ""Value"",
+                    ""id"": ""9eb8647d-a35a-455a-839d-49be038bb7fc"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""PushPaddleNegZP1"",
+                    ""type"": ""Button"",
+                    ""id"": ""5ca22734-2eab-4cb9-ae2f-77c5799cd752"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PokeTheBall"",
+                    ""type"": ""Button"",
+                    ""id"": ""3d6364e1-029a-4a01-8824-ee002329bec4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Zoom"",
+                    ""type"": ""Value"",
+                    ""id"": ""6c988764-4b39-4340-8fdb-a5213d2d663c"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""MousePosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""782670fd-2f85-4103-b773-f7cf6e1343ae"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ToggleGameMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""4a006e7a-1236-41f7-8f04-cb25f030871c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""AD"",
+                    ""id"": ""a3704ef4-75ec-4cbd-81b5-d41f083fb84c"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SideMovementNegZP1"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""66046dbd-f0c1-45e4-b8af-9a53f48df3d5"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""SideMovementNegZP1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""e9a86646-56dd-4200-8b73-0d1ae327b309"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""SideMovementNegZP1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""LeftStickLR"",
+                    ""id"": ""b299bf44-1b13-4bcf-9ea1-54fc97ace415"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SideMovementNegZP1"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""080de118-efa6-4caa-a659-0608ae03116e"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""SideMovementNegZP1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""989105dc-be20-4a89-984f-ca1031213640"",
+                    ""path"": ""<Gamepad>/leftStick/right"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""SideMovementNegZP1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d26b9925-4538-49d1-a59c-c1cd98035bc6"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""ToggleGameMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6a5666f4-a46e-4031-b5d5-f4d82a783fb6"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ToggleGameMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a55c40bf-f67f-4dee-ab2d-1dc5c2c9e232"",
+                    ""path"": ""<DualShockGamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ToggleGameMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3e5112a3-f88d-4226-9393-875e5f826d49"",
+                    ""path"": ""<XInputController>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ToggleGameMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""72622e73-884c-401f-8060-1b23a321dab8"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ad52016c-c147-49f8-b3c8-a15f566ecf73"",
+                    ""path"": ""<Gamepad>/dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1cace3cf-66fb-46c9-9b92-97f337e21ccd"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""PokeTheBall"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c2a51e50-0f58-42b5-a23e-c503c098188a"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""PokeTheBall"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9ff5f197-ab73-4ec9-af03-abbb6b71eaf6"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""MousePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""92d09360-76c2-44eb-9374-1e93c7f196f6"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""MousePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""QE"",
+                    ""id"": ""8756445f-6ca0-48a9-a803-8d565b3db5b4"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotatePaddleNegZP1"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""83ef7268-91b6-4179-94ad-bb684579faf8"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""RotatePaddleNegZP1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""c663c160-9e7d-4681-acec-7361d945516e"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""RotatePaddleNegZP1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""GamepadLR"",
+                    ""id"": ""4dba6a02-2c05-4655-9647-0a6f1cc6243d"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotatePaddleNegZP1"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""569e81d8-b84b-4319-b8f0-e541b97f93d8"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""RotatePaddleNegZP1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""e14ecc6a-08a5-48c7-ab3a-047af483b874"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""RotatePaddleNegZP1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1401a083-c9f6-4817-acc5-0396b25a63a9"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""PushPaddleNegZP1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f7ce29f0-31e4-401d-a360-0d02cc74dd3e"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""PushPaddleNegZP1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -1597,6 +1899,15 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_PlayerActions_Zoom = m_PlayerActions.FindAction("Zoom", throwIfNotFound: true);
             m_PlayerActions_MousePosition = m_PlayerActions.FindAction("MousePosition", throwIfNotFound: true);
             m_PlayerActions_ToggleGameMenu = m_PlayerActions.FindAction("ToggleGameMenu", throwIfNotFound: true);
+            // PlayerActionsOn
+            m_PlayerActionsOn = asset.FindActionMap("PlayerActionsOn", throwIfNotFound: true);
+            m_PlayerActionsOn_SideMovementNegZP1 = m_PlayerActionsOn.FindAction("SideMovementNegZP1", throwIfNotFound: true);
+            m_PlayerActionsOn_RotatePaddleNegZP1 = m_PlayerActionsOn.FindAction("RotatePaddleNegZP1", throwIfNotFound: true);
+            m_PlayerActionsOn_PushPaddleNegZP1 = m_PlayerActionsOn.FindAction("PushPaddleNegZP1", throwIfNotFound: true);
+            m_PlayerActionsOn_PokeTheBall = m_PlayerActionsOn.FindAction("PokeTheBall", throwIfNotFound: true);
+            m_PlayerActionsOn_Zoom = m_PlayerActionsOn.FindAction("Zoom", throwIfNotFound: true);
+            m_PlayerActionsOn_MousePosition = m_PlayerActionsOn.FindAction("MousePosition", throwIfNotFound: true);
+            m_PlayerActionsOn_ToggleGameMenu = m_PlayerActionsOn.FindAction("ToggleGameMenu", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1834,6 +2145,100 @@ namespace ThreeDeePongProto.Shared.InputActions
         }
         public PlayerActionsActions @PlayerActions => new PlayerActionsActions(this);
 
+        // PlayerActionsOn
+        private readonly InputActionMap m_PlayerActionsOn;
+        private List<IPlayerActionsOnActions> m_PlayerActionsOnActionsCallbackInterfaces = new List<IPlayerActionsOnActions>();
+        private readonly InputAction m_PlayerActionsOn_SideMovementNegZP1;
+        private readonly InputAction m_PlayerActionsOn_RotatePaddleNegZP1;
+        private readonly InputAction m_PlayerActionsOn_PushPaddleNegZP1;
+        private readonly InputAction m_PlayerActionsOn_PokeTheBall;
+        private readonly InputAction m_PlayerActionsOn_Zoom;
+        private readonly InputAction m_PlayerActionsOn_MousePosition;
+        private readonly InputAction m_PlayerActionsOn_ToggleGameMenu;
+        public struct PlayerActionsOnActions
+        {
+            private @PlayerInputActions m_Wrapper;
+            public PlayerActionsOnActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @SideMovementNegZP1 => m_Wrapper.m_PlayerActionsOn_SideMovementNegZP1;
+            public InputAction @RotatePaddleNegZP1 => m_Wrapper.m_PlayerActionsOn_RotatePaddleNegZP1;
+            public InputAction @PushPaddleNegZP1 => m_Wrapper.m_PlayerActionsOn_PushPaddleNegZP1;
+            public InputAction @PokeTheBall => m_Wrapper.m_PlayerActionsOn_PokeTheBall;
+            public InputAction @Zoom => m_Wrapper.m_PlayerActionsOn_Zoom;
+            public InputAction @MousePosition => m_Wrapper.m_PlayerActionsOn_MousePosition;
+            public InputAction @ToggleGameMenu => m_Wrapper.m_PlayerActionsOn_ToggleGameMenu;
+            public InputActionMap Get() { return m_Wrapper.m_PlayerActionsOn; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(PlayerActionsOnActions set) { return set.Get(); }
+            public void AddCallbacks(IPlayerActionsOnActions instance)
+            {
+                if (instance == null || m_Wrapper.m_PlayerActionsOnActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_PlayerActionsOnActionsCallbackInterfaces.Add(instance);
+                @SideMovementNegZP1.started += instance.OnSideMovementNegZP1;
+                @SideMovementNegZP1.performed += instance.OnSideMovementNegZP1;
+                @SideMovementNegZP1.canceled += instance.OnSideMovementNegZP1;
+                @RotatePaddleNegZP1.started += instance.OnRotatePaddleNegZP1;
+                @RotatePaddleNegZP1.performed += instance.OnRotatePaddleNegZP1;
+                @RotatePaddleNegZP1.canceled += instance.OnRotatePaddleNegZP1;
+                @PushPaddleNegZP1.started += instance.OnPushPaddleNegZP1;
+                @PushPaddleNegZP1.performed += instance.OnPushPaddleNegZP1;
+                @PushPaddleNegZP1.canceled += instance.OnPushPaddleNegZP1;
+                @PokeTheBall.started += instance.OnPokeTheBall;
+                @PokeTheBall.performed += instance.OnPokeTheBall;
+                @PokeTheBall.canceled += instance.OnPokeTheBall;
+                @Zoom.started += instance.OnZoom;
+                @Zoom.performed += instance.OnZoom;
+                @Zoom.canceled += instance.OnZoom;
+                @MousePosition.started += instance.OnMousePosition;
+                @MousePosition.performed += instance.OnMousePosition;
+                @MousePosition.canceled += instance.OnMousePosition;
+                @ToggleGameMenu.started += instance.OnToggleGameMenu;
+                @ToggleGameMenu.performed += instance.OnToggleGameMenu;
+                @ToggleGameMenu.canceled += instance.OnToggleGameMenu;
+            }
+
+            private void UnregisterCallbacks(IPlayerActionsOnActions instance)
+            {
+                @SideMovementNegZP1.started -= instance.OnSideMovementNegZP1;
+                @SideMovementNegZP1.performed -= instance.OnSideMovementNegZP1;
+                @SideMovementNegZP1.canceled -= instance.OnSideMovementNegZP1;
+                @RotatePaddleNegZP1.started -= instance.OnRotatePaddleNegZP1;
+                @RotatePaddleNegZP1.performed -= instance.OnRotatePaddleNegZP1;
+                @RotatePaddleNegZP1.canceled -= instance.OnRotatePaddleNegZP1;
+                @PushPaddleNegZP1.started -= instance.OnPushPaddleNegZP1;
+                @PushPaddleNegZP1.performed -= instance.OnPushPaddleNegZP1;
+                @PushPaddleNegZP1.canceled -= instance.OnPushPaddleNegZP1;
+                @PokeTheBall.started -= instance.OnPokeTheBall;
+                @PokeTheBall.performed -= instance.OnPokeTheBall;
+                @PokeTheBall.canceled -= instance.OnPokeTheBall;
+                @Zoom.started -= instance.OnZoom;
+                @Zoom.performed -= instance.OnZoom;
+                @Zoom.canceled -= instance.OnZoom;
+                @MousePosition.started -= instance.OnMousePosition;
+                @MousePosition.performed -= instance.OnMousePosition;
+                @MousePosition.canceled -= instance.OnMousePosition;
+                @ToggleGameMenu.started -= instance.OnToggleGameMenu;
+                @ToggleGameMenu.performed -= instance.OnToggleGameMenu;
+                @ToggleGameMenu.canceled -= instance.OnToggleGameMenu;
+            }
+
+            public void RemoveCallbacks(IPlayerActionsOnActions instance)
+            {
+                if (m_Wrapper.m_PlayerActionsOnActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IPlayerActionsOnActions instance)
+            {
+                foreach (var item in m_Wrapper.m_PlayerActionsOnActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_PlayerActionsOnActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public PlayerActionsOnActions @PlayerActionsOn => new PlayerActionsOnActions(this);
+
         // UI
         private readonly InputActionMap m_UI;
         private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
@@ -1991,6 +2396,16 @@ namespace ThreeDeePongProto.Shared.InputActions
             void OnPushPaddlePosZP2(InputAction.CallbackContext context);
             void OnPushPaddleNegZP3(InputAction.CallbackContext context);
             void OnPushPaddlePosZP4(InputAction.CallbackContext context);
+            void OnPokeTheBall(InputAction.CallbackContext context);
+            void OnZoom(InputAction.CallbackContext context);
+            void OnMousePosition(InputAction.CallbackContext context);
+            void OnToggleGameMenu(InputAction.CallbackContext context);
+        }
+        public interface IPlayerActionsOnActions
+        {
+            void OnSideMovementNegZP1(InputAction.CallbackContext context);
+            void OnRotatePaddleNegZP1(InputAction.CallbackContext context);
+            void OnPushPaddleNegZP1(InputAction.CallbackContext context);
             void OnPokeTheBall(InputAction.CallbackContext context);
             void OnZoom(InputAction.CallbackContext context);
             void OnMousePosition(InputAction.CallbackContext context);
