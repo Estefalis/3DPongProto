@@ -122,20 +122,17 @@ namespace ThreeDeePongProto.Shared.InputActions
                     break;
                 case "LocalGameScene":
                 {
-                    ToggleActionMaps(m_playerInputActions.PlayerActionsNeg);
-                    ToggleActionMaps(m_playerInputActions.PlayerActionsPos);
+                    ToggleActionMaps(m_playerInputActions.PlayerActions);
                     break;
                 }
                 case "LanGameScene":
                 {
-                    ToggleActionMaps(m_playerInputActions.PlayerActionsNeg);
-                    ToggleActionMaps(m_playerInputActions.PlayerActionsPos);
+                    ToggleActionMaps(m_playerInputActions.PlayerActions);
                     break;
                 }
                 case "NetGameScene":
                 {
-                    ToggleActionMaps(m_playerInputActions.PlayerActionsNeg);
-                    ToggleActionMaps(m_playerInputActions.PlayerActionsPos);
+                    ToggleActionMaps(m_playerInputActions.PlayerActions);
                     break;
                 }
                 case "WinScene":

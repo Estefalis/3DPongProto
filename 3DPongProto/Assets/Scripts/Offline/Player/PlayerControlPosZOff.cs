@@ -46,10 +46,10 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         protected override void Start()
         {
             base.Start();
-            m_playerMovement.PlayerActionsPos.PushPaddlePosZP2.performed += PushInputPlayerTwo;
-            m_playerMovement.PlayerActionsPos.PushPaddlePosZP2.canceled += CanceledInputPlayerTwo;
-            m_playerMovement.PlayerActionsPos.PushPaddlePosZP4.performed += PushInputPlayerFour;
-            m_playerMovement.PlayerActionsPos.PushPaddlePosZP4.canceled += CanceledInputPlayerFour;
+            m_playerMovement.PlayerActions.PushPaddlePosZP2.performed += PushInputPlayerTwo;
+            m_playerMovement.PlayerActions.PushPaddlePosZP2.canceled += CanceledInputPlayerTwo;
+            m_playerMovement.PlayerActions.PushPaddlePosZP4.performed += PushInputPlayerFour;
+            m_playerMovement.PlayerActions.PushPaddlePosZP4.canceled += CanceledInputPlayerFour;
 
             InGameMenuOpens += DisablePlayerActions;
             MenuOrganisation.CloseInGameMenu += StartCoroutinesAndActions;
@@ -64,9 +64,9 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
             m_axisRotPosZ = m_playerIDData.PlayerId switch
             {
-                1 => new Vector3(0, m_playerMovement.PlayerActionsPos.RotatePaddlePosZP2.ReadValue<Vector2>().x, 0),//Player2 ID = 1.
-                3 => new Vector3(0, m_playerMovement.PlayerActionsPos.RotatePaddlePosZP4.ReadValue<Vector2>().x, 0),//Player4 ID = 3.
-                _ => new Vector3(0, m_playerMovement.PlayerActionsPos.RotatePaddlePosZP2.ReadValue<Vector2>().x, 0),//Player2 ID = 1.
+                1 => new Vector3(0, m_playerMovement.PlayerActions.RotatePaddlePosZP2.ReadValue<Vector2>().x, 0),//Player2 ID = 1.
+                3 => new Vector3(0, m_playerMovement.PlayerActions.RotatePaddlePosZP4.ReadValue<Vector2>().x, 0),//Player4 ID = 3.
+                _ => new Vector3(0, m_playerMovement.PlayerActions.RotatePaddlePosZP2.ReadValue<Vector2>().x, 0),//Player2 ID = 1.
             };
         }
 
@@ -89,16 +89,16 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             {
                 case 1:
                 {
-                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActionsPos.SideMovementPosZP2.ReadValue<Vector2>().x * xInvert, 0, m_playerMovement.PlayerActionsPos.SideMovementPosZP2.ReadValue<Vector2>().y).normalized;  //Player2 ID
+                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActions.SideMovementPosZP2.ReadValue<Vector2>().x * xInvert, 0, m_playerMovement.PlayerActions.SideMovementPosZP2.ReadValue<Vector2>().y).normalized;  //Player2 ID
                     break;
                 }
                 case 3:
                 {
-                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActionsPos.SideMovementPosZP4.ReadValue<Vector2>().x * xInvert, 0, m_playerMovement.PlayerActionsPos.SideMovementPosZP4.ReadValue<Vector2>().y).normalized;  //Player4 ID
+                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActions.SideMovementPosZP4.ReadValue<Vector2>().x * xInvert, 0, m_playerMovement.PlayerActions.SideMovementPosZP4.ReadValue<Vector2>().y).normalized;  //Player4 ID
                     break;
                 }
                 default:
-                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActionsPos.SideMovementPosZP2.ReadValue<Vector2>().x * xInvert, 0, m_playerMovement.PlayerActionsPos.SideMovementPosZP2.ReadValue<Vector2>().y).normalized;  //Player2 ID
+                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_playerMovement.PlayerActions.SideMovementPosZP2.ReadValue<Vector2>().x * xInvert, 0, m_playerMovement.PlayerActions.SideMovementPosZP2.ReadValue<Vector2>().y).normalized;  //Player2 ID
                     break;
             }
 

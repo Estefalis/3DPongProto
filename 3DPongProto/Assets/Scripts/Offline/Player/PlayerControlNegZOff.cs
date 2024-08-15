@@ -47,10 +47,10 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         protected override void Start()
         {
             base.Start();
-            m_playerMovement.PlayerActionsNeg.PushPaddleNegZP1.performed += PushInputPlayerOne;
-            m_playerMovement.PlayerActionsNeg.PushPaddleNegZP1.canceled += CanceledInputPlayerOne;
-            m_playerMovement.PlayerActionsNeg.PushPaddleNegZP3.performed += PushInputPlayerThree;
-            m_playerMovement.PlayerActionsNeg.PushPaddleNegZP3.canceled += CanceledInputPlayerThree;
+            m_playerMovement.PlayerActions.PushPaddleNegZP1.performed += PushInputPlayerOne;
+            m_playerMovement.PlayerActions.PushPaddleNegZP1.canceled += CanceledInputPlayerOne;
+            m_playerMovement.PlayerActions.PushPaddleNegZP3.performed += PushInputPlayerThree;
+            m_playerMovement.PlayerActions.PushPaddleNegZP3.canceled += CanceledInputPlayerThree;
 
             InGameMenuOpens += DisablePlayerActions;
             MenuOrganisation.CloseInGameMenu += StartCoroutinesAndActions;
@@ -65,9 +65,9 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
             m_axisRotNegZ = m_playerIDData.PlayerId switch
             {
-                0 => new Vector3(0, m_playerMovement.PlayerActionsNeg.RotatePaddleNegZP1.ReadValue<Vector2>().x, 0),//Player1 ID = 0.
-                2 => new Vector3(0, m_playerMovement.PlayerActionsNeg.RotatePaddleNegZP3.ReadValue<Vector2>().x, 0),//Player3 ID = 2.
-                _ => new Vector3(0, m_playerMovement.PlayerActionsNeg.RotatePaddleNegZP1.ReadValue<Vector2>().x, 0),//Player1 ID = 0.
+                0 => new Vector3(0, m_playerMovement.PlayerActions.RotatePaddleNegZP1.ReadValue<Vector2>().x, 0),//Player1 ID = 0.
+                2 => new Vector3(0, m_playerMovement.PlayerActions.RotatePaddleNegZP3.ReadValue<Vector2>().x, 0),//Player3 ID = 2.
+                _ => new Vector3(0, m_playerMovement.PlayerActions.RotatePaddleNegZP1.ReadValue<Vector2>().x, 0),//Player1 ID = 0.
             };
         }
 
@@ -91,17 +91,17 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
                 case 0:
                 {
                     //var choose = object (bool b) => b ? 1 : "two"; // Func<bool, object>
-                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_playerMovement.PlayerActionsNeg.SideMovementNegZP1.ReadValue<Vector2>().x * xInvert, 0, m_playerMovement.PlayerActionsNeg.SideMovementNegZP1.ReadValue<Vector2>().y).normalized;   //Player1 ID
+                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_playerMovement.PlayerActions.SideMovementNegZP1.ReadValue<Vector2>().x * xInvert, 0, m_playerMovement.PlayerActions.SideMovementNegZP1.ReadValue<Vector2>().y).normalized;   //Player1 ID
                     break;
                 }
                 case 2:
                 {
-                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_playerMovement.PlayerActionsNeg.SideMovementNegZP3.ReadValue<Vector2>().x * xInvert, 0, m_playerMovement.PlayerActionsNeg.SideMovementNegZP3.ReadValue<Vector2>().y).normalized;   //Player3 ID
+                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_playerMovement.PlayerActions.SideMovementNegZP3.ReadValue<Vector2>().x * xInvert, 0, m_playerMovement.PlayerActions.SideMovementNegZP3.ReadValue<Vector2>().y).normalized;   //Player3 ID
                     break;
                 }
                 default:
                 {
-                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_playerMovement.PlayerActionsNeg.SideMovementNegZP1.ReadValue<Vector2>().x * xInvert, 0, m_playerMovement.PlayerActionsNeg.SideMovementNegZP1.ReadValue<Vector2>().y).normalized;   //Player1 ID
+                    m_readValueVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_playerMovement.PlayerActions.SideMovementNegZP1.ReadValue<Vector2>().x * xInvert, 0, m_playerMovement.PlayerActions.SideMovementNegZP1.ReadValue<Vector2>().y).normalized;   //Player1 ID
                     break;
                 }
             }

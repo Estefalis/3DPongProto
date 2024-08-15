@@ -12,6 +12,7 @@ namespace ThreeDeePongProto.Offline.Settings
         [Header("Content Views")]
         [SerializeField] private Button[] m_playerButtons;
         [SerializeField] private Transform[] m_contentSubTransforms;
+        [SerializeField] private Transform[] m_menuButtonTransforms;
         [SerializeField, Range(0.1f, 0.9f)] private float m_reducedAlphaValue = 0.5f;
         [SerializeField, Range(0.5f, 1f)] private float m_maxAlphaValue = 1f;
 
@@ -515,6 +516,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 if (_sender == m_playerButtons[i])
                 {
                     m_contentSubTransforms[i].gameObject.SetActive(true);
+                    m_menuButtonTransforms[i].gameObject.SetActive(true);
                     Color tempAlpha1 = m_playerButtons[i].image.color;
                     tempAlpha1.a = m_maxAlphaValue;
                     m_playerButtons[i].image.color = tempAlpha1;
@@ -524,6 +526,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 else
                 {
                     m_contentSubTransforms[i].gameObject.SetActive(false);
+                    m_menuButtonTransforms[i].gameObject.SetActive(false);
                     Color tempAlpha05 = m_playerButtons[i].image.color;
                     tempAlpha05.a = m_reducedAlphaValue;
                     m_playerButtons[i].image.color = tempAlpha05;

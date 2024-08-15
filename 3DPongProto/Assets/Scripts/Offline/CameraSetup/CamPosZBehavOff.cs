@@ -66,7 +66,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             //CameraActions need to be in Start to prevent NullReferenceExceptions due to relation to the InputManager.
             m_cameraInputActions = InputManager.m_playerInputActions;
             m_cameraInputActions.Enable();
-            m_cameraInputActions.PlayerActionsPos.Zoom.performed += Zooming;
+            m_cameraInputActions.PlayerActions.Zoom.performed += Zooming;
 
             m_cameraManager = FindObjectOfType<CameraManager>();
 
@@ -77,7 +77,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private void OnDisable()
         {
             m_cameraInputActions?.Disable();
-            m_cameraInputActions.PlayerActionsPos.Zoom.performed -= Zooming;
+            m_cameraInputActions.PlayerActions.Zoom.performed -= Zooming;
             MatchManager.AddCamerasNow -= AddCameras;
             CameraManager.LetsRemoveCamera(m_followCamera, m_playerId);
         }
@@ -188,7 +188,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private void GetMousePosition()
         {
 #if ENABLE_INPUT_SYSTEM
-            m_mousePosition = m_cameraInputActions.PlayerActionsPos.MousePosition.ReadValue<Vector2>();
+            m_mousePosition = m_cameraInputActions.PlayerActions.MousePosition.ReadValue<Vector2>();
 #else
             m_mousePosition = Input.mousePosition;
 #endif
@@ -213,7 +213,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private void UpdateZoomPosition()
         {
             //The 'zoomTarget' and 'm_currentHeight' shall only change, while the PlayerController in the 'PlayerActions' is enabled.
-            if (m_cameraInputActions.PlayerActionsPos.enabled)
+            if (m_cameraInputActions.PlayerActions.enabled)
             {
                 m_zoomTarget = new Vector3(m_followCamera.transform.localPosition.x, m_currentHeight, m_followCamera.transform.localPosition.z);
 

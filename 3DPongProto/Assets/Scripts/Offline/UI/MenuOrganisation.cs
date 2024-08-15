@@ -104,8 +104,7 @@ namespace ThreeDeePongProto.Offline.UI
         private void OnDisable()
         {
             m_menuActions?.Disable();
-            m_menuActions.PlayerActionsNeg.ToggleGameMenu.performed -= EnableMenuNavigation;
-            m_menuActions.PlayerActionsPos.ToggleGameMenu.performed -= EnableMenuNavigation;
+            m_menuActions.PlayerActions.ToggleGameMenu.performed -= EnableMenuNavigation;
         }
 
         /// <summary>
@@ -115,8 +114,7 @@ namespace ThreeDeePongProto.Offline.UI
         {
             m_menuActions = InputManager.m_playerInputActions;
             m_menuActions?.Enable();
-            m_menuActions.PlayerActionsNeg.ToggleGameMenu.performed += EnableMenuNavigation;
-            m_menuActions.PlayerActionsPos.ToggleGameMenu.performed += EnableMenuNavigation;
+            m_menuActions.PlayerActions.ToggleGameMenu.performed += EnableMenuNavigation;
 
             PreSetUpPlayerAmount(m_matchUIStates.EPlayerAmount);
         }
@@ -248,16 +246,14 @@ namespace ThreeDeePongProto.Offline.UI
         {
             CloseInGameMenu?.Invoke();
             m_firstElement.gameObject.SetActive(false);
-            InputManager.ToggleActionMaps(InputManager.m_playerInputActions.PlayerActionsNeg);
-            InputManager.ToggleActionMaps(InputManager.m_playerInputActions.PlayerActionsPos);
+            InputManager.ToggleActionMaps(InputManager.m_playerInputActions.PlayerActions);
         }
 
         public void RestartLevel()
         {
             RestartGameLevel?.Invoke();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            InputManager.ToggleActionMaps(InputManager.m_playerInputActions.PlayerActionsNeg);
-            InputManager.ToggleActionMaps(InputManager.m_playerInputActions.PlayerActionsPos);
+            InputManager.ToggleActionMaps(InputManager.m_playerInputActions.PlayerActions);
         }
 
         public void ReturnToMainScene()
