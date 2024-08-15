@@ -229,7 +229,9 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                 !(m_mousePosition.y < CameraManager.RuntimeFullsizeRect.yMin) && !(m_mousePosition.y > CameraManager.RuntimeFullsizeRect.height))
             {
                 float zoomValue = -_callbackContext.ReadValue<Vector2>().y * m_zoomSpeed;
-
+#if UNITY_EDITOR
+                //Debug.Log(zoomValue);
+#endif
                 if (Mathf.Abs(zoomValue) > 0.1f)
                 {
                     //Limits the zoom to the window of each player.

@@ -185,7 +185,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "LeftStickLR",
+                    "name": "DPadLR",
                     "id": "73f921da-6d81-4e6a-8294-c288d5a5faf5",
                     "path": "2DVector",
                     "interactions": "",
@@ -198,7 +198,7 @@
                 {
                     "name": "left",
                     "id": "c7b5aced-a238-444a-b4d6-faa0f79c3891",
-                    "path": "<Gamepad>/leftStick/left",
+                    "path": "<Gamepad>/dpad/left",
                     "interactions": "",
                     "processors": "AxisDeadzone",
                     "groups": "Gamepad",
@@ -209,7 +209,7 @@
                 {
                     "name": "right",
                     "id": "c7199799-5008-4999-9649-755df45f2deb",
-                    "path": "<Gamepad>/leftStick/right",
+                    "path": "<Gamepad>/dpad/right",
                     "interactions": "",
                     "processors": "AxisDeadzone",
                     "groups": "Gamepad",
@@ -274,10 +274,10 @@
                 },
                 {
                     "name": "",
-                    "id": "b141449b-6d0b-440f-a714-dac14c1379ef",
-                    "path": "<Gamepad>/dpad",
+                    "id": "b5b9eb3f-34b9-4009-89e5-ef5ccc92e964",
+                    "path": "<Gamepad>/leftStick",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "ScaleVector2(y=100)",
                     "groups": "Gamepad",
                     "action": "Zoom",
                     "isComposite": false,
@@ -361,7 +361,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "GamepadLR",
+                    "name": "ShoulderLR",
                     "id": "99196118-49ba-4601-ae59-9f99efba25d5",
                     "path": "2DVector",
                     "interactions": "",
@@ -471,7 +471,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "LeftStickLR",
+                    "name": "DPadLR",
                     "id": "a72af444-9190-4b2d-90f0-af9cad7d3cc4",
                     "path": "2DVector",
                     "interactions": "",
@@ -484,7 +484,7 @@
                 {
                     "name": "left",
                     "id": "ce0a2544-2949-4925-98fc-87e580809908",
-                    "path": "<Gamepad>/leftStick/left",
+                    "path": "<Gamepad>/dpad/left",
                     "interactions": "",
                     "processors": "AxisDeadzone",
                     "groups": "Gamepad",
@@ -495,7 +495,7 @@
                 {
                     "name": "right",
                     "id": "d17ce103-6ce9-41a1-8c59-616bf0173bdd",
-                    "path": "<Gamepad>/leftStick/right",
+                    "path": "<Gamepad>/dpad/right",
                     "interactions": "",
                     "processors": "AxisDeadzone",
                     "groups": "Gamepad",
@@ -537,7 +537,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "LeftStickLR",
+                    "name": "DPadLR",
                     "id": "665572b0-788d-4ddf-8815-91a12d4120c9",
                     "path": "2DVector",
                     "interactions": "",
@@ -550,7 +550,7 @@
                 {
                     "name": "left",
                     "id": "ccc8df23-2ca3-46e8-a8f4-ea180ed1eeac",
-                    "path": "<Gamepad>/leftStick/left",
+                    "path": "<Gamepad>/dpad/left",
                     "interactions": "",
                     "processors": "AxisDeadzone",
                     "groups": "Gamepad",
@@ -561,7 +561,7 @@
                 {
                     "name": "right",
                     "id": "20f4de1b-325c-4d69-80d5-4476c0fa5450",
-                    "path": "<Gamepad>/leftStick/right",
+                    "path": "<Gamepad>/dpad/right",
                     "interactions": "",
                     "processors": "AxisDeadzone",
                     "groups": "Gamepad",
@@ -603,7 +603,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "GamepadLR",
+                    "name": "ShoulderLR",
                     "id": "66128233-a282-4da7-88a0-5a7b71bfac6e",
                     "path": "2DVector",
                     "interactions": "",
@@ -669,7 +669,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "GamepadLR",
+                    "name": "ShoulderLR",
                     "id": "4b76a08c-2662-4fdc-a1db-f53fd85d0cd8",
                     "path": "2DVector",
                     "interactions": "",
@@ -735,7 +735,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "GamepadLR",
+                    "name": "ShoulderLR",
                     "id": "230547fb-81ad-4883-b887-1d46c42caf8f",
                     "path": "2DVector",
                     "interactions": "",
@@ -845,7 +845,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "LeftStickLR",
+                    "name": "DPadLR",
                     "id": "a574d8cb-f051-48f1-a033-a9ca19b450a8",
                     "path": "2DVector",
                     "interactions": "",
@@ -858,7 +858,7 @@
                 {
                     "name": "left",
                     "id": "f9cb56e4-4ceb-4bce-bec6-af99cb529ef9",
-                    "path": "<Gamepad>/leftStick/left",
+                    "path": "<Gamepad>/dpad/left",
                     "interactions": "",
                     "processors": "AxisDeadzone",
                     "groups": "Gamepad",
@@ -869,7 +869,7 @@
                 {
                     "name": "right",
                     "id": "1db591b2-0822-431e-92c3-25ab7b4725b8",
-                    "path": "<Gamepad>/leftStick/right",
+                    "path": "<Gamepad>/dpad/right",
                     "interactions": "",
                     "processors": "AxisDeadzone",
                     "groups": "Gamepad",
@@ -880,13 +880,22 @@
             ]
         },
         {
-            "name": "PlayerActionsOn",
+            "name": "PlayerActionsOnline",
             "id": "36d29194-0dbc-402a-8420-17c674cffbd3",
             "actions": [
                 {
                     "name": "SideMovementNegZP1",
                     "type": "Value",
                     "id": "33d53fcf-b41f-4979-b93d-cb3ab6b6ce06",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "SideMovementPosZP2",
+                    "type": "Value",
+                    "id": "4ca9c2a6-7313-4808-a415-4972d55f93bf",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -902,9 +911,27 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "RotatePaddlePosZP2",
+                    "type": "Value",
+                    "id": "16709bbe-7b3a-4c81-a110-b81f0466993d",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "PushPaddleNegZP1",
                     "type": "Button",
                     "id": "5ca22734-2eab-4cb9-ae2f-77c5799cd752",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PushPaddlePosZP2",
+                    "type": "Button",
+                    "id": "4e0252c2-b3b7-4160-bb51-ca14d92934e8",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -1071,17 +1098,6 @@
                 },
                 {
                     "name": "",
-                    "id": "ad52016c-c147-49f8-b3c8-a15f566ecf73",
-                    "path": "<Gamepad>/dpad",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Zoom",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "1cace3cf-66fb-46c9-9b92-97f337e21ccd",
                     "path": "<Keyboard>/b",
                     "interactions": "",
@@ -1209,6 +1225,171 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "PushPaddleNegZP1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5e13771e-f325-4553-af35-b4b3a62462ac",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "ScaleVector2(y=100)",
+                    "groups": "Gamepad",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "ArrowKeys",
+                    "id": "c0649db4-c1b9-4d98-a555-9f44a907bfc0",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SideMovementPosZP2",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "left",
+                    "id": "1ba386fa-9033-4f8e-ba1a-30eefce32eb3",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "SideMovementPosZP2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "915c5825-6762-4bac-9fad-1716c8538e2f",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "SideMovementPosZP2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "DPadLR",
+                    "id": "409915ac-200a-4cab-9858-05e66a402382",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SideMovementPosZP2",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "left",
+                    "id": "692fe527-7a67-4d63-bc9a-8ae036fda761",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "AxisDeadzone",
+                    "groups": "Gamepad",
+                    "action": "SideMovementPosZP2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "ea439515-7a45-4674-a2d1-402697eaa8d7",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "AxisDeadzone",
+                    "groups": "Gamepad",
+                    "action": "SideMovementPosZP2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "RightShiftNumPad",
+                    "id": "b55669cf-73aa-4160-a8e2-0b2328b2e967",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotatePaddlePosZP2",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "left",
+                    "id": "8b62f58c-3385-48ac-96e4-9d1c8e95b643",
+                    "path": "<Keyboard>/rightShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "RotatePaddlePosZP2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "848cf62c-98c7-415b-8ac0-db3ff6c1ba26",
+                    "path": "<Keyboard>/numpad1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "RotatePaddlePosZP2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "ShoulderLR",
+                    "id": "b5031758-0b1a-409e-a860-a8d49ff4eff3",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotatePaddlePosZP2",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "left",
+                    "id": "0d7eac89-bd0e-4bef-a653-6c5b041ca86a",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "RotatePaddlePosZP2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "50438524-e126-4983-916b-ffafbfd4dfa8",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "RotatePaddlePosZP2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "de320122-5914-41dc-946a-d3ab10489973",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "PushPaddlePosZP2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ef151067-1a02-4e2b-a216-c273b66978ec",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "PushPaddlePosZP2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

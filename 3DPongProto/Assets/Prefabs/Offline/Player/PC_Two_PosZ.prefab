@@ -385,8 +385,8 @@ MonoBehaviour:
   m_lerpDuration: 1.5
   m_delayRetreat: 0.1
   m_delayRepetition: 1.5
-  m_enablePushDelay: 0
   m_blockPushInput: 0
+  m_enablePushDelay: 0
   m_playerIDData: {fileID: 11400000, guid: 21b573c09ff18ba4893ceecaaf9c5756, type: 2}
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
@@ -446,8 +446,8 @@ MonoBehaviour:
   m_enableSmoothFollow: 1
   m_desiredOffset: {x: 0, y: 2.5, z: 7.5}
   m_smoothfactor: 6
-  m_zoomSpeed: 0.001
+  m_zoomSpeed: 0.002
   m_zoomStep: 2
-  m_zoomDampening: 10
+  m_zoomDampening: 20
   m_graphicUiStates: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11, type: 2}
   m_basicFieldValues: {fileID: 11400000, guid: b7c0516de58b3a240a6970d999010f71, type: 2}

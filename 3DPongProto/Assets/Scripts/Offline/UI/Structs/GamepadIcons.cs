@@ -17,6 +17,8 @@ namespace ThreeDeePongProto.Offline.UI
         public Sprite leftTrigger;
         public Sprite rightTrigger;
         public Sprite dpad;
+        public Sprite dpadX;
+        public Sprite dpadY;
         public Sprite dpadUp;
         public Sprite dpadDown;
         public Sprite dpadLeft;
@@ -57,6 +59,8 @@ namespace ThreeDeePongProto.Offline.UI
                 "<Gamepad>/leftShoulder" => leftShoulder,
                 "<Gamepad>/rightShoulder" => rightShoulder,
                 "<Gamepad>/dpad" => dpad,
+                "<Gamepad>/dpad/x" => dpadX,
+                "<Gamepad>/dpad/y" => dpadY,
                 "<Gamepad>/dpad/up" => dpadUp,
                 "<Gamepad>/dpad/down" => dpadDown,
                 "<Gamepad>/dpad/left" => dpadLeft,
@@ -88,7 +92,7 @@ namespace ThreeDeePongProto.Offline.UI
             switch (controlPath)
             {
                 case "<DualShockGamepad>/touchpadButton":
-                    return touchpadButtonPress;    //Until I get PS5 icons. If ever.
+                    return touchpadButtonPress;
                 default:
                     return null;
             }
