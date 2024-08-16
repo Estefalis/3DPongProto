@@ -25,7 +25,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private static event Action<Queue<Camera>, int> m_ARegisterCamera;
         private static event Action<Queue<Camera>, int> m_ARemoveCamera;
 
-        public static Rect RuntimeFullsizeRect { get; set; }
+        internal static Rect RuntimeFullsizeRect { get; set; }
 
         private void Awake()
         {
@@ -50,20 +50,21 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
                 UpdateSplittedCamRectLists();
             }
-
-            //return null;
         }
 
         /// <summary>
-        /// Only returns true, after the activated PlayerCameras added themselves to the 'AvailableCameras'-List equal to the registered PlayerIDData.
+        /// Only returns true, after the activated PlayerCameras added themselves to the 'AvailableCameras'-List are equal to the registered PlayerIDData.
         /// </summary>
         /// <returns></returns>
         private bool CamerasEqualPlayerCount()
         {
-            if (AvailableCameras.Count == m_matchValues.PlayerData.Count)
-                return true;
-            else
-                return false;
+            switch (AvailableCameras.Count == m_matchValues.PlayerData.Count)
+            {
+                case true:
+                    return true;
+                case false:
+                    return false;
+            }
         }
 
         private void OnDisable()
@@ -92,6 +93,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         //Rect3(x:253.00, y:142.50, width:253.00, height:142.50)  -  Halfsize width and halfsize height
         #endregion
 
+        #region Register and Add Cameras
         public static void LetsRegisterCameras(Camera _camera, int _cameraID)
         {
             m_QRegisterCamera.Enqueue(_camera);
@@ -107,7 +109,9 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                 _queue.Dequeue();
             }
         }
+        #endregion
 
+        #region DeRegister and Remove Cameras
         public static void LetsRemoveCamera(Camera _camera, int _cameraID)
         {
             m_QRemoveCamera.Enqueue(_camera);
@@ -124,10 +128,11 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                 _queue.Dequeue();
             }
         }
+        #endregion
 
         public void UpdateRectDimensions(Camera _keyCamera, Rect _newValueRect)
         {
-            //Update the 'pair.Value' of the 'pair.Key _keyCamera'.
+            //Update the 'keyValuePair.Value' of the 'keyValuePair.Key _keyCamera'.
             m_cameraRectDict[_keyCamera] = _newValueRect;
             //And additionally clear and update the separated Lists of Camera and Rects. (It's easier to do/follow, if we do it here.)
             UpdateSplittedCamRectLists();
@@ -138,10 +143,10 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             m_dictCameras.Clear();
             m_dictRects.Clear();
 
-            foreach (var pair in m_cameraRectDict)
+            foreach (var keyValuePair in m_cameraRectDict)
             {
-                Camera camera = pair.Key;
-                Rect rect = pair.Value;
+                Camera camera = keyValuePair.Key;
+                Rect rect = keyValuePair.Value;
 
                 m_dictCameras.Add(camera);
                 m_dictRects.Add(rect);

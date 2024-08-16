@@ -11,10 +11,10 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         [SerializeField] private CameraManager m_cameraManager;
         #endregion
 
-        private const float m_FULLWIDTHHOR = 1.0f;
-        private const float m_FULLHEIGHTVER = 1.0f;
-        private const float m_HALFHEIGHTHOR = 0.5f;
-        private const float m_HALFWIDTHVER = 0.5f;
+        private const float m_FullWidthHor = 1.0f;
+        private const float m_FullHeightVer = 1.0f;
+        private const float m_HalfHeightHor = 0.5f;
+        private const float m_HalfWidthVer = 0.5f;
 
         //private Rect m_fullsizeRect; //Moved to CameraManager.
         private ECameraModi m_lastSetCameraMode;
@@ -42,15 +42,18 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         }
 
         /// <summary>
-        /// Only returns true, after the activated PlayerCameras added themselves to the 'AvailableCameras'-List equal to the registered PlayerIDData.
+        /// Only returns true, after the activated PlayerCameras added themselves to the 'AvailableCameras'-List are equal to the registered PlayerIDData.
         /// </summary>
         /// <returns></returns>
         private bool CamerasEqualPlayerCount()
         {
-            if (m_cameraManager.AvailableCameras.Count == m_matchValues.PlayerData.Count)
-                return true;
-            else
-                return false;
+            switch (m_cameraManager.AvailableCameras.Count == m_matchValues.PlayerData.Count)
+            {
+                case true:
+                    return true;
+                case false:
+                    return false;
+            }
         }
 
         private void SetCameraMode(ECameraModi _cameraMode)
@@ -97,20 +100,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             //Debug.Log($"Cam3 Height {m_cameraManager.AvailableCameras[2].pixelRect.height} -  Width {m_cameraManager.AvailableCameras[2].pixelRect.width}");
             //Debug.Log($"Cam4 Height {m_cameraManager.AvailableCameras[3].pixelRect.height} -  Width {m_cameraManager.AvailableCameras[3].pixelRect.width}");
 #endif
-            //SetRectSplit();
         }
-
-        #region Direct Runtime ScreenChange
-        //private void SetRectSplit()
-        //{
-        //    //if (m_lastSetCameraMode != (int)GameManager.Instance.ECameraMode)
-        //    if (m_lastSetCameraMode != (int)m_matchUIStates.SetCameraMode)
-        //    {
-        //        m_lastSetCameraMode = (int)m_matchUIStates.SetCameraMode;
-        //        SetCameraMode(m_lastSetCameraMode);
-        //    }
-        //}
-        #endregion
 
         /// <summary>
         /// new Rect(xOrigin, yOrigin, width, height)
@@ -147,42 +137,42 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             }
         }
 
-        public void SetSingleCamera()
+        private void SetSingleCamera()
         {
-            SetCamerasAndRects(m_lastSetCameraMode);
+            SetCamerasAndRects();
         }
 
-        public void SetCamerasHorizontal(Camera _camera1, Camera _camera2)
+        private void SetCamerasHorizontal(Camera _camera1, Camera _camera2)
         {
-            SetCamerasAndRects(m_lastSetCameraMode);
+            SetCamerasAndRects();
 
             CamRectOut(_camera1, _camera2, out float Cam1X, out float Cam1Y, out float Cam1W, out float Cam1H, out float Cam2X, out float Cam2Y, out float Cam2W, out float Cam2H);
 
-            _camera1.pixelRect = new Rect(Cam1X, Cam1Y, Cam1W * m_FULLWIDTHHOR, Cam1H * m_HALFHEIGHTHOR);
+            _camera1.pixelRect = new Rect(Cam1X, Cam1Y, Cam1W * m_FullWidthHor, Cam1H * m_HalfHeightHor);
             m_cameraManager.UpdateRectDimensions(_camera1, _camera1.pixelRect);
 
-            Cam2Y += Cam2H * m_HALFHEIGHTHOR;
-            _camera2.pixelRect = new Rect(Cam2X, Cam2Y, Cam2W * m_FULLWIDTHHOR, Cam2H * m_HALFHEIGHTHOR);
+            Cam2Y += Cam2H * m_HalfHeightHor;
+            _camera2.pixelRect = new Rect(Cam2X, Cam2Y, Cam2W * m_FullWidthHor, Cam2H * m_HalfHeightHor);
             m_cameraManager.UpdateRectDimensions(_camera2, _camera2.pixelRect);
         }
 
-        public void SetCamerasVertical(Camera _camera1, Camera _camera2)
+        private void SetCamerasVertical(Camera _camera1, Camera _camera2)
         {
-            SetCamerasAndRects(m_lastSetCameraMode);
+            SetCamerasAndRects();
 
             CamRectOut(_camera1, _camera2, out float Cam1X, out float Cam1Y, out float Cam1W, out float Cam1H, out float Cam2X, out float Cam2Y, out float Cam2W, out float Cam2H);
 
-            _camera1.pixelRect = new Rect(Cam1X, Cam1Y, Cam1W * m_HALFWIDTHVER, Cam1H * m_FULLHEIGHTVER);
+            _camera1.pixelRect = new Rect(Cam1X, Cam1Y, Cam1W * m_HalfWidthVer, Cam1H * m_FullHeightVer);
             m_cameraManager.UpdateRectDimensions(_camera1, _camera1.pixelRect);
 
-            Cam2X += Cam2W * m_HALFWIDTHVER;
-            _camera2.pixelRect = new Rect(Cam2X, Cam2Y, Cam2W * m_HALFWIDTHVER, Cam2H * m_FULLHEIGHTVER);
+            Cam2X += Cam2W * m_HalfWidthVer;
+            _camera2.pixelRect = new Rect(Cam2X, Cam2Y, Cam2W * m_HalfWidthVer, Cam2H * m_FullHeightVer);
             m_cameraManager.UpdateRectDimensions(_camera2, _camera2.pixelRect);
         }
 
-        public void SetFourSplit(Camera _camera1, Camera _camera2, Camera _camera3, Camera _camera4)
+        private void SetFourSplit(Camera _camera1, Camera _camera2, Camera _camera3, Camera _camera4)
         {
-            SetCamerasAndRects(m_lastSetCameraMode);
+            SetCamerasAndRects();
 
             CamRectOut(_camera1, _camera2, out float Cam1X, out float Cam1Y, out float Cam1W, out float Cam1H, out float Cam2X, out float Cam2Y, out float Cam2W, out float Cam2H);
 
@@ -196,21 +186,20 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             float Cam4W = _camera4.pixelRect.width;
             float Cam4H = _camera4.pixelRect.height;
 
-            //Cam1W *= m_HALFWIDTHVER;
-            _camera1.pixelRect = new Rect(Cam1X, Cam1Y, Cam1W * m_HALFWIDTHVER, Cam1H * m_HALFHEIGHTHOR);
+            _camera1.pixelRect = new Rect(Cam1X, Cam1Y, Cam1W * m_HalfWidthVer, Cam1H * m_HalfHeightHor);
             m_cameraManager.UpdateRectDimensions(_camera1, _camera1.pixelRect);
 
-            Cam2X += Cam2W * m_HALFWIDTHVER;
-            _camera2.pixelRect = new Rect(Cam2X, Cam2Y, Cam2W * m_HALFWIDTHVER, Cam2H * m_HALFHEIGHTHOR);
+            Cam2X += Cam2W * m_HalfWidthVer;
+            _camera2.pixelRect = new Rect(Cam2X, Cam2Y, Cam2W * m_HalfWidthVer, Cam2H * m_HalfHeightHor);
             m_cameraManager.UpdateRectDimensions(_camera2, _camera2.pixelRect);
 
-            Cam3Y += Cam3H * m_HALFHEIGHTHOR;
-            _camera3.pixelRect = new Rect(Cam3X, Cam3Y, Cam3W * m_HALFWIDTHVER, Cam3H * m_HALFHEIGHTHOR);
+            Cam3Y += Cam3H * m_HalfHeightHor;
+            _camera3.pixelRect = new Rect(Cam3X, Cam3Y, Cam3W * m_HalfWidthVer, Cam3H * m_HalfHeightHor);
             m_cameraManager.UpdateRectDimensions(_camera3, _camera3.pixelRect);
 
-            Cam4X += Cam4W * m_HALFWIDTHVER;
-            Cam4Y += Cam4H * m_HALFHEIGHTHOR;
-            _camera4.pixelRect = new Rect(Cam4X, Cam4Y, Cam4W * m_HALFWIDTHVER, Cam4H * m_HALFHEIGHTHOR);
+            Cam4X += Cam4W * m_HalfWidthVer;
+            Cam4Y += Cam4H * m_HalfHeightHor;
+            _camera4.pixelRect = new Rect(Cam4X, Cam4Y, Cam4W * m_HalfWidthVer, Cam4H * m_HalfHeightHor);
             m_cameraManager.UpdateRectDimensions(_camera4, _camera4.pixelRect);
         }
 
@@ -226,81 +215,23 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             Cam2H = _camera2.pixelRect.height;
         }
 
-        private void SetCamerasAndRects(ECameraModi _cameraMode)
+        private void SetCamerasAndRects()
         {
-            foreach (Camera camera in m_cameraManager.AvailableCameras)
+            //switch (_cameraMode) for each ECameraModi with 'ReSetViewportRects(m_cameraManager.AvailableCameras[0-3]), 'null checks', 'SetActive' and updating 'pixelRect' replaced by this for loop.
+            #region Camera nullCheck with for loop
+            for (int i = 0; i < m_cameraManager.AvailableCameras.Count; i++)
             {
-                if (m_cameraManager.AvailableCameras.Contains(camera))
-                    camera.gameObject.SetActive(true);
-                else
-                    camera.gameObject.SetActive(false);
+                if (m_cameraManager.AvailableCameras[i] != null)
+                {
+                    m_cameraManager.AvailableCameras[i].gameObject.SetActive(true);
+
+                    if (m_cameraManager.AvailableCameras[i].pixelRect != CameraManager.RuntimeFullsizeRect)
+                        m_cameraManager.UpdateRectDimensions(m_cameraManager.AvailableCameras[i], CameraManager.RuntimeFullsizeRect);
+
+                    m_cameraManager.AvailableCameras[i].pixelRect = CameraManager.RuntimeFullsizeRect;
+                }
             }
-
-            switch (_cameraMode)
-            {
-                case ECameraModi.SingleCam:
-                {
-                    ResetViewportRects(m_cameraManager.AvailableCameras[0]);
-                    break;
-                }
-                case ECameraModi.TwoVertical:
-                case ECameraModi.TwoHorizontal:
-                {
-                    ResetViewportRects(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1]);
-                    break;
-                }
-                case ECameraModi.FourSplit:
-                {
-                    ResetViewportRects(m_cameraManager.AvailableCameras[0], m_cameraManager.AvailableCameras[1], m_cameraManager.AvailableCameras[2], m_cameraManager.AvailableCameras[3]);
-                    break;
-                }
-                default:
-                    Debug.Log("Mode not implemented, yet! Please ask your personal Progger. <(~.^)'");
-                    break;
-            }
-        }
-
-        private void ResetViewportRects(Camera _camera1, Camera _camera2 = null, Camera _camera3 = null, Camera _camera4 = null)
-        {
-            if (_camera1 != null)
-            {
-                if (m_cameraManager.AvailableCameras[0].pixelRect != CameraManager.RuntimeFullsizeRect)
-                {
-                    m_cameraManager.UpdateRectDimensions(m_cameraManager.AvailableCameras[0], CameraManager.RuntimeFullsizeRect);
-                }
-
-                _camera1.pixelRect = CameraManager.RuntimeFullsizeRect;
-            }
-
-            if (_camera2 != null)
-            {
-                if (m_cameraManager.AvailableCameras[1].pixelRect != CameraManager.RuntimeFullsizeRect)
-                {
-                    m_cameraManager.UpdateRectDimensions(m_cameraManager.AvailableCameras[1], CameraManager.RuntimeFullsizeRect);
-                }
-
-                _camera2.pixelRect = CameraManager.RuntimeFullsizeRect;
-            }
-
-            if (_camera3 != null)
-            {
-                if (m_cameraManager.AvailableCameras[2].pixelRect != CameraManager.RuntimeFullsizeRect)
-                {
-                    m_cameraManager.UpdateRectDimensions(m_cameraManager.AvailableCameras[2], CameraManager.RuntimeFullsizeRect);
-                }
-
-                _camera3.pixelRect = CameraManager.RuntimeFullsizeRect;
-            }
-
-            if (_camera4 != null)
-            {
-                if (m_cameraManager.AvailableCameras[3].pixelRect != CameraManager.RuntimeFullsizeRect)
-                {
-                    m_cameraManager.UpdateRectDimensions(m_cameraManager.AvailableCameras[3], CameraManager.RuntimeFullsizeRect);
-                }
-
-                m_cameraManager.AvailableCameras[3].pixelRect = CameraManager.RuntimeFullsizeRect;
-            }
+            #endregion
         }
     }
 }
