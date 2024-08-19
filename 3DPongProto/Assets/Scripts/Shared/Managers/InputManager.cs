@@ -223,7 +223,9 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             return null;
         }
+        #endregion
 
+        #region Helper Method(s)
         public static string GetWordBetweenArgs(string _source, string _firstArg, string _secondArg)
         {
             if (_source.Contains(_firstArg) && _source.Contains(_secondArg))
@@ -235,6 +237,17 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             return "";
         }
+#if UNITY_EDITOR
+        public static string ToUpperFirstCharacter(string _source)
+        {
+            if (string.IsNullOrEmpty(_source))
+                return _source;
+
+            char[] letters = _source.ToCharArray();
+            letters[0] = char.ToUpper(letters[0]);
+            return new string(letters);
+        }
+#endif
         #endregion
 
         #region KeyRebinding
@@ -255,15 +268,17 @@ namespace ThreeDeePongProto.Shared.InputActions
             //isComposite: Corresponds to WASD's Actions Properties. (WASD itself.)
             if (inputAction.bindings[_bindingIndex].isComposite)
             {
-                var firstParentSubIndex = _bindingIndex + 1;    //Examples: First entry after WASD.
+                var firstChildIndex = _bindingIndex + 1;    //Examples: First entry after WASD.
 
                 //isPartOfComposite: Corresponds to WASD's W for example. (Childs/Binding Properties of the Composite.)
-                if (firstParentSubIndex < inputAction.bindings.Count && inputAction.bindings[firstParentSubIndex].isPartOfComposite)
+                if (firstChildIndex < inputAction.bindings.Count && inputAction.bindings[firstChildIndex].isPartOfComposite)
                 {
-                    ExecuteKeyRebind(inputAction, firstParentSubIndex, _statusText, _controlScheme, true, _excludeMouse, _uniqueGuid);
+                    //true == _allCompositeParts: true.
+                    ExecuteKeyRebind(inputAction, firstChildIndex, _statusText, _controlScheme, true, _excludeMouse, _uniqueGuid);
                 }
             }
             else
+                //false == _allCompositeParts: false.
                 ExecuteKeyRebind(inputAction, _bindingIndex, _statusText, _controlScheme, false, _excludeMouse, _uniqueGuid);
         }
 
@@ -280,7 +295,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             if (_actionToRebind == null || _bindingIndex < 0)
                 return;
 
-            _statusText.text = $"Please press a Button"; //old: _statusText.text = $"Press a {_actionToRebind.expectedControlType}";
+            _statusText.text = $"Press a Button"; //old: _statusText.text = $"Press a {_actionToRebind.expectedControlType}";
 
             _actionToRebind.Disable();  //Required while rebinding!
 
@@ -290,6 +305,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             //Debug.Log($"ExpectedControlType: {_actionToRebind.expectedControlType}");
 #endif
 
+            #region Rebind Operation OnComplete (Including Keyboard & Gamepad Override Saves.)
             //assignment of the OnComplete'operation' delegate.
             rebind.OnComplete(operation =>
             {
@@ -300,12 +316,12 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     case true:
                     {
-                        Debug.Log("Composite.");
+                        Debug.Log($"Rebinding a Composite on Index {_bindingIndex}.");  //Confirm bindingIndex before doing another Index + 1.
                         //On rebinding a composite-button with multiple bindings.
-                        var nextBindingIndex = _bindingIndex + 1;
+                        //var nextBindingIndex = _bindingIndex + 1;
 
-                        if (nextBindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[nextBindingIndex].isPartOfComposite)
-                            ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _controlScheme, _allCompositeParts, _excludeMouse, _uniqueGuid);
+                        //if (nextBindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[nextBindingIndex].isPartOfComposite)
+                        //    ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _controlScheme, _allCompositeParts, _excludeMouse, _uniqueGuid);
                         break;
                     }
                     case false:
@@ -319,14 +335,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                         break;
                     }
                 }
-
-                //if (_allCompositeParts) //If the Index has compositeParts/children. (On rebinding a composite-button with multiple bindings.)
-                //{
-                //    var nextBindingIndex = _bindingIndex + 1;
-
-                //    if (nextBindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[nextBindingIndex].isPartOfComposite)
-                //        ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _controlScheme, _allCompositeParts, _excludeMouse, _uniqueGuid);
-                //}
 
                 m_RebindComplete?.Invoke(); //Subscribers update to new state.
 
@@ -343,8 +351,10 @@ namespace ThreeDeePongProto.Shared.InputActions
                         break;
                 }
                 #endregion
+                #endregion
             });
 
+            #region Rebind Operation OnCancel (Including '.WithCancelingThrough' Button-Switch.)
             //assignment of the OnCancel'operation' delegate.
             rebind.OnCancel(operation =>
             {
@@ -354,7 +364,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 m_RebindCanceled?.Invoke();
             });
 
-            switch (_controlScheme)  //ONLY ONE cancelButton gets recognized in code at a time.
+            switch (_controlScheme)     //ONLY ONE cancelButton gets recognized in code at a time.
             {
                 case m_keyboardMouseScheme:
                     rebind.WithCancelingThrough(m_cancelWithKeyboardButton);
@@ -367,6 +377,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 default:
                     break;
             }
+            #endregion
 
             #region Exclude controls from the rebind process
             rebind.WithControlsExcluding("<Keyboard>/escape");  //Else ESC gets set on keyboard button rebinds on cancellation.
@@ -416,7 +427,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                             if (binding.effectivePath == newBinding.effectivePath)
                             {
 #if UNITY_EDITOR
-                                Debug.Log($"Duplicate binding {newBinding.effectivePath} found. Canceling rebind.");
+                                string bindingName = ToUpperFirstCharacter(binding.name);
+                                Debug.Log($"Duplicate binding {newBinding.effectivePath} found in own Composite Part {bindingName}. Canceling rebind.");
 #endif
                                 return true;                                                //Call out a duplicate, if one if found.
                             }
@@ -431,9 +443,21 @@ namespace ThreeDeePongProto.Shared.InputActions
                             if (binding.effectivePath == newBinding.effectivePath)          //Compare paths on (different) actions & IDs.
                             {
 #if UNITY_EDITOR
-                                Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
+                                switch (binding.isPartOfComposite)
+                                {
+                                    case true:
+                                    {
+                                        string bindingName = ToUpperFirstCharacter(binding.name);
+                                        Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}, Composite Part {bindingName}. Canceling rebind.");
+                                        return true;                                                //Call out a duplicate, if one if found.
+                                    }
+                                    case false:
+                                    {
+                                        Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
+                                        return true;                                                //Call out a duplicate, if one if found.
+                                    }
+                                }
 #endif
-                                return true;                                                //Call out a duplicate, if one if found.
                             }
                         }
                     }
@@ -515,7 +539,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             if (inputAction.bindings[_bindingIndex].isComposite)
             {
-                for (int i = _bindingIndex; i < inputAction.bindings.Count && inputAction.bindings[i].isComposite; i++)
+                for (int i = _bindingIndex; i < inputAction.bindings.Count && inputAction.bindings[i].isPartOfComposite; i++)
                     inputAction.RemoveBindingOverride(i);
             }
             else
@@ -523,10 +547,10 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             #region Reset Rebind Save
             if (_controlScheme == m_keyboardMouseScheme)
-                ResetKeyboardOverrides(inputAction, /*_bindingIndex,*/ _uniqueGuid);
+                ResetKeyboardOverrides(inputAction, /*_bindingIndex,*/ _uniqueGuid);    //Kept as example. Guid replaced the Index.
 
             if (_controlScheme == m_gamePadScheme)
-                ResetGamepadOverrides(inputAction, /*_bindingIndex,*/ _uniqueGuid);
+                ResetGamepadOverrides(inputAction, /*_bindingIndex,*/ _uniqueGuid);    //Kept as example. Guid replaced the Index.
             #endregion
         }
         #endregion
