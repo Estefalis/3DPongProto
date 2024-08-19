@@ -10678,7 +10678,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2131281743}
   - component: {fileID: 2131281742}
-  - component: {fileID: 2131281741}
   m_Layer: 0
   m_Name: CameraManager
   m_TagString: Untagged
@@ -10686,22 +10685,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2131281741
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2131281740}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98313fd36d66110489decacd6bf72974, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_graphicsSettings: {fileID: 1953017739}
-  m_cameraManager: {fileID: 2131281742}
-  m_graphicUiStates: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11, type: 2}
-  m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
 --- !u!114 &2131281742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10715,6 +10698,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_availableCameras: []
+  m_graphicsSettings: {fileID: 1953017739}
+  m_graphicUIStates: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
 --- !u!4 &2131281743
 Transform:

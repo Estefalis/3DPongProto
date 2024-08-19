@@ -58,10 +58,10 @@ namespace ThreeDeePongProto.Offline.Managers
         private bool m_nextRoundConditionIsMet;
         private string m_scoredPlayer;
 
-        #region Properties-Access
         private bool m_matchHasStarted = false;
         private float m_matchStartTime;        
 
+        #region Properties-Access
         public float DefaultBackLineDistance { get => m_minimalBackLineDistance; }
         public float DefaultFrontLineDistance { get => m_minimalFrontLineDistance; }
         public float DefaultFieldWidth { get => m_playGroundWidth; }
