@@ -296,20 +296,37 @@ namespace ThreeDeePongProto.Shared.InputActions
                 _actionToRebind.Enable();
                 operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
-                if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _controlScheme, _allCompositeParts)) //if DuplicateCheck true. (No composite check needed.)
+                switch (_allCompositeParts)
                 {
-                    _actionToRebind.RemoveBindingOverride(_bindingIndex);   //Don't forget this, or the new effectivePath gets displayed still.
-                    rebind.Cancel();
-                    return;
+                    case true:
+                    {
+                        Debug.Log("Composite.");
+                        //On rebinding a composite-button with multiple bindings.
+                        var nextBindingIndex = _bindingIndex + 1;
+
+                        if (nextBindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[nextBindingIndex].isPartOfComposite)
+                            ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _controlScheme, _allCompositeParts, _excludeMouse, _uniqueGuid);
+                        break;
+                    }
+                    case false:
+                    {
+                        if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _controlScheme)) //if DuplicateCheck true. (No Composite.)
+                        {
+                            _actionToRebind.RemoveBindingOverride(_bindingIndex);   //Required, or the new effectivePath gets displayed still.
+                            rebind.Cancel();
+                            return;
+                        }
+                        break;
+                    }
                 }
 
-                if (_allCompositeParts) //If the Index has compositeParts/children. (On rebinding a composite-button with multiple bindings.)
-                {
-                    var nextBindingIndex = _bindingIndex + 1;
+                //if (_allCompositeParts) //If the Index has compositeParts/children. (On rebinding a composite-button with multiple bindings.)
+                //{
+                //    var nextBindingIndex = _bindingIndex + 1;
 
-                    if (nextBindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[nextBindingIndex].isPartOfComposite)
-                        ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _controlScheme, _allCompositeParts, _excludeMouse, _uniqueGuid);
-                }
+                //    if (nextBindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[nextBindingIndex].isPartOfComposite)
+                //        ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _controlScheme, _allCompositeParts, _excludeMouse, _uniqueGuid);
+                //}
 
                 m_RebindComplete?.Invoke(); //Subscribers update to new state.
 
@@ -387,7 +404,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                         if (binding.id == newBinding.id)                                    //Act by binding ID.
                         {
 #if UNITY_EDITOR
-                            Debug.Log("Same binding skipped.");                             //Skips itself on same ID. (Can set binding.)
+                            Debug.Log("Same Binding. Skipped Duplicate-Check.");            //Skips itself on same ID. (Can set binding.)
 #endif
                             continue;                                                       //And continues.
                         }
