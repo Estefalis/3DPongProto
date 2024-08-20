@@ -274,12 +274,12 @@ namespace ThreeDeePongProto.Shared.InputActions
                 if (firstChildIndex < inputAction.bindings.Count && inputAction.bindings[firstChildIndex].isPartOfComposite)
                 {
                     //true == _allCompositeParts: true.
-                    ExecuteKeyRebind(inputAction, firstChildIndex, _statusText, _controlScheme, true, _excludeMouse, _uniqueGuid);
+                    ExecuteKeyRebind(inputAction, firstChildIndex, _statusText, _controlScheme, _excludeMouse, true, _uniqueGuid);
                 }
             }
             else
                 //false == _allCompositeParts: false.
-                ExecuteKeyRebind(inputAction, _bindingIndex, _statusText, _controlScheme, false, _excludeMouse, _uniqueGuid);
+                ExecuteKeyRebind(inputAction, _bindingIndex, _statusText, _controlScheme, _excludeMouse, false, _uniqueGuid);
         }
 
         /// <summary>
@@ -290,7 +290,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// <param name="_statusText"></param>
         /// <param name="_allCompositeParts"></param>
         /// <param name="_excludeMouse"></param>
-        private static void ExecuteKeyRebind(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI _statusText, string _controlScheme, bool _allCompositeParts, bool _excludeMouse, Guid _uniqueGuid)
+        private static void ExecuteKeyRebind(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI _statusText, string _controlScheme, bool _excludeMouse, bool _allCompositeParts, Guid _uniqueGuid)
         {
             if (_actionToRebind == null || _bindingIndex < 0)
                 return;
@@ -312,22 +312,53 @@ namespace ThreeDeePongProto.Shared.InputActions
                 _actionToRebind.Enable();
                 operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
+                #region Pre Composite Code
+                //if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _controlScheme, _allCompositeParts))
+                //{
+                //    _actionToRebind.RemoveBindingOverride(_bindingIndex);   //Required, or the new effectivePath gets displayed still.
+                //    rebind.Cancel();
+                //    return;
+                //}
+
+                //if (_allCompositeParts)
+                //{
+                //    var nextBindingIndex = _bindingIndex + 1;
+
+                //    if (nextBindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[nextBindingIndex].isPartOfComposite)
+                //        ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _controlScheme, _allCompositeParts, _excludeMouse, _uniqueGuid);
+                //}
+                #endregion
+
                 switch (_allCompositeParts)
                 {
-                    case true:
+                    case true:  //For all Composite for future projects.
                     {
-                        Debug.Log($"Rebinding a Composite on Index {_bindingIndex}.");  //Confirm bindingIndex before doing another Index + 1.
-                        //On rebinding a composite-button with multiple bindings.
-                        //var nextBindingIndex = _bindingIndex + 1;
+                        if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _statusText, _controlScheme, _excludeMouse))
+                        {
+                            //Duplicate case.
+                            _actionToRebind.RemoveBindingOverride(_bindingIndex);   //Required, or the new effectivePath gets displayed still.
 
-                        //if (nextBindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[nextBindingIndex].isPartOfComposite)
-                        //    ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _controlScheme, _allCompositeParts, _excludeMouse, _uniqueGuid);
+                            //Gives the Player the option to retry and rebind another buttonKey with '_bindingIndex'. Or to press Escape.
+                            if (_bindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[_bindingIndex].isPartOfComposite)
+                                ExecuteKeyRebind(_actionToRebind, _bindingIndex, _statusText, _controlScheme, _excludeMouse, _allCompositeParts, _uniqueGuid);
+                        }
+                        else
+                        {
+                            //No Duplicate case. Each new buttonPress rebinds the next Composite Part/Button in line with 'nextBindingIndex'.
+                            var nextBindingIndex = _bindingIndex + 1;
+
+                            if (nextBindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[nextBindingIndex].isPartOfComposite)
+                            {
+                                ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _controlScheme, _excludeMouse, _allCompositeParts, _uniqueGuid);
+                            }
+                        }
                         break;
                     }
-                    case false:
+                    case false: //For all Rebinds in this project.
                     {
-                        if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _controlScheme)) //if DuplicateCheck true. (No Composite.)
+                        if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _statusText, _controlScheme, _excludeMouse))
                         {
+                            //if DuplicateCheck true. (No Composite.)
                             _actionToRebind.RemoveBindingOverride(_bindingIndex);   //Required, or the new effectivePath gets displayed still.
                             rebind.Cancel();
                             return;
@@ -385,7 +416,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 rebind.WithControlsExcluding("Mouse");
             rebind.WithControlsExcluding("<DualSenseGamepadHID>/systemButton");
             rebind.WithControlsExcluding("<DualSenseGamepadHID>/micButton");
-            rebind.WithControlsExcluding("<Gamepad>/start");    //We don't to completely f... all of our rebinds. Trust me. <(o.O)".
+            rebind.WithControlsExcluding("<Gamepad>/start");    //We don't want to completely f... all of our rebinds. Trust me. <(o.O)".
             #endregion
 
             m_rebindStarted?.Invoke(_actionToRebind, _bindingIndex);
@@ -393,7 +424,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             rebind.Start(); //Real Start of the rebind process.
         }
 
-        private static bool DuplicateBindingCheck(InputAction _actionToRebind, int _bindingIndex, string _controlScheme, bool _allCompositeParts = false)
+        private static bool DuplicateBindingCheck(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI _statusText, string _controlScheme, bool _excludeMouse, bool _allCompositeParts = false, Guid _uniqueGuid = default)
         {
             InputBinding newBinding = _actionToRebind.bindings[_bindingIndex];
 
@@ -420,9 +451,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                             continue;                                                       //And continues.
                         }
 
-                        //if (binding.id != newBinding.id)
-                        //{
-                        for (int i = 0; i < binding.action.Length; i++) //if (_allCompositeParts)-Part //Not Composite like WSAD.
+                        //Old 'if(binding.id != newBinding.id)'.
+                        for (int i = 0; i < binding.action.Length; i++) //'_allCompositeParts' set moved to switch before this DuplicateCheck.
                         {
                             if (binding.effectivePath == newBinding.effectivePath)
                             {
@@ -433,7 +463,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                                 return true;                                                //Call out a duplicate, if one if found.
                             }
                         }
-                        //}
                     }
 
                     if (binding.action != newBinding.action)                                //If actions are different.
@@ -480,14 +509,14 @@ namespace ThreeDeePongProto.Shared.InputActions
                         if (binding.id == newBinding.id)                                    //Act by binding ID.
                         {
 #if UNITY_EDITOR
-                            Debug.Log("Same binding skipped.");                             //Skips itself on same ID. (Can set binding.)
+                            Debug.Log("Same Binding. Skipped Duplicate-Check.");            //Skips itself on same ID. (Can set binding.)
 #endif
                             continue;                                                       //And continues.
                         }
 
                         //if (binding.id != newBinding.id)
                         //{
-                        for (int i = 0; i < binding.action.Length; i++) //if (_allCompositeParts)-Part //Not Composite like WSAD.
+                        for (int i = 0; i < binding.action.Length; i++) //'_allCompositeParts' set moved to switch before this DuplicateCheck.
                         {
                             if (binding.effectivePath == newBinding.effectivePath)
                             {
@@ -611,6 +640,10 @@ namespace ThreeDeePongProto.Shared.InputActions
                             }
                         }
                     }
+                }
+                else
+                {
+                    Debug.Log($"Guid from the yet unsupported Composite: {_uniqueGuid} with effectivePath: {_inputAction.bindings[i].effectivePath}");
                 }
                 #endregion
             }

@@ -172,6 +172,15 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TestComposite"",
+                    ""type"": ""Value"",
+                    ""id"": ""ade3662a-cd03-4bc5-bd4a-75d058d86e25"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -898,6 +907,61 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""processors"": ""AxisDeadzone"",
                     ""groups"": ""Gamepad"",
                     ""action"": ""SideMovementPosZP4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""6789"",
+                    ""id"": ""f6129239-7607-431a-bba0-c6a1410c2977"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TestComposite"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""df6e47e3-ac27-4db9-b6ff-da2dce881e94"",
+                    ""path"": ""<Keyboard>/6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""TestComposite"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""36c3d40e-6938-4284-819a-0d7b9f6ded05"",
+                    ""path"": ""<Keyboard>/7"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""TestComposite"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""5cfafca4-a971-4d7e-8c29-d721721363ec"",
+                    ""path"": ""<Keyboard>/8"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""TestComposite"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""3d0406ab-fe5f-4404-b16c-77532ec5003e"",
+                    ""path"": ""<Keyboard>/9"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""TestComposite"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 }
@@ -2080,6 +2144,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_PlayerActions_Zoom = m_PlayerActions.FindAction("Zoom", throwIfNotFound: true);
             m_PlayerActions_MousePosition = m_PlayerActions.FindAction("MousePosition", throwIfNotFound: true);
             m_PlayerActions_ToggleGameMenu = m_PlayerActions.FindAction("ToggleGameMenu", throwIfNotFound: true);
+            m_PlayerActions_TestComposite = m_PlayerActions.FindAction("TestComposite", throwIfNotFound: true);
             // PlayerActionsOnline
             m_PlayerActionsOnline = asset.FindActionMap("PlayerActionsOnline", throwIfNotFound: true);
             m_PlayerActionsOnline_SideMovementNegZP1 = m_PlayerActionsOnline.FindAction("SideMovementNegZP1", throwIfNotFound: true);
@@ -2182,6 +2247,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         private readonly InputAction m_PlayerActions_Zoom;
         private readonly InputAction m_PlayerActions_MousePosition;
         private readonly InputAction m_PlayerActions_ToggleGameMenu;
+        private readonly InputAction m_PlayerActions_TestComposite;
         public struct PlayerActionsActions
         {
             private @PlayerInputActions m_Wrapper;
@@ -2202,6 +2268,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             public InputAction @Zoom => m_Wrapper.m_PlayerActions_Zoom;
             public InputAction @MousePosition => m_Wrapper.m_PlayerActions_MousePosition;
             public InputAction @ToggleGameMenu => m_Wrapper.m_PlayerActions_ToggleGameMenu;
+            public InputAction @TestComposite => m_Wrapper.m_PlayerActions_TestComposite;
             public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -2259,6 +2326,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @ToggleGameMenu.started += instance.OnToggleGameMenu;
                 @ToggleGameMenu.performed += instance.OnToggleGameMenu;
                 @ToggleGameMenu.canceled += instance.OnToggleGameMenu;
+                @TestComposite.started += instance.OnTestComposite;
+                @TestComposite.performed += instance.OnTestComposite;
+                @TestComposite.canceled += instance.OnTestComposite;
             }
 
             private void UnregisterCallbacks(IPlayerActionsActions instance)
@@ -2311,6 +2381,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @ToggleGameMenu.started -= instance.OnToggleGameMenu;
                 @ToggleGameMenu.performed -= instance.OnToggleGameMenu;
                 @ToggleGameMenu.canceled -= instance.OnToggleGameMenu;
+                @TestComposite.started -= instance.OnTestComposite;
+                @TestComposite.performed -= instance.OnTestComposite;
+                @TestComposite.canceled -= instance.OnTestComposite;
             }
 
             public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -2608,6 +2681,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             void OnZoom(InputAction.CallbackContext context);
             void OnMousePosition(InputAction.CallbackContext context);
             void OnToggleGameMenu(InputAction.CallbackContext context);
+            void OnTestComposite(InputAction.CallbackContext context);
         }
         public interface IPlayerActionsOnlineActions
         {
