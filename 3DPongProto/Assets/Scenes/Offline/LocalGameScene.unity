@@ -782,6 +782,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1488546962678968378, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 913481593}
+    - target: {fileID: 1488546962678968378, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1008670891}
@@ -1070,6 +1075,11 @@ PrefabInstance:
       propertyPath: m_Navigation.m_Mode
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 2996707030087504961, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 913481593}
     - target: {fileID: 2996707030087504961, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -2560,6 +2570,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4852882517651250896, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 913481593}
     - target: {fileID: 4852882517651250896, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -5060,6 +5075,11 @@ PrefabInstance:
       propertyPath: m_Navigation.m_Mode
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 8592173330078493523, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 913481593}
     - target: {fileID: 8592173330078493523, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -13946,6 +13966,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2975291514765981241 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7313720337061845682, guid: 5d99c73a2379ef643b2423fb48c9661c,
+    type: 3}
+  m_PrefabInstance: {fileID: 2975291514765981239}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &3278400537742640468
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14085,7 +14117,7 @@ PrefabInstance:
     - target: {fileID: 5422136428263519, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4322350903448800858}
     - target: {fileID: 5422136428263519, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
@@ -14125,7 +14157,7 @@ PrefabInstance:
     - target: {fileID: 5422136671982765, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 9014555835905702876}
     - target: {fileID: 5422136671982765, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
@@ -14153,7 +14185,7 @@ PrefabInstance:
     - target: {fileID: 5422137896713478, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2975291514765981241}
     - target: {fileID: 5422137896713478, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
@@ -14209,7 +14241,7 @@ PrefabInstance:
     - target: {fileID: 5422137939896439, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 216069553}
     - target: {fileID: 5422137939896439, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
@@ -14245,7 +14277,7 @@ PrefabInstance:
     - target: {fileID: 5422138135313803, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4938937939454417544}
     - target: {fileID: 5422138135313803, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
@@ -15726,6 +15758,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4938937939454417544 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8735401617698262590, guid: d5d526be9fc149148aeb5951486723ed,
+    type: 3}
+  m_PrefabInstance: {fileID: 4938937939454417542}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5258602198036560004
@@ -18986,6 +19030,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &9014555835905702876 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5575190014678580627, guid: 55fb1881186267542992d56e3f7720d3,
+    type: 3}
+  m_PrefabInstance: {fileID: 9014555835905702874}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &9053355310850682322
