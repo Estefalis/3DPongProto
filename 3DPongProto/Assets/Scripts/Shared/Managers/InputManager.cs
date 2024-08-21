@@ -319,7 +319,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     case true:  //For all Composite for future projects.
                     {
-                        if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _statusText, _controlScheme, _excludeMouse, _allCompositeParts))
+                        if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _statusText, _controlScheme, _excludeMouse/*, _allCompositeParts*/))
                         {
                             //Duplicate case.
                             _actionToRebind.RemoveBindingOverride(_bindingIndex);   //Required, or the new effectivePath gets displayed still.
@@ -434,7 +434,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     //    Debug.Log($"'isPartOfComposite' flag {binding.effectivePath} in {binding.action}.");
                     #endregion
 #endif
-                    if (binding.action == newBinding.action && !_allCompositeParts)         //If actions are the same.
+                    if (binding.action == newBinding.action/* && !_allCompositeParts*/)     //If actions are the same.
                     {
                         if (binding.id == newBinding.id)                                    //Act by binding ID.
                         {
@@ -457,7 +457,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                         }
                     }
 
-                    if (binding.action != newBinding.action && !_allCompositeParts)         //If actions are different.
+                    if (binding.action != newBinding.action/* && !_allCompositeParts*/)     //If actions are different.
                     {
                         for (int j = 0; j < _actionToRebind.actionMap.bindings.Count; j++)
                         {
@@ -489,19 +489,19 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
 
             #region Composite Internal Duplicate Check
-            if (_allCompositeParts) //Duplicate Check inside the Composite.
-            {
-                for (int i = 1; i < _bindingIndex; ++i)
-                {
-                    if (_actionToRebind.bindings[i].effectivePath == newBinding.effectivePath)
-                    {
-#if UNITY_EDITOR
-                        Debug.Log($"Duplicate binding {newBinding.effectivePath} found. Canceling rebind.");
-#endif
-                        return true;                                                        //Call out a duplicate, if one if found.
-                    }
-                }
-            }
+//            if (_allCompositeParts) //Duplicate Check inside the Composite.
+//            {
+//                for (int i = 1; i < _bindingIndex; ++i)
+//                {
+//                    if (_actionToRebind.bindings[i].effectivePath == newBinding.effectivePath)
+//                    {
+//#if UNITY_EDITOR
+//                        Debug.Log($"Duplicate binding {newBinding.effectivePath} found. Canceling rebind.");
+//#endif
+//                        return true;                                                        //Call out a duplicate, if one if found.
+//                    }
+//                }
+//            }
             #endregion
 
             return false;                                                                   //Exiting search w/o a discovery.
