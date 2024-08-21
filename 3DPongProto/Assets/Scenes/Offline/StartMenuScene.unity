@@ -29625,7 +29625,7 @@ PrefabInstance:
     - target: {fileID: 2877092418444377030, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_inputBinding.m_Name
-      value: VBNM
+      value: 6789
       objectReference: {fileID: 0}
     - target: {fileID: 2877092418444377030, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
@@ -30426,7 +30426,7 @@ PrefabInstance:
     - target: {fileID: 4846197603840525479, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4846197603992207374, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
@@ -30446,7 +30446,7 @@ PrefabInstance:
     - target: {fileID: 4846197604128668485, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_text
-      value: 6/7/8/9
+      value: 1/2/3/4
       objectReference: {fileID: 0}
     - target: {fileID: 4846197604128668485, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}

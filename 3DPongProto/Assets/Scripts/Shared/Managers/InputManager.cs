@@ -568,8 +568,11 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             if (inputAction.bindings[_bindingIndex].isComposite)
             {
-                for (int i = _bindingIndex; i < inputAction.bindings.Count && inputAction.bindings[i].isPartOfComposite; i++)
+                var firstChildIndex = _bindingIndex + 1;    //Without adding + 1 to start with here, the reset did not work.
+                for (int i = firstChildIndex; i < inputAction.bindings.Count && inputAction.bindings[i].isPartOfComposite; i++)
+                {
                     inputAction.RemoveBindingOverride(i);
+                }
             }
             else
                 inputAction.RemoveBindingOverride(_bindingIndex);
