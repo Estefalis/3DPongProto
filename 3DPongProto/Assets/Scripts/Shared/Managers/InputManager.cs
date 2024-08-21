@@ -489,19 +489,19 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
 
             #region Composite Internal Duplicate Check
-//            if (_allCompositeParts) //Duplicate Check inside the Composite.
-//            {
-//                for (int i = 1; i < _bindingIndex; ++i)
-//                {
-//                    if (_actionToRebind.bindings[i].effectivePath == newBinding.effectivePath)
-//                    {
-//#if UNITY_EDITOR
-//                        Debug.Log($"Duplicate binding {newBinding.effectivePath} found. Canceling rebind.");
-//#endif
-//                        return true;                                                        //Call out a duplicate, if one if found.
-//                    }
-//                }
-//            }
+            //            if (_allCompositeParts) //Duplicate Check inside the Composite.
+            //            {
+            //                for (int i = 1; i < _bindingIndex; ++i)
+            //                {
+            //                    if (_actionToRebind.bindings[i].effectivePath == newBinding.effectivePath)
+            //                    {
+            //#if UNITY_EDITOR
+            //                        Debug.Log($"Duplicate binding {newBinding.effectivePath} found. Canceling rebind.");
+            //#endif
+            //                        return true;                                                        //Call out a duplicate, if one if found.
+            //                    }
+            //                }
+            //            }
             #endregion
 
             return false;                                                                   //Exiting search w/o a discovery.
@@ -652,15 +652,51 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private static void SaveSchemelessComposites(InputAction _inputAction, int _bindingIndex, Guid _uniqueGuid/* = default*/)
         {
-            var deviceType = GetWordBetweenArgs(_inputAction.bindings[_bindingIndex].effectivePath, "<", ">");
+            string deviceType = GetWordBetweenArgs(_inputAction.bindings[_bindingIndex].effectivePath, "<", ">");
+            Guid childIndexGuid = _inputAction.bindings[_bindingIndex].id;
+
             switch (deviceType)
             {
                 case m_keyboardPath:
                 {
+                    bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{childIndexGuid}");
+
+                    switch (dictHasKey)
+                    {
+                        case true:
+                        {
+                            m_keyboardRebindDict[$"{childIndexGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!";
+                            break;
+                        }
+                        case false:
+                        {
+                            m_keyboardRebindDict.Add($"{childIndexGuid}", $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!");
+                            break;
+                        }
+                    }
+
+                    m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
                     break;
                 }
                 case m_gamepadPath:
                 {
+                    bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{childIndexGuid}");
+
+                    switch (dictHasKey)
+                    {
+                        case true:
+                        {
+                            m_gamepadRebindDict[$"{_uniqueGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!";
+                            break;
+                        }
+                        case false:
+                        {
+                            m_gamepadRebindDict.Add($"{_uniqueGuid}", $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!");
+                            break;
+                        }
+                    }
+
+                    m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
                     break;
                 }
                 default:
