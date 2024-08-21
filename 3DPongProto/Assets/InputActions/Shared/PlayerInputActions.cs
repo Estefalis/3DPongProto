@@ -911,7 +911,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""6789"",
+                    ""name"": ""6U8D7L9R"",
                     ""id"": ""f6129239-7607-431a-bba0-c6a1410c2977"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
@@ -933,9 +933,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""left"",
-                    ""id"": ""36c3d40e-6938-4284-819a-0d7b9f6ded05"",
-                    ""path"": ""<Keyboard>/7"",
+                    ""name"": ""down"",
+                    ""id"": ""5cfafca4-a971-4d7e-8c29-d721721363ec"",
+                    ""path"": ""<Keyboard>/8"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
@@ -944,9 +944,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""down"",
-                    ""id"": ""5cfafca4-a971-4d7e-8c29-d721721363ec"",
-                    ""path"": ""<Keyboard>/8"",
+                    ""name"": ""left"",
+                    ""id"": ""36c3d40e-6938-4284-819a-0d7b9f6ded05"",
+                    ""path"": ""<Keyboard>/7"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",

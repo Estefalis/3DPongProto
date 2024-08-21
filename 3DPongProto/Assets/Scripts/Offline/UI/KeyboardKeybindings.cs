@@ -38,8 +38,8 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             if (m_InputActionReference != null)
             {
-                GetBindingInfomation();                
-                InputManager.LoadKeyboardOverrides(m_actionName, m_bindingId);    //MUST be below 'GetBindingInfomation()'! Else Exception!
+                GetBindingInformation();
+                InputManager.LoadKeyboardOverrides(m_actionName, m_bindingId);    //MUST be below 'GetBindingInformation()'! Else Exception!
                 UpdateRebindUI();
             }
         }
@@ -55,11 +55,11 @@ namespace ThreeDeePongProto.Shared.InputActions
             if (m_InputActionReference == null)
                 return;
 
-            GetBindingInfomation();
+            GetBindingInformation();
             UpdateRebindUI();
         }
 
-        private void GetBindingInfomation()
+        private void GetBindingInformation()
         {
             if (m_InputActionReference.action != null)
                 m_actionName = m_InputActionReference.action.name;
@@ -107,7 +107,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ExecuteKeyRebind()
         {
-            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_excludeMouse, m_controlScheme, m_bindingId);
+            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_controlScheme, m_excludeMouse, m_bindingId);
         }
 
         /// <summary>

@@ -251,7 +251,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region KeyRebinding
-        public static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, bool _excludeMouse, string _controlScheme, Guid _uniqueGuid)
+        public static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, string _controlScheme, bool _excludeMouse, Guid _uniqueGuid)
         {
             //Look up the action name of the inputAction in the generated C#-Script, not the Scriptable Object.
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
@@ -329,6 +329,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 //}
                 #endregion
 
+                #region .isComposite/.isPartOfComposite switch pre DuplicateBindingCheck
                 switch (_allCompositeParts)
                 {
                     case true:  //For all Composite for future projects.
@@ -366,6 +367,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                         break;
                     }
                 }
+                #endregion
 
                 m_RebindComplete?.Invoke(); //Subscribers update to new state.
 
