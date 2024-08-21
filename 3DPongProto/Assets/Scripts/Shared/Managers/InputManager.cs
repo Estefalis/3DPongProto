@@ -36,10 +36,13 @@ namespace ThreeDeePongProto.Shared.InputActions
         private const string m_cancelWithKeyboardButton = "<Keyboard>/escape";
         private const string m_cancelWithGamepadButton = "<Gamepad>/select";
 
-        private const string m_keyboardMouseScheme = "KeyboardMouse";   //Inputsystem's KeyboardMouse scheme. (groups)
-        private const string m_gamePadScheme = "Gamepad";               //Inputsystem's Gamepad scheme. (groups)
-        private const string m_keyboardPath = "Keyboard";               //EffectivePath string.
-        private const string m_gamepadPath = "Gamepad";                 //EffectivePath string.
+        private const string m_keyboardMouseScheme = "KeyboardMouse";           //Inputsystem's KeyboardMouse scheme. (groups)
+        private const string m_gamePadScheme = "Gamepad";                       //Inputsystem's Gamepad scheme. (groups)
+
+        private const string m_keyboardPath = "Keyboard";                       //EffectivePath string.
+        private const string m_gamepadPath = "Gamepad";                         //EffectivePath string.
+        private const string m_dualShockGamepadPath = "DualShockGamepad";       //EffectivePath string.
+        private const string m_dualSenseGamepadHIDPath = "DualSenseGamepadHID"; //EffectivePath string.
         #endregion
 
         #region KeyBinding Icons
@@ -679,6 +682,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                     break;
                 }
                 case m_gamepadPath:
+                case m_dualShockGamepadPath:
+                case m_dualSenseGamepadHIDPath:
                 {
                     bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{childIndexGuid}");
 
