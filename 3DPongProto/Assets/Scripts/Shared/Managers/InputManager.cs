@@ -38,6 +38,8 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private const string m_keyboardMouseScheme = "KeyboardMouse";   //Inputsystem's KeyboardMouse scheme. (groups)
         private const string m_gamePadScheme = "Gamepad";               //Inputsystem's Gamepad scheme. (groups)
+        private const string m_keyboardPath = "Keyboard";               //EffectivePath string.
+        private const string m_gamepadPath = "Gamepad";                 //EffectivePath string.
         #endregion
 
         #region KeyBinding Icons
@@ -312,29 +314,12 @@ namespace ThreeDeePongProto.Shared.InputActions
                 _actionToRebind.Enable();
                 operation.Dispose();    //Releases memory held by the operation to prevent memory leaks.
 
-                #region Pre Composite Code
-                //if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _controlScheme, _allCompositeParts))
-                //{
-                //    _actionToRebind.RemoveBindingOverride(_bindingIndex);   //Required, or the new effectivePath gets displayed still.
-                //    rebind.Cancel();
-                //    return;
-                //}
-
-                //if (_allCompositeParts)
-                //{
-                //    var nextBindingIndex = _bindingIndex + 1;
-
-                //    if (nextBindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[nextBindingIndex].isPartOfComposite)
-                //        ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _controlScheme, _allCompositeParts, _excludeMouse, _uniqueGuid);
-                //}
-                #endregion
-
                 #region .isComposite/.isPartOfComposite switch pre DuplicateBindingCheck
                 switch (_allCompositeParts)
                 {
                     case true:  //For all Composite for future projects.
                     {
-                        if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _statusText, _controlScheme, _excludeMouse))
+                        if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _statusText, _controlScheme, _excludeMouse, _allCompositeParts))
                         {
                             //Duplicate case.
                             _actionToRebind.RemoveBindingOverride(_bindingIndex);   //Required, or the new effectivePath gets displayed still.
@@ -353,13 +338,14 @@ namespace ThreeDeePongProto.Shared.InputActions
                                 ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _controlScheme, _excludeMouse, _allCompositeParts, _uniqueGuid);
                             }
                         }
+                        //Composite Rebinding completed from here.
                         break;
                     }
                     case false: //For all Rebinds in this project.
                     {
                         if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _statusText, _controlScheme, _excludeMouse))
                         {
-                            //if DuplicateCheck true. (No Composite.)
+                            //if DuplicateCheck true. Canceling rebind right away.
                             _actionToRebind.RemoveBindingOverride(_bindingIndex);   //Required, or the new effectivePath gets displayed still.
                             rebind.Cancel();
                             return;
@@ -380,6 +366,11 @@ namespace ThreeDeePongProto.Shared.InputActions
                     case m_gamePadScheme:
                         SaveGamepadOverrides(_actionToRebind, _bindingIndex, _uniqueGuid);
                         break;
+                    case "":
+                    {
+                        SaveSchemelessComposites(_actionToRebind, _bindingIndex, _uniqueGuid);
+                        break;
+                    }
                     default:
                         break;
                 }
@@ -432,18 +423,18 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             foreach (InputBinding binding in _actionToRebind.actionMap.bindings)
             {
-                #region Compare Keyboard actionBindings in the actionMap.
-                if (binding.groups == m_keyboardMouseScheme && !binding.isComposite)        //Exclude Composites and Gamepad-Scheme.
+                #region Compare ActionBindings in the actionMap.
+                if (!binding.isComposite)                                                   //Excludes Composites.
                 {
 #if UNITY_EDITOR
-                    #region Keyboard Debug Logs
+                    #region Flag Debug Logs
                     //if (!binding.isPartOfComposite)
                     //    Debug.Log($"'None' flag {binding.effectivePath} in {binding.action}.");
                     //if (binding.isPartOfComposite)
                     //    Debug.Log($"'isPartOfComposite' flag {binding.effectivePath} in {binding.action}.");
                     #endregion
 #endif
-                    if (binding.action == newBinding.action)                                //If actions are the same.
+                    if (binding.action == newBinding.action && !_allCompositeParts)         //If actions are the same.
                     {
                         if (binding.id == newBinding.id)                                    //Act by binding ID.
                         {
@@ -453,8 +444,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                             continue;                                                       //And continues.
                         }
 
-                        //Old 'if(binding.id != newBinding.id)'.
-                        for (int i = 0; i < binding.action.Length; i++) //'_allCompositeParts' set moved to switch before this DuplicateCheck.
+                        for (int i = 0; i < binding.action.Length; i++)                     //Old 'if(binding.id != newBinding.id)'.
                         {
                             if (binding.effectivePath == newBinding.effectivePath)
                             {
@@ -467,82 +457,48 @@ namespace ThreeDeePongProto.Shared.InputActions
                         }
                     }
 
-                    if (binding.action != newBinding.action)                                //If actions are different.
+                    if (binding.action != newBinding.action && !_allCompositeParts)         //If actions are different.
                     {
                         for (int j = 0; j < _actionToRebind.actionMap.bindings.Count; j++)
                         {
                             if (binding.effectivePath == newBinding.effectivePath)          //Compare paths on (different) actions & IDs.
                             {
-#if UNITY_EDITOR
                                 switch (binding.isPartOfComposite)
                                 {
                                     case true:
                                     {
+#if UNITY_EDITOR
                                         string bindingName = ToUpperFirstCharacter(binding.name);
                                         Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}, Composite Part {bindingName}. Canceling rebind.");
-                                        return true;                                                //Call out a duplicate, if one if found.
+#endif
+                                        return true;                                        //Call out a duplicate, if one if found.
                                     }
                                     case false:
                                     {
+#if UNITY_EDITOR
                                         Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
-                                        return true;                                                //Call out a duplicate, if one if found.
+#endif
+                                        return true;                                        //Call out a duplicate, if one if found.
                                     }
                                 }
-#endif
                             }
                         }
                     }
                 }
                 #endregion
+            }
 
-                #region Compare Gamepad actionBindings in the actionMap.
-                if (binding.groups == m_gamePadScheme && !binding.isComposite)              //Exclude Composites and Keyboard-Scheme.
+            #region Composite Internal Duplicate Check
+            if (_allCompositeParts) //Duplicate Check inside the Composite.
+            {
+                for (int i = 1; i < _bindingIndex; ++i)
                 {
-#if UNITY_EDITOR
-                    #region Gamepad Debug Logs
-                    //if (!binding.isPartOfComposite)
-                    //    Debug.Log($"'None' flag {binding.effectivePath} in {binding.action}.");
-                    //if (binding.isPartOfComposite)
-                    //    Debug.Log($"'isPartOfComposite' flag {binding.effectivePath} in {binding.action}.");
-                    #endregion
-#endif
-                    if (binding.action == newBinding.action)                                //If actions are the same.
+                    if (_actionToRebind.bindings[i].effectivePath == newBinding.effectivePath)
                     {
-                        if (binding.id == newBinding.id)                                    //Act by binding ID.
-                        {
 #if UNITY_EDITOR
-                            Debug.Log("Same Binding. Skipped Duplicate-Check.");            //Skips itself on same ID. (Can set binding.)
+                        Debug.Log($"Duplicate binding {newBinding.effectivePath} found. Canceling rebind.");
 #endif
-                            continue;                                                       //And continues.
-                        }
-
-                        //if (binding.id != newBinding.id)
-                        //{
-                        for (int i = 0; i < binding.action.Length; i++) //'_allCompositeParts' set moved to switch before this DuplicateCheck.
-                        {
-                            if (binding.effectivePath == newBinding.effectivePath)
-                            {
-#if UNITY_EDITOR
-                                Debug.Log($"Duplicate binding {newBinding.effectivePath} found. Canceling rebind.");
-#endif
-                                return true;                                                //Call out a duplicate, if one if found.
-                            }
-                        }
-                        //}
-                    }
-
-                    if (binding.action != newBinding.action)                                //If actions are different.
-                    {
-                        for (int j = 0; j < _actionToRebind.actionMap.bindings.Count; j++)
-                        {
-                            if (binding.effectivePath == newBinding.effectivePath)          //Compare paths on (different) actions & IDs.
-                            {
-#if UNITY_EDITOR
-                                Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
-#endif
-                                return true;                                                //Call out a duplicate, if one if found.
-                            }
-                        }
+                        return true;                                                        //Call out a duplicate, if one if found.
                     }
                 }
             }
@@ -692,6 +648,24 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
 
             m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
+        }
+
+        private static void SaveSchemelessComposites(InputAction _inputAction, int _bindingIndex, Guid _uniqueGuid/* = default*/)
+        {
+            var deviceType = GetWordBetweenArgs(_inputAction.bindings[_bindingIndex].effectivePath, "<", ">");
+            switch (deviceType)
+            {
+                case m_keyboardPath:
+                {
+                    break;
+                }
+                case m_gamepadPath:
+                {
+                    break;
+                }
+                default:
+                    break;
+            }
         }
 
         internal static void LoadKeyboardOverrides(string _actionName, Guid _uiGuid)
