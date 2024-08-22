@@ -747,14 +747,19 @@ namespace ThreeDeePongProto.Shared.InputActions
 
                 switch (uniqueGuid == _uiGuid)
                 {
-                    case true:
+                    case true:  //'_uiGuid' comes each (.is)PartOfComposite directly.
                     {
                         inputAction.ApplyBindingOverride(bindingIndexAsInt, overridePath);
                         break;
                     }
-                    case false:
+                    case false: //'_uiGuid' comes from the Composite parent, so it's children id's have to be compared.
                     {
-                        continue;
+                        foreach (InputBinding partOfComposite in inputAction.bindings)
+                        {
+                            if (partOfComposite.id == uniqueGuid)
+                                inputAction.ApplyBindingOverride(bindingIndexAsInt, overridePath);
+                        }
+                        break;  //break; or continue; here?
                     }
                 }
             }
@@ -795,14 +800,19 @@ namespace ThreeDeePongProto.Shared.InputActions
 
                 switch (uniqueGuid == _uiGuid)
                 {
-                    case true:
+                    case true:  //'_uiGuid' comes each (.is)PartOfComposite directly.
                     {
                         inputAction.ApplyBindingOverride(bindingIndexAsInt, overridePath);
                         break;
                     }
-                    case false:
+                    case false: //'_uiGuid' comes from the Composite parent, so it's children id's have to be compared.
                     {
-                        continue;
+                        foreach (InputBinding partOfComposite in inputAction.bindings)
+                        {
+                            if (partOfComposite.id == uniqueGuid)
+                                inputAction.ApplyBindingOverride(bindingIndexAsInt, overridePath);
+                        }
+                        break;  //break; or continue; here?
                     }
                 }
             }

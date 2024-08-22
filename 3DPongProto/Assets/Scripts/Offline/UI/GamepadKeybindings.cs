@@ -8,7 +8,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 {
     public class GamepadKeybindings : MonoBehaviour
     {
-        [SerializeField] private InputActionReference m_InputActionReference; //ScriptableObject.
+        [SerializeField] private InputActionReference m_inputActionReference; //ScriptableObject.
 
         [Range(0f, 10), SerializeField] private int m_selectedBinding;
         [SerializeField] private InputBinding.DisplayStringOptions m_displayStringOptions;
@@ -36,7 +36,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             InputManager.m_RebindComplete += UpdateRebindUI;
             InputManager.m_RebindCanceled += UpdateRebindUI;
 
-            if (m_InputActionReference != null)
+            if (m_inputActionReference != null)
             {
                 GetBindingInformation();
                 InputManager.LoadGamepadOverrides(m_actionName, m_bindingId);   //MUST be below 'GetBindingInformation()'! Else Exception!
@@ -52,7 +52,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private void OnValidate()
         {
-            if (m_InputActionReference == null)
+            if (m_inputActionReference == null)
                 return;
 
             GetBindingInformation();
@@ -61,19 +61,19 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private void GetBindingInformation()
         {
-            if (m_InputActionReference.action != null)
-                m_actionName = m_InputActionReference.action.name;
+            if (m_inputActionReference.action != null)
+                m_actionName = m_inputActionReference.action.name;
 
-            m_selectedBinding = Mathf.Clamp(m_selectedBinding, 0, m_InputActionReference.action.bindings.Count - 1);
+            m_selectedBinding = Mathf.Clamp(m_selectedBinding, 0, m_inputActionReference.action.bindings.Count - 1);
 
             if (this.gameObject.activeInHierarchy)
             {
-                if (m_InputActionReference.action.bindings.Count > m_selectedBinding)   //prevents ArgumentOutOfRangeException.
+                if (m_inputActionReference.action.bindings.Count > m_selectedBinding)   //prevents ArgumentOutOfRangeException.
                 {
-                    m_inputBinding = m_InputActionReference.action.bindings[m_selectedBinding];
+                    m_inputBinding = m_inputActionReference.action.bindings[m_selectedBinding];
                     m_bindingIndex = m_selectedBinding;
-                    m_bindingId = m_InputActionReference.action.bindings[m_bindingIndex].id;
-                    m_controlScheme = m_InputActionReference.action.bindings[m_bindingIndex].groups;
+                    m_bindingId = m_inputActionReference.action.bindings[m_bindingIndex].id;
+                    m_controlScheme = m_inputActionReference.action.bindings[m_bindingIndex].groups;
                 }
             }
         }
