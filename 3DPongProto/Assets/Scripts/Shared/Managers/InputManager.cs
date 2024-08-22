@@ -270,12 +270,12 @@ namespace ThreeDeePongProto.Shared.InputActions
                 return;
             }
 
-            //isComposite: Corresponds to WASD's Actions Properties. (WASD itself.)
+            //isComposite: WASD's Actions Properties. (WASD itself.)
             if (inputAction.bindings[_bindingIndex].isComposite)
             {
                 var firstChildIndex = _bindingIndex + 1;    //Examples: First entry after WASD.
 
-                //isPartOfComposite: Corresponds to WASD's W for example. (Childs/Binding Properties of the Composite.)
+                //isPartOfComposite: Corresponds to WASD's W for example. (Child's/Binding Properties of the Composite.)
                 if (firstChildIndex < inputAction.bindings.Count && inputAction.bindings[firstChildIndex].isPartOfComposite)
                 {
                     //true == _allCompositeParts: true.
@@ -369,12 +369,15 @@ namespace ThreeDeePongProto.Shared.InputActions
                     case m_gamePadScheme:
                         SaveGamepadOverrides(_actionToRebind, _bindingIndex, _uniqueGuid);
                         break;
-                    case "":
+                    case "":    //Empty string. Does not accept 'string.Empty'.
                     {
                         SaveSchemelessComposites(_actionToRebind, _bindingIndex, _uniqueGuid);
                         break;
                     }
                     default:
+#if UNITY_EDITOR
+                        Debug.Log($"Saving this deviceType is still unsupported, yet. Please ask your purrrsonal Progger. <(~.^)'");
+#endif
                         break;
                 }
                 #endregion
@@ -491,22 +494,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 #endregion
             }
 
-            #region Composite Internal Duplicate Check
-            //            if (_allCompositeParts) //Duplicate Check inside the Composite.
-            //            {
-            //                for (int i = 1; i < _bindingIndex; ++i)
-            //                {
-            //                    if (_actionToRebind.bindings[i].effectivePath == newBinding.effectivePath)
-            //                    {
-            //#if UNITY_EDITOR
-            //                        Debug.Log($"Duplicate binding {newBinding.effectivePath} found. Canceling rebind.");
-            //#endif
-            //                        return true;                                                        //Call out a duplicate, if one if found.
-            //                    }
-            //                }
-            //            }
-            #endregion
-
             return false;                                                                   //Exiting search w/o a discovery.
         }
 
@@ -539,11 +526,25 @@ namespace ThreeDeePongProto.Shared.InputActions
                 inputAction.RemoveBindingOverride(_bindingIndex);
 
             #region Reset Rebind Save
-            if (_controlScheme == m_keyboardMouseScheme)
-                ResetKeyboardOverrides(inputAction, /*_bindingIndex,*/ _uniqueGuid);    //Kept as example. Guid replaced the Index.
-
-            if (_controlScheme == m_gamePadScheme)
-                ResetGamepadOverrides(inputAction, /*_bindingIndex,*/ _uniqueGuid);    //Kept as example. Guid replaced the Index.
+            switch (_controlScheme)
+            {
+                case m_keyboardMouseScheme:
+                    ResetKeyboardOverrides(inputAction, /*_bindingIndex,*/ _uniqueGuid);    //Reset DictEntry by '_uniqueGuid'.
+                    break;
+                case m_gamePadScheme:
+                    ResetGamepadOverrides(inputAction, /*_bindingIndex,*/ _uniqueGuid);     //Reset DictEntry by '_uniqueGuid'.
+                    break;
+                case "":    //Empty string. Does not accept 'string.Empty'.
+                {
+                    ResetSchemelessComposites(inputAction, _bindingIndex/*, _uniqueGuid*/); //Reset dictEntries by child's '_bindingIndices'.
+                    break;
+                }
+                default:
+#if UNITY_EDITOR
+                    Debug.Log($"Resetting this deviceType is still unsupported, yet. Please ask your purrrsonal Progger (again). <(~.^)'");
+#endif
+                    break;
+            }
             #endregion
         }
         #endregion
@@ -859,6 +860,67 @@ namespace ThreeDeePongProto.Shared.InputActions
 
                 m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
                 #endregion
+            }
+        }
+
+        private static void ResetSchemelessComposites(InputAction _inputAction, int _bindingIndex/*, Guid _uniqueGuid = default*/)
+        {
+            string deviceScheme;
+            Guid childGuid;
+
+            for (int i = 0; i < _inputAction.bindings.Count; i++)
+            {
+                if (!_inputAction.bindings[i].isComposite)              //'!.isComposite' excludes 'WASD' parent.
+                {
+                    deviceScheme = _inputAction.bindings[i].groups;     //Get the deviceScheme for each Index.
+                    childGuid = _inputAction.bindings[i].id;            //Get the child's Guid for each Index.
+
+                    switch (deviceScheme)                               //Check and remove child's Guid "guided" by it's deviceScheme.
+                    {
+                        case m_keyboardMouseScheme:
+                        {
+                            bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{childGuid}");
+
+                            switch (dictHasKey)
+                            {
+                                case true:
+                                {
+                                    m_keyboardRebindDict.Remove($"{childGuid}");
+                                    break;
+                                }
+                                case false:
+                                {
+                                    break;
+                                }
+                            }
+
+                            m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
+                            break;
+                        }
+                        case m_gamePadScheme:
+                        {
+                            bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{childGuid}");
+
+                            switch (dictHasKey)
+                            {
+                                case true:
+                                {
+                                    m_gamepadRebindDict.Remove($"{childGuid}");
+                                    break;
+                                }
+                                case false:
+                                {
+                                    break;
+                                }
+                            }
+
+                            m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
+                            break;
+                        }
+                        default:
+                            break;
+                    }
+                }
             }
         }
         #endregion
