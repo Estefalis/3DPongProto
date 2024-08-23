@@ -85,7 +85,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 if (Application.isPlaying)
                 {
                     m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex).ToUpper();
-                    Debug.Log($"AN: {m_actionName} - BI {m_bindingId} - IMR {m_rebindText.text}");
                     //m_rebindText.text = InputControlPath.ToHumanReadableString(InputManager.GetBindingName(m_actionName, m_bindingIndex), options: InputControlPath.HumanReadableStringOptions.OmitDevice).ToUpper();
                 }
                 else
