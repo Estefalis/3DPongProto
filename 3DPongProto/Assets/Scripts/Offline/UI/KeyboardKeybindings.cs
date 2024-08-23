@@ -12,6 +12,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         [Range(0f, 10), SerializeField] private int m_selectedBinding;
         [SerializeField] private InputBinding.DisplayStringOptions m_displayStringOptions;
+        [SerializeField] private InputControlPath.HumanReadableStringOptions m_humanReadableStringOptions;
         [SerializeField] private bool m_excludeMouse = true; //Exclude the Mouse on the Rebind-Prozess.
 
         [Header("Binding-Informations - DON'T CHANGE ANYTHING HERE!")]
@@ -84,8 +85,8 @@ namespace ThreeDeePongProto.Shared.InputActions
             {
                 if (Application.isPlaying)
                 {
-                    m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex).ToUpper();
-                    //m_rebindText.text = InputControlPath.ToHumanReadableString(InputManager.GetBindingName(m_actionName, m_bindingIndex), options: InputControlPath.HumanReadableStringOptions.OmitDevice).ToUpper();
+                    //m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex).ToUpper();
+                    m_rebindText.text = InputControlPath.ToHumanReadableString(InputManager.GetBindingName(m_actionName, m_bindingIndex), m_humanReadableStringOptions).ToUpper();
                 }
                 else
                 {

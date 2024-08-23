@@ -173,7 +173,7 @@ MonoBehaviour:
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 16
+  m_fontSizeMin: 12
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
@@ -308,7 +308,7 @@ MonoBehaviour:
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 18
+  m_fontSizeMin: 12
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
@@ -382,7 +382,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_SizeDelta: {x: -15, y: -5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2509531060326514962
 CanvasRenderer:
@@ -439,11 +439,11 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35.8
+  m_fontSize: 31.3
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 16
+  m_fontSizeMin: 12
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
@@ -616,9 +616,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15db174d644ed8649a99956158c81a0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_InputActionReference: {fileID: 0}
+  m_inputActionReference: {fileID: 0}
   m_selectedBinding: 0
   m_displayStringOptions: 0
+  m_humanReadableStringOptions: 2
   m_excludeMouse: 1
   m_inputBinding:
     m_Name: 
@@ -629,7 +630,6 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
-  m_buttonControlScheme: 1
   m_buttonImage: {fileID: 5373583968872865941}
   m_rebindButton: {fileID: 2509531060462451291}
   m_rebindText: {fileID: 2509531060148079307}
@@ -775,7 +775,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 50}
+  m_SizeDelta: {x: 125, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!1 &2509531061962685659
 GameObject:
@@ -912,9 +912,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf14a1b24c2919d428c05af24f831138, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_InputActionReference: {fileID: 0}
+  m_inputActionReference: {fileID: 0}
   m_selectedBinding: 0
   m_displayStringOptions: 0
+  m_humanReadableStringOptions: 2
   m_excludeMouse: 1
   m_inputBinding:
     m_Name: 
@@ -925,7 +926,6 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
-  m_buttonControlScheme: 0
   m_buttonImage: {fileID: 5202953337551828031}
   m_rebindButton: {fileID: 2509531061962685656}
   m_rebindText: {fileID: 2509531060326514965}
@@ -1065,7 +1065,7 @@ MonoBehaviour:
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 18
+  m_fontSizeMin: 12
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
@@ -1142,7 +1142,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 800, y: 0}
+  m_SizeDelta: {x: 817.5, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3579551642052345594
 MonoBehaviour:
@@ -1267,7 +1267,7 @@ MonoBehaviour:
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 18
+  m_fontSizeMin: 12
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
