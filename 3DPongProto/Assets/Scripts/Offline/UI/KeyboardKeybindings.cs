@@ -66,7 +66,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             m_selectedBinding = Mathf.Clamp(m_selectedBinding, 0, m_inputActionReference.action.bindings.Count - 1);
 
-            if (this.gameObject.activeInHierarchy)
+            if (gameObject.activeInHierarchy)
             {
                 if (m_inputActionReference.action.bindings.Count > m_selectedBinding)   //prevents ArgumentOutOfRangeException.
                 {

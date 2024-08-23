@@ -83,6 +83,9 @@ public class Ball : MonoBehaviour
 
     private void ApplyForceOnBall()
     {
+        if (m_rigidbody.velocity != Vector3.zero)   //Only apply force on the ball, if it stand still( in the middle of the field).
+            return;
+
         int sideChoice;
         if (DateTime.Now.Millisecond < 500)
             sideChoice = Mathf.FloorToInt(UnityEngine.Random.Range(0, 4) + DateTime.Now.Millisecond / 1000);
@@ -109,8 +112,7 @@ public class Ball : MonoBehaviour
     private void StartBallMovement(InputAction.CallbackContext _callbackContext)
     {
         if (!m_matchManager.GameIsPaused)
-        {
-            ResetBall();
+        {            
             ApplyForceOnBall();
 
             if (!m_matchManager.MatchStarted)
