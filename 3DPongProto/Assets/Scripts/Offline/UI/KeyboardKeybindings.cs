@@ -1,4 +1,5 @@
 using System;
+using ThreeDeePongProto.Offline.Settings;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -34,6 +35,8 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_rebindButton.onClick.AddListener(() => ExecuteKeyRebind());
             m_resetButton.onClick.AddListener(() => ResetRebinding());
 
+            ControlSettings.ResetPlayerViewRebinds += ResetRebinding;
+
             InputManager.m_RebindComplete += UpdateRebindUI;
             InputManager.m_RebindCanceled += UpdateRebindUI;
 
@@ -47,6 +50,8 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private void OnDisable()
         {
+            ControlSettings.ResetPlayerViewRebinds -= ResetRebinding;
+
             InputManager.m_RebindComplete -= UpdateRebindUI;
             InputManager.m_RebindCanceled -= UpdateRebindUI;
         }

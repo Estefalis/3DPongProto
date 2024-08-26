@@ -18,6 +18,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private int m_currentViewIndex;
         public static event Action<int> PlayerViewIndex;
+        public static event Action ResetPlayerViewRebinds;
         #endregion
 
         #region Axis Inversion
@@ -632,6 +633,8 @@ namespace ThreeDeePongProto.Offline.Settings
             m_rotToggleKeysEP[m_currentViewIndex].isOn = m_customToggleDefaults[m_currentViewIndex];
             m_MoveValueSliderXEP[m_currentViewIndex].value = m_xMovespeedDefault;
             m_RotValueSliderYEP[m_currentViewIndex].value = m_yRotationDefault;
+
+            ResetPlayerViewRebinds?.Invoke();   //Active KeyRebindButtons in the currently active PlayerView shall reset their bindings.
         }
         #endregion
     }

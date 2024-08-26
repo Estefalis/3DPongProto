@@ -153,7 +153,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// Switches ActionMaps, if the active actionMap isn't equal to the submitted one. But does not disable the old actionMaps!
         /// </summary>
         /// <param name="_actionMap"></param>
-        public static void ToggleActionMaps(InputActionMap _actionMap)
+        internal static void ToggleActionMaps(InputActionMap _actionMap)
         {
             //if you try to change to the same ActionMap skip the rest.
             if (_actionMap.enabled)
@@ -167,7 +167,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region Get and Return Sprites
-        public static Sprite GetControllerIcons(string _controlScheme, string _controlPath)
+        internal static Sprite GetControllerIcons(string _controlScheme, string _controlPath)
         {
             if (string.IsNullOrEmpty($"{_controlScheme}") || string.IsNullOrEmpty(_controlPath))
                 return null;
@@ -231,7 +231,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region Helper Method(s)
-        public static string GetWordBetweenArgs(string _source, string _firstArg, string _secondArg)
+        internal static string GetWordBetweenArgs(string _source, string _firstArg, string _secondArg)
         {
             if (_source.Contains(_firstArg) && _source.Contains(_secondArg))
             {
@@ -243,7 +243,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             return "";
         }
 #if UNITY_EDITOR
-        public static string ToUpperFirstCharacter(string _source)
+        internal static string ToUpperFirstCharacter(string _source)
         {
             if (string.IsNullOrEmpty(_source))
                 return _source;
@@ -256,7 +256,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region KeyRebinding
-        public static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, string _controlScheme, bool _excludeMouse, Guid _uniqueGuid)
+        internal static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, string _controlScheme, bool _excludeMouse, Guid _uniqueGuid)
         {
             //Look up the action name of the inputAction in the generated C#-Script, not the Scriptable Object.
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
@@ -423,7 +423,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             rebind.Start(); //Real Start of the rebind process.
         }
 
-        private static bool DuplicateBindingCheck(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI _statusText, string _controlScheme, bool _excludeMouse, bool _allCompositeParts = false, Guid _uniqueGuid = default)
+        private static bool DuplicateBindingCheck(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI _statusText, string _controlScheme, bool _excludeMouse/*, bool _allCompositeParts = false, Guid _uniqueGuid = default*/)
         {
             InputBinding newBinding = _actionToRebind.bindings[_bindingIndex];
 
@@ -502,7 +502,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         /// <param name="_actionName"></param>
         /// <param name="_bindingIndex"></param>
-        public static void ResetRebinding(string _actionName, int _bindingIndex, string _controlScheme, Guid _uniqueGuid)
+        internal static void ResetRebinding(string _actionName, int _bindingIndex, string _controlScheme, Guid _uniqueGuid)
         {
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
 
@@ -556,7 +556,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// <param name="_actionName"></param>
         /// <param name="_bindingIndex"></param>
         /// <returns></returns>
-        public static string GetBindingName(string _actionName, int _bindingIndex)
+        internal static string GetBindingName(string _actionName, int _bindingIndex)
         {
             if (m_playerInputActions == null)
                 m_playerInputActions = new PlayerInputActions();
@@ -605,10 +605,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                             }
                         }
                     }
-                }
-                else
-                {
-                    Debug.Log($"Guid from the yet unsupported Composite: {_uniqueGuid} with effectivePath: {_inputAction.bindings[i].effectivePath}");
                 }
                 #endregion
             }
