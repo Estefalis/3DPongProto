@@ -13,10 +13,7 @@ namespace ThreeDeePongProto.Offline.UI
     public class MenuOrganisation : MonoBehaviour
     {
         private PlayerInputActions m_menuActions;
-
         [SerializeField] private EventSystem m_eventSystem;
-        [SerializeField] private GameObject m_currentSelectedGO;
-        private readonly string m_startMenuScene = "StartMenuScene";
 
         #region Select First Elements by using the EventSystem.
         // The stack of active (Transform-)elements for menu-navigation needs to have a Start-Transform to prevent an error. It gets set active in 'Awake()'.
@@ -30,6 +27,8 @@ namespace ThreeDeePongProto.Offline.UI
         [SerializeField] private GameObject[] m_valueGameObject;
         private Dictionary<Transform, GameObject> m_selectedElement = new Dictionary<Transform, GameObject>();
         #endregion
+
+        private readonly string m_startMenuScene = "StartMenuScene";
 
         #region Alpha-Buttons and SubPages.
         //I could not leave this undone. Only the clicked button shall be dominant, the others should visibly stay in the back.
@@ -121,10 +120,10 @@ namespace ThreeDeePongProto.Offline.UI
 
         private void Update()
         {
-            m_currentSelectedGO = EventSystem.current.currentSelectedGameObject;
-
-            if (m_currentSelectedGO == null && InputManager.m_playerInputActions.UI.enabled)
+            if (EventSystem.current.currentSelectedGameObject == null && InputManager.m_playerInputActions.UI.enabled)
+            {
                 SetSelectedElement(m_lastSelectedTransform);
+            }
         }
 
         private void EnableMenuNavigation(InputAction.CallbackContext _callbackContext)
