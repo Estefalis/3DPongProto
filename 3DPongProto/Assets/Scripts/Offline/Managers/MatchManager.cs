@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using ThreeDeePongProto.Offline.Player.Inputs;
-using ThreeDeePongProto.Offline.UI;
+using ThreeDeePongProto.Offline.UI.Menu;
 using UnityEngine;
 
 public enum EGameModi

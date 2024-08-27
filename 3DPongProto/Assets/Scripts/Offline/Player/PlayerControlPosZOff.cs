@@ -1,6 +1,6 @@
 using System.Collections;
 using ThreeDeePongProto.Offline.AudioManagement;
-using ThreeDeePongProto.Offline.UI;
+using ThreeDeePongProto.Offline.UI.Menu;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
