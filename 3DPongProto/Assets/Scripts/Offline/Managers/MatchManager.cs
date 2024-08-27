@@ -59,7 +59,8 @@ namespace ThreeDeePongProto.Offline.Managers
         private string m_scoredPlayer;
 
         private bool m_matchHasStarted = false;
-        private float m_matchStartTime, m_ballYPos;        
+        private float m_matchStartTime, m_ballYPos;
+        private Vector3 m_ballPopPos;
 
         #region Properties-Access
         public float DefaultBackLineDistance { get => m_minimalBackLineDistance; }
@@ -105,10 +106,10 @@ namespace ThreeDeePongProto.Offline.Managers
         {
             PlayerControlMain.InGameMenuOpens += PauseAndTimeScale;
 
-            MenuNavigation.CloseInGameMenu += ResetPauseAndTimescale;
-            MenuNavigation.OnLoadMainScene += SceneRestartActions;
-            MenuNavigation.RestartGameLevel += ReSetMatch;
-            MenuNavigation.EndInfiniteMatch += LetsEndInfiniteMatch;
+            InGameMenuActions.CloseInGameMenu += ResetPauseAndTimescale;
+            InGameMenuActions.OnLoadMainScene += SceneRestartActions;
+            InGameMenuActions.RestartGameLevel += ReSetMatch;
+            InGameMenuActions.EndInfiniteMatch += LetsEndInfiniteMatch;
 
             Ball.RoundCountStarts += MatchStartValues;
             Ball.HitGoalOne += UpdateTPTwoPoints;
@@ -147,10 +148,10 @@ namespace ThreeDeePongProto.Offline.Managers
         {
             PlayerControlMain.InGameMenuOpens -= PauseAndTimeScale;
 
-            MenuNavigation.CloseInGameMenu -= ResetPauseAndTimescale;
-            MenuNavigation.OnLoadMainScene -= SceneRestartActions;
-            MenuNavigation.RestartGameLevel -= ReSetMatch;
-            MenuNavigation.EndInfiniteMatch -= LetsEndInfiniteMatch;
+            InGameMenuActions.CloseInGameMenu -= ResetPauseAndTimescale;
+            InGameMenuActions.OnLoadMainScene -= SceneRestartActions;
+            InGameMenuActions.RestartGameLevel -= ReSetMatch;
+            InGameMenuActions.EndInfiniteMatch -= LetsEndInfiniteMatch;
 
             Ball.RoundCountStarts -= MatchStartValues;
             Ball.HitGoalOne -= UpdateTPTwoPoints;
@@ -184,6 +185,7 @@ namespace ThreeDeePongProto.Offline.Managers
             }
 
             m_ballYPos = m_ballPrefab.GetComponent<SphereCollider>().radius;
+            m_ballPopPos = new Vector3(0.0f, m_ballYPos, 0.0f);
         }
 
         private void LoadMatchSettings()
@@ -329,7 +331,7 @@ namespace ThreeDeePongProto.Offline.Managers
             m_playGround.transform.localScale = new Vector3(m_basicFieldValues.SetGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_basicFieldValues.SetGroundLength * m_playGroundLengthScale);
 
             Instantiate(m_playGround, Vector3.zero, Quaternion.Euler(0, 0, 0), m_prefabParent);
-            Instantiate(m_ballPrefab, new Vector3(0.0f, m_ballYPos, 0.0f), Quaternion.Euler(0, 0, 0), m_prefabParent);
+            Instantiate(m_ballPrefab, m_ballPopPos, Quaternion.Euler(0, 0, 0), m_prefabParent);
         }
 
         private void ResetRoundValues()

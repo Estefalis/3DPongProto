@@ -225,8 +225,8 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         {
             //Zooming limited to the inside of the gameWindow.
             //x/yMin == (Rect.width - Rect.width) or (Rect.height - Rect.height). x/yMax == Rect.width or Rect.height.
-            if (!(m_mousePosition.x < CameraManager.RuntimeFullsizeRect.xMin) && !(m_mousePosition.x > CameraManager.RuntimeFullsizeRect.width) &&
-                !(m_mousePosition.y < CameraManager.RuntimeFullsizeRect.yMin) && !(m_mousePosition.y > CameraManager.RuntimeFullsizeRect.height))
+            if (!(m_mousePosition.x < CameraManager.RuntimeFullsizeRect.xMin) && !(m_mousePosition.x > CameraManager.RuntimeFullsizeRect.xMax) &&
+                !(m_mousePosition.y < CameraManager.RuntimeFullsizeRect.yMin) && !(m_mousePosition.y > CameraManager.RuntimeFullsizeRect.yMax))
             {
                 float zoomValue = -_callbackContext.ReadValue<Vector2>().y * m_zoomSpeed;
 #if UNITY_EDITOR

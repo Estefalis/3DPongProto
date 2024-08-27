@@ -15271,8 +15271,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2093391957}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Shared.UI.ConnectionManager,
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
           Assembly-CSharp
         m_MethodName: QuitGame
         m_Mode: 1
@@ -25310,7 +25310,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_menuOrganisation: {fileID: 2136304140}
-  m_firstElement: {fileID: 433312016}
   m_keyTransform:
   - {fileID: 433312016}
   - {fileID: 703546890}
@@ -25341,14 +25340,6 @@ MonoBehaviour:
   - {fileID: 1480635289120328398}
   - {fileID: 1108786669}
   - {fileID: 1480635289435456337}
-  m_hiddenFinishButton: {fileID: 0}
-  m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
-  m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
-  m_playerIDData:
-  - {fileID: 11400000, guid: 533fe6eee149a3143aab50fbfb5541a8, type: 2}
-  - {fileID: 11400000, guid: 21b573c09ff18ba4893ceecaaf9c5756, type: 2}
-  - {fileID: 11400000, guid: 862bfec20d10c5049a46b7b03f906cd9, type: 2}
-  - {fileID: 11400000, guid: 0a4b44b7dfa182243ab981955eda3e67, type: 2}
 --- !u!114 &2136304137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25397,12 +25388,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2136304134}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1648af51fc010fe40b3503ad56c50c30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_menuOrganisation: {fileID: 2136304140}
+  m_hiddenFinishButton: {fileID: 0}
 --- !u!114 &2136304140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25419,6 +25411,14 @@ MonoBehaviour:
   m_menuNavigation: {fileID: 2136304136}
   m_inGameMenuActions: {fileID: 2136304139}
   m_autoScrollView: {fileID: 2136304138}
+  m_firstElement: {fileID: 433312016}
+  m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
+  m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
+  m_playerIDData:
+  - {fileID: 11400000, guid: 533fe6eee149a3143aab50fbfb5541a8, type: 2}
+  - {fileID: 11400000, guid: 21b573c09ff18ba4893ceecaaf9c5756, type: 2}
+  - {fileID: 11400000, guid: 862bfec20d10c5049a46b7b03f906cd9, type: 2}
+  - {fileID: 11400000, guid: 0a4b44b7dfa182243ab981955eda3e67, type: 2}
 --- !u!1 &2146547063
 GameObject:
   m_ObjectHideFlags: 0

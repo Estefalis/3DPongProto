@@ -90,7 +90,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private void Update()
         {
             GetMousePosition();
-
             SelectCameraToZoom();
         }
 
