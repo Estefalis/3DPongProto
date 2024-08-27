@@ -97,7 +97,7 @@ namespace ThreeDeePongProto.Offline.Settings
                     ReSetDefault();
                 }
             }
-            //else LoadControlSettingsFromScriptableSave(); move to 'MenuOrganisation.cs'.!
+            //else LoadControlSettingsFromScriptableSave(); move to 'MenuNavigation.cs'.!
         }
 
         private void OnEnable()

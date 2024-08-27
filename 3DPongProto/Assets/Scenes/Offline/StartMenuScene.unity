@@ -25270,7 +25270,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2136304135}
+  - component: {fileID: 2136304140}
   - component: {fileID: 2136304136}
+  - component: {fileID: 2136304139}
+  - component: {fileID: 2136304138}
   - component: {fileID: 2136304137}
   m_Layer: 0
   m_Name: MenuManager
@@ -25306,7 +25309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8da2c558ed6364144990e6fbc7872677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_eventSystem: {fileID: 1805932207}
+  m_menuOrganisation: {fileID: 2136304140}
   m_firstElement: {fileID: 433312016}
   m_keyTransform:
   - {fileID: 433312016}
@@ -25374,6 +25377,48 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e825f2f6f761104468ca0e58d4ca9a6a, type: 2}
   - {fileID: 11400000, guid: 14003bf4faa01cd4ea4a72bb9ae959d9, type: 2}
   - {fileID: 11400000, guid: 60351461f53e287428ae533872def51a, type: 2}
+--- !u!114 &2136304138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2136304134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac77e38b8c1c2b4abfb645a557dc856, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_menuOrganisation: {fileID: 2136304140}
+--- !u!114 &2136304139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2136304134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1648af51fc010fe40b3503ad56c50c30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_menuOrganisation: {fileID: 2136304140}
+--- !u!114 &2136304140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2136304134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 293157a3d26188f44981d8eda4fd97d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_eventSystem: {fileID: 1805932207}
+  m_menuNavigation: {fileID: 2136304136}
+  m_inGameMenuActions: {fileID: 2136304139}
+  m_autoScrollView: {fileID: 2136304138}
 --- !u!1 &2146547063
 GameObject:
   m_ObjectHideFlags: 0

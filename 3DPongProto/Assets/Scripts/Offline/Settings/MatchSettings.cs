@@ -106,7 +106,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
             if (m_matchUIStates == null || m_matchValues == null)
                 ReSetDefault();
-            //else LoadMatchSettings(); moved to 'MenuOrganisation.cs'.
+            //else LoadMatchSettings(); moved to 'MenuNavigation.cs'.
         }
 
         private void OnEnable()

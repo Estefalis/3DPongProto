@@ -105,10 +105,10 @@ namespace ThreeDeePongProto.Offline.Managers
         {
             PlayerControlMain.InGameMenuOpens += PauseAndTimeScale;
 
-            MenuOrganisation.CloseInGameMenu += ResetPauseAndTimescale;
-            MenuOrganisation.OnLoadMainScene += SceneRestartActions;
-            MenuOrganisation.RestartGameLevel += ReSetMatch;
-            MenuOrganisation.EndInfiniteMatch += LetsEndInfiniteMatch;
+            MenuNavigation.CloseInGameMenu += ResetPauseAndTimescale;
+            MenuNavigation.OnLoadMainScene += SceneRestartActions;
+            MenuNavigation.RestartGameLevel += ReSetMatch;
+            MenuNavigation.EndInfiniteMatch += LetsEndInfiniteMatch;
 
             Ball.RoundCountStarts += MatchStartValues;
             Ball.HitGoalOne += UpdateTPTwoPoints;
@@ -147,10 +147,10 @@ namespace ThreeDeePongProto.Offline.Managers
         {
             PlayerControlMain.InGameMenuOpens -= PauseAndTimeScale;
 
-            MenuOrganisation.CloseInGameMenu -= ResetPauseAndTimescale;
-            MenuOrganisation.OnLoadMainScene -= SceneRestartActions;
-            MenuOrganisation.RestartGameLevel -= ReSetMatch;
-            MenuOrganisation.EndInfiniteMatch -= LetsEndInfiniteMatch;
+            MenuNavigation.CloseInGameMenu -= ResetPauseAndTimescale;
+            MenuNavigation.OnLoadMainScene -= SceneRestartActions;
+            MenuNavigation.RestartGameLevel -= ReSetMatch;
+            MenuNavigation.EndInfiniteMatch -= LetsEndInfiniteMatch;
 
             Ball.RoundCountStarts -= MatchStartValues;
             Ball.HitGoalOne -= UpdateTPTwoPoints;

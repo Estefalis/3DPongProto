@@ -64,7 +64,7 @@ namespace ThreeDeePongProto.Offline.Settings
 #endif
                 ReSetDefault();
             }
-            //else LoadGraphicSettings(); moved to 'MenuOrganisation.cs'.       
+            //else LoadGraphicSettings(); moved to 'MenuNavigation.cs'.       
         }
 
         private void Start()

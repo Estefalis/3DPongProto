@@ -7,12 +7,12 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace ThreeDeePongProto.Offline.UI
+namespace ThreeDeePongProto.Offline.UI.Menu
 {
-    public class MenuOrganisation : MonoBehaviour
+    public class MenuNavigation : MonoBehaviour
     {
         private PlayerInputActions m_menuActions;
-        [SerializeField] private EventSystem m_eventSystem;
+        [SerializeField] internal MenuOrganisation m_menuOrganisation;
 
         #region Select First Elements by using the EventSystem.
         // The stack of active (Transform-)elements for menu-navigation needs to have a Start-Transform to prevent an error. It gets set active in 'Awake()'.
@@ -201,7 +201,7 @@ namespace ThreeDeePongProto.Offline.UI
         {
             m_lastSelectedTransform = _activeTransform; //Update reselects first selected Button once, if none is selected anymore.
             GameObject selectElement = m_selectedElement[_activeTransform];
-            m_eventSystem.SetSelectedGameObject(selectElement);
+            m_menuOrganisation.m_eventSystem.SetSelectedGameObject(selectElement);
         }
 
         protected void SetFirstElement(Transform _firstElement)

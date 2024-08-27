@@ -7601,7 +7601,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1008670890}
+  - component: {fileID: 1008670894}
   - component: {fileID: 1008670891}
+  - component: {fileID: 1008670893}
+  - component: {fileID: 1008670892}
   m_Layer: 0
   m_Name: PauseMenuManager
   m_TagString: Untagged
@@ -7636,7 +7639,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8da2c558ed6364144990e6fbc7872677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_eventSystem: {fileID: 1185994179}
+  m_menuOrganisation: {fileID: 1008670894}
   m_firstElement: {fileID: 1969194567}
   m_keyTransform:
   - {fileID: 1969194567}
@@ -7664,6 +7667,48 @@ MonoBehaviour:
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
   m_playerIDData: []
+--- !u!114 &1008670892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008670889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac77e38b8c1c2b4abfb645a557dc856, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_menuOrganisation: {fileID: 1008670894}
+--- !u!114 &1008670893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008670889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1648af51fc010fe40b3503ad56c50c30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_menuOrganisation: {fileID: 1008670894}
+--- !u!114 &1008670894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008670889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 293157a3d26188f44981d8eda4fd97d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_eventSystem: {fileID: 1185994179}
+  m_menuNavigation: {fileID: 1008670891}
+  m_inGameMenuActions: {fileID: 1008670893}
+  m_autoScrollView: {fileID: 1008670892}
 --- !u!1 &1016119921
 GameObject:
   m_ObjectHideFlags: 0

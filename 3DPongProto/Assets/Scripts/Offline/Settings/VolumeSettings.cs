@@ -87,7 +87,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
             if (m_volumeUIStates == null || m_volumeUIValues == null)
                 ReSetDefault();
-            //else LoadVolumeSettings(); moved to 'MenuOrganisation.cs'.
+            //else LoadVolumeSettings(); moved to 'MenuNavigation.cs'.
         }
 
         private void OnEnable()
