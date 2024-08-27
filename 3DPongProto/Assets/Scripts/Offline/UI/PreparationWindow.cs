@@ -1,4 +1,3 @@
-using Sirenix.Utilities;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -14,7 +13,7 @@ public enum EPlayerAmount
     Four = 4
 }
 
-namespace ThreeDeePongProto.Offline.Settings
+namespace ThreeDeePongProto.Offline.UI
 {
     public class PreparationWindow : MonoBehaviour
     {
@@ -36,7 +35,7 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private Button m_startButton;
         [SerializeField] private Button m_joinButton;
 
-        #region Scriptable-References
+        #region Scriptable-Objects
         [Header("Scriptable Objects")]
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
@@ -215,7 +214,8 @@ namespace ThreeDeePongProto.Offline.Settings
         {
             for (int i = 0; i < (int)_ePlayerAmount; i++)
             {
-                if (m_inputFields[i].text.IsNullOrWhitespace())
+                //if (m_inputFields[i].text.IsNullOrWhitespace())   //Sirenix.Utilities.
+                if (string.IsNullOrWhiteSpace(m_inputFields[i].text))
                 {
                     //TODO: Set a PopUp here!!!                    
                     m_startButton.interactable = false; //StartButton
@@ -287,7 +287,8 @@ namespace ThreeDeePongProto.Offline.Settings
         {
             m_matchValues.PlayerData[0].PlayerId = 0;
 
-            if (m_inputFields[0].text.IsNullOrWhitespace())
+            //if (m_inputFields[0].text.IsNullOrWhitespace())   //Sirenix.Utilities.
+            if (string.IsNullOrWhiteSpace(m_inputFields[0].text))
             {
                 Debug.Log($"PlayerName for Player {m_playerIDData[0].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for Player 1-4.
                 ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
@@ -302,7 +303,8 @@ namespace ThreeDeePongProto.Offline.Settings
         {
             m_matchValues.PlayerData[1].PlayerId = 1;
 
-            if (m_inputFields[1].text.IsNullOrWhitespace())
+            //if (m_inputFields[1].text.IsNullOrWhitespace())   //Sirenix.Utilities.
+            if (string.IsNullOrWhiteSpace(m_inputFields[1].text))
             {
                 Debug.Log($"PlayerName for Player {m_playerIDData[1].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for Player 1-4.
                 ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
@@ -317,7 +319,8 @@ namespace ThreeDeePongProto.Offline.Settings
         {
             m_matchValues.PlayerData[2].PlayerId = 2;
 
-            if (m_inputFields[2].text.IsNullOrWhitespace())
+            //if (m_inputFields[2].text.IsNullOrWhitespace())   //Sirenix.Utilities.
+            if (string.IsNullOrWhiteSpace(m_inputFields[2].text))
             {
                 Debug.Log($"PlayerName for Player {m_playerIDData[2].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for Player 1-4.
                 ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
@@ -332,7 +335,8 @@ namespace ThreeDeePongProto.Offline.Settings
         {
             m_matchValues.PlayerData[3].PlayerId = 3;
 
-            if (m_inputFields[3].text.IsNullOrWhitespace())
+            //if (m_inputFields[3].text.IsNullOrWhitespace())   //Sirenix.Utilities.
+            if (string.IsNullOrWhiteSpace(m_inputFields[3].text))
             {
                 Debug.Log($"PlayerName for Player {m_playerIDData[3].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for Player 1-4.
                 ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
