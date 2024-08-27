@@ -61,8 +61,8 @@ namespace ThreeDeePongProto.Offline.Settings
 
         #region Scriptable-References
         [Header("Scriptable Objects")]
-        [SerializeField] private ControlUIStates[] m_controlUIStatesEP; //Old: ControlUIStates m_controlUIStates;
-        [SerializeField] private ControlUIValues[] m_controlUIValuesEP; //Old: ControlUIValues m_controlUIValues;
+        [SerializeField] private ControlUIStates[] m_controlUIStatesEP;
+        [SerializeField] private ControlUIValues[] m_controlUIValuesEP;
         #endregion
 
         #region Serialization

@@ -18,7 +18,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         [SerializeField] private bool m_loadRebindDicts = true;
 
         #region Change Action Maps
-        //ActionEvent to switch between ActionMaps within the new InputActionAsset.
+        //ActionEvent to switch between ActionMaps within the InputActionAsset.
         public static event Action<InputActionMap> m_changeActiveActionMap;
 
         private int m_currentSceneIndex;

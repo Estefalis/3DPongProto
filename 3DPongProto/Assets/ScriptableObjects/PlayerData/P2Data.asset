@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 23ae38de6bc0d3f4aaa8718fe9de0dee, type: 3}
-  m_Name: PlayerFourData
+  m_Name: P2Data
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 4887262735936627534, guid: 53549484812ff734d80002c639f02a41, type: 3}
-  PlayerName: Mycandra
-  PlayerId: 3
+  Prefab: {fileID: 2849503855690960358, guid: 314f7651877d7c649b85b4b9396b3140, type: 3}
+  PlayerName: Nyclia
+  PlayerId: 1
   Avatar: {fileID: 0}
-  PlayerOnFrontline: 1
+  PlayerOnFrontline: 0
