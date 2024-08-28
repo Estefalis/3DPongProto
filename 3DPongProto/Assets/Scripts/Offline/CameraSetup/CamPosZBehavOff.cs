@@ -29,6 +29,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private float m_maxSideMovement, m_setGroundWidth;
 
         [Header("Camera-Zoom")]
+        [SerializeField, Min(0.01f)] private float m_minAbsLimit = 0.05f;
         [SerializeField, Min(0.001f)] private float m_zoomSpeed;
         [SerializeField] private float m_zoomStep;
         [SerializeField] private float m_zoomDampening;
@@ -225,14 +226,14 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         {
             //Zooming limited to the inside of the gameWindow.
             //x/yMin == (Rect.width - Rect.width) or (Rect.height - Rect.height). x/yMax == Rect.width or Rect.height.
-            if (!(m_mousePosition.x < CameraManager.RuntimeFullsizeRect.xMin) && !(m_mousePosition.x > CameraManager.RuntimeFullsizeRect.xMax) &&
-                !(m_mousePosition.y < CameraManager.RuntimeFullsizeRect.yMin) && !(m_mousePosition.y > CameraManager.RuntimeFullsizeRect.yMax))
+            if (m_mousePosition.x > CameraManager.RuntimeFullsizeRect.xMin && m_mousePosition.x < CameraManager.RuntimeFullsizeRect.xMax &&
+                m_mousePosition.y > CameraManager.RuntimeFullsizeRect.yMin && m_mousePosition.y < CameraManager.RuntimeFullsizeRect.yMax)
             {
                 float zoomValue = -_callbackContext.ReadValue<Vector2>().y * m_zoomSpeed;
 #if UNITY_EDITOR
                 //Debug.Log(zoomValue);
 #endif
-                if (Mathf.Abs(zoomValue) > 0.1f)
+                if (Mathf.Abs(zoomValue) > m_minAbsLimit)
                 {
                     //Limits the zoom to the window of each player.
                     if (m_playerWindowId == m_playerId)

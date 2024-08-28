@@ -301,7 +301,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""id"": ""b5b9eb3f-34b9-4009-89e5-ef5ccc92e964"",
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
-                    ""processors"": ""StickDeadzone"",
+                    ""processors"": ""StickDeadzone,ScaleVector2(y=50)"",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Zoom"",
                     ""isComposite"": false,
