@@ -59,17 +59,17 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void EnableMenuNavigation(InputAction.CallbackContext _callbackContext)
         {
-            if (!m_menuOrganisation.m_firstElement.gameObject.activeInHierarchy)
+            if (!m_menuOrganisation.m_menuNavigation.m_firstElement.gameObject.activeInHierarchy)
             {
-                m_menuOrganisation.m_firstElement.gameObject.SetActive(true);
-                m_menuOrganisation.m_menuNavigation.SetEventSystemGameObject(m_menuOrganisation.m_firstElement);
+                m_menuOrganisation.m_menuNavigation.m_firstElement.gameObject.SetActive(true);
+                m_menuOrganisation.m_menuNavigation.SetNavigationGameObject(m_menuOrganisation.m_menuNavigation.m_firstElement);
             }
         }
 
         public void ResumeGame()
         {
             CloseInGameMenu?.Invoke();
-            m_menuOrganisation.m_firstElement.gameObject.SetActive(false);
+            m_menuOrganisation.m_menuNavigation.m_firstElement.gameObject.SetActive(false);
             InputManager.ToggleActionMaps(InputManager.m_playerInputActions.PlayerActions);
         }
 

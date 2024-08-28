@@ -11,11 +11,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu
     {
         [SerializeField] internal MenuOrganisation m_menuOrganisation;
 
-        #region Select First Elements by using the EventSystem.        
+        #region Select First Elements by using the EventSystem.
         [Header("Select First Elements")]
-        //[SerializeField] internal Transform m_firstElement;   //moved to MenuOrganisation.cs!
+        [SerializeField] internal Transform m_firstElement;
+        private Transform m_lastSelectedTransform;
         private Stack<Transform> m_activeElement = new();
-        //private Transform m_lastSelectedTransform;            //moved to MenuOrganisation.cs!
 
         //Key-/Value-Pair component-arrays to set the selected GameObject for menu navigation with a dictionary.
         [SerializeField] internal Transform[] m_keyTransform;
@@ -34,9 +34,20 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] private Transform[] m_subPageTransforms;
         #endregion
 
+        //internal GameObject LastSelectedGameObject { get => m_lastSelectedGameObject; }
+        private GameObject m_lastSelectedGameObject;
+        public static event Action<GameObject> ALastSelectedGameObject;
+
         private void Awake()
         {
-            SetFirstStackElement(m_menuOrganisation.m_firstElement);
+            SetFirstStackElement(m_firstElement);
+            ALastSelectedGameObject += UpdateCurrentGameObject;
+        }
+
+        private void OnDisable()
+        {
+            m_lastSelectedTransform = null;
+            ALastSelectedGameObject -= UpdateCurrentGameObject;
         }
 
         private void Start()
@@ -46,9 +57,16 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void Update()
         {
-            if (EventSystem.current.currentSelectedGameObject == null && InputManager.m_playerInputActions.UI.enabled)
+            if (InputManager.m_playerInputActions.UI.enabled)
             {
-                SetEventSystemGameObject(m_menuOrganisation.m_lastSelectedTransform);
+                if (m_menuOrganisation.m_eventSystem.currentSelectedGameObject == null)
+                {
+                    m_menuOrganisation.m_eventSystem.SetSelectedGameObject(m_lastSelectedGameObject);
+                }
+                else if (m_menuOrganisation.m_eventSystem.currentSelectedGameObject != m_lastSelectedGameObject)
+                {
+                    ALastSelectedGameObject?.Invoke(m_menuOrganisation.m_eventSystem.currentSelectedGameObject);
+                }
             }
         }
 
@@ -57,10 +75,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             for (int i = 0; i < m_keyTransform.Length; i++)
                 m_selectedElement.Add(m_keyTransform[i], m_valueGameObject[i]);
 
-            SetEventSystemGameObject(m_menuOrganisation.m_firstElement);
+            SetNavigationGameObject(m_firstElement);
         }
 
         #region Methods to (de-)activate Menu-Transforms with a stack and to set the active Element in each UI-Window.
+        /// <summary>
+        /// 'm_activeElement' Stack requires a set element to start with, to prevent a null error.
+        /// </summary>
+        /// <param name="_firstElement"></param>
+        protected void SetFirstStackElement(Transform _firstElement)
+        {
+            m_activeElement.Push(_firstElement);
+        }
+
         public void NextElement(Transform _next)
         {
             Transform currentElement = m_activeElement.Peek();
@@ -69,7 +96,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_activeElement.Push(_next);
             _next.gameObject.SetActive(true);
 
-            SetEventSystemGameObject(_next);
+            SetNavigationGameObject(_next);
         }
 
         public void CloseToPreviousElement()
@@ -80,29 +107,35 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             Transform previousElement = m_activeElement.Peek();
             previousElement.gameObject.SetActive(true);
 
-            SetEventSystemGameObject(previousElement);
+            SetNavigationGameObject(previousElement);
         }
 
         /// <summary>
-        /// The Transform gets used as the 'Key' to find the correct 'Value' in the dictionary.
+        /// Sets the lastSelected Transform and GameObject from the dictionary required for navigation in each new enabled Transform.
         /// </summary>
         /// <param name="_activeTransform"></param>
-        internal void SetEventSystemGameObject(Transform _activeTransform)
+        internal void SetNavigationGameObject(Transform _activeTransform)
         {
-            m_menuOrganisation.m_lastSelectedTransform = _activeTransform; //Update reselects first selected Button once, if none is selected.
-            GameObject selectElement = m_selectedElement[_activeTransform];
-            m_menuOrganisation.m_eventSystem.SetSelectedGameObject(selectElement);
-        }
-
-        /// <summary>
-        /// 'm_activeElement' Stack requires a set element to start with, to prevent a null error.
-        /// </summary>
-        /// <param name="_firstElement"></param>
-        protected void SetFirstStackElement(Transform _firstElement)
-        {
-            m_activeElement.Push(_firstElement);
+            switch (m_lastSelectedTransform == _activeTransform)
+            {
+                case true:
+                    return;
+                case false:
+                {
+                    m_lastSelectedTransform = _activeTransform;
+                    GameObject selectElement = m_selectedElement[_activeTransform];
+                    m_menuOrganisation.m_eventSystem.SetSelectedGameObject(selectElement);
+                    ALastSelectedGameObject?.Invoke(selectElement);
+                    break;
+                }
+            }
         }
         #endregion
+
+        private void UpdateCurrentGameObject(GameObject _gameObject)
+        {
+            m_lastSelectedGameObject = _gameObject;
+        }
 
         /// <summary>
         /// Each Button pressed sets the visibly activated/deactivated Button and enables/disables the corresponding Settings-SubPage.

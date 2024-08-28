@@ -19,15 +19,11 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private readonly Dictionary<Camera, Rect> m_cameraRectDict = new();
         #endregion
 
-        #region DeRegister Cameras
-        #region DeRegister Queues
+        #region DeRegister Cameras with Queues and Actions
         private static Queue<Camera> m_QRegisterCamera;
         private static Queue<Camera> m_QRemoveCamera;
-        #endregion
-        #region DeRegister Actions
         private static event Action<Queue<Camera>, int> m_ARegisterCamera;
         private static event Action<Queue<Camera>, int> m_ARemoveCamera;
-        #endregion
         #endregion
 
         private const float m_FullWidthHor = 1.0f;

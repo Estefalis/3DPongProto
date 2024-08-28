@@ -265,28 +265,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": """",
-                    ""id"": ""d11dbea8-bbbf-455a-8403-b9827f08aa22"",
-                    ""path"": ""<DualShockGamepad>/start"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""ToggleGameMenu"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""a6c8c838-05db-4fa5-a092-5e3e97f2c981"",
-                    ""path"": ""<XInputController>/start"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""ToggleGameMenu"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""a96e739d-eeac-4337-9c56-392de5c04ef3"",
                     ""path"": ""<Mouse>/scroll"",
                     ""interactions"": """",
@@ -1033,7 +1011,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""name"": ""up"",
                     ""id"": ""be4b4b0e-56d4-46c3-b497-25a2cf52b006"",
-                    ""path"": ""<Gamepad>/rightStick/up"",
+                    ""path"": ""<Gamepad>/dpad/up"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
@@ -1055,7 +1033,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""name"": ""down"",
                     ""id"": ""b65dd422-63af-42c7-8e37-22d822593bd0"",
-                    ""path"": ""<Gamepad>/rightStick/down"",
+                    ""path"": ""<Gamepad>/dpad/down"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
@@ -1077,7 +1055,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""name"": ""left"",
                     ""id"": ""a6e0cb26-18d1-4b89-8f18-db1d338a512d"",
-                    ""path"": ""<Gamepad>/rightStick/left"",
+                    ""path"": ""<Gamepad>/dpad/left"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
@@ -1099,24 +1077,13 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""name"": ""right"",
                     ""id"": ""ba417a72-3485-4f3a-9dff-e55ca6f9d13e"",
-                    ""path"": ""<Gamepad>/rightStick/right"",
+                    ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4739d800-fec9-426a-b8b0-961fef47ed7a"",
-                    ""path"": ""<Gamepad>/dpad"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""Joystick"",

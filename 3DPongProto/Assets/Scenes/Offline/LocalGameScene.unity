@@ -5297,6 +5297,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &216069554 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7993449986471244577, guid: 706ee50c909a6454e91a530a8c3361e8,
+    type: 3}
+  m_PrefabInstance: {fileID: 216069550}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &216069555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 216069554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac77e38b8c1c2b4abfb645a557dc856, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_setAutoScrollOption: 1
+  m_scrollSpeed: 50
+  m_targetScrollRect: {fileID: 0}
+  m_scrollWindow: {fileID: 0}
 --- !u!1 &272630528
 GameObject:
   m_ObjectHideFlags: 0
@@ -7604,7 +7626,6 @@ GameObject:
   - component: {fileID: 1008670894}
   - component: {fileID: 1008670891}
   - component: {fileID: 1008670893}
-  - component: {fileID: 1008670892}
   m_Layer: 0
   m_Name: PauseMenuManager
   m_TagString: Untagged
@@ -7640,6 +7661,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_menuOrganisation: {fileID: 1008670894}
+  m_firstElement: {fileID: 1969194567}
   m_keyTransform:
   - {fileID: 1969194567}
   - {fileID: 4322350903333636756}
@@ -7662,19 +7684,6 @@ MonoBehaviour:
   - {fileID: 216069551}
   - {fileID: 913481587}
   - {fileID: 4322350903372898449}
---- !u!114 &1008670892
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1008670889}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac77e38b8c1c2b4abfb645a557dc856, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_menuOrganisation: {fileID: 1008670894}
 --- !u!114 &1008670893
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7704,8 +7713,6 @@ MonoBehaviour:
   m_eventSystem: {fileID: 1185994179}
   m_menuNavigation: {fileID: 1008670891}
   m_inGameMenuActions: {fileID: 1008670893}
-  m_autoScrollView: {fileID: 1008670892}
-  m_firstElement: {fileID: 1969194567}
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
   m_playerIDData: []

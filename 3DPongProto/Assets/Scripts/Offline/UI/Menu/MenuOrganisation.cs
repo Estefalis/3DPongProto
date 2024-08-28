@@ -9,11 +9,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [Header("Internal Connections")]
         [SerializeField] internal MenuNavigation m_menuNavigation;
         [SerializeField] internal InGameMenuActions m_inGameMenuActions;
-        [SerializeField] internal AutoScrollView m_autoScrollView;
-
-        [Header("Select First Elements")]
-        [SerializeField] internal Transform m_firstElement;
-        internal Transform m_lastSelectedTransform;
 
         #region Scriptable Object
         [Header("Scriptable Objects")]
@@ -21,6 +16,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] internal MatchValues m_matchValues;
         [SerializeField] internal PlayerIDData[] m_playerIDData;
         #endregion
+
+        private void Awake()
+        {
+            if (m_eventSystem == null)
+                m_eventSystem = EventSystem.current;
+        }
 
         private void Start()
         {
