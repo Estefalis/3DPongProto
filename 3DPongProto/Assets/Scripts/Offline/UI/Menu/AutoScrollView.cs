@@ -114,34 +114,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 }
             }
 
-            if (m_layoutGroup == null)  //Only gets called if the LayoutGroup is None in the inspector. Misses setup at the moment.
-                AddMissingLayoutGroup();
-        }
-
-        private void AddMissingLayoutGroup()
-        {
-#if UNITY_EDITOR
-            Debug.Log("If you see this, don't forget to set the LayoutGroup values, or it looks ugly. (As you see above. <(x.x)>)");
-#endif
-            //May add variable values, if the Layout is missing.
-            switch (m_setAutoScrollOption)
-            {
-                case AutoScrollOptions.Both:
-                {
-                    m_layoutGroup = m_scrollRectContent.AddComponent<GridLayoutGroup>();
-                    break;
-                }
-                case AutoScrollOptions.Vertical:
-                {
-                    m_layoutGroup = m_scrollRectContent.AddComponent<VerticalLayoutGroup>();
-                    break;
-                }
-                case AutoScrollOptions.Horizontal:
-                {
-                    m_layoutGroup = m_scrollRectContent.AddComponent<HorizontalLayoutGroup>();
-                    break;
-                }
-            }
+            //if '(m_layoutGroup == null)' and you want to add one (WITH detailed memberValues to set it's dimensions):
+            //'AddMissingLayoutGroup()' - 'switch (m_setAutoScrollOption)' - 'case AutoScrollOptions.Both/.Vertical/.Horizontal' -
+            //'m_layoutGroup = m_scrollRectContent.AddComponent<GridLayoutGroup/VerticalLayoutGroup/HorizontalLayoutGroup>()' and
+            //'default: break;' - for savety. (It would currently go too far.)
         }
 
         /// <summary>
@@ -262,7 +238,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 #endif
         }
 
-        private void AutoScrollToNextGameObject()
+        private void AutoScrollToNextGameObject()   //TODO:
         {
             if (!m_canAutoScroll)
                 return;
