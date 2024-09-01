@@ -256,7 +256,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region KeyRebinding
-        internal static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, string _controlScheme, bool _excludeMouse, Guid _uniqueGuid)
+        internal static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, string _controlScheme, bool _excludeMouse)
         {
             //Look up the action name of the inputAction in the generated C#-Script, not the Scriptable Object.
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
@@ -279,12 +279,12 @@ namespace ThreeDeePongProto.Shared.InputActions
                 if (firstChildIndex < inputAction.bindings.Count && inputAction.bindings[firstChildIndex].isPartOfComposite)
                 {
                     //true == _allCompositeParts: true.
-                    ExecuteKeyRebind(inputAction, firstChildIndex, _statusText, _controlScheme, _excludeMouse, true, _uniqueGuid);
+                    ExecuteKeyRebind(inputAction, firstChildIndex, _statusText, _controlScheme, _excludeMouse, true);
                 }
             }
             else
                 //false == _allCompositeParts: false.
-                ExecuteKeyRebind(inputAction, _bindingIndex, _statusText, _controlScheme, _excludeMouse, false, _uniqueGuid);
+                ExecuteKeyRebind(inputAction, _bindingIndex, _statusText, _controlScheme, _excludeMouse, false);
         }
 
         /// <summary>
@@ -295,7 +295,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// <param name="_statusText"></param>
         /// <param name="_allCompositeParts"></param>
         /// <param name="_excludeMouse"></param>
-        private static void ExecuteKeyRebind(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI _statusText, string _controlScheme, bool _excludeMouse, bool _allCompositeParts, Guid _uniqueGuid)
+        private static void ExecuteKeyRebind(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI _statusText, string _controlScheme, bool _excludeMouse, bool _allCompositeParts)
         {
             if (_actionToRebind == null || _bindingIndex < 0)
                 return;
@@ -322,14 +322,14 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     case true:  //For all Composite for future projects.
                     {
-                        if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _statusText, _controlScheme, _excludeMouse/*, _allCompositeParts*/))
+                        if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _statusText, _controlScheme, _excludeMouse))
                         {
                             //Duplicate case.
                             _actionToRebind.RemoveBindingOverride(_bindingIndex);   //Required, or the new effectivePath gets displayed still.
 
                             //Gives the Player the option to retry and rebind another buttonKey with '_bindingIndex'. Or to press Escape.
                             if (_bindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[_bindingIndex].isPartOfComposite)
-                                ExecuteKeyRebind(_actionToRebind, _bindingIndex, _statusText, _controlScheme, _excludeMouse, _allCompositeParts, _uniqueGuid);
+                                ExecuteKeyRebind(_actionToRebind, _bindingIndex, _statusText, _controlScheme, _excludeMouse, _allCompositeParts);
                         }
                         else
                         {
@@ -338,7 +338,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
                             if (nextBindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[nextBindingIndex].isPartOfComposite)
                             {
-                                ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _controlScheme, _excludeMouse, _allCompositeParts, _uniqueGuid);
+                                ExecuteKeyRebind(_actionToRebind, nextBindingIndex, _statusText, _controlScheme, _excludeMouse, _allCompositeParts);
                             }
                         }
                         //Composite Rebinding completed from here.
@@ -364,14 +364,14 @@ namespace ThreeDeePongProto.Shared.InputActions
                 switch (_controlScheme)
                 {
                     case m_keyboardMouseScheme:
-                        SaveKeyboardOverrides(_actionToRebind, _bindingIndex, _uniqueGuid);
+                        SaveKeyboardIsPartOverrides(_actionToRebind, _bindingIndex);
                         break;
                     case m_gamePadScheme:
-                        SaveGamepadOverrides(_actionToRebind, _bindingIndex, _uniqueGuid);
+                        SaveGamepadIsPartOverrides(_actionToRebind, _bindingIndex);
                         break;
                     case "":    //Empty string. Does not accept 'string.Empty'.
                     {
-                        SaveSchemelessComposites(_actionToRebind, _bindingIndex, _uniqueGuid);
+                        SaveSchemelessCompositeOverrides(_actionToRebind, _bindingIndex);
                         break;
                     }
                     default:
@@ -423,7 +423,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             rebind.Start(); //Real Start of the rebind process.
         }
 
-        private static bool DuplicateBindingCheck(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI _statusText, string _controlScheme, bool _excludeMouse/*, bool _allCompositeParts = false, Guid _uniqueGuid = default*/)
+        private static bool DuplicateBindingCheck(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI _statusText, string _controlScheme, bool _excludeMouse)
         {
             InputBinding newBinding = _actionToRebind.bindings[_bindingIndex];
 
@@ -440,7 +440,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     //    Debug.Log($"'isPartOfComposite' flag {binding.effectivePath} in {binding.action}.");
                     #endregion
 #endif
-                    if (binding.action == newBinding.action/* && !_allCompositeParts*/)     //If actions are the same.
+                    if (binding.action == newBinding.action)                                //If actions are the same.
                     {
                         if (binding.id == newBinding.id)                                    //Act by binding ID.
                         {
@@ -502,7 +502,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         /// <param name="_actionName"></param>
         /// <param name="_bindingIndex"></param>
-        internal static void ResetRebinding(string _actionName, int _bindingIndex, string _controlScheme, Guid _uniqueGuid)
+        internal static void ResetRebinding(string _actionName, int _bindingIndex, string _controlScheme)
         {
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
 
@@ -526,17 +526,18 @@ namespace ThreeDeePongProto.Shared.InputActions
                 inputAction.RemoveBindingOverride(_bindingIndex);
 
             #region Reset Rebind Save
+            //Sending Guid as method arguments got replaced by getting each Guid with '_inputAction.bindings[_bindingIndex].id;'.
             switch (_controlScheme)
             {
                 case m_keyboardMouseScheme:
-                    ResetKeyboardOverrides(inputAction, /*_bindingIndex,*/ _uniqueGuid);    //Reset DictEntry by '_uniqueGuid'.
+                    ResetKeyboardIsPartOverrides(inputAction, _bindingIndex);
                     break;
                 case m_gamePadScheme:
-                    ResetGamepadOverrides(inputAction, /*_bindingIndex,*/ _uniqueGuid);     //Reset DictEntry by '_uniqueGuid'.
+                    ResetGamepadIsPartOverrides(inputAction, _bindingIndex);
                     break;
                 case "":    //Empty string. Does not accept 'string.Empty'.
                 {
-                    ResetSchemelessComposites(inputAction, _bindingIndex/*, _uniqueGuid*/); //Reset dictEntries by child's '_bindingIndices'.
+                    ResetSchemelessCompositeOverrides(inputAction);
                     break;
                 }
                 default:
@@ -565,6 +566,12 @@ namespace ThreeDeePongProto.Shared.InputActions
             return inputAction.GetBindingDisplayString(_bindingIndex);
         }
 
+        /// <summary>
+        /// Return the effective bindingPath, so each Gamepad button (or Keyboard button, if desired) sets it's icon properly.
+        /// </summary>
+        /// <param name="_actionName"></param>
+        /// <param name="_bindingIndex"></param>
+        /// <returns></returns>
         public static string GetEffectiveBindingPath(string _actionName, int _bindingIndex)
         {
             if (m_playerInputActions == null)
@@ -574,83 +581,100 @@ namespace ThreeDeePongProto.Shared.InputActions
             return inputAction.bindings[_bindingIndex].effectivePath;
         }
 
-        private static void SaveKeyboardOverrides(InputAction _inputAction, int _bindingIndex, Guid _uniqueGuid/* = default*/)
+        /// <summary>
+        /// Saves Keyboard overrides from individual buttons, that can be allocated to the Keyboard(Mouse) control scheme.
+        /// </summary>
+        /// <param name="_inputAction"></param>
+        /// <param name="_bindingIndex"></param>
+        private static void SaveKeyboardIsPartOverrides(InputAction _inputAction, int _bindingIndex)
         {
-            for (int i = 0; i < _inputAction.bindings.Count; i++)
+            Guid keyIndexGuid = _inputAction.bindings[_bindingIndex].id;
+            bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{keyIndexGuid}");
+
+            //for (int i = 0; i < _inputAction.bindings.Count; i++)
+            //{
+            #region PlayerPref Example
+            //PlayerPrefs.SetString(_inputAction.actionMap + _inputAction.name + i, _inputAction.bindings[i].overridePath);
+            #endregion
+
+            #region Unique Guid
+            if (_inputAction.bindings[_bindingIndex].groups == m_keyboardMouseScheme && !_inputAction.bindings[_bindingIndex].isComposite)
+            //if (_inputAction.bindings[i].overridePath != null && _inputAction.bindings[i].groups == m_keyboardMouseScheme)
             {
-                #region PlayerPref Example
-                //PlayerPrefs.SetString(_inputAction.actionMap + _inputAction.name + i, _inputAction.bindings[i].overridePath);
-                #endregion
-
-                #region Unique Guid
-                if (_inputAction.bindings[i].overridePath != null && _inputAction.bindings[i].groups == m_keyboardMouseScheme)
+                //Only check and save, if iteration index equals inputAction index. Else more than the target index gets saved.
+                //if (i == _bindingIndex)
+                //{
+                switch (dictHasKey)
                 {
-                    //string dictKey = $"{_uniqueGuid}";
-                    bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{_uniqueGuid}");
-
-                    //Only check and save, if iteration index equals inputAction index. Else more than the target index gets saved.
-                    if (i == _bindingIndex)
+                    case true:
                     {
-                        switch (dictHasKey)
-                        {
-                            case true:
-                            {
-                                m_keyboardRebindDict[$"{_uniqueGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!";
-                                break;
-                            }
-                            case false:
-                            {
-                                m_keyboardRebindDict.Add($"{_uniqueGuid}", $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!");
-                                break;
-                            }
-                        }
+                        m_keyboardRebindDict[$"{keyIndexGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!";
+                        break;
+                    }
+                    case false:
+                    {
+                        m_keyboardRebindDict.Add($"{keyIndexGuid}", $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!");
+                        break;
                     }
                 }
-                #endregion
+                //}
             }
+            #endregion
+            //}
 
             m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
         }
 
-        private static void SaveGamepadOverrides(InputAction _inputAction, int _bindingIndex, Guid _uniqueGuid/* = default*/)
+        /// <summary>
+        /// Saves Gamepad overrides from individual buttons, that can be allocated to the Gamepad control scheme.
+        /// </summary>
+        /// <param name="_inputAction"></param>
+        /// <param name="_bindingIndex"></param>
+        private static void SaveGamepadIsPartOverrides(InputAction _inputAction, int _bindingIndex)
         {
-            for (int i = 0; i < _inputAction.bindings.Count; i++)
+            Guid buttonIndexGuid = _inputAction.bindings[_bindingIndex].id;
+            bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{buttonIndexGuid}");
+
+            //for (int i = 0; i < _inputAction.bindings.Count; i++)
+            //{
+            #region PlayerPref Example
+            //PlayerPrefs.SetString(_inputAction.actionMap + _inputAction.name + i, _inputAction.bindings[i].overridePath);
+            #endregion
+
+            #region Unique Guid
+            if (_inputAction.bindings[_bindingIndex].groups == m_gamePadScheme && !_inputAction.bindings[_bindingIndex].isComposite)
+            //if (_inputAction.bindings[i].overridePath != null && _inputAction.bindings[i].groups == m_gamePadScheme)
             {
-                #region PlayerPref Example
-                //PlayerPrefs.SetString(_inputAction.actionMap + _inputAction.name + i, _inputAction.bindings[i].overridePath);
-                #endregion
-
-                #region Unique Guid
-                if (_inputAction.bindings[i].overridePath != null && _inputAction.bindings[i].groups == m_gamePadScheme)
+                //Only check and save, if iteration index equals inputAction index. Else more than the target index gets saved.
+                //if (i == _bindingIndex)
+                //{
+                switch (dictHasKey)
                 {
-                    //string dictKey = $"{_uniqueGuid}";
-                    bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{_uniqueGuid}");
-
-                    //Only check and save, if iteration index equals inputAction index. Else more than the target index gets saved.
-                    if (i == _bindingIndex)
+                    case true:
                     {
-                        switch (dictHasKey)
-                        {
-                            case true:
-                            {
-                                m_gamepadRebindDict[$"{_uniqueGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!";
-                                break;
-                            }
-                            case false:
-                            {
-                                m_gamepadRebindDict.Add($"{_uniqueGuid}", $"]{_bindingIndex}.{_inputAction.bindings[i].effectivePath}!");
-                                break;
-                            }
-                        }
+                        m_gamepadRebindDict[$"{buttonIndexGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!";
+                        break;
+                    }
+                    case false:
+                    {
+                        m_gamepadRebindDict.Add($"{buttonIndexGuid}", $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!");
+                        break;
                     }
                 }
-                #endregion
+                //}
             }
+            #endregion
+            //}
 
             m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
         }
 
-        private static void SaveSchemelessComposites(InputAction _inputAction, int _bindingIndex, Guid _uniqueGuid/* = default*/)
+        /// <summary>
+        /// Gets the deviceType of each CompositeChildIndex and uses the Control Schemes of the Inputsystem to save properly.
+        /// </summary>
+        /// <param name="_inputAction"></param>
+        /// <param name="_bindingIndex"></param>
+        private static void SaveSchemelessCompositeOverrides(InputAction _inputAction, int _bindingIndex)
         {
             string deviceType = GetWordBetweenArgs(_inputAction.bindings[_bindingIndex].effectivePath, "<", ">");
             Guid childIndexGuid = _inputAction.bindings[_bindingIndex].id;
@@ -688,12 +712,12 @@ namespace ThreeDeePongProto.Shared.InputActions
                     {
                         case true:
                         {
-                            m_gamepadRebindDict[$"{_uniqueGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!";
+                            m_gamepadRebindDict[$"{childIndexGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!";
                             break;
                         }
                         case false:
                         {
-                            m_gamepadRebindDict.Add($"{_uniqueGuid}", $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!");
+                            m_gamepadRebindDict.Add($"{childIndexGuid}", $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!");
                             break;
                         }
                     }
@@ -815,20 +839,26 @@ namespace ThreeDeePongProto.Shared.InputActions
             #endregion
         }
 
-        private static void ResetKeyboardOverrides(InputAction _inputAction, /*int _bindingIndex,*/ Guid _uniqueGuid/* = default*/)
+        /// <summary>
+        /// Reset Keyboard Overrides by the buttonIndex, if the dictionary contains the Guid key.
+        /// </summary>
+        /// <param name="_inputAction"></param>
+        /// <param name="_bindingIndex"></param>
+        private static void ResetKeyboardIsPartOverrides(InputAction _inputAction, int _bindingIndex)
         {
+            Guid buttonIndexGuid = _inputAction.bindings[_bindingIndex].id;
+
             for (int i = 0; i < _inputAction.bindings.Count; i++)
             {
                 #region Unique Guid
-                //string dictKey = $"{_uniqueGuid}";
-                bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{_uniqueGuid}");
+                bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{buttonIndexGuid}");
 
-                //If the dictionary has the guidKey, save the entry. Else create a new entry with the new informations. 
+                //If the dictionary has the guidKey, the entry gets removed.
                 switch (dictHasKey)
                 {
                     case true:
                     {
-                        m_keyboardRebindDict.Remove($"{_uniqueGuid}");
+                        m_keyboardRebindDict.Remove($"{buttonIndexGuid}");
                         break;
                     }
                     case false:
@@ -842,20 +872,26 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
         }
 
-        private static void ResetGamepadOverrides(InputAction _inputAction, /*int _bindingIndex,*/ Guid _uniqueGuid/* = default*/)
+        /// <summary>
+        /// Reset Gamepad Overrides by the buttonIndex, if the dictionary contains the Guid key.
+        /// </summary>
+        /// <param name="_inputAction"></param>
+        /// <param name="_bindingIndex"></param>
+        private static void ResetGamepadIsPartOverrides(InputAction _inputAction, int _bindingIndex)
         {
+            Guid buttonIndexGuid = _inputAction.bindings[_bindingIndex].id;
+
             for (int i = 0; i < _inputAction.bindings.Count; i++)
             {
-                #region Unique Guid
-                //string dictKey = $"{_uniqueGuid}";
-                bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{_uniqueGuid}");
+                #region Unique Guid                
+                bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{buttonIndexGuid}");
 
                 //If the dictionary has the guidKey, save the entry. Else create a new entry with the new informations. 
                 switch (dictHasKey)
                 {
                     case true:
                     {
-                        m_gamepadRebindDict.Remove($"{_uniqueGuid}");
+                        m_gamepadRebindDict.Remove($"{buttonIndexGuid}");
                         break;
                     }
                     case false:
@@ -869,29 +905,33 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
         }
 
-        private static void ResetSchemelessComposites(InputAction _inputAction, int _bindingIndex/*, Guid _uniqueGuid = default*/)
+        /// <summary>
+        /// Resets each Composite child. Control Schemes are still required to 'switch' between the corresponding device Type dicts.
+        /// </summary>
+        /// <param name="_inputAction"></param>
+        private static void ResetSchemelessCompositeOverrides(InputAction _inputAction)
         {
             string deviceScheme;
-            Guid childGuid;
+            Guid childIndexGuid;
 
             for (int i = 0; i < _inputAction.bindings.Count; i++)
             {
                 if (!_inputAction.bindings[i].isComposite)              //'!.isComposite' excludes 'WASD' parent.
                 {
                     deviceScheme = _inputAction.bindings[i].groups;     //Get the deviceScheme for each Index.
-                    childGuid = _inputAction.bindings[i].id;            //Get the child's Guid for each Index.
+                    childIndexGuid = _inputAction.bindings[i].id;       //Get the child's Guid for each Index.
 
                     switch (deviceScheme)                               //Check and remove child's Guid "guided" by it's deviceScheme.
                     {
                         case m_keyboardMouseScheme:
                         {
-                            bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{childGuid}");
+                            bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{childIndexGuid}");
 
                             switch (dictHasKey)
                             {
                                 case true:
                                 {
-                                    m_keyboardRebindDict.Remove($"{childGuid}");
+                                    m_keyboardRebindDict.Remove($"{childIndexGuid}");
                                     break;
                                 }
                                 case false:
@@ -905,13 +945,13 @@ namespace ThreeDeePongProto.Shared.InputActions
                         }
                         case m_gamePadScheme:
                         {
-                            bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{childGuid}");
+                            bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{childIndexGuid}");
 
                             switch (dictHasKey)
                             {
                                 case true:
                                 {
-                                    m_gamepadRebindDict.Remove($"{childGuid}");
+                                    m_gamepadRebindDict.Remove($"{childIndexGuid}");
                                     break;
                                 }
                                 case false:

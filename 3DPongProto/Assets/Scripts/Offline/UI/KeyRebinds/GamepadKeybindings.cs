@@ -113,7 +113,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ExecuteKeyRebind()
         {
-            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_controlScheme, m_excludeMouse, m_bindingId);
+            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_controlScheme, m_excludeMouse);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ResetRebinding()
         {
-            InputManager.ResetRebinding(m_actionName, m_bindingIndex, m_controlScheme, m_bindingId);
+            InputManager.ResetRebinding(m_actionName, m_bindingIndex, m_controlScheme);
             UpdateRebindUI();
         }
     }

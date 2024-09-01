@@ -10,12 +10,12 @@ PrefabInstance:
     - target: {fileID: 949249328883997831, guid: 855948233e4a46a4383f0591718081f0,
         type: 3}
       propertyPath: m_inputBinding.m_Id
-      value: f6129239-7607-431a-bba0-c6a1410c2977
+      value: 492c4cbf-69b4-4290-9d7f-271e07d17e3b
       objectReference: {fileID: 0}
     - target: {fileID: 949249328883997831, guid: 855948233e4a46a4383f0591718081f0,
         type: 3}
       propertyPath: m_inputBinding.m_Name
-      value: 6U8D7L9R
+      value: 1234
       objectReference: {fileID: 0}
     - target: {fileID: 949249328883997831, guid: 855948233e4a46a4383f0591718081f0,
         type: 3}
@@ -26,7 +26,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_inputActionReference
       value: 
-      objectReference: {fileID: 1775451174988343755, guid: 10bcd34be915850428dc91a0ac6c1a9f,
+      objectReference: {fileID: -1987516868094200356, guid: 10bcd34be915850428dc91a0ac6c1a9f,
         type: 3}
     - target: {fileID: 949249328883997831, guid: 855948233e4a46a4383f0591718081f0,
         type: 3}
@@ -37,6 +37,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_inputBinding.m_Action
       value: TestComposite
+      objectReference: {fileID: 0}
+    - target: {fileID: 949249328883997831, guid: 855948233e4a46a4383f0591718081f0,
+        type: 3}
+      propertyPath: m_humanReadableStringOptions
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4416730169712746152, guid: 855948233e4a46a4383f0591718081f0,
         type: 3}
@@ -111,7 +116,7 @@ PrefabInstance:
     - target: {fileID: 7602131665892154372, guid: 855948233e4a46a4383f0591718081f0,
         type: 3}
       propertyPath: m_text
-      value: 6/7/8/9
+      value: 1/2/3/4
       objectReference: {fileID: 0}
     - target: {fileID: 7602131666147189733, guid: 855948233e4a46a4383f0591718081f0,
         type: 3}
