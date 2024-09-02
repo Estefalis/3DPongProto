@@ -188,24 +188,24 @@ namespace ThreeDeePongProto.Shared.InputActions
                 }
                 case m_gamePadScheme:
                 {
-                    string wordBetween = GetWordBetweenArgs(_controlPath, "<", ">");
+                    string devicePath = GetWordBetweenArgs(_controlPath, "<", ">");
 #if UNITY_EDITOR
-                    //Debug.Log($"Start-{wordBetween}-End");
+                    //Debug.Log($"Start-{devicePath}-End");
 #endif
-                    switch (wordBetween)
+                    switch (devicePath)
                     {
-                        case "Gamepad":
+                        case m_gamepadPath:
                         {
                             buttonImage = m_pS.GetGamepadSprite(_controlPath);
                             return buttonImage;
                         }
-                        case "DualShockGamepad":
+                        case m_dualShockGamepadPath:
                         {
                             buttonImage = m_pS.GetDualShockGamepadSprite(_controlPath);
                             return buttonImage;
 
                         }
-                        case "DualSenseGamepadHID":
+                        case m_dualSenseGamepadHIDPath:
                         {
                             buttonImage = m_pS.GetDualSenseGamepadHIDSprite(_controlPath);
                             return buttonImage;
@@ -220,10 +220,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 //    return buttonImage;
                 //}
                 default:
-                {
-                    buttonImage = m_pS.GetGamepadSprite(_controlPath);
-                    return buttonImage;
-                }
+                    break;
             }
 
             return null;
@@ -364,14 +361,14 @@ namespace ThreeDeePongProto.Shared.InputActions
                 switch (_controlScheme)
                 {
                     case m_keyboardMouseScheme:
-                        SaveKeyboardIsPartOverrides(_actionToRebind, _bindingIndex);
+                        SaveKeyboardIndexOverrides(_actionToRebind, _bindingIndex);
                         break;
                     case m_gamePadScheme:
-                        SaveGamepadIsPartOverrides(_actionToRebind, _bindingIndex);
+                        SaveGamepadIndexOverrides(_actionToRebind, _bindingIndex);
                         break;
                     case "":    //Empty string. Does not accept 'string.Empty'.
                     {
-                        SaveSchemelessCompositeOverrides(_actionToRebind, _bindingIndex);
+                        SaveCompositeOverrides(_actionToRebind, _bindingIndex);
                         break;
                     }
                     default:
@@ -530,14 +527,14 @@ namespace ThreeDeePongProto.Shared.InputActions
             switch (_controlScheme)
             {
                 case m_keyboardMouseScheme:
-                    ResetKeyboardIsPartOverrides(inputAction, _bindingIndex);
+                    ResetKeyboardIndexOverrides(inputAction, _bindingIndex);
                     break;
                 case m_gamePadScheme:
-                    ResetGamepadIsPartOverrides(inputAction, _bindingIndex);
+                    ResetGamepadIndexOverrides(inputAction, _bindingIndex);
                     break;
                 case "":    //Empty string. Does not accept 'string.Empty'.
                 {
-                    ResetSchemelessCompositeOverrides(inputAction);
+                    ResetCompositeOverrides(inputAction);
                     break;
                 }
                 default:
@@ -586,24 +583,21 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         /// <param name="_inputAction"></param>
         /// <param name="_bindingIndex"></param>
-        private static void SaveKeyboardIsPartOverrides(InputAction _inputAction, int _bindingIndex)
+        private static void SaveKeyboardIndexOverrides(InputAction _inputAction, int _bindingIndex)
         {
             Guid keyIndexGuid = _inputAction.bindings[_bindingIndex].id;
             bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{keyIndexGuid}");
 
+            #region PlayerPref Example
             //for (int i = 0; i < _inputAction.bindings.Count; i++)
             //{
-            #region PlayerPref Example
             //PlayerPrefs.SetString(_inputAction.actionMap + _inputAction.name + i, _inputAction.bindings[i].overridePath);
+            //}
             #endregion
 
             #region Unique Guid
             if (_inputAction.bindings[_bindingIndex].groups == m_keyboardMouseScheme && !_inputAction.bindings[_bindingIndex].isComposite)
-            //if (_inputAction.bindings[i].overridePath != null && _inputAction.bindings[i].groups == m_keyboardMouseScheme)
             {
-                //Only check and save, if iteration index equals inputAction index. Else more than the target index gets saved.
-                //if (i == _bindingIndex)
-                //{
                 switch (dictHasKey)
                 {
                     case true:
@@ -617,10 +611,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                         break;
                     }
                 }
-                //}
             }
             #endregion
-            //}
 
             m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
         }
@@ -630,24 +622,21 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         /// <param name="_inputAction"></param>
         /// <param name="_bindingIndex"></param>
-        private static void SaveGamepadIsPartOverrides(InputAction _inputAction, int _bindingIndex)
+        private static void SaveGamepadIndexOverrides(InputAction _inputAction, int _bindingIndex)
         {
             Guid buttonIndexGuid = _inputAction.bindings[_bindingIndex].id;
             bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{buttonIndexGuid}");
 
+            #region PlayerPref Example
             //for (int i = 0; i < _inputAction.bindings.Count; i++)
             //{
-            #region PlayerPref Example
             //PlayerPrefs.SetString(_inputAction.actionMap + _inputAction.name + i, _inputAction.bindings[i].overridePath);
+            //}
             #endregion
 
             #region Unique Guid
             if (_inputAction.bindings[_bindingIndex].groups == m_gamePadScheme && !_inputAction.bindings[_bindingIndex].isComposite)
-            //if (_inputAction.bindings[i].overridePath != null && _inputAction.bindings[i].groups == m_gamePadScheme)
             {
-                //Only check and save, if iteration index equals inputAction index. Else more than the target index gets saved.
-                //if (i == _bindingIndex)
-                //{
                 switch (dictHasKey)
                 {
                     case true:
@@ -661,40 +650,38 @@ namespace ThreeDeePongProto.Shared.InputActions
                         break;
                     }
                 }
-                //}
             }
             #endregion
-            //}
 
             m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
         }
 
         /// <summary>
-        /// Gets the deviceType of each CompositeChildIndex and uses the Control Schemes of the Inputsystem to save properly.
+        /// Gets the deviceType from each '(Composite)Index.effectivePath' to save properly.
         /// </summary>
         /// <param name="_inputAction"></param>
         /// <param name="_bindingIndex"></param>
-        private static void SaveSchemelessCompositeOverrides(InputAction _inputAction, int _bindingIndex)
+        private static void SaveCompositeOverrides(InputAction _inputAction, int _bindingIndex)
         {
             string deviceType = GetWordBetweenArgs(_inputAction.bindings[_bindingIndex].effectivePath, "<", ">");
-            Guid childIndexGuid = _inputAction.bindings[_bindingIndex].id;
+            Guid indexGuid = _inputAction.bindings[_bindingIndex].id;
 
             switch (deviceType)
             {
                 case m_keyboardPath:
                 {
-                    bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{childIndexGuid}");
+                    bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{indexGuid}");
 
                     switch (dictHasKey)
                     {
                         case true:
                         {
-                            m_keyboardRebindDict[$"{childIndexGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!";
+                            m_keyboardRebindDict[$"{indexGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!";
                             break;
                         }
                         case false:
                         {
-                            m_keyboardRebindDict.Add($"{childIndexGuid}", $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!");
+                            m_keyboardRebindDict.Add($"{indexGuid}", $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!");
                             break;
                         }
                     }
@@ -706,18 +693,18 @@ namespace ThreeDeePongProto.Shared.InputActions
                 case m_dualShockGamepadPath:
                 case m_dualSenseGamepadHIDPath:
                 {
-                    bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{childIndexGuid}");
+                    bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{indexGuid}");
 
                     switch (dictHasKey)
                     {
                         case true:
                         {
-                            m_gamepadRebindDict[$"{childIndexGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!";
+                            m_gamepadRebindDict[$"{indexGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!";
                             break;
                         }
                         case false:
                         {
-                            m_gamepadRebindDict.Add($"{childIndexGuid}", $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!");
+                            m_gamepadRebindDict.Add($"{indexGuid}", $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!");
                             break;
                         }
                     }
@@ -726,18 +713,20 @@ namespace ThreeDeePongProto.Shared.InputActions
                     break;
                 }
                 default:
+                {
+#if UNITY_EDITOR
+                    Debug.LogWarning($"Save structure for {deviceType} is not set, yet. Didn't you ask alrrready? <(o.O)'");
+#endif
                     break;
+                }
             }
         }
 
-        internal static void LoadKeyboardOverrides(string _actionName, int _bindingIndex)
+        internal static void LoadKeyRebindOverrides(string _actionName, int _bindingIndex)
         {
             if (m_playerInputActions == null)
             {
-                //m_playerInputActions = new PlayerInputActions();
-#if UNITY_EDITOR
-                Debug.Log("Keyboard-InputAction is null");
-#endif
+                m_playerInputActions = new PlayerInputActions();
             }
 
             InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
@@ -782,32 +771,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                     }
                 }
             }
-            #endregion
-        }
-
-        internal static void LoadGamepadOverrides(string _actionName, int _bindingIndex)
-        {
-            if (m_playerInputActions == null)
-            {
-                m_playerInputActions = new PlayerInputActions();
-            }
-
-            InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
-
-            #region PlayerPref Example
-            //for (int i = 0; i < inputAction.bindings.Count; i++)
-            //{
-            //    if (!string.IsNullOrEmpty(PlayerPrefs.GetString(inputAction.actionMap + inputAction.name + i)))
-            //    {
-            //        inputAction.ApplyBindingOverride(i, PlayerPrefs.GetString(inputAction.actionMap + inputAction.name + i));
-            //    }
-            //}
-            #endregion
-
-            #region Unique Guid
-            Guid uniqueGuid;    //The key in the dictionary.
-            int bindingIndex;
-            string /* actionMap,*/ overridePath;
 
             foreach (var entry in m_gamepadRebindDict)
             {
@@ -842,7 +805,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         /// <param name="_inputAction"></param>
         /// <param name="_bindingIndex"></param>
-        private static void ResetKeyboardIsPartOverrides(InputAction _inputAction, int _bindingIndex)
+        private static void ResetKeyboardIndexOverrides(InputAction _inputAction, int _bindingIndex)
         {
             Guid buttonIndexGuid = _inputAction.bindings[_bindingIndex].id;
 
@@ -875,7 +838,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         /// <param name="_inputAction"></param>
         /// <param name="_bindingIndex"></param>
-        private static void ResetGamepadIsPartOverrides(InputAction _inputAction, int _bindingIndex)
+        private static void ResetGamepadIndexOverrides(InputAction _inputAction, int _bindingIndex)
         {
             Guid buttonIndexGuid = _inputAction.bindings[_bindingIndex].id;
 
@@ -907,7 +870,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// Resets each Composite child. Control Schemes are still required to 'switch' between the corresponding device Type dicts.
         /// </summary>
         /// <param name="_inputAction"></param>
-        private static void ResetSchemelessCompositeOverrides(InputAction _inputAction)
+        private static void ResetCompositeOverrides(InputAction _inputAction)
         {
             string deviceScheme;
             Guid childIndexGuid;

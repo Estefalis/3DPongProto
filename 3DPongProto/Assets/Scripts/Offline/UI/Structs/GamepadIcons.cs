@@ -108,6 +108,8 @@ namespace ThreeDeePongProto.Offline.UI
                     return leftTrigger;
                 case "<DualSenseGamepadHID>/rightTriggerButton":
                     return rightTrigger;
+                case "<DualSenseGamepadHID>/touchpadButton":
+                    return touchpadButtonPress;
                 //case "<DualSenseGamepadHID>/systemButton":
                 //    return home;  //Disabled for ControlRebinds.
                 //case "<DualSenseGamepadHID>/micButton":

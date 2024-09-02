@@ -12,7 +12,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         [SerializeField] private InputActionReference m_inputActionReference; //ScriptableObject.
 
         [Range(0f, 10), SerializeField] private int m_selectedBinding;
-        [SerializeField] private InputBinding.DisplayStringOptions m_displayStringOptions;
+        //[SerializeField] private InputBinding.DisplayStringOptions m_displayStringOptions;    //Not used, yet.
         [SerializeField] private InputControlPath.HumanReadableStringOptions m_humanReadableStringOptions;
         [SerializeField] private bool m_excludeMouse = true; //Exclude the Mouse on the Rebind-Prozess.
 
@@ -28,6 +28,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private int m_bindingIndex;
         private string m_actionName, m_controlScheme;
+        private Guid m_uniqueGuid;
 
         private const string m_keyboardMouseScheme = "KeyboardMouse";           //Inputsystem's KeyboardMouse scheme. (groups)
         private const string m_gamePadScheme = "Gamepad";                       //Inputsystem's Gamepad scheme. (groups)
@@ -45,7 +46,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             if (m_inputActionReference != null)
             {
                 GetBindingInformation();
-                InputManager.LoadGamepadOverrides(m_actionName, m_bindingIndex); //MUST be below 'GetBindingInformation()', else Exception!
+                InputManager.LoadKeyRebindOverrides(m_actionName, m_bindingIndex); //MUST be below 'GetBindingInformation()', else Exception!
                 UpdateRebindUI();
             }
         }
@@ -104,6 +105,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                             break;
                         }
                         default:
+                            m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex).ToUpper();
                             break;
                     }
                 }
