@@ -7,12 +7,13 @@ using UnityEngine.UI;
 
 namespace ThreeDeePongProto.Shared.InputActions
 {
-    public class KeyboardKeybindings : MonoBehaviour
+    public class KeyRebindings : MonoBehaviour
     {
         [SerializeField] private InputActionReference m_inputActionReference; //ScriptableObject.
 
         [Range(0f, 10), SerializeField] private int m_selectedBinding;
         [SerializeField] private InputBinding.DisplayStringOptions m_displayStringOptions;
+        [SerializeField] private InputControlPath.HumanReadableStringOptions m_humanReadableStringOptions;
         [SerializeField] private bool m_excludeMouse = true; //Exclude the Mouse on the Rebind-Prozess.
 
         [Header("Binding-Informations - DON'T CHANGE ANYTHING HERE!")]
@@ -28,6 +29,9 @@ namespace ThreeDeePongProto.Shared.InputActions
         private int m_bindingIndex;
         private string m_actionName, m_controlScheme;
 
+        private const string m_keyboardMouseScheme = "KeyboardMouse";           //Inputsystem's KeyboardMouse scheme. (groups)
+        private const string m_gamePadScheme = "Gamepad";                       //Inputsystem's Gamepad scheme. (groups)
+
         private void OnEnable()
         {
             m_rebindButton.onClick.AddListener(() => ExecuteKeyRebind());
@@ -41,7 +45,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             if (m_inputActionReference != null)
             {
                 GetBindingInformation();
-                InputManager.LoadKeyboardOverrides(m_actionName, m_bindingIndex); //MUST be below 'GetBindingInformation()', else Exception!
+                InputManager.LoadGamepadOverrides(m_actionName, m_bindingIndex); //MUST be below 'GetBindingInformation()', else Exception!
                 UpdateRebindUI();
             }
         }
@@ -87,18 +91,33 @@ namespace ThreeDeePongProto.Shared.InputActions
             {
                 if (Application.isPlaying)
                 {
-                    m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex).ToUpper();
+                    switch (m_controlScheme)
+                    {
+                        case m_keyboardMouseScheme:
+                        {
+                            m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex).ToUpper();
+                            break;
+                        }
+                        case m_gamePadScheme:
+                        {
+                            m_rebindText.text = InputControlPath.ToHumanReadableString(InputManager.GetBindingName(m_actionName, m_bindingIndex), m_humanReadableStringOptions);
+                            break;
+                        }
+                        default:
+                            break;
+                    }
                 }
                 else
                 {
                     m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex).ToUpper();
+                    //m_rebindText.text = InputControlPath.ToHumanReadableString(InputManager.GetBindingName(m_actionName, m_bindingIndex), options: InputControlPath.HumanReadableStringOptions.OmitDevice);
                 }
             }
 
             if (m_buttonImage != null && m_buttonImage.gameObject.activeInHierarchy)
             {
                 Image buttonImage = m_buttonImage.GetComponent<Image>();
-                buttonImage.sprite = InputManager.GetControllerIcons(m_controlScheme, InputManager.GetEffectiveBindingPath(m_actionName, m_bindingIndex).ToUpper());
+                buttonImage.sprite = InputManager.GetControllerIcons(m_controlScheme, InputManager.GetEffectiveBindingPath(m_actionName, m_bindingIndex));
                 m_buttonImage.sprite = buttonImage.sprite;
             }
         }
