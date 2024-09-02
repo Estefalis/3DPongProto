@@ -730,7 +730,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
         }
 
-        internal static void LoadKeyboardOverrides(string _actionName, Guid _uiGuid)
+        internal static void LoadKeyboardOverrides(string _actionName, int _bindingIndex)
         {
             if (m_playerInputActions == null)
             {
@@ -753,40 +753,39 @@ namespace ThreeDeePongProto.Shared.InputActions
             #endregion
 
             #region Unique Guid
-            Guid uniqueGuid;
-            string guidKey,/* actionMap,*/ bindingIndex, overridePath;
+            Guid uniqueGuid;    //The key in the dictionary.
+            int bindingIndex;
+            string /* actionMap,*/ overridePath;
 
             foreach (var entry in m_keyboardRebindDict)
             {
-                guidKey = entry.Key;
-                uniqueGuid = Guid.Parse(guidKey);
+                uniqueGuid = Guid.Parse(entry.Key);
                 //actionMap = GetWordBetweenArgs(entry.Value, "[", "]");
-                bindingIndex = GetWordBetweenArgs(entry.Value, "]", ".");
-                int bindingIndexAsInt = int.Parse(bindingIndex);
+                bindingIndex = int.Parse(GetWordBetweenArgs(entry.Value, "]", ".")); //Dict Value directly into int.
                 overridePath = GetWordBetweenArgs(entry.Value, ".", "!");
 
-                switch (uniqueGuid == _uiGuid)
+                switch (uniqueGuid == inputAction.bindings[_bindingIndex].id)
                 {
-                    case true:  //'_uiGuid' comes each (.is)PartOfComposite directly.
+                    case true:  //'inputAction.bindings[_bindingIndex].id' comes from each (.is)PartOfComposite directly.
                     {
-                        inputAction.ApplyBindingOverride(bindingIndexAsInt, overridePath);
+                        inputAction.ApplyBindingOverride(bindingIndex, overridePath);
                         break;
                     }
-                    case false: //'_uiGuid' comes from the Composite parent, so it's children id's have to be compared.
+                    case false: //Comparing 'inputAction.bindings[_bindingIndex].id' from the children, instead from the Composite parent.
                     {
                         foreach (InputBinding partOfComposite in inputAction.bindings)
                         {
-                            if (partOfComposite.id == uniqueGuid)
-                                inputAction.ApplyBindingOverride(bindingIndexAsInt, overridePath);
+                            if (uniqueGuid == partOfComposite.id)
+                                inputAction.ApplyBindingOverride(bindingIndex, overridePath);
                         }
-                        break;  //break; or continue; here?
+                        break;
                     }
                 }
             }
             #endregion
         }
 
-        internal static void LoadGamepadOverrides(string _actionName, Guid _uiGuid)
+        internal static void LoadGamepadOverrides(string _actionName, int _bindingIndex)
         {
             if (m_playerInputActions == null)
             {
@@ -806,33 +805,32 @@ namespace ThreeDeePongProto.Shared.InputActions
             #endregion
 
             #region Unique Guid
-            Guid uniqueGuid;
-            string guidKey,/* actionMap,*/ bindingIndex, overridePath;
+            Guid uniqueGuid;    //The key in the dictionary.
+            int bindingIndex;
+            string /* actionMap,*/ overridePath;
 
             foreach (var entry in m_gamepadRebindDict)
             {
-                guidKey = entry.Key;
-                uniqueGuid = Guid.Parse(guidKey);
+                uniqueGuid = Guid.Parse(entry.Key);
                 //actionMap = GetWordBetweenArgs(entry.Value, "[", "]");
-                bindingIndex = GetWordBetweenArgs(entry.Value, "]", ".");
-                int bindingIndexAsInt = int.Parse(bindingIndex);
+                bindingIndex = int.Parse(GetWordBetweenArgs(entry.Value, "]", ".")); //Dict Value directly into int.
                 overridePath = GetWordBetweenArgs(entry.Value, ".", "!");
 
-                switch (uniqueGuid == _uiGuid)
+                switch (uniqueGuid == inputAction.bindings[_bindingIndex].id)
                 {
-                    case true:  //'_uiGuid' comes each (.is)PartOfComposite directly.
+                    case true:  //'inputAction.bindings[_bindingIndex].id' comes from each (.is)PartOfComposite directly.
                     {
-                        inputAction.ApplyBindingOverride(bindingIndexAsInt, overridePath);
+                        inputAction.ApplyBindingOverride(bindingIndex, overridePath);
                         break;
                     }
-                    case false: //'_uiGuid' comes from the Composite parent, so it's children id's have to be compared.
+                    case false: //Comparing 'inputAction.bindings[_bindingIndex].id' from the children, instead from the Composite parent.
                     {
                         foreach (InputBinding partOfComposite in inputAction.bindings)
                         {
-                            if (partOfComposite.id == uniqueGuid)
-                                inputAction.ApplyBindingOverride(bindingIndexAsInt, overridePath);
+                            if (uniqueGuid == partOfComposite.id)
+                                inputAction.ApplyBindingOverride(bindingIndex, overridePath);
                         }
-                        break;  //break; or continue; here?
+                        break;
                     }
                 }
             }

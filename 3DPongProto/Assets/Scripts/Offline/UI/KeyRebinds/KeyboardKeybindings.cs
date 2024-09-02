@@ -27,7 +27,6 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private int m_bindingIndex;
         private string m_actionName, m_controlScheme;
-        private Guid m_bindingId;
 
         private void OnEnable()
         {
@@ -42,7 +41,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             if (m_inputActionReference != null)
             {
                 GetBindingInformation();
-                InputManager.LoadKeyboardOverrides(m_actionName, m_bindingId);    //MUST be below 'GetBindingInformation()'! Else Exception!
+                InputManager.LoadKeyboardOverrides(m_actionName, m_bindingIndex); //MUST be below 'GetBindingInformation()', else Exception!
                 UpdateRebindUI();
             }
         }
@@ -77,7 +76,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     m_inputBinding = m_inputActionReference.action.bindings[m_selectedBinding];
                     m_bindingIndex = m_selectedBinding;
-                    m_bindingId = m_inputActionReference.action.bindings[m_bindingIndex].id;
                     m_controlScheme = m_inputActionReference.action.bindings[m_bindingIndex].groups;
                 }
             }
