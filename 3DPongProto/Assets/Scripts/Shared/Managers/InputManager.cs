@@ -239,7 +239,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             return "";
         }
-#if UNITY_EDITOR
+
         internal static string ToUpperFirstCharacter(string _source)
         {
             if (string.IsNullOrEmpty(_source))
@@ -249,7 +249,6 @@ namespace ThreeDeePongProto.Shared.InputActions
             letters[0] = char.ToUpper(letters[0]);
             return new string(letters);
         }
-#endif
         #endregion
 
         #region KeyRebinding
@@ -595,7 +594,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             //}
             #endregion
 
-            #region Unique Guid
+            #region Save data with unique Guid as Dict Key
             if (_inputAction.bindings[_bindingIndex].groups == m_keyboardMouseScheme && !_inputAction.bindings[_bindingIndex].isComposite)
             {
                 switch (dictHasKey)
@@ -634,7 +633,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             //}
             #endregion
 
-            #region Unique Guid
+            #region Save data with unique Guid as Dict Key
             if (_inputAction.bindings[_bindingIndex].groups == m_gamePadScheme && !_inputAction.bindings[_bindingIndex].isComposite)
             {
                 switch (dictHasKey)
@@ -672,6 +671,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{indexGuid}");
 
+                    #region Save Keyboard data with unique Guid as Dict Key
                     switch (dictHasKey)
                     {
                         case true:
@@ -685,6 +685,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                             break;
                         }
                     }
+                    #endregion
 
                     m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
                     break;
@@ -695,6 +696,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{indexGuid}");
 
+                    #region Save Gamepad data with unique Guid as Dict Key
                     switch (dictHasKey)
                     {
                         case true:
@@ -708,6 +710,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                             break;
                         }
                     }
+                    #endregion
 
                     m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
                     break;
@@ -741,13 +744,13 @@ namespace ThreeDeePongProto.Shared.InputActions
             //}
             #endregion
 
-            #region Unique Guid
             Guid uniqueGuid;    //The key in the dictionary.
             int bindingIndex;
             string /* actionMap,*/ overridePath;
 
             switch (inputAction.bindings[_bindingIndex].groups)
             {
+                #region Using unique Guid to reapply the specific Keyboard Override
                 case m_keyboardMouseScheme:
                 {
                     foreach (var entry in m_keyboardRebindDict)
@@ -777,6 +780,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                     }
                     break;
                 }
+                #endregion
+                #region Using unique Guid to reapply the specific Gamepad Override
                 case m_gamePadScheme:
                 {
                     foreach (var entry in m_gamepadRebindDict)
@@ -806,8 +811,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                     }
                     break;
                 }
+                #endregion
             }
-            #endregion
         }
 
         /// <summary>
@@ -821,9 +826,10 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             for (int i = 0; i < _inputAction.bindings.Count; i++)
             {
-                #region Unique Guid
+                #region Unique Guid to remove the specific Override
                 bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{buttonIndexGuid}");
 
+                #region Using unique Guid to remove the specific Keyboard Override
                 //If the dictionary has the guidKey, the entry gets removed.
                 switch (dictHasKey)
                 {
@@ -836,7 +842,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                     {
                         break;
                     }
-                }
+                } 
+                #endregion
 
                 m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
                 #endregion
@@ -857,6 +864,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 #region Unique Guid                
                 bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{buttonIndexGuid}");
 
+                #region Using unique Guid to remove the specific Gamepad Override
                 //If the dictionary has the guidKey, save the entry. Else create a new entry with the new informations. 
                 switch (dictHasKey)
                 {
@@ -870,6 +878,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                         break;
                     }
                 }
+                #endregion
 
                 m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
                 #endregion
@@ -894,6 +903,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
                     switch (deviceScheme)                               //Check and remove child's Guid "guided" by it's deviceScheme.
                     {
+                        #region Using unique Guid to remove the specific Keyboard Override in Composites
                         case m_keyboardMouseScheme:
                         {
                             bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{childIndexGuid}");
@@ -914,6 +924,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                             m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
                             break;
                         }
+                        #endregion
+                        #region Using unique Guid to remove the specific Gamepad Override in Composites
                         case m_gamePadScheme:
                         {
                             bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{childIndexGuid}");
@@ -934,6 +946,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                             m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
                             break;
                         }
+                        #endregion
                         default:
                             break;
                     }
