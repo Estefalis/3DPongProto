@@ -26,6 +26,24 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] private ScrollRect m_scrollRect;
         [SerializeField] private RectTransform m_scrollContent;
         [SerializeField] private LayoutGroup m_layoutGroup;
+        [Space]
+        [SerializeField] private int m_verticalPadding;
+        [SerializeField] private int m_horizontalPadding;
+        [Space]
+        [SerializeField] private float m_verticalSpacing;
+        [SerializeField] private float m_horizontalSpacing;
+        [Space]
+        [SerializeField] private float m_gridSpacingX;
+        [SerializeField] private float m_gridSpacingY;
+        [Space]
+        [SerializeField] private float m_scrollWindowHeight;
+        [SerializeField] private float m_scrollWindowWidth;
+        [Space]
+        [SerializeField] private float m_contentHeight;
+        [SerializeField] private float m_contentWidth;
+        [Space]
+        [SerializeField] float m_firstChildHeight;
+        [SerializeField] float m_firstChildWidth;
 
         private bool m_canAutoScroll = false, m_scrollContentSet;
 
@@ -41,11 +59,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_scrollRect = GetComponent<ScrollRect>();
             m_scrollWindow = m_scrollRect.GetComponent<RectTransform>();
             m_scrollContent = m_scrollRect.content.GetComponent<RectTransform>();
-            m_layoutGroup = m_scrollContent.GetComponent<LayoutGroup>();
 
             m_scrollContentSet = m_scrollRect != null && m_scrollContent != null;
 
             GetAutoScrollOptions(m_scrollRect);
+            GetLayoutGroupSettings(m_layoutGroup);
 
             MenuNavigation.ALastSelectedGameObject += UpdateCurrentGameObject;
         }
@@ -73,7 +91,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         }
 
         /// <summary>
-        /// Switch solution to autoset available AutoScroll options.
+        /// Sets the AutoScrollOption and gets the LayoutGroup automatic, depending on the availabilities of connected scrollbars and their corresponding bool states.
         /// </summary>
         /// <param name="_targetScrollRect"></param>
         private void GetAutoScrollOptions(ScrollRect _targetScrollRect)
@@ -88,6 +106,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case true:
                 {
                     m_setAutoScrollOption = AutoScrollOptions.Both;
+                    m_layoutGroup = GetComponent<GridLayoutGroup>();
                     break;
                 }
                 case false:
@@ -97,6 +116,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         case true:
                         {
                             m_setAutoScrollOption = AutoScrollOptions.Vertical;
+                            m_layoutGroup = m_scrollContent.GetComponent<VerticalLayoutGroup>();
                             break;
                         }
                         case false:
@@ -106,11 +126,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                                 case true:
                                 {
                                     m_setAutoScrollOption = AutoScrollOptions.Horizontal;
+                                    m_layoutGroup = m_scrollContent.GetComponent<HorizontalLayoutGroup>();
                                     break;
                                 }
                                 case false:
                                 {
                                     m_setAutoScrollOption = AutoScrollOptions.None;
+                                    m_layoutGroup = null;
                                     break;
                                 }
                             }
@@ -125,6 +147,44 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             //'AddMissingLayoutGroup()' - 'switch (m_setAutoScrollOption)' - 'case AutoScrollOptions.Both/.Vertical/.Horizontal' -
             //'m_layoutGroup = m_scrollContent.AddComponent<GridLayoutGroup/VerticalLayoutGroup/HorizontalLayoutGroup>()' and
             //'default: break;' - for savety. (It would currently go too far.)
+        }
+
+        private void GetLayoutGroupSettings(LayoutGroup m_layoutGroup)
+        {
+            switch (m_setAutoScrollOption)
+            {
+                case AutoScrollOptions.Both:
+                {
+                    var padding = m_layoutGroup.GetComponent<GridLayoutGroup>().padding;
+                    m_horizontalPadding = padding.horizontal;                                           //Left + Right Sides
+                    m_verticalPadding = padding.vertical;                                               //Up + Down Sides
+                    var gridSpacing = m_layoutGroup.GetComponent<GridLayoutGroup>().spacing;            //Spacing between Elements.
+                    m_gridSpacingX = gridSpacing.x;
+                    m_gridSpacingY = gridSpacing.y;
+                    break;
+                }
+                case AutoScrollOptions.Vertical:
+                {
+                    m_verticalPadding = m_layoutGroup.GetComponent<VerticalLayoutGroup>().padding.vertical; //Up + Down Sides
+                    m_verticalSpacing = m_layoutGroup.GetComponent<VerticalLayoutGroup>().spacing;      //Spacing between Elements.
+                    break;
+                }
+                case AutoScrollOptions.Horizontal:
+                {
+                    m_horizontalPadding = m_layoutGroup.GetComponent<GridLayoutGroup>().padding.horizontal; //Left + Right Sides
+                    m_horizontalSpacing = m_layoutGroup.GetComponent<HorizontalLayoutGroup>().spacing;  //Spacing between Elements.
+                    break;
+                }
+            }
+
+            m_scrollWindowHeight = m_scrollWindow.rect.height;
+            m_scrollWindowWidth = m_scrollWindow.rect.width;
+            var contentRect = m_scrollContent.GetComponent<RectTransform>().rect;
+            m_contentHeight = contentRect.height;
+            m_contentWidth = contentRect.width;
+            var firstChildRect = m_scrollContent.GetChild(0).GetComponent<RectTransform>().rect;
+            m_firstChildHeight = firstChildRect.height;
+            m_firstChildWidth = firstChildRect.width;
         }
 
         /// <summary>
@@ -224,7 +284,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             m_lastSelectedGameObject = _gameObject;
             m_moveDirection = m_playerInputActions.UI.Navigate.ReadValue<Vector2>();
-            
+
             //for (int i = 0; i < m_scrollViewGameObjects.Count; i++)
             //{
             switch (m_scrollViewGameObjects.Contains(m_lastSelectedGameObject))

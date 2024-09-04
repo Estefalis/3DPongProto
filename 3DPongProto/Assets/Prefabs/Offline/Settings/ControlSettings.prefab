@@ -201,9 +201,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_setAutoScrollOption: 1
   m_scrollSpeed: 50
-  m_targetScrollRect: {fileID: 0}
-  m_scrollWindow: {fileID: 0}
-  m_scrollRectContent: {fileID: 0}
+  m_scrollRect: {fileID: 0}
+  m_scrollContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
 --- !u!1 &42570364796873869
 GameObject:
@@ -6890,9 +6889,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_setAutoScrollOption: 1
   m_scrollSpeed: 50
-  m_targetScrollRect: {fileID: 0}
-  m_scrollWindow: {fileID: 0}
-  m_scrollRectContent: {fileID: 0}
+  m_scrollRect: {fileID: 0}
+  m_scrollContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
 --- !u!1 &3560525716519637838
 GameObject:
@@ -9094,9 +9092,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_setAutoScrollOption: 1
   m_scrollSpeed: 50
-  m_targetScrollRect: {fileID: 0}
-  m_scrollWindow: {fileID: 0}
-  m_scrollRectContent: {fileID: 0}
+  m_scrollRect: {fileID: 0}
+  m_scrollContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
 --- !u!1 &4676749264564885076
 GameObject:
@@ -22504,9 +22501,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_setAutoScrollOption: 1
   m_scrollSpeed: 50
-  m_targetScrollRect: {fileID: 0}
-  m_scrollWindow: {fileID: 0}
-  m_scrollRectContent: {fileID: 0}
+  m_scrollRect: {fileID: 0}
+  m_scrollContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
 --- !u!1 &7993449986529936593
 GameObject:

@@ -29544,6 +29544,10 @@ PrefabInstance:
       propertyPath: m_menuNavigation
       value: 
       objectReference: {fileID: 2136304136}
+    - target: {fileID: 403340884, guid: 706ee50c909a6454e91a530a8c3361e8, type: 3}
+      propertyPath: m_setAutoScrollOption
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 694661341, guid: 706ee50c909a6454e91a530a8c3361e8, type: 3}
       propertyPath: m_menuNavigation
       value: 
