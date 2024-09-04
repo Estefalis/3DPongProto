@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-//TODO: Get available scroll options;
-//      Update next GameObject for AutoScrolling based on InputActionAsset MovementInput, current GameObject.
-//      AutoScroll, once GameObject is hidden.
+//TODO: AutoScroll, once GameObject is hidden.
+//CurrentTargetRectTransform == RectTransform of the currently selected element in the ScrollView.
 namespace ThreeDeePongProto.Offline.UI.Menu
 {
     [RequireComponent(typeof(ScrollRect))]
@@ -16,40 +15,44 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         internal enum AutoScrollOptions
         {
             None,
-            Both,
             Vertical,
-            Horizontal
+            Horizontal,
+            Both
         }
 
         [SerializeField] private AutoScrollOptions m_setAutoScrollOption = AutoScrollOptions.Both;
         [SerializeField] private float m_scrollSpeed = 50.0f;
 
-        [SerializeField] private ScrollRect m_targetScrollRect;
-        [SerializeField] private RectTransform m_scrollWindow;      //Used in rect.height.
-        [SerializeField] private GameObject m_scrollRectContent;
-        [SerializeField] private LayoutGroup m_layoutGroup;         //Used in group.anchoredPosition (.x and .y).
+        [SerializeField] private ScrollRect m_scrollRect;
+        [SerializeField] private RectTransform m_scrollContent;
+        //[SerializeField] private GameObject m_scrollRectContent;
+        [SerializeField] private LayoutGroup m_layoutGroup;
 
+        private RectTransform m_scrollWindow;
         private GameObject m_lastSelectedGameObject;
         private List<GameObject> m_scrollViewGameObjects = new List<GameObject>();
-        private bool m_canAutoScroll = false;
+        private bool m_canAutoScroll = false, m_scrollContentSet;
 
         private void Awake()
         {
             m_scrollViewGameObjects.Clear();
 
-            m_targetScrollRect = GetComponent<ScrollRect>();
-            m_scrollWindow = m_targetScrollRect.GetComponent<RectTransform>();
-            m_scrollRectContent = m_targetScrollRect.content.gameObject;
-            m_layoutGroup = m_scrollRectContent.GetComponent<LayoutGroup>();
+            m_scrollRect = GetComponent<ScrollRect>();
+            m_scrollWindow = m_scrollRect.GetComponent<RectTransform>();
 
-            GetAutoScrollOptions(m_targetScrollRect);
+            m_scrollContent = m_scrollRect.content.GetComponent<RectTransform>();
+            m_layoutGroup = m_scrollContent.GetComponent<LayoutGroup>();
+
+            m_scrollContentSet = m_scrollRect != null && m_scrollContent != null;
+
+            GetAutoScrollOptions(m_scrollRect);
 
             MenuNavigation.ALastSelectedGameObject += UpdateCurrentGameObject;  //or 'EventSystem.current.currentSelectedGameObject'.
         }
 
         private void Start()
         {
-            if (m_scrollRectContent != null)
+            if (m_scrollContent != null)
             {
                 ContentLevelIterations();
             }
@@ -125,7 +128,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         /// </summary>
         private void ContentLevelIterations()
         {
-            foreach (Transform transform in m_scrollRectContent.transform)
+            foreach (Transform transform in m_scrollContent.transform)
             {
                 //Level for X/Y Axis Toggles.
                 for (int i = 0; i < transform.childCount; i++)
@@ -238,10 +241,45 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 #endif
         }
 
+        /// <summary>
+        /// AutoScrolls to the next element, if the ScrollView and it's content are not null and the next element is part of the ScrollView.
+        /// </summary>
         private void AutoScrollToNextGameObject()   //TODO:
         {
-            if (!m_canAutoScroll)
+            if (!m_scrollContentSet || !m_canAutoScroll)
                 return;
+
+            switch (m_setAutoScrollOption)
+            {
+                case AutoScrollOptions.Vertical:
+                    UpdateVerticalScrollPosition();
+                    break;
+                case AutoScrollOptions.Horizontal:
+                    UpdateHorizontalScrollPosition();
+                    break;
+                case AutoScrollOptions.Both:
+                    UpdateVerticalScrollPosition();
+                    UpdateHorizontalScrollPosition();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void UpdateVerticalScrollPosition()
+        {
+            //TODO:
+            //Berechnung der ScrollView element position, zu der gescrollt werden muss:
+            //      - element.anchorPosition, element.rect.width/height, element.pivot.y.
+            //Berechnung Offset-Value, gemessen an der CursorPosition(später, nicht aktuell gebraucht):
+            //      - element.height/width, scrollView.height/width, scrollView.anchorPosition.y.
+            //      - Berechnung per Methode
+            //      - mit 'TargetScrollRect.verticalNormalizedPosition' Scrollbar/ScrollView scollen
+        }
+
+        private void UpdateHorizontalScrollPosition()
+        {
+
         }
     }
 }
