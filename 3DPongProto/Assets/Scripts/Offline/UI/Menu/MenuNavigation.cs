@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace ThreeDeePongProto.Offline.UI.Menu
@@ -34,8 +33,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] private Transform[] m_subPageTransforms;
         #endregion
 
-        //internal GameObject LastSelectedGameObject { get => m_lastSelectedGameObject; }
         private GameObject m_lastSelectedGameObject;
+
         public static event Action<GameObject> ALastSelectedGameObject;
 
         private void Awake()

@@ -1,6 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,18 +19,20 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             Both
         }
 
+        private PlayerInputActions m_playerInputActions;
         [SerializeField] private AutoScrollOptions m_setAutoScrollOption = AutoScrollOptions.Both;
         [SerializeField] private float m_scrollSpeed = 50.0f;
 
         [SerializeField] private ScrollRect m_scrollRect;
         [SerializeField] private RectTransform m_scrollContent;
-        //[SerializeField] private GameObject m_scrollRectContent;
         [SerializeField] private LayoutGroup m_layoutGroup;
+
+        private bool m_canAutoScroll = false, m_scrollContentSet;
 
         private RectTransform m_scrollWindow;
         private GameObject m_lastSelectedGameObject;
+        private Vector2 m_moveDirection;
         private List<GameObject> m_scrollViewGameObjects = new List<GameObject>();
-        private bool m_canAutoScroll = false, m_scrollContentSet;
 
         private void Awake()
         {
@@ -39,7 +40,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             m_scrollRect = GetComponent<ScrollRect>();
             m_scrollWindow = m_scrollRect.GetComponent<RectTransform>();
-
             m_scrollContent = m_scrollRect.content.GetComponent<RectTransform>();
             m_layoutGroup = m_scrollContent.GetComponent<LayoutGroup>();
 
@@ -47,7 +47,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             GetAutoScrollOptions(m_scrollRect);
 
-            MenuNavigation.ALastSelectedGameObject += UpdateCurrentGameObject;  //or 'EventSystem.current.currentSelectedGameObject'.
+            MenuNavigation.ALastSelectedGameObject += UpdateCurrentGameObject;
         }
 
         private void Start()
@@ -56,11 +56,15 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             {
                 ContentLevelIterations();
             }
+
+            m_playerInputActions = InputManager.m_playerInputActions;
+            m_playerInputActions.UI.Enable();
         }
 
         private void OnDisable()
         {
-            MenuNavigation.ALastSelectedGameObject -= UpdateCurrentGameObject;  //or 'EventSystem.current.currentSelectedGameObject'.
+            MenuNavigation.ALastSelectedGameObject -= UpdateCurrentGameObject;
+            m_playerInputActions.UI.Disable();
         }
 
         private void Update()
@@ -119,7 +123,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             //if '(m_layoutGroup == null)' and you want to add one (WITH detailed memberValues to set it's dimensions):
             //'AddMissingLayoutGroup()' - 'switch (m_setAutoScrollOption)' - 'case AutoScrollOptions.Both/.Vertical/.Horizontal' -
-            //'m_layoutGroup = m_scrollRectContent.AddComponent<GridLayoutGroup/VerticalLayoutGroup/HorizontalLayoutGroup>()' and
+            //'m_layoutGroup = m_scrollContent.AddComponent<GridLayoutGroup/VerticalLayoutGroup/HorizontalLayoutGroup>()' and
             //'default: break;' - for savety. (It would currently go too far.)
         }
 
@@ -219,7 +223,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void UpdateCurrentGameObject(GameObject _gameObject)
         {
             m_lastSelectedGameObject = _gameObject;
-
+            m_moveDirection = m_playerInputActions.UI.Navigate.ReadValue<Vector2>();
+            
             //for (int i = 0; i < m_scrollViewGameObjects.Count; i++)
             //{
             switch (m_scrollViewGameObjects.Contains(m_lastSelectedGameObject))
@@ -237,7 +242,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             }
             //}
 #if UNITY_EDITOR
-            //Debug.Log(m_canAutoScroll);
+            //Debug.Log($"ASW MoveDir: {m_moveDirection} - AutoScroll: {m_canAutoScroll} - CurrentGO: {m_lastSelectedGameObject}");
 #endif
         }
 
