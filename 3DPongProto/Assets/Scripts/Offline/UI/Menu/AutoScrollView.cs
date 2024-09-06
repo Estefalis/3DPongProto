@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 //TODO: AutoScroll, once GameObject is hidden.
@@ -21,12 +22,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private PlayerInputActions m_playerInputActions;
         [SerializeField] private AutoScrollOptions m_setAutoScrollOption = AutoScrollOptions.Both;
-        [SerializeField] private float m_scrollSpeed = 50.0f;
+        [SerializeField] private float m_scrollSpeed = 175.0f;
         [Space]
         [SerializeField] private ScrollRect m_scrollRect;
         [SerializeField] private RectTransform m_scrollContent;
         [SerializeField] private int m_contentChildIndex;
-        [SerializeField] private float m_scrollSensitivity;
         [Space]
         [SerializeField] private LayoutGroup m_layoutGroup;
         [SerializeField] private int m_verticalPadding;
@@ -35,41 +35,40 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] private float m_verticalSpacing;
         [SerializeField] private float m_horizontalSpacing;
         [Space]
-        [SerializeField] private float m_gridSpacingX;
-        [SerializeField] private float m_gridSpacingY;
-        [Space]
-        [SerializeField] private float m_scrollWindowHeight;
-        [SerializeField] private float m_scrollWindowWidth;
-        [Space]
-        [SerializeField] private float m_contentHeight;
-        [SerializeField] private float m_contentWidth;
+        //[SerializeField] private float m_contentHeight;
+        //[SerializeField] private float m_contentWidth;
         [Space]
         [SerializeField] float m_firstChildHeight;
         [SerializeField] float m_firstChildWidth;
 
+        //[SerializeField] float m_totalSpacingHor, m_totalSpacingVer, m_totalFreeSpace;
+
+        private RectTransform m_scrollViewRectTransform;
+
+        private float m_scrollWindowHeight;
+        private float m_scrollWindowWidth;
         private bool m_canAutoScroll = false, m_scrollContentSet;
 
-        private RectTransform m_scrollWindow;
         private GameObject m_lastSelectedGameObject;
         private Vector2 m_moveDirection;
+        private GridLayoutGroup.Constraint m_gridConstraint;
+
         //private List<GameObject> m_scrollViewGameObjects = new List<GameObject>();
         private Dictionary<GameObject, int> m_contentChildID = new Dictionary<GameObject, int>();
 
         private void Awake()
         {
             //m_scrollViewGameObjects.Clear();
+            m_lastSelectedGameObject = null;
             m_contentChildID.Clear();
 
             m_scrollRect = GetComponent<ScrollRect>();
-            m_scrollSensitivity = m_scrollRect.scrollSensitivity;
-            m_scrollWindow = m_scrollRect.GetComponent<RectTransform>();
+            m_scrollViewRectTransform = m_scrollRect.GetComponent<RectTransform>();
             m_scrollContent = m_scrollRect.content.GetComponent<RectTransform>();
 
             m_scrollContentSet = m_scrollRect != null && m_scrollContent != null;
 
             GetAutoScrollOptions(m_scrollRect);
-            GetLayoutGroupSettings(m_layoutGroup);
-
             MenuNavigation.ALastSelectedGameObject += UpdateCurrentGameObject;
         }
 
@@ -79,6 +78,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             {
                 ContentLevelIterations();
             }
+
+            GetLayoutGroupSettings(m_layoutGroup);  //Requires 'ContentLevelIterations()' 'm_contentChildIndex', if m_totalSpacings are wanted.
 
             m_playerInputActions = InputManager.m_playerInputActions;
             m_playerInputActions.UI.Enable();
@@ -92,54 +93,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void Update()
         {
+            if (m_lastSelectedGameObject != null)
+                Debug.Log(m_lastSelectedGameObject);
+
             AutoScrollToNextGameObject();
-        }
-
-        /// <summary>
-        /// Searches Content, of the currently active ScrollView, for GameObjects in each Parent/Child Level of the Hierarchy.
-        /// </summary>
-        private void ContentLevelIterations()
-        {
-            m_contentChildIndex = 0;
-            foreach (Transform transform in m_scrollContent.transform)
-            {
-                m_contentChildIndex += 1;
-                //Level for X/Y Axis Toggles.
-                for (int i = 0; i < transform.childCount; i++)
-                {
-#if UNITY_EDITOR
-                    //Debug.Log(transform.GetChild(i).name);
-#endif
-                    Transform subLevelOne = transform.GetChild(i);
-                    ScrollViewObjectsToDict(subLevelOne, m_contentChildIndex);
-
-                    ////Level for SliderXAxis Lower & Higher Buttons, XSlider itself, it's Toggle.
-                    ////Level for SliderYAxis Lower & Higher Buttons, YSlider itself, it's Toggle.
-                    ////Level for ResetButtons for KeyRebinds.
-                    for (int j = 0; j < subLevelOne.childCount; j++)
-                    {
-#if UNITY_EDITOR
-                        //Debug.Log(subLevelOne.GetChild(j).name);
-#endif
-                        Transform subLevelTwo = subLevelOne.GetChild(j);
-                        ScrollViewObjectsToDict(subLevelTwo, m_contentChildIndex);
-
-                        //Level for Keyboard & Gamepad Rebind Buttons.
-                        for (int k = 0; k < subLevelTwo.childCount; k++)
-                        {
-#if UNITY_EDITOR
-                            //Debug.Log(subLevelTwo.GetChild(k).name);
-#endif
-                            Transform subLevelThree = subLevelTwo.GetChild(k);
-                            ScrollViewObjectsToDict(subLevelThree, m_contentChildIndex);
-                        }
-                    }
-                }
-            }
-#if UNITY_EDITOR
-            //for (int i = 0; i < m_scrollViewGameObjects.Count; i++)
-            //    Debug.Log(m_scrollViewGameObjects[i].name);
-#endif
         }
 
         /// <summary>
@@ -248,6 +205,53 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             //'default: break;' - for savety. (It would currently go too far.)
         }
 
+        /// <summary>
+        /// Searches Content, of the currently active ScrollView, for GameObjects in each Parent/Child Level of the Hierarchy.
+        /// </summary>
+        private void ContentLevelIterations()
+        {
+            m_contentChildIndex = 0;
+            foreach (Transform transform in m_scrollContent.transform)
+            {
+                m_contentChildIndex += 1;
+                //Level for X/Y Axis Toggles.
+                for (int i = 0; i < transform.childCount; i++)
+                {
+#if UNITY_EDITOR
+                    //Debug.Log(transform.GetChild(i).name);
+#endif
+                    Transform subLevelOne = transform.GetChild(i);
+                    ScrollViewObjectsToDict(subLevelOne, m_contentChildIndex);
+
+                    ////Level for SliderXAxis Lower & Higher Buttons, XSlider itself, it's Toggle.
+                    ////Level for SliderYAxis Lower & Higher Buttons, YSlider itself, it's Toggle.
+                    ////Level for ResetButtons for KeyRebinds.
+                    for (int j = 0; j < subLevelOne.childCount; j++)
+                    {
+#if UNITY_EDITOR
+                        //Debug.Log(subLevelOne.GetChild(j).name);
+#endif
+                        Transform subLevelTwo = subLevelOne.GetChild(j);
+                        ScrollViewObjectsToDict(subLevelTwo, m_contentChildIndex);
+
+                        //Level for Keyboard & Gamepad Rebind Buttons.
+                        for (int k = 0; k < subLevelTwo.childCount; k++)
+                        {
+#if UNITY_EDITOR
+                            //Debug.Log(subLevelTwo.GetChild(k).name);
+#endif
+                            Transform subLevelThree = subLevelTwo.GetChild(k);
+                            ScrollViewObjectsToDict(subLevelThree, m_contentChildIndex);
+                        }
+                    }
+                }
+            }
+#if UNITY_EDITOR
+            //for (int i = 0; i < m_scrollViewGameObjects.Count; i++)
+            //    Debug.Log(m_scrollViewGameObjects[i].name);
+#endif
+        }
+
         private void GetLayoutGroupSettings(LayoutGroup m_layoutGroup)
         {
             switch (m_setAutoScrollOption)
@@ -258,29 +262,44 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     m_horizontalPadding = padding.horizontal;                                           //Left + Right Sides
                     m_verticalPadding = padding.vertical;                                               //Up + Down Sides
                     var gridSpacing = m_layoutGroup.GetComponent<GridLayoutGroup>().spacing;            //Spacing between Elements.
-                    m_gridSpacingX = gridSpacing.x;
-                    m_gridSpacingY = gridSpacing.y;
+                    m_horizontalSpacing = gridSpacing.x;
+                    m_verticalSpacing = gridSpacing.y;
+
+                    m_gridConstraint = m_layoutGroup.GetComponent<GridLayoutGroup>().constraint;
+                    switch (m_gridConstraint)   //TODO: Get Column/Row childCounts, depending on 'm_gridConstraint's.
+                    {
+                        case GridLayoutGroup.Constraint.Flexible:
+                            break;
+                        case GridLayoutGroup.Constraint.FixedColumnCount:
+                            break;
+                        case GridLayoutGroup.Constraint.FixedRowCount:
+                            break;
+                    }
                     break;
                 }
                 case AutoScrollOptions.Vertical:
                 {
                     m_verticalPadding = m_layoutGroup.GetComponent<VerticalLayoutGroup>().padding.vertical; //Up + Down Sides
                     m_verticalSpacing = m_layoutGroup.GetComponent<VerticalLayoutGroup>().spacing;      //Spacing between Elements.
+                    //m_totalSpacingVer = Mathf.Clamp(m_totalSpacingVer, 0, m_verticalSpacing * m_contentChildIndex - 1);
+                    //m_totalFreeSpace = m_verticalPadding + m_totalSpacingVer;
                     break;
                 }
                 case AutoScrollOptions.Horizontal:
                 {
                     m_horizontalPadding = m_layoutGroup.GetComponent<GridLayoutGroup>().padding.horizontal; //Left + Right Sides
                     m_horizontalSpacing = m_layoutGroup.GetComponent<HorizontalLayoutGroup>().spacing;  //Spacing between Elements.
+                    //m_totalSpacingHor = Mathf.Clamp(m_totalSpacingHor, 0, m_horizontalSpacing * m_contentChildIndex - 1);
+                    //m_totalFreeSpace = m_horizontalPadding + m_totalSpacingHor;
                     break;
                 }
             }
 
-            m_scrollWindowHeight = m_scrollWindow.rect.height;
-            m_scrollWindowWidth = m_scrollWindow.rect.width;
-            var contentRect = m_scrollContent.GetComponent<RectTransform>().rect;
-            m_contentHeight = contentRect.height;
-            m_contentWidth = contentRect.width;
+            m_scrollWindowHeight = m_scrollViewRectTransform.rect.height;
+            m_scrollWindowWidth = m_scrollViewRectTransform.rect.width;
+            //var contentRect = m_scrollContent.GetComponent<RectTransform>().rect;
+            //m_contentHeight = contentRect.height;
+            //m_contentWidth = contentRect.width;
             var firstChildRect = m_scrollContent.GetChild(0).GetComponent<RectTransform>().rect;
             m_firstChildHeight = firstChildRect.height;
             m_firstChildWidth = firstChildRect.width;
@@ -329,6 +348,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             }
             #endregion
 #if UNITY_EDITOR
+            Debug.Log(m_canAutoScroll);
             //Debug.Log($"ASW MoveDir: {m_moveDirection} - AutoScroll: {m_canAutoScroll} - CurrentGO: {m_lastSelectedGameObject}");
 #endif
         }
@@ -360,6 +380,37 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void UpdateVerticalScrollPosition(RectTransform _scrollContent, Vector2 _moveDirection)
         {
+            //move the current scroll rect to correct _variableContentPos           //min: -57 - max: 0
+            float variableContentPos = -_scrollContent.anchoredPosition.y - (_scrollContent.rect.height * (1 - _scrollContent.pivot.y) - m_verticalPadding);
+            float scrollContentHeight = _scrollContent.rect.height;                 //487 - Fullsize Content
+            //float scrollContentHeight = m_firstChildHeight;                       //60  - Child Height
+            float scrollWindowHeight = m_scrollWindowHeight;                        //430 - masked ContentScrollView
+            float viewRectAnchorPos = m_scrollViewRectTransform.anchoredPosition.y; //0   - fixed ScrollView AnchorPosition
+
+            // get the element offset value depending on the cursor move direction
+            float offlimitsValue = GetScrollOffset(variableContentPos, viewRectAnchorPos, scrollContentHeight, scrollWindowHeight);  //917 - 974
+
+            float normalizedPosition = m_scrollRect.verticalNormalizedPosition + (offlimitsValue / m_scrollViewRectTransform.rect.height);
+            //2,265116 - 3,132558
+
+            normalizedPosition = Mathf.Clamp01(normalizedPosition); //Currently Mouse isn't part of the context.
+
+            if (Keyboard.current.numpadPlusKey.wasPressedThisFrame)
+            {
+                normalizedPosition -= Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.height;
+                normalizedPosition = Mathf.Clamp01(normalizedPosition);
+                // move the target scroll rect
+                m_scrollRect.verticalNormalizedPosition = Mathf.SmoothStep(m_scrollRect.verticalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * m_scrollSpeed);
+            }
+
+            if (Keyboard.current.numpadMinusKey.wasPressedThisFrame)
+            {
+                normalizedPosition += Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.height;
+                normalizedPosition = Mathf.Clamp01(normalizedPosition);
+                // move the target scroll rect
+                m_scrollRect.verticalNormalizedPosition = Mathf.SmoothStep(m_scrollRect.verticalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * m_scrollSpeed);
+            }
+
             float yDirection = _moveDirection.y;
             switch (yDirection)
             {
@@ -378,13 +429,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 }
             }
 
-            //TODO:
-            //Berechnung der ScrollView element position, zu der gescrollt werden muss:
-            //      - element.anchorPosition, element.rect.width/height, element.pivot.y.
-            //Berechnung Offset-Value, gemessen an der CursorPosition(später, nicht aktuell gebraucht):
-            //      - element.height/width, scrollView.height/width, scrollView.anchorPosition.y.
-            //      - Berechnung per Methode
-            //      - mit 'TargetScrollRect.verticalNormalizedPosition' Scrollbar/ScrollView scollen
+            //TODO: - Berechnung Offset-Value, gemessen an der CursorPosition(später, nicht aktuell gebraucht).
         }
 
         private void UpdateHorizontalScrollPosition(RectTransform _scrollContent, Vector2 _moveDirection)
@@ -408,15 +453,25 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             }
         }
 
-        private float GetScrollOffset(float position, float listAnchorPosition, float targetLength, float maskLength)
+        //Debug.Log($"With ContentHeight: {0 + (487 / 2)} - {-57 + (487 / 2)}"); //243 || 186
+        //Debug.Log($"With ChildrenHeight: {0 + (60 / 2)} - {-57 + (60 / 2)}"); //30 || -27
+        //            GetScrollOffset(ContentPos upper/start,    fix ScrollView AnchorPos,      Fullsize Content,     (masked) ContentScrollView)
+        //                           (          -57 - 0        ,            0            ,              487          ,              430         )
+        private float GetScrollOffset(float _variableContentPos, float _viewRectAnchorPos, float _scrollContentHeight, float _scrollWindowHeight)
         {
-            if (position < listAnchorPosition + (targetLength / 2))
+            if (_variableContentPos < _viewRectAnchorPos + (_scrollContentHeight / 2))
             {
-                return (listAnchorPosition + maskLength) - (position - targetLength);
+#if UNITY_EDITOR
+                //Debug.Log(_viewRectAnchorPos + _scrollWindowHeight - (_variableContentPos - _scrollContentHeight));
+#endif
+                return (_viewRectAnchorPos + _scrollWindowHeight) - (_variableContentPos - _scrollContentHeight);
             }
-            else if (position + targetLength > listAnchorPosition + maskLength)
+            else if (_variableContentPos + _scrollContentHeight > _viewRectAnchorPos + _scrollWindowHeight)
             {
-                return (listAnchorPosition + maskLength) - (position + targetLength);
+#if UNITY_EDITOR
+                //Debug.Log(_viewRectAnchorPos + _scrollWindowHeight - (_variableContentPos + _scrollContentHeight));
+#endif
+                return (_viewRectAnchorPos + _scrollWindowHeight) - (_variableContentPos + _scrollContentHeight);
             }
 
             return 0;

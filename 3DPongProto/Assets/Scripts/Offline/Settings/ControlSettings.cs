@@ -17,8 +17,8 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField, Range(0.5f, 1f)] private float m_maxAlphaValue = 1f;
 
         private int m_currentViewIndex;
-        public static event Action<int> PlayerViewIndex;
-        public static event Action ResetPlayerViewRebinds;
+        public static event Action<int> PlayerViewIndex;        //Subscriber: InputManager.
+        public static event Action ResetPlayerViewRebinds;      //Subscriber: InputManager.
         #endregion
 
         #region Axis Inversion

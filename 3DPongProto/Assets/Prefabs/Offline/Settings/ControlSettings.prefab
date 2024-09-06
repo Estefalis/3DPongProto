@@ -200,20 +200,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_setAutoScrollOption: 1
-  m_scrollSpeed: 50
+  m_scrollSpeed: 175
   m_scrollRect: {fileID: 0}
   m_scrollContent: {fileID: 0}
+  m_contentChildIndex: 0
   m_layoutGroup: {fileID: 0}
   m_verticalPadding: 0
   m_horizontalPadding: 0
   m_verticalSpacing: 0
   m_horizontalSpacing: 0
-  m_gridSpacingX: 0
-  m_gridSpacingY: 0
-  m_scrollWindowHeight: 0
-  m_scrollWindowWidth: 0
-  m_contentHeight: 0
-  m_contentWidth: 0
   m_firstChildHeight: 0
   m_firstChildWidth: 0
 --- !u!1 &42570364796873869
@@ -6900,20 +6895,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_setAutoScrollOption: 1
-  m_scrollSpeed: 50
+  m_scrollSpeed: 175
   m_scrollRect: {fileID: 0}
   m_scrollContent: {fileID: 0}
+  m_contentChildIndex: 0
   m_layoutGroup: {fileID: 0}
   m_verticalPadding: 0
   m_horizontalPadding: 0
   m_verticalSpacing: 0
   m_horizontalSpacing: 0
-  m_gridSpacingX: 0
-  m_gridSpacingY: 0
-  m_scrollWindowHeight: 0
-  m_scrollWindowWidth: 0
-  m_contentHeight: 0
-  m_contentWidth: 0
   m_firstChildHeight: 0
   m_firstChildWidth: 0
 --- !u!1 &3560525716519637838
@@ -9115,20 +9105,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_setAutoScrollOption: 1
-  m_scrollSpeed: 50
+  m_scrollSpeed: 175
   m_scrollRect: {fileID: 0}
   m_scrollContent: {fileID: 0}
+  m_contentChildIndex: 0
   m_layoutGroup: {fileID: 0}
   m_verticalPadding: 0
   m_horizontalPadding: 0
   m_verticalSpacing: 0
   m_horizontalSpacing: 0
-  m_gridSpacingX: 0
-  m_gridSpacingY: 0
-  m_scrollWindowHeight: 0
-  m_scrollWindowWidth: 0
-  m_contentHeight: 0
-  m_contentWidth: 0
   m_firstChildHeight: 0
   m_firstChildWidth: 0
 --- !u!1 &4676749264564885076
@@ -22536,20 +22521,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_setAutoScrollOption: 1
-  m_scrollSpeed: 50
+  m_scrollSpeed: 175
   m_scrollRect: {fileID: 0}
   m_scrollContent: {fileID: 0}
+  m_contentChildIndex: 0
   m_layoutGroup: {fileID: 0}
   m_verticalPadding: 0
   m_horizontalPadding: 0
   m_verticalSpacing: 0
   m_horizontalSpacing: 0
-  m_gridSpacingX: 0
-  m_gridSpacingY: 0
-  m_scrollWindowHeight: 0
-  m_scrollWindowWidth: 0
-  m_contentHeight: 0
-  m_contentWidth: 0
   m_firstChildHeight: 0
   m_firstChildWidth: 0
 --- !u!1 &7993449986529936593
