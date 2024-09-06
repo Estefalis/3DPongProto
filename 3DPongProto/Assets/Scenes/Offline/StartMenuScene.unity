@@ -29570,6 +29570,56 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2136304136}
+    - target: {fileID: 1726353091199949180, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /R/ /Y'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1726353091347026594, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /R/ /Y'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1737676753052282862, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: NACH-OBEN
+      objectReference: {fileID: 0}
+    - target: {fileID: 1737676753240810544, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: NACH-OBEN
+      objectReference: {fileID: 0}
+    - target: {fileID: 2146074059936172240, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /NACH-LINKS/ /NACH-RECHTS'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2146074060123063054, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /NACH-LINKS/ /NACH-RECHTS'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2184946544009107967, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /UMSCHALT RECHTS/ /1 (ZEHNERTASTATUR)'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2184946544189149729, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /UMSCHALT RECHTS/ /1 (ZEHNERTASTATUR)'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2594693517211987145, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /NACH-LINKS/ /NACH-RECHTS'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2594693517323282199, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /NACH-LINKS/ /NACH-RECHTS'
+      objectReference: {fileID: 0}
     - target: {fileID: 2996707030087504961, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -29585,6 +29635,16 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
       objectReference: {fileID: 1739567780}
+    - target: {fileID: 3419453489462386833, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /UMSCHALT RECHTS/ /1 (ZEHNERTASTATUR)'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3419453489609042767, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /UMSCHALT RECHTS/ /1 (ZEHNERTASTATUR)'
+      objectReference: {fileID: 0}
     - target: {fileID: 3683833498379111465, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
@@ -29635,6 +29695,16 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
       objectReference: {fileID: 1739567780}
+    - target: {fileID: 4474221741394980516, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /R/ /Y'
+      objectReference: {fileID: 0}
+    - target: {fileID: 4474221741514728826, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /R/ /Y'
+      objectReference: {fileID: 0}
     - target: {fileID: 4852882517651250896, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown

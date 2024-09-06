@@ -204,6 +204,18 @@ MonoBehaviour:
   m_scrollRect: {fileID: 0}
   m_scrollContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
+  m_verticalPadding: 0
+  m_horizontalPadding: 0
+  m_verticalSpacing: 0
+  m_horizontalSpacing: 0
+  m_gridSpacingX: 0
+  m_gridSpacingY: 0
+  m_scrollWindowHeight: 0
+  m_scrollWindowWidth: 0
+  m_contentHeight: 0
+  m_contentWidth: 0
+  m_firstChildHeight: 0
+  m_firstChildWidth: 0
 --- !u!1 &42570364796873869
 GameObject:
   m_ObjectHideFlags: 0
@@ -6892,6 +6904,18 @@ MonoBehaviour:
   m_scrollRect: {fileID: 0}
   m_scrollContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
+  m_verticalPadding: 0
+  m_horizontalPadding: 0
+  m_verticalSpacing: 0
+  m_horizontalSpacing: 0
+  m_gridSpacingX: 0
+  m_gridSpacingY: 0
+  m_scrollWindowHeight: 0
+  m_scrollWindowWidth: 0
+  m_contentHeight: 0
+  m_contentWidth: 0
+  m_firstChildHeight: 0
+  m_firstChildWidth: 0
 --- !u!1 &3560525716519637838
 GameObject:
   m_ObjectHideFlags: 0
@@ -9095,6 +9119,18 @@ MonoBehaviour:
   m_scrollRect: {fileID: 0}
   m_scrollContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
+  m_verticalPadding: 0
+  m_horizontalPadding: 0
+  m_verticalSpacing: 0
+  m_horizontalSpacing: 0
+  m_gridSpacingX: 0
+  m_gridSpacingY: 0
+  m_scrollWindowHeight: 0
+  m_scrollWindowWidth: 0
+  m_contentHeight: 0
+  m_contentWidth: 0
+  m_firstChildHeight: 0
+  m_firstChildWidth: 0
 --- !u!1 &4676749264564885076
 GameObject:
   m_ObjectHideFlags: 0
@@ -22476,7 +22512,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 6.5
+  m_ScrollSensitivity: 9.5
   m_Viewport: {fileID: 7993449985087965045}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 7993449986542095200}
@@ -22504,6 +22540,18 @@ MonoBehaviour:
   m_scrollRect: {fileID: 0}
   m_scrollContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
+  m_verticalPadding: 0
+  m_horizontalPadding: 0
+  m_verticalSpacing: 0
+  m_horizontalSpacing: 0
+  m_gridSpacingX: 0
+  m_gridSpacingY: 0
+  m_scrollWindowHeight: 0
+  m_scrollWindowWidth: 0
+  m_contentHeight: 0
+  m_contentWidth: 0
+  m_firstChildHeight: 0
+  m_firstChildWidth: 0
 --- !u!1 &7993449986529936593
 GameObject:
   m_ObjectHideFlags: 0

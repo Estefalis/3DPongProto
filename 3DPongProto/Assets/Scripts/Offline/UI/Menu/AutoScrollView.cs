@@ -22,11 +22,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private PlayerInputActions m_playerInputActions;
         [SerializeField] private AutoScrollOptions m_setAutoScrollOption = AutoScrollOptions.Both;
         [SerializeField] private float m_scrollSpeed = 50.0f;
-
+        [Space]
         [SerializeField] private ScrollRect m_scrollRect;
         [SerializeField] private RectTransform m_scrollContent;
-        [SerializeField] private LayoutGroup m_layoutGroup;
+        [SerializeField] private int m_contentChildIndex;
+        [SerializeField] private float m_scrollSensitivity;
         [Space]
+        [SerializeField] private LayoutGroup m_layoutGroup;
         [SerializeField] private int m_verticalPadding;
         [SerializeField] private int m_horizontalPadding;
         [Space]
@@ -50,13 +52,16 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private RectTransform m_scrollWindow;
         private GameObject m_lastSelectedGameObject;
         private Vector2 m_moveDirection;
-        private List<GameObject> m_scrollViewGameObjects = new List<GameObject>();
+        //private List<GameObject> m_scrollViewGameObjects = new List<GameObject>();
+        private Dictionary<GameObject, int> m_contentChildID = new Dictionary<GameObject, int>();
 
         private void Awake()
         {
-            m_scrollViewGameObjects.Clear();
+            //m_scrollViewGameObjects.Clear();
+            m_contentChildID.Clear();
 
             m_scrollRect = GetComponent<ScrollRect>();
+            m_scrollSensitivity = m_scrollRect.scrollSensitivity;
             m_scrollWindow = m_scrollRect.GetComponent<RectTransform>();
             m_scrollContent = m_scrollRect.content.GetComponent<RectTransform>();
 
@@ -88,6 +93,100 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void Update()
         {
             AutoScrollToNextGameObject();
+        }
+
+        /// <summary>
+        /// Searches Content, of the currently active ScrollView, for GameObjects in each Parent/Child Level of the Hierarchy.
+        /// </summary>
+        private void ContentLevelIterations()
+        {
+            m_contentChildIndex = 0;
+            foreach (Transform transform in m_scrollContent.transform)
+            {
+                m_contentChildIndex += 1;
+                //Level for X/Y Axis Toggles.
+                for (int i = 0; i < transform.childCount; i++)
+                {
+#if UNITY_EDITOR
+                    //Debug.Log(transform.GetChild(i).name);
+#endif
+                    Transform subLevelOne = transform.GetChild(i);
+                    ScrollViewObjectsToDict(subLevelOne, m_contentChildIndex);
+
+                    ////Level for SliderXAxis Lower & Higher Buttons, XSlider itself, it's Toggle.
+                    ////Level for SliderYAxis Lower & Higher Buttons, YSlider itself, it's Toggle.
+                    ////Level for ResetButtons for KeyRebinds.
+                    for (int j = 0; j < subLevelOne.childCount; j++)
+                    {
+#if UNITY_EDITOR
+                        //Debug.Log(subLevelOne.GetChild(j).name);
+#endif
+                        Transform subLevelTwo = subLevelOne.GetChild(j);
+                        ScrollViewObjectsToDict(subLevelTwo, m_contentChildIndex);
+
+                        //Level for Keyboard & Gamepad Rebind Buttons.
+                        for (int k = 0; k < subLevelTwo.childCount; k++)
+                        {
+#if UNITY_EDITOR
+                            //Debug.Log(subLevelTwo.GetChild(k).name);
+#endif
+                            Transform subLevelThree = subLevelTwo.GetChild(k);
+                            ScrollViewObjectsToDict(subLevelThree, m_contentChildIndex);
+                        }
+                    }
+                }
+            }
+#if UNITY_EDITOR
+            //for (int i = 0; i < m_scrollViewGameObjects.Count; i++)
+            //    Debug.Log(m_scrollViewGameObjects[i].name);
+#endif
+        }
+
+        /// <summary>
+        /// If Slider, Toggle or Button GameObjects are found in the ScrollView, they will get added to the 'm_scrollViewGameObjects' List.
+        /// </summary>
+        /// <param name="_transformLevel"></param>
+        private void ScrollViewObjectsToDict(Transform _transformLevel, int _contentChildIndex)
+        {
+            bool containsToggle = _transformLevel.TryGetComponent(out Toggle toggle);
+            bool containsSlider = _transformLevel.TryGetComponent(out Slider slider);
+            bool containsButton = _transformLevel.TryGetComponent(out Button button);
+
+            switch (containsToggle)
+            {
+                case false:
+                    break;
+                case true:
+                {
+                    //m_scrollViewGameObjects.Add(toggle.gameObject);
+                    m_contentChildID.Add(toggle.gameObject, _contentChildIndex);
+                    break;
+                }
+            }
+
+            switch (containsSlider)
+            {
+                case false:
+                    break;
+                case true:
+                {
+                    //m_scrollViewGameObjects.Add(slider.gameObject);
+                    m_contentChildID.Add(slider.gameObject, _contentChildIndex);
+                    break;
+                }
+            }
+
+            switch (containsButton)
+            {
+                case false:
+                    break;
+                case true:
+                {
+                    //m_scrollViewGameObjects.Add(button.gameObject);
+                    m_contentChildID.Add(button.gameObject, _contentChildIndex);
+                    break;
+                }
+            }
         }
 
         /// <summary>
@@ -188,95 +287,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         }
 
         /// <summary>
-        /// Searches Content, of the currently active ScrollView, for GameObjects in each Parent/Child Level of the Hierarchy.
-        /// </summary>
-        private void ContentLevelIterations()
-        {
-            foreach (Transform transform in m_scrollContent.transform)
-            {
-                //Level for X/Y Axis Toggles.
-                for (int i = 0; i < transform.childCount; i++)
-                {
-#if UNITY_EDITOR
-                    //Debug.Log(transform.GetChild(i).name);
-#endif
-                    Transform subLevelOne = transform.GetChild(i);
-                    GetToggleSliderButtons(subLevelOne);
-
-                    ////Level for SliderXAxis Lower & Higher Buttons, XSlider itself, it's Toggle.
-                    ////Level for SliderYAxis Lower & Higher Buttons, YSlider itself, it's Toggle.
-                    ////Level for ResetButtons for KeyRebinds.
-                    for (int j = 0; j < subLevelOne.childCount; j++)
-                    {
-#if UNITY_EDITOR
-                        //Debug.Log(subLevelOne.GetChild(j).name);
-#endif
-                        Transform subLevelTwo = subLevelOne.GetChild(j);
-                        GetToggleSliderButtons(subLevelTwo);
-
-                        //Level for Keyboard & Gamepad Rebind Buttons.
-                        for (int k = 0; k < subLevelTwo.childCount; k++)
-                        {
-#if UNITY_EDITOR
-                            //Debug.Log(subLevelTwo.GetChild(k).name);
-#endif
-                            Transform subLevelThree = subLevelTwo.GetChild(k);
-                            GetToggleSliderButtons(subLevelThree);
-                        }
-                    }
-                }
-            }
-#if UNITY_EDITOR
-            //for (int i = 0; i < m_scrollViewGameObjects.Count; i++)
-            //    Debug.Log(m_scrollViewGameObjects[i].name);
-#endif
-        }
-
-        /// <summary>
-        /// If Slider, Toggle or Button GameObjects are found in the ScrollView, they will get added to the 'm_scrollViewGameObjects' List.
-        /// </summary>
-        /// <param name="_transformLevel"></param>
-        private void GetToggleSliderButtons(Transform _transformLevel)
-        {
-            bool containsToggle = _transformLevel.TryGetComponent(out Toggle toggle);
-            bool containsSlider = _transformLevel.TryGetComponent(out Slider slider);
-            bool containsButton = _transformLevel.TryGetComponent(out Button button);
-
-            switch (containsToggle)
-            {
-                case false:
-                    break;
-                case true:
-                {
-                    m_scrollViewGameObjects.Add(toggle.gameObject);
-                    break;
-                }
-            }
-
-            switch (containsSlider)
-            {
-                case false:
-                    break;
-                case true:
-                {
-                    m_scrollViewGameObjects.Add(slider.gameObject);
-                    break;
-                }
-            }
-
-            switch (containsButton)
-            {
-                case false:
-                    break;
-                case true:
-                {
-                    m_scrollViewGameObjects.Add(button.gameObject);
-                    break;
-                }
-            }
-        }
-
-        /// <summary>
         /// Updates AutoScrolling bool 'm_canAutoScroll', depending on 'm_scrollViewGameObjects' List entries.
         /// </summary>
         /// <param name="_gameObject"></param>
@@ -285,13 +295,30 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_lastSelectedGameObject = _gameObject;
             m_moveDirection = m_playerInputActions.UI.Navigate.ReadValue<Vector2>();
 
-            //for (int i = 0; i < m_scrollViewGameObjects.Count; i++)
+            #region List switch
+            //switch (m_scrollViewGameObjects.Contains(m_lastSelectedGameObject))
             //{
-            switch (m_scrollViewGameObjects.Contains(m_lastSelectedGameObject))
+            //    case true:
+            //    {
+            //        m_canAutoScroll = true;
+            //        //TODO: Detect, if the gameobject is masked.
+            //        break;
+            //    }
+            //    case false:
+            //    {
+            //        m_canAutoScroll = false;
+            //        break;
+            //    }
+            //}
+            #endregion
+
+            #region Dict switch
+            switch (m_contentChildID.ContainsKey(m_lastSelectedGameObject))
             {
                 case true:
                 {
                     m_canAutoScroll = true;
+                    //TODO: Detect, if the gameobject is masked.
                     break;
                 }
                 case false:
@@ -300,7 +327,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     break;
                 }
             }
-            //}
+            #endregion
 #if UNITY_EDITOR
             //Debug.Log($"ASW MoveDir: {m_moveDirection} - AutoScroll: {m_canAutoScroll} - CurrentGO: {m_lastSelectedGameObject}");
 #endif
@@ -309,7 +336,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         /// <summary>
         /// AutoScrolls to the next element, if the ScrollView and it's content are not null and the next element is part of the ScrollView.
         /// </summary>
-        private void AutoScrollToNextGameObject()   //TODO:
+        private void AutoScrollToNextGameObject()
         {
             if (!m_scrollContentSet || !m_canAutoScroll)
                 return;
@@ -317,22 +344,40 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             switch (m_setAutoScrollOption)
             {
                 case AutoScrollOptions.Vertical:
-                    UpdateVerticalScrollPosition();
+                    UpdateVerticalScrollPosition(m_scrollContent, m_moveDirection);
                     break;
                 case AutoScrollOptions.Horizontal:
-                    UpdateHorizontalScrollPosition();
+                    UpdateHorizontalScrollPosition(m_scrollContent, m_moveDirection);
                     break;
                 case AutoScrollOptions.Both:
-                    UpdateVerticalScrollPosition();
-                    UpdateHorizontalScrollPosition();
+                    UpdateVerticalScrollPosition(m_scrollContent, m_moveDirection);
+                    UpdateHorizontalScrollPosition(m_scrollContent, m_moveDirection);
                     break;
                 default:
                     break;
             }
         }
 
-        private void UpdateVerticalScrollPosition()
+        private void UpdateVerticalScrollPosition(RectTransform _scrollContent, Vector2 _moveDirection)
         {
+            float yDirection = _moveDirection.y;
+            switch (yDirection)
+            {
+                case 0:
+                default:
+                {
+                    break;
+                }
+                case -1:
+                {
+                    break;
+                }
+                case 1:
+                {
+                    break;
+                }
+            }
+
             //TODO:
             //Berechnung der ScrollView element position, zu der gescrollt werden muss:
             //      - element.anchorPosition, element.rect.width/height, element.pivot.y.
@@ -342,9 +387,39 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             //      - mit 'TargetScrollRect.verticalNormalizedPosition' Scrollbar/ScrollView scollen
         }
 
-        private void UpdateHorizontalScrollPosition()
+        private void UpdateHorizontalScrollPosition(RectTransform _scrollContent, Vector2 _moveDirection)
         {
+            float xDirection = _moveDirection.x;
+            switch (xDirection)
+            {
+                case 0:
+                default:
+                {
+                    break;
+                }
+                case -1:
+                {
+                    break;
+                }
+                case 1:
+                {
+                    break;
+                }
+            }
+        }
 
+        private float GetScrollOffset(float position, float listAnchorPosition, float targetLength, float maskLength)
+        {
+            if (position < listAnchorPosition + (targetLength / 2))
+            {
+                return (listAnchorPosition + maskLength) - (position - targetLength);
+            }
+            else if (position + targetLength > listAnchorPosition + maskLength)
+            {
+                return (listAnchorPosition + maskLength) - (position + targetLength);
+            }
+
+            return 0;
         }
     }
 }
