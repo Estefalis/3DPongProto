@@ -20,7 +20,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             Horizontal,
             Both
         }
-
+        //TODO: Remove '[SerializeField] ' after development, if it's not needed.
         private PlayerInputActions m_playerInputActions;
         [SerializeField] private AutoScrollOptions m_setAutoScrollOption = AutoScrollOptions.Both;
         [SerializeField] private float m_scrollSpeed = 175.0f;
@@ -31,7 +31,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [Space]
         [SerializeField] private LayoutGroup m_layoutGroup;
         [SerializeField] private int m_verticalPadding;
+        [SerializeField] private int m_topPadding;
+        [SerializeField] private int m_bottomPadding;
+        [Space]
         [SerializeField] private int m_horizontalPadding;
+        [SerializeField] private int m_leftPadding;
+        [SerializeField] private int m_rightPadding;
         [Space]
         [SerializeField] private float m_verticalSpacing;
         [SerializeField] private float m_horizontalSpacing;
@@ -41,8 +46,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [Space]
         [SerializeField] float m_firstChildHeight;
         [SerializeField] float m_firstChildWidth;
-
-        //[SerializeField] float m_totalSpacingHor, m_totalSpacingVer, m_totalFreeSpace;
 
         private RectTransform m_scrollViewRectTransform;
 
@@ -70,7 +73,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_scrollContentSet = m_scrollRect != null && m_scrollContent != null;
 
             GetAutoScrollOptions(m_scrollRect);
-            //MenuNavigation.ALastSelectedGameObject += UpdateCurrentGameObject;
         }
 
         private void Start()
@@ -88,7 +90,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnDisable()
         {
-            //MenuNavigation.ALastSelectedGameObject -= UpdateCurrentGameObject;
             m_playerInputActions.UI.Disable();
         }
 
@@ -257,9 +258,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             {
                 case AutoScrollOptions.Both:
                 {
-                    var padding = m_layoutGroup.GetComponent<GridLayoutGroup>().padding;
+                    var padding = m_layoutGroup./*GetComponent<GridLayoutGroup>().*/padding;
                     m_horizontalPadding = padding.horizontal;                                           //Left + Right Sides
                     m_verticalPadding = padding.vertical;                                               //Up + Down Sides
+                    m_topPadding = padding.top;
+                    m_bottomPadding = padding.bottom;
+                    m_leftPadding = padding.left;
+                    m_rightPadding = padding.right;
                     var gridSpacing = m_layoutGroup.GetComponent<GridLayoutGroup>().spacing;            //Spacing between Elements.
                     m_horizontalSpacing = gridSpacing.x;
                     m_verticalSpacing = gridSpacing.y;
@@ -278,18 +283,20 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 }
                 case AutoScrollOptions.Vertical:
                 {
-                    m_verticalPadding = m_layoutGroup.GetComponent<VerticalLayoutGroup>().padding.vertical; //Up + Down Sides
+                    var padding = m_layoutGroup./*GetComponent<VerticalLayoutGroup>().*/padding;
+                    m_verticalPadding = padding.vertical;    //Up + Down Sides
+                    m_topPadding = padding.top;
+                    m_bottomPadding = padding.bottom;
                     m_verticalSpacing = m_layoutGroup.GetComponent<VerticalLayoutGroup>().spacing;      //Spacing between Elements.
-                    //m_totalSpacingVer = Mathf.Clamp(m_totalSpacingVer, 0, m_verticalSpacing * m_contentChildIndex - 1);
-                    //m_totalFreeSpace = m_verticalPadding + m_totalSpacingVer;
                     break;
                 }
                 case AutoScrollOptions.Horizontal:
                 {
-                    m_horizontalPadding = m_layoutGroup.GetComponent<GridLayoutGroup>().padding.horizontal; //Left + Right Sides
+                    var padding = m_layoutGroup./*GetComponent<HorizontalLayoutGroup>().*/padding;
+                    m_horizontalPadding = padding.horizontal; //Left + Right Sides
+                    m_leftPadding = padding.left;
+                    m_rightPadding = padding.right;
                     m_horizontalSpacing = m_layoutGroup.GetComponent<HorizontalLayoutGroup>().spacing;  //Spacing between Elements.
-                    //m_totalSpacingHor = Mathf.Clamp(m_totalSpacingHor, 0, m_horizontalSpacing * m_contentChildIndex - 1);
-                    //m_totalFreeSpace = m_horizontalPadding + m_totalSpacingHor;
                     break;
                 }
             }
@@ -420,12 +427,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 {
                     break;
                 }
-                case -1:
+                //Children GetComponents Method (OnEachChildAdd) at Start for pivot.y(, when no new Children get added on runtime)?
+                case -1:    //On MoveDirection Down     
                 {
+                    //TODO: (Lower Children border to lower ScrollView border)
+                    //GetComponent Button's' ScrollWindow-ChildTransform and compare it's pivot.y to ScrollwWindow.pivot.y (South border).
+                    //If 'ScrollWindow-ChildTransform's pivot.y is below scrollWindow's south border, move up by childTransforms height + south Padding.
                     break;
                 }
-                case 1:
+                case 1:     //On MoveDirection Up
                 {
+                    //TODO: (Upper Children border to upper ScrollView border)
+                    //GetComponent Button's' ScrollWindow-ChildTransform and compare it's pivot.y to ScrollwWindow.pivot.y (North border).
+                    //If 'ScrollWindow-ChildTransform's pivot.y is above scrollWindow's north border, move down by childTransforms height + north Padding.
                     break;
                 }
             }
@@ -443,12 +457,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 {
                     break;
                 }
+                //Children GetComponents Method (OnEachChildAdd) at Start for pivot.y(, when no new Children get added on runtime)?
                 case -1:
                 {
+                    //TODO: (Left Children border to left ScrollView border)
+                    //GetComponent Button's' ScrollWindow-ChildTransform and compare it's pivot.y to ScrollwWindow.pivot.y (Left border).
+                    //If 'ScrollWindow-ChildTransform's pivot.y is left to scrollWindow's left border, move right by childTransforms width + left Padding
                     break;
                 }
                 case 1:
                 {
+                    //TODO: (Left Children border to right ScrollView border)
+                    //GetComponent Button's' ScrollWindow-ChildTransform and compare it's pivot.y to ScrollwWindow.pivot.y (Right border).
+                    //If 'ScrollWindow-ChildTransform's pivot.y is right to scrollWindow's right border, move left by childTransforms width + right Padding
                     break;
                 }
             }
