@@ -200,7 +200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_setAutoScrollOption: 1
-  m_scrollSpeed: 175
+  m_scrollSpeed: 200
   m_scrollRect: {fileID: 0}
   m_scrollContent: {fileID: 0}
   m_contentChildIndex: 0
@@ -6895,7 +6895,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_setAutoScrollOption: 1
-  m_scrollSpeed: 175
+  m_scrollSpeed: 200
   m_scrollRect: {fileID: 0}
   m_scrollContent: {fileID: 0}
   m_contentChildIndex: 0
@@ -9105,7 +9105,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_setAutoScrollOption: 1
-  m_scrollSpeed: 175
+  m_scrollSpeed: 200
   m_scrollRect: {fileID: 0}
   m_scrollContent: {fileID: 0}
   m_contentChildIndex: 0
@@ -22521,7 +22521,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_setAutoScrollOption: 1
-  m_scrollSpeed: 175
+  m_scrollSpeed: 200
   m_scrollRect: {fileID: 0}
   m_scrollContent: {fileID: 0}
   m_contentChildIndex: 0

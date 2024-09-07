@@ -35,7 +35,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private GameObject m_lastSelectedGameObject;
 
-        public static event Action<GameObject> ALastSelectedGameObject;
+        private event Action<GameObject> ALastSelectedGameObject;
 
         private void Awake()
         {

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -50,7 +51,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private bool m_canAutoScroll = false, m_scrollContentSet;
 
         private GameObject m_lastSelectedGameObject;
-        private Vector2 m_moveDirection;
+        private Vector2 m_lastMoveDirection;
         private GridLayoutGroup.Constraint m_gridConstraint;
 
         //private List<GameObject> m_scrollViewGameObjects = new List<GameObject>();
@@ -69,7 +70,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_scrollContentSet = m_scrollRect != null && m_scrollContent != null;
 
             GetAutoScrollOptions(m_scrollRect);
-            MenuNavigation.ALastSelectedGameObject += UpdateCurrentGameObject;
+            //MenuNavigation.ALastSelectedGameObject += UpdateCurrentGameObject;
         }
 
         private void Start()
@@ -87,16 +88,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnDisable()
         {
-            MenuNavigation.ALastSelectedGameObject -= UpdateCurrentGameObject;
+            //MenuNavigation.ALastSelectedGameObject -= UpdateCurrentGameObject;
             m_playerInputActions.UI.Disable();
         }
 
         private void Update()
         {
-            if (m_lastSelectedGameObject != null)
-                Debug.Log(m_lastSelectedGameObject);
-
             AutoScrollToNextGameObject();
+            UpdateCurrentGameObject();
         }
 
         /// <summary>
@@ -309,47 +308,49 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         /// Updates AutoScrolling bool 'm_canAutoScroll', depending on 'm_scrollViewGameObjects' List entries.
         /// </summary>
         /// <param name="_gameObject"></param>
-        private void UpdateCurrentGameObject(GameObject _gameObject)
+        private void UpdateCurrentGameObject()
         {
-            m_lastSelectedGameObject = _gameObject;
-            m_moveDirection = m_playerInputActions.UI.Navigate.ReadValue<Vector2>();
-
-            #region List switch
-            //switch (m_scrollViewGameObjects.Contains(m_lastSelectedGameObject))
-            //{
-            //    case true:
-            //    {
-            //        m_canAutoScroll = true;
-            //        //TODO: Detect, if the gameobject is masked.
-            //        break;
-            //    }
-            //    case false:
-            //    {
-            //        m_canAutoScroll = false;
-            //        break;
-            //    }
-            //}
-            #endregion
-
-            #region Dict switch
-            switch (m_contentChildID.ContainsKey(m_lastSelectedGameObject))
+            if (m_lastSelectedGameObject != EventSystem.current.currentSelectedGameObject)
             {
-                case true:
+                m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
+                m_lastMoveDirection = m_playerInputActions.UI.Navigate.ReadValue<Vector2>();
+
+                #region List switch
+                //switch (m_scrollViewGameObjects.Contains(m_lastSelectedGameObject))
+                //{
+                //    case true:
+                //    {
+                //        m_canAutoScroll = true;
+                //        //TODO: Detect, if the gameobject is masked.
+                //        break;
+                //    }
+                //    case false:
+                //    {
+                //        m_canAutoScroll = false;
+                //        break;
+                //    }
+                //}
+                #endregion
+
+                #region Dict switch
+                switch (m_contentChildID.ContainsKey(m_lastSelectedGameObject))
                 {
-                    m_canAutoScroll = true;
-                    //TODO: Detect, if the gameobject is masked.
-                    break;
-                }
-                case false:
-                {
-                    m_canAutoScroll = false;
-                    break;
+                    case true:
+                    {
+                        m_canAutoScroll = true;
+                        //TODO: Detect, if the gameobject is masked.
+                        break;
+                    }
+                    case false:
+                    {
+                        m_canAutoScroll = false;
+                        break;
+                    }
                 }
             }
             #endregion
 #if UNITY_EDITOR
-            Debug.Log(m_canAutoScroll);
-            //Debug.Log($"ASW MoveDir: {m_moveDirection} - AutoScroll: {m_canAutoScroll} - CurrentGO: {m_lastSelectedGameObject}");
+            //Debug.Log($"LastGO: {m_lastSelectedGameObject.name} - LastMoveDir: {m_lastMoveDirection} - autoScroll: {m_canAutoScroll}");
 #endif
         }
 
@@ -364,14 +365,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             switch (m_setAutoScrollOption)
             {
                 case AutoScrollOptions.Vertical:
-                    UpdateVerticalScrollPosition(m_scrollContent, m_moveDirection);
+                    UpdateVerticalScrollPosition(m_scrollContent, m_lastMoveDirection);
                     break;
                 case AutoScrollOptions.Horizontal:
-                    UpdateHorizontalScrollPosition(m_scrollContent, m_moveDirection);
+                    UpdateHorizontalScrollPosition(m_scrollContent, m_lastMoveDirection);
                     break;
                 case AutoScrollOptions.Both:
-                    UpdateVerticalScrollPosition(m_scrollContent, m_moveDirection);
-                    UpdateHorizontalScrollPosition(m_scrollContent, m_moveDirection);
+                    UpdateVerticalScrollPosition(m_scrollContent, m_lastMoveDirection);
+                    UpdateHorizontalScrollPosition(m_scrollContent, m_lastMoveDirection);
                     break;
                 default:
                     break;
