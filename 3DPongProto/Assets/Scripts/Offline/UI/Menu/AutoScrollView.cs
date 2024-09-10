@@ -25,36 +25,37 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] private AutoScrollOptions m_setAutoScrollOption = AutoScrollOptions.Both;
         [SerializeField] private float m_scrollSpeed = 175.0f;
         [Space]
-        [SerializeField] private ScrollRect m_scrollRect;
-        [SerializeField] private RectTransform m_scrollContent;
-        [SerializeField] private int m_contentChildIndex;
+        [SerializeField] private ScrollRect m_scrollViewRect;
+        [SerializeField] private RectTransform m_scrollContentRT;
         [Space]
         [SerializeField] private LayoutGroup m_layoutGroup;
-        [SerializeField] private int m_verticalPadding;
-        [SerializeField] private int m_topPadding;
-        [SerializeField] private int m_bottomPadding;
+        [SerializeField] private int m_contentChildIndex;
+        [SerializeField] private Vector2 m_unmaskedContentRT;
+        [SerializeField] private Vector2 m_maskedScrollWindow;
+        [SerializeField] private Vector2 m_firstChildRT;
         [Space]
-        [SerializeField] private int m_horizontalPadding;
+        [SerializeField] private int m_topPadding;
         [SerializeField] private int m_leftPadding;
         [SerializeField] private int m_rightPadding;
+        [SerializeField] private int m_bottomPadding;
         [Space]
         [SerializeField] private float m_verticalSpacing;
         [SerializeField] private float m_horizontalSpacing;
-        [Space]
+        //[Space]
         //[SerializeField] private float m_contentHeight;
         //[SerializeField] private float m_contentWidth;
-        [Space]
-        [SerializeField] float m_firstChildHeight;
-        [SerializeField] float m_firstChildWidth;
+        //[SerializeField] float m_firstChildHeight;
+        //[SerializeField] float m_firstChildWidth;
 
         private RectTransform m_scrollViewRectTransform;
 
-        private float m_scrollWindowHeight;
-        private float m_scrollWindowWidth;
+        //private float m_scrollWindowHeight;
+        //private float m_scrollWindowWidth;
         private bool m_canAutoScroll = false, m_scrollContentSet;
 
         private GameObject m_lastSelectedGameObject;
         private Vector2 m_lastMoveDirection;
+        private Vector2 m_contentAnchoredPos, m_childAnchoredPos;    //OriginPos' of ScrollContent and each Child!
         private GridLayoutGroup.Constraint m_gridConstraint;
 
         //private List<GameObject> m_scrollViewGameObjects = new List<GameObject>();
@@ -66,18 +67,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_lastSelectedGameObject = null;
             m_contentChildID.Clear();
 
-            m_scrollRect = GetComponent<ScrollRect>();
-            m_scrollViewRectTransform = m_scrollRect.GetComponent<RectTransform>();
-            m_scrollContent = m_scrollRect.content.GetComponent<RectTransform>();
+            m_scrollViewRect = GetComponent<ScrollRect>();
+            m_scrollViewRectTransform = m_scrollViewRect.GetComponent<RectTransform>();
+            m_scrollContentRT = m_scrollViewRect.content.GetComponent<RectTransform>();
+            m_contentAnchoredPos = m_scrollContentRT.anchoredPosition;
 
-            m_scrollContentSet = m_scrollRect != null && m_scrollContent != null;
+            m_scrollContentSet = m_scrollViewRect != null && m_scrollContentRT != null;
 
-            GetAutoScrollOptions(m_scrollRect);
+            GetAutoScrollOptions(m_scrollViewRect);
         }
 
         private void Start()
         {
-            if (m_scrollContent != null)
+            if (m_scrollContentRT != null)
             {
                 ContentLevelIterations();
             }
@@ -172,7 +174,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         case true:
                         {
                             m_setAutoScrollOption = AutoScrollOptions.Vertical;
-                            m_layoutGroup = m_scrollContent.GetComponent<VerticalLayoutGroup>();
+                            m_layoutGroup = m_scrollContentRT.GetComponent<VerticalLayoutGroup>();
                             break;
                         }
                         case false:
@@ -182,7 +184,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                                 case true:
                                 {
                                     m_setAutoScrollOption = AutoScrollOptions.Horizontal;
-                                    m_layoutGroup = m_scrollContent.GetComponent<HorizontalLayoutGroup>();
+                                    m_layoutGroup = m_scrollContentRT.GetComponent<HorizontalLayoutGroup>();
                                     break;
                                 }
                                 case false:
@@ -201,7 +203,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             //if '(m_layoutGroup == null)' and you want to add one (WITH detailed memberValues to set it's dimensions):
             //'AddMissingLayoutGroup()' - 'switch (m_setAutoScrollOption)' - 'case AutoScrollOptions.Both/.Vertical/.Horizontal' -
-            //'m_layoutGroup = m_scrollContent.AddComponent<GridLayoutGroup/VerticalLayoutGroup/HorizontalLayoutGroup>()' and
+            //'m_layoutGroup = m_scrollContentRT.AddComponent<GridLayoutGroup/VerticalLayoutGroup/HorizontalLayoutGroup>()' and
             //'default: break;' - for savety. (It would currently go too far.)
         }
 
@@ -211,9 +213,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void ContentLevelIterations()
         {
             m_contentChildIndex = 0;
-            foreach (Transform transform in m_scrollContent.transform)
+            foreach (Transform transform in m_scrollContentRT.transform)
             {
                 m_contentChildIndex += 1;
+                m_childAnchoredPos = transform.GetComponent<RectTransform>().anchoredPosition;
+                Debug.Log($"ChildAnchoredPos: {transform.name} {m_childAnchoredPos} - DistanceA: {m_childAnchoredPos - m_contentAnchoredPos}");
                 //Level for X/Y Axis Toggles.
                 for (int i = 0; i < transform.childCount; i++)
                 {
@@ -259,8 +263,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case AutoScrollOptions.Both:
                 {
                     var padding = m_layoutGroup./*GetComponent<GridLayoutGroup>().*/padding;
-                    m_horizontalPadding = padding.horizontal;                                           //Left + Right Sides
-                    m_verticalPadding = padding.vertical;                                               //Up + Down Sides
                     m_topPadding = padding.top;
                     m_bottomPadding = padding.bottom;
                     m_leftPadding = padding.left;
@@ -284,7 +286,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case AutoScrollOptions.Vertical:
                 {
                     var padding = m_layoutGroup./*GetComponent<VerticalLayoutGroup>().*/padding;
-                    m_verticalPadding = padding.vertical;    //Up + Down Sides
                     m_topPadding = padding.top;
                     m_bottomPadding = padding.bottom;
                     m_verticalSpacing = m_layoutGroup.GetComponent<VerticalLayoutGroup>().spacing;      //Spacing between Elements.
@@ -293,7 +294,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case AutoScrollOptions.Horizontal:
                 {
                     var padding = m_layoutGroup./*GetComponent<HorizontalLayoutGroup>().*/padding;
-                    m_horizontalPadding = padding.horizontal; //Left + Right Sides
                     m_leftPadding = padding.left;
                     m_rightPadding = padding.right;
                     m_horizontalSpacing = m_layoutGroup.GetComponent<HorizontalLayoutGroup>().spacing;  //Spacing between Elements.
@@ -301,14 +301,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 }
             }
 
-            m_scrollWindowHeight = m_scrollViewRectTransform.rect.height;
-            m_scrollWindowWidth = m_scrollViewRectTransform.rect.width;
-            //var contentRect = m_scrollContent.GetComponent<RectTransform>().rect;
-            //m_contentHeight = contentRect.height;
-            //m_contentWidth = contentRect.width;
-            var firstChildRect = m_scrollContent.GetChild(0).GetComponent<RectTransform>().rect;
-            m_firstChildHeight = firstChildRect.height;
-            m_firstChildWidth = firstChildRect.width;
+            //m_scrollWindowHeight = m_scrollViewRectTransform.rect.height;
+            //m_scrollWindowWidth = m_scrollViewRectTransform.rect.width;
+            m_maskedScrollWindow = new Vector2(m_scrollViewRectTransform.rect.width, m_scrollViewRectTransform.rect.height);
+
+            var contentRect = m_scrollContentRT.GetComponent<RectTransform>().rect;
+            m_unmaskedContentRT = new Vector2(contentRect.width, contentRect.height);   //.x - .width, .y - .height.
+            var firstChildRect = m_scrollContentRT.GetChild(0).GetComponent<RectTransform>().rect;
+            m_firstChildRT = new Vector2(firstChildRect.width, firstChildRect.height);
         }
 
         /// <summary>
@@ -372,14 +372,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             switch (m_setAutoScrollOption)
             {
                 case AutoScrollOptions.Vertical:
-                    UpdateVerticalScrollPosition(m_scrollContent, m_lastMoveDirection);
+                    UpdateVerticalScrollPosition(m_scrollContentRT, m_lastMoveDirection);
                     break;
                 case AutoScrollOptions.Horizontal:
-                    UpdateHorizontalScrollPosition(m_scrollContent, m_lastMoveDirection);
+                    UpdateHorizontalScrollPosition(m_scrollContentRT, m_lastMoveDirection);
                     break;
                 case AutoScrollOptions.Both:
-                    UpdateVerticalScrollPosition(m_scrollContent, m_lastMoveDirection);
-                    UpdateHorizontalScrollPosition(m_scrollContent, m_lastMoveDirection);
+                    UpdateVerticalScrollPosition(m_scrollContentRT, m_lastMoveDirection);
+                    UpdateHorizontalScrollPosition(m_scrollContentRT, m_lastMoveDirection);
                     break;
                 default:
                     break;
@@ -389,16 +389,16 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void UpdateVerticalScrollPosition(RectTransform _scrollContent, Vector2 _moveDirection)
         {
             //move the current scroll rect to correct _variableContentPos           //min: -57 - max: 0
-            float variableContentPos = -_scrollContent.anchoredPosition.y - (_scrollContent.rect.height * (1 - _scrollContent.pivot.y) - m_verticalPadding);
+            float variableContentPos = -_scrollContent.anchoredPosition.y - (_scrollContent.rect.height * (1 - _scrollContent.pivot.y) - (m_topPadding + m_bottomPadding));
             float scrollContentHeight = _scrollContent.rect.height;                 //487 - Fullsize Content
             //float scrollContentHeight = m_firstChildHeight;                       //60  - Child Height
-            float scrollWindowHeight = m_scrollWindowHeight;                        //430 - masked ContentScrollView
+            float scrollWindowHeight = m_maskedScrollWindow.y;                      //yVector = height of masked ContentScrollWindow
             float viewRectAnchorPos = m_scrollViewRectTransform.anchoredPosition.y; //0   - fixed ScrollView AnchorPosition
 
             // get the element offset value depending on the cursor move direction
             float offlimitsValue = GetScrollOffset(variableContentPos, viewRectAnchorPos, scrollContentHeight, scrollWindowHeight);  //917 - 974
 
-            float normalizedPosition = m_scrollRect.verticalNormalizedPosition + (offlimitsValue / m_scrollViewRectTransform.rect.height);
+            float normalizedPosition = m_scrollViewRect.verticalNormalizedPosition + (offlimitsValue / m_scrollViewRectTransform.rect.height);
             //2,265116 - 3,132558
 
             normalizedPosition = Mathf.Clamp01(normalizedPosition); //Currently Mouse isn't part of the context.
@@ -408,7 +408,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 normalizedPosition -= Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.height;
                 normalizedPosition = Mathf.Clamp01(normalizedPosition);
                 // move the target scroll rect
-                m_scrollRect.verticalNormalizedPosition = Mathf.SmoothStep(m_scrollRect.verticalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * m_scrollSpeed);
+                m_scrollViewRect.verticalNormalizedPosition = Mathf.SmoothStep(m_scrollViewRect.verticalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * m_scrollSpeed);
             }
 
             if (Keyboard.current.numpadMinusKey.wasPressedThisFrame)
@@ -416,7 +416,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 normalizedPosition += Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.height;
                 normalizedPosition = Mathf.Clamp01(normalizedPosition);
                 // move the target scroll rect
-                m_scrollRect.verticalNormalizedPosition = Mathf.SmoothStep(m_scrollRect.verticalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * m_scrollSpeed);
+                m_scrollViewRect.verticalNormalizedPosition = Mathf.SmoothStep(m_scrollViewRect.verticalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * m_scrollSpeed);
             }
 
             float yDirection = _moveDirection.y;
@@ -430,6 +430,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 //Children GetComponents Method (OnEachChildAdd) at Start for pivot.y(, when no new Children get added on runtime)?
                 case -1:    //On MoveDirection Down     
                 {
+                    //////Vector2 contentAnchorPos = m_scrollContentRT.anchoredPosition;    //OriginPos of ScrollContent<3! <--------------------
+                    
                     //TODO: (Lower Children border to lower ScrollView border)
                     //GetComponent Button's' ScrollWindow-ChildTransform and compare it's pivot.y to ScrollwWindow.pivot.y (South border).
                     //If 'ScrollWindow-ChildTransform's pivot.y is below scrollWindow's south border, move up by childTransforms height + south Padding.
