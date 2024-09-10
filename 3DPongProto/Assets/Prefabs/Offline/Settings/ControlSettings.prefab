@@ -201,16 +201,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_setAutoScrollOption: 1
   m_scrollSpeed: 200
-  m_scrollRect: {fileID: 0}
-  m_scrollContent: {fileID: 0}
-  m_contentChildIndex: 0
+  m_scrollViewRect: {fileID: 0}
+  m_scrollContentRT: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_verticalPadding: 0
-  m_horizontalPadding: 0
-  m_verticalSpacing: 0
+  m_contentChildIndex: 0
+  m_unmaskedContentRT: {x: 0, y: 0}
+  m_maskedScrollWindow: {x: 0, y: 0}
+  m_firstChildRT: {x: 0, y: 0}
+  m_leftPadding: 0
+  m_rightPadding: 0
+  m_topPadding: 0
+  m_bottomPadding: 0
   m_horizontalSpacing: 0
-  m_firstChildHeight: 0
-  m_firstChildWidth: 0
+  m_verticalSpacing: 0
 --- !u!1 &42570364796873869
 GameObject:
   m_ObjectHideFlags: 0
@@ -6896,16 +6899,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_setAutoScrollOption: 1
   m_scrollSpeed: 200
-  m_scrollRect: {fileID: 0}
-  m_scrollContent: {fileID: 0}
-  m_contentChildIndex: 0
+  m_scrollViewRect: {fileID: 0}
+  m_scrollContentRT: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_verticalPadding: 0
-  m_horizontalPadding: 0
-  m_verticalSpacing: 0
+  m_contentChildIndex: 0
+  m_unmaskedContentRT: {x: 0, y: 0}
+  m_maskedScrollWindow: {x: 0, y: 0}
+  m_firstChildRT: {x: 0, y: 0}
+  m_leftPadding: 0
+  m_rightPadding: 0
+  m_topPadding: 0
+  m_bottomPadding: 0
   m_horizontalSpacing: 0
-  m_firstChildHeight: 0
-  m_firstChildWidth: 0
+  m_verticalSpacing: 0
 --- !u!1 &3560525716519637838
 GameObject:
   m_ObjectHideFlags: 0
@@ -9106,16 +9112,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_setAutoScrollOption: 1
   m_scrollSpeed: 200
-  m_scrollRect: {fileID: 0}
-  m_scrollContent: {fileID: 0}
-  m_contentChildIndex: 0
+  m_scrollViewRect: {fileID: 0}
+  m_scrollContentRT: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_verticalPadding: 0
-  m_horizontalPadding: 0
-  m_verticalSpacing: 0
+  m_contentChildIndex: 0
+  m_unmaskedContentRT: {x: 0, y: 0}
+  m_maskedScrollWindow: {x: 0, y: 0}
+  m_firstChildRT: {x: 0, y: 0}
+  m_leftPadding: 0
+  m_rightPadding: 0
+  m_topPadding: 0
+  m_bottomPadding: 0
   m_horizontalSpacing: 0
-  m_firstChildHeight: 0
-  m_firstChildWidth: 0
+  m_verticalSpacing: 0
 --- !u!1 &4676749264564885076
 GameObject:
   m_ObjectHideFlags: 0
@@ -22520,18 +22529,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac77e38b8c1c2b4abfb645a557dc856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_setAutoScrollOption: 1
-  m_scrollSpeed: 200
-  m_scrollRect: {fileID: 0}
-  m_scrollContent: {fileID: 0}
-  m_contentChildIndex: 0
+  m_setAutoScrollOption: 3
+  m_scrollSpeed: 50
+  m_scrollViewRect: {fileID: 0}
+  m_scrollContentRT: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_verticalPadding: 0
-  m_horizontalPadding: 0
-  m_verticalSpacing: 0
+  m_contentChildIndex: 0
+  m_unmaskedContentRT: {x: 0, y: 0}
+  m_maskedScrollWindow: {x: 0, y: 0}
+  m_firstChildRT: {x: 0, y: 0}
+  m_leftPadding: 0
+  m_rightPadding: 0
+  m_topPadding: 0
+  m_bottomPadding: 0
   m_horizontalSpacing: 0
-  m_firstChildHeight: 0
-  m_firstChildWidth: 0
+  m_verticalSpacing: 0
 --- !u!1 &7993449986529936593
 GameObject:
   m_ObjectHideFlags: 0
@@ -28466,6 +28478,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7262960464999482621, guid: 397fcbf91267bd643b065367b4dcaad1,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7262960465151361105, guid: 397fcbf91267bd643b065367b4dcaad1,
         type: 3}
       propertyPath: m_Name
@@ -30703,6 +30720,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7262960464999482621, guid: 397fcbf91267bd643b065367b4dcaad1,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7262960465151361105, guid: 397fcbf91267bd643b065367b4dcaad1,
         type: 3}
       propertyPath: m_Name
@@ -31265,6 +31287,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7262960464999482621, guid: 397fcbf91267bd643b065367b4dcaad1,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7262960465151361105, guid: 397fcbf91267bd643b065367b4dcaad1,
         type: 3}
@@ -32327,6 +32354,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7262960464999482621, guid: 397fcbf91267bd643b065367b4dcaad1,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7262960465151361105, guid: 397fcbf91267bd643b065367b4dcaad1,
         type: 3}
       propertyPath: m_Name
@@ -32869,6 +32901,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7262960464999482621, guid: 397fcbf91267bd643b065367b4dcaad1,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7262960465151361105, guid: 397fcbf91267bd643b065367b4dcaad1,
         type: 3}

@@ -958,6 +958,24 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""MousePosition"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""90ffc7cf-a93a-428e-bf8a-5b378ed9fde7"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ToggleGameMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""5afb6f62-4bc8-4391-8b61-e5c2f08385a7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""TrackedDevicePosition"",
                     ""type"": ""PassThrough"",
                     ""id"": ""40b1d236-4280-45ee-bab6-d382a5bc61d0"",
@@ -971,15 +989,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""type"": ""PassThrough"",
                     ""id"": ""3a705899-d2a2-4222-a9e0-8ba2f8684c60"",
                     ""expectedControlType"": ""Quaternion"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""ToggleGameMenu"",
-                    ""type"": ""Button"",
-                    ""id"": ""5afb6f62-4bc8-4391-8b61-e5c2f08385a7"",
-                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1483,6 +1492,28 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": """",
+                    ""id"": ""b7ca3f1e-a1a1-468b-a7da-0c06231a9901"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""MousePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b6bd4b3b-46ab-4713-bb51-8287d7cc01f2"",
+                    ""path"": ""<VirtualMouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""MousePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""51c713a3-8ce8-451d-938b-47551117b8c5"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
@@ -1579,9 +1610,10 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
             m_UI_MiddleClick = m_UI.FindAction("MiddleClick", throwIfNotFound: true);
             m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
+            m_UI_MousePosition = m_UI.FindAction("MousePosition", throwIfNotFound: true);
+            m_UI_ToggleGameMenu = m_UI.FindAction("ToggleGameMenu", throwIfNotFound: true);
             m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
             m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
-            m_UI_ToggleGameMenu = m_UI.FindAction("ToggleGameMenu", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -1817,9 +1849,10 @@ namespace ThreeDeePongProto.Shared.InputActions
         private readonly InputAction m_UI_ScrollWheel;
         private readonly InputAction m_UI_MiddleClick;
         private readonly InputAction m_UI_RightClick;
+        private readonly InputAction m_UI_MousePosition;
+        private readonly InputAction m_UI_ToggleGameMenu;
         private readonly InputAction m_UI_TrackedDevicePosition;
         private readonly InputAction m_UI_TrackedDeviceOrientation;
-        private readonly InputAction m_UI_ToggleGameMenu;
         public struct UIActions
         {
             private @PlayerInputActions m_Wrapper;
@@ -1832,9 +1865,10 @@ namespace ThreeDeePongProto.Shared.InputActions
             public InputAction @ScrollWheel => m_Wrapper.m_UI_ScrollWheel;
             public InputAction @MiddleClick => m_Wrapper.m_UI_MiddleClick;
             public InputAction @RightClick => m_Wrapper.m_UI_RightClick;
+            public InputAction @MousePosition => m_Wrapper.m_UI_MousePosition;
+            public InputAction @ToggleGameMenu => m_Wrapper.m_UI_ToggleGameMenu;
             public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
             public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
-            public InputAction @ToggleGameMenu => m_Wrapper.m_UI_ToggleGameMenu;
             public InputActionMap Get() { return m_Wrapper.m_UI; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1868,15 +1902,18 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @RightClick.started += instance.OnRightClick;
                 @RightClick.performed += instance.OnRightClick;
                 @RightClick.canceled += instance.OnRightClick;
+                @MousePosition.started += instance.OnMousePosition;
+                @MousePosition.performed += instance.OnMousePosition;
+                @MousePosition.canceled += instance.OnMousePosition;
+                @ToggleGameMenu.started += instance.OnToggleGameMenu;
+                @ToggleGameMenu.performed += instance.OnToggleGameMenu;
+                @ToggleGameMenu.canceled += instance.OnToggleGameMenu;
                 @TrackedDevicePosition.started += instance.OnTrackedDevicePosition;
                 @TrackedDevicePosition.performed += instance.OnTrackedDevicePosition;
                 @TrackedDevicePosition.canceled += instance.OnTrackedDevicePosition;
                 @TrackedDeviceOrientation.started += instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.performed += instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.canceled += instance.OnTrackedDeviceOrientation;
-                @ToggleGameMenu.started += instance.OnToggleGameMenu;
-                @ToggleGameMenu.performed += instance.OnToggleGameMenu;
-                @ToggleGameMenu.canceled += instance.OnToggleGameMenu;
             }
 
             private void UnregisterCallbacks(IUIActions instance)
@@ -1905,15 +1942,18 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @RightClick.started -= instance.OnRightClick;
                 @RightClick.performed -= instance.OnRightClick;
                 @RightClick.canceled -= instance.OnRightClick;
+                @MousePosition.started -= instance.OnMousePosition;
+                @MousePosition.performed -= instance.OnMousePosition;
+                @MousePosition.canceled -= instance.OnMousePosition;
+                @ToggleGameMenu.started -= instance.OnToggleGameMenu;
+                @ToggleGameMenu.performed -= instance.OnToggleGameMenu;
+                @ToggleGameMenu.canceled -= instance.OnToggleGameMenu;
                 @TrackedDevicePosition.started -= instance.OnTrackedDevicePosition;
                 @TrackedDevicePosition.performed -= instance.OnTrackedDevicePosition;
                 @TrackedDevicePosition.canceled -= instance.OnTrackedDevicePosition;
                 @TrackedDeviceOrientation.started -= instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.performed -= instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.canceled -= instance.OnTrackedDeviceOrientation;
-                @ToggleGameMenu.started -= instance.OnToggleGameMenu;
-                @ToggleGameMenu.performed -= instance.OnToggleGameMenu;
-                @ToggleGameMenu.canceled -= instance.OnToggleGameMenu;
             }
 
             public void RemoveCallbacks(IUIActions instance)
@@ -1978,9 +2018,10 @@ namespace ThreeDeePongProto.Shared.InputActions
             void OnScrollWheel(InputAction.CallbackContext context);
             void OnMiddleClick(InputAction.CallbackContext context);
             void OnRightClick(InputAction.CallbackContext context);
+            void OnMousePosition(InputAction.CallbackContext context);
+            void OnToggleGameMenu(InputAction.CallbackContext context);
             void OnTrackedDevicePosition(InputAction.CallbackContext context);
             void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
-            void OnToggleGameMenu(InputAction.CallbackContext context);
         }
     }
 }

@@ -934,6 +934,24 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "MousePosition",
+                    "type": "PassThrough",
+                    "id": "90ffc7cf-a93a-428e-bf8a-5b378ed9fde7",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "ToggleGameMenu",
+                    "type": "Button",
+                    "id": "5afb6f62-4bc8-4391-8b61-e5c2f08385a7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "TrackedDevicePosition",
                     "type": "PassThrough",
                     "id": "40b1d236-4280-45ee-bab6-d382a5bc61d0",
@@ -947,15 +965,6 @@
                     "type": "PassThrough",
                     "id": "3a705899-d2a2-4222-a9e0-8ba2f8684c60",
                     "expectedControlType": "Quaternion",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "ToggleGameMenu",
-                    "type": "Button",
-                    "id": "5afb6f62-4bc8-4391-8b61-e5c2f08385a7",
-                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -1454,6 +1463,28 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b7ca3f1e-a1a1-468b-a7da-0c06231a9901",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "MousePosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b6bd4b3b-46ab-4713-bb51-8287d7cc01f2",
+                    "path": "<VirtualMouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "MousePosition",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
