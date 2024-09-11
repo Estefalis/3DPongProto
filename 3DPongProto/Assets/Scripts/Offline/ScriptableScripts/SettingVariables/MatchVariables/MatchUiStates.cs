@@ -9,8 +9,7 @@ public class MatchUIStates : ScriptableObject
     public EPlayerAmount EPlayerAmount;
     public EGameModi EGameConnectModi { get => eGameConnectModi; set => eGameConnectModi = value; }
     [SerializeField] private EGameModi eGameConnectModi;
-    public bool TpOneRotReset;
-    public bool TpTwoRotReset;
+    public bool RotationReset;
 
     [Header("Match-Details")]
     public bool GameRuns;

@@ -16,4 +16,5 @@ MonoBehaviour:
   PlayerName: Estefalis
   PlayerId: 0
   Avatar: {fileID: 0}
+  ETeamChoice: 0
   PlayerOnFrontline: 0

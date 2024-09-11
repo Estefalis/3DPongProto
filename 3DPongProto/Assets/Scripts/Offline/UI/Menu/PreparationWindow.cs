@@ -13,6 +13,12 @@ public enum EPlayerAmount
     Four = 4
 }
 
+public enum ETeamChoice
+{
+    One,
+    Two
+}
+
 namespace ThreeDeePongProto.Offline.UI
 {
     public class PreparationWindow : MonoBehaviour

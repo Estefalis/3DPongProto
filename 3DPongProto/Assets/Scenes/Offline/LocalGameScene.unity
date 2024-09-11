@@ -11836,7 +11836,7 @@ PrefabInstance:
     - target: {fileID: 5422138135313803, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 4938937939454417543}
+      objectReference: {fileID: 0}
     - target: {fileID: 5422138135313803, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -13303,18 +13303,6 @@ PrefabInstance:
       objectReference: {fileID: 913481592}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5d526be9fc149148aeb5951486723ed, type: 3}
---- !u!114 &4938937939454417543 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1737116095492769620, guid: d5d526be9fc149148aeb5951486723ed,
-    type: 3}
-  m_PrefabInstance: {fileID: 4938937939454417542}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4938937939454417544 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8735401617698262590, guid: d5d526be9fc149148aeb5951486723ed,

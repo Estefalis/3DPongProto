@@ -16,4 +16,5 @@ MonoBehaviour:
   PlayerName: Rayago
   PlayerId: 2
   Avatar: {fileID: 0}
+  ETeamChoice: 0
   PlayerOnFrontline: 1

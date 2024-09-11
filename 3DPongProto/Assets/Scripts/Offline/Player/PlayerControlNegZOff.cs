@@ -280,7 +280,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
             //m_rigidbody.transform.localRotation = targetValue;
             #endregion
-            switch (m_matchUIStates.TpOneRotReset)
+            switch (m_matchUIStates.RotationReset)
             {
                 case true:
                     m_rigidbody.transform.localRotation = m_paddleStartRotation;
@@ -304,6 +304,11 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             }
         }
 
+        private void CanceledInputPlayerOne(InputAction.CallbackContext _callbackContext)
+        {
+            m_pushPlayerOne = false;
+        }
+
         private void PushInputPlayerThree(InputAction.CallbackContext _callbackContext)
         {
             if (!m_blockPushInput)
@@ -314,11 +319,6 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
                     m_pushPlayerThree = _callbackContext.ReadValueAsButton();
                 }
             }
-        }
-
-        private void CanceledInputPlayerOne(InputAction.CallbackContext _callbackContext)
-        {
-            m_pushPlayerOne = false;
         }
 
         private void CanceledInputPlayerThree(InputAction.CallbackContext _callbackContext)

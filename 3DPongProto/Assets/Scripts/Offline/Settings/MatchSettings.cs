@@ -13,9 +13,9 @@ namespace ThreeDeePongProto.Offline.Settings
         #region Player-Names
         [Header("Player-Details")]
         //OnEndEdit in Unity sets the PlayerNames from MatchSettings UI.        
-        [SerializeField] private Toggle[] m_rotationReset;
-        [SerializeField] private bool m_TpOneRotResetDefault = true;
-        [SerializeField] private bool m_TpTwoRotResetDefault = true;
+        [SerializeField] private Toggle m_rotationReset;
+        [SerializeField] private TextMeshProUGUI m_rotationResetText;
+        [SerializeField] private bool m_paddleRotResetDefault = true;
         #endregion
 
         #region Field-Dimension
@@ -88,7 +88,7 @@ namespace ThreeDeePongProto.Offline.Settings
         [SerializeField] private MatchValues m_matchValues;
         [SerializeField] private GraphicUIStates m_graphicUiStates;
         #endregion
-        
+
         #region Serialization
         private readonly string m_settingsStatesFolderPath = "/SaveData/Settings-States";
         private readonly string m_fieldSettingsPath = "/SaveData/FieldSettings";
@@ -125,7 +125,7 @@ namespace ThreeDeePongProto.Offline.Settings
             m_persistentData.SaveData(m_settingsStatesFolderPath, m_matchFileName, m_fileFormat, m_matchUIStates, m_encryptionEnabled, true);
             m_persistentData.SaveData(m_fieldSettingsPath, m_matchFileName, m_fileFormat, m_basicFieldValues, m_encryptionEnabled, true);
         }
-                
+
         #region UnRegister Listener Region
         private void AddGroupListeners()
         {
@@ -162,9 +162,8 @@ namespace ThreeDeePongProto.Offline.Settings
             { OnTeamTwoBacklineDropdownValueChanged(m_backLineDds[1]); });
             m_distanceSliderValues[1].onValueChanged.AddListener(OnBacklineSliderValueChanged);
 
-            //Toggles to allow or deny PaddleRotation-Resets on each Goal for TeamPlayerOne [0] and TeamPlayerTwo [1].
-            m_rotationReset[0].onValueChanged.AddListener(HandleTpOneToggleValueChanges);
-            m_rotationReset[1].onValueChanged.AddListener(HandleTpTwoToggleValueChanges);
+            //Toggles to allow or deny PaddleRotation-Resets on each Goal.
+            m_rotationReset.onValueChanged.AddListener(HandleRotationToggleValueChanges);
         }
 
         private void RemoveGroupListeners()
@@ -202,8 +201,7 @@ namespace ThreeDeePongProto.Offline.Settings
             { OnTeamTwoBacklineDropdownValueChanged(m_backLineDds[1]); });
             m_distanceSliderValues[1].onValueChanged.RemoveListener(OnBacklineSliderValueChanged);
 
-            m_rotationReset[0].onValueChanged.RemoveListener(HandleTpOneToggleValueChanges);
-            m_rotationReset[1].onValueChanged.RemoveListener(HandleTpTwoToggleValueChanges);
+            m_rotationReset.onValueChanged.RemoveListener(HandleRotationToggleValueChanges);
         }
         #endregion
 
@@ -231,14 +229,10 @@ namespace ThreeDeePongProto.Offline.Settings
             }
         }
 
-        private void HandleTpOneToggleValueChanges(bool _toggle)
+        private void HandleRotationToggleValueChanges(bool _toggle)
         {
-            m_matchUIStates.TpOneRotReset = _toggle;
-        }
-
-        private void HandleTpTwoToggleValueChanges(bool _toggle)
-        {
-            m_matchUIStates.TpTwoRotReset = _toggle;
+            m_matchUIStates.RotationReset = _toggle;
+            SetRotationResetText(_toggle);
         }
         #endregion
 
@@ -435,8 +429,8 @@ namespace ThreeDeePongProto.Offline.Settings
         private void InitializeUISetup()
         {
             m_fixRatioToggle.isOn = m_matchUIStates.FixRatio;
-            m_rotationReset[0].isOn = m_matchUIStates.TpOneRotReset;
-            m_rotationReset[1].isOn = m_matchUIStates.TpTwoRotReset;
+            m_rotationReset.isOn = m_matchUIStates.RotationReset;
+            SetRotationResetText(m_rotationReset.isOn);
 
             int roundDdIndex = Array.FindIndex(m_matchSetupDropdowns, (fn) => fn == m_matchSetupDropdowns[0]);
             int maxPointDdIndex = Array.FindIndex(m_matchSetupDropdowns, (fn) => fn == m_matchSetupDropdowns[1]);
@@ -451,6 +445,19 @@ namespace ThreeDeePongProto.Offline.Settings
             UpdateLineUpTMPs();
 
             UpdateObjectsVisibility(m_matchUIStates.EPlayerAmount);
+        }
+
+        private void SetRotationResetText(bool _rotationReset)
+        {
+            switch (_rotationReset)
+            {
+                case true:
+                    m_rotationResetText.text = "On";
+                    break;
+                case false:
+                    m_rotationResetText.text = "Off";
+                    break;
+            }
         }
 
         private void UpdateObjectsVisibility(EPlayerAmount _ePlayerAmount)
@@ -671,7 +678,7 @@ namespace ThreeDeePongProto.Offline.Settings
 
             m_backLineDds[1].RefreshShownValue();
         }
-        
+
         private void SetupLineDictionaries()
         {
             for (int i = 0; i < m_reduceButtonKeys.Count; i++)
@@ -789,7 +796,7 @@ namespace ThreeDeePongProto.Offline.Settings
                 {
                     m_matchSetupDropdowns[3].value = m_fieldLengthDdIndex;
                     break;
-                }                
+                }
                 default:
                     break;
             }
@@ -828,8 +835,7 @@ namespace ThreeDeePongProto.Offline.Settings
         public void ReSetDefault()
         {
             m_fixRatioToggle.isOn = m_fixAspectRatio;
-            m_rotationReset[0].isOn = m_TpOneRotResetDefault;
-            m_rotationReset[1].isOn = m_TpTwoRotResetDefault;
+            m_rotationReset.isOn = m_paddleRotResetDefault;
 
             m_matchSetupDropdowns[0].value = m_maxRoundDdIndex;
             m_matchSetupDropdowns[1].value = m_maxPointDdIndex;

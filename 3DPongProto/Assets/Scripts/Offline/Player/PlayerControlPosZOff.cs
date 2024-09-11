@@ -275,7 +275,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
             //m_rigidbody.transform.localRotation = targetValue;
             #endregion
-            switch (m_matchUIStates.TpTwoRotReset)
+            switch (m_matchUIStates.RotationReset)
             {
                 case true:
                     m_rigidbody.transform.localRotation = m_paddleStartRotation;
