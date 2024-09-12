@@ -11,7 +11,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         private IEnumerator m_paddleTwoPushCoroutine, m_paddleFourPushCoroutine;
         protected bool m_pushPlayer2 = false, m_pushPlayer4 = false;
         private Vector3 m_axisRotPosZ;
-        private Quaternion m_paddleStartRotation;
+        private Quaternion m_paddleStartRotation;                                                                           //PlayerMovement
 
         protected override void Awake()
         {

@@ -9,35 +9,35 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
     public abstract class PlayerControlMain : MonoBehaviour
     {
         #region Script-References
-        protected PlayerInputActions m_playerMovement;
+        protected PlayerInputActions m_playerMovement;                                                                      //PlayerInputReceiver
         #endregion
 
         #region SerializeField-Member-Variables
-        [SerializeField] protected Rigidbody m_rigidbody;
-        [SerializeField] protected AudioSource m_audioSource;
+        [SerializeField] protected Rigidbody m_rigidbody;                                                                   //PlayerController
+        [SerializeField] protected AudioSource m_audioSource;                                                               //PlayerController
 
         [Header("Player Details")]
-        [SerializeField] protected int m_playerId;
-        [SerializeField, Range(1, 20)] protected float m_movementSpeed = 10.0f;
-        [SerializeField, Range(1, 5)] protected float m_rotationSpeed = 2.5f;
-        [SerializeField] private float m_maxRotationAngle;
-        [SerializeField] protected bool m_defaultFrontLineUp;
+        [SerializeField] protected int m_playerId;                                                                          //PlayerController
+        [SerializeField, Range(1, 20)] protected float m_movementSpeed = 10.0f;                                             //PlayerMovement
+        [SerializeField, Range(1, 5)] protected float m_rotationSpeed = 2.5f;                                               //PlayerMovement
+        [SerializeField] private float m_maxRotationAngle;                                                                  //PlayerMovement
+        [SerializeField] protected bool m_defaultFrontLineUp;                                                               //PlayerController
 
         [Header("Forward-Movement")]
         //PushDistance for 'Mathf.MoveTowards'.
-        [SerializeField] protected float m_lerpDuration = 1.5f;
-        [SerializeField] protected float m_delayRetreat;
-        [SerializeField] protected float m_delayRepetition;
-        [SerializeField] protected bool m_blockPushInput;
-        [SerializeField] protected bool m_enablePushDelay = false;
-
+        [SerializeField] protected float m_lerpDuration = 1.5f;                                                             //PlayerMovement
+        [SerializeField] protected float m_delayRetreat;                                                                    //PlayerMovement
+        [SerializeField] protected float m_delayRepetition;                                                                 //PlayerMovement
+        [SerializeField] protected bool m_blockPushInput;                                                                   //PlayerMovement
+        [SerializeField] protected bool m_enablePushDelay = false;                                                          //PlayerMovement
+                
         #region Scriptable Objects
-        [SerializeField] protected PlayerIDData m_playerIDData;
-        [SerializeField] protected MatchUIStates m_matchUIStates;
-        [SerializeField] protected MatchValues m_matchValues;
-        [SerializeField] protected BasicFieldValues m_basicFieldValues;
-        [SerializeField] protected ControlUIStates m_controlUIStates;
-        [SerializeField] protected ControlUIValues m_controlUIValues;
+        [SerializeField] protected PlayerIDData m_playerIDData;                                                             //PlayerController
+        [SerializeField] protected MatchUIStates m_matchUIStates;                                                           //PlayerController
+        [SerializeField] protected MatchValues m_matchValues;                                                               //PlayerController
+        [SerializeField] protected BasicFieldValues m_basicFieldValues;                                                     //PlayerController
+        [SerializeField] protected ControlUIStates m_controlUIStates;                                                       //PlayerController
+        [SerializeField] protected ControlUIValues m_controlUIValues;                                                       //PlayerController
         #endregion
         #endregion
 
@@ -45,41 +45,42 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         #region Properties-Access
         public int PlayerId { get { return m_playerId; } }
         #endregion
-        protected float m_maxSideMovement, m_groundWidth, m_groundLength;
-        protected readonly float m_baseRotationSpeed = 100;
-        protected float m_goalDistance;
-        private float m_paddleWidthAdjustment;
+        protected float m_maxSideMovement;                                                                                  //PlayerMovement
+        private float m_paddleWidthAdjustment;                                                                              //PlayerMovement
+        protected readonly float m_baseRotationSpeed = 100;                                                                 //PlayerMovement
+        private float m_groundWidth, m_groundLength;                                                                        //PlayerController
+        protected float m_goalDistance;                                                                                     //PlayerController
 
-        protected float m_maxPushDistance;
-        protected bool m_tempBlocked = false;
+        protected float m_maxPushDistance;                                                                                  //PlayerController
+        protected bool m_tempBlocked = false;                                                                               //PlayerMovement
 
-        protected Vector3 m_localPaddleScale;                               //Saved PaddleScale for all.
-        protected Vector3 m_rbPosition, m_readValueVector;
-        protected Quaternion m_deltaRotation;
+        protected Vector3 m_localPaddleScale;                               //Saved PaddleScale for all.                    //PlayerController
+        protected Vector3 m_rbPosition, m_readValueVector;                                                                  //PlayerMovement
+        protected Quaternion m_deltaRotation;                                                                               //PlayerMovement
 
-        protected MatchManager m_matchManager;
+        protected MatchManager m_matchManager;                                                                              //PlayerController
         #endregion
 
         //MatchManager pauses the Game. Coroutines and the Inputsystem.PlayerActions get disabled inside this class.
-        public static event Action InGameMenuOpens;
+        public static event Action InGameMenuOpens;                                                                         //PlayerInputReceiver
 
         protected abstract void Awake();
 
         protected virtual void OnEnable()
         {
             //Gets GroundWidth, Ground-Length and goalDistance to set and clamp the playerPositions right after.
-            GetFieldDetails();
-            GetPlayerDetails();
+            GetFieldDetails();                                                                                              //PlayerController
+            GetPlayerDetails();                                                                                             //PlayerController
 
-            m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, -m_groundLength * 0.5f - -m_goalDistance);
+            m_rigidbody.transform.localPosition = new Vector3(m_rigidbody.transform.localPosition.x, m_rigidbody.transform.localPosition.y, -m_groundLength * 0.5f - -m_goalDistance);                                                                     //PlayerMovement
 
-            ClampMoveRange();
+            ClampMoveRange();                                                                                               //PlayerMovement
         }
 
         protected virtual void OnDisable()
         {
-            m_playerMovement.PlayerActions.Disable();
-            m_playerMovement.PlayerActions.ToggleGameMenu.performed -= ToggleMenu;
+            m_playerMovement.PlayerActions.Disable();                                                                       //PlayerInputReceiver
+            m_playerMovement.PlayerActions.ToggleGameMenu.performed -= ToggleMenu;                                          //PlayerInputReceiver
         }
 
         /// <summary>
@@ -87,17 +88,18 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         /// </summary>
         protected virtual void Start()
         {
-            m_playerMovement = InputManager.m_playerInputActions;
-            m_playerMovement.PlayerActions.Enable();
-            m_playerMovement.PlayerActions.ToggleGameMenu.performed += ToggleMenu;
+            m_playerMovement = InputManager.m_playerInputActions;                                                           //PlayerInputReceiver
+            m_playerMovement.PlayerActions.Enable();                                                                        //PlayerInputReceiver
+            m_playerMovement.PlayerActions.ToggleGameMenu.performed += ToggleMenu;                                          //PlayerInputReceiver
         }
 
         protected virtual void Update()
         {
-            ClampMoveRange();
-            ClampRotationAngle();
+            //Update code moved into:                                                                                       //PlayerMovement
+            ClampMoveRange();                                                                                               //PlayerMovement
+            ClampRotationAngle();                                                                                           //PlayerMovement
 
-            //TODO: MUST be removed after testing is completed!!!_______________________________
+            //TODO: MUST be removed after testing is completed!!!_______________________________                            //PlayerMovement
             //TODO: MatchManager shall pass PaddleWidthAdjustment-Changes after hitting objects to each individual player.
             if (Keyboard.current.pKey.wasPressedThisFrame)
             {
@@ -121,7 +123,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 
         protected abstract void FixedUpdate();
 
-        private void GetFieldDetails()
+        private void GetFieldDetails()                                                                                      //PlayerController
         {
             if (m_matchValues == null)
             {
@@ -135,7 +137,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             }
         }
 
-        private void GetPlayerDetails()
+        private void GetPlayerDetails()                                                                                     //PlayerController
         {
             if (m_playerIDData == null ^ m_matchValues == null)
             {
@@ -173,7 +175,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         /// Clamps the paddlemMovement on it's 'localPosition.x' and the calculated movementRange based on paddleWidth and fieldWidth.
         /// Also clamps the desired minimal and maximal moveDistance on the zAxis based on m_goalDistance and m_maxPushDistance to the playerGoals.
         /// </summary>
-        public void ClampMoveRange()
+        public void ClampMoveRange()                                                                                        //PlayerMovement
         {
             m_maxSideMovement = m_groundWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
 
@@ -192,7 +194,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         /// <summary>
         /// Clamps the maximal rotationAngle based on 'Quaternion.LookRotation, rigidbody's forwardVector and Vector3.up'.
         /// </summary>
-        private void ClampRotationAngle()
+        private void ClampRotationAngle()                                                                                   //PlayerMovement
         {
             Quaternion rotation = Quaternion.LookRotation(m_rigidbody.transform.forward, Vector3.up);
             rotation.ToAngleAxis(out float angle, out Vector3 axis);
@@ -200,15 +202,16 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             m_rigidbody/*.transform*/.rotation = Quaternion.AngleAxis(angle, axis);
         }
 
-        protected virtual void StartCoroutinesAndActions()
+        protected virtual void StartCoroutinesAndActions()                                                                  //PlayerInputReceiver
         {
             m_playerMovement.PlayerActions.Enable();
         }
 
         #region CallbackContext Methods
-        protected void ToggleMenu(InputAction.CallbackContext _callbackContext)
+        protected void ToggleMenu(InputAction.CallbackContext _callbackContext)                                             //PlayerInputReceiver
         {
-            m_matchManager = FindObjectOfType<MatchManager>();  //Required, if not catched with '[SerializeField]'.
+            if (m_matchManager == null)
+                m_matchManager = FindObjectOfType<MatchManager>();  //Required, if not catched with '[SerializeField]'.
 
             if (!m_matchManager.GameIsPaused && m_playerMovement.PlayerActions.enabled)
             {
@@ -218,7 +221,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         }
         #endregion
 
-        protected virtual void DisablePlayerActions()
+        protected virtual void DisablePlayerActions()                                                                       //PlayerInputReceiver
         {
             m_playerMovement.PlayerActions.Disable();
         }

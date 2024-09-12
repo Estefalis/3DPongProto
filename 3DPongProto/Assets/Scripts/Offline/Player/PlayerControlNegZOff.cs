@@ -9,54 +9,54 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
 {
     public class PlayerControlNegZOff : PlayerControlMain
     {
-        private IEnumerator m_paddleOnePushCoroutine, m_paddleThreePushCoroutine;
-        private bool m_pushPlayerOne = false, m_pushPlayerThree = false;
-        private Vector3 m_axisRotNegZ;
-        private Quaternion m_paddleStartRotation;
+        private IEnumerator m_paddleOnePushCoroutine, m_paddleThreePushCoroutine;                                           //PlayerMovement
+        private bool m_pushPlayerOne = false, m_pushPlayerThree = false;                                                    //PlayerMovement
+        private Vector3 m_axisRotNegZ;                                                                                      //PlayerMovement
+        private Quaternion m_paddleStartRotation;                                                                           //PlayerMovement
 
         protected override void Awake()
         {
             if (m_rigidbody == null)
             {
-                m_rigidbody = GetComponentInChildren<Rigidbody>();
+                m_rigidbody = GetComponentInChildren<Rigidbody>();                                                          //PlayerController
             }
 
-            m_paddleStartRotation = m_rigidbody.transform.localRotation;
-            m_playerIDData.PlayerId = m_playerId;
-            m_paddleOnePushCoroutine = PushPaddleOne(m_lerpDuration);
+            m_paddleStartRotation = m_rigidbody.transform.localRotation;                                                    //PlayerMovement
+            m_playerIDData.PlayerId = m_playerId;                                                                           //PlayerController
+            m_paddleOnePushCoroutine = PushPaddleOne(m_lerpDuration);                                                       //PlayerMovement
             m_paddleThreePushCoroutine = PushPaddleThree(m_lerpDuration);
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            Ball.HitGoalOne += LetsResetPaddleRotation;
-            Ball.HitGoalTwo += LetsResetPaddleRotation;
+            Ball.HitGoalOne += LetsResetPaddleRotation;                                                                     //PlayerMovement
+            Ball.HitGoalTwo += LetsResetPaddleRotation;                                                                     //PlayerMovement
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
             StopAllCoroutines();
-            InGameMenuOpens -= DisablePlayerActions;
-            InGameMenuActions.CloseInGameMenu -= StartCoroutinesAndActions;
-            Ball.HitGoalOne -= LetsResetPaddleRotation;
-            Ball.HitGoalTwo -= LetsResetPaddleRotation;
+            InGameMenuOpens -= DisablePlayerActions;                                                                        //PlayerInputReceiver
+            InGameMenuActions.CloseInGameMenu -= StartCoroutinesAndActions;                                                 //PlayerInputReceiver
+            Ball.HitGoalOne -= LetsResetPaddleRotation;                                                                     //PlayerMovement
+            Ball.HitGoalTwo -= LetsResetPaddleRotation;                                                                     //PlayerMovement
         }
 
         protected override void Start()
         {
             base.Start();
-            m_playerMovement.PlayerActions.PushPaddleNegZP1.performed += PushInputPlayerOne;
-            m_playerMovement.PlayerActions.PushPaddleNegZP1.canceled += CanceledInputPlayerOne;
+            m_playerMovement.PlayerActions.PushPaddleNegZP1.performed += PushInputPlayerOne;                                //PlayerInputReceiver
+            m_playerMovement.PlayerActions.PushPaddleNegZP1.canceled += CanceledInputPlayerOne;                             //PlayerInputReceiver
             m_playerMovement.PlayerActions.PushPaddleNegZP3.performed += PushInputPlayerThree;
             m_playerMovement.PlayerActions.PushPaddleNegZP3.canceled += CanceledInputPlayerThree;
 
-            InGameMenuOpens += DisablePlayerActions;
-            InGameMenuActions.CloseInGameMenu += StartCoroutinesAndActions;
-            StartCoroutinesAndActions();
+            InGameMenuOpens += DisablePlayerActions;                                                                        //PlayerInputReceiver
+            InGameMenuActions.CloseInGameMenu += StartCoroutinesAndActions;                                                 //PlayerInputReceiver
+            StartCoroutinesAndActions();                                                                                    //PlayerInputReceiver
 
-            AudioManager.LetsRegisterAudioSources(m_audioSource);
+            AudioManager.LetsRegisterAudioSources(m_audioSource);                                                           //PlayerController
         }
 
         protected override void Update()
@@ -68,20 +68,20 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
                 0 => new Vector3(0, m_playerMovement.PlayerActions.RotatePaddleNegZP1.ReadValue<Vector2>().x, 0),//Player1 ID = 0.
                 2 => new Vector3(0, m_playerMovement.PlayerActions.RotatePaddleNegZP3.ReadValue<Vector2>().x, 0),//Player3 ID = 2.
                 _ => new Vector3(0, m_playerMovement.PlayerActions.RotatePaddleNegZP1.ReadValue<Vector2>().x, 0),//Player1 ID = 0.
-            };
+            };                                                                                                              //PlayerMovement
         }
 
         protected override void FixedUpdate()
         {
-            MovePaddleByPlayer();
-            TurnPaddleByPlayer();
+            MovePaddleByPlayer();                                                                                           //PlayerMovement
+            TurnPaddleByPlayer();                                                                                           //PlayerMovement
         }
 
         /// <summary>
         /// MovePaddleByPlayer requires a switch to handle the positive and negative paddlePositions and moveDirections based on a playerID.
         /// </summary>
         /// <param name="playerID"></param>
-        private void MovePaddleByPlayer()
+        private void MovePaddleByPlayer()                                                                                   //PlayerMovement
         {
             m_rbPosition = m_rigidbody.transform.localPosition;
             var xInvert = m_controlUIStates.InvertXAxis ? -1 : 1;   //Also possible: ReadValue.x * (m_controlUIStates.InvertXAxis ? -1 : 1)
@@ -112,29 +112,29 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         /// <summary>
         /// Turns the playerPaddle based on Quaternion and 'rigidbody.rotation'.
         /// </summary>
-        private void TurnPaddleByPlayer()
+        private void TurnPaddleByPlayer()                                                                                   //PlayerMovement
         {
             var yInvert = m_controlUIStates.InvertYAxis ? -1 : 1;
             m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (m_axisRotNegZ * yInvert)).normalized;
             m_rigidbody.MoveRotation(m_rigidbody.rotation * m_deltaRotation);
         }
 
-        protected override void StartCoroutinesAndActions()
+        protected override void StartCoroutinesAndActions()                                                                 //PlayerInputReceiver
         {
             //Use BaseClass code and return to do the rest here.
             base.StartCoroutinesAndActions();
 
             if (m_paddleOnePushCoroutine != null)
-                StartCoroutine(m_paddleOnePushCoroutine);
+                StartCoroutine(m_paddleOnePushCoroutine);                                                                   //PlayerMovement
             if (m_paddleThreePushCoroutine != null)
                 StartCoroutine(m_paddleThreePushCoroutine);
         }
 
-        protected override void DisablePlayerActions()
+        protected override void DisablePlayerActions()                                                                      //PlayerInputReceiver
         {
             //Use BaseClass code and return to do the rest here.
             base.DisablePlayerActions();
-            StopAllCoroutines();
+            StopAllCoroutines();                                                                                            //PlayerMovement
         }
 
         #region IEnumerators - Coroutines
@@ -143,7 +143,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         /// '_lerpDuration' also works as maximal Time in the whileLoop, but could be replaced with a fix floatAmount.
         /// <param name="_lerpDuration"></param>
         /// <returns></returns>
-        private IEnumerator PushPaddleOne(float _lerpDuration)
+        private IEnumerator PushPaddleOne(float _lerpDuration)                                                              //PlayerMovement
         {
             float currentTime = 0;
 
@@ -188,7 +188,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             }
         }
 
-        private IEnumerator RestrictPushPOne()
+        private IEnumerator RestrictPushPOne()                                                                              //PlayerMovement
         {
             float countdown = m_delayRepetition;
 

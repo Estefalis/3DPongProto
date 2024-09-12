@@ -46,12 +46,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26c7c84218db8094bbb002a7cceb0c83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_rigidbody: {fileID: 1514124386283540311}
+  m_audioSource: {fileID: 2562273096893088642}
   m_inputAndCamComponent: {fileID: 6906505718523990414}
   m_playerInputReceiver: {fileID: 6906505718174328188}
   m_playerMovement: {fileID: 6906505718804641180}
   m_playerInteractions: {fileID: 6906505718804641155}
   m_playerHealth: {fileID: 6906505718804641153}
   m_playerCameraControl: {fileID: 1514124386014938132}
+  m_playerId: 0
+  m_defaultFrontLineUp: 0
+  m_playerIDData: {fileID: 11400000, guid: 533fe6eee149a3143aab50fbfb5541a8, type: 2}
+  m_controlUIStates: {fileID: 11400000, guid: 6f73ed489a50771489b477142348bfd6, type: 2}
+  m_controlUIValues: {fileID: 11400000, guid: 89d7e5fb5393a2a4fbaa05059af3fa6c, type: 2}
+  m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
+  m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
+  m_basicFieldValues: {fileID: 11400000, guid: b7c0516de58b3a240a6970d999010f71, type: 2}
 --- !u!1001 &4297264331869225740
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -61,9 +71,76 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3360163880313079576, guid: 8d92881aaa352c947926a0cd604d6243,
         type: 3}
+      propertyPath: m_RbPlayer
+      value: 
+      objectReference: {fileID: 1514124386283540311}
+    - target: {fileID: 3360163880313079576, guid: 8d92881aaa352c947926a0cd604d6243,
+        type: 3}
+      propertyPath: m_zoomStep
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3360163880313079576, guid: 8d92881aaa352c947926a0cd604d6243,
+        type: 3}
+      propertyPath: m_zoomSpeed
+      value: 0.002
+      objectReference: {fileID: 0}
+    - target: {fileID: 3360163880313079576, guid: 8d92881aaa352c947926a0cd604d6243,
+        type: 3}
+      propertyPath: m_followCamera
+      value: 
+      objectReference: {fileID: 1514124384917802635}
+    - target: {fileID: 3360163880313079576, guid: 8d92881aaa352c947926a0cd604d6243,
+        type: 3}
+      propertyPath: m_lowestHeight
+      value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 3360163880313079576, guid: 8d92881aaa352c947926a0cd604d6243,
+        type: 3}
+      propertyPath: m_smoothfactor
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3360163880313079576, guid: 8d92881aaa352c947926a0cd604d6243,
+        type: 3}
+      propertyPath: m_maximalHeight
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3360163880313079576, guid: 8d92881aaa352c947926a0cd604d6243,
+        type: 3}
+      propertyPath: m_zoomDampening
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3360163880313079576, guid: 8d92881aaa352c947926a0cd604d6243,
+        type: 3}
+      propertyPath: m_desiredOffset.y
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3360163880313079576, guid: 8d92881aaa352c947926a0cd604d6243,
+        type: 3}
+      propertyPath: m_desiredOffset.z
+      value: 7.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3360163880313079576, guid: 8d92881aaa352c947926a0cd604d6243,
+        type: 3}
+      propertyPath: m_graphicUiStates
+      value: 
+      objectReference: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11,
+        type: 2}
+    - target: {fileID: 3360163880313079576, guid: 8d92881aaa352c947926a0cd604d6243,
+        type: 3}
+      propertyPath: m_basicFieldValues
+      value: 
+      objectReference: {fileID: 11400000, guid: b7c0516de58b3a240a6970d999010f71,
+        type: 2}
+    - target: {fileID: 3360163880313079576, guid: 8d92881aaa352c947926a0cd604d6243,
+        type: 3}
       propertyPath: m_playerController
       value: 
       objectReference: {fileID: 1514124386352258756}
+    - target: {fileID: 3360163880313079576, guid: 8d92881aaa352c947926a0cd604d6243,
+        type: 3}
+      propertyPath: m_enableSmoothFollow
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7240140580504081025, guid: 8d92881aaa352c947926a0cd604d6243,
         type: 3}
       propertyPath: m_Name
@@ -131,6 +208,12 @@ PrefabInstance:
       objectReference: {fileID: 1514124386352258756}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d92881aaa352c947926a0cd604d6243, type: 3}
+--- !u!20 &1514124384917802635 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 3360163881431190919, guid: 8d92881aaa352c947926a0cd604d6243,
+    type: 3}
+  m_PrefabInstance: {fileID: 4297264331869225740}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1514124386014938132 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3360163880313079576, guid: 8d92881aaa352c947926a0cd604d6243,
@@ -168,6 +251,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1514124386352258762}
     m_Modifications:
+    - target: {fileID: 3019389867575858760, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
+        type: 3}
+      propertyPath: m_maxRotationAngle
+      value: 45
+      objectReference: {fileID: 0}
     - target: {fileID: 3019389867575858760, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
         type: 3}
       propertyPath: m_playerController
@@ -245,6 +333,18 @@ PrefabInstance:
       objectReference: {fileID: 1514124386352258756}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e, type: 3}
+--- !u!54 &1514124386283540311 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 7150750110298139779, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
+    type: 3}
+  m_PrefabInstance: {fileID: 8520759151465866196}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &2562273096893088642 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 6174668752426262614, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
+    type: 3}
+  m_PrefabInstance: {fileID: 8520759151465866196}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &6906505718804641153 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3019389867575858773, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,

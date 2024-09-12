@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23ae38de6bc0d3f4aaa8718fe9de0dee, type: 3}
   m_Name: P1Data
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 5985516158134654762, guid: 840e92d4a9372544b9571a59a3063d11, type: 3}
+  Prefab: {fileID: 6448770841493022979, guid: 7bd79cfa5cbbd1f438412108551e4367, type: 3}
   PlayerName: Estefalis
   PlayerId: 0
   Avatar: {fileID: 0}

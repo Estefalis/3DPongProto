@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 namespace ThreeDeePongProto.Offline.CameraSetup
 {
-    public class CamNegZBehavOff : MonoBehaviour
+    public class CamNegZBehavOff : MonoBehaviour    //PlayerCameraController
     {
         // Start is called before the first frame update
         private PlayerInputActions m_cameraInputActions;

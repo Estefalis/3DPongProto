@@ -596,7 +596,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""name"": ""right"",
                     ""id"": ""2d561700-73c3-433d-840f-616e730ee5c5"",
-                    ""path"": ""<Keyboard>/z"",
+                    ""path"": ""<Keyboard>/y"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",

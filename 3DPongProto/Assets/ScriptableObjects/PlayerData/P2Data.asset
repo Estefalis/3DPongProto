@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23ae38de6bc0d3f4aaa8718fe9de0dee, type: 3}
   m_Name: P2Data
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 2849503855690960358, guid: 314f7651877d7c649b85b4b9396b3140, type: 3}
+  Prefab: {fileID: 9035185388189574357, guid: b6c9b8711929648418effb9cc6653f6a, type: 3}
   PlayerName: Nyclia
   PlayerId: 1
   Avatar: {fileID: 0}

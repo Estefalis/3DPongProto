@@ -446,6 +446,7 @@ MonoBehaviour:
   m_enableSmoothFollow: 1
   m_desiredOffset: {x: 0, y: 2.5, z: 7.5}
   m_smoothfactor: 6
+  m_minAbsLimit: 0.05
   m_zoomSpeed: 0.002
   m_zoomStep: 2
   m_zoomDampening: 20

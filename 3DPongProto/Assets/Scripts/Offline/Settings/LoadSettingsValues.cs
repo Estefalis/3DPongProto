@@ -68,6 +68,7 @@ namespace ThreeDeePongProto.Offline.Settings
         {
             MatchUISettingsStates uiIndices = m_persistentData.LoadData<MatchUISettingsStates>(m_settingStatesFolderPath, m_matchFileName, m_fileFormat, m_encryptionEnabled);
             m_matchUIStates.EPlayerAmount = uiIndices.EPlayerAmount;
+            m_matchUIStates.RotationReset = uiIndices.RotationReset;
             m_matchUIStates.InfiniteMatch = uiIndices.InfiniteMatch;
             //In this special case, the DropdownIndex is equal to the set Rounds and MaxPoints, because Index 0 is set as "InfinityValue".
             m_matchUIStates.LastRoundDdIndex = uiIndices.LastRoundDdIndex;

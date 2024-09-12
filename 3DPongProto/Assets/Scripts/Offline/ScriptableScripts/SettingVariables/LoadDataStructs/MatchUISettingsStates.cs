@@ -4,8 +4,7 @@ using System;
 public struct MatchUISettingsStates
 {
     public EPlayerAmount EPlayerAmount;
-    public bool TpOneRotReset;
-    public bool TpTwoRotReset;
+    public bool RotationReset;
     public bool InfiniteMatch;
     public int LastRoundDdIndex;
     public int LastMaxPointDdIndex;
