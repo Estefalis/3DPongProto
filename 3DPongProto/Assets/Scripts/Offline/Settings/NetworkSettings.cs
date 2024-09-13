@@ -49,7 +49,7 @@ namespace ThreeDeePongProto.Offline.Settings
             float addedCount = rest - (rest % 1);
             int otherAxisCount = rest <= 0 ? _constraintAxisCount + (int)addedCount : _constraintAxisCount + (int)addedCount + 1;
 #if UNITY_EDITOR
-            Debug.Log($"KnownAxis: {_constraintAxisCount} - Unknown: {otherAxisCount} - Rest: {rest} - AddedCount {addedCount}");
+            Debug.Log($"ConstraintAxis: {_constraintAxisCount} - OtherAxis: {otherAxisCount} - Rest: {rest} - AddedCount {addedCount}");
 #endif
             return otherAxisCount;
         }
