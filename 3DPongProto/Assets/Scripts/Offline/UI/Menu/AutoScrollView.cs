@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+/// Credit zero3growlithe (See README.md.)
+/// sourced from: http://forum.unity3d.com/threads/scripts-useful-4-6-scripts-collection.264161/page-2#post-2011648
+
 namespace ThreeDeePongProto.Offline.UI.Menu
 {
     [RequireComponent(typeof(ScrollRect))]
@@ -303,8 +306,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         /// <param name="_gameObject"></param>
         private void UpdateCurrentGameObject()
         {
-            if (m_lastSelectedGameObject == null)   //Dicts don't allow null on keys.
-                return;
+            if (m_lastSelectedGameObject == null)   //Dicts don't allow null on keys. And just 'return;' disables AutoScrolling.
+                m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
 
             if (m_lastSelectedGameObject != EventSystem.current.currentSelectedGameObject)
             {
@@ -336,7 +339,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         /// </summary>
         private void AutoScrollToNextGameObject()
         {
-            if (!m_scrollContentSet || !m_canAutoScroll/* || Cursor.lockState == CursorLockMode.None*/)
+            if (!m_scrollContentSet || !m_canAutoScroll/* || Cursor.lockState == CursorLockMode.None*/) //TODO: Implement Mouse (In)Visibility change.
                 return;
 
             switch (m_setAutoScrollOption)
