@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace ThreeDeePongProto.Offline.UI.Menu
@@ -92,7 +91,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             //m_mousePosition = m_playerInputActions.UI.MousePosition.ReadValue<Vector2>();
             //Debug.Log(m_mousePosition);
             AutoScrollToNextGameObject();
-            //TODO: MouseScrolling shall scroll up/down the scrollView elements and select each, depending on the scrollDirection.
             UpdateCurrentGameObject();
         }
 
@@ -305,6 +303,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         /// <param name="_gameObject"></param>
         private void UpdateCurrentGameObject()
         {
+            if (m_lastSelectedGameObject == null)   //Dicts don't allow null on keys.
+                return;
+
             if (m_lastSelectedGameObject != EventSystem.current.currentSelectedGameObject)
             {
                 m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
