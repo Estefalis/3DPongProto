@@ -30,7 +30,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] private RectTransform m_scrollContentRT;
         [Space]
         [SerializeField] private LayoutGroup m_layoutGroup;
-        [SerializeField] private int m_contentChildIndex;
+        [SerializeField] private int m_contentChildCount;
+        /*[SerializeField] */private Vector2Int m_gridSize;
         [SerializeField] private Vector2 m_unmaskedContentRT;
         [SerializeField] private Vector2 m_maskedScrollWindow;
         [SerializeField] private Vector2 m_firstChildRT;
@@ -73,11 +74,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void Start()
         {
             if (m_scrollContentRT != null)
-            {
                 ContentLevelIterations();
-            }
 
-            GetLayoutGroupSettings(m_layoutGroup);  //Requires 'ContentLevelIterations()' 'm_contentChildIndex', if m_totalSpacings are wanted.
+            GetLayoutGroupSettings(m_layoutGroup);  //Requires 'ContentLevelIterations()' 'm_contentChildCount', if m_totalSpacings are wanted.
 
             m_playerInputActions = InputManager.m_playerInputActions;
             m_playerInputActions.UI.Enable();
@@ -194,9 +193,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 }
             }
 
-            //if '(m_layoutGroup == null)' and you want to add one (WITH detailed memberValues to set it's dimensions):
+            //if '(_layoutGroup == null)' and you want to add one (WITH detailed memberValues to set it's dimensions):
             //'AddMissingLayoutGroup()' - 'switch (m_setAutoScrollOption)' - 'case AutoScrollOptions.Both/.Vertical/.Horizontal' -
-            //'m_layoutGroup = m_scrollContentRT.AddComponent<GridLayoutGroup/VerticalLayoutGroup/HorizontalLayoutGroup>()' and
+            //'_layoutGroup = m_scrollContentRT.AddComponent<GridLayoutGroup/VerticalLayoutGroup/HorizontalLayoutGroup>()' and
             //'default: break;' - for savety. (It would currently go too far.)
         }
 
@@ -205,10 +204,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         /// </summary>
         private void ContentLevelIterations()
         {
-            m_contentChildIndex = 0;
+            m_contentChildCount = 0;
             foreach (Transform transform in m_scrollContentRT.transform)
             {
-                m_contentChildIndex += 1;
+                m_contentChildCount += 1;
                 m_childRect = transform.GetComponent<RectTransform>();
 
                 //Level for X/Y Axis Toggles.
@@ -245,29 +244,36 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             }
         }
 
-        private void GetLayoutGroupSettings(LayoutGroup m_layoutGroup)
+        private void GetLayoutGroupSettings(LayoutGroup _layoutGroup)
         {
             switch (m_setAutoScrollOption)
             {
                 case AutoScrollOptions.Both:
                 {
-                    var padding = m_layoutGroup./*GetComponent<GridLayoutGroup>().*/padding;            //Space at LayoutGroup borders.
-                    m_topPadding = padding.top;
-                    m_bottomPadding = padding.bottom;
-                    m_leftPadding = padding.left;
-                    m_rightPadding = padding.right;
-                    var gridSpacing = m_layoutGroup.GetComponent<GridLayoutGroup>().spacing;            //Spacing between elements.
-                    m_horizontalSpacing = gridSpacing.x;
-                    m_verticalSpacing = gridSpacing.y;
+                    var gridSettings = _layoutGroup.GetComponent<GridLayoutGroup>();
+                    //Space at LayoutGroup borders.
+                    m_topPadding = gridSettings.padding.top;
+                    m_bottomPadding = gridSettings.padding.bottom;
+                    m_leftPadding = gridSettings.padding.left;
+                    m_rightPadding = gridSettings.padding.right;
+                    //Spacing between elements.
+                    m_horizontalSpacing = gridSettings.spacing.x;
+                    m_verticalSpacing = gridSettings.spacing.y;
 
-                    m_gridConstraint = m_layoutGroup.GetComponent<GridLayoutGroup>().constraint;
-                    switch (m_gridConstraint)   //TODO: Get Column/Row childCounts, depending on 'm_gridConstraint's.
+                    m_gridConstraint = gridSettings.constraint;
+                    var constraintCount = _layoutGroup.GetComponent<GridLayoutGroup>().constraintCount;
+
+                    switch (m_gridConstraint)   //TODO: 'GridLayoutGroup.Constraint.Flexible'.
                     {
                         case GridLayoutGroup.Constraint.Flexible:
                             break;
                         case GridLayoutGroup.Constraint.FixedColumnCount:
+                            m_gridSize.x = constraintCount;
+                            m_gridSize.y = GetOtherAxisCount(m_contentChildCount, m_gridSize.x);
                             break;
                         case GridLayoutGroup.Constraint.FixedRowCount:
+                            m_gridSize.y = constraintCount;
+                            m_gridSize.x = GetOtherAxisCount(m_contentChildCount, m_gridSize.y);
                             break;
                         default:
                             break;
@@ -276,18 +282,18 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 }
                 case AutoScrollOptions.Vertical:
                 {
-                    var padding = m_layoutGroup./*GetComponent<VerticalLayoutGroup>().*/padding;        //Space at LayoutGroup borders.
+                    var padding = _layoutGroup./*GetComponent<VerticalLayoutGroup>().*/padding;        //Space at LayoutGroup borders.
                     m_topPadding = padding.top;
                     m_bottomPadding = padding.bottom;
-                    m_verticalSpacing = m_layoutGroup.GetComponent<VerticalLayoutGroup>().spacing;      //Spacing between Elements.
+                    m_verticalSpacing = _layoutGroup.GetComponent<VerticalLayoutGroup>().spacing;      //Spacing between Elements.
                     break;
                 }
                 case AutoScrollOptions.Horizontal:
                 {
-                    var padding = m_layoutGroup./*GetComponent<HorizontalLayoutGroup>().*/padding;      //Space at LayoutGroup borders.
+                    var padding = _layoutGroup./*GetComponent<HorizontalLayoutGroup>().*/padding;      //Space at LayoutGroup borders.
                     m_leftPadding = padding.left;
                     m_rightPadding = padding.right;
-                    m_horizontalSpacing = m_layoutGroup.GetComponent<HorizontalLayoutGroup>().spacing;  //Spacing between Elements.
+                    m_horizontalSpacing = _layoutGroup.GetComponent<HorizontalLayoutGroup>().spacing;  //Spacing between Elements.
                     break;
                 }
             }
@@ -306,32 +312,39 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         /// <param name="_gameObject"></param>
         private void UpdateCurrentGameObject()
         {
-            if (m_lastSelectedGameObject == null)   //Dicts don't allow null on keys. And just 'return;' disables AutoScrolling.
-                m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
-
-            if (m_lastSelectedGameObject != EventSystem.current.currentSelectedGameObject)
+            switch (m_lastSelectedGameObject == null)
             {
-                m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
-
-                #region Dict switch
-                switch (m_contentChildAnchorPos.ContainsKey(m_lastSelectedGameObject))
+                case true:  //Dicts don't allow null on keys. And just 'return;' disables AutoScrolling.
+                    m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
+                    break;
+                case false:
                 {
-                    case true:
+                    if (m_lastSelectedGameObject != EventSystem.current.currentSelectedGameObject)
                     {
-                        m_canAutoScroll = true;
-                        break;
+                        m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
+
+                        #region Dict switch
+                        switch (m_contentChildAnchorPos.ContainsKey(m_lastSelectedGameObject))
+                        {
+                            case true:
+                            {
+                                m_canAutoScroll = true;
+                                break;
+                            }
+                            case false:
+                            {
+                                m_canAutoScroll = false;
+                                break;
+                            }
+                        }
                     }
-                    case false:
-                    {
-                        m_canAutoScroll = false;
-                        break;
-                    }
+                    #endregion
+#if UNITY_EDITOR
+                    //Debug.Log($"LastGO: {m_lastSelectedGameObject.name} - autoScroll: {m_canAutoScroll}");
+#endif
+                    break;
                 }
             }
-            #endregion
-#if UNITY_EDITOR
-            //Debug.Log($"LastGO: {m_lastSelectedGameObject.name} - autoScroll: {m_canAutoScroll}");
-#endif
         }
 
         /// <summary>
@@ -441,6 +454,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             }
 
             return 0;
+        }
+
+        private static int GetOtherAxisCount(int m_contentChildCount, int _constraintAxisCount)
+        {
+            float rest = (float)m_contentChildCount / _constraintAxisCount - _constraintAxisCount;
+            float addedCount = rest - (rest % 1);
+            int otherAxisCount = rest <= 0 ? _constraintAxisCount + (int)addedCount : _constraintAxisCount + (int)addedCount + 1;
+            return otherAxisCount;
         }
     }
 }
