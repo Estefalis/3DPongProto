@@ -45,11 +45,11 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private static int GetOtherAxisCount(int m_contentChildCount, int _constraintAxisCount)
         {
-            float rest = (float)m_contentChildCount / _constraintAxisCount - _constraintAxisCount;
-            float addedCount = rest - (rest % 1);
-            int otherAxisCount = rest <= 0 ? _constraintAxisCount + (int)addedCount : _constraintAxisCount + (int)addedCount + 1;
+            float lambdaSwitch = (float)m_contentChildCount / _constraintAxisCount - _constraintAxisCount;
+            float addedCount = lambdaSwitch - (lambdaSwitch % 1);
+            int otherAxisCount = lambdaSwitch <= 0 ? _constraintAxisCount + (int)addedCount : _constraintAxisCount + (int)addedCount + 1;
 #if UNITY_EDITOR
-            Debug.Log($"ConstraintAxis: {_constraintAxisCount} - OtherAxis: {otherAxisCount} - Rest: {rest} - AddedCount {addedCount}");
+            Debug.Log($"ConstraintAxis: {_constraintAxisCount} - OtherAxis: {otherAxisCount} - Rest: {lambdaSwitch} - AddedCount {addedCount}");
 #endif
             return otherAxisCount;
         }
