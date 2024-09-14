@@ -76,7 +76,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (m_scrollContentRT != null)
                 ContentLevelIterations();
 
-            GetLayoutGroupSettings(m_layoutGroup);  //Requires 'ContentLevelIterations()' 'm_contentChildCount', if m_totalSpacings are wanted.
+            GetLayoutGroupSettings(m_layoutGroup);  //Requires 'ContentLevelIterations()' '_contentChildCount', if m_totalSpacings are wanted.
 
             m_playerInputActions = InputManager.m_playerInputActions;
             m_playerInputActions.UI.Enable();
@@ -456,9 +456,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             return 0;
         }
 
-        private static int GetOtherAxisCount(int m_contentChildCount, int _constraintAxisCount)
+        private static int GetOtherAxisCount(int _contentChildCount, int _constraintAxisCount)
         {
-            float lambdaSwitch = (float)m_contentChildCount / _constraintAxisCount - _constraintAxisCount;
+            float lambdaSwitch = (float)_contentChildCount / _constraintAxisCount - _constraintAxisCount;
             float addedCount = lambdaSwitch - (lambdaSwitch % 1);
             int otherAxisCount = lambdaSwitch <= 0 ? _constraintAxisCount + (int)addedCount : _constraintAxisCount + (int)addedCount + 1;
             return otherAxisCount;

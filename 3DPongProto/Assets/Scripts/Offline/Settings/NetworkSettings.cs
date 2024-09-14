@@ -43,9 +43,9 @@ namespace ThreeDeePongProto.Offline.Settings
             }
         }
 
-        private static int GetOtherAxisCount(int m_contentChildCount, int _constraintAxisCount)
+        private static int GetOtherAxisCount(int _contentChildCount, int _constraintAxisCount)
         {
-            float lambdaSwitch = (float)m_contentChildCount / _constraintAxisCount - _constraintAxisCount;
+            float lambdaSwitch = (float)_contentChildCount / _constraintAxisCount - _constraintAxisCount;
             float addedCount = lambdaSwitch - (lambdaSwitch % 1);
             int otherAxisCount = lambdaSwitch <= 0 ? _constraintAxisCount + (int)addedCount : _constraintAxisCount + (int)addedCount + 1;
 #if UNITY_EDITOR
