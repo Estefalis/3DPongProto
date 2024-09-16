@@ -20,10 +20,18 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             Horizontal,
             Both
         }
+
+        internal enum WindowMaskSwitch
+        {
+            MaskedScrollViewRect,
+            UnmaskedContentRect
+        }
+
         //TODO: Remove '[SerializeField] ' after development, if it's not needed.
         private PlayerInputActions m_playerInputActions;
 
-        [SerializeField] private AutoScrollOptions m_setAutoScrollOption = AutoScrollOptions.Both;
+        [SerializeField] private AutoScrollOptions m_detectedScrollOption = AutoScrollOptions.Both;
+        [SerializeField] private WindowMaskSwitch m_selectedWindowMask = WindowMaskSwitch.MaskedScrollViewRect;
         [SerializeField] private float m_scrollSpeed = 50.0f;
         [Space]
         [SerializeField] private ScrollRect m_scrollViewRect;
@@ -31,18 +39,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [Space]
         [SerializeField] private LayoutGroup m_layoutGroup;
         [SerializeField] private int m_contentChildCount;
-
+        [Space]
+        [SerializeField] private Vector2 m_maskedScrollWindow;  //Fix (masked) Width & Height
+        [SerializeField] private Vector2 m_unmaskedContentRT;  //Full Width & Height.
         private Vector2Int m_gridSize;
-        //private Vector2 m_unmaskedContentRT;  //Full Width & Height.
-        private Vector2 m_maskedScrollWindow;
         private Vector2 m_firstChildRT;
-
-        private int m_leftPadding;
-        private int m_rightPadding;
-        private int m_topPadding;
-        private int m_bottomPadding;
-        private float m_horizontalSpacing;
-        private float m_verticalSpacing;
+        //private Vector2 m_movingContentAnchorPos;
+        [Space]
+        [SerializeField] private int m_leftPadding;
+        [SerializeField] private int m_rightPadding;
+        [SerializeField] private int m_topPadding;
+        [SerializeField] private int m_bottomPadding;
+        [SerializeField] private float m_horizontalSpacing;
+        [SerializeField] private float m_verticalSpacing;
 
         private bool m_canAutoScroll = false, m_scrollContentSet;
         private bool m_edgePosition = false;
@@ -158,7 +167,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             {
                 case true:
                 {
-                    m_setAutoScrollOption = AutoScrollOptions.Both;
+                    m_detectedScrollOption = AutoScrollOptions.Both;
                     m_layoutGroup = m_scrollContentRT.GetComponent<GridLayoutGroup>();
                     break;
                 }
@@ -168,7 +177,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     {
                         case true:
                         {
-                            m_setAutoScrollOption = AutoScrollOptions.Vertical;
+                            m_detectedScrollOption = AutoScrollOptions.Vertical;
                             m_layoutGroup = m_scrollContentRT.GetComponent<VerticalLayoutGroup>();
                             break;
                         }
@@ -178,13 +187,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                             {
                                 case true:
                                 {
-                                    m_setAutoScrollOption = AutoScrollOptions.Horizontal;
+                                    m_detectedScrollOption = AutoScrollOptions.Horizontal;
                                     m_layoutGroup = m_scrollContentRT.GetComponent<HorizontalLayoutGroup>();
                                     break;
                                 }
                                 case false:
                                 {
-                                    m_setAutoScrollOption = AutoScrollOptions.None;
+                                    m_detectedScrollOption = AutoScrollOptions.None;
                                     m_layoutGroup = null;
                                     break;
                                 }
@@ -197,13 +206,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             }
 
             //if '(_layoutGroup == null)' and you want to add one (WITH detailed memberValues to set it's dimensions):
-            //'AddMissingLayoutGroup()' - 'switch (m_setAutoScrollOption)' - 'case AutoScrollOptions.Both/.Vertical/.Horizontal' -
+            //'AddMissingLayoutGroup()' - 'switch (m_detectedScrollOption)' - 'case AutoScrollOptions.Both/.Vertical/.Horizontal' -
             //'_layoutGroup = m_scrollContentRT.AddComponent<GridLayoutGroup/VerticalLayoutGroup/HorizontalLayoutGroup>()' and
             //'default: break;' - for savety. (It would currently go too far.)
         }
 
         /// <summary>
-        /// Searches Content, of the currently active ScrollView, for GameObjects in each Parent/Child Level of the Hierarchy.
+        /// Searches Content of the currently active ScrollView with nested for-loops, to fill Dictionaries with AnchoredPositions and Navigation Informations of the contained GameObjects.
         /// </summary>
         private void ContentLevelIterations()
         {
@@ -249,7 +258,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void GetLayoutGroupSettings(LayoutGroup _layoutGroup)
         {
-            switch (m_setAutoScrollOption)
+            switch (m_detectedScrollOption)
             {
                 case AutoScrollOptions.Both:
                 {
@@ -307,7 +316,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_maskedScrollWindow = new Vector2(m_scrollViewRectTransform.rect.width, m_scrollViewRectTransform.rect.height);
 
             var contentRect = m_scrollContentRT.GetComponent<RectTransform>().rect;
-            //m_unmaskedContentRT = new Vector2(contentRect.width, contentRect.height);   //.x - .width, .y - .height.
+            m_unmaskedContentRT = new Vector2(contentRect.width, contentRect.height);   //.x - .width, .y - .height.
             var firstChildRect = m_scrollContentRT.GetChild(0).GetComponent<RectTransform>().rect;
             m_firstChildRT = new Vector2(firstChildRect.width, firstChildRect.height);
         }
@@ -333,10 +342,25 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         {
                             case true:  //true, while being inside the ScrollView.
                             {
-                                m_edgePosition = EdgePositionCheck(m_scrollContentRT.anchoredPosition, m_contentChildAnchorPos[m_lastSelectedGameObject].anchoredPosition);
+                                switch (m_selectedWindowMask)
+                                {
+                                    case WindowMaskSwitch.MaskedScrollViewRect:
+                                    {
+                                        m_edgePosition = MaskedScrollRectEdgeCheck(m_scrollViewRectTransform, m_contentChildAnchorPos[m_lastSelectedGameObject].anchoredPosition);
+                                        break;
+                                    }
+                                    case WindowMaskSwitch.UnmaskedContentRect:
+                                    {
+                                        m_edgePosition = UnmaskedContentEdgeCheck(m_scrollContentRT.anchoredPosition, m_contentChildAnchorPos[m_lastSelectedGameObject].anchoredPosition);
+                                        break;
+                                    }
+                                    default:
+                                        break;
+                                }
 #if UNITY_EDITOR
-                                Debug.Log(m_edgePosition);
+                                //Debug.Log($"AtEdgePosition: {m_edgePosition}");
 #endif
+
                                 if (m_edgePosition)
                                 {
                                     //ScrollSelectNextGameObject();
@@ -362,38 +386,69 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             }
         }
 
-        private bool EdgePositionCheck(Vector2 _contentAchor, Vector2 _lastGOAnchor)
+        private bool MaskedScrollRectEdgeCheck(RectTransform _scrollViewRect, Vector2 _lastGOAnchor)
         {
-            switch (m_setAutoScrollOption)
+            switch (m_detectedScrollOption)
             {
                 case AutoScrollOptions.Vertical:
                 {
-                    var zeroedContentRTAnchorY = _contentAchor.y - _contentAchor.y; //On entering ScrollView from below, AnchorPos is not 0.
-                    m_startEdgeVer = _lastGOAnchor.y + m_verticalSpacing + m_topPadding > zeroedContentRTAnchorY;
-                    m_endEdgeVer = _lastGOAnchor.y - m_firstChildRT.y - m_verticalSpacing - m_bottomPadding < zeroedContentRTAnchorY - m_maskedScrollWindow.y;
-
-                    #region Edge Sketch (Yes, really. <(~.^)")
-                    //edgePosition = _lastGOAnchor.y + m_verticalSpacing + m_topPadding > zeroedContentRTAnchorX ^
-                    //    _lastGOAnchor.y - m_firstChildRT.y - m_verticalSpacing - m_bottomPadding < zeroedContentRTAnchorX - m_maskedScrollWindow.y;
-                    #endregion
+                    m_startEdgeVer = _lastGOAnchor.y + (m_verticalSpacing * m_contentChildCount - 1) + m_topPadding + m_scrollContentRT.anchoredPosition.y >= _scrollViewRect.anchoredPosition.y;
+                    m_endEdgeVer = -(_lastGOAnchor.y - m_firstChildRT.y - (m_verticalSpacing * m_contentChildCount - 1) - m_bottomPadding + m_scrollContentRT.anchoredPosition.y) >= _scrollViewRect.rect.height;
                     break;
                 }
                 case AutoScrollOptions.Horizontal:
                 {
-                    var zeroedContentRTAnchorX = _contentAchor.x - _contentAchor.x;  //On entering ScrollView from right, AnchorPos is not 0.
-                    m_startEdgeHor = _lastGOAnchor.x + m_horizontalSpacing + m_leftPadding > zeroedContentRTAnchorX;
-                    m_endEdgeHor = _lastGOAnchor.x - m_firstChildRT.x - m_horizontalSpacing - m_rightPadding < zeroedContentRTAnchorX - m_maskedScrollWindow.x;
+                    m_startEdgeHor = _lastGOAnchor.x + (m_horizontalSpacing * m_contentChildCount - 1) + m_leftPadding + m_scrollContentRT.anchoredPosition.x >= _scrollViewRect.anchoredPosition.x;
+                    m_endEdgeHor = -(_lastGOAnchor.x - m_firstChildRT.x - (m_horizontalSpacing * m_contentChildCount - 1) - m_rightPadding + m_scrollContentRT.anchoredPosition.x) >= _scrollViewRect.rect.width;
                     break;
                 }
                 case AutoScrollOptions.Both:
                 {
-                    var zeroedContentRTAnchorY = _contentAchor.y - _contentAchor.y; //On entering ScrollView from below, AnchorPos is not 0.
-                    m_startEdgeVer = _lastGOAnchor.y + m_verticalSpacing + m_topPadding > zeroedContentRTAnchorY;
-                    m_endEdgeVer = _lastGOAnchor.y - m_firstChildRT.y - m_verticalSpacing - m_bottomPadding < zeroedContentRTAnchorY - m_maskedScrollWindow.y;
+                    //TODO: MaskedScrollRectEdgeCheck AutoScrollOptions.Both
+                    break;
+                }
+                case AutoScrollOptions.None:
+                default:
+                    break;
+            }
 
-                    var zeroedContentRTAnchorX = _contentAchor.x - _contentAchor.x;  //On entering ScrollView from right, AnchorPos is not 0.
-                    m_startEdgeHor = _lastGOAnchor.x + m_horizontalSpacing + m_leftPadding > zeroedContentRTAnchorX;
-                    m_endEdgeHor = _lastGOAnchor.x - m_firstChildRT.x - m_horizontalSpacing - m_rightPadding < zeroedContentRTAnchorX - m_maskedScrollWindow.x;
+            switch (m_startEdgeVer ^ m_endEdgeVer || m_startEdgeHor ^ m_endEdgeHor)
+            {
+                case true:
+                    return true;
+                case false:
+                    return false;
+            }
+        }
+
+        private bool UnmaskedContentEdgeCheck(Vector2 _contentAnchor, Vector2 _lastGOAnchor)
+        {
+            switch (m_detectedScrollOption)
+            {
+                case AutoScrollOptions.Vertical:
+                {
+                    var zeroedContentRTAnchorY = _contentAnchor.y - _contentAnchor.y; //On entering ScrollView from below, AnchorPos is not 0.
+                    m_startEdgeVer = _lastGOAnchor.y + m_verticalSpacing + m_topPadding >= zeroedContentRTAnchorY;
+                    m_endEdgeVer = _lastGOAnchor.y - m_firstChildRT.y - m_verticalSpacing - m_bottomPadding <= zeroedContentRTAnchorY - m_maskedScrollWindow.y;
+                    break;
+                }
+                case AutoScrollOptions.Horizontal:
+                {
+                    var zeroedContentRTAnchorX = _contentAnchor.x - _contentAnchor.x;  //On entering ScrollView from right, AnchorPos is not 0.
+                    m_startEdgeHor = _lastGOAnchor.x + m_horizontalSpacing + m_leftPadding >= zeroedContentRTAnchorX;
+                    m_endEdgeHor = _lastGOAnchor.x - m_firstChildRT.x - m_horizontalSpacing - m_rightPadding <= zeroedContentRTAnchorX - m_maskedScrollWindow.x;
+                    break;
+                }
+                case AutoScrollOptions.Both:
+                {
+                    //TODO: Confirm MaskedScrollRectEdgeCheck AutoScrollOptions.Both
+                    var zeroedContentRTAnchorY = _contentAnchor.y - _contentAnchor.y; //On entering ScrollView from below, AnchorPos is not 0.
+                    m_startEdgeVer = _lastGOAnchor.y + m_verticalSpacing + m_topPadding >= zeroedContentRTAnchorY;
+                    m_endEdgeVer = _lastGOAnchor.y - m_firstChildRT.y - m_verticalSpacing - m_bottomPadding <= zeroedContentRTAnchorY - m_maskedScrollWindow.y;
+
+                    var zeroedContentRTAnchorX = _contentAnchor.x - _contentAnchor.x;  //On entering ScrollView from right, AnchorPos is not 0.
+                    m_startEdgeHor = _lastGOAnchor.x + m_horizontalSpacing + m_leftPadding >= zeroedContentRTAnchorX;
+                    m_endEdgeHor = _lastGOAnchor.x - m_firstChildRT.x - m_horizontalSpacing - m_rightPadding <= zeroedContentRTAnchorX - m_maskedScrollWindow.x;
                     break;
                 }
                 case AutoScrollOptions.None:
@@ -418,7 +473,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (!m_scrollContentSet || !m_canAutoScroll/* || Cursor.lockState == CursorLockMode.None*/) //TODO: Implement Mouse (In)Visibility change.
                 return;
 
-            switch (m_setAutoScrollOption)
+            switch (m_detectedScrollOption)
             {
                 case AutoScrollOptions.Vertical:
                     UpdateVerticalScrollPosition(m_contentChildAnchorPos[m_lastSelectedGameObject]);
@@ -434,6 +489,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 default:
                     break;
             }
+
+            //if (m_movingContentAnchorPos != m_scrollContentRT.anchoredPosition)
+            //{
+            //    m_movingContentAnchorPos = m_scrollContentRT.anchoredPosition;
+            //}
         }
 
         private void UpdateVerticalScrollPosition(RectTransform _selectedElement)

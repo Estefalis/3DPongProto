@@ -39,7 +39,7 @@ public class SerializingData : IPersistentData
             if (File.Exists(combinedPath))
             {
 #if UNITY_EDITOR
-                Debug.Log("The data already exists. Deleting the old file and writing a new one.");
+                //Debug.Log("The data already exists. Deleting the old file and writing a new one.");
 #endif
                 File.Delete(combinedPath);
             }

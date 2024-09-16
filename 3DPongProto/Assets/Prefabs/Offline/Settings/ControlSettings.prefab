@@ -199,15 +199,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac77e38b8c1c2b4abfb645a557dc856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_setAutoScrollOption: 1
+  m_detectedScrollOption: 3
+  m_selectedWindowMask: 0
   m_scrollSpeed: 200
   m_scrollViewRect: {fileID: 0}
   m_scrollContentRT: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_contentChildIndex: 0
-  m_unmaskedContentRT: {x: 0, y: 0}
+  m_contentChildCount: 0
   m_maskedScrollWindow: {x: 0, y: 0}
-  m_firstChildRT: {x: 0, y: 0}
+  m_unmaskedContentRT: {x: 0, y: 0}
   m_leftPadding: 0
   m_rightPadding: 0
   m_topPadding: 0
@@ -6897,15 +6897,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac77e38b8c1c2b4abfb645a557dc856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_setAutoScrollOption: 1
+  m_detectedScrollOption: 3
+  m_selectedWindowMask: 0
   m_scrollSpeed: 200
   m_scrollViewRect: {fileID: 0}
   m_scrollContentRT: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_contentChildIndex: 0
-  m_unmaskedContentRT: {x: 0, y: 0}
+  m_contentChildCount: 0
   m_maskedScrollWindow: {x: 0, y: 0}
-  m_firstChildRT: {x: 0, y: 0}
+  m_unmaskedContentRT: {x: 0, y: 0}
   m_leftPadding: 0
   m_rightPadding: 0
   m_topPadding: 0
@@ -9110,15 +9110,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac77e38b8c1c2b4abfb645a557dc856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_setAutoScrollOption: 1
+  m_detectedScrollOption: 3
+  m_selectedWindowMask: 0
   m_scrollSpeed: 200
   m_scrollViewRect: {fileID: 0}
   m_scrollContentRT: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_contentChildIndex: 0
-  m_unmaskedContentRT: {x: 0, y: 0}
+  m_contentChildCount: 0
   m_maskedScrollWindow: {x: 0, y: 0}
-  m_firstChildRT: {x: 0, y: 0}
+  m_unmaskedContentRT: {x: 0, y: 0}
   m_leftPadding: 0
   m_rightPadding: 0
   m_topPadding: 0
@@ -13855,7 +13855,7 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 7993449985590698526}
-    m_SelectOnDown: {fileID: 1989390246691700656}
+    m_SelectOnDown: {fileID: 6267188321244080831}
     m_SelectOnLeft: {fileID: 6328862609781674453}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -22529,15 +22529,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac77e38b8c1c2b4abfb645a557dc856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_setAutoScrollOption: 3
+  m_detectedScrollOption: 3
+  m_selectedWindowMask: 0
   m_scrollSpeed: 50
   m_scrollViewRect: {fileID: 0}
   m_scrollContentRT: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_contentChildIndex: 0
-  m_unmaskedContentRT: {x: 0, y: 0}
+  m_contentChildCount: 0
   m_maskedScrollWindow: {x: 0, y: 0}
-  m_firstChildRT: {x: 0, y: 0}
+  m_unmaskedContentRT: {x: 0, y: 0}
   m_leftPadding: 0
   m_rightPadding: 0
   m_topPadding: 0
