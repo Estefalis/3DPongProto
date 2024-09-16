@@ -57,11 +57,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private GridLayoutGroup.Constraint m_gridConstraint;
 
         private Dictionary<GameObject, RectTransform> m_contentChildAnchorPos = new Dictionary<GameObject, RectTransform>();
+        private Dictionary<GameObject, Navigation> m_objectNavigation = new Dictionary<GameObject, Navigation>();  //Navigation or Selectable.
 
         private void Awake()
         {
             m_lastSelectedGameObject = null;
             m_contentChildAnchorPos.Clear();
+            m_objectNavigation.Clear();
 
             m_scrollViewRect = GetComponent<ScrollRect>();
             m_scrollViewRectTransform = m_scrollViewRect.GetComponent<RectTransform>();
@@ -98,7 +100,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         /// If Slider, Toggle or Button GameObjects are found in the ScrollView, they will get added to the 'm_scrollViewGameObjects' List.
         /// </summary>
         /// <param name="_transformLevel"></param>
-        private void ScrollViewObjectsToDict(Transform _transformLevel, RectTransform _contentElementAnchorPos)
+        private void ScrollViewObjectsToDicts(Transform _transformLevel, RectTransform _contentElementAnchorPos)
         {
             bool containsToggle = _transformLevel.TryGetComponent(out Toggle toggle);
             bool containsSlider = _transformLevel.TryGetComponent(out Slider slider);
@@ -111,6 +113,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case true:
                 {
                     m_contentChildAnchorPos.Add(toggle.gameObject, _contentElementAnchorPos); //RectTransform with '.anchoredPosition'.
+                    m_objectNavigation.Add(toggle.gameObject, toggle.navigation);
                     break;
                 }
             }
@@ -122,6 +125,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case true:
                 {
                     m_contentChildAnchorPos.Add(slider.gameObject, _contentElementAnchorPos); //RectTransform with '.anchoredPosition'.
+                    m_objectNavigation.Add(slider.gameObject, slider.navigation);
                     break;
                 }
             }
@@ -133,6 +137,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case true:
                 {
                     m_contentChildAnchorPos.Add(button.gameObject, _contentElementAnchorPos); //RectTransform with '.anchoredPosition'.
+                    m_objectNavigation.Add(button.gameObject, button.navigation);
                     break;
                 }
             }
@@ -215,7 +220,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     //Debug.Log(transform.GetChild(i).name);
 #endif
                     Transform subLevelOne = transform.GetChild(i);
-                    ScrollViewObjectsToDict(subLevelOne, m_childRect);            //'m_childRect.anchoredPosition' instead of i.
+                    ScrollViewObjectsToDicts(subLevelOne, m_childRect);            //'m_childRect.anchoredPosition' instead of i.
 
                     ////Level for SliderXAxis Lower & Higher Buttons, XSlider itself, it's Toggle.
                     ////Level for SliderYAxis Lower & Higher Buttons, YSlider itself, it's Toggle.
@@ -226,7 +231,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         //Debug.Log(subLevelOne.GetChild(j).name);
 #endif
                         Transform subLevelTwo = subLevelOne.GetChild(j);
-                        ScrollViewObjectsToDict(subLevelTwo, m_childRect);        //'m_childRect.anchoredPosition' instead of i.
+                        ScrollViewObjectsToDicts(subLevelTwo, m_childRect);        //'m_childRect.anchoredPosition' instead of i.
 
                         //Level for Keyboard & Gamepad Rebind Buttons.
                         for (int k = 0; k < subLevelTwo.childCount; k++)
@@ -235,7 +240,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                             //Debug.Log(subLevelTwo.GetChild(k).name);
 #endif
                             Transform subLevelThree = subLevelTwo.GetChild(k);
-                            ScrollViewObjectsToDict(subLevelThree, m_childRect);  //'m_childRect.anchoredPosition' instead of i.
+                            ScrollViewObjectsToDicts(subLevelThree, m_childRect);  //'m_childRect.anchoredPosition' instead of i.
                         }
                     }
                 }
@@ -333,7 +338,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                                 Debug.Log(m_edgePosition);
 #endif
                                 if (m_edgePosition)
-                                    ScrollSelectNextGameObject();
+                                {
+                                    //ScrollSelectNextGameObject();
+                                    //TODO: On EdgePositions switch selected GameObject with m_objectNavigation Dict, depending on the MouseScroll-Input.
+                                }
 
                                 m_canAutoScroll = true;
                                 break;
@@ -400,11 +408,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case false:
                     return false;
             }
-        }
-
-        private void ScrollSelectNextGameObject()
-        {
-            //TODO: On EdgePositions move SelectedGameObject with accessing Inspectors Up/Down/Left/Right Button Navigation, depending on the MouseScroll-Input.
         }
 
         /// <summary>
