@@ -13297,7 +13297,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 0.98039216}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -15668,7 +15668,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 0.98039216}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -22097,7 +22097,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 0.98039216}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -22506,7 +22506,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 9.5
+  m_ScrollSensitivity: 10
   m_Viewport: {fileID: 7993449985087965045}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 7993449986542095200}
@@ -22531,7 +22531,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_detectedScrollOption: 3
   m_selectedWindowMask: 0
-  m_scrollSpeed: 50
+  m_scrollSpeed: 60
   m_scrollViewRect: {fileID: 0}
   m_scrollContentRT: {fileID: 0}
   m_layoutGroup: {fileID: 0}
