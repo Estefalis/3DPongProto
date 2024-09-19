@@ -65,6 +65,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private RectTransform m_childRect;      //ChildRect for each chilc of the Content and it's '.anchoredPosition'.
         private GridLayoutGroup.Constraint m_gridConstraint;
 
+        private Resolution m_screenResolution;
+
         private Dictionary<GameObject, RectTransform> m_contentChildAnchorPos = new Dictionary<GameObject, RectTransform>();
         private Dictionary<GameObject, Navigation> m_objectNavigation = new Dictionary<GameObject, Navigation>();
 
@@ -79,6 +81,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_scrollContentRT = m_scrollViewRect.content.GetComponent<RectTransform>();
 
             m_scrollContentSet = m_scrollViewRect != null && m_scrollContentRT != null;
+            m_screenResolution.width = Screen.width;
+            m_screenResolution.height = Screen.height;
 
             GetAutoScrollOptions(m_scrollViewRect);
         }
@@ -482,12 +486,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             m_mouseYInScrollView = m_mousePosition.y + m_scrollViewRectTransform.rect.min.y > 0 && m_mousePosition.y + m_scrollViewRectTransform.rect.min.y < m_scrollViewRectTransform.rect.height;
             //m_mouseXInScrollView = m_mousePosition.x + m_scrollViewRectTransform.rect.min.x > 0 && m_mousePosition.x + m_scrollViewRectTransform.rect.min.x < m_scrollViewRectTransform.rect.width; //INCORRECT, but why?!
+            var restSpaceX = (m_screenResolution.width - m_scrollViewRectTransform.rect.width) * 0.5f;
+            m_mouseXInScrollView = !(m_mousePosition.x < restSpaceX) && !(m_mousePosition.x > m_scrollViewRectTransform.rect.width + restSpaceX);
+            Debug.Log($"MouseXIn: {m_mouseXInScrollView} - MouseYIn: {m_mouseYInScrollView}");
 
             #region Tested / Confirmed
             //X Min to Max = -689 & +689 | Y Min to Max -215 & +215.
 
             //bool m_mouseYInScrollView = m_mousePosition.y + m_scrollViewRectTransform.rect.min.y > 0 && m_mousePosition.y + m_scrollViewRectTransform.rect.min.y < m_scrollViewRectTransform.rect.height;
             //Debug.Log($"MouseY: {m_mouseYInScrollView}");
+
+            //var restSpaceX = (m_screenResolution.width - m_scrollViewRectTransform.rect.width) * 0.5f;
+            //m_mouseXInScrollView = !(m_mousePosition.x < restSpaceX) && !(m_mousePosition.x > m_scrollViewRectTransform.rect.width + restSpaceX);
+            //Debug.Log($"MouseXIn: {m_mouseXInScrollView}");
             #endregion
         }
 
@@ -614,7 +625,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void ScrollSelectNextGameObject()
         {
-            if (m_mouseScrollValue.y != 0 /*&& m_mouseXInScrollView*/ && m_mouseYInScrollView)
+            if (m_mouseScrollValue.y != 0 && m_mouseXInScrollView && m_mouseYInScrollView)
             {
                 switch (m_detectedScrollOption)
                 {
