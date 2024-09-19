@@ -27,13 +27,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             UnmaskedContentRect
         }
 
-        private enum DebugSwitch
-        {
-            None,
-            RectMinMaxWidthHeight,
-            MouseXInside,
-        }
-        [SerializeField] private DebugSwitch m_debugSwitch;
         //TODO: Remove '[SerializeField] ' after development, if it's not needed.
         private PlayerInputActions m_playerInputActions;
 
@@ -64,7 +57,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private bool m_startEdgeVer = false, m_endEdgeVer = false;
         private bool m_startEdgeHor = false, m_endEdgeHor = false;
 
-        private bool m_mouseInsideScrollView, m_mouseYInsideScrollView;
+        private bool m_mouseXInScrollView, m_mouseYInScrollView;
         private Vector2 m_mouseScrollValue, m_mousePosition;
 
         private GameObject m_lastSelectedGameObject;
@@ -485,35 +478,16 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             m_mouseScrollValue = m_playerInputActions.UI.ScrollWheel.ReadValue<Vector2>();
             m_mousePosition = m_playerInputActions.UI.MousePosition.ReadValue<Vector2>();
-            //TODO: m_mouseInsideScrollView.
+            //TODO: Check for mouseX inside the ScrollView.
 
-            m_mouseYInsideScrollView = m_mousePosition.y + m_scrollViewRectTransform.rect.min.y > 0 && m_mousePosition.y + m_scrollViewRectTransform.rect.min.y < m_scrollViewRectTransform.rect.height;
-
-            //Debug.Log(m_mousePosition.x + m_scrollViewRectTransform.rect.min.x);
-
-            switch (m_debugSwitch)
-            {
-                case DebugSwitch.RectMinMaxWidthHeight:
-                {
-                    Debug.Log($"RectMinX: {m_scrollViewRectTransform.rect.min.x} - RectMaxX: {m_scrollViewRectTransform.rect.max.x} - RectWidth: {m_scrollViewRectTransform.rect.width}\nRectMinY: {m_scrollViewRectTransform.rect.min.y} - RectMaxY: {m_scrollViewRectTransform.rect.max.y} - RectHeight: {m_scrollViewRectTransform.rect.height}");
-                    break;
-                }
-                case DebugSwitch.MouseXInside:
-                {
-                    bool mouseXInsideScrollView = m_mousePosition.x + m_scrollViewRectTransform.rect.min.x > 0 && m_mousePosition.x + m_scrollViewRectTransform.rect.min.x < m_scrollViewRectTransform.rect.width;
-                    Debug.Log($"MouseX: {mouseXInsideScrollView}");
-                    break;
-                }
-                case DebugSwitch.None:
-                default:
-                    break;
-            }
+            m_mouseYInScrollView = m_mousePosition.y + m_scrollViewRectTransform.rect.min.y > 0 && m_mousePosition.y + m_scrollViewRectTransform.rect.min.y < m_scrollViewRectTransform.rect.height;
+            //m_mouseXInScrollView = m_mousePosition.x + m_scrollViewRectTransform.rect.min.x > 0 && m_mousePosition.x + m_scrollViewRectTransform.rect.min.x < m_scrollViewRectTransform.rect.width; //INCORRECT, but why?!
 
             #region Tested / Confirmed
             //X Min to Max = -689 & +689 | Y Min to Max -215 & +215.
 
-            //bool m_mouseYInsideScrollView = m_mousePosition.y + m_scrollViewRectTransform.rect.min.y > 0 && m_mousePosition.y + m_scrollViewRectTransform.rect.min.y < m_scrollViewRectTransform.rect.height;
-            //Debug.Log($"MouseY: {m_mouseYInsideScrollView}");
+            //bool m_mouseYInScrollView = m_mousePosition.y + m_scrollViewRectTransform.rect.min.y > 0 && m_mousePosition.y + m_scrollViewRectTransform.rect.min.y < m_scrollViewRectTransform.rect.height;
+            //Debug.Log($"MouseY: {m_mouseYInScrollView}");
             #endregion
         }
 
@@ -640,7 +614,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void ScrollSelectNextGameObject()
         {
-            if (m_mouseScrollValue.y != 0 && m_mouseYInsideScrollView /*&& MouseX!*/)
+            if (m_mouseScrollValue.y != 0 /*&& m_mouseXInScrollView*/ && m_mouseYInScrollView)
             {
                 switch (m_detectedScrollOption)
                 {
