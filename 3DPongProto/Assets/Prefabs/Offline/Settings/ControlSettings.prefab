@@ -199,6 +199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac77e38b8c1c2b4abfb645a557dc856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_debugSwitch: 0
   m_detectedScrollOption: 3
   m_selectedWindowMask: 0
   m_scrollSpeed: 200
@@ -6897,6 +6898,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac77e38b8c1c2b4abfb645a557dc856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_debugSwitch: 0
   m_detectedScrollOption: 3
   m_selectedWindowMask: 0
   m_scrollSpeed: 200
@@ -9110,6 +9112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac77e38b8c1c2b4abfb645a557dc856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_debugSwitch: 0
   m_detectedScrollOption: 3
   m_selectedWindowMask: 0
   m_scrollSpeed: 200
@@ -22529,6 +22532,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac77e38b8c1c2b4abfb645a557dc856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_debugSwitch: 0
   m_detectedScrollOption: 3
   m_selectedWindowMask: 0
   m_scrollSpeed: 60
