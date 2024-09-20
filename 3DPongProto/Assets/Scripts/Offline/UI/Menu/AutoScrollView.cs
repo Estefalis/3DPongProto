@@ -336,7 +336,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             switch (m_lastSelectedGameObject == null)
             {
                 case true:  //Dicts don't allow null on keys. And just 'return;' disables AutoScrolling.
-                    m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
+                    if (EventSystem.current.currentSelectedGameObject != null)
+                        m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
                     break;
                 case false:
                 {
@@ -365,7 +366,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                                         break;
                                 }
 #if UNITY_EDITOR
-                                Debug.Log($"AtEdgePosition: {m_edgePosition}");
+                                //Debug.Log($"AtEdgePosition: {m_edgePosition}");
 #endif
 
                                 #region Work Around on incomplete autoScrolling with MouseWheel on m_startEdge & m_endEdge positions.
@@ -488,7 +489,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             //m_mouseXInScrollView = m_mousePosition.x + m_scrollViewRectTransform.rect.min.x > 0 && m_mousePosition.x + m_scrollViewRectTransform.rect.min.x < m_scrollViewRectTransform.rect.width; //INCORRECT, but why?!
             var restSpaceX = (m_screenResolution.width - m_scrollViewRectTransform.rect.width) * 0.5f;
             m_mouseXInScrollView = !(m_mousePosition.x < restSpaceX) && !(m_mousePosition.x > m_scrollViewRectTransform.rect.width + restSpaceX);
-            Debug.Log($"MouseXIn: {m_mouseXInScrollView} - MouseYIn: {m_mouseYInScrollView}");
+            //Debug.Log($"MouseXIn: {m_mouseXInScrollView} - MouseYIn: {m_mouseYInScrollView}");
 
             #region Tested / Confirmed
             //X Min to Max = -689 & +689 | Y Min to Max -215 & +215.
