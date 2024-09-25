@@ -141,6 +141,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "CursorVisibility",
+                    "type": "Button",
+                    "id": "acc02fc3-ae13-4b92-9014-16d11745dfe7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "ToggleGameMenu",
                     "type": "Button",
                     "id": "10c55572-7a33-47de-aec8-fe3fe0adbad2",
@@ -854,6 +863,28 @@
                     "action": "SideMovementPosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "05c3b8c2-ac0b-4bd9-aae9-6c50eb7d3ced",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "CursorVisibility",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ec92322a-aa1a-43f5-b192-ad678b5ad758",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "CursorVisibility",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -941,6 +972,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "CursorVisibility",
+                    "type": "Button",
+                    "id": "43e61106-20c5-460e-9808-fcbc8d998ff2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "ToggleGameMenu",
@@ -1507,6 +1547,28 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "ToggleGameMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c4d9138b-a922-4234-8da0-954a193a8d15",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "CursorVisibility",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f19800cf-60cf-4674-828a-51761963696d",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "CursorVisibility",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

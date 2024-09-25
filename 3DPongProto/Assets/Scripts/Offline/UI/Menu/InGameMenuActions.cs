@@ -36,7 +36,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         /// </summary>
         private void Start()
         {
-            m_menuActions = InputManager.m_playerInputActions;
+            m_menuActions = InputManager.m_PlayerInputActions;
             m_menuActions?.Enable();
             m_menuActions.PlayerActions.ToggleGameMenu.performed += EnableMenuNavigation;
 
@@ -70,14 +70,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             CloseInGameMenu?.Invoke();
             m_menuOrganisation.m_menuNavigation.m_firstElement.gameObject.SetActive(false);
-            InputManager.ToggleActionMaps(InputManager.m_playerInputActions.PlayerActions);
+            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.PlayerActions);
         }
 
         public void RestartLevel()
         {
             RestartGameLevel?.Invoke();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            InputManager.ToggleActionMaps(InputManager.m_playerInputActions.PlayerActions);
+            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.PlayerActions);
         }
 
         public void ReturnToMainScene()

@@ -88,7 +88,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         /// </summary>
         protected virtual void Start()
         {
-            m_playerMovement = InputManager.m_playerInputActions;                                                           //PlayerInputReceiver
+            m_playerMovement = InputManager.m_PlayerInputActions;                                                           //PlayerInputReceiver
             m_playerMovement.PlayerActions.Enable();                                                                        //PlayerInputReceiver
             m_playerMovement.PlayerActions.ToggleGameMenu.performed += ToggleMenu;                                          //PlayerInputReceiver
         }
@@ -216,7 +216,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             if (!m_matchManager.GameIsPaused && m_playerMovement.PlayerActions.enabled)
             {
                 InGameMenuOpens?.Invoke();
-                InputManager.ToggleActionMaps(InputManager.m_playerInputActions.UI);
+                InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.UI);
             }
         }
         #endregion

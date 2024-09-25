@@ -8,7 +8,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 {
     public class CamNegZBehavOff : MonoBehaviour    //PlayerCameraController
     {
-        // Start is called before the first frame update
         private PlayerInputActions m_cameraInputActions;
         [SerializeField] private PlayerControlNegZOff m_playerControlSubNegZ;
 
@@ -65,7 +64,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
             MaxSideMovement();
 
             //CameraActions need to be in Start to prevent NullReferenceExceptions due to relation to the InputManager.
-            m_cameraInputActions = InputManager.m_playerInputActions;
+            m_cameraInputActions = InputManager.m_PlayerInputActions;
             m_cameraInputActions.Enable();
             m_cameraInputActions.PlayerActions.Zoom.performed += Zooming;
 

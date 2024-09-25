@@ -62,7 +62,7 @@ public class Ball : MonoBehaviour
     {
         AudioManager.LetsRegisterAudioSources(m_ballAudioSource);
 
-        m_ballMovement = InputManager.m_playerInputActions;
+        m_ballMovement = InputManager.m_PlayerInputActions;
         m_ballMovement.PlayerActions.Enable();
         m_ballMovement.PlayerActions.PokeTheBall.performed += StartBallMovement;
     }

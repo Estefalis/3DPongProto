@@ -40,7 +40,7 @@ namespace ThreeDeePongProto.Shared.Player
         /// </summary>
         private void Start()
         {
-            m_playerInputActions = InputManager.m_playerInputActions;
+            m_playerInputActions = InputManager.m_PlayerInputActions;
             m_playerInputActions.PlayerActions.Enable();
 
             InGameMenuOpens += DisablePlayerActions;
@@ -124,7 +124,7 @@ namespace ThreeDeePongProto.Shared.Player
             if (!m_playerController.m_matchManager.GameIsPaused && m_playerInputActions.PlayerActions.enabled)
             {
                 InGameMenuOpens?.Invoke();
-                InputManager.ToggleActionMaps(InputManager.m_playerInputActions.UI);
+                InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.UI);
             }
         }
 

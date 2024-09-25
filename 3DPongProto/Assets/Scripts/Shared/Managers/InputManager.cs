@@ -11,7 +11,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 {
     public class InputManager : MonoBehaviour
     {
-        public static PlayerInputActions m_playerInputActions;  //Reference to the PlayerAction-InputAsset.
+        public static PlayerInputActions m_PlayerInputActions;  //Reference to the PlayerAction-InputAsset.
 #if UNITY_EDITOR
         [SerializeField] private bool m_deleteAllPlayerPrefs = false;
 #endif
@@ -79,10 +79,10 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
 #endif
 
-            //Alternative: m_playerInputActions ??= new PlayerInputActions();
-            if (m_playerInputActions == null)
+            //Alternative: m_PlayerInputActions ??= new PlayerInputActions();
+            if (m_PlayerInputActions == null)
             {
-                m_playerInputActions = new PlayerInputActions();
+                m_PlayerInputActions = new PlayerInputActions();
             }
         }
 
@@ -123,28 +123,28 @@ namespace ThreeDeePongProto.Shared.InputActions
             switch (m_currentSceneName)
             {
                 case "StartMenuScene":
-                    ToggleActionMaps(m_playerInputActions.UI);
+                    ToggleActionMaps(m_PlayerInputActions.UI);
                     break;
                 case "LocalGameScene":
                 {
-                    ToggleActionMaps(m_playerInputActions.PlayerActions);
+                    ToggleActionMaps(m_PlayerInputActions.PlayerActions);
                     break;
                 }
                 case "LanGameScene":
                 {
-                    ToggleActionMaps(m_playerInputActions.PlayerActions);
+                    ToggleActionMaps(m_PlayerInputActions.PlayerActions);
                     break;
                 }
                 case "NetGameScene":
                 {
-                    ToggleActionMaps(m_playerInputActions.PlayerActions);
+                    ToggleActionMaps(m_PlayerInputActions.PlayerActions);
                     break;
                 }
                 case "WinScene":
-                    ToggleActionMaps(m_playerInputActions.UI);
+                    ToggleActionMaps(m_PlayerInputActions.UI);
                     break;
                 default:
-                    ToggleActionMaps(m_playerInputActions.UI);
+                    ToggleActionMaps(m_PlayerInputActions.UI);
                     break;
             }
         }
@@ -160,7 +160,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 return;
 
             //else disable the current ActionMap to switch to the next.
-            m_playerInputActions.Disable();
+            m_PlayerInputActions.Disable();
             m_changeActiveActionMap?.Invoke(_actionMap);
             _actionMap.Enable();
         }
@@ -255,7 +255,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         internal static void StartRebindProcess(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, string _controlScheme, bool _excludeMouse)
         {
             //Look up the action name of the inputAction in the generated C#-Script, not the Scriptable Object.
-            InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
+            InputAction inputAction = m_PlayerInputActions.asset.FindAction(_actionName);
 
             //Check for null references and valid indices.
             if (inputAction == null || inputAction.bindings.Count <= _bindingIndex)
@@ -500,7 +500,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// <param name="_bindingIndex"></param>
         internal static void ResetRebinding(string _actionName, int _bindingIndex, string _controlScheme)
         {
-            InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
+            InputAction inputAction = m_PlayerInputActions.asset.FindAction(_actionName);
 
             if (inputAction == null && inputAction.bindings.Count <= _bindingIndex)
             {
@@ -555,10 +555,10 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// <returns></returns>
         internal static string GetBindingName(string _actionName, int _bindingIndex)
         {
-            if (m_playerInputActions == null)
-                m_playerInputActions = new PlayerInputActions();
+            if (m_PlayerInputActions == null)
+                m_PlayerInputActions = new PlayerInputActions();
 
-            InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
+            InputAction inputAction = m_PlayerInputActions.asset.FindAction(_actionName);
             return inputAction.GetBindingDisplayString(_bindingIndex);
         }
 
@@ -570,10 +570,10 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// <returns></returns>
         public static string GetEffectiveBindingPath(string _actionName, int _bindingIndex)
         {
-            if (m_playerInputActions == null)
-                m_playerInputActions = new PlayerInputActions();
+            if (m_PlayerInputActions == null)
+                m_PlayerInputActions = new PlayerInputActions();
 
-            InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
+            InputAction inputAction = m_PlayerInputActions.asset.FindAction(_actionName);
             return inputAction.bindings[_bindingIndex].effectivePath;
         }
 
@@ -727,12 +727,12 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         internal static void LoadKeyRebindOverrides(string _actionName, int _bindingIndex)
         {
-            if (m_playerInputActions == null)
+            if (m_PlayerInputActions == null)
             {
-                m_playerInputActions = new PlayerInputActions();
+                m_PlayerInputActions = new PlayerInputActions();
             }
 
-            InputAction inputAction = m_playerInputActions.asset.FindAction(_actionName);
+            InputAction inputAction = m_PlayerInputActions.asset.FindAction(_actionName);
 
             #region PlayerPref Example
             //for (int i = 0; i < inputAction.bindings.Count; i++)

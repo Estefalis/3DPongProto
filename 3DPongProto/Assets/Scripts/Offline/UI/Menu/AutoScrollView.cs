@@ -90,7 +90,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             GetLayoutGroupSettings(m_layoutGroup);  //Requires 'ContentLevelIterations()' '_contentChildCount', if m_totalSpacings are wanted.
 
-            m_playerInputActions = InputManager.m_playerInputActions;
+            m_playerInputActions = InputManager.m_PlayerInputActions;
             m_playerInputActions.UI.Enable();
         }
 

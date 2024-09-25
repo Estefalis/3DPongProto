@@ -1,6 +1,5 @@
 using ThreeDeePongProto.Offline.CameraSetup;
 using ThreeDeePongProto.Offline.Managers;
-using ThreeDeePongProto.Offline.Player.Inputs;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,7 +10,6 @@ namespace ThreeDeePongProto.Shared.Player
 	{
         private PlayerInputActions m_cameraInputActions;
         [SerializeField] internal PlayerController m_playerController;
-        //[SerializeField] private PlayerControlNegZOff m_playerControlSubNegZ;
 
         [Header("Camera-Positions")]
         [SerializeField] private float m_lowestHeight;
@@ -66,7 +64,7 @@ namespace ThreeDeePongProto.Shared.Player
             MaxSideMovement();
 
             //CameraActions need to be in Start to prevent NullReferenceExceptions due to relation to the InputManager.
-            m_cameraInputActions = InputManager.m_playerInputActions;
+            m_cameraInputActions = InputManager.m_PlayerInputActions;
             m_cameraInputActions.Enable();
             m_cameraInputActions.PlayerActions.Zoom.performed += Zooming;
 

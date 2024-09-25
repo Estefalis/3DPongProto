@@ -56,7 +56,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void Update()
         {
-            if (InputManager.m_playerInputActions.UI.enabled)
+            if (InputManager.m_PlayerInputActions.UI.enabled)
             {
                 if (m_menuOrganisation.m_eventSystem.currentSelectedGameObject == null)
                 {
