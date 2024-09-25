@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,7 +10,7 @@ public class MenuCamera : MonoBehaviour
     [SerializeField] private CursorLockMode m_cursorLockMode;
     [SerializeField] private bool m_cursorVisibility = false;
 
-    private Vector2 m_mousePosition, m_lastMousePosition;
+    private Vector2 m_mousePosition, m_lastMousePosition, m_disabledMousePosition = Vector2.zero;
 
     private void Awake()
     {
@@ -33,29 +31,22 @@ public class MenuCamera : MonoBehaviour
         m_playerInputActions.UI.CursorVisibility.performed += SwitchCursorVisibility;
     }
 
-    private void SetCursorRestrictions(CursorLockMode _lockMode, bool _visibility)
-    {
-        Cursor.lockState = _lockMode;    //Lock to ScreenCenter (Locked), or to the inside of the Screen (Confined).
-        Cursor.visible = _visibility;    //true = visible, false = invisible.
-    }
-
-    private void SwitchCursorVisibility()
+    private void SwitchCursorState()
     {
         switch (Cursor.visible)
         {
-            case false: //invisible to visible
-            {
-                Mouse.current.WarpCursorPosition(m_lastMousePosition);  //Set Mouse to it's last Position.
-                //TODO: Disable objectSelection with Mouse, while it's invisible.
-                SetCursorRestrictions(m_cursorLockMode, true);
-                break;
-            }
-            case true:  //visible to invisible
+            case true:  //Cursor is currently visible.
             {
                 GetMousePosition();
-                m_lastMousePosition = m_mousePosition;
-
-                SetCursorRestrictions(m_cursorLockMode, false);
+                SetCursorRestrictions(CursorLockMode.Confined, false);
+                m_playerInputActions.UI.MousePosition.Disable();
+                break;
+            }
+            case false: //Cursor is currently invisible.
+            {
+                Mouse.current.WarpCursorPosition(m_lastMousePosition);  //Set Mouse to it's last visible Position.
+                SetCursorRestrictions(CursorLockMode.None, true);
+                m_playerInputActions.UI.MousePosition.Enable();
                 break;
             }
         }
@@ -70,10 +61,29 @@ public class MenuCamera : MonoBehaviour
 #endif
     }
 
+    private void SetCursorRestrictions(CursorLockMode _lockMode, bool _visibility)
+    {
+        switch (_visibility)
+        {
+            case false:
+            {
+                m_lastMousePosition = m_mousePosition;
+                Mouse.current.WarpCursorPosition(m_disabledMousePosition);
+                break;
+            }
+            case true:
+                break;
+        }
+
+        m_cursorLockMode = _lockMode;   //Sets 'm_cursorLockMode' in the Inspector.
+        Cursor.lockState = _lockMode;   //Lock Cursor inside the Screen with '.Confined'. Unlocks the Cursor with '.None'.
+        Cursor.visible = _visibility;   //true = visible, false = invisible.
+    }
+
     #region CallbackContext
     private void SwitchCursorVisibility(InputAction.CallbackContext _callbackContext)
     {
-        SwitchCursorVisibility();
+        SwitchCursorState();
     }
     #endregion
 }
