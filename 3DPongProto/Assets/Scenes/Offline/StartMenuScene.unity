@@ -3567,10 +3567,10 @@ RectTransform:
   m_Father: {fileID: 641281396}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -25, y: 2140}
+  m_SizeDelta: {x: -25, y: 1607}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &285261683
 MonoBehaviour:
@@ -6725,7 +6725,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2090772667}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.24906541
+  m_Size: 0.52357566
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -15503,7 +15503,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
+    m_SelectOnUp: {fileID: 1739567783}
     m_SelectOnDown: {fileID: 259794944}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 785584812}
@@ -33334,7 +33334,7 @@ MonoBehaviour:
   m_Content: {fileID: 285261682}
   m_Horizontal: 1
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
@@ -33401,7 +33401,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_detectedScrollOption: 3
   m_selectedWindowMask: 0
-  m_scrollSpeed: 50
+  m_scrollSpeed: 60
   m_scrollViewRect: {fileID: 0}
   m_scrollContentRT: {fileID: 0}
   m_layoutGroup: {fileID: 0}
@@ -34118,7 +34118,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 177955486}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.47589287
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
