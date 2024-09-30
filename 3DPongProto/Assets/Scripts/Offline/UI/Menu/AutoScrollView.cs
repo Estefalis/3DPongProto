@@ -105,8 +105,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             GetMouseValues();
 
-            AutoScrollToNextGameObject();
             UpdateCurrentGameObject();
+            AutoScrollToNextGameObject();
         }
 
         /// <summary>
@@ -383,16 +383,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         {
                             case true:
                             {
-                                if (!m_startEdgeVer)
-                                    MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnUp);
+                                MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnUp);
                                 break;
                             }
                             case false:
                             {
-                                if (!m_endEdgeVer)
-                                {
-                                    MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnDown);
-                                }
+                                MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnDown);
                                 break;
                             }
                         }
@@ -404,14 +400,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         {
                             case true:
                             {
-                                if (!m_startEdgeHor)
-                                    MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnLeft);
+                                MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnLeft);
                                 break;
                             }
                             case false:
                             {
-                                if (!m_endEdgeHor)
-                                    MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnRight);
+                                MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnRight);
                                 break;
                             }
                         }
@@ -432,8 +426,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void MoveToNextObject(Selectable _nextObject)
         {
             EventSystem.current.SetSelectedGameObject(_nextObject.gameObject);
-            m_lastSelectedGameObject = _nextObject.gameObject;
-            m_fallbackGameObject = m_lastSelectedGameObject;
         }
 
         private void UpdateVerticalScrollPosition(RectTransform _selectedElement)
@@ -566,18 +558,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 #if UNITY_EDITOR
                                 //Debug.Log($"AtEdgePosition: {m_edgePosition}");
 #endif
-
-                                #region Work Around on incomplete autoScrolling with MouseWheel on m_startEdge & m_endEdge positions.
-                                //switch (m_edgePosition)
-                                //{
-                                //    case true:
-                                //        m_scrollViewRect.scrollSensitivity = 0.0f;
-                                //        break;
-                                //    case false:
-                                //        m_scrollViewRect.scrollSensitivity = 10.0f;
-                                //        break;
-                                //}
-                                #endregion
 
                                 m_canAutoScroll = true;
                                 break;
