@@ -64,7 +64,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private GameObject m_lastSelectedGameObject, m_fallbackGameObject;
         private RectTransform m_scrollViewRectTransform;
         private RectTransform m_childRect;      //ChildRect for each chilc of the Content and it's '.anchoredPosition'.
-        private GridLayoutGroup.Constraint m_gridConstraint;
         private Vector2 m_lastChildAnchorPos;
 
         private Dictionary<GameObject, RectTransform> m_contentChildAnchorPos = new Dictionary<GameObject, RectTransform>();
@@ -351,9 +350,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (!m_scrollContentSet || !m_canAutoScroll/* || Cursor.lockState == CursorLockMode.None*/)
                 return;
 
-            //TODO: Implement Gamepad Mouse.
-            //ScrollSelectNextGameObject();
-
             switch (m_detectedScrollOption)
             {
                 case DetectedScrollOption.Vertical:
@@ -370,6 +366,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 default:
                     break;
             }
+
+            //TODO: Implement Gamepad Mouse.
+            //ScrollSelectNextGameObject();
         }
 
         private void ScrollSelectNextGameObject()
@@ -391,7 +390,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                             case false:
                             {
                                 if (!m_endEdgeVer)
+                                {
                                     MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnDown);
+                                }
                                 break;
                             }
                         }
@@ -605,6 +606,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 {
                     m_startEdgeVer = _lastGOAnchor.y + (m_verticalSpacing * m_contentChildCount - 1) + m_topPadding + m_scrollContentRT.anchoredPosition.y >= _scrollViewRect.anchoredPosition.y;
                     m_endEdgeVer = -(_lastGOAnchor.y - m_firstChildRT.y - (m_verticalSpacing * m_contentChildCount - 1) - m_bottomPadding + m_scrollContentRT.anchoredPosition.y) >= _scrollViewRect.rect.height;
+                    //Debug.Log($"StartEdge: {m_startEdgeVer} - EndEdge: {m_endEdgeVer}");
                     break;
                 }
                 case DetectedScrollOption.Horizontal:
