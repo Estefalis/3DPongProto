@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -38,27 +37,19 @@ namespace ThreeDeePongProto.Shared.HelperClasses
 
         private static Vector2Int GetFlexibleGridSize(GridLayoutGroup _gridLayoutGroup, int _childCount)
         {
-            //TODO: Get Grid Size.
+            if (_childCount == 0)
+                return Vector2Int.zero;
+
             int xAxisCount = 0, yAxisCount = 0;
 
-            for (int i = 0; i < _childCount; i++)
-            {
-                var childRectTransform = (RectTransform)_gridLayoutGroup.transform.GetChild(i);
-                Vector2 childAnchorPos = childRectTransform.anchoredPosition;
-
-                if (childAnchorPos.y + _gridLayoutGroup.padding.top + _gridLayoutGroup.cellSize.y >= 0)
-                {
-                    xAxisCount++;
-#if UNITY_EDITOR
-                    Debug.Log($"{childAnchorPos.y + _gridLayoutGroup.padding.top + _gridLayoutGroup.cellSize.y} - ChildName: {childRectTransform.name}");
-#endif
-                }
-            }
-
+            float squareRoot = Mathf.Sqrt(_childCount);
+            xAxisCount = Mathf.CeilToInt(squareRoot);   //Ceil > ceiling > up!
             yAxisCount = GetOtherAxisCount(xAxisCount, _childCount);
-            Debug.Log($"Column: {xAxisCount} - Row: {yAxisCount}");
-            return new Vector2Int(xAxisCount, yAxisCount);
-            //return Vector2Int.zero;
+
+#if UNITY_EDITOR
+            //Debug.Log($"Column: {xAxisCount} - Row: {yAxisCount}");
+#endif
+            return new Vector2Int(xAxisCount, yAxisCount);  //Else return Vector2Int.zero;
         }
 
         private static int GetOtherAxisCount(int _constraintAxisCount, int _contentChildCount)

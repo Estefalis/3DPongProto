@@ -1,10 +1,9 @@
 using System.Collections.Generic;
+using ThreeDeePongProto.Shared.HelperClasses;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-//using ThreeDeePongProto.Shared.HelperClasses;
-using System;
 
 /// Credit zero3growlithe (See README.md.)
 /// sourced from: http://forum.unity3d.com/threads/scripts-useful-4-6-scripts-collection.264161/page-2#post-2011648
@@ -15,7 +14,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
     //[AddComponentMenu("UI/Extensions/AutoScrollView")]
     public class AutoScrollView : MonoBehaviour
     {
-        private enum AutoScrollOptions
+        private enum DetectedScrollOption
         {
             None,
             Vertical,
@@ -32,7 +31,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         //TODO: Remove '[SerializeField] ' after development, if it's not needed.
         private PlayerInputActions m_playerInputActions;
 
-        [SerializeField] private AutoScrollOptions m_detectedScrollOption = AutoScrollOptions.Both;
+        [SerializeField] private DetectedScrollOption m_detectedScrollOption = DetectedScrollOption.Both;
         [SerializeField] private WindowEdgesSwitch m_selectedWindowMask = WindowEdgesSwitch.MaskedScrollViewRect;
         [SerializeField] private float m_scrollSpeed = 60.0f;
         [Space]
@@ -66,6 +65,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private RectTransform m_scrollViewRectTransform;
         private RectTransform m_childRect;      //ChildRect for each chilc of the Content and it's '.anchoredPosition'.
         private GridLayoutGroup.Constraint m_gridConstraint;
+        private Vector2 m_lastChildAnchorPos;
 
         private Dictionary<GameObject, RectTransform> m_contentChildAnchorPos = new Dictionary<GameObject, RectTransform>();
         private Dictionary<GameObject, Navigation> m_objectNavigation = new Dictionary<GameObject, Navigation>();
@@ -125,7 +125,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             {
                 case true:
                 {
-                    m_detectedScrollOption = AutoScrollOptions.Both;
+                    m_detectedScrollOption = DetectedScrollOption.Both;
                     break;
                 }
                 case false:
@@ -134,7 +134,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     {
                         case true:
                         {
-                            m_detectedScrollOption = AutoScrollOptions.Vertical;
+                            m_detectedScrollOption = DetectedScrollOption.Vertical;
                             break;
                         }
                         case false:
@@ -143,12 +143,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                             {
                                 case true:
                                 {
-                                    m_detectedScrollOption = AutoScrollOptions.Horizontal;
+                                    m_detectedScrollOption = DetectedScrollOption.Horizontal;
                                     break;
                                 }
                                 case false:
                                 {
-                                    m_detectedScrollOption = AutoScrollOptions.None;
+                                    m_detectedScrollOption = DetectedScrollOption.None;
                                     break;
                                 }
                             }
@@ -161,7 +161,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             m_layoutGroup = m_scrollContentRT.GetComponent<LayoutGroup>();
             //if '(m_layoutGroup == null)' and you want to add one (WITH detailed memberValues to set it's dimensions):
-            //'AddMissingLayoutGroup()' - 'switch (m_detectedScrollOption)' - 'case AutoScrollOptions.Both/.Vertical/.Horizontal' -
+            //'AddMissingLayoutGroup()' - 'switch (m_detectedScrollOption)' - 'case DetectedScrollOption.Both/.Vertical/.Horizontal' -
             //'m_layoutGroup = m_scrollContentRT.AddComponent<GridLayoutGroup/VerticalLayoutGroup/HorizontalLayoutGroup>()' and
             //'default: break;' - for savety. (It would currently go too far.)
         }
@@ -182,31 +182,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     m_horizontalSpacing = gridSettings.spacing.x;
                     m_verticalSpacing = gridSettings.spacing.y;
 
-                    m_gridConstraint = gridSettings.constraint;
-                    var constraintCount = _layoutGroup.GetComponent<GridLayoutGroup>().constraintCount;
-                    int childCount = gridSettings.transform.childCount;
-
-                    #region Custom
-                    switch (m_gridConstraint)   //TODO: 'GridLayoutGroup.Constraint.Flexible'.
-                    {
-                        case GridLayoutGroup.Constraint.Flexible:
-                            m_gridSize = GetFlexibleGridSize(gridSettings, childCount);
-                            break;
-                        case GridLayoutGroup.Constraint.FixedColumnCount:
-                            m_gridSize.x = constraintCount;
-                            m_gridSize.y = GetOtherAxisCount(m_gridSize.x, childCount);
-                            break;
-                        case GridLayoutGroup.Constraint.FixedRowCount:
-                            m_gridSize.y = constraintCount;
-                            m_gridSize.x = GetOtherAxisCount(m_gridSize.y, childCount);
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException($"Unexpected constraint type: {m_gridConstraint}");
-                    }
-                    #endregion
-                    #region Tutorial
-                    //Vector2Int gridAxisCounts = CustomGridLayoutSetup.GetGridSize(gridSettings);
-                    #endregion
+                    m_gridSize = CustomGridLayoutSetup.GetGridSize(gridSettings);
                     break;
                 }
                 case VerticalLayoutGroup:
@@ -336,6 +312,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void GetMouseValues()
         {
             m_mouseScrollValue = m_playerInputActions.UI.ScrollWheel.ReadValue<Vector2>();
+            m_mouseScrollValue.Normalize();
             m_mousePosition = m_playerInputActions.UI.MousePosition.ReadValue<Vector2>();
 
             switch (MouseIsInScrollView(m_mousePosition))
@@ -375,21 +352,21 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 return;
 
             //TODO: Implement Gamepad Mouse.
-            ScrollSelectNextGameObject();
+            //ScrollSelectNextGameObject();
 
             switch (m_detectedScrollOption)
             {
-                case AutoScrollOptions.Vertical:
+                case DetectedScrollOption.Vertical:
                     UpdateVerticalScrollPosition(m_contentChildAnchorPos[m_lastSelectedGameObject]);
                     break;
-                case AutoScrollOptions.Horizontal:
+                case DetectedScrollOption.Horizontal:
                     UpdateHorizontalScrollPosition(m_contentChildAnchorPos[m_lastSelectedGameObject]);
                     break;
-                case AutoScrollOptions.Both:
+                case DetectedScrollOption.Both:
                     UpdateVerticalScrollPosition(m_contentChildAnchorPos[m_lastSelectedGameObject]);
                     UpdateHorizontalScrollPosition(m_contentChildAnchorPos[m_lastSelectedGameObject]);
                     break;
-                case AutoScrollOptions.None:
+                case DetectedScrollOption.None:
                 default:
                     break;
             }
@@ -401,46 +378,50 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             {
                 switch (m_detectedScrollOption)
                 {
-                    case AutoScrollOptions.Vertical:
+                    case DetectedScrollOption.Vertical:
                     {
                         switch (m_mouseScrollValue.y > 0)
                         {
                             case true:
                             {
-                                MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnUp);
+                                if (!m_startEdgeVer)
+                                    MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnUp);
                                 break;
                             }
                             case false:
                             {
-                                MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnDown);
+                                if (!m_endEdgeVer)
+                                    MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnDown);
                                 break;
                             }
                         }
                         break;
                     }
-                    case AutoScrollOptions.Horizontal:
+                    case DetectedScrollOption.Horizontal:
                     {
                         switch (m_mouseScrollValue.y > 0)
                         {
                             case true:
                             {
-                                MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnLeft);
+                                if (!m_startEdgeHor)
+                                    MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnLeft);
                                 break;
                             }
                             case false:
                             {
-                                MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnRight);
+                                if (!m_endEdgeHor)
+                                    MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnRight);
                                 break;
                             }
                         }
                         break;
                     }
-                    case AutoScrollOptions.Both:
+                    case DetectedScrollOption.Both:
                     {
-                        //TODO: MoveToNextObject on AutoScrollOptions.Both.
+                        //TODO: MoveToNextObject on DetectedScrollOption.Both.
                         break;
                     }
-                    case AutoScrollOptions.None:
+                    case DetectedScrollOption.None:
                     default:
                         break;
                 }
@@ -578,6 +559,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                                         break;
                                     }
                                     default:
+                                        m_edgePosition = MaskedScrollRectEdgeCheck(m_scrollViewRectTransform, m_contentChildAnchorPos[m_lastSelectedGameObject].anchoredPosition);
                                         break;
                                 }
 #if UNITY_EDITOR
@@ -585,15 +567,15 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 #endif
 
                                 #region Work Around on incomplete autoScrolling with MouseWheel on m_startEdge & m_endEdge positions.
-                                switch (m_edgePosition)
-                                {
-                                    case true:
-                                        m_scrollViewRect.scrollSensitivity = 0.0f;
-                                        break;
-                                    case false:
-                                        m_scrollViewRect.scrollSensitivity = 10.0f;
-                                        break;
-                                }
+                                //switch (m_edgePosition)
+                                //{
+                                //    case true:
+                                //        m_scrollViewRect.scrollSensitivity = 0.0f;
+                                //        break;
+                                //    case false:
+                                //        m_scrollViewRect.scrollSensitivity = 10.0f;
+                                //        break;
+                                //}
                                 #endregion
 
                                 m_canAutoScroll = true;
@@ -619,24 +601,24 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             switch (m_detectedScrollOption)
             {
-                case AutoScrollOptions.Vertical:
+                case DetectedScrollOption.Vertical:
                 {
                     m_startEdgeVer = _lastGOAnchor.y + (m_verticalSpacing * m_contentChildCount - 1) + m_topPadding + m_scrollContentRT.anchoredPosition.y >= _scrollViewRect.anchoredPosition.y;
                     m_endEdgeVer = -(_lastGOAnchor.y - m_firstChildRT.y - (m_verticalSpacing * m_contentChildCount - 1) - m_bottomPadding + m_scrollContentRT.anchoredPosition.y) >= _scrollViewRect.rect.height;
                     break;
                 }
-                case AutoScrollOptions.Horizontal:
+                case DetectedScrollOption.Horizontal:
                 {
                     m_startEdgeHor = _lastGOAnchor.x + (m_horizontalSpacing * m_contentChildCount - 1) + m_leftPadding + m_scrollContentRT.anchoredPosition.x >= _scrollViewRect.anchoredPosition.x;
                     m_endEdgeHor = -(_lastGOAnchor.x - m_firstChildRT.x - (m_horizontalSpacing * m_contentChildCount - 1) - m_rightPadding + m_scrollContentRT.anchoredPosition.x) >= _scrollViewRect.rect.width;
                     break;
                 }
-                case AutoScrollOptions.Both:
+                case DetectedScrollOption.Both:
                 {
-                    //TODO: MaskedScrollRectEdgeCheck AutoScrollOptions.Both
+                    //TODO: MaskedScrollRectEdgeCheck DetectedScrollOption.Both
                     break;
                 }
-                case AutoScrollOptions.None:
+                case DetectedScrollOption.None:
                 default:
                     break;
             }
@@ -654,23 +636,23 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             switch (m_detectedScrollOption)
             {
-                case AutoScrollOptions.Vertical:
+                case DetectedScrollOption.Vertical:
                 {
                     var zeroedContentRTAnchorY = _contentAnchor.y - _contentAnchor.y; //On entering ScrollView from below, AnchorPos is not 0.
                     m_startEdgeVer = _lastGOAnchor.y + m_verticalSpacing + m_topPadding >= zeroedContentRTAnchorY;
                     m_endEdgeVer = _lastGOAnchor.y - m_firstChildRT.y - m_verticalSpacing - m_bottomPadding <= zeroedContentRTAnchorY - m_maskedScrollWindow.y;
                     break;
                 }
-                case AutoScrollOptions.Horizontal:
+                case DetectedScrollOption.Horizontal:
                 {
                     var zeroedContentRTAnchorX = _contentAnchor.x - _contentAnchor.x;  //On entering ScrollView from right, AnchorPos is not 0.
                     m_startEdgeHor = _lastGOAnchor.x + m_horizontalSpacing + m_leftPadding >= zeroedContentRTAnchorX;
                     m_endEdgeHor = _lastGOAnchor.x - m_firstChildRT.x - m_horizontalSpacing - m_rightPadding <= zeroedContentRTAnchorX - m_maskedScrollWindow.x;
                     break;
                 }
-                case AutoScrollOptions.Both:
+                case DetectedScrollOption.Both:
                 {
-                    //TODO: Confirm MaskedScrollRectEdgeCheck AutoScrollOptions.Both
+                    //TODO: Confirm MaskedScrollRectEdgeCheck DetectedScrollOption.Both
                     //var zeroedContentRTAnchorY = _contentAnchor.y - _contentAnchor.y; //On entering ScrollView from below, AnchorPos is not 0.
                     //m_startEdgeVer = _lastGOAnchor.y + m_verticalSpacing + m_topPadding >= zeroedContentRTAnchorY;
                     //m_endEdgeVer = _lastGOAnchor.y - m_firstChildRT.y - m_verticalSpacing - m_bottomPadding <= zeroedContentRTAnchorY - m_maskedScrollWindow.y;
@@ -680,7 +662,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     //m_endEdgeHor = _lastGOAnchor.x - m_firstChildRT.x - m_horizontalSpacing - m_rightPadding <= zeroedContentRTAnchorX - m_maskedScrollWindow.x;
                     break;
                 }
-                case AutoScrollOptions.None:
+                case DetectedScrollOption.None:
                 default:
                     break;
             }
@@ -692,47 +674,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case false:
                     return false;
             }
-        }
-        #endregion
-
-        #region Static GridLayout Methods
-        private static Vector2Int GetFlexibleGridSize(GridLayoutGroup _gridLayoutGroup, int _childCount)
-        {
-            //TODO: Get delayed GridSize.
-
-            if (_childCount == 0)
-                return Vector2Int.zero;
-
-            int xAxisCount = 0, yAxisCount = 0;
-
-            for (int i = 0; i < _childCount; i++)
-            {
-                var childRectTransform = (RectTransform)_gridLayoutGroup.transform.GetChild(i);
-                Vector2 childAnchorPos = childRectTransform.anchoredPosition;
-
-                if (childAnchorPos.y + _gridLayoutGroup.padding.top + _gridLayoutGroup.cellSize.y >= 0)
-                {
-                    xAxisCount++;
-#if UNITY_EDITOR
-                    //Debug.Log($"{childAnchorPos.y + _gridLayoutGroup.padding.top + _gridLayoutGroup.cellSize.y} - ChildName: {childRectTransform.name}");
-#endif
-                }
-            }
-
-            yAxisCount = GetOtherAxisCount(xAxisCount, _childCount);
-#if UNITY_EDITOR
-            Debug.Log($"Column: {xAxisCount} - Row: {yAxisCount}");
-#endif
-            return new Vector2Int(xAxisCount, yAxisCount);
-            //return Vector2Int.zero;
-        }
-
-        private static int GetOtherAxisCount(int _constraintAxisCount, int _contentChildCount)
-        {
-            float lambdaSwitch = (float)_contentChildCount / _constraintAxisCount - _constraintAxisCount;
-            float addedCount = lambdaSwitch - (lambdaSwitch % 1);
-            int otherAxisCount = lambdaSwitch <= 0 ? _constraintAxisCount + (int)addedCount : _constraintAxisCount + (int)addedCount + 1;
-            return otherAxisCount;
         }
         #endregion
     }
