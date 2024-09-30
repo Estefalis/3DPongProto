@@ -350,6 +350,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (!m_scrollContentSet || !m_canAutoScroll/* || Cursor.lockState == CursorLockMode.None*/)
                 return;
 
+            //TODO: Implement Gamepad Mouse.
+            ScrollSelectNextGameObject();
+
             switch (m_detectedScrollOption)
             {
                 case DetectedScrollOption.Vertical:
@@ -366,9 +369,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 default:
                     break;
             }
-
-            //TODO: Implement Gamepad Mouse.
-            //ScrollSelectNextGameObject();
         }
 
         private void ScrollSelectNextGameObject()
@@ -392,6 +392,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                                 break;
                             }
                         }
+
                         break;
                     }
                     case DetectedScrollOption.Horizontal:
@@ -409,6 +410,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                                 break;
                             }
                         }
+
                         break;
                     }
                     case DetectedScrollOption.Both:
@@ -559,6 +561,18 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                                 //Debug.Log($"AtEdgePosition: {m_edgePosition}");
 #endif
 
+                                #region Switch helps to keep AutoScroll smooth, while using 'MoveToNextObject()' MouseScrolling.
+                                switch (m_edgePosition)
+                                {
+                                    case true:
+                                        m_scrollViewRect.scrollSensitivity = 0.0f;
+                                        break;
+                                    case false:
+                                        m_scrollViewRect.scrollSensitivity = 10.0f;
+                                        break;
+                                }
+                                #endregion
+
                                 m_canAutoScroll = true;
                                 break;
                             }
@@ -586,7 +600,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 {
                     m_startEdgeVer = _lastGOAnchor.y + (m_verticalSpacing * m_contentChildCount - 1) + m_topPadding + m_scrollContentRT.anchoredPosition.y >= _scrollViewRect.anchoredPosition.y;
                     m_endEdgeVer = -(_lastGOAnchor.y - m_firstChildRT.y - (m_verticalSpacing * m_contentChildCount - 1) - m_bottomPadding + m_scrollContentRT.anchoredPosition.y) >= _scrollViewRect.rect.height;
-                    //Debug.Log($"StartEdge: {m_startEdgeVer} - EndEdge: {m_endEdgeVer}");
                     break;
                 }
                 case DetectedScrollOption.Horizontal:
