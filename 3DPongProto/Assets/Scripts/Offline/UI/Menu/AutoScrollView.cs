@@ -63,7 +63,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private GameObject m_lastSelectedGameObject, m_fallbackGameObject;
         private RectTransform m_scrollViewRectTransform;
-        private RectTransform m_childRect;      //ChildRect for each chilc of the Content and it's '.anchoredPosition'.
+        private RectTransform m_childRect;      //ChildRect for each child of the Content and it's '.anchoredPosition'.
         private Vector2 m_lastChildAnchorPos;
 
         private Dictionary<GameObject, RectTransform> m_contentChildAnchorPos = new Dictionary<GameObject, RectTransform>();
@@ -226,13 +226,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 m_childRect = transform.GetComponent<RectTransform>();
 
                 //Level for X/Y Axis Toggles.
-                for (int i = 0; i < transform.childCount; i++)
+                for (int i = 0; i < transform.childCount; i++)                      //TODO: Why does the code below not work on GridLayouts?
                 {
 #if UNITY_EDITOR
                     //Debug.Log(transform.GetChild(i).name);
 #endif
                     Transform subLevelOne = transform.GetChild(i);
-                    ScrollViewObjectsToDicts(subLevelOne, m_childRect);            //'m_childRect.anchoredPosition' instead of i.
+                    ScrollViewObjectsToDicts(subLevelOne, m_childRect);             //'m_childRect.anchoredPosition' instead of i.
 
                     ////Level for SliderXAxis Lower & Higher Buttons, XSlider itself, it's Toggle.
                     ////Level for SliderYAxis Lower & Higher Buttons, YSlider itself, it's Toggle.
@@ -243,7 +243,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         //Debug.Log(subLevelOne.GetChild(j).name);
 #endif
                         Transform subLevelTwo = subLevelOne.GetChild(j);
-                        ScrollViewObjectsToDicts(subLevelTwo, m_childRect);        //'m_childRect.anchoredPosition' instead of i.
+                        ScrollViewObjectsToDicts(subLevelTwo, m_childRect);         //'m_childRect.anchoredPosition' instead of i.
 
                         //Level for Keyboard & Gamepad Rebind Buttons.
                         for (int k = 0; k < subLevelTwo.childCount; k++)
@@ -252,7 +252,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                             //Debug.Log(subLevelTwo.GetChild(k).name);
 #endif
                             Transform subLevelThree = subLevelTwo.GetChild(k);
-                            ScrollViewObjectsToDicts(subLevelThree, m_childRect);  //'m_childRect.anchoredPosition' instead of i.
+                            ScrollViewObjectsToDicts(subLevelThree, m_childRect);   //'m_childRect.anchoredPosition' instead of i.
                         }
                     }
                 }
@@ -611,6 +611,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case DetectedScrollOption.Both:
                 {
                     //TODO: MaskedScrollRectEdgeCheck DetectedScrollOption.Both
+                    //m_startEdgeVer = _lastGOAnchor.y + (m_verticalSpacing * m_contentChildCount - 1) + m_topPadding + m_scrollContentRT.anchoredPosition.y >= _scrollViewRect.anchoredPosition.y;
+                    //m_endEdgeVer = -(_lastGOAnchor.y - m_firstChildRT.y - (m_verticalSpacing * m_contentChildCount - 1) - m_bottomPadding + m_scrollContentRT.anchoredPosition.y) >= _scrollViewRect.rect.height;
+
+                    //m_startEdgeHor = _lastGOAnchor.x + (m_horizontalSpacing * m_contentChildCount - 1) + m_leftPadding + m_scrollContentRT.anchoredPosition.x >= _scrollViewRect.anchoredPosition.x;
+                    //m_endEdgeHor = -(_lastGOAnchor.x - m_firstChildRT.x - (m_horizontalSpacing * m_contentChildCount - 1) - m_rightPadding + m_scrollContentRT.anchoredPosition.x) >= _scrollViewRect.rect.width;
+
+                    //Debug.Log($"StartEVer: {m_startEdgeVer} EndEVer: {m_endEdgeVer} StartEHor: {m_startEdgeHor} EndEHor: {m_endEdgeHor}");
                     break;
                 }
                 case DetectedScrollOption.None:
@@ -648,13 +655,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case DetectedScrollOption.Both:
                 {
                     //TODO: Confirm MaskedScrollRectEdgeCheck DetectedScrollOption.Both
-                    //var zeroedContentRTAnchorY = _contentAnchor.y - _contentAnchor.y; //On entering ScrollView from below, AnchorPos is not 0.
-                    //m_startEdgeVer = _lastGOAnchor.y + m_verticalSpacing + m_topPadding >= zeroedContentRTAnchorY;
-                    //m_endEdgeVer = _lastGOAnchor.y - m_firstChildRT.y - m_verticalSpacing - m_bottomPadding <= zeroedContentRTAnchorY - m_maskedScrollWindow.y;
-
-                    //var zeroedContentRTAnchorX = _contentAnchor.x - _contentAnchor.x;  //On entering ScrollView from right, AnchorPos is not 0.
-                    //m_startEdgeHor = _lastGOAnchor.x + m_horizontalSpacing + m_leftPadding >= zeroedContentRTAnchorX;
-                    //m_endEdgeHor = _lastGOAnchor.x - m_firstChildRT.x - m_horizontalSpacing - m_rightPadding <= zeroedContentRTAnchorX - m_maskedScrollWindow.x;
                     break;
                 }
                 case DetectedScrollOption.None:
