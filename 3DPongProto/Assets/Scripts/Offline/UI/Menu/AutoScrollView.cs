@@ -224,9 +224,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             {
                 //m_contentChildCount += 1;
                 m_childRect = transform.GetComponent<RectTransform>();
+                ScrollViewObjectsToDicts(transform, m_childRect);
 
                 //Level for X/Y Axis Toggles.
-                for (int i = 0; i < transform.childCount; i++)                      //TODO: Why does the code below not work on GridLayouts?
+                for (int i = 0; i < transform.childCount; i++)
                 {
 #if UNITY_EDITOR
                     //Debug.Log(transform.GetChild(i).name);
