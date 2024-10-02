@@ -34,6 +34,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] private DetectedScrollOption m_detectedScrollOption = DetectedScrollOption.Both;
         [SerializeField] private WindowEdgesSwitch m_selectedWindowMask = WindowEdgesSwitch.MaskedScrollViewRect;
         [SerializeField] private float m_scrollSpeed = 60.0f;
+        [SerializeField] private float m_setScrollSensitivity = 10.0f;
         [Space]
         [SerializeField] private ScrollRect m_scrollViewRect;
         [SerializeField] private RectTransform m_scrollContentRT;
@@ -89,6 +90,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void Start()
         {
+            m_scrollViewRect.scrollSensitivity = m_setScrollSensitivity;
+
             if (m_scrollContentRT != null)
                 ContentLevelIterations();
 
@@ -349,7 +352,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void AutoScrollToNextGameObject()
         {
             if (!m_scrollContentSet || !m_canAutoScroll/* || Cursor.lockState == CursorLockMode.None*/)
+            {
+                if (m_scrollViewRect.scrollSensitivity != m_setScrollSensitivity)
+                    m_scrollViewRect.scrollSensitivity = m_setScrollSensitivity;
                 return;
+            }
 
             //TODO: Implement Gamepad Mouse.
             ScrollSelectNextGameObject();
@@ -434,7 +441,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void UpdateVerticalScrollPosition(RectTransform _selectedElement)
         {
             //Move the current scroll rect to correct elementPosition           //min: -57 - max: 0
-            float elementPosition = -_selectedElement.anchoredPosition.y - (_selectedElement.rect.height * (1 - _selectedElement.pivot.y) - (m_topPadding + m_bottomPadding + m_verticalSpacing));
+            float elementPosition = -_selectedElement.anchoredPosition.y - (_selectedElement.rect.height * (1 - _selectedElement.pivot.y) - m_topPadding - m_bottomPadding - m_verticalSpacing);
 
             float viewRectAnchorPos = m_scrollViewRectTransform.anchoredPosition.y; //0   - fixed ScrollView AnchorPosition
             float contentElementHeight = _selectedElement.rect.height;              //Child Height
@@ -445,9 +452,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             //Get the normalized  position, based on the TargetScrollRect's height.
             float normalizedPosition = m_scrollViewRect.verticalNormalizedPosition + (offlimitsValue / m_scrollViewRectTransform.rect.height);
-            normalizedPosition = Mathf.Clamp01(normalizedPosition);
+            //normalizedPosition = Mathf.Clamp01(normalizedPosition);
 #if UNITY_EDITOR
-            //Debug.Log($"OffValue: {offlimitsValue} - NormalizedPos: {normalizedPosition} - ElementPos: {elementPosition}");
+            //Debug.Log($"Vertical OffValue: {offlimitsValue} | NormalizedPos: {normalizedPosition} | ElementPos: {elementPosition}");
 #endif
 
             if (offlimitsValue < 0)
@@ -469,7 +476,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void UpdateHorizontalScrollPosition(RectTransform _selectedElement)
         {
             //Move the current scroll rect to correct elementPosition           //min: -57 - max: 0
-            float elementPosition = -_selectedElement.anchoredPosition.x - (_selectedElement.rect.width * (1 - _selectedElement.pivot.x) - (m_leftPadding + m_rightPadding + m_horizontalSpacing));
+            float elementPosition = -_selectedElement.anchoredPosition.x - (_selectedElement.rect.width * (1 - _selectedElement.pivot.x) - m_leftPadding - m_rightPadding - m_horizontalSpacing);
 
             float viewRectAnchorPos = m_scrollViewRectTransform.anchoredPosition.x; //0   - fixed ScrollView AnchorPosition.
             float contentElementWidth = _selectedElement.rect.width;                //Child Width.
@@ -478,11 +485,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             //Get the element offset value depending on the cursor move direction.
             float offlimitsValue = GetScrollOffset(elementPosition, viewRectAnchorPos, contentElementWidth, maskedWindowWidth);
 
-            //Get the normalized  position, based on the TargetScrollRect's height.
+            //Get the normalized  position, based on the TargetScrollRect's width.
             float normalizedPosition = m_scrollViewRect.horizontalNormalizedPosition + (offlimitsValue / m_scrollViewRectTransform.rect.width);
-            normalizedPosition = Mathf.Clamp01(normalizedPosition);
+            //normalizedPosition = Mathf.Clamp01(normalizedPosition);
 #if UNITY_EDITOR
-            //Debug.Log($"OffValue: {offlimitsValue} - NormalizedPos: {normalizedPosition} - ElementPos: {elementPosition}");
+            Debug.Log($"Horizontal OffValue: {offlimitsValue} | NormalizedPos: {normalizedPosition} | ElementPos: {elementPosition}");
 #endif
 
             if (offlimitsValue < 0)
@@ -501,15 +508,15 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_scrollViewRect.horizontalNormalizedPosition = Mathf.SmoothStep(m_scrollViewRect.horizontalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * m_scrollSpeed);
         }
 
-        private float GetScrollOffset(float _elementPosition, float _viewRectAnchorPos, float _contentElementHeight, float _maskedWindowHeight)
+        private float GetScrollOffset(float _elementPosition, float _viewRectAnchorPos, float _elementWidthOrHeight, float _windowWidthOrHeight)
         {
-            if (_elementPosition < _viewRectAnchorPos + (_contentElementHeight / 2))
+            if (_elementPosition < _viewRectAnchorPos + (_elementWidthOrHeight / 2))
             {
-                return _viewRectAnchorPos + _maskedWindowHeight - (_elementPosition - _contentElementHeight);
+                return _viewRectAnchorPos + _windowWidthOrHeight - (_elementPosition - _elementWidthOrHeight);
             }
-            else if (_elementPosition + _contentElementHeight > _viewRectAnchorPos + _maskedWindowHeight)
+            else if (_elementPosition + _elementWidthOrHeight > _viewRectAnchorPos + _windowWidthOrHeight)
             {
-                return _viewRectAnchorPos + _maskedWindowHeight - (_elementPosition + _contentElementHeight);
+                return _viewRectAnchorPos + _windowWidthOrHeight - (_elementPosition + _elementWidthOrHeight);
             }
 
             return 0;
@@ -569,7 +576,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                                         m_scrollViewRect.scrollSensitivity = 0.0f;
                                         break;
                                     case false:
-                                        m_scrollViewRect.scrollSensitivity = 10.0f;
+                                        m_scrollViewRect.scrollSensitivity = m_setScrollSensitivity;
                                         break;
                                 }
                                 #endregion
@@ -605,20 +612,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 }
                 case DetectedScrollOption.Horizontal:
                 {
-                    m_startEdgeHor = _lastGOAnchor.x + (m_horizontalSpacing * m_contentChildCount - 1) + m_leftPadding + m_scrollContentRT.anchoredPosition.x >= _scrollViewRect.anchoredPosition.x;
-                    m_endEdgeHor = -(_lastGOAnchor.x - m_firstChildRT.x - (m_horizontalSpacing * m_contentChildCount - 1) - m_rightPadding + m_scrollContentRT.anchoredPosition.x) >= _scrollViewRect.rect.width;
+                    //TODO: MaskedScrollRectEdgeCheck DetectedScrollOption.Horizontal
                     break;
                 }
                 case DetectedScrollOption.Both:
                 {
-                    //TODO: MaskedScrollRectEdgeCheck DetectedScrollOption.Both
-                    //m_startEdgeVer = _lastGOAnchor.y + (m_verticalSpacing * m_contentChildCount - 1) + m_topPadding + m_scrollContentRT.anchoredPosition.y >= _scrollViewRect.anchoredPosition.y;
-                    //m_endEdgeVer = -(_lastGOAnchor.y - m_firstChildRT.y - (m_verticalSpacing * m_contentChildCount - 1) - m_bottomPadding + m_scrollContentRT.anchoredPosition.y) >= _scrollViewRect.rect.height;
-
-                    //m_startEdgeHor = _lastGOAnchor.x + (m_horizontalSpacing * m_contentChildCount - 1) + m_leftPadding + m_scrollContentRT.anchoredPosition.x >= _scrollViewRect.anchoredPosition.x;
-                    //m_endEdgeHor = -(_lastGOAnchor.x - m_firstChildRT.x - (m_horizontalSpacing * m_contentChildCount - 1) - m_rightPadding + m_scrollContentRT.anchoredPosition.x) >= _scrollViewRect.rect.width;
-
-                    //Debug.Log($"StartEVer: {m_startEdgeVer} EndEVer: {m_endEdgeVer} StartEHor: {m_startEdgeHor} EndEHor: {m_endEdgeHor}");
+                    //TODO: MaskedScrollRectEdgeCheck DetectedScrollOption.Both                    
                     break;
                 }
                 case DetectedScrollOption.None:
