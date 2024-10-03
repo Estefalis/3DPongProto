@@ -35,6 +35,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] private WindowEdgesSwitch m_selectedWindowMask = WindowEdgesSwitch.MaskedScrollViewRect;
         [SerializeField] private float m_scrollSpeed = 60.0f;
         [SerializeField] private float m_setScrollSensitivity = 10.0f;
+
+        [Header("Prefab")]
+        [SerializeField] private bool m_variableContentSize = false;
+        [SerializeField] private GameObject m_spawnablePrefab = null;
+        [SerializeField] private int m_setChildAmount = 50;
+        [SerializeField] private bool m_childsInstantiated = false;
         [Space]
         [SerializeField] private ScrollRect m_scrollViewRect;
         [SerializeField] private RectTransform m_scrollContentRT;
@@ -82,21 +88,33 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_scrollViewRectTransform = m_scrollViewRect.GetComponent<RectTransform>();
             m_scrollContentRT = m_scrollViewRect.content.GetComponent<RectTransform>();
 
-            m_scrollContentSet = m_scrollViewRect != null && m_scrollContentRT != null;
+            m_scrollContentSet = m_scrollViewRect != null && m_scrollViewRect.content != null;
 
             GetScrollOptionAndLayout(m_scrollViewRect);
-            GetLayoutGroupSettings(m_layoutGroup);
+        }
+
+        private void OnEnable()
+        {
+            if (m_variableContentSize && !m_childsInstantiated && m_spawnablePrefab != null)
+            {
+                for (int i = 0; i < m_setChildAmount; i++)
+                    Instantiate(m_spawnablePrefab, m_scrollContentRT);
+
+                m_childsInstantiated = true;
+            }
         }
 
         private void Start()
         {
             m_scrollViewRect.scrollSensitivity = m_setScrollSensitivity;
 
-            if (m_scrollContentRT != null)
-                ContentLevelIterations();
-
             m_playerInputActions = InputManager.m_PlayerInputActions;
             m_playerInputActions.UI.Enable();
+
+            if (m_scrollContentRT != null && m_contentChildCount > 0)
+                ContentLevelIterations();
+
+            GetLayoutGroupSettings(m_layoutGroup);  //Else below 'GetScrollOptionAndLayout(m_scrollViewRect);'.
         }
 
         private void OnDisable()
@@ -208,12 +226,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             }
 
             m_maskedScrollWindow = new Vector2(m_scrollViewRectTransform.rect.width, m_scrollViewRectTransform.rect.height);
+            m_unmaskedContentRT = new Vector2(m_scrollContentRT.rect.width, m_scrollContentRT.rect.height);   //.x - .width, .y - .height.
 
-            var contentRect = m_scrollContentRT.GetComponent<RectTransform>().rect;
-            m_unmaskedContentRT = new Vector2(contentRect.width, contentRect.height);   //.x - .width, .y - .height.
-            var firstChildRect = m_scrollContentRT.GetChild(0).GetComponent<RectTransform>().rect;
-            m_firstChildRT = new Vector2(firstChildRect.width, firstChildRect.height);
             m_contentChildCount = _layoutGroup.transform.childCount;
+            if (m_contentChildCount > 0)
+            {
+                var firstChildRect = m_scrollContentRT.GetChild(0).GetComponent<RectTransform>().rect;
+                m_firstChildRT = new Vector2(firstChildRect.width, firstChildRect.height);
+            }
         }
 
         #region ContentLevelIterations
@@ -227,6 +247,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             {
                 //m_contentChildCount += 1;
                 m_childRect = transform.GetComponent<RectTransform>();
+                //Very first childLevel.
                 ScrollViewObjectsToDicts(transform, m_childRect);
 
                 //Level for X/Y Axis Toggles.
@@ -280,7 +301,20 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case true:
                 {
                     m_contentChildAnchorPos.Add(toggle.gameObject, _contentElementAnchorPos); //RectTransform with '.anchoredPosition'.
-                    m_objectNavigation.Add(toggle.gameObject, toggle.navigation);
+
+                    switch (m_variableContentSize)
+                    {
+                        case true:
+                        {
+                            //TODO: SetupObjectNavigation();
+                            break;
+                        }
+                        case false:
+                        {
+                            m_objectNavigation.Add(toggle.gameObject, toggle.navigation);
+                            break;
+                        }
+                    }
                     break;
                 }
             }
@@ -308,6 +342,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     break;
                 }
             }
+        }
+
+        private void SetupObjectNavigation()
+        {
+            //if (m_contentChildCount < 2)
+            //    return;
         }
         #endregion
 
