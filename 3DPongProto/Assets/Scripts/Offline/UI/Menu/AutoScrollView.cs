@@ -489,7 +489,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             float normalizedPosition = m_scrollViewRect.horizontalNormalizedPosition + (offlimitsValue / m_scrollViewRectTransform.rect.width);
             //normalizedPosition = Mathf.Clamp01(normalizedPosition);
 #if UNITY_EDITOR
-            Debug.Log($"Horizontal OffValue: {offlimitsValue} | NormalizedPos: {normalizedPosition} | ElementPos: {elementPosition}");
+            //Debug.Log($"Horizontal OffValue: {offlimitsValue} | NormalizedPos: {normalizedPosition} | ElementPos: {elementPosition}");
 #endif
 
             if (offlimitsValue < 0)
