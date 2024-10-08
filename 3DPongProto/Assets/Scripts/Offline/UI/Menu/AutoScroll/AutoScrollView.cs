@@ -22,7 +22,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             Both
         }
 
-        private enum WindowEdgesSwitch
+        private enum WindowEdgeCheck
         {
             MaskedScrollViewRect,
             UnmaskedContentRect
@@ -32,15 +32,15 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private PlayerInputActions m_playerInputActions;
 
         [SerializeField] private DetectedScrollOption m_detectedScrollOption = DetectedScrollOption.Both;
-        [SerializeField] private WindowEdgesSwitch m_selectedWindowMask = WindowEdgesSwitch.MaskedScrollViewRect;
+        [SerializeField] private WindowEdgeCheck m_selectedWindowMask = WindowEdgeCheck.MaskedScrollViewRect;
         [SerializeField] private float m_scrollSpeed = 60.0f;
         [SerializeField] private float m_setScrollSensitivity = 10.0f;
 
         [Header("Prefab")]
-        [SerializeField] private bool m_variableContentSize = false;
+        [SerializeField] private bool m_instantiatedContent = false;
         [SerializeField] private GameObject m_spawnablePrefab = null;
         [SerializeField] private int m_setChildAmount = 50;
-        [SerializeField] private bool m_childsInstantiated = false;
+        [SerializeField] private bool m_childsSpawned = false;
         [Space]
         [SerializeField] private ScrollRect m_scrollViewRect;
         [SerializeField] private RectTransform m_scrollContentRT;
@@ -70,8 +70,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private GameObject m_lastSelectedGameObject, m_fallbackGameObject;
         private RectTransform m_scrollViewRectTransform;
-        private RectTransform m_childRect;      //ChildRect for each child of the Content and it's '.anchoredPosition'.
-        private Vector2 m_lastChildAnchorPos;
+        private RectTransform m_childRect;      //Rect for each child of the Content and it's '.anchoredPosition'.
 
         private Dictionary<GameObject, RectTransform> m_contentChildAnchorPos = new Dictionary<GameObject, RectTransform>();
         private Dictionary<GameObject, Navigation> m_objectNavigation = new Dictionary<GameObject, Navigation>();
@@ -95,12 +94,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnEnable()
         {
-            if (m_variableContentSize && !m_childsInstantiated && m_spawnablePrefab != null)
+            if (m_instantiatedContent && !m_childsSpawned && m_spawnablePrefab != null)
             {
                 for (int i = 0; i < m_setChildAmount; i++)
                     Instantiate(m_spawnablePrefab, m_scrollContentRT);
 
-                m_childsInstantiated = true;
+                m_childsSpawned = true;
             }
         }
 
@@ -180,6 +179,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             }
 
             m_layoutGroup = m_scrollContentRT.GetComponent<LayoutGroup>();
+            m_contentChildCount = m_layoutGroup.transform.childCount;
             //if '(m_layoutGroup == null)' and you want to add one (WITH detailed memberValues to set it's dimensions):
             //'AddMissingLayoutGroup()' - 'switch (m_detectedScrollOption)' - 'case DetectedScrollOption.Both/.Vertical/.Horizontal' -
             //'m_layoutGroup = m_scrollContentRT.AddComponent<GridLayoutGroup/VerticalLayoutGroup/HorizontalLayoutGroup>()' and
@@ -228,7 +228,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_maskedScrollWindow = new Vector2(m_scrollViewRectTransform.rect.width, m_scrollViewRectTransform.rect.height);
             m_unmaskedContentRT = new Vector2(m_scrollContentRT.rect.width, m_scrollContentRT.rect.height);   //.x - .width, .y - .height.
 
-            m_contentChildCount = _layoutGroup.transform.childCount;
             if (m_contentChildCount > 0)
             {
                 var firstChildRect = m_scrollContentRT.GetChild(0).GetComponent<RectTransform>().rect;
@@ -247,7 +246,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             {
                 //m_contentChildCount += 1;
                 m_childRect = transform.GetComponent<RectTransform>();
-                //Very first childLevel.
+                //Very first childLevel of 'm_scrollContentRT.transform'.
                 ScrollViewObjectsToDicts(transform, m_childRect);
 
                 //Level for X/Y Axis Toggles.
@@ -301,12 +300,15 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case true:
                 {
                     m_contentChildAnchorPos.Add(toggle.gameObject, _contentElementAnchorPos); //RectTransform with '.anchoredPosition'.
-
-                    switch (m_variableContentSize)
+                    //m_objectNavigation.Add(toggle.gameObject, toggle.navigation);
+                    switch (m_instantiatedContent)
                     {
                         case true:
                         {
-                            //TODO: SetupObjectNavigation();
+                            //TODO:
+                            //SetupObjectNavigation(toggle.gameObject);
+                            //- contentTransform.childCount fuer Navigation an EndObject bei Index 0 und umgekehrt (inkl. .GetComponent)
+                            //- je nach Hor/Ver/Grid, Up/Down &| Left/Right mit eigenen Methoden/Code. (Grid mit constaintAxisCount)
                             break;
                         }
                         case false:
@@ -326,7 +328,23 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case true:
                 {
                     m_contentChildAnchorPos.Add(slider.gameObject, _contentElementAnchorPos); //RectTransform with '.anchoredPosition'.
-                    m_objectNavigation.Add(slider.gameObject, slider.navigation);
+                    //m_objectNavigation.Add(slider.gameObject, slider.navigation);
+                    switch (m_instantiatedContent)
+                    {
+                        case true:
+                        {
+                            //TODO:
+                            //SetupObjectNavigation(slider.gameObject);
+                            //- contentTransform.childCount fuer Navigation an EndObject bei Index 0 und umgekehrt (inkl. .GetComponent)
+                            //- je nach Hor/Ver/Grid, Up/Down &| Left/Right mit eigenen Methoden/Code. (Grid mit constaintAxisCount)
+                            break;
+                        }
+                        case false:
+                        {
+                            m_objectNavigation.Add(slider.gameObject, slider.navigation);
+                            break;
+                        }
+                    }
                     break;
                 }
             }
@@ -338,16 +356,64 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case true:
                 {
                     m_contentChildAnchorPos.Add(button.gameObject, _contentElementAnchorPos); //RectTransform with '.anchoredPosition'.
-                    m_objectNavigation.Add(button.gameObject, button.navigation);
+                    //m_objectNavigation.Add(button.gameObject, button.navigation);
+                    switch (m_instantiatedContent)
+                    {
+                        case true:
+                        {
+                            //TODO:
+                            //SetupObjectNavigation(button.gameObject);
+
+                            //- contentTransform.childCount fuer Navigation an EndObject bei Index 0 und umgekehrt (inkl. .GetComponent)
+                            //- je nach Hor/Ver/Grid, Up/Down &| Left/Right mit eigenen Methoden/Code. (Grid mit constaintAxisCount)
+                            break;
+                        }
+                        case false:
+                        {
+                            m_objectNavigation.Add(button.gameObject, button.navigation);
+                            break;
+                        }
+                    }
                     break;
                 }
             }
         }
 
-        private void SetupObjectNavigation()
+        private void SetupObjectNavigation(GameObject _childObject)
         {
-            //if (m_contentChildCount < 2)
-            //    return;
+            //GameObject[] contentChildren = _childObject.GetComponentsInChildren<GameObject>();
+
+            if (m_contentChildCount < 2)
+                return;
+
+            Navigation navigation;
+
+            for (int i = 0; i < m_scrollContentRT.childCount; i++)
+            {
+                if (m_scrollContentRT.transform.Find($"{_childObject.name}"))
+                    navigation = _childObject.GetComponent<Navigation>();
+
+                switch (m_detectedScrollOption)
+                {
+                    case DetectedScrollOption.Vertical:
+                    {
+                        //navigation.selectOnUp = GetNavigationVertical(i - 1, m_contentChildCount);
+                        //navigation.selectOnDown = GetNavigationVertical(i + 1, m_contentChildCount);
+                        break;
+                    }
+                    case DetectedScrollOption.Horizontal:
+                    {
+                        break;
+                    }
+                    case DetectedScrollOption.Both:
+                    {
+                        break;
+                    }
+                    case DetectedScrollOption.None:
+                    default:
+                        break;
+                }
+            }
         }
         #endregion
 
@@ -475,6 +541,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void MoveToNextObject(Selectable _nextObject)
         {
+            if (_nextObject == null)
+                return;
+
             EventSystem.current.SetSelectedGameObject(_nextObject.gameObject);
         }
 
@@ -489,10 +558,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             //Get the element offset value depending on the cursor move direction.
             float offlimitsValue = GetScrollOffset(elementPosition, viewRectAnchorPos, contentElementHeight, maskedWindowHeight);
-
+            
             //Get the normalized  position, based on the TargetScrollRect's height.
             float normalizedPosition = m_scrollViewRect.verticalNormalizedPosition + (offlimitsValue / m_scrollViewRectTransform.rect.height);
-            //normalizedPosition = Mathf.Clamp01(normalizedPosition);
 #if UNITY_EDITOR
             //Debug.Log($"Vertical OffValue: {offlimitsValue} | NormalizedPos: {normalizedPosition} | ElementPos: {elementPosition}");
 #endif
@@ -516,7 +584,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void UpdateHorizontalScrollPosition(RectTransform _selectedElement)
         {
             //Move the current scroll rect to correct elementPosition           //min: -57 - max: 0
-            float elementPosition = -_selectedElement.anchoredPosition.x - (_selectedElement.rect.width * (1 - _selectedElement.pivot.x) - m_leftPadding - m_rightPadding - m_horizontalSpacing);
+            float elementPosition = _selectedElement.anchoredPosition.x - (_selectedElement.rect.width * (1 - _selectedElement.pivot.x) - m_leftPadding - m_rightPadding - m_horizontalSpacing);
 
             float viewRectAnchorPos = m_scrollViewRectTransform.anchoredPosition.x; //0   - fixed ScrollView AnchorPosition.
             float contentElementWidth = _selectedElement.rect.width;                //Child Width.
@@ -524,22 +592,21 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             //Get the element offset value depending on the cursor move direction.
             float offlimitsValue = GetScrollOffset(elementPosition, viewRectAnchorPos, contentElementWidth, maskedWindowWidth);
-
+            
             //Get the normalized  position, based on the TargetScrollRect's width.
             float normalizedPosition = m_scrollViewRect.horizontalNormalizedPosition + (offlimitsValue / m_scrollViewRectTransform.rect.width);
-            //normalizedPosition = Mathf.Clamp01(normalizedPosition);
 #if UNITY_EDITOR
             //Debug.Log($"Horizontal OffValue: {offlimitsValue} | NormalizedPos: {normalizedPosition} | ElementPos: {elementPosition}");
 #endif
 
             if (offlimitsValue < 0)
             {
-                normalizedPosition -= Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.width;    //Scroll left.
+                normalizedPosition += Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.width;    //Scroll left.
             }
 
             if (offlimitsValue > 0)
             {
-                normalizedPosition += offlimitsValue / m_scrollViewRectTransform.rect.width;               //Scroll right.
+                normalizedPosition -= offlimitsValue / m_scrollViewRectTransform.rect.width;               //Scroll right.
             }
 
             //Clamp the normalized Position to ensure, that it stays within the valid bound of (0 ... 1).
@@ -591,12 +658,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                             {
                                 switch (m_selectedWindowMask)
                                 {
-                                    case WindowEdgesSwitch.MaskedScrollViewRect:
+                                    case WindowEdgeCheck.MaskedScrollViewRect:
                                     {
                                         m_edgePosition = MaskedScrollRectEdgeCheck(m_scrollViewRectTransform, m_contentChildAnchorPos[m_lastSelectedGameObject].anchoredPosition);
                                         break;
                                     }
-                                    case WindowEdgesSwitch.UnmaskedContentRect:
+                                    case WindowEdgeCheck.UnmaskedContentRect:
                                     {
                                         m_edgePosition = UnmaskedContentEdgeCheck(m_scrollContentRT.anchoredPosition, m_contentChildAnchorPos[m_lastSelectedGameObject].anchoredPosition);
                                         break;
@@ -652,7 +719,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 }
                 case DetectedScrollOption.Horizontal:
                 {
-                    //TODO: MaskedScrollRectEdgeCheck DetectedScrollOption.Horizontal
+                    //TODO: m_startEdgeHor;
+                    //TODO: m_endEdgeHor;
                     break;
                 }
                 case DetectedScrollOption.Both:
