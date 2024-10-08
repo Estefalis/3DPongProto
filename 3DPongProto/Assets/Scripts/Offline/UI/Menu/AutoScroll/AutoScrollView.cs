@@ -559,26 +559,26 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             //Get the element offset value depending on the cursor move direction.
             float offlimitsValue = GetScrollOffset(elementPosition, viewRectAnchorPos, contentElementHeight, maskedWindowHeight);
             
-            //Get the normalized  position, based on the TargetScrollRect's height.
+            //Get the normalized position, based on the TargetScrollRect's height.
             float normalizedPosition = m_scrollViewRect.verticalNormalizedPosition + (offlimitsValue / m_scrollViewRectTransform.rect.height);
-#if UNITY_EDITOR
-            //Debug.Log($"Vertical OffValue: {offlimitsValue} | NormalizedPos: {normalizedPosition} | ElementPos: {elementPosition}");
-#endif
-
-            if (offlimitsValue < 0)
-            {
-                normalizedPosition -= Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.height;    //Scroll up.
-            }
 
             if (offlimitsValue > 0)
             {
-                normalizedPosition += offlimitsValue / m_scrollViewRectTransform.rect.height;               //Scroll down.
+                normalizedPosition += offlimitsValue / m_scrollViewRectTransform.rect.height;               //Scroll up.
+            }
+
+            if (offlimitsValue < 0)
+            {
+                normalizedPosition -= Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.height;    //Scroll down.
             }
 
             //Clamp the normalized Position to ensure, that it stays within the valid bound of (0 ... 1).
             normalizedPosition = Mathf.Clamp01(normalizedPosition);
             //Move the targetScrollRect to the new position with 'SmoothStep'.
             m_scrollViewRect.verticalNormalizedPosition = Mathf.SmoothStep(m_scrollViewRect.verticalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * m_scrollSpeed);
+#if UNITY_EDITOR
+            //Debug.Log($"OffValue: {offlimitsValue} | NormalizedPos: {normalizedPosition} | Calc: {offlimitsValue / m_scrollViewRectTransform.rect.height} | AbsCalc: {Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.height}");
+#endif
         }
 
         private void UpdateHorizontalScrollPosition(RectTransform _selectedElement)
@@ -593,26 +593,27 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             //Get the element offset value depending on the cursor move direction.
             float offlimitsValue = GetScrollOffset(elementPosition, viewRectAnchorPos, contentElementWidth, maskedWindowWidth);
             
-            //Get the normalized  position, based on the TargetScrollRect's width.
-            float normalizedPosition = m_scrollViewRect.horizontalNormalizedPosition + (offlimitsValue / m_scrollViewRectTransform.rect.width);
-#if UNITY_EDITOR
-            //Debug.Log($"Horizontal OffValue: {offlimitsValue} | NormalizedPos: {normalizedPosition} | ElementPos: {elementPosition}");
-#endif
-
-            if (offlimitsValue < 0)
-            {
-                normalizedPosition += Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.width;    //Scroll left.
-            }
+            //Get the normalized position, based on the TargetScrollRect's width.
+            float normalizedPosition = m_scrollViewRect.horizontalNormalizedPosition/* + (offlimitsValue / m_scrollViewRectTransform.rect.width)*/;
 
             if (offlimitsValue > 0)
             {
-                normalizedPosition -= offlimitsValue / m_scrollViewRectTransform.rect.width;               //Scroll right.
+                normalizedPosition -= offlimitsValue / m_scrollViewRectTransform.rect.width;               //Scroll Left.
+            }
+
+            if (offlimitsValue < 0)
+            {
+                normalizedPosition += Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.width;    //Scroll right.
             }
 
             //Clamp the normalized Position to ensure, that it stays within the valid bound of (0 ... 1).
             normalizedPosition = Mathf.Clamp01(normalizedPosition);
             //Move the targetScrollRect to the new position with 'SmoothStep'.
             m_scrollViewRect.horizontalNormalizedPosition = Mathf.SmoothStep(m_scrollViewRect.horizontalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * m_scrollSpeed);
+#if UNITY_EDITOR
+            //AbsCalc +, while normal Calc -.
+            Debug.Log($"OffValue: {offlimitsValue} | HoriBar: {m_scrollViewRect.horizontalNormalizedPosition} | NormalizedPos: {normalizedPosition} | Calc: {offlimitsValue / m_scrollViewRectTransform.rect.width} | AbsCalc: {Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.width}");
+#endif
         }
 
         private float GetScrollOffset(float _elementPosition, float _viewRectAnchorPos, float _elementWidthOrHeight, float _windowWidthOrHeight)
