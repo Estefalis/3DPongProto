@@ -688,25 +688,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_detectedScrollOption: 3
-  m_selectedWindowMask: 0
+  m_scrollViewRect: {fileID: 0}
+  m_scrollViewContent: {fileID: 0}
+  m_layoutGroup: {fileID: 0}
+  m_contentChildCount: 0
+  m_maskedScrollWindow: {x: 0, y: 0}
+  m_fullContentWindow: {x: 0, y: 0}
   m_scrollSpeed: 60
   m_setScrollSensitivity: 10
   m_instantiatedContent: 0
   m_spawnablePrefab: {fileID: 0}
   m_setChildAmount: 50
   m_childsSpawned: 0
-  m_scrollViewRect: {fileID: 0}
-  m_scrollContentRT: {fileID: 0}
-  m_layoutGroup: {fileID: 0}
-  m_contentChildCount: 0
-  m_maskedScrollWindow: {x: 0, y: 0}
-  m_unmaskedContentRT: {x: 0, y: 0}
-  m_leftPadding: 0
-  m_rightPadding: 0
-  m_topPadding: 0
-  m_bottomPadding: 0
-  m_horizontalSpacing: 0
-  m_verticalSpacing: 0
 --- !u!114 &32744707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15174,7 +15167,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_detectedScrollOption: 3
-  m_selectedWindowMask: 0
+  m_scrollViewRect: {fileID: 0}
+  m_scrollViewContent: {fileID: 0}
+  m_layoutGroup: {fileID: 0}
+  m_contentChildCount: 0
+  m_maskedScrollWindow: {x: 0, y: 0}
+  m_fullContentWindow: {x: 0, y: 0}
   m_scrollSpeed: 60
   m_setScrollSensitivity: 10
   m_instantiatedContent: 1
@@ -15182,18 +15180,6 @@ MonoBehaviour:
     type: 3}
   m_setChildAmount: 50
   m_childsSpawned: 0
-  m_scrollViewRect: {fileID: 0}
-  m_scrollContentRT: {fileID: 0}
-  m_layoutGroup: {fileID: 0}
-  m_contentChildCount: 0
-  m_maskedScrollWindow: {x: 0, y: 0}
-  m_unmaskedContentRT: {x: 0, y: 0}
-  m_leftPadding: 0
-  m_rightPadding: 0
-  m_topPadding: 0
-  m_bottomPadding: 0
-  m_horizontalSpacing: 0
-  m_verticalSpacing: 0
 --- !u!1 &911946499
 GameObject:
   m_ObjectHideFlags: 0
@@ -34809,25 +34795,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_detectedScrollOption: 3
-  m_selectedWindowMask: 0
+  m_scrollViewRect: {fileID: 0}
+  m_scrollViewContent: {fileID: 0}
+  m_layoutGroup: {fileID: 0}
+  m_contentChildCount: 0
+  m_maskedScrollWindow: {x: 0, y: 0}
+  m_fullContentWindow: {x: 0, y: 0}
   m_scrollSpeed: 60
   m_setScrollSensitivity: 10
   m_instantiatedContent: 0
   m_spawnablePrefab: {fileID: 0}
   m_setChildAmount: 50
   m_childsSpawned: 0
-  m_scrollViewRect: {fileID: 0}
-  m_scrollContentRT: {fileID: 0}
-  m_layoutGroup: {fileID: 0}
-  m_contentChildCount: 0
-  m_maskedScrollWindow: {x: 0, y: 0}
-  m_unmaskedContentRT: {x: 0, y: 0}
-  m_leftPadding: 0
-  m_rightPadding: 0
-  m_topPadding: 0
-  m_bottomPadding: 0
-  m_horizontalSpacing: 0
-  m_verticalSpacing: 0
 --- !u!1 &1839044203
 GameObject:
   m_ObjectHideFlags: 0
@@ -35956,7 +35935,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1894078493
 RectTransform:
   m_ObjectHideFlags: 0
@@ -37863,7 +37842,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2016222911}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
   m_Name: 
@@ -44158,6 +44137,56 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2136304136}
+    - target: {fileID: 1726353091199949180, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /R/ /Z'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1726353091347026594, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /R/ /Z'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1737676753052282862, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: NACH-OBEN
+      objectReference: {fileID: 0}
+    - target: {fileID: 1737676753240810544, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: NACH-OBEN
+      objectReference: {fileID: 0}
+    - target: {fileID: 2146074059936172240, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /NACH-LINKS/ /NACH-RECHTS'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2146074060123063054, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /NACH-LINKS/ /NACH-RECHTS'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2184946544009107967, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /UMSCHALT RECHTS/ /1 (ZEHNERTASTATUR)'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2184946544189149729, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /UMSCHALT RECHTS/ /1 (ZEHNERTASTATUR)'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2594693517211987145, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /NACH-LINKS/ /NACH-RECHTS'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2594693517323282199, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /NACH-LINKS/ /NACH-RECHTS'
+      objectReference: {fileID: 0}
     - target: {fileID: 2996707030087504961, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -44173,6 +44202,16 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
       objectReference: {fileID: 1739567780}
+    - target: {fileID: 3419453489462386833, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /UMSCHALT RECHTS/ /1 (ZEHNERTASTATUR)'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3419453489609042767, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /UMSCHALT RECHTS/ /1 (ZEHNERTASTATUR)'
+      objectReference: {fileID: 0}
     - target: {fileID: 3683833498379111465, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
@@ -44183,6 +44222,16 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
       objectReference: {fileID: 1739567780}
+    - target: {fileID: 4474221741394980516, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /R/ /Z'
+      objectReference: {fileID: 0}
+    - target: {fileID: 4474221741514728826, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_text
+      value: ' /R/ /Z'
+      objectReference: {fileID: 0}
     - target: {fileID: 4852882517651250896, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown

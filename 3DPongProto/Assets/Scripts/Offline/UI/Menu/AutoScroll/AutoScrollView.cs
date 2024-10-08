@@ -26,6 +26,15 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private PlayerInputActions m_playerInputActions;
 
         [SerializeField] private DetectedScrollOption m_detectedScrollOption = DetectedScrollOption.Both;
+        [Header("ScrollView Components")]
+        [SerializeField] private ScrollRect m_scrollViewRect;
+        [SerializeField] private RectTransform m_scrollViewContent;
+        [SerializeField] private LayoutGroup m_layoutGroup;
+        [SerializeField] private int m_contentChildCount;
+        [Space]
+        [SerializeField] private Vector2 m_maskedScrollWindow;      //Fix (masked) Width & Height
+        [SerializeField] private Vector2 m_fullContentWindow;       //Full Width & Height.
+        [Space]
         [SerializeField] private float m_scrollSpeed = 60.0f;
         [SerializeField] private float m_setScrollSensitivity = 10.0f;
 
@@ -34,24 +43,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] private GameObject m_spawnablePrefab = null;
         [SerializeField] private int m_setChildAmount = 50;
         [SerializeField] private bool m_childsSpawned = false;
-        [Space]
-        [SerializeField] private ScrollRect m_scrollViewRect;
-        [SerializeField] private RectTransform m_scrollContentRT;
-        [Space]
-        [SerializeField] private LayoutGroup m_layoutGroup;
-        [SerializeField] private int m_contentChildCount;
-        [Space]
-        [SerializeField] private Vector2 m_maskedScrollWindow;  //Fix (masked) Width & Height
-        [SerializeField] private Vector2 m_unmaskedContentRT;   //Full Width & Height.
-        private Vector2Int m_gridSize;
-        private Vector2 m_firstChildRT;
-        [Space]
-        [SerializeField] private int m_leftPadding;
-        [SerializeField] private int m_rightPadding;
-        [SerializeField] private int m_topPadding;
-        [SerializeField] private int m_bottomPadding;
-        [SerializeField] private float m_horizontalSpacing;
-        [SerializeField] private float m_verticalSpacing;
+
+        private int m_leftPadding;
+        private int m_rightPadding;
+        private int m_topPadding;
+        private int m_bottomPadding;
+        private float m_horizontalSpacing;
+        private float m_verticalSpacing;
 
         private bool m_canAutoScroll = false, m_scrollContentSet;
         private bool m_edgePosition = false;
@@ -60,6 +58,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private bool m_mouseIsInScrollView;
         private Vector2 m_mouseScrollValue, m_mousePosition;
+
+        private Vector2Int m_gridSize;
+        private Vector2 m_firstChildRT;
 
         private GameObject m_lastSelectedGameObject, m_fallbackGameObject;
         private RectTransform m_scrollViewRectTransform;
@@ -70,31 +71,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void Awake()
         {
-            m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
-            m_fallbackGameObject = m_lastSelectedGameObject;
+            GetScrollViewComponents();
+            GetScrollOptionAndLayout(m_scrollViewRect);
+
+            m_scrollContentSet = m_scrollViewRect != null && m_scrollViewContent != null;
+            if (m_scrollContentSet && m_instantiatedContent && !m_childsSpawned && m_spawnablePrefab != null)
+                SpawnContentChildren();
+
+            GetLayoutGroupSettings(m_layoutGroup);     //Gets childCount AFTER Instantiation.
 
             m_contentChildAnchorPos.Clear();
             m_objectNavigation.Clear();
-
-            m_scrollViewRect = GetComponent<ScrollRect>();
-            m_scrollViewRectTransform = m_scrollViewRect.GetComponent<RectTransform>();
-            m_scrollContentRT = m_scrollViewRect.content.GetComponent<RectTransform>();
-
-            m_scrollContentSet = m_scrollViewRect != null && m_scrollViewRect.content != null;
-
-            GetScrollOptionAndLayout(m_scrollViewRect);
-            GetLayoutGroupSettings(m_layoutGroup);
-        }
-
-        private void OnEnable()
-        {
-            if (m_instantiatedContent && !m_childsSpawned && m_spawnablePrefab != null)
-            {
-                for (int i = 0; i < m_setChildAmount; i++)
-                    Instantiate(m_spawnablePrefab, m_scrollContentRT);
-
-                m_childsSpawned = true;
-            }
+            m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
+            m_fallbackGameObject = m_lastSelectedGameObject;
         }
 
         private void Start()
@@ -104,7 +93,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_playerInputActions = InputManager.m_PlayerInputActions;
             m_playerInputActions.UI.Enable();
 
-            if (m_scrollContentRT != null && m_contentChildCount > 0)
+            if (m_scrollViewContent != null && m_contentChildCount > 0)
                 ContentLevelIterations();
         }
 
@@ -119,6 +108,21 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             UpdateCurrentGameObject();
             AutoScrollToNextGameObject();
+        }
+
+        private void GetScrollViewComponents()
+        {
+            m_scrollViewRect = GetComponent<ScrollRect>();
+            m_scrollViewRectTransform = m_scrollViewRect.GetComponent<RectTransform>();
+            m_scrollViewContent = m_scrollViewRect.content.GetComponent<RectTransform>();
+        }
+
+        private void SpawnContentChildren()
+        {
+            for (int i = 0; i < m_setChildAmount; i++)
+                Instantiate(m_spawnablePrefab, m_scrollViewContent);
+
+            m_childsSpawned = true;
         }
 
         /// <summary>
@@ -170,12 +174,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 }
             }
 
-            m_layoutGroup = m_scrollContentRT.GetComponent<LayoutGroup>();
-            m_contentChildCount = m_layoutGroup.transform.childCount;
-            //if '(m_layoutGroup == null)' and you want to add one (WITH detailed memberValues to set it's dimensions):
-            //'AddMissingLayoutGroup()' - 'switch (m_detectedScrollOption)' - 'case DetectedScrollOption.Both/.Vertical/.Horizontal' -
-            //'m_layoutGroup = m_scrollContentRT.AddComponent<GridLayoutGroup/VerticalLayoutGroup/HorizontalLayoutGroup>()' and
-            //'default: break;' - for savety. (It would currently go too far.)
+            m_layoutGroup = m_scrollViewContent.GetComponent<LayoutGroup>();
         }
 
         private void GetLayoutGroupSettings(LayoutGroup _layoutGroup)
@@ -218,11 +217,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             }
 
             m_maskedScrollWindow = new Vector2(m_scrollViewRectTransform.rect.width, m_scrollViewRectTransform.rect.height);
-            m_unmaskedContentRT = new Vector2(m_scrollContentRT.rect.width, m_scrollContentRT.rect.height);   //.x - .width, .y - .height.
+            m_fullContentWindow = new Vector2(m_scrollViewContent.rect.width, m_scrollViewContent.rect.height);   //.x - .width, .y - .height.
+            m_contentChildCount = m_layoutGroup.transform.childCount;
 
             if (m_contentChildCount > 0)
             {
-                var firstChildRect = m_scrollContentRT.GetChild(0).GetComponent<RectTransform>().rect;
+                var firstChildRect = m_scrollViewContent.GetChild(0).GetComponent<RectTransform>().rect;
                 m_firstChildRT = new Vector2(firstChildRect.width, firstChildRect.height);
             }
         }
@@ -234,11 +234,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void ContentLevelIterations()
         {
             //m_contentChildCount = 0;
-            foreach (Transform transform in m_scrollContentRT.transform)
+            foreach (Transform transform in m_scrollViewContent.transform)
             {
                 //m_contentChildCount += 1;
                 m_childRect = transform.GetComponent<RectTransform>();
-                //Very first childLevel of 'm_scrollContentRT.transform'.
+                //Very first childLevel of 'm_scrollViewContent.transform'.
                 ScrollViewObjectsToDicts(transform, m_childRect);
 
                 //Level for X/Y Axis Toggles.
@@ -292,7 +292,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case true:
                 {
                     m_contentChildAnchorPos.Add(toggle.gameObject, _contentElementAnchorPos); //RectTransform with '.anchoredPosition'.
-                    //m_objectNavigation.Add(toggle.gameObject, toggle.navigation);
+
                     switch (m_instantiatedContent)
                     {
                         case true:
@@ -320,7 +320,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case true:
                 {
                     m_contentChildAnchorPos.Add(slider.gameObject, _contentElementAnchorPos); //RectTransform with '.anchoredPosition'.
-                    //m_objectNavigation.Add(slider.gameObject, slider.navigation);
+
                     switch (m_instantiatedContent)
                     {
                         case true:
@@ -348,7 +348,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case true:
                 {
                     m_contentChildAnchorPos.Add(button.gameObject, _contentElementAnchorPos); //RectTransform with '.anchoredPosition'.
-                    //m_objectNavigation.Add(button.gameObject, button.navigation);
+
                     switch (m_instantiatedContent)
                     {
                         case true:
@@ -496,10 +496,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void MoveToNextObject(Selectable _nextObject)
         {
-            if (_nextObject == null)
-                return;
-
-            EventSystem.current.SetSelectedGameObject(_nextObject.gameObject);
+            switch (_nextObject == null)
+            {
+                case true:
+                    return;
+                case false:
+                    EventSystem.current.SetSelectedGameObject(_nextObject.gameObject);
+                    break;
+            }
         }
 
         private void UpdateVerticalScrollPosition(RectTransform _selectedElement)
@@ -564,7 +568,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             //Clamp the normalized Position to ensure, that it stays within the valid bound of (0 ... 1).
             normalizedPosition = Mathf.Clamp01(normalizedPosition);
             //Move the targetScrollRect to the new position with 'SmoothStep'.
-            m_scrollViewRect.horizontalNormalizedPosition = Mathf.SmoothStep(m_scrollViewRect.horizontalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * m_scrollSpeed);
+            //m_scrollViewRect.horizontalNormalizedPosition = Mathf.SmoothStep(m_scrollViewRect.horizontalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * m_scrollSpeed);
 #if UNITY_EDITOR
             //AbsCalc +, while normal Calc -.
             Debug.Log($"OffValue: {offlimitsValue} | HoriBar: {m_scrollViewRect.horizontalNormalizedPosition} | NormalizedPos: {normalizedPosition} | Calc: {offlimitsValue / m_scrollViewRectTransform.rect.width} | AbsCalc: {Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.width}");
@@ -588,7 +592,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         #region UpdateCurrentGameObject
         /// <summary>
-        /// Updates AutoScrolling bool 'm_canAutoScroll', depending on 'm_scrollViewGameObjects' List entries.
+        /// Updates AutoScrolling bool 'm_canAutoScroll', depending on GameObject related Dicts.
         /// </summary>
         /// <param name="_gameObject"></param>
         private void UpdateCurrentGameObject()
@@ -654,12 +658,16 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             {
                 case DetectedScrollOption.Vertical:
                 {
-                    m_startEdgeVer = _lastGOAnchor.y + (m_verticalSpacing * m_contentChildCount - 1) + m_topPadding + m_scrollContentRT.anchoredPosition.y >= _scrollViewRect.anchoredPosition.y;
-                    m_endEdgeVer = -(_lastGOAnchor.y - m_firstChildRT.y - (m_verticalSpacing * m_contentChildCount - 1) - m_bottomPadding + m_scrollContentRT.anchoredPosition.y) >= _scrollViewRect.rect.height;
+                    m_startEdgeVer = _lastGOAnchor.y + (m_verticalSpacing * m_contentChildCount - 1) + m_topPadding + m_scrollViewContent.anchoredPosition.y >= _scrollViewRect.anchoredPosition.y;
+                    m_endEdgeVer = -(_lastGOAnchor.y - m_firstChildRT.y - (m_verticalSpacing * m_contentChildCount - 1) - m_bottomPadding + m_scrollViewContent.anchoredPosition.y) >= _scrollViewRect.rect.height;
                     break;
                 }
                 case DetectedScrollOption.Horizontal:
                 {
+                    //var zeroedContentAnchorPos = -m_scrollViewContent.anchoredPosition.x + m_scrollViewContent.anchoredPosition.x;
+                    //var fullRectStartEdgeHor = _lastGOAnchor.x - m_firstChildRT.x - (m_horizontalSpacing * m_contentChildCount - 1) - m_leftPadding <= _scrollViewRect.anchoredPosition.x;
+                     //var fullRectEndEdgeHor = _lastGOAnchor.x + m_firstChildRT.x + (m_horizontalSpacing * m_contentChildCount - 1) + m_rightPadding >= m_scrollViewContent.rect.width;
+
                     //TODO: m_startEdgeHor;
                     //TODO: m_endEdgeHor;
                     break;
