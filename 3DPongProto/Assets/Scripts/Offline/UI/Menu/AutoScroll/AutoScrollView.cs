@@ -22,17 +22,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             Both
         }
 
-        private enum WindowEdgeCheck
-        {
-            MaskedScrollViewRect,
-            UnmaskedContentRect
-        }
-
         //TODO: Remove '[SerializeField] ' after development, if it's not needed.
         private PlayerInputActions m_playerInputActions;
 
         [SerializeField] private DetectedScrollOption m_detectedScrollOption = DetectedScrollOption.Both;
-        [SerializeField] private WindowEdgeCheck m_selectedWindowMask = WindowEdgeCheck.MaskedScrollViewRect;
         [SerializeField] private float m_scrollSpeed = 60.0f;
         [SerializeField] private float m_setScrollSensitivity = 10.0f;
 
@@ -90,6 +83,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_scrollContentSet = m_scrollViewRect != null && m_scrollViewRect.content != null;
 
             GetScrollOptionAndLayout(m_scrollViewRect);
+            GetLayoutGroupSettings(m_layoutGroup);
         }
 
         private void OnEnable()
@@ -112,8 +106,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             if (m_scrollContentRT != null && m_contentChildCount > 0)
                 ContentLevelIterations();
-
-            GetLayoutGroupSettings(m_layoutGroup);  //Else below 'GetScrollOptionAndLayout(m_scrollViewRect);'.
         }
 
         private void OnDisable()
@@ -378,43 +370,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 }
             }
         }
-
-        private void SetupObjectNavigation(GameObject _childObject)
-        {
-            //GameObject[] contentChildren = _childObject.GetComponentsInChildren<GameObject>();
-
-            if (m_contentChildCount < 2)
-                return;
-
-            Navigation navigation;
-
-            for (int i = 0; i < m_scrollContentRT.childCount; i++)
-            {
-                if (m_scrollContentRT.transform.Find($"{_childObject.name}"))
-                    navigation = _childObject.GetComponent<Navigation>();
-
-                switch (m_detectedScrollOption)
-                {
-                    case DetectedScrollOption.Vertical:
-                    {
-                        //navigation.selectOnUp = GetNavigationVertical(i - 1, m_contentChildCount);
-                        //navigation.selectOnDown = GetNavigationVertical(i + 1, m_contentChildCount);
-                        break;
-                    }
-                    case DetectedScrollOption.Horizontal:
-                    {
-                        break;
-                    }
-                    case DetectedScrollOption.Both:
-                    {
-                        break;
-                    }
-                    case DetectedScrollOption.None:
-                    default:
-                        break;
-                }
-            }
-        }
         #endregion
 
         #region GetMouseValues
@@ -558,7 +513,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             //Get the element offset value depending on the cursor move direction.
             float offlimitsValue = GetScrollOffset(elementPosition, viewRectAnchorPos, contentElementHeight, maskedWindowHeight);
-            
+
             //Get the normalized position, based on the TargetScrollRect's height.
             float normalizedPosition = m_scrollViewRect.verticalNormalizedPosition + (offlimitsValue / m_scrollViewRectTransform.rect.height);
 
@@ -592,7 +547,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             //Get the element offset value depending on the cursor move direction.
             float offlimitsValue = GetScrollOffset(elementPosition, viewRectAnchorPos, contentElementWidth, maskedWindowWidth);
-            
+
             //Get the normalized position, based on the TargetScrollRect's width.
             float normalizedPosition = m_scrollViewRect.horizontalNormalizedPosition/* + (offlimitsValue / m_scrollViewRectTransform.rect.width)*/;
 
@@ -657,22 +612,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         {
                             case true:
                             {
-                                switch (m_selectedWindowMask)
-                                {
-                                    case WindowEdgeCheck.MaskedScrollViewRect:
-                                    {
-                                        m_edgePosition = MaskedScrollRectEdgeCheck(m_scrollViewRectTransform, m_contentChildAnchorPos[m_lastSelectedGameObject].anchoredPosition);
-                                        break;
-                                    }
-                                    case WindowEdgeCheck.UnmaskedContentRect:
-                                    {
-                                        m_edgePosition = UnmaskedContentEdgeCheck(m_scrollContentRT.anchoredPosition, m_contentChildAnchorPos[m_lastSelectedGameObject].anchoredPosition);
-                                        break;
-                                    }
-                                    default:
-                                        m_edgePosition = MaskedScrollRectEdgeCheck(m_scrollViewRectTransform, m_contentChildAnchorPos[m_lastSelectedGameObject].anchoredPosition);
-                                        break;
-                                }
+                                m_edgePosition = MaskedScrollRectEdgeCheck(m_scrollViewRectTransform, m_contentChildAnchorPos[m_lastSelectedGameObject].anchoredPosition);
 #if UNITY_EDITOR
                                 //Debug.Log($"AtEdgePosition: {m_edgePosition}");
 #endif
@@ -727,43 +667,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case DetectedScrollOption.Both:
                 {
                     //TODO: MaskedScrollRectEdgeCheck DetectedScrollOption.Both                    
-                    break;
-                }
-                case DetectedScrollOption.None:
-                default:
-                    break;
-            }
-
-            switch (m_startEdgeVer ^ m_endEdgeVer || m_startEdgeHor ^ m_endEdgeHor)
-            {
-                case true:
-                    return true;
-                case false:
-                    return false;
-            }
-        }
-
-        private bool UnmaskedContentEdgeCheck(Vector2 _contentAnchor, Vector2 _lastGOAnchor)
-        {
-            switch (m_detectedScrollOption)
-            {
-                case DetectedScrollOption.Vertical:
-                {
-                    var zeroedContentRTAnchorY = _contentAnchor.y - _contentAnchor.y; //On entering ScrollView from below, AnchorPos is not 0.
-                    m_startEdgeVer = _lastGOAnchor.y + m_verticalSpacing + m_topPadding >= zeroedContentRTAnchorY;
-                    m_endEdgeVer = _lastGOAnchor.y - m_firstChildRT.y - m_verticalSpacing - m_bottomPadding <= zeroedContentRTAnchorY - m_maskedScrollWindow.y;
-                    break;
-                }
-                case DetectedScrollOption.Horizontal:
-                {
-                    var zeroedContentRTAnchorX = _contentAnchor.x - _contentAnchor.x;  //On entering ScrollView from right, AnchorPos is not 0.
-                    m_startEdgeHor = _lastGOAnchor.x + m_horizontalSpacing + m_leftPadding >= zeroedContentRTAnchorX;
-                    m_endEdgeHor = _lastGOAnchor.x - m_firstChildRT.x - m_horizontalSpacing - m_rightPadding <= zeroedContentRTAnchorX - m_maskedScrollWindow.x;
-                    break;
-                }
-                case DetectedScrollOption.Both:
-                {
-                    //TODO: Confirm MaskedScrollRectEdgeCheck DetectedScrollOption.Both
                     break;
                 }
                 case DetectedScrollOption.None:
