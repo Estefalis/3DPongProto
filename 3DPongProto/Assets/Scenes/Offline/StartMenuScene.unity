@@ -15940,7 +15940,7 @@ GameObject:
   - component: {fileID: 903394535}
   - component: {fileID: 903394534}
   m_Layer: 5
-  m_Name: VertScrollView
+  m_Name: VertScrollViewInt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16052,6 +16052,7 @@ MonoBehaviour:
   m_scrollViewController: {fileID: 903394535}
   m_scrollSpeed: 60
   m_setScrollSensitivity: 10
+  m_transitionDuration: 0.2
 --- !u!114 &903394535
 MonoBehaviour:
   m_ObjectHideFlags: 0

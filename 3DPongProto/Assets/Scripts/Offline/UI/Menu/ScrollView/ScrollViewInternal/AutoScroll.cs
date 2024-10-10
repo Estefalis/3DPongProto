@@ -1,11 +1,13 @@
 using System.Collections;
+using System.Threading.Tasks;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
 {
-    public class AutoScrolling : MonoBehaviour
+    public class AutoScroll : MonoBehaviour
     {
         private PlayerInputActions m_playerInputActions;
         [SerializeField] internal ScrollViewController m_scrollViewController;
@@ -29,7 +31,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
 
         private bool m_selectedObjectInScrollView = false, m_autoScrollingEnabled = false;
         private bool m_mouseIsInScrollView;
-        private Vector2 m_mouseScrollValue, m_mousePosition;
+        private Vector2 m_mouseScrollValue, m_mousePosition, m_lastDirectionInput;
 
         private GameObject m_lastSelectedGameObject, m_fallbackGameObject;
         private IEnumerator iEAutoScrolling;
@@ -38,23 +40,23 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
 
         private void OnEnable()
         {
-            iEAutoScrolling = AutoScrollObjects();
-            ScrollViewController.ScrollPreparationsDone += EnableScrolling;
+            //iEAutoScrolling = AutoScrollObjects();
         }
 
         private void OnDisable()
         {
             m_playerInputActions.UI.Disable();
+            m_playerInputActions.UI.Navigate.performed -= StoreLastNavigationInput;
 
             m_autoScrollingEnabled = false;
-            StopCoroutine(iEAutoScrolling);
-            ScrollViewController.ScrollPreparationsDone -= EnableScrolling;
+            //StopCoroutine(iEAutoScrolling);
         }
 
         private void Start()
         {
             m_playerInputActions = InputManager.m_PlayerInputActions;
             m_playerInputActions.UI.Enable();
+            m_playerInputActions.UI.Navigate.performed += StoreLastNavigationInput;
 
             m_scrollViewController.m_scrollViewRect.scrollSensitivity = m_setScrollSensitivity;
 
@@ -62,6 +64,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
             {
                 m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
                 m_fallbackGameObject = m_lastSelectedGameObject;
+            }
+
+            if (m_scrollViewController.ContentChildrenSet & m_scrollViewController.ObjectNavigationSet)
+            {
+                m_autoScrollingEnabled = true;
+                //StartCoroutine(iEAutoScrolling);
             }
         }
 
@@ -117,7 +125,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         }
         #endregion
 
-        private void UpdateCurrentObject()
+        private async void UpdateCurrentObject()
         {
             switch (m_lastSelectedGameObject == null)
             {
@@ -136,6 +144,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
                 {
                     if (m_lastSelectedGameObject != EventSystem.current.currentSelectedGameObject && EventSystem.current.currentSelectedGameObject != null)
                     {
+                        Task objectTransition = PerformAutoScrolling();
+                        await objectTransition;
+
                         m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
                         m_fallbackGameObject = m_lastSelectedGameObject;
 
@@ -158,19 +169,60 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
             }
         }
 
-        #region AutoScroll Coroutine
-        private void EnableScrolling()
+        private async Task PerformAutoScrolling()
         {
-            Debug.Log("Received command from Controller!");
-            StartCoroutine(iEAutoScrolling);
-            m_autoScrollingEnabled = true;
+            await Task.Delay(0);
+
+            Debug.Log($"Doing Task: LastGO: {m_lastSelectedGameObject.name} | EventSysCurGo: {EventSystem.current.currentSelectedGameObject.name} | LastDirIn: {m_lastDirectionInput}");
         }
 
+        #region AutoScroll Coroutine
         private IEnumerator AutoScrollObjects()     //Equal to 'AutoScrollToNextGameObject' from AutoScrollView
         {
-            //TODO: Implement 'm_selectedObjectInScrollView' in IEnumerator.
+            //TODO: - Only start the process, when 'm_selectedObjectInScrollView = true'
+            //if (m_selectedObjectInScrollView && m_lastSelectedGameObject != EventSystem.current.currentSelectedGameObject)
+            //{
+            //    ResetEnumeratorVariables();
+            //    m_positionFrom = m_scrollViewController.m_contentChildAnchorPos[m_lastSelectedGameObject].anchoredPosition;
+            //    m_positionTo = m_scrollViewController.m_contentChildAnchorPos[EventSystem.current.currentSelectedGameObject].anchoredPosition;
+            //    m_inProgress = true;
+            //    //TODO: Do IEnumerator stuff.
+            //}
+
+            //if (m_inProgress)
+            //{
+            //    switch (m_navigateDirection != Vector2.zero)
+            //    {
+            //        case true:
+            //        {
+            //            yield return m_currentPosition = Vector2.Lerp(m_positionFrom, m_positionTo, m_timeElapsed += Time.deltaTime / m_duration);
+            //            break;
+            //        }
+            //        case false:
+            //            break;
+            //    } 
+            //}
             yield return null;
         }
+
+        private void ResetEnumeratorVariables()
+        {
+            m_currentPosition = Vector2.zero;
+            m_positionFrom = Vector2.zero;
+            m_positionTo = Vector2.zero;
+            m_timeElapsed = 0.0f;
+        }
         #endregion
+
+        private void StoreLastNavigationInput(InputAction.CallbackContext _callbackContext)
+        {
+            if (_callbackContext.ReadValue<Vector2>() != Vector2.zero)
+            {
+                m_lastDirectionInput = _callbackContext.ReadValue<Vector2>();
+#if UNITY_EDITOR
+                //Debug.Log(m_lastDirectionInput);
+#endif
+            }
+        }
     }
 }

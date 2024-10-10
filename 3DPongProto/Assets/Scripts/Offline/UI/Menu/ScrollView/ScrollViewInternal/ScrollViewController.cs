@@ -22,7 +22,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
             Instantiated
         }
 
-        [SerializeField] internal AutoScrolling m_autoScrolling;
+        [SerializeField] internal AutoScroll m_autoScrolling;
 
         [SerializeField] internal ScrollDirection m_scrollDirection = ScrollDirection.Both;
         [SerializeField] internal ContentFillType m_contentFillType = ContentFillType.Filled;
@@ -50,6 +50,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         private float m_verticalSpacing;
 
         private bool m_gotComponents;
+        internal bool ContentChildrenSet { get => m_contentChildrenSet; }
+        internal bool ObjectNavigationSet { get => m_objectNavigationSet; }
         private bool m_contentChildrenSet = false, m_objectNavigationSet = false;  //or 'internal static Action<bool> ContentFilled/Set;'
 
         private Vector2Int m_gridSize;
@@ -60,10 +62,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
 
         internal Dictionary<GameObject, RectTransform> m_contentChildAnchorPos = new Dictionary<GameObject, RectTransform>();
         internal Dictionary<GameObject, Navigation> m_objectNavigation = new Dictionary<GameObject, Navigation>();
-
-        #region Event Calls
-        internal static Action ScrollPreparationsDone;
-        #endregion
 
         private void Awake()
         {
@@ -84,10 +82,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
             ContentLevelIterations();
         }
 
-        private void Start()
+        private void OnDisable()
         {
-            if (m_contentChildrenSet & m_objectNavigationSet)
-                ScrollPreparationsDone?.Invoke();
+            m_contentChildAnchorPos.Clear();
+            m_objectNavigation.Clear();   
         }
 
         #region ScrollView Preparation

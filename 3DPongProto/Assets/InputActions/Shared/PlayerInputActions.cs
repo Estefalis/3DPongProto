@@ -918,7 +918,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             ""actions"": [
                 {
                     ""name"": ""Navigate"",
-                    ""type"": ""Value"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""21bfa009-9e05-4669-a790-562c554e886d"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
