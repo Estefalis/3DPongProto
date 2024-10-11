@@ -319,7 +319,7 @@ PrefabInstance:
     - target: {fileID: 4917459433395199634, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
       propertyPath: m_Name
-      value: ImageButtonTest (9)
+      value: ImageButton9
       objectReference: {fileID: 0}
     - target: {fileID: 4917459433395199635, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
@@ -2831,7 +2831,7 @@ PrefabInstance:
     - target: {fileID: 4917459433395199634, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
       propertyPath: m_Name
-      value: ImageButtonTest (8)
+      value: ImageButton8
       objectReference: {fileID: 0}
     - target: {fileID: 4917459433395199635, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
@@ -7714,7 +7714,7 @@ PrefabInstance:
     - target: {fileID: 4917459433395199634, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
       propertyPath: m_Name
-      value: ImageButtonTest (4)
+      value: ImageButton4
       objectReference: {fileID: 0}
     - target: {fileID: 4917459433395199635, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
@@ -11691,7 +11691,7 @@ PrefabInstance:
     - target: {fileID: 4917459433395199634, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
       propertyPath: m_Name
-      value: ImageButtonTest (2)
+      value: ImageButton2
       objectReference: {fileID: 0}
     - target: {fileID: 4917459433395199635, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
@@ -13565,7 +13565,7 @@ PrefabInstance:
     - target: {fileID: 4917459433395199634, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
       propertyPath: m_Name
-      value: ImageButtonTest (5)
+      value: ImageButton5
       objectReference: {fileID: 0}
     - target: {fileID: 4917459433395199635, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
@@ -15683,7 +15683,7 @@ PrefabInstance:
     - target: {fileID: 4917459433395199634, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
       propertyPath: m_Name
-      value: ImageButtonTest (6)
+      value: ImageButton6
       objectReference: {fileID: 0}
     - target: {fileID: 4917459433395199635, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
@@ -31038,7 +31038,7 @@ PrefabInstance:
     - target: {fileID: 4917459433395199634, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
       propertyPath: m_Name
-      value: ImageButtonTest (3)
+      value: ImageButton3
       objectReference: {fileID: 0}
     - target: {fileID: 4917459433395199635, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
@@ -33536,7 +33536,7 @@ PrefabInstance:
     - target: {fileID: 4917459433395199634, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
       propertyPath: m_Name
-      value: ImageButtonTest (10)
+      value: ImageButton10
       objectReference: {fileID: 0}
     - target: {fileID: 4917459433395199635, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
@@ -36145,7 +36145,7 @@ PrefabInstance:
     - target: {fileID: 4917459433395199634, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
       propertyPath: m_Name
-      value: ImageButtonTest
+      value: ImageButton
       objectReference: {fileID: 0}
     - target: {fileID: 4917459433395199635, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
@@ -38938,7 +38938,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 0
+  m_Spacing: 1
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -39247,7 +39247,7 @@ PrefabInstance:
     - target: {fileID: 4917459433395199634, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
       propertyPath: m_Name
-      value: ImageButtonTest (1)
+      value: ImageButton1
       objectReference: {fileID: 0}
     - target: {fileID: 4917459433395199635, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
@@ -41575,7 +41575,7 @@ PrefabInstance:
     - target: {fileID: 4917459433395199634, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}
       propertyPath: m_Name
-      value: ImageButtonTest (7)
+      value: ImageButton7
       objectReference: {fileID: 0}
     - target: {fileID: 4917459433395199635, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
         type: 3}

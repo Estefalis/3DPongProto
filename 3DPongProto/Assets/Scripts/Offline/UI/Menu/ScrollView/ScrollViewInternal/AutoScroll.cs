@@ -82,8 +82,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
             {
                 case true:
                 {
-                    //Ticks();
-                    //CalculatePosition();
+                    //Progress();
+                    //LerpPosition();
                     break;
                 }
                 case false:
@@ -144,17 +144,15 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
                 {
                     if (m_lastSelectedGameObject != EventSystem.current.currentSelectedGameObject && EventSystem.current.currentSelectedGameObject != null)
                     {
-                        Task objectTransition = PerformAutoScrolling();
-                        await objectTransition;
-
-                        m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
-                        m_fallbackGameObject = m_lastSelectedGameObject;
 
                         switch (m_scrollViewController.m_contentChildAnchorPos.ContainsKey(m_lastSelectedGameObject))
                         {
                             case true:
                             {
                                 m_selectedObjectInScrollView = true;
+                                Task objectTransition = TransitionFromTo(m_lastSelectedGameObject, EventSystem.current.currentSelectedGameObject, m_transitionDuration);
+                                await objectTransition;
+                                objectTransition.Dispose();
                                 break;
                             }
                             case false:
@@ -163,17 +161,41 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
                                 break;
                             }
                         }
+
+                        m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
+                        m_fallbackGameObject = m_lastSelectedGameObject;
                     }
                     break;
                 }
             }
         }
 
-        private async Task PerformAutoScrolling()
+        private async Task TransitionFromTo(GameObject _oldGOFrom, GameObject _newGOTo, float _duration)   //MoveContentObjectYByAmount?
         {
+            ResetVariables();
             await Task.Delay(0);
 
-            Debug.Log($"Doing Task: LastGO: {m_lastSelectedGameObject.name} | EventSysCurGo: {EventSystem.current.currentSelectedGameObject.name} | LastDirIn: {m_lastDirectionInput}");
+            if (m_scrollViewController.m_contentChildAnchorPos.ContainsKey(_newGOTo))
+            {
+                //m_positionFrom = m_scrollViewController.m_scrollViewContent.transform.localPosition;
+                m_positionFrom = m_scrollViewController.m_contentChildAnchorPos[_oldGOFrom].anchoredPosition;
+                m_positionTo = m_scrollViewController.m_contentChildAnchorPos[_newGOTo].anchoredPosition;
+            }
+
+            Debug.Log($"OldGO: {m_lastSelectedGameObject.name} - {m_positionFrom} | NewGO: {EventSystem.current.currentSelectedGameObject.name} - {m_positionTo} | DirInput: {m_lastDirectionInput}");
+        }
+
+        private void ResetVariables()
+        {
+            m_currentPosition = Vector2.zero;
+            m_positionFrom = Vector2.zero;
+            m_positionTo = Vector2.zero;
+
+            m_duration = 0.0f;
+            m_timeElapsed = 0.0f;
+            m_progress = 0.0f;
+
+            m_inProgress = false;
         }
 
         #region AutoScroll Coroutine
@@ -182,7 +204,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
             //TODO: - Only start the process, when 'm_selectedObjectInScrollView = true'
             //if (m_selectedObjectInScrollView && m_lastSelectedGameObject != EventSystem.current.currentSelectedGameObject)
             //{
-            //    ResetEnumeratorVariables();
+            //    ResetVariables();
             //    m_positionFrom = m_scrollViewController.m_contentChildAnchorPos[m_lastSelectedGameObject].anchoredPosition;
             //    m_positionTo = m_scrollViewController.m_contentChildAnchorPos[EventSystem.current.currentSelectedGameObject].anchoredPosition;
             //    m_inProgress = true;
@@ -203,14 +225,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
             //    } 
             //}
             yield return null;
-        }
-
-        private void ResetEnumeratorVariables()
-        {
-            m_currentPosition = Vector2.zero;
-            m_positionFrom = Vector2.zero;
-            m_positionTo = Vector2.zero;
-            m_timeElapsed = 0.0f;
         }
         #endregion
 
