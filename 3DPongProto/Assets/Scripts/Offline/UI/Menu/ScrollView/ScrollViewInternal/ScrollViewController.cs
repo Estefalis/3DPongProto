@@ -42,12 +42,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         [SerializeField] private int m_setChildAmount = 50;
         [SerializeField] internal bool m_childsSpawned = false;
 
-        private int m_leftPadding;
-        private int m_rightPadding;
-        private int m_topPadding;
-        private int m_bottomPadding;
-        private float m_horizontalSpacing;
-        private float m_verticalSpacing;
+        internal int m_leftPadding;
+        internal int m_rightPadding;
+        internal int m_topPadding;
+        internal int m_bottomPadding;
+        internal float m_horizontalSpacing;
+        internal float m_verticalSpacing;
 
         private bool m_gotComponents;
         internal bool ContentChildrenSet { get => m_contentChildrenSet; }
