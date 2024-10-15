@@ -55,7 +55,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         private bool m_contentChildrenSet = false, m_objectNavigationSet = false;  //or 'internal static Action<bool> ContentFilled/Set;'
 
         private Vector2Int m_gridSize;
-        private Vector2 m_firstChildRT;
+        internal Vector2 m_firstChildRT;
 
         internal RectTransform m_scrollViewRectTransform;
         private RectTransform m_childRect;      //Rect for each child of the Content and it's '.anchoredPosition'.

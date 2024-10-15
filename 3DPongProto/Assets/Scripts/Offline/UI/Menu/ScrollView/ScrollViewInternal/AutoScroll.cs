@@ -4,6 +4,7 @@ using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using static ThreeDeePongProto.Offline.UI.Menu.AutoScrolling.ScrollViewController;
 
 namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
 {
@@ -25,13 +26,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         private bool m_inProgress = false;
 
         private Vector2 m_currentPosition;
-        private Vector2 m_positionFrom;
-        private Vector2 m_positionTo;
+        //private Vector2 m_positionFrom;
+        //private Vector2 m_positionTo;
         #endregion
 
         private bool m_selectedObjectInScrollView = false, m_autoScrollingEnabled = false;
         private bool m_mouseIsInScrollView;
-        private Vector2 m_mouseScrollValue, m_mousePosition, m_lastDirectionInput;
+        private Vector2 m_mouseScrollValue, m_mousePosition;
 
         private GameObject m_lastSelectedGameObject, m_fallbackGameObject;
         private IEnumerator iEAutoScrolling;
@@ -46,7 +47,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         private void OnDisable()
         {
             m_playerInputActions.UI.Disable();
-            m_playerInputActions.UI.Navigate.performed -= StoreLastNavigationInput;
 
             m_autoScrollingEnabled = false;
             //StopCoroutine(iEAutoScrolling);
@@ -56,7 +56,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         {
             m_playerInputActions = InputManager.m_PlayerInputActions;
             m_playerInputActions.UI.Enable();
-            m_playerInputActions.UI.Navigate.performed += StoreLastNavigationInput;
 
             m_scrollViewController.m_scrollViewRect.scrollSensitivity = m_setScrollSensitivity;
 
@@ -144,13 +143,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
                 {
                     if (m_lastSelectedGameObject != EventSystem.current.currentSelectedGameObject && EventSystem.current.currentSelectedGameObject != null)
                     {
-
                         switch (m_scrollViewController.m_contentChildAnchorPos.ContainsKey(m_lastSelectedGameObject))
                         {
                             case true:
                             {
                                 m_selectedObjectInScrollView = true;
-                                Task objectTransition = TransitionFromTo(m_lastSelectedGameObject, EventSystem.current.currentSelectedGameObject, m_transitionDuration);
+                                Task objectTransition = TransitionToNewGO(/*m_lastSelectedGameObject, */EventSystem.current.currentSelectedGameObject, m_transitionDuration);
                                 await objectTransition;
                                 objectTransition.Dispose();
                                 break;
@@ -170,32 +168,86 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
             }
         }
 
-        private async Task TransitionFromTo(GameObject _oldGOFrom, GameObject _newGOTo, float _duration)   //MoveContentObjectYByAmount?
+        private async Task TransitionToNewGO(/*GameObject _oldGOFrom, */GameObject _newGOTo, float _duration)   //MoveContentObjectYByAmount?
         {
-            ResetVariables();
+            //ResetVariables();
             await Task.Delay(0);
 
             if (m_scrollViewController.m_contentChildAnchorPos.ContainsKey(_newGOTo))
             {
                 //m_positionFrom = m_scrollViewController.m_scrollViewContent.transform.localPosition;
-                m_positionFrom = m_scrollViewController.m_contentChildAnchorPos[_oldGOFrom].anchoredPosition;
-                m_positionTo = m_scrollViewController.m_contentChildAnchorPos[_newGOTo].anchoredPosition;
+                //m_positionFrom = m_scrollViewController.m_contentChildAnchorPos[_oldGOFrom].anchoredPosition;
+                //m_positionTo = m_scrollViewController.m_contentChildAnchorPos[_newGOTo].anchoredPosition;
+                
+                switch (m_scrollViewController.m_scrollDirection)
+                {
+                    case ScrollDirection.Vertical:
+                    {
+                        ScrollPositionVertical(_newGOTo);
+                        break;
+                    }
+                    case ScrollDirection.Horizontal:
+                    {
+                        ScrollPositionHorizontal(_newGOTo);
+                        break;
+                    }
+                    case ScrollDirection.Both:
+                    {
+                        ScrollPositionVertical(_newGOTo);
+                        ScrollPositionHorizontal(_newGOTo);
+                        break;
+                    }
+                    case ScrollDirection.None:
+                    default:
+                        break;
+                }
             }
 
-            Debug.Log($"OldGO: {m_lastSelectedGameObject.name} - {m_positionFrom} | NewGO: {EventSystem.current.currentSelectedGameObject.name} - {m_positionTo} | DirInput: {m_lastDirectionInput}");
+            //Debug.Log($"OldGO: {m_lastSelectedGameObject.name} - {m_positionFrom} | NewGO: {EventSystem.current.currentSelectedGameObject.name} - {m_positionTo} | DirInput: {m_lastDirectionInput}");
         }
 
         private void ResetVariables()
         {
             m_currentPosition = Vector2.zero;
-            m_positionFrom = Vector2.zero;
-            m_positionTo = Vector2.zero;
+            //m_positionFrom = Vector2.zero;
+            //m_positionTo = Vector2.zero;
 
             m_duration = 0.0f;
             m_timeElapsed = 0.0f;
             m_progress = 0.0f;
 
             m_inProgress = false;
+        }
+
+        private void ScrollPositionVertical(GameObject _newGOTo)
+        {
+            var topWindowBorder = m_scrollViewController.m_scrollViewContent.anchoredPosition.y;   //Always origin of 0.
+            var bottomWindowBorder = m_scrollViewController.m_scrollViewContent.anchoredPosition.y - m_scrollViewController.m_scrollViewRectTransform.rect.height;
+
+            //Distance of moving Content-TopBorder to fix Viewport-TopBorder:
+            var distanceContentTopToViewportTop = m_scrollViewController.m_scrollViewContent.anchoredPosition.y - (m_scrollViewController.m_scrollViewContent.rect.height - m_scrollViewController.m_scrollViewContent.rect.height);
+
+            var relativeElementPosition = m_scrollViewController.m_contentChildAnchorPos[_newGOTo].localPosition.y + distanceContentTopToViewportTop;
+
+            //TODO: Lerping between Elements, depending on their positions to the window borders. (Maybe w/o task delay.)
+            //Element is above top Window Border.
+            if (relativeElementPosition > topWindowBorder - distanceContentTopToViewportTop)
+            {
+                //    m_scrollViewController.m_scrollViewContent.localPosition = new Vector2(m_scrollViewController.m_scrollViewContent.localPosition.x, 
+                //        Mathf.Lerp(m_scrollViewController.m_scrollViewContent.localPosition.y, m_scrollViewController.m_scrollViewContent.localPosition.y + m_scrollViewController.m_firstChildRT.y, 0.2f));
+                //}
+            }
+
+            //Element is below bottom Window Border.
+            if (relativeElementPosition < bottomWindowBorder - distanceContentTopToViewportTop)
+            {
+
+            }
+        }
+
+        private void ScrollPositionHorizontal(GameObject _newGOTo)
+        {
+
         }
 
         #region AutoScroll Coroutine
@@ -227,16 +279,5 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
             yield return null;
         }
         #endregion
-
-        private void StoreLastNavigationInput(InputAction.CallbackContext _callbackContext)
-        {
-            if (_callbackContext.ReadValue<Vector2>() != Vector2.zero)
-            {
-                m_lastDirectionInput = _callbackContext.ReadValue<Vector2>();
-#if UNITY_EDITOR
-                //Debug.Log(m_lastDirectionInput);
-#endif
-            }
-        }
     }
 }

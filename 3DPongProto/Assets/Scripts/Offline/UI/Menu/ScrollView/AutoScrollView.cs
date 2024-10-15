@@ -63,7 +63,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private Vector2 m_firstChildRT;
 
         private GameObject m_lastSelectedGameObject, m_fallbackGameObject;
-        private RectTransform m_scrollViewRectTransform;
+        internal RectTransform m_scrollViewRectTransform;
         private RectTransform m_childRect;      //Rect for each child of the Content and it's '.anchoredPosition'.
 
         private Dictionary<GameObject, RectTransform> m_contentChildAnchorPos = new Dictionary<GameObject, RectTransform>();
