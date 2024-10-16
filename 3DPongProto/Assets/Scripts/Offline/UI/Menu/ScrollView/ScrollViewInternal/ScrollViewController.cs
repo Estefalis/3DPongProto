@@ -4,19 +4,21 @@ using ThreeDeePongProto.Shared.HelperClasses;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
 {
+    internal enum ScrollDirection
+    {
+        None,
+        Vertical,
+        Horizontal,
+        Both
+    }
+
     public class ScrollViewController : MonoBehaviour
     {
-        internal enum ScrollDirection
-        {
-            None,
-            Vertical,
-            Horizontal,
-            Both
-        }
 
-        internal enum ContentFillType
+        private enum ContentFillType
         {
             Filled,
             Instantiated
@@ -25,7 +27,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         [SerializeField] internal AutoScroll m_autoScrolling;
 
         [SerializeField] internal ScrollDirection m_scrollDirection = ScrollDirection.Both;
-        [SerializeField] internal ContentFillType m_contentFillType = ContentFillType.Filled;
+        [SerializeField] private ContentFillType m_contentFillType = ContentFillType.Filled;
 
         [Header("ScrollView Components")]
         [SerializeField] internal ScrollRect m_scrollViewRect;
@@ -74,7 +76,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
             GetLayoutGroupSettings(m_layoutGroup);
 
             m_contentChildAnchorPos.Clear();
-            m_objectNavigation.Clear();            
+            m_objectNavigation.Clear();
         }
 
         private void OnEnable()
@@ -85,7 +87,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         private void OnDisable()
         {
             m_contentChildAnchorPos.Clear();
-            m_objectNavigation.Clear();   
+            m_objectNavigation.Clear();
         }
 
         #region ScrollView Preparation

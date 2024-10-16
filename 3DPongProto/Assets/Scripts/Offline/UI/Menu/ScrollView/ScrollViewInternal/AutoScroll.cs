@@ -4,7 +4,6 @@ using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using static ThreeDeePongProto.Offline.UI.Menu.AutoScrolling.ScrollViewController;
 
 namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
 {
@@ -19,6 +18,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         #region AutoScroll Transition
         [Header("Transition")]
         [SerializeField] private float m_transitionDuration = 0.2f;
+        [SerializeField] private int m_taskDelay = 0;
         private float m_duration = 0.0f;
         private float m_timeElapsed = 0.0f;
         private float m_progress = 0.0f;
@@ -148,7 +148,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
                             case true:
                             {
                                 m_selectedObjectInScrollView = true;
-                                Task objectTransition = TransitionToNewGO(/*m_lastSelectedGameObject, */EventSystem.current.currentSelectedGameObject, m_transitionDuration);
+                                Task objectTransition = TransitionToNewGO(EventSystem.current.currentSelectedGameObject, m_taskDelay);
                                 await objectTransition;
                                 objectTransition.Dispose();
                                 break;
@@ -168,39 +168,41 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
             }
         }
 
-        private async Task TransitionToNewGO(/*GameObject _oldGOFrom, */GameObject _newGOTo, float _duration)   //MoveContentObjectYByAmount?
+        private async Task TransitionToNewGO(GameObject _newGOTo, int _taskDelay)   //MoveContentObjectYByAmount?
         {
             //ResetVariables();
-            await Task.Delay(0);
+            await Task.Delay(_taskDelay);
 
-            if (m_scrollViewController.m_contentChildAnchorPos.ContainsKey(_newGOTo))
+            if (!m_scrollViewController.m_contentChildAnchorPos.ContainsKey(_newGOTo))
             {
-                //m_positionFrom = m_scrollViewController.m_scrollViewContent.transform.localPosition;
-                //m_positionFrom = m_scrollViewController.m_contentChildAnchorPos[_oldGOFrom].anchoredPosition;
-                //m_positionTo = m_scrollViewController.m_contentChildAnchorPos[_newGOTo].anchoredPosition;
-                
-                switch (m_scrollViewController.m_scrollDirection)
+                return;
+            }
+
+            //m_positionFrom = m_scrollViewController.m_scrollViewContent.transform.localPosition;
+            //m_positionFrom = m_scrollViewController.m_contentChildAnchorPos[_oldGOFrom].anchoredPosition;
+            //m_positionTo = m_scrollViewController.m_contentChildAnchorPos[_newGOTo].anchoredPosition;
+
+            switch (m_scrollViewController.m_scrollDirection)
+            {
+                case ScrollDirection.Vertical:
                 {
-                    case ScrollDirection.Vertical:
-                    {
-                        ScrollPositionVertical(_newGOTo);
-                        break;
-                    }
-                    case ScrollDirection.Horizontal:
-                    {
-                        ScrollPositionHorizontal(_newGOTo);
-                        break;
-                    }
-                    case ScrollDirection.Both:
-                    {
-                        ScrollPositionVertical(_newGOTo);
-                        ScrollPositionHorizontal(_newGOTo);
-                        break;
-                    }
-                    case ScrollDirection.None:
-                    default:
-                        break;
+                    ScrollPositionVertical(_newGOTo);
+                    break;
                 }
+                case ScrollDirection.Horizontal:
+                {
+                    ScrollPositionHorizontal(_newGOTo);
+                    break;
+                }
+                case ScrollDirection.Both:
+                {
+                    ScrollPositionVertical(_newGOTo);
+                    ScrollPositionHorizontal(_newGOTo);
+                    break;
+                }
+                case ScrollDirection.None:
+                default:
+                    break;
             }
 
             //Debug.Log($"OldGO: {m_lastSelectedGameObject.name} - {m_positionFrom} | NewGO: {EventSystem.current.currentSelectedGameObject.name} - {m_positionTo} | DirInput: {m_lastDirectionInput}");
@@ -229,19 +231,41 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
 
             var relativeElementPosition = m_scrollViewController.m_contentChildAnchorPos[_newGOTo].localPosition.y + distanceContentTopToViewportTop;
 
-            //TODO: Lerping between Elements, depending on their positions to the window borders. (Maybe w/o task delay.)
-            //Element is above top Window Border.
-            if (relativeElementPosition > topWindowBorder - distanceContentTopToViewportTop)
+            #region newer
+            ////TODO: Lerping between Elements, depending on their positions to the window borders. (Maybe w/o task delay.)
+            ////Element is above top Window Border, minus the topPadding.
+            //if (relativeElementPosition > topWindowBorder - distanceContentTopToViewportTop - m_scrollViewController.m_verticalSpacing)
+            //{
+            //    Vector2 newVertPos = new Vector2(m_scrollViewController.m_scrollViewContent.localPosition.x, m_scrollViewController.m_scrollViewContent.localPosition.y - m_scrollViewController.m_firstChildRT.y - (m_scrollViewController.m_verticalSpacing + (m_scrollViewController.m_verticalSpacing / m_scrollViewController.m_contentChildCount)));
+
+            //    m_scrollViewController.m_scrollViewContent.localPosition = Vector2.Lerp(m_scrollViewController.m_scrollViewContent.localPosition, newVertPos, Time.unscaledDeltaTime / m_transitionDuration);
+            //    //    m_scrollViewController.m_scrollViewContent.localPosition = new Vector2(m_scrollViewController.m_scrollViewContent.localPosition.x, 
+            //    //        Mathf.Lerp(m_scrollViewController.m_scrollViewContent.localPosition.y, m_scrollViewController.m_scrollViewContent.localPosition.y + m_scrollViewController.m_firstChildRT.y, 0.2f));
+            //    //}
+            //}
+
+            ////Element is below bottom Window Border, "minus" the bottomPadding.
+            //if (relativeElementPosition <= bottomWindowBorder - distanceContentTopToViewportTop + m_scrollViewController.m_verticalSpacing)
+            //{
+            //    Vector2 newVertPos = new Vector2(m_scrollViewController.m_scrollViewContent.localPosition.x, m_scrollViewController.m_scrollViewContent.localPosition.y + m_scrollViewController.m_firstChildRT.y + (m_scrollViewController.m_verticalSpacing + (m_scrollViewController.m_verticalSpacing / m_scrollViewController.m_contentChildCount)));
+
+            //    m_scrollViewController.m_scrollViewContent.localPosition = Vector2.Lerp(m_scrollViewController.m_scrollViewContent.localPosition, newVertPos, Time.unscaledDeltaTime / m_transitionDuration);
+            //}
+            #endregion
+            if (relativeElementPosition > topWindowBorder - distanceContentTopToViewportTop - m_scrollViewController.m_verticalSpacing)
             {
+                m_scrollViewController.m_scrollViewContent.localPosition = new Vector2(m_scrollViewController.m_scrollViewContent.localPosition.x,
+                        Mathf.SmoothStep(m_scrollViewController.m_scrollViewContent.localPosition.y, m_scrollViewController.m_scrollViewContent.localPosition.y - m_scrollViewController.m_firstChildRT.y - (m_scrollViewController.m_verticalSpacing + (m_scrollViewController.m_verticalSpacing / m_scrollViewController.m_contentChildCount)), Time.unscaledDeltaTime / m_duration));
+            }
+
+            //Element is below bottom Window Border, "minus" the bottomPadding.
+            if (relativeElementPosition <= bottomWindowBorder - distanceContentTopToViewportTop + m_scrollViewController.m_verticalSpacing)
+            {
+                m_scrollViewController.m_scrollViewContent.localPosition = new Vector2(m_scrollViewController.m_scrollViewContent.localPosition.x,
+                        Mathf.SmoothStep(m_scrollViewController.m_scrollViewContent.localPosition.y, m_scrollViewController.m_scrollViewContent.localPosition.y + m_scrollViewController.m_firstChildRT.y + (m_scrollViewController.m_verticalSpacing + (m_scrollViewController.m_verticalSpacing / m_scrollViewController.m_contentChildCount)), Time.unscaledDeltaTime / m_duration));
                 //    m_scrollViewController.m_scrollViewContent.localPosition = new Vector2(m_scrollViewController.m_scrollViewContent.localPosition.x, 
                 //        Mathf.Lerp(m_scrollViewController.m_scrollViewContent.localPosition.y, m_scrollViewController.m_scrollViewContent.localPosition.y + m_scrollViewController.m_firstChildRT.y, 0.2f));
                 //}
-            }
-
-            //Element is below bottom Window Border.
-            if (relativeElementPosition < bottomWindowBorder - distanceContentTopToViewportTop)
-            {
-
             }
         }
 

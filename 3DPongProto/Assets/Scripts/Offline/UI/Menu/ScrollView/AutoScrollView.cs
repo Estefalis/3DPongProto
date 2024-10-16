@@ -511,7 +511,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             //Move the current scroll rect to correct elementPosition           //min: -57 - max: 0
             float elementPosition = -_selectedElement.anchoredPosition.y - (_selectedElement.rect.height * (1 - _selectedElement.pivot.y) - m_topPadding - m_bottomPadding - m_verticalSpacing);
 
-            float viewRectAnchorPos = m_scrollViewRectTransform.anchoredPosition.y; //0   - fixed ScrollView AnchorPosition
+            float viewRectAnchorPos = m_scrollViewRectTransform.anchoredPosition.y; //0 - fixed ScrollView AnchorPosition
             float contentElementHeight = _selectedElement.rect.height;              //Child Height
             float maskedWindowHeight = m_maskedScrollWindow.y;                      //yVector = height of masked ContentScrollWindow
 
@@ -579,7 +579,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             //Move the current scroll rect to correct elementPosition                   //min: -57 - max: 0
             float elementPosition = -_selectedElement.anchoredPosition.x - (_selectedElement.rect.width * (1 - _selectedElement.pivot.x) - m_leftPadding - m_rightPadding - m_horizontalSpacing);
 
-            float viewRectAnchorPos = -m_scrollViewRectTransform.anchoredPosition.x;    //0   - fixed ScrollView AnchorPosition
+            float viewRectAnchorPos = -m_scrollViewRectTransform.anchoredPosition.x;    //0 - fixed ScrollView AnchorPosition
             float elementWidth = _selectedElement.rect.width;                           //Child Width
             float maskedWindowWidth = m_maskedScrollWindow.x;                           //xVector = width of masked ContentScrollWindow
 
