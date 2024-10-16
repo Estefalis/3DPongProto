@@ -1,9 +1,8 @@
 using System.Collections;
-using System.Threading.Tasks;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
 {
@@ -15,41 +14,18 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         [SerializeField] private float m_scrollSpeed = 60.0f;
         [SerializeField] private float m_setScrollSensitivity = 10.0f;
 
-        #region AutoScroll Transition
-        [Header("Transition")]
-        [SerializeField] private float m_transitionDuration = 0.2f;
-        [SerializeField] private int m_taskDelay = 0;
-        private float m_duration = 0.0f;
-        private float m_timeElapsed = 0.0f;
-        private float m_progress = 0.0f;
-
-        private bool m_inProgress = false;
-
-        private Vector2 m_currentPosition;
-        //private Vector2 m_positionFrom;
-        //private Vector2 m_positionTo;
-        #endregion
-
         private bool m_selectedObjectInScrollView = false, m_autoScrollingEnabled = false;
         private bool m_mouseIsInScrollView;
         private Vector2 m_mouseScrollValue, m_mousePosition;
 
         private GameObject m_lastSelectedGameObject, m_fallbackGameObject;
-        private IEnumerator iEAutoScrolling;
 
         //TODO: StackOption to keep track of current selected Objects and new Object to scroll to?
-
-        private void OnEnable()
-        {
-            //iEAutoScrolling = AutoScrollObjects();
-        }
 
         private void OnDisable()
         {
             m_playerInputActions.UI.Disable();
-
             m_autoScrollingEnabled = false;
-            //StopCoroutine(iEAutoScrolling);
         }
 
         private void Start()
@@ -66,28 +42,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
             }
 
             if (m_scrollViewController.ContentChildrenSet & m_scrollViewController.ObjectNavigationSet)
-            {
                 m_autoScrollingEnabled = true;
-                //StartCoroutine(iEAutoScrolling);
-            }
         }
 
         private void Update()
         {
             GetMouseValues();
             UpdateCurrentObject();
-
-            switch (m_autoScrollingEnabled && m_selectedObjectInScrollView)
-            {
-                case true:
-                {
-                    //Progress();
-                    //LerpPosition();
-                    break;
-                }
-                case false:
-                    break;
-            }
+            AutoScrollToNextGameObject();
         }
 
         #region GetMouseValues
@@ -124,7 +86,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         }
         #endregion
 
-        private async void UpdateCurrentObject()
+        private void UpdateCurrentObject()
         {
             switch (m_lastSelectedGameObject == null)
             {
@@ -143,14 +105,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
                 {
                     if (m_lastSelectedGameObject != EventSystem.current.currentSelectedGameObject && EventSystem.current.currentSelectedGameObject != null)
                     {
-                        switch (m_scrollViewController.m_contentChildAnchorPos.ContainsKey(m_lastSelectedGameObject))
+                        switch (m_scrollViewController.m_contentChildAnchorPos.ContainsKey(EventSystem.current.currentSelectedGameObject))
                         {
                             case true:
                             {
+                                //TODO: edgePosition & scrollSensitivity again?
                                 m_selectedObjectInScrollView = true;
-                                Task objectTransition = TransitionToNewGO(EventSystem.current.currentSelectedGameObject, m_taskDelay);
-                                await objectTransition;
-                                objectTransition.Dispose();
                                 break;
                             }
                             case false:
@@ -168,139 +128,219 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
             }
         }
 
-        private async Task TransitionToNewGO(GameObject _newGOTo, int _taskDelay)   //MoveContentObjectYByAmount?
+        #region AutoScroll to next GameObject
+        /// <summary>
+        /// AutoScrolls to the next element, if the ScrollView and it's content are not null and the next element is part of the ScrollView.
+        /// </summary>
+        /// <param name="_newGOTo"></param>
+        /// <param name="_taskDelay"></param>
+        private void AutoScrollToNextGameObject()
         {
-            //ResetVariables();
-            await Task.Delay(_taskDelay);
-
-            if (!m_scrollViewController.m_contentChildAnchorPos.ContainsKey(_newGOTo))
+            if (!m_autoScrollingEnabled || !m_selectedObjectInScrollView/* || Cursor.lockState == CursorLockMode.None*/)
             {
+                if (m_scrollViewController.m_scrollViewRect.scrollSensitivity != m_setScrollSensitivity)
+                    m_scrollViewController.m_scrollViewRect.scrollSensitivity = m_setScrollSensitivity;
                 return;
             }
 
-            //m_positionFrom = m_scrollViewController.m_scrollViewContent.transform.localPosition;
-            //m_positionFrom = m_scrollViewController.m_contentChildAnchorPos[_oldGOFrom].anchoredPosition;
-            //m_positionTo = m_scrollViewController.m_contentChildAnchorPos[_newGOTo].anchoredPosition;
+            //TODO: Implement Gamepad Mouse.
+            ScrollSelectNextGameObject();
 
             switch (m_scrollViewController.m_scrollDirection)
             {
                 case ScrollDirection.Vertical:
-                {
-                    ScrollPositionVertical(_newGOTo);
+                    UpdateVerticalScrollPosition(m_scrollViewController.m_contentChildAnchorPos[m_lastSelectedGameObject]);
                     break;
-                }
                 case ScrollDirection.Horizontal:
-                {
-                    ScrollPositionHorizontal(_newGOTo);
+                    UpdateHorizontalScrollPosition(m_scrollViewController.m_contentChildAnchorPos[m_lastSelectedGameObject]);
                     break;
-                }
                 case ScrollDirection.Both:
-                {
-                    ScrollPositionVertical(_newGOTo);
-                    ScrollPositionHorizontal(_newGOTo);
+                    UpdateVerticalScrollPosition(m_scrollViewController.m_contentChildAnchorPos[m_lastSelectedGameObject]);
+                    UpdateHorizontalScrollPosition(m_scrollViewController.m_contentChildAnchorPos[m_lastSelectedGameObject]);
                     break;
-                }
                 case ScrollDirection.None:
                 default:
                     break;
             }
-
-            //Debug.Log($"OldGO: {m_lastSelectedGameObject.name} - {m_positionFrom} | NewGO: {EventSystem.current.currentSelectedGameObject.name} - {m_positionTo} | DirInput: {m_lastDirectionInput}");
         }
 
-        private void ResetVariables()
+        private void ScrollSelectNextGameObject()
         {
-            m_currentPosition = Vector2.zero;
-            //m_positionFrom = Vector2.zero;
-            //m_positionTo = Vector2.zero;
+            if (m_mouseScrollValue.y != 0 && m_mouseIsInScrollView)
+            {
+                switch (m_scrollViewController.m_scrollDirection)
+                {
+                    case ScrollDirection.Vertical:
+                    {
+                        switch (m_mouseScrollValue.y > 0)
+                        {
+                            case true:
+                            {
+                                MoveToNextObject(m_scrollViewController.m_objectNavigation[m_lastSelectedGameObject].selectOnUp);
+                                break;
+                            }
+                            case false:
+                            {
+                                MoveToNextObject(m_scrollViewController.m_objectNavigation[m_lastSelectedGameObject].selectOnDown);
+                                break;
+                            }
+                        }
 
-            m_duration = 0.0f;
-            m_timeElapsed = 0.0f;
-            m_progress = 0.0f;
+                        break;
+                    }
+                    case ScrollDirection.Horizontal:
+                    {
+                        switch (m_mouseScrollValue.y > 0)
+                        {
+                            case true:
+                            {
+                                MoveToNextObject(m_scrollViewController.m_objectNavigation[m_lastSelectedGameObject].selectOnLeft);
+                                break;
+                            }
+                            case false:
+                            {
+                                MoveToNextObject(m_scrollViewController.m_objectNavigation[m_lastSelectedGameObject].selectOnRight);
+                                break;
+                            }
+                        }
 
-            m_inProgress = false;
+                        break;
+                    }
+                    case ScrollDirection.Both:
+                    {
+                        //TODO: MoveToNextObject on DetectedScrollOption.Both.
+                        break;
+                    }
+                    case ScrollDirection.None:
+                    default:
+                        break;
+                }
+            }
         }
 
-        private void ScrollPositionVertical(GameObject _newGOTo)
+        private void MoveToNextObject(Selectable _nextObject)
         {
-            var topWindowBorder = m_scrollViewController.m_scrollViewContent.anchoredPosition.y;   //Always origin of 0.
-            var bottomWindowBorder = m_scrollViewController.m_scrollViewContent.anchoredPosition.y - m_scrollViewController.m_scrollViewRectTransform.rect.height;
+            switch (_nextObject == null)
+            {
+                case true:
+                    return;
+                case false:
+                    EventSystem.current.SetSelectedGameObject(_nextObject.gameObject);
+                    break;
+            }
+        }
 
-            //Distance of moving Content-TopBorder to fix Viewport-TopBorder:
-            var distanceContentTopToViewportTop = m_scrollViewController.m_scrollViewContent.anchoredPosition.y - (m_scrollViewController.m_scrollViewContent.rect.height - m_scrollViewController.m_scrollViewContent.rect.height);
+        private void UpdateVerticalScrollPosition(RectTransform _selectedElement)
+        {
+            //Move the current scroll rect to correct elementPosition           //min: -57 - max: 0
+            float elementPosition = -_selectedElement.anchoredPosition.y - (_selectedElement.rect.height * (1 - _selectedElement.pivot.y) - m_scrollViewController.m_topPadding - m_scrollViewController.m_bottomPadding - m_scrollViewController.m_verticalSpacing);
 
-            var relativeElementPosition = m_scrollViewController.m_contentChildAnchorPos[_newGOTo].localPosition.y + distanceContentTopToViewportTop;
+            float elementHeight = _selectedElement.rect.height;                                 //Child Height
+            float maskedWindowHeight = m_scrollViewController.m_maskedScrollWindow.y;           //yVector = height of masked ContentScrollWindow
+            float viewRectAnchorPos = m_scrollViewController.m_scrollViewRectTransform.anchoredPosition.y; //0 - fixed ScrollView AnchorPosition
 
-            #region newer
-            ////TODO: Lerping between Elements, depending on their positions to the window borders. (Maybe w/o task delay.)
-            ////Element is above top Window Border, minus the topPadding.
-            //if (relativeElementPosition > topWindowBorder - distanceContentTopToViewportTop - m_scrollViewController.m_verticalSpacing)
-            //{
-            //    Vector2 newVertPos = new Vector2(m_scrollViewController.m_scrollViewContent.localPosition.x, m_scrollViewController.m_scrollViewContent.localPosition.y - m_scrollViewController.m_firstChildRT.y - (m_scrollViewController.m_verticalSpacing + (m_scrollViewController.m_verticalSpacing / m_scrollViewController.m_contentChildCount)));
+            //Get the element offset value depending on the cursor move direction.
+            float offlimitsValue = GetScrollOffset(elementPosition, elementHeight, maskedWindowHeight, viewRectAnchorPos);
 
-            //    m_scrollViewController.m_scrollViewContent.localPosition = Vector2.Lerp(m_scrollViewController.m_scrollViewContent.localPosition, newVertPos, Time.unscaledDeltaTime / m_transitionDuration);
-            //    //    m_scrollViewController.m_scrollViewContent.localPosition = new Vector2(m_scrollViewController.m_scrollViewContent.localPosition.x, 
-            //    //        Mathf.Lerp(m_scrollViewController.m_scrollViewContent.localPosition.y, m_scrollViewController.m_scrollViewContent.localPosition.y + m_scrollViewController.m_firstChildRT.y, 0.2f));
-            //    //}
-            //}
+            //Get the normalized position, based on the TargetScrollRect's height.
+            float normalizedPosition = m_scrollViewController.m_scrollViewRect.verticalNormalizedPosition + (offlimitsValue / m_scrollViewController.m_scrollViewRectTransform.rect.height);
 
-            ////Element is below bottom Window Border, "minus" the bottomPadding.
-            //if (relativeElementPosition <= bottomWindowBorder - distanceContentTopToViewportTop + m_scrollViewController.m_verticalSpacing)
-            //{
-            //    Vector2 newVertPos = new Vector2(m_scrollViewController.m_scrollViewContent.localPosition.x, m_scrollViewController.m_scrollViewContent.localPosition.y + m_scrollViewController.m_firstChildRT.y + (m_scrollViewController.m_verticalSpacing + (m_scrollViewController.m_verticalSpacing / m_scrollViewController.m_contentChildCount)));
+            if (offlimitsValue < 0)
+            {
+                normalizedPosition -= Mathf.Abs(offlimitsValue) / m_scrollViewController.m_scrollViewRectTransform.rect.height;    //Scroll down.
+            }
+            else if (offlimitsValue > 0)
+            {
+                normalizedPosition += offlimitsValue / m_scrollViewController.m_scrollViewRectTransform.rect.height;               //Scroll up.
+            }
 
-            //    m_scrollViewController.m_scrollViewContent.localPosition = Vector2.Lerp(m_scrollViewController.m_scrollViewContent.localPosition, newVertPos, Time.unscaledDeltaTime / m_transitionDuration);
-            //}
+            //Clamp the normalized Position to ensure, that it stays within the valid bound of (0 ... 1).
+            normalizedPosition = Mathf.Clamp01(normalizedPosition);
+            //Move the targetScrollRect to the new position with 'SmoothStep'.
+            m_scrollViewController.m_scrollViewRect.verticalNormalizedPosition = Mathf.SmoothStep(m_scrollViewController.m_scrollViewRect.verticalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * m_scrollSpeed);
+#if UNITY_EDITOR
+            //Debug.Log($"OffValue: {offlimitsValue} | NormalizedPos: {normalizedPosition} | Calc: {offlimitsValue / m_scrollViewController.m_scrollViewRectTransform.rect.height} | AbsCalc: {Mathf.Abs(offlimitsValue) / m_scrollViewController.m_scrollViewRectTransform.rect.height}");
+#endif
+        }
+
+        private void UpdateHorizontalScrollPosition(RectTransform _selectedElement)
+        {
+            #region Own
+            //            //Move the current scroll rect to correct elementPosition           //min: -57 - max: 0
+            //            float elementPosition = _selectedElement.anchoredPosition.x - (_selectedElement.rect.width * (1 - _selectedElement.pivot.x) - m_leftPadding - m_rightPadding - m_horizontalSpacing);
+
+            //            float viewRectAnchorPos = m_scrollViewRectTransform.anchoredPosition.x; //0   - fixed ScrollView AnchorPosition.
+            //            float contentElementWidth = _selectedElement.rect.width;                //Child Width.
+            //            float maskedWindowWidth = m_maskedScrollWindow.x;                       //xVector = width of masked ContentScrollWindow.
+
+            //            //Get the element offset value depending on the cursor move direction.
+            //            float offlimitsValue = GetScrollOffset(elementPosition, viewRectAnchorPos, contentElementWidth, maskedWindowWidth);
+
+            //            //Get the normalized position, based on the TargetScrollRect's width.
+            //            float normalizedPosition = m_scrollViewRect.horizontalNormalizedPosition/* + (offlimitsValue / m_scrollViewRectTransform.rect.width)*/;
+
+            //            if (offlimitsValue > 0)
+            //            {
+            //                normalizedPosition -= offlimitsValue / m_scrollViewRectTransform.rect.width;               //Scroll Left.
+            //            }
+
+            //            if (offlimitsValue < 0)
+            //            {
+            //                normalizedPosition += Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.width;    //Scroll right.
+            //            }
+
+            //            //Clamp the normalized Position to ensure, that it stays within the valid bound of (0 ... 1).
+            //            normalizedPosition = Mathf.Clamp01(normalizedPosition);
+            //            //Move the targetScrollRect to the new position with 'SmoothStep'.
+            //            m_scrollViewRect.horizontalNormalizedPosition = Mathf.SmoothStep(m_scrollViewRect.horizontalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * m_scrollSpeed);
+            //#if UNITY_EDITOR
+            //            //AbsCalc +, while normal Calc -.
+            //            Debug.Log($"OffValue: {offlimitsValue} | HoriBar: {m_scrollViewRect.horizontalNormalizedPosition} | NormalizedPos: {normalizedPosition} | Calc: {offlimitsValue / m_scrollViewRectTransform.rect.width} | AbsCalc: {Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.width}");
+            //#endif
             #endregion
-            if (relativeElementPosition > topWindowBorder - distanceContentTopToViewportTop - m_scrollViewController.m_verticalSpacing)
+
+            //Move the current scroll rect to correct elementPosition                   //min: -57 - max: 0
+            float elementPosition = -_selectedElement.anchoredPosition.x - (_selectedElement.rect.width * (1 - _selectedElement.pivot.x) - m_scrollViewController.m_leftPadding - m_scrollViewController.m_rightPadding - m_scrollViewController.m_horizontalSpacing);
+
+            float viewRectAnchorPos = -m_scrollViewController.m_scrollViewRectTransform.anchoredPosition.x;    //0 - fixed ScrollView AnchorPosition
+            float elementWidth = _selectedElement.rect.width;                           //Child Width
+            float maskedWindowWidth = m_scrollViewController.m_maskedScrollWindow.x;                           //xVector = width of masked ContentScrollWindow
+
+            //Get the element offset value depending on the cursor move direction.
+            float offlimitsValue = -GetScrollOffset(elementPosition, elementWidth, maskedWindowWidth, viewRectAnchorPos);
+
+            //Get the normalized position, based on the TargetScrollRect's height.
+            float normalizedPosition = m_scrollViewController.m_scrollViewRect.horizontalNormalizedPosition + (offlimitsValue / m_scrollViewController.m_scrollViewRectTransform.rect.width);
+
+            if (offlimitsValue > 0)
             {
-                m_scrollViewController.m_scrollViewContent.localPosition = new Vector2(m_scrollViewController.m_scrollViewContent.localPosition.x,
-                        Mathf.SmoothStep(m_scrollViewController.m_scrollViewContent.localPosition.y, m_scrollViewController.m_scrollViewContent.localPosition.y - m_scrollViewController.m_firstChildRT.y - (m_scrollViewController.m_verticalSpacing + (m_scrollViewController.m_verticalSpacing / m_scrollViewController.m_contentChildCount)), Time.unscaledDeltaTime / m_duration));
+                normalizedPosition += offlimitsValue / m_scrollViewController.m_scrollViewRectTransform.rect.width;               //Scroll ?.
             }
 
-            //Element is below bottom Window Border, "minus" the bottomPadding.
-            if (relativeElementPosition <= bottomWindowBorder - distanceContentTopToViewportTop + m_scrollViewController.m_verticalSpacing)
+            if (offlimitsValue < 0)
             {
-                m_scrollViewController.m_scrollViewContent.localPosition = new Vector2(m_scrollViewController.m_scrollViewContent.localPosition.x,
-                        Mathf.SmoothStep(m_scrollViewController.m_scrollViewContent.localPosition.y, m_scrollViewController.m_scrollViewContent.localPosition.y + m_scrollViewController.m_firstChildRT.y + (m_scrollViewController.m_verticalSpacing + (m_scrollViewController.m_verticalSpacing / m_scrollViewController.m_contentChildCount)), Time.unscaledDeltaTime / m_duration));
-                //    m_scrollViewController.m_scrollViewContent.localPosition = new Vector2(m_scrollViewController.m_scrollViewContent.localPosition.x, 
-                //        Mathf.Lerp(m_scrollViewController.m_scrollViewContent.localPosition.y, m_scrollViewController.m_scrollViewContent.localPosition.y + m_scrollViewController.m_firstChildRT.y, 0.2f));
-                //}
+                normalizedPosition -= Mathf.Abs(offlimitsValue) / m_scrollViewController.m_scrollViewRectTransform.rect.width;    //Scroll ?.
             }
+
+            //Clamp the normalized Position to ensure, that it stays within the valid bound of (0 ... 1).
+            normalizedPosition = Mathf.Clamp01(normalizedPosition);
+
+            //Move the targetScrollRect to the new position with 'SmoothStep'.
+            m_scrollViewController.m_scrollViewRect.horizontalNormalizedPosition = Mathf.SmoothStep(m_scrollViewController.m_scrollViewRect.horizontalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * m_scrollSpeed);
         }
 
-        private void ScrollPositionHorizontal(GameObject _newGOTo)
+        private float GetScrollOffset(float _elementPosition, float _elementWidthOrHeight, float _windowWidthOrHeight, float _viewRectAnchorPos)
         {
+            if (_elementPosition < _viewRectAnchorPos + (_elementWidthOrHeight / 2))
+            {
+                return _viewRectAnchorPos + _windowWidthOrHeight - (_elementPosition - _elementWidthOrHeight);
+            }
+            else if (_elementPosition + _elementWidthOrHeight > _viewRectAnchorPos + _windowWidthOrHeight)
+            {
+                return _viewRectAnchorPos + _windowWidthOrHeight - (_elementPosition + _elementWidthOrHeight);
+            }
 
-        }
-
-        #region AutoScroll Coroutine
-        private IEnumerator AutoScrollObjects()     //Equal to 'AutoScrollToNextGameObject' from AutoScrollView
-        {
-            //TODO: - Only start the process, when 'm_selectedObjectInScrollView = true'
-            //if (m_selectedObjectInScrollView && m_lastSelectedGameObject != EventSystem.current.currentSelectedGameObject)
-            //{
-            //    ResetVariables();
-            //    m_positionFrom = m_scrollViewController.m_contentChildAnchorPos[m_lastSelectedGameObject].anchoredPosition;
-            //    m_positionTo = m_scrollViewController.m_contentChildAnchorPos[EventSystem.current.currentSelectedGameObject].anchoredPosition;
-            //    m_inProgress = true;
-            //    //TODO: Do IEnumerator stuff.
-            //}
-
-            //if (m_inProgress)
-            //{
-            //    switch (m_navigateDirection != Vector2.zero)
-            //    {
-            //        case true:
-            //        {
-            //            yield return m_currentPosition = Vector2.Lerp(m_positionFrom, m_positionTo, m_timeElapsed += Time.deltaTime / m_duration);
-            //            break;
-            //        }
-            //        case false:
-            //            break;
-            //    } 
-            //}
-            yield return null;
+            return 0;
         }
         #endregion
     }

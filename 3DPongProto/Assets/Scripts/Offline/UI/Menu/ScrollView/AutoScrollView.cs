@@ -511,24 +511,24 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             //Move the current scroll rect to correct elementPosition           //min: -57 - max: 0
             float elementPosition = -_selectedElement.anchoredPosition.y - (_selectedElement.rect.height * (1 - _selectedElement.pivot.y) - m_topPadding - m_bottomPadding - m_verticalSpacing);
 
-            float viewRectAnchorPos = m_scrollViewRectTransform.anchoredPosition.y; //0 - fixed ScrollView AnchorPosition
             float contentElementHeight = _selectedElement.rect.height;              //Child Height
             float maskedWindowHeight = m_maskedScrollWindow.y;                      //yVector = height of masked ContentScrollWindow
+            float viewRectAnchorPos = m_scrollViewRectTransform.anchoredPosition.y; //0 - fixed ScrollView AnchorPosition
 
             //Get the element offset value depending on the cursor move direction.
-            float offlimitsValue = GetScrollOffset(elementPosition, viewRectAnchorPos, contentElementHeight, maskedWindowHeight);
+            float offlimitsValue = GetScrollOffset(elementPosition, contentElementHeight, maskedWindowHeight, viewRectAnchorPos);
 
             //Get the normalized position, based on the TargetScrollRect's height.
             float normalizedPosition = m_scrollViewRect.verticalNormalizedPosition + (offlimitsValue / m_scrollViewRectTransform.rect.height);
 
-            if (offlimitsValue > 0)
-            {
-                normalizedPosition += offlimitsValue / m_scrollViewRectTransform.rect.height;               //Scroll up.
-            }
-
             if (offlimitsValue < 0)
             {
                 normalizedPosition -= Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.height;    //Scroll down.
+            }
+
+            if (offlimitsValue > 0)
+            {
+                normalizedPosition += offlimitsValue / m_scrollViewRectTransform.rect.height;               //Scroll up.
             }
 
             //Clamp the normalized Position to ensure, that it stays within the valid bound of (0 ... 1).
@@ -579,24 +579,24 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             //Move the current scroll rect to correct elementPosition                   //min: -57 - max: 0
             float elementPosition = -_selectedElement.anchoredPosition.x - (_selectedElement.rect.width * (1 - _selectedElement.pivot.x) - m_leftPadding - m_rightPadding - m_horizontalSpacing);
 
-            float viewRectAnchorPos = -m_scrollViewRectTransform.anchoredPosition.x;    //0 - fixed ScrollView AnchorPosition
             float elementWidth = _selectedElement.rect.width;                           //Child Width
             float maskedWindowWidth = m_maskedScrollWindow.x;                           //xVector = width of masked ContentScrollWindow
+            float viewRectAnchorPos = -m_scrollViewRectTransform.anchoredPosition.x;    //0 - fixed ScrollView AnchorPosition
 
             //Get the element offset value depending on the cursor move direction.
-            float offlimitsValue = -GetScrollOffset(elementPosition, viewRectAnchorPos, elementWidth, maskedWindowWidth);
+            float offlimitsValue = -GetScrollOffset(elementPosition, elementWidth, maskedWindowWidth, viewRectAnchorPos);
 
             //Get the normalized position, based on the TargetScrollRect's height.
             float normalizedPosition = m_scrollViewRect.horizontalNormalizedPosition + (offlimitsValue / m_scrollViewRectTransform.rect.width);
 
-            if (offlimitsValue > 0)
-            {
-                normalizedPosition += offlimitsValue / m_scrollViewRectTransform.rect.width;               //Scroll ?.
-            }
-
             if (offlimitsValue < 0)
             {
                 normalizedPosition -= Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.width;    //Scroll ?.
+            }
+
+            if (offlimitsValue > 0)
+            {
+                normalizedPosition += offlimitsValue / m_scrollViewRectTransform.rect.width;               //Scroll ?.
             }
 
             //Clamp the normalized Position to ensure, that it stays within the valid bound of (0 ... 1).
@@ -606,7 +606,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_scrollViewRect.horizontalNormalizedPosition = Mathf.SmoothStep(m_scrollViewRect.horizontalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * m_scrollSpeed);
         }
 
-        private float GetScrollOffset(float _elementPosition, float _viewRectAnchorPos, float _elementWidthOrHeight, float _windowWidthOrHeight)
+        private float GetScrollOffset(float _elementPosition, float _elementWidthOrHeight, float _windowWidthOrHeight, float _viewRectAnchorPos)
         {
             if (_elementPosition < _viewRectAnchorPos + (_elementWidthOrHeight / 2))
             {
@@ -644,6 +644,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     if (m_lastSelectedGameObject != EventSystem.current.currentSelectedGameObject && EventSystem.current.currentSelectedGameObject != null)
                     {
                         m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
+                        m_fallbackGameObject = m_lastSelectedGameObject;
 
                         #region Dict switch
                         switch (m_contentChildAnchorPos.ContainsKey(m_lastSelectedGameObject))
