@@ -16070,7 +16070,7 @@ MonoBehaviour:
   m_scrollViewController: {fileID: 903394535}
   m_scrollSpeed: 51.5
   m_setScrollSensitivity: 10
-  m_transitionDuration: 0.2
+  m_transitionDuration: 0.05
 --- !u!114 &903394535
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,12 +12,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         private PlayerInputActions m_playerInputActions;
         [SerializeField] internal ScrollViewController m_scrollViewController;
 
-        [SerializeField] private float m_scrollSpeed = 60.0f;
         [SerializeField] private float m_setScrollSensitivity = 10.0f;
 
         #region AutoScroll Transition
         [Header("Transition")]
-        [SerializeField] private float m_transitionDuration = 0.2f;
+        [SerializeField] private float m_transitionDuration = 0.05f;
         private float m_duration = 0.0f;
         private float m_timeElapsed = 0.0f;
         private float m_progress = 0.0f;
@@ -34,8 +33,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         private Vector2 m_mouseScrollValue, m_mousePosition;
 
         private GameObject m_lastSelectedGameObject, m_fallbackGameObject;
-
-        //TODO: StackOption to keep track of current selected Objects and new Object to scroll to?
 
         private void OnDisable()
         {
@@ -64,6 +61,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         {
             GetMouseValues();
             UpdateCurrentObject();
+
+            AutoScrollToNextGameObject(m_lastSelectedGameObject);
+
+            if (m_scrollViewController.m_contentChildAnchorPos.ContainsKey(m_lastSelectedGameObject))
+                ScrollSelectNextGameObject();       //'AutoScrollToNextGameObject();' above SETS the object to compare in the dict!
+            //TODO: Implement Gamepad Mouse.
 
             TransitionProgress();
             CalculatePosition();
@@ -128,12 +131,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
                         m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
                         m_fallbackGameObject = m_lastSelectedGameObject;
 
-                        switch (m_scrollViewController.m_contentChildAnchorPos.ContainsKey(EventSystem.current.currentSelectedGameObject))
+                        switch (m_scrollViewController.m_contentChildAnchorPos.ContainsKey(m_lastSelectedGameObject))
                         {
                             case true:
-                            {
-                                //TODO: edgePosition & scrollSensitivity again
-                                AutoScrollToNextGameObject(m_lastSelectedGameObject);
+                            {                            
                                 m_selectedObjectInScrollView = true;
                                 break;
                             }
@@ -155,7 +156,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         /// </summary>
         /// <param name="_newGOTo"></param>
         /// <param name="_taskDelay"></param>
-        private void AutoScrollToNextGameObject(GameObject _nextGameObject)
+        private void AutoScrollToNextGameObject(GameObject _gameObject)
         {
             if (!m_autoScrollingEnabled || !m_selectedObjectInScrollView/* || Cursor.lockState == CursorLockMode.None*/)
             {
@@ -166,57 +167,39 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
 
             float scrollViewTopBorderLocalY = GetLocalTopBorder(m_scrollViewController.m_scrollViewRectTransform.gameObject);
             float scrollViewBottomBorderLocalY = GetLocalBottomBorder(m_scrollViewController.m_scrollViewRectTransform.gameObject);
-            
+
             //top
-            float nextGOTopBorderY = GetRelativeTopBorder(_nextGameObject);
-            float nextGOTopOffsetY = nextGOTopBorderY + scrollViewTopBorderLocalY;
-            
+            float gameObjectTopBorderY = GetRelativeTopBorder(_gameObject);
+            float gameObjectTopOffsetY = gameObjectTopBorderY + scrollViewTopBorderLocalY;
+
             //bottom
-            float nextGOBottomBorderY = GetRelativeBottomBorder(_nextGameObject);
-            float nextGOBottomOffsetY = nextGOBottomBorderY - scrollViewBottomBorderLocalY;
+            float gameObjectBottomBorderY = GetRelativeBottomBorder(_gameObject);
+            float gameObjectBottomOffsetY = gameObjectBottomBorderY - scrollViewBottomBorderLocalY;
 
             //topDifference
-            float topDifference = nextGOTopOffsetY - scrollViewTopBorderLocalY;
+            float topDifference = gameObjectTopOffsetY - scrollViewTopBorderLocalY;
             if (topDifference > 0)
             {
-                MoveContentObjectYByAmount((topDifference) + m_scrollViewController.m_topPadding);
+                MoveContentObjectYByAmount(topDifference + m_scrollViewController.m_topPadding);
             }
 
             //bottomDifference
-            float bottomDifference = nextGOBottomOffsetY - scrollViewBottomBorderLocalY;
+            float bottomDifference = gameObjectBottomOffsetY - scrollViewBottomBorderLocalY;
 
             if (bottomDifference < 0)
             {
-                MoveContentObjectYByAmount((bottomDifference) - m_scrollViewController.m_bottomPadding);
+                MoveContentObjectYByAmount(bottomDifference - m_scrollViewController.m_bottomPadding);
             }
 
-            ////TODO: Implement Gamepad Mouse.
-            //ScrollSelectNextGameObject();
-
-            //switch (m_scrollViewController.m_scrollDirection)
-            //{
-            //    case ScrollDirection.Vertical:
-            //        UpdateVerticalScrollPosition(m_scrollViewController.m_contentChildAnchorPos[m_lastSelectedGameObject]);
-            //        break;
-            //    case ScrollDirection.Horizontal:
-            //        UpdateHorizontalScrollPosition(m_scrollViewController.m_contentChildAnchorPos[m_lastSelectedGameObject]);
-            //        break;
-            //    case ScrollDirection.Both:
-            //        UpdateVerticalScrollPosition(m_scrollViewController.m_contentChildAnchorPos[m_lastSelectedGameObject]);
-            //        UpdateHorizontalScrollPosition(m_scrollViewController.m_contentChildAnchorPos[m_lastSelectedGameObject]);
-            //        break;
-            //    case ScrollDirection.None:
-            //    default:
-            //        break;
-            //}
+            //Debug.Log($"BottomDiff: {bottomDifference} = GOBottomOffY: {gameObjectBottomOffsetY} - GOBottomBorderY: {gameObjectBottomBorderY}");
         }
 
         private float GetRelativeTopBorder(GameObject _object)
         {
-            float contentY = m_scrollViewController.m_scrollViewContent.transform.localPosition.y;
+            float contentY = m_scrollViewController.m_scrollViewContent.anchoredPosition.y;
             float elementTopBorderLocalY = GetLocalTopBorder(_object);
             float elementTopBorderRelativeY = elementTopBorderLocalY + contentY;
-            
+
             return elementTopBorderRelativeY;
         }
 
@@ -229,10 +212,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
 
         private float GetRelativeBottomBorder(GameObject _object)
         {
-            float contentY = m_scrollViewController.m_scrollViewContent.transform.localPosition.y;
+            float contentY = m_scrollViewController.m_scrollViewContent.anchoredPosition.y;
             float elementBottomBorderLocalY = GetLocalBottomBorder(_object);
             float elementBottomBorderRelativeY = elementBottomBorderLocalY + contentY;
-
             return elementBottomBorderRelativeY;
         }
 
@@ -240,189 +222,77 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         {
             Vector2 rectSize = m_scrollViewController.m_scrollViewRectTransform.rect.size;
             Vector2 localPos = _object.transform.localPosition;
-            localPos.y -= rectSize.y;
+
+            localPos.y -= rectSize.y - m_scrollViewController.m_firstChildRT.y;
 
             return localPos.y;
         }
 
-        //        private void ScrollSelectNextGameObject()
-        //        {
-        //            if (m_mouseScrollValue.y != 0 && m_mouseIsInScrollView)
-        //            {
-        //                switch (m_scrollViewController.m_scrollDirection)
-        //                {
-        //                    case ScrollDirection.Vertical:
-        //                    {
-        //                        switch (m_mouseScrollValue.y > 0)
-        //                        {
-        //                            case true:
-        //                            {
-        //                                MoveToNextObject(m_scrollViewController.m_objectNavigation[m_lastSelectedGameObject].selectOnUp);
-        //                                break;
-        //                            }
-        //                            case false:
-        //                            {
-        //                                MoveToNextObject(m_scrollViewController.m_objectNavigation[m_lastSelectedGameObject].selectOnDown);
-        //                                break;
-        //                            }
-        //                        }
+        private void ScrollSelectNextGameObject()
+        {
+            if (m_mouseScrollValue.y != 0 && m_mouseIsInScrollView)
+            {
+                switch (m_scrollViewController.m_scrollDirection)
+                {
+                    case ScrollDirection.Vertical:
+                    {
+                        switch (m_mouseScrollValue.y > 0)
+                        {
+                            case true:
+                            {
+                                MoveToNextObject(m_scrollViewController.m_objectNavigation[m_lastSelectedGameObject].selectOnUp);
+                                break;
+                            }
+                            case false:
+                            {
+                                MoveToNextObject(m_scrollViewController.m_objectNavigation[m_lastSelectedGameObject].selectOnDown);
+                                break;
+                            }
+                        }
 
-        //                        break;
-        //                    }
-        //                    case ScrollDirection.Horizontal:
-        //                    {
-        //                        switch (m_mouseScrollValue.y > 0)
-        //                        {
-        //                            case true:
-        //                            {
-        //                                MoveToNextObject(m_scrollViewController.m_objectNavigation[m_lastSelectedGameObject].selectOnLeft);
-        //                                break;
-        //                            }
-        //                            case false:
-        //                            {
-        //                                MoveToNextObject(m_scrollViewController.m_objectNavigation[m_lastSelectedGameObject].selectOnRight);
-        //                                break;
-        //                            }
-        //                        }
+                        break;
+                    }
+                    case ScrollDirection.Horizontal:
+                    {
+                        switch (m_mouseScrollValue.y > 0)
+                        {
+                            case true:
+                            {
+                                MoveToNextObject(m_scrollViewController.m_objectNavigation[m_lastSelectedGameObject].selectOnLeft);
+                                break;
+                            }
+                            case false:
+                            {
+                                MoveToNextObject(m_scrollViewController.m_objectNavigation[m_lastSelectedGameObject].selectOnRight);
+                                break;
+                            }
+                        }
 
-        //                        break;
-        //                    }
-        //                    case ScrollDirection.Both:
-        //                    {
-        //                        //TODO: MoveToNextObject on DetectedScrollOption.Both.
-        //                        break;
-        //                    }
-        //                    case ScrollDirection.None:
-        //                    default:
-        //                        break;
-        //                }
-        //            }
-        //        }
+                        break;
+                    }
+                    case ScrollDirection.Both:
+                    {
+                        //TODO: MoveToNextObject on DetectedScrollOption.Both.
+                        break;
+                    }
+                    case ScrollDirection.None:
+                    default:
+                        break;
+                }
+            }
+        }
 
-        //        private void MoveToNextObject(Selectable _nextObject)
-        //        {
-        //            switch (_nextObject == null)
-        //            {
-        //                case true:
-        //                    return;
-        //                case false:
-        //                    EventSystem.current.SetSelectedGameObject(_nextObject.gameObject);
-        //                    break;
-        //            }
-        //        }
-
-        //        private void UpdateVerticalScrollPosition(RectTransform _selectedElement)
-        //        {
-        //            //Move the current scroll rect to correct elementPosition           //min: -57 - max: 0
-        //            float elementPosition = -_selectedElement.anchoredPosition.y - (_selectedElement.rect.height * (1 - _selectedElement.pivot.y) - m_scrollViewController.m_topPadding - m_scrollViewController.m_bottomPadding - m_scrollViewController.m_verticalSpacing);
-
-        //            float elementHeight = _selectedElement.rect.height;                                 //Child Height
-        //            float maskedWindowHeight = m_scrollViewController.m_maskedScrollWindow.y;           //yVector = height of masked ContentScrollWindow
-        //            float viewRectAnchorPos = m_scrollViewController.m_scrollViewRectTransform.anchoredPosition.y; //0 - fixed ScrollView AnchorPosition
-
-        //            //Get the element offset value depending on the cursor move direction.
-        //            float offlimitsValue = GetScrollOffset(elementPosition, elementHeight, maskedWindowHeight, viewRectAnchorPos);
-
-        //            //Get the normalized position, based on the TargetScrollRect's height.
-        //            float normalizedPosition = m_scrollViewController.m_scrollViewRect.verticalNormalizedPosition + (offlimitsValue / m_scrollViewController.m_scrollViewRectTransform.rect.height);
-
-        //            if (offlimitsValue < 0)
-        //            {
-        //                normalizedPosition -= Mathf.Abs(offlimitsValue) / m_scrollViewController.m_scrollViewRectTransform.rect.height;    //Scroll down.
-        //            }
-        //            else if (offlimitsValue > 0)
-        //            {
-        //                normalizedPosition += offlimitsValue / m_scrollViewController.m_scrollViewRectTransform.rect.height;               //Scroll up.
-        //            }
-
-        //            //Clamp the normalized Position to ensure, that it stays within the valid bound of (0 ... 1).
-        //            normalizedPosition = Mathf.Clamp01(normalizedPosition);
-        //            //Move the targetScrollRect to the new position with 'SmoothStep'.
-        //            m_scrollViewController.m_scrollViewRect.verticalNormalizedPosition = Mathf.SmoothStep(m_scrollViewController.m_scrollViewRect.verticalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * m_scrollSpeed);
-        //#if UNITY_EDITOR
-        //            //Debug.Log($"OffValue: {offlimitsValue} | NormalizedPos: {normalizedPosition} | Calc: {offlimitsValue / m_scrollViewController.m_scrollViewRectTransform.rect.height} | AbsCalc: {Mathf.Abs(offlimitsValue) / m_scrollViewController.m_scrollViewRectTransform.rect.height}");
-        //#endif
-        //        }
-
-        //        private void UpdateHorizontalScrollPosition(RectTransform _selectedElement)
-        //        {
-        //            #region Own
-        //            //            //Move the current scroll rect to correct elementPosition           //min: -57 - max: 0
-        //            //            float elementPosition = _selectedElement.anchoredPosition.x - (_selectedElement.rect.width * (1 - _selectedElement.pivot.x) - m_leftPadding - m_rightPadding - m_horizontalSpacing);
-
-        //            //            float viewRectAnchorPos = m_scrollViewRectTransform.anchoredPosition.x; //0   - fixed ScrollView AnchorPosition.
-        //            //            float contentElementWidth = _selectedElement.rect.width;                //Child Width.
-        //            //            float maskedWindowWidth = m_maskedScrollWindow.x;                       //xVector = width of masked ContentScrollWindow.
-
-        //            //            //Get the element offset value depending on the cursor move direction.
-        //            //            float offlimitsValue = GetScrollOffset(elementPosition, viewRectAnchorPos, contentElementWidth, maskedWindowWidth);
-
-        //            //            //Get the normalized position, based on the TargetScrollRect's width.
-        //            //            float normalizedPosition = m_scrollViewRect.horizontalNormalizedPosition/* + (offlimitsValue / m_scrollViewRectTransform.rect.width)*/;
-
-        //            //            if (offlimitsValue > 0)
-        //            //            {
-        //            //                normalizedPosition -= offlimitsValue / m_scrollViewRectTransform.rect.width;               //Scroll Left.
-        //            //            }
-
-        //            //            if (offlimitsValue < 0)
-        //            //            {
-        //            //                normalizedPosition += Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.width;    //Scroll right.
-        //            //            }
-
-        //            //            //Clamp the normalized Position to ensure, that it stays within the valid bound of (0 ... 1).
-        //            //            normalizedPosition = Mathf.Clamp01(normalizedPosition);
-        //            //            //Move the targetScrollRect to the new position with 'SmoothStep'.
-        //            //            m_scrollViewRect.horizontalNormalizedPosition = Mathf.SmoothStep(m_scrollViewRect.horizontalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * m_scrollSpeed);
-        //            //#if UNITY_EDITOR
-        //            //            //AbsCalc +, while normal Calc -.
-        //            //            Debug.Log($"OffValue: {offlimitsValue} | HoriBar: {m_scrollViewRect.horizontalNormalizedPosition} | NormalizedPos: {normalizedPosition} | Calc: {offlimitsValue / m_scrollViewRectTransform.rect.width} | AbsCalc: {Mathf.Abs(offlimitsValue) / m_scrollViewRectTransform.rect.width}");
-        //            //#endif
-        //            #endregion
-
-        //            //Move the current scroll rect to correct elementPosition                   //min: -57 - max: 0
-        //            float elementPosition = -_selectedElement.anchoredPosition.x - (_selectedElement.rect.width * (1 - _selectedElement.pivot.x) - m_scrollViewController.m_leftPadding - m_scrollViewController.m_rightPadding - m_scrollViewController.m_horizontalSpacing);
-
-        //            float viewRectAnchorPos = -m_scrollViewController.m_scrollViewRectTransform.anchoredPosition.x;    //0 - fixed ScrollView AnchorPosition
-        //            float elementWidth = _selectedElement.rect.width;                           //Child Width
-        //            float maskedWindowWidth = m_scrollViewController.m_maskedScrollWindow.x;                           //xVector = width of masked ContentScrollWindow
-
-        //            //Get the element offset value depending on the cursor move direction.
-        //            float offlimitsValue = -GetScrollOffset(elementPosition, elementWidth, maskedWindowWidth, viewRectAnchorPos);
-
-        //            //Get the normalized position, based on the TargetScrollRect's height.
-        //            float normalizedPosition = m_scrollViewController.m_scrollViewRect.horizontalNormalizedPosition + (offlimitsValue / m_scrollViewController.m_scrollViewRectTransform.rect.width);
-
-        //            if (offlimitsValue > 0)
-        //            {
-        //                normalizedPosition += offlimitsValue / m_scrollViewController.m_scrollViewRectTransform.rect.width;               //Scroll ?.
-        //            }
-
-        //            if (offlimitsValue < 0)
-        //            {
-        //                normalizedPosition -= Mathf.Abs(offlimitsValue) / m_scrollViewController.m_scrollViewRectTransform.rect.width;    //Scroll ?.
-        //            }
-
-        //            //Clamp the normalized Position to ensure, that it stays within the valid bound of (0 ... 1).
-        //            normalizedPosition = Mathf.Clamp01(normalizedPosition);
-
-        //            //Move the targetScrollRect to the new position with 'SmoothStep'.
-        //            m_scrollViewController.m_scrollViewRect.horizontalNormalizedPosition = Mathf.SmoothStep(m_scrollViewController.m_scrollViewRect.horizontalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * m_scrollSpeed);
-        //        }
-
-        //        private float GetScrollOffset(float _elementPosition, float _elementWidthOrHeight, float _windowWidthOrHeight, float _viewRectAnchorPos)
-        //        {
-        //            if (_elementPosition < _viewRectAnchorPos + (_elementWidthOrHeight / 2))
-        //            {
-        //                return _viewRectAnchorPos + _windowWidthOrHeight - (_elementPosition - _elementWidthOrHeight);
-        //            }
-        //            else if (_elementPosition + _elementWidthOrHeight > _viewRectAnchorPos + _windowWidthOrHeight)
-        //            {
-        //                return _viewRectAnchorPos + _windowWidthOrHeight - (_elementPosition + _elementWidthOrHeight);
-        //            }
-
-        //            return 0;
-        //        }
+        private void MoveToNextObject(Selectable _nextObject)
+        {
+            switch (_nextObject == null)
+            {
+                case true:
+                    return;
+                case false:
+                    EventSystem.current.SetSelectedGameObject(_nextObject.gameObject);
+                    break;
+            }
+        }
         #endregion
 
         private void TransitionProgress()

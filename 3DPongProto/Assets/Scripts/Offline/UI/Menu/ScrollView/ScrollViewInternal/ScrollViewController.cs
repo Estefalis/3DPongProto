@@ -59,7 +59,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         private Vector2Int m_gridSize;
         internal Vector2 m_firstChildRT;
 
-        internal RectTransform m_scrollViewRectTransform/*, m_viewportRectTransform*/;
+        internal RectTransform m_scrollViewRectTransform;
         private RectTransform m_childRect;      //Rect for each child of the Content and it's '.anchoredPosition'.
 
         internal Dictionary<GameObject, RectTransform> m_contentChildAnchorPos = new Dictionary<GameObject, RectTransform>();
@@ -95,7 +95,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         {
             m_scrollViewRect = GetComponent<ScrollRect>();
             m_scrollViewRectTransform = m_scrollViewRect.GetComponent<RectTransform>();
-            //m_viewportRectTransform = m_scrollViewRect.viewport.GetComponent<RectTransform>();
             m_scrollViewContent = m_scrollViewRect.content.GetComponent<RectTransform>();
         }
 
