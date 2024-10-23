@@ -623,14 +623,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         #region UpdateCurrentGameObject
         /// <summary>
-        /// Updates AutoScrolling bool 'm_selectedObjectInScrollView', depending on GameObject related Dicts.
+        /// Updates bool 'm_selectedObjectInScrollView', depending on GameObject related Dicts.
         /// </summary>
         /// <param name="_gameObject"></param>
         private void UpdateCurrentGameObject()
         {
             switch (m_lastSelectedGameObject == null)
             {
-                case true:  //Dicts don't allow null on keys. And just 'return;' disables AutoScrolling.
+                case true:  //Dicts don't allow null on keys. And just 'return;' disables the autoscrolling.
                     if (EventSystem.current.currentSelectedGameObject != null)
                     {
                         m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;

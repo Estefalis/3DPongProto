@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 namespace ThreeDeePongProto.Shared.Player
 {
-    public class PlayerCameraController : MonoBehaviour
+    internal class PlayerCameraController : MonoBehaviour
 	{
         private PlayerInputActions m_cameraInputActions;
         [SerializeField] internal PlayerController m_playerController;

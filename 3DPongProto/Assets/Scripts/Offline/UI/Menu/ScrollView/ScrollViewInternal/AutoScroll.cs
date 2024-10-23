@@ -3,9 +3,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
+//Credit to: Unity ScrollView Auto Scroll from 'Des CSK'. https://www.youtube.com/watch?v=l2_rHUffkJw 
+namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 {
-    public class AutoScroll : MonoBehaviour
+    internal class AutoScroll : MonoBehaviour
     {
         private PlayerInputActions m_playerInputActions;
         [SerializeField] internal ScrollViewController m_scrollViewController;
@@ -112,7 +113,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         {
             switch (m_lastSelectedGameObject == null)
             {
-                case true:  //Dicts don't allow null on keys. And just 'return;' disables AutoScrolling.
+                case true:  //Dicts don't allow null on keys. And just 'return;' disables the autoscrolling.
                 {
                     if (EventSystem.current.currentSelectedGameObject != null)
                     {

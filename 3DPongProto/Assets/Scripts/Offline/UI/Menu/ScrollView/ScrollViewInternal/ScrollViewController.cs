@@ -3,8 +3,7 @@ using ThreeDeePongProto.Shared.HelperClasses;
 using UnityEngine;
 using UnityEngine.UI;
 
-
-namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
+namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 {
     internal enum ScrollDirection
     {
@@ -37,11 +36,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         [SerializeField] internal Vector2 m_maskedScrollWindow;      //Fix (masked) Width & Height
         [SerializeField] internal Vector2 m_fullContentWindow;       //Full Width & Height.
 
-        [Header("Prefab")]
-        [SerializeField] internal bool m_instantiatedContent = false;
+        [Header("Prefab Instantiation")]
         [SerializeField] private GameObject m_spawnablePrefab = null;
         [SerializeField] private int m_setChildAmount = 50;
-        [SerializeField] internal bool m_childsSpawned = false;
+        internal bool m_childsSpawned = false;
 
         internal int m_leftPadding;
         internal int m_rightPadding;
@@ -66,21 +64,22 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
 
         private void Awake()
         {
+            m_contentChildAnchorPos.Clear();
+            m_objectNavigation.Clear();
+
             GetScrollViewComponents();
             GetScrollOptionAndLayout(m_scrollViewRect);
 
             m_gotComponents = m_scrollViewRect != null && m_scrollViewContent != null;
 
-            SetContentFillType();
             GetLayoutGroupSettings(m_layoutGroup);
-
-            m_contentChildAnchorPos.Clear();
-            m_objectNavigation.Clear();
+            SetContentFillType();
         }
 
         private void OnEnable()
         {
-            ContentLevelIterations();
+            if (m_contentFillType == ContentFillType.Filled)
+                ContentLevelIterations();
         }
 
         private void OnDisable()
@@ -149,46 +148,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
             m_layoutGroup = m_scrollViewContent.GetComponent<LayoutGroup>();
         }
 
-        private void SetContentFillType()
-        {
-            if (m_gotComponents)
-            {
-                switch (m_instantiatedContent && !m_childsSpawned && m_spawnablePrefab != null)
-                {
-                    case true:
-                    {
-                        SpawnContentChildren();
-                        m_contentFillType = ContentFillType.Instantiated;
-                        break;
-                    }
-                    case false:
-                    {
-                        m_contentFillType = ContentFillType.Filled;
-                        break;
-                    }
-                }
-
-                m_contentChildCount = m_scrollViewContent.childCount;
-                switch (m_contentChildCount > 0)
-                {
-                    case true:
-                        m_contentChildrenSet = true;
-                        break;
-                    case false:
-                        m_contentChildrenSet = false;
-                        break;
-                }
-            }
-        }
-
-        private void SpawnContentChildren()
-        {
-            for (int i = 0; i < m_setChildAmount; i++)
-                Instantiate(m_spawnablePrefab, m_scrollViewContent);
-
-            m_childsSpawned = true;
-        }
-
         private void GetLayoutGroupSettings(LayoutGroup _layoutGroup)
         {
             switch (_layoutGroup)
@@ -231,11 +190,39 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
             m_maskedScrollWindow = new Vector2(m_scrollViewRectTransform.rect.width, m_scrollViewRectTransform.rect.height);
             m_fullContentWindow = new Vector2(m_scrollViewContent.rect.width, m_scrollViewContent.rect.height);   //.x - .width, .y - .height.
 
-            if (m_contentChildCount > 0)
+            m_contentChildCount = m_scrollViewContent.childCount;
+        }
+
+        private void SetContentFillType()
+        {
+            if (m_gotComponents)
             {
-                var firstChildRect = m_scrollViewContent.GetChild(0).GetComponent<RectTransform>().rect;
-                m_firstChildRT = new Vector2(firstChildRect.width, firstChildRect.height);
+                switch (m_contentChildCount == 0 && !m_childsSpawned && m_spawnablePrefab != null)
+                {
+                    case true:
+                    {
+                        m_contentFillType = ContentFillType.Instantiated;
+                        SpawnContentChildren();
+                        break;
+                    }
+                    case false:
+                    {
+                        m_contentFillType = ContentFillType.Filled;
+                        break;
+                    }
+                }
             }
+        }
+
+        private void SpawnContentChildren()
+        {
+            for (int i = 0; i < m_setChildAmount; i++)
+                Instantiate(m_spawnablePrefab, m_scrollViewContent);
+
+            m_childsSpawned = true;
+            m_contentChildCount = m_scrollViewContent.childCount;
+
+            ContentLevelIterations();
         }
 
         /// <summary>
@@ -243,6 +230,21 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
         /// </summary>
         private void ContentLevelIterations()
         {
+            switch (m_contentChildCount > 0)
+            {
+                case true:
+                {
+                    var firstChildRect = m_scrollViewContent.GetChild(0).GetComponent<RectTransform>().rect;
+                    m_firstChildRT = new Vector2(firstChildRect.width, firstChildRect.height);
+
+                    m_contentChildrenSet = true;
+                    break;
+                }
+                case false:
+                    m_contentChildrenSet = false;
+                    return;
+            }
+
             foreach (Transform transform in m_scrollViewContent.transform)
             {
                 m_childRect = transform.GetComponent<RectTransform>();
@@ -307,8 +309,34 @@ namespace ThreeDeePongProto.Offline.UI.Menu.AutoScrolling
                 case ContentFillType.Instantiated:
                 {
                     //TODO: Set Up/Down/Left/Right - ObjectNavigation for Hor/Ver/Grid Layouts. Including loop between index 0 - lastChild index.
+                    SetInstaniateNavigation();
                     break;
                 }
+                default:
+                    break;
+            }
+        }
+
+        private void SetInstaniateNavigation()
+        {
+            switch (m_scrollDirection)
+            {
+                case ScrollDirection.Vertical:
+                {
+                    //TODO: Get Navigation Objects for each ContentChild above and below, depending on it's Index.
+                    break;
+                }
+                case ScrollDirection.Horizontal:
+                {
+                    //TODO: Get Navigation Objects for each ContentChild to the left and right, depending on it's Index.
+                    break;
+                }
+                case ScrollDirection.Both:
+                {
+                    //TODO: Get Naviation to all 4 MoveDirections, depending on GridConstraints.
+                    break;
+                }
+                case ScrollDirection.None:
                 default:
                     break;
             }

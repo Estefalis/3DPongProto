@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 namespace ThreeDeePongProto.Shared.Player
 {
-    public class PlayerInputReceiver : MonoBehaviour
+    internal class PlayerInputReceiver : MonoBehaviour
     {
         private PlayerInputActions m_playerInputActions;
         [SerializeField] internal PlayerController m_playerController;
