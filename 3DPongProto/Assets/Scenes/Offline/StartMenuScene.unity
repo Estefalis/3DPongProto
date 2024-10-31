@@ -926,6 +926,7 @@ MonoBehaviour:
   m_autoScrolling: {fileID: 32744710}
   m_scrollDirection: 3
   m_contentFillType: 0
+  m_navigationLevel: 1
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
@@ -934,6 +935,7 @@ MonoBehaviour:
   m_fullContentWindow: {x: 0, y: 0}
   m_spawnablePrefab: {fileID: 0}
   m_setChildAmount: 50
+  m_loopNavigation: 0
 --- !u!114 &49199792 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7313720336969877070, guid: 5d99c73a2379ef643b2423fb48c9661c,
@@ -16117,6 +16119,7 @@ MonoBehaviour:
   m_autoScrolling: {fileID: 903394534}
   m_scrollDirection: 3
   m_contentFillType: 0
+  m_navigationLevel: 1
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
@@ -16126,6 +16129,7 @@ MonoBehaviour:
   m_spawnablePrefab: {fileID: 4917459433395199634, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
     type: 3}
   m_setChildAmount: 50
+  m_loopNavigation: 0
 --- !u!1 &911946499
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ThreeDeePongProto.Shared.HelperClasses;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         Vertical,
         Horizontal,
         Both
+    }
+
+    internal enum NavigationLevel
+    {
+        None,
+        Simple,
+        Nested
     }
 
     public class ScrollViewController : MonoBehaviour
@@ -26,6 +34,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
         [SerializeField] internal ScrollDirection m_scrollDirection = ScrollDirection.Both;
         [SerializeField] private ContentFillType m_contentFillType = ContentFillType.Filled;
+        [SerializeField] private NavigationLevel m_navigationLevel = NavigationLevel.Simple;
 
         [Header("ScrollView Components")]
         [SerializeField] internal ScrollRect m_scrollViewRect;
@@ -39,7 +48,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         [Header("Prefab Instantiation")]
         [SerializeField] private GameObject m_spawnablePrefab = null;
         [SerializeField] private int m_setChildAmount = 50;
+        [SerializeField] private bool m_loopNavigation = false;
+        private Selectable m_simpleSelectable;
+        private bool m_setNavigationStarted = false;
         internal bool m_childsSpawned = false;
+        List<GameObject> m_dictKeys;
 
         internal int m_leftPadding;
         internal int m_rightPadding;
@@ -78,8 +91,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
         private void OnEnable()
         {
-            if (m_contentFillType == ContentFillType.Filled)
-                ContentLevelIterations();
+            ContentLevelIterations();
         }
 
         private void OnDisable()
@@ -216,13 +228,56 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
         private void SpawnContentChildren()
         {
+            int navObjectCount = 0;
+
+            bool containsToggle = m_spawnablePrefab.TryGetComponent(out Toggle toggle);
+            bool containsSlider = m_spawnablePrefab.TryGetComponent(out Slider slider);
+            bool containsButton = m_spawnablePrefab.TryGetComponent(out Button button);
+
+            foreach (Transform child in m_spawnablePrefab.transform)
+            {
+                if (containsToggle)
+                    navObjectCount++;
+                if (containsSlider)
+                    navObjectCount++;
+                if (containsButton)
+                    navObjectCount++;
+            }
+
+            switch (navObjectCount)    //determine how many NavigationObjects the contentChild Prefab has on each one.
+            {
+                case 0:
+                    m_navigationLevel = NavigationLevel.None;
+                    return;
+                case 1:
+                {
+                    m_navigationLevel = NavigationLevel.Simple;
+
+                    if (containsToggle)
+                        m_simpleSelectable = toggle;
+                    if (containsSlider)
+                        m_simpleSelectable = slider;
+                    if (containsButton)
+                        m_simpleSelectable = button;
+
+                    break;
+                }
+                default:
+                {
+                    m_navigationLevel = NavigationLevel.Nested;
+                    break;
+                }
+            }
+
             for (int i = 0; i < m_setChildAmount; i++)
+            {
+                m_spawnablePrefab.name = $"TestButton Nr. {i}";
+                m_spawnablePrefab.GetComponentInChildren<TextMeshProUGUI>().text = $"TestButton Nr. {i}";
                 Instantiate(m_spawnablePrefab, m_scrollViewContent);
+            }
 
             m_childsSpawned = true;
             m_contentChildCount = m_scrollViewContent.childCount;
-
-            ContentLevelIterations();
         }
 
         /// <summary>
@@ -309,7 +364,25 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                 case ContentFillType.Instantiated:
                 {
                     //TODO: Set Up/Down/Left/Right - ObjectNavigation for Hor/Ver/Grid Layouts. Including loop between index 0 - lastChild index.
-                    SetInstaniateNavigation();
+                    if (containsToggle)
+                        m_contentChildAnchorPos.Add(toggle.gameObject, _contentElementAnchorPos);
+
+                    if (containsSlider)
+                        m_contentChildAnchorPos.Add(slider.gameObject, _contentElementAnchorPos);
+
+                    if (containsButton)
+                        m_contentChildAnchorPos.Add(button.gameObject, _contentElementAnchorPos);
+
+                    if (m_scrollViewContent.childCount < 2)
+                        return;
+
+                    //Looping until this point!
+
+                    if (m_contentChildAnchorPos.Keys.Count == m_setChildAmount && !m_setNavigationStarted)
+                    {
+                        m_setNavigationStarted = true;                  //Blocks 2nd access to start the following code only once.
+                        SetInstaniateNavigation(m_navigationLevel);
+                    }
                     break;
                 }
                 default:
@@ -317,29 +390,262 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             }
         }
 
-        private void SetInstaniateNavigation()
+        private void SetInstaniateNavigation(NavigationLevel _navigationLevel)
         {
-            switch (m_scrollDirection)
+            Navigation navigation = default;
+
+            switch (_navigationLevel)
             {
-                case ScrollDirection.Vertical:
-                {
-                    //TODO: Get Navigation Objects for each ContentChild above and below, depending on it's Index.
-                    break;
-                }
-                case ScrollDirection.Horizontal:
-                {
-                    //TODO: Get Navigation Objects for each ContentChild to the left and right, depending on it's Index.
-                    break;
-                }
-                case ScrollDirection.Both:
-                {
-                    //TODO: Get Naviation to all 4 MoveDirections, depending on GridConstraints.
-                    break;
-                }
-                case ScrollDirection.None:
+                case NavigationLevel.None:
                 default:
                     break;
+                case NavigationLevel.Simple:
+                {
+                    switch (m_scrollDirection)
+                    {
+                        case ScrollDirection.None:
+                        default:
+                            break;
+                        case ScrollDirection.Vertical:
+                        {
+                            m_dictKeys = new(m_contentChildAnchorPos.Keys);
+
+                            for (int i = 0; i < m_contentChildAnchorPos.Count; i++)
+                            {
+                                switch (m_simpleSelectable)
+                                {
+                                    case Toggle:
+                                    {
+                                        navigation = m_dictKeys[i].GetComponent<Toggle>().navigation;
+                                        break;
+                                    }
+                                    case Slider:
+                                    {
+                                        navigation = m_dictKeys[i].GetComponent<Slider>().navigation;
+                                        break;
+                                    }
+                                    case Button:
+                                    {
+                                        navigation = m_dictKeys[i].GetComponent<Button>().navigation;
+                                        break;
+                                    }
+                                }
+
+                                switch (m_scrollDirection)
+                                {
+                                    case ScrollDirection.Vertical:
+                                    {
+                                        navigation.selectOnUp = GetNavigationUp(i);
+                                        navigation.selectOnDown = GetNavigationDown(i);
+                                        break;
+                                    }
+                                    case ScrollDirection.Horizontal:
+                                    {
+                                        //navigation.selectOnLeft = GetNavigationLeft(i);
+                                        //navigation.selectOnRight = GetNavigationRight(i);
+                                        break;
+                                    }
+                                    case ScrollDirection.None:
+                                    default:
+                                        break;
+                                }
+
+                                switch (m_simpleSelectable)
+                                {
+                                    case Toggle:
+                                    {
+                                        m_dictKeys[i].GetComponent<Toggle>().navigation = navigation;
+                                        break;
+                                    }
+                                    case Slider:
+                                    {
+                                        m_dictKeys[i].GetComponent<Slider>().navigation = navigation;
+                                        break;
+                                    }
+                                    case Button:
+                                    {
+                                        m_dictKeys[i].GetComponent<Button>().navigation = navigation;
+                                        break;
+                                    }
+                                }
+#if UNITY_EDITOR
+                                //Debug.Log(m_contentChildAnchorPos[m_scrollViewContent.transform.GetChild(i).gameObject].name);
+#endif
+                            }
+
+                            //TODO: Get Navigation Objects for each ContentChild above and below, depending on it's Index.
+                            break;
+                        }
+                        case ScrollDirection.Horizontal:
+                        {
+                            //TODO: Get Navigation Objects for each ContentChild to the left and right, depending on it's Index.
+                            break;
+                        }
+                        case ScrollDirection.Both:
+                        {
+                            //TODO: Get Naviation to all 4 MoveDirections, depending on GridConstraints.
+                            break;
+                        }
+                    }
+                    break;
+                }
+                case NavigationLevel.Nested:
+                {
+                    break;
+                }
             }
+        }
+
+        private Selectable GetNavigationUp(int _objectIndex)
+        {
+            Toggle selectableToggle;
+            Slider selectableSlider;
+            Button selectableButton;
+
+            if (_objectIndex == 0 && m_loopNavigation)
+            {
+                switch (m_simpleSelectable)
+                {
+                    case Toggle:
+                    {
+                        selectableToggle =
+                            m_scrollViewContent.transform.GetChild(m_scrollViewContent.transform.childCount - 1).GetComponent<Toggle>();
+                        return selectableToggle.GetComponent<Selectable>();
+                    }
+                    case Slider:
+                    {
+                        selectableSlider =
+                            m_scrollViewContent.transform.GetChild(m_scrollViewContent.transform.childCount - 1).GetComponent<Slider>();
+                        return selectableSlider.GetComponent<Selectable>();
+                    }
+                    case Button:
+                    {
+                        selectableButton =
+                            m_scrollViewContent.transform.GetChild(m_scrollViewContent.transform.childCount - 1).GetComponent<Button>();
+                        return selectableButton.GetComponent<Selectable>();
+                    }
+                }
+            }
+            else if (_objectIndex == 0 && !m_loopNavigation)
+            {
+                switch (m_simpleSelectable)
+                {
+                    case Toggle:
+                    {
+                        break;
+                    }
+                    case Slider:
+                    {
+                        break;
+                    }
+                    case Button:
+                    {
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                switch (m_simpleSelectable)
+                {
+                    case Toggle:
+                    {
+                        selectableToggle =
+                            m_scrollViewContent.transform.GetChild(_objectIndex - 1).GetComponent<Toggle>();
+                        return selectableToggle.GetComponent<Selectable>();
+                    }
+                    case Slider:
+                    {
+                        selectableSlider =
+                            m_scrollViewContent.transform.GetChild(_objectIndex - 1).GetComponent<Slider>();
+                        return selectableSlider.GetComponent<Selectable>();
+                    }
+                    case Button:
+                    {
+                        selectableButton =
+                            m_scrollViewContent.transform.GetChild(_objectIndex - 1).GetComponent<Button>();
+                        return selectableButton.GetComponent<Selectable>();
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private Selectable GetNavigationDown(int _objectIndex)
+        {
+            Toggle selectableToggle;
+            Slider selectableSlider;
+            Button selectableButton;
+
+            if (_objectIndex == m_scrollViewContent.transform.childCount - 1 && m_loopNavigation)
+            {
+                switch (m_simpleSelectable)
+                {
+                    case Toggle:
+                    {
+                        selectableToggle =
+                            m_scrollViewContent.transform.GetChild(0).GetComponent<Toggle>();
+                        return selectableToggle.GetComponent<Selectable>();
+                    }
+                    case Slider:
+                    {
+                        selectableSlider =
+                            m_scrollViewContent.transform.GetChild(0).GetComponent<Slider>();
+                        return selectableSlider.GetComponent<Selectable>();
+                    }
+                    case Button:
+                    {
+                        selectableButton =
+                            m_scrollViewContent.transform.GetChild(0).GetComponent<Button>();
+                        return selectableButton.GetComponent<Selectable>();
+                    }
+                }
+            }
+            else if (_objectIndex == m_scrollViewContent.transform.childCount - 1 && !m_loopNavigation)
+            {
+                switch (m_simpleSelectable)
+                {
+                    case Toggle:
+                    {
+                        break;
+                    }
+                    case Slider:
+                    {
+                        break;
+                    }
+                    case Button:
+                    {
+                        break;
+                    }
+                }
+            }
+            else if(_objectIndex < m_scrollViewContent.transform.childCount - 1)
+            {
+                switch (m_simpleSelectable)
+                {
+                    case Toggle:
+                    {
+                        selectableToggle =
+                            m_scrollViewContent.transform.GetChild(_objectIndex + 1).GetComponent<Toggle>();
+                        return selectableToggle.GetComponent<Selectable>();
+                    }
+                    case Slider:
+                    {
+                        selectableSlider =
+                            m_scrollViewContent.transform.GetChild(_objectIndex + 1).GetComponent<Slider>();
+                        return selectableSlider.GetComponent<Selectable>();
+                    }
+                    case Button:
+                    {
+                        selectableButton =
+                            m_scrollViewContent.transform.GetChild(_objectIndex + 1).GetComponent<Button>();
+                        return selectableButton.GetComponent<Selectable>();
+                    }
+                }
+            }
+
+            return null;
         }
         #endregion
     }
