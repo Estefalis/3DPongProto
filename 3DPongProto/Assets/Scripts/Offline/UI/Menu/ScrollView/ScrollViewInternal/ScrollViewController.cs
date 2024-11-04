@@ -23,7 +23,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
     public class ScrollViewController : MonoBehaviour
     {
-
         private enum ContentFillType
         {
             Filled,
@@ -228,7 +227,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
         private void SpawnContentChildren()
         {
-            int navObjectCount = 0;
+            int navObjCount = 0;
 
             bool containsToggle = m_spawnablePrefab.TryGetComponent(out Toggle toggle);
             bool containsSlider = m_spawnablePrefab.TryGetComponent(out Slider slider);
@@ -237,14 +236,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             foreach (Transform child in m_spawnablePrefab.transform)
             {
                 if (containsToggle)
-                    navObjectCount++;
+                    navObjCount++;
                 if (containsSlider)
-                    navObjectCount++;
+                    navObjCount++;
                 if (containsButton)
-                    navObjectCount++;
+                    navObjCount++;
             }
 
-            switch (navObjectCount)    //determine how many NavigationObjects the contentChild Prefab has on each one.
+            switch (navObjCount)    //determine how many NavigationObjects the contentChild Prefab has on each one.
             {
                 case 0:
                     m_navigationLevel = NavigationLevel.None;
@@ -271,8 +270,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
             for (int i = 0; i < m_setChildAmount; i++)
             {
-                m_spawnablePrefab.name = $"TestButton Nr. {i}";
-                m_spawnablePrefab.GetComponentInChildren<TextMeshProUGUI>().text = $"TestButton Nr. {i}";
+                m_spawnablePrefab.name = $"Button Nr. {i}";
+                m_spawnablePrefab.GetComponentInChildren<TextMeshProUGUI>().text = $"Btn-Nr. {i}";
                 Instantiate(m_spawnablePrefab, m_scrollViewContent);
             }
 
@@ -431,24 +430,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                                     }
                                 }
 
-                                switch (m_scrollDirection)
-                                {
-                                    case ScrollDirection.Vertical:
-                                    {
-                                        navigation.selectOnUp = GetNavigationUp(i);
-                                        navigation.selectOnDown = GetNavigationDown(i);
-                                        break;
-                                    }
-                                    case ScrollDirection.Horizontal:
-                                    {
-                                        //navigation.selectOnLeft = GetNavigationLeft(i);
-                                        //navigation.selectOnRight = GetNavigationRight(i);
-                                        break;
-                                    }
-                                    case ScrollDirection.None:
-                                    default:
-                                        break;
-                                }
+                                navigation.selectOnUp = GetTopNavigation(i);
+                                navigation.selectOnDown = GetBottomNavigation(i);
 
                                 switch (m_simpleSelectable)
                                 {
@@ -473,12 +456,59 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 #endif
                             }
 
-                            //TODO: Get Navigation Objects for each ContentChild above and below, depending on it's Index.
                             break;
                         }
                         case ScrollDirection.Horizontal:
                         {
-                            //TODO: Get Navigation Objects for each ContentChild to the left and right, depending on it's Index.
+                            m_dictKeys = new(m_contentChildAnchorPos.Keys);
+
+                            for (int i = 0; i < m_contentChildAnchorPos.Count; i++)
+                            {
+                                switch (m_simpleSelectable)
+                                {
+                                    case Toggle:
+                                    {
+                                        navigation = m_dictKeys[i].GetComponent<Toggle>().navigation;
+                                        break;
+                                    }
+                                    case Slider:
+                                    {
+                                        navigation = m_dictKeys[i].GetComponent<Slider>().navigation;
+                                        break;
+                                    }
+                                    case Button:
+                                    {
+                                        navigation = m_dictKeys[i].GetComponent<Button>().navigation;
+                                        break;
+                                    }
+                                }
+
+                                navigation.selectOnLeft = GetTopNavigation(i);
+                                navigation.selectOnRight = GetBottomNavigation(i);
+
+                                switch (m_simpleSelectable)
+                                {
+                                    case Toggle:
+                                    {
+                                        m_dictKeys[i].GetComponent<Toggle>().navigation = navigation;
+                                        break;
+                                    }
+                                    case Slider:
+                                    {
+                                        m_dictKeys[i].GetComponent<Slider>().navigation = navigation;
+                                        break;
+                                    }
+                                    case Button:
+                                    {
+                                        m_dictKeys[i].GetComponent<Button>().navigation = navigation;
+                                        break;
+                                    }
+                                }
+#if UNITY_EDITOR
+                                //Debug.Log(m_contentChildAnchorPos[m_scrollViewContent.transform.GetChild(i).gameObject].name);
+#endif
+                            }
+
                             break;
                         }
                         case ScrollDirection.Both:
@@ -496,7 +526,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             }
         }
 
-        private Selectable GetNavigationUp(int _objectIndex)
+        private Selectable GetTopNavigation(int _objectIndex)
         {
             Toggle selectableToggle;
             Slider selectableSlider;
@@ -528,21 +558,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             }
             else if (_objectIndex == 0 && !m_loopNavigation)
             {
-                switch (m_simpleSelectable)
-                {
-                    case Toggle:
-                    {
-                        break;
-                    }
-                    case Slider:
-                    {
-                        break;
-                    }
-                    case Button:
-                    {
-                        break;
-                    }
-                }
+                return null;
             }
             else
             {
@@ -572,7 +588,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             return null;
         }
 
-        private Selectable GetNavigationDown(int _objectIndex)
+        private Selectable GetBottomNavigation(int _objectIndex)
         {
             Toggle selectableToggle;
             Slider selectableSlider;
@@ -604,23 +620,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             }
             else if (_objectIndex == m_scrollViewContent.transform.childCount - 1 && !m_loopNavigation)
             {
-                switch (m_simpleSelectable)
-                {
-                    case Toggle:
-                    {
-                        break;
-                    }
-                    case Slider:
-                    {
-                        break;
-                    }
-                    case Button:
-                    {
-                        break;
-                    }
-                }
+                return null;
             }
-            else if(_objectIndex < m_scrollViewContent.transform.childCount - 1)
+            else if (_objectIndex < m_scrollViewContent.transform.childCount - 1)
             {
                 switch (m_simpleSelectable)
                 {
