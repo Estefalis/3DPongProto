@@ -11,7 +11,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         None,
         Vertical,
         Horizontal,
-        Both
+        Grid
     }
 
     internal enum NavigationLevel
@@ -31,27 +31,25 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
         [SerializeField] internal AutoScroll m_autoScrolling;
 
-        [SerializeField] internal ScrollDirection m_scrollDirection = ScrollDirection.Both;
+        [SerializeField] internal ScrollDirection m_scrollDirection = ScrollDirection.Grid;
         [SerializeField] private ContentFillType m_contentFillType = ContentFillType.Filled;
         [SerializeField] private NavigationLevel m_navigationLevel = NavigationLevel.Simple;
 
         [Header("ScrollView Components")]
         [SerializeField] internal ScrollRect m_scrollViewRect;
         [SerializeField] internal RectTransform m_scrollViewContent;
-        [SerializeField] internal LayoutGroup m_layoutGroup;
-        [SerializeField] internal int m_contentChildCount;
-        [Space]
-        [SerializeField] internal Vector2 m_maskedScrollWindow;      //Fix (masked) Width & Height
-        [SerializeField] internal Vector2 m_fullContentWindow;       //Full Width & Height.
+        [SerializeField] private LayoutGroup m_layoutGroup;
+        [SerializeField] private int m_contentChildCount;
 
         [Header("Prefab Instantiation")]
         [SerializeField] private GameObject m_spawnablePrefab = null;
         [SerializeField] private int m_setChildAmount = 50;
         [SerializeField] private bool m_loopNavigation = false;
-        private Selectable m_simpleSelectable;
+
         private bool m_setNavigationStarted = false;
-        internal bool m_childsSpawned = false;
-        List<GameObject> m_dictKeys;
+        private bool m_childsSpawned = false;
+        private Selectable m_simpleSelectable;
+        private List<GameObject> m_dictKeys;
 
         internal int m_leftPadding;
         internal int m_rightPadding;
@@ -65,11 +63,15 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         internal bool ObjectNavigationSet { get => m_objectNavigationSet; }
         private bool m_contentChildrenSet = false, m_objectNavigationSet = false;  //or 'internal static Action<bool> ContentFilled/Set;'
 
-        private Vector2Int m_gridSize;
-        internal Vector2 m_firstChildRT;
+        /*[SerializeField] */private Vector2 m_maskedScrollWindow;      //Fix (masked) Width & Height
+        /*[SerializeField] */private Vector2 m_fullContentWindow;       //Full Width & Height.
 
         internal RectTransform m_scrollViewRectTransform;
         private RectTransform m_childRect;      //Rect for each child of the Content and it's '.anchoredPosition'.
+        internal Vector2 m_firstChildRT;
+
+        private GridLayoutGroup m_gridSettings;
+        /*[SerializeField] */private Vector2Int m_gridSize;
 
         internal Dictionary<GameObject, RectTransform> m_contentChildAnchorPos = new Dictionary<GameObject, RectTransform>();
         internal Dictionary<GameObject, Navigation> m_objectNavigation = new Dictionary<GameObject, Navigation>();
@@ -99,7 +101,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             m_objectNavigation.Clear();
         }
 
-        #region ScrollView Preparation
         private void GetScrollViewComponents()
         {
             m_scrollViewRect = GetComponent<ScrollRect>();
@@ -122,7 +123,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             {
                 case true:
                 {
-                    m_scrollDirection = ScrollDirection.Both;
+                    m_scrollDirection = ScrollDirection.Grid;
                     break;
                 }
                 case false:
@@ -165,17 +166,18 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             {
                 case GridLayoutGroup:
                 {
-                    var gridSettings = _layoutGroup.GetComponent<GridLayoutGroup>();
+                    m_gridSettings = _layoutGroup.GetComponent<GridLayoutGroup>();
                     //Space at LayoutGroup borders.
-                    m_topPadding = gridSettings.padding.top;
-                    m_bottomPadding = gridSettings.padding.bottom;
-                    m_leftPadding = gridSettings.padding.left;
-                    m_rightPadding = gridSettings.padding.right;
+                    m_topPadding = m_gridSettings.padding.top;
+                    m_bottomPadding = m_gridSettings.padding.bottom;
+                    m_leftPadding = m_gridSettings.padding.left;
+                    m_rightPadding = m_gridSettings.padding.right;
                     //Spacing between elements.
-                    m_horizontalSpacing = gridSettings.spacing.x;
-                    m_verticalSpacing = gridSettings.spacing.y;
+                    m_horizontalSpacing = m_gridSettings.spacing.x;
+                    m_verticalSpacing = m_gridSettings.spacing.y;
 
-                    m_gridSize = CustomGridLayoutSetup.GetGridSize(gridSettings);
+                    if (m_contentFillType == ContentFillType.Filled)
+                        m_gridSize = CustomGridLayoutSetup.GetGridSize(m_gridSettings);
                     break;
                 }
                 case VerticalLayoutGroup:
@@ -270,8 +272,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
             for (int i = 0; i < m_setChildAmount; i++)
             {
-                m_spawnablePrefab.name = $"Button Nr. {i}";
-                m_spawnablePrefab.GetComponentInChildren<TextMeshProUGUI>().text = $"Btn-Nr. {i}";
+                m_spawnablePrefab.GetComponentInChildren<TextMeshProUGUI>().text = $"Btn-ID {i}";
                 Instantiate(m_spawnablePrefab, m_scrollViewContent);
             }
 
@@ -389,9 +390,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             }
         }
 
+        #region InstaniateNavigation
         private void SetInstaniateNavigation(NavigationLevel _navigationLevel)
         {
-            Navigation navigation = default;
+            Navigation navigation;
 
             switch (_navigationLevel)
             {
@@ -411,49 +413,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
                             for (int i = 0; i < m_contentChildAnchorPos.Count; i++)
                             {
-                                switch (m_simpleSelectable)
-                                {
-                                    case Toggle:
-                                    {
-                                        navigation = m_dictKeys[i].GetComponent<Toggle>().navigation;
-                                        break;
-                                    }
-                                    case Slider:
-                                    {
-                                        navigation = m_dictKeys[i].GetComponent<Slider>().navigation;
-                                        break;
-                                    }
-                                    case Button:
-                                    {
-                                        navigation = m_dictKeys[i].GetComponent<Button>().navigation;
-                                        break;
-                                    }
-                                }
+                                navigation = GetSimpleSelectableNavigation(m_simpleSelectable, i);
 
                                 navigation.selectOnUp = GetTopNavigation(i);
                                 navigation.selectOnDown = GetBottomNavigation(i);
 
-                                switch (m_simpleSelectable)
-                                {
-                                    case Toggle:
-                                    {
-                                        m_dictKeys[i].GetComponent<Toggle>().navigation = navigation;
-                                        break;
-                                    }
-                                    case Slider:
-                                    {
-                                        m_dictKeys[i].GetComponent<Slider>().navigation = navigation;
-                                        break;
-                                    }
-                                    case Button:
-                                    {
-                                        m_dictKeys[i].GetComponent<Button>().navigation = navigation;
-                                        break;
-                                    }
-                                }
-#if UNITY_EDITOR
-                                //Debug.Log(m_contentChildAnchorPos[m_scrollViewContent.transform.GetChild(i).gameObject].name);
-#endif
+                                SetSimpleSelectableNavigation(m_simpleSelectable, i, navigation);
                             }
 
                             break;
@@ -464,56 +429,20 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
                             for (int i = 0; i < m_contentChildAnchorPos.Count; i++)
                             {
-                                switch (m_simpleSelectable)
-                                {
-                                    case Toggle:
-                                    {
-                                        navigation = m_dictKeys[i].GetComponent<Toggle>().navigation;
-                                        break;
-                                    }
-                                    case Slider:
-                                    {
-                                        navigation = m_dictKeys[i].GetComponent<Slider>().navigation;
-                                        break;
-                                    }
-                                    case Button:
-                                    {
-                                        navigation = m_dictKeys[i].GetComponent<Button>().navigation;
-                                        break;
-                                    }
-                                }
+                                navigation = GetSimpleSelectableNavigation(m_simpleSelectable, i);
 
                                 navigation.selectOnLeft = GetTopNavigation(i);
                                 navigation.selectOnRight = GetBottomNavigation(i);
 
-                                switch (m_simpleSelectable)
-                                {
-                                    case Toggle:
-                                    {
-                                        m_dictKeys[i].GetComponent<Toggle>().navigation = navigation;
-                                        break;
-                                    }
-                                    case Slider:
-                                    {
-                                        m_dictKeys[i].GetComponent<Slider>().navigation = navigation;
-                                        break;
-                                    }
-                                    case Button:
-                                    {
-                                        m_dictKeys[i].GetComponent<Button>().navigation = navigation;
-                                        break;
-                                    }
-                                }
-#if UNITY_EDITOR
-                                //Debug.Log(m_contentChildAnchorPos[m_scrollViewContent.transform.GetChild(i).gameObject].name);
-#endif
+                                SetSimpleSelectableNavigation(m_simpleSelectable, i, navigation);
                             }
 
                             break;
                         }
-                        case ScrollDirection.Both:
+                        case ScrollDirection.Grid:  //Instantiate case gets set in 'GetScrollViewObjects()'.
                         {
                             //TODO: Get Naviation to all 4 MoveDirections, depending on GridConstraints.
+                            m_gridSize = CustomGridLayoutSetup.GetGridSize(m_gridSettings);
                             break;
                         }
                     }
@@ -524,6 +453,57 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                     break;
                 }
             }
+        }
+
+        private Navigation GetSimpleSelectableNavigation(Selectable _simpleSelectable, int _index)
+        {
+            Navigation navigation = default;
+
+            switch (_simpleSelectable)
+            {
+                case Toggle:
+                {
+                    navigation = m_dictKeys[_index].GetComponent<Toggle>().navigation;
+                    break;
+                }
+                case Slider:
+                {
+                    navigation = m_dictKeys[_index].GetComponent<Slider>().navigation;
+                    break;
+                }
+                case Button:
+                {
+                    navigation = m_dictKeys[_index].GetComponent<Button>().navigation;
+                    break;
+                }
+            }
+
+            return navigation;
+        }
+
+        private void SetSimpleSelectableNavigation(Selectable _simpleSelectable, int _index, Navigation _navigation)
+        {
+            switch (_simpleSelectable)
+            {
+                case Toggle:
+                {
+                    m_dictKeys[_index].GetComponent<Toggle>().navigation = _navigation;
+                    break;
+                }
+                case Slider:
+                {
+                    m_dictKeys[_index].GetComponent<Slider>().navigation = _navigation;
+                    break;
+                }
+                case Button:
+                {
+                    m_dictKeys[_index].GetComponent<Button>().navigation = _navigation;
+                    break;
+                }
+            }
+#if UNITY_EDITOR
+            //Debug.Log(m_contentChildAnchorPos[m_scrollViewContent.transform.GetChild(_index).gameObject].name);
+#endif
         }
 
         private Selectable GetTopNavigation(int _objectIndex)

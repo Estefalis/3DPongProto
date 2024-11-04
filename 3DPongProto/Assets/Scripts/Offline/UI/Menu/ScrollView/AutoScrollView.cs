@@ -484,7 +484,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     }
                     case DetectedScrollOption.Both:
                     {
-                        //TODO: MoveToNextObject on DetectedScrollOption.Both.
+                        //TODO: MoveToNextObject on DetectedScrollOption.Grid.
                         break;
                     }
                     case DetectedScrollOption.None:
@@ -709,7 +709,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 }
                 case DetectedScrollOption.Both:
                 {
-                    //TODO: MaskedScrollRectEdgeCheck DetectedScrollOption.Both                    
+                    //TODO: MaskedScrollRectEdgeCheck DetectedScrollOption.Grid                    
                     break;
                 }
                 case DetectedScrollOption.None:

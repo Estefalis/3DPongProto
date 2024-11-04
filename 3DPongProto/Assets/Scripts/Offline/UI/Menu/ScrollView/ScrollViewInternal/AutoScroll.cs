@@ -177,7 +177,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                     ScrollHorizontal(_gameObject);
                     break;
                 }
-                case ScrollDirection.Both:
+                case ScrollDirection.Grid:
                 {
                     //ScrollVertical(_gameObject);
                     //ScrollHorizontal(_gameObject);
@@ -377,9 +377,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
                         break;
                     }
-                    case ScrollDirection.Both:
+                    case ScrollDirection.Grid:
                     {
-                        //TODO: MoveToNextObject on DetectedScrollOption.Both.
+                        //TODO: MoveToNextObject on DetectedScrollOption.Grid.
                         break;
                     }
                     case ScrollDirection.None:
