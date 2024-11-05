@@ -809,7 +809,6 @@ MonoBehaviour:
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_contentChildCount: 0
   m_spawnablePrefab: {fileID: 7390952189908015992, guid: 7b32bb407247aca499404a73eafef717,
     type: 3}
   m_setChildAmount: 50
@@ -10819,7 +10818,6 @@ MonoBehaviour:
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_contentChildCount: 0
   m_spawnablePrefab: {fileID: 4917459433395199634, guid: 0ab48dc1ee48d5944b5c48a544e1e71e,
     type: 3}
   m_setChildAmount: 50
@@ -25467,7 +25465,7 @@ MonoBehaviour:
   m_Vertical: 1
   m_MovementType: 2
   m_Elasticity: 0.1
-  m_Inertia: 1
+  m_Inertia: 0
   m_DecelerationRate: 0.135
   m_ScrollSensitivity: 10
   m_Viewport: {fileID: 641281396}
@@ -25552,7 +25550,6 @@ MonoBehaviour:
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_contentChildCount: 50
   m_spawnablePrefab: {fileID: 7390952189908015992, guid: 7b32bb407247aca499404a73eafef717,
     type: 3}
   m_setChildAmount: 50

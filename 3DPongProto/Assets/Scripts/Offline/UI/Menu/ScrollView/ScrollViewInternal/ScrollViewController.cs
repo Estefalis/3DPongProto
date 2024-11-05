@@ -39,7 +39,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         [SerializeField] internal ScrollRect m_scrollViewRect;
         [SerializeField] internal RectTransform m_scrollViewContent;
         [SerializeField] private LayoutGroup m_layoutGroup;
-        [SerializeField] private int m_contentChildCount;
 
         [Header("Prefab Instantiation")]
         [SerializeField] private GameObject m_spawnablePrefab = null;
@@ -57,21 +56,27 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         internal int m_bottomPadding;
         internal float m_horizontalSpacing;
         internal float m_verticalSpacing;
+        //private Vector2 m_cellSize;
 
         private bool m_gotComponents;
         internal bool ContentChildrenSet { get => m_contentChildrenSet; }
         internal bool ObjectNavigationSet { get => m_objectNavigationSet; }
         private bool m_contentChildrenSet = false, m_objectNavigationSet = false;  //or 'internal static Action<bool> ContentFilled/Set;'
 
-        /*[SerializeField] */private Vector2 m_maskedScrollWindow;      //Fix (masked) Width & Height
-        /*[SerializeField] */private Vector2 m_fullContentWindow;       //Full Width & Height.
+        /*[SerializeField] */
+        private Vector2 m_maskedScrollWindow;      //Fix (masked) Width & Height
+        /*[SerializeField] */
+        private Vector2 m_fullContentWindow;       //Full Width & Height.
+        /*[SerializeField] */
+        private int m_contentChildCount;
 
         internal RectTransform m_scrollViewRectTransform;
         private RectTransform m_childRect;      //Rect for each child of the Content and it's '.anchoredPosition'.
         internal Vector2 m_firstChildRT;
 
         private GridLayoutGroup m_gridSettings;
-        /*[SerializeField] */private Vector2Int m_gridSize;
+        //[SerializeField]
+        private Vector2Int m_gridSize;
 
         internal Dictionary<GameObject, RectTransform> m_contentChildAnchorPos = new Dictionary<GameObject, RectTransform>();
         internal Dictionary<GameObject, Navigation> m_objectNavigation = new Dictionary<GameObject, Navigation>();
@@ -175,6 +180,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                     //Spacing between elements.
                     m_horizontalSpacing = m_gridSettings.spacing.x;
                     m_verticalSpacing = m_gridSettings.spacing.y;
+                    //m_cellSize = m_gridSettings.cellSize;
 
                     if (m_contentFillType == ContentFillType.Filled)
                         m_gridSize = CustomGridLayoutSetup.GetGridSize(m_gridSettings);
@@ -442,7 +448,15 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                         case ScrollDirection.Grid:  //Instantiate case gets set in 'GetScrollViewObjects()'.
                         {
                             //TODO: Get Naviation to all 4 MoveDirections, depending on GridConstraints.
+                            m_dictKeys = new(m_contentChildAnchorPos.Keys);
                             m_gridSize = CustomGridLayoutSetup.GetGridSize(m_gridSettings);
+
+                            for (int i = 0; i < m_scrollViewContent.childCount; i++)
+                            {
+                                navigation = GetSimpleSelectableNavigation(m_simpleSelectable, i);
+
+                                SetGridSlotNavigation(m_simpleSelectable, i, navigation);
+                            }
                             break;
                         }
                     }
@@ -504,6 +518,51 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 #if UNITY_EDITOR
             //Debug.Log(m_contentChildAnchorPos[m_scrollViewContent.transform.GetChild(_index).gameObject].name);
 #endif
+        }
+
+        private void SetGridSlotNavigation(Selectable _simpleSelectable, int _index, Navigation _navigation)
+        {
+            bool topBorderIndex = _index < m_gridSettings.constraintCount;
+            bool leftBorderIndex = _index % m_gridSettings.constraintCount == 0;
+            bool rightBorderIndex = _index % m_gridSettings.constraintCount == m_gridSettings.constraintCount - 1;
+            bool bottomBorderIndex = _index / m_gridSettings.constraintCount == m_gridSize.y - 1;
+
+            //if (bottomBorderIndex)
+            //    Debug.Log(_index);
+
+            #region Considered steps while progressing
+            //switch (m_loopNavigation)
+            //{
+            //    case false:
+            //    {
+            //        break;
+            //    }
+            //    case true:
+            //    {
+            //        break;
+            //    }
+            //}
+
+            ////SetSimpleSelectableNavigation-Part.
+            //switch (_simpleSelectable)
+            //{
+            //    case Toggle:
+            //    {
+            //        m_dictKeys[_index].GetComponent<Toggle>().navigation = _navigation;
+            //        break;
+            //    }
+            //    case Slider:
+            //    {
+            //        m_dictKeys[_index].GetComponent<Slider>().navigation = _navigation;
+            //        break;
+            //    }
+            //    case Button:
+            //    {
+            //        m_dictKeys[_index].GetComponent<Button>().navigation = _navigation;
+            //        break;
+            //    }
+            //}
+            #endregion
         }
 
         private Selectable GetTopNavigation(int _objectIndex)
