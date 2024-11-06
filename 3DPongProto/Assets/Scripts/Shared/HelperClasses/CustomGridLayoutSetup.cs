@@ -49,15 +49,12 @@ namespace ThreeDeePongProto.Shared.HelperClasses
 #if UNITY_EDITOR
             //Debug.Log($"Column: {xAxisCount} - Row: {yAxisCount}");
 #endif
-            return new Vector2Int(xAxisCount, yAxisCount);  //Else return Vector2Int.zero;
+            return new Vector2Int(xAxisCount, yAxisCount);  //Else 'return Vector2Int.zero;' from above.
         }
 
         private static int GetOtherAxisCount(int _constraintAxisCount, int _contentChildCount)
         {
-            float lambdaSwitch = (float)_contentChildCount / _constraintAxisCount - _constraintAxisCount;
-            float addedCount = lambdaSwitch - (lambdaSwitch % 1);
-            int otherAxisCount = lambdaSwitch <= 0 ? _constraintAxisCount + (int)addedCount : _constraintAxisCount + (int)addedCount + 1;
-            return otherAxisCount;
+            return _contentChildCount / _constraintAxisCount + Mathf.Min(1, _contentChildCount % _constraintAxisCount);
         }
     }
 }

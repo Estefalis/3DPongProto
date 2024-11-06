@@ -75,8 +75,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         internal Vector2 m_firstChildRT;
 
         private GridLayoutGroup m_gridSettings;
-        //[SerializeField]
+        [SerializeField]
         private Vector2Int m_gridSize;
+        private int m_rowCount, m_columnCount;
 
         internal Dictionary<GameObject, RectTransform> m_contentChildAnchorPos = new Dictionary<GameObject, RectTransform>();
         internal Dictionary<GameObject, Navigation> m_objectNavigation = new Dictionary<GameObject, Navigation>();
@@ -85,6 +86,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         {
             m_contentChildAnchorPos.Clear();
             m_objectNavigation.Clear();
+            m_dictKeys = new();
+            m_dictKeys.Clear();
+            m_rowCount = 0;
+            m_columnCount = 0;
 
             GetScrollViewComponents();
             GetScrollOptionAndLayout(m_scrollViewRect);
@@ -278,6 +283,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
             for (int i = 0; i < m_setChildAmount; i++)
             {
+                m_spawnablePrefab.name = $"Btn-ID {i}";
                 m_spawnablePrefab.GetComponentInChildren<TextMeshProUGUI>().text = $"Btn-ID {i}";
                 Instantiate(m_spawnablePrefab, m_scrollViewContent);
             }
@@ -454,7 +460,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                             for (int i = 0; i < m_scrollViewContent.childCount; i++)
                             {
                                 navigation = GetSimpleSelectableNavigation(m_simpleSelectable, i);
-
                                 SetGridSlotNavigation(m_simpleSelectable, i, navigation);
                             }
                             break;
@@ -525,10 +530,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             bool topBorderIndex = _index < m_gridSettings.constraintCount;
             bool leftBorderIndex = _index % m_gridSettings.constraintCount == 0;
             bool rightBorderIndex = _index % m_gridSettings.constraintCount == m_gridSettings.constraintCount - 1;
-            bool bottomBorderIndex = _index / m_gridSettings.constraintCount == m_gridSize.y - 1;
 
-            //if (bottomBorderIndex)
-            //    Debug.Log(_index);
+            if (leftBorderIndex)
+                m_rowCount++;
+            bool bottomBorderIndex = m_rowCount == m_gridSize.y;    //On Fix Column Count. Fix Row Count equivalent: m_columnCount == m_gridSize.x;
+
+            if (bottomBorderIndex)
+                Debug.Log(_index);
 
             #region Considered steps while progressing
             //switch (m_loopNavigation)

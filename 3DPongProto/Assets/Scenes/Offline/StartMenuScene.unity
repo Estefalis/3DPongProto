@@ -813,6 +813,7 @@ MonoBehaviour:
     type: 3}
   m_setChildAmount: 50
   m_loopNavigation: 0
+  m_gridSize: {x: 0, y: 0}
 --- !u!114 &49199792 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7313720336969877070, guid: 5d99c73a2379ef643b2423fb48c9661c,
@@ -3140,7 +3141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
-  m_VerticalFit: 2
+  m_VerticalFit: 1
 --- !u!1 &292267304
 GameObject:
   m_ObjectHideFlags: 0
@@ -10822,6 +10823,7 @@ MonoBehaviour:
     type: 3}
   m_setChildAmount: 50
   m_loopNavigation: 0
+  m_gridSize: {x: 0, y: 0}
 --- !u!1 &911946499
 GameObject:
   m_ObjectHideFlags: 0
@@ -25554,6 +25556,7 @@ MonoBehaviour:
     type: 3}
   m_setChildAmount: 50
   m_loopNavigation: 0
+  m_gridSize: {x: 0, y: 0}
 --- !u!1 &1839044203
 GameObject:
   m_ObjectHideFlags: 0
