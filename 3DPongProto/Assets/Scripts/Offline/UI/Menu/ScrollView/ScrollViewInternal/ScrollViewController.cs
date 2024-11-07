@@ -527,16 +527,28 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
         private void SetGridSlotNavigation(Selectable _simpleSelectable, int _index, Navigation _navigation)
         {
+            #region Border Booleans
             bool topBorderIndex = _index < m_gridSettings.constraintCount;
             bool leftBorderIndex = _index % m_gridSettings.constraintCount == 0;
             bool rightBorderIndex = _index % m_gridSettings.constraintCount == m_gridSettings.constraintCount - 1;
+            bool bottomBorderIndex = m_rowCount == m_gridSize.y;    //On Fix Column Count. Fix Row Count equivalent: m_columnCount == m_gridSize.x;
+            #endregion
 
+            #region Edge Booleans
+            bool startIndex = _index == 0;
+            bool topRightIndex = topBorderIndex && rightBorderIndex;
+            bool bottomLeftIndex = leftBorderIndex && bottomBorderIndex;
+            bool endIndex = _index == m_scrollViewContent.childCount - 1;
+            bool leftBottomEndIndex = _index % (m_scrollViewContent.childCount - 1) == 0 && leftBorderIndex && endIndex;
+            #endregion
+
+            #region Must have to count rows!
             if (leftBorderIndex)
                 m_rowCount++;
-            bool bottomBorderIndex = m_rowCount == m_gridSize.y;    //On Fix Column Count. Fix Row Count equivalent: m_columnCount == m_gridSize.x;
+            #endregion
 
-            if (bottomBorderIndex)
-                Debug.Log(_index);
+            if(leftBottomEndIndex)
+            Debug.Log(_index);
 
             #region Considered steps while progressing
             //switch (m_loopNavigation)
