@@ -427,8 +427,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                             {
                                 navigation = GetSimpleSelectableNavigation(m_simpleSelectable, i);
 
-                                navigation.selectOnUp = GetTopNavigation(i);
-                                navigation.selectOnDown = GetBottomNavigation(i);
+                                navigation.selectOnUp = GetTopNavigation(m_simpleSelectable, i);
+                                navigation.selectOnDown = GetBottomNavigation(m_simpleSelectable, i);
 
                                 SetSimpleSelectableNavigation(m_simpleSelectable, i, navigation);
                             }
@@ -443,8 +443,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                             {
                                 navigation = GetSimpleSelectableNavigation(m_simpleSelectable, i);
 
-                                navigation.selectOnLeft = GetTopNavigation(i);
-                                navigation.selectOnRight = GetBottomNavigation(i);
+                                navigation.selectOnLeft = GetTopNavigation(m_simpleSelectable, i);
+                                navigation.selectOnRight = GetBottomNavigation(m_simpleSelectable, i);
 
                                 SetSimpleSelectableNavigation(m_simpleSelectable, i, navigation);
                             }
@@ -537,7 +537,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             #region Edge Booleans
             bool startIndex = _index == 0;
             bool topRightIndex = topBorderIndex && rightBorderIndex;
-            bool bottomLeftIndex = leftBorderIndex && bottomBorderIndex;
+            bool leftBottomIndex = leftBorderIndex && bottomBorderIndex;
             bool endIndex = _index == m_scrollViewContent.childCount - 1;
             bool leftBottomEndIndex = _index % (m_scrollViewContent.childCount - 1) == 0 && leftBorderIndex && endIndex;
             #endregion
@@ -547,73 +547,41 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                 m_rowCount++;
             #endregion
 
-            if(leftBottomEndIndex)
-            Debug.Log(_index);
+            //Debug.Log($"ModuloIndex: {_index % m_gridSettings.constraintCount} Row: {m_rowCount}");
 
             #region Considered steps while progressing
-            //switch (m_loopNavigation)
-            //{
-            //    case false:
-            //    {
-            //        break;
-            //    }
-            //    case true:
-            //    {
-            //        break;
-            //    }
-            //}
+            _navigation.selectOnUp = GetGridNavigationUp(_simpleSelectable, _index);
+            _navigation.selectOnDown = GetGridNavigationDown(_simpleSelectable, _index);
+            _navigation.selectOnLeft = GetGridNavigationLeft(_simpleSelectable, _index);
+            _navigation.selectOnRight = GetGridNavigationRight(_simpleSelectable, _index);
 
-            ////SetSimpleSelectableNavigation-Part.
-            //switch (_simpleSelectable)
-            //{
-            //    case Toggle:
-            //    {
-            //        m_dictKeys[_index].GetComponent<Toggle>().navigation = _navigation;
-            //        break;
-            //    }
-            //    case Slider:
-            //    {
-            //        m_dictKeys[_index].GetComponent<Slider>().navigation = _navigation;
-            //        break;
-            //    }
-            //    case Button:
-            //    {
-            //        m_dictKeys[_index].GetComponent<Button>().navigation = _navigation;
-            //        break;
-            //    }
-            //}
+            //SetSimpleSelectableNavigation-Part.
+            switch (_simpleSelectable)
+            {
+                case Toggle:
+                {
+                    m_dictKeys[_index].GetComponent<Toggle>().navigation = _navigation;
+                    break;
+                }
+                case Slider:
+                {
+                    m_dictKeys[_index].GetComponent<Slider>().navigation = _navigation;
+                    break;
+                }
+                case Button:
+                {
+                    m_dictKeys[_index].GetComponent<Button>().navigation = _navigation;
+                    break;
+                }
+            }
             #endregion
         }
 
-        private Selectable GetTopNavigation(int _objectIndex)
+        private Selectable GetTopNavigation(Selectable _simpleSelectable, int _objectIndex)
         {
-            Toggle selectableToggle;
-            Slider selectableSlider;
-            Button selectableButton;
-
             if (_objectIndex == 0 && m_loopNavigation)
             {
-                switch (m_simpleSelectable)
-                {
-                    case Toggle:
-                    {
-                        selectableToggle =
-                            m_scrollViewContent.transform.GetChild(m_scrollViewContent.transform.childCount - 1).GetComponent<Toggle>();
-                        return selectableToggle.GetComponent<Selectable>();
-                    }
-                    case Slider:
-                    {
-                        selectableSlider =
-                            m_scrollViewContent.transform.GetChild(m_scrollViewContent.transform.childCount - 1).GetComponent<Slider>();
-                        return selectableSlider.GetComponent<Selectable>();
-                    }
-                    case Button:
-                    {
-                        selectableButton =
-                            m_scrollViewContent.transform.GetChild(m_scrollViewContent.transform.childCount - 1).GetComponent<Button>();
-                        return selectableButton.GetComponent<Selectable>();
-                    }
-                }
+                return _ = GetSelectableComponent(_simpleSelectable, m_scrollViewContent.transform.childCount - 1);
             }
             else if (_objectIndex == 0 && !m_loopNavigation)
             {
@@ -621,92 +589,169 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             }
             else
             {
-                switch (m_simpleSelectable)
-                {
-                    case Toggle:
-                    {
-                        selectableToggle =
-                            m_scrollViewContent.transform.GetChild(_objectIndex - 1).GetComponent<Toggle>();
-                        return selectableToggle.GetComponent<Selectable>();
-                    }
-                    case Slider:
-                    {
-                        selectableSlider =
-                            m_scrollViewContent.transform.GetChild(_objectIndex - 1).GetComponent<Slider>();
-                        return selectableSlider.GetComponent<Selectable>();
-                    }
-                    case Button:
-                    {
-                        selectableButton =
-                            m_scrollViewContent.transform.GetChild(_objectIndex - 1).GetComponent<Button>();
-                        return selectableButton.GetComponent<Selectable>();
-                    }
-                }
+                return _ = GetSelectableComponent(_simpleSelectable, _objectIndex - 1);
             }
-
-            return null;
         }
 
-        private Selectable GetBottomNavigation(int _objectIndex)
+        private Selectable GetBottomNavigation(Selectable _simpleSelectable, int _objectIndex)
         {
-            Toggle selectableToggle;
-            Slider selectableSlider;
-            Button selectableButton;
-
             if (_objectIndex == m_scrollViewContent.transform.childCount - 1 && m_loopNavigation)
             {
-                switch (m_simpleSelectable)
-                {
-                    case Toggle:
-                    {
-                        selectableToggle =
-                            m_scrollViewContent.transform.GetChild(0).GetComponent<Toggle>();
-                        return selectableToggle.GetComponent<Selectable>();
-                    }
-                    case Slider:
-                    {
-                        selectableSlider =
-                            m_scrollViewContent.transform.GetChild(0).GetComponent<Slider>();
-                        return selectableSlider.GetComponent<Selectable>();
-                    }
-                    case Button:
-                    {
-                        selectableButton =
-                            m_scrollViewContent.transform.GetChild(0).GetComponent<Button>();
-                        return selectableButton.GetComponent<Selectable>();
-                    }
-                }
+                return _ = GetSelectableComponent(_simpleSelectable, 0);
             }
             else if (_objectIndex == m_scrollViewContent.transform.childCount - 1 && !m_loopNavigation)
             {
                 return null;
             }
-            else if (_objectIndex < m_scrollViewContent.transform.childCount - 1)
+            else /*if (_objectIndex < m_scrollViewContent.transform.childCount - 1)*/
             {
-                switch (m_simpleSelectable)
+                return _ = GetSelectableComponent(_simpleSelectable, _objectIndex + 1);
+            }
+        }
+
+        private Selectable GetGridNavigationUp(Selectable _selectable, int _currentIndex)
+        {
+            bool topBorderIndex = _currentIndex < m_gridSettings.constraintCount;
+            bool bottomBorderIndex = m_rowCount == m_gridSize.y;    //On Fix Column Count. Fix Row Count equivalent: m_columnCount == m_gridSize.x;
+
+            switch (m_loopNavigation)
+            {
+                case false:
                 {
-                    case Toggle:
+                    if (!topBorderIndex)
+                        return _ = GetSelectableComponent(_selectable, _currentIndex - m_gridSettings.constraintCount);
+                    //Get Category-Button on first row.
+                    break;
+                }
+                case true:
+                {
+                    if (topBorderIndex)
                     {
-                        selectableToggle =
-                            m_scrollViewContent.transform.GetChild(_objectIndex + 1).GetComponent<Toggle>();
-                        return selectableToggle.GetComponent<Selectable>();
+                        //Debug.Log(m_scrollViewContent.childCount % m_gridSettings.constraintCount); //Indices in last row, yes... .
                     }
-                    case Slider:
-                    {
-                        selectableSlider =
-                            m_scrollViewContent.transform.GetChild(_objectIndex + 1).GetComponent<Slider>();
-                        return selectableSlider.GetComponent<Selectable>();
-                    }
-                    case Button:
-                    {
-                        selectableButton =
-                            m_scrollViewContent.transform.GetChild(_objectIndex + 1).GetComponent<Button>();
-                        return selectableButton.GetComponent<Selectable>();
-                    }
+                    /*else */
+                    if (!topBorderIndex)
+                        return _ = GetSelectableComponent(_selectable, _currentIndex - m_gridSettings.constraintCount);
+                    break;
                 }
             }
-
             return null;
+        }
+
+        private Selectable GetGridNavigationDown(Selectable _selectable, int _currentIndex)
+        {
+            bool nextIndexOutOfRange = _currentIndex + m_gridSettings.constraintCount > m_scrollViewContent.childCount - 1; //>= on childCount.
+
+            //Another 'case false' down-direction may be considered by personal likings. <(o.O)"
+            switch (m_loopNavigation)
+            {
+                case false:
+                {
+                    if (!nextIndexOutOfRange)
+                        return _ = GetSelectableComponent(_selectable, _currentIndex + m_gridSettings.constraintCount);
+                    break;
+                }
+                case true:
+                {
+                    if (!nextIndexOutOfRange)
+                        return _ = GetSelectableComponent(_selectable, _currentIndex + m_gridSettings.constraintCount);
+                    /*else */
+                    if (nextIndexOutOfRange)
+                        return _ = GetSelectableComponent(_selectable, _currentIndex % m_gridSettings.constraintCount);
+                    break;
+                }
+            }
+            return null;
+        }
+
+        private Selectable GetGridNavigationLeft(Selectable _selectable, int _currentIndex)
+        {
+            bool leftBorderIndex = _currentIndex % m_gridSettings.constraintCount == 0;
+            bool loopIndexInRange = _currentIndex + (m_gridSettings.constraintCount - 1) < m_scrollViewContent.childCount - 1;
+
+            switch (m_loopNavigation)
+            {
+                case false:
+                {
+                    if (_currentIndex > 0)
+                        return _ = GetSelectableComponent(_selectable, _currentIndex - 1);
+                    /*else */
+                    if (_currentIndex == 0)
+                        return null;
+                    break;
+                }
+                case true:
+                {
+                    if (!leftBorderIndex)
+                        return _ = GetSelectableComponent(_selectable, _currentIndex - 1);
+                    ///*else */
+                    if (leftBorderIndex && loopIndexInRange)
+                        return _ = GetSelectableComponent(_selectable, _currentIndex + (m_gridSettings.constraintCount - 1));
+                    break;
+                }
+            }
+            return null;
+        }
+
+        private Selectable GetGridNavigationRight(Selectable _selectable, int _currentIndex)
+        {
+            bool rightBorderIndex = _currentIndex % m_gridSettings.constraintCount == m_gridSettings.constraintCount - 1;
+            bool loopIndexInRange = _currentIndex % m_gridSettings.constraintCount < m_gridSettings.constraintCount - 1 &&
+                _currentIndex < m_scrollViewContent.childCount - 1;
+
+            switch (m_loopNavigation)
+            {
+                case false:
+                {
+                    if (_currentIndex < m_scrollViewContent.childCount - 1)
+                        return _ = GetSelectableComponent(_selectable, _currentIndex + 1);
+                    /*else */
+                    if (_currentIndex == m_scrollViewContent.childCount - 1)
+                        return null;
+                    break;
+                }
+                case true:
+                {
+                    if (!rightBorderIndex && loopIndexInRange)
+                        return _ = GetSelectableComponent(_selectable, _currentIndex + 1);
+                    /*else */
+                    if (rightBorderIndex)
+                        return _ = GetSelectableComponent(_selectable, _currentIndex - (m_gridSettings.constraintCount - 1));
+                    break;
+                }
+            }
+            return null;
+        }
+
+        private Selectable GetSelectableComponent(Selectable _selectableObject, int _targetIndex)
+        {
+            Toggle selectableToggle;
+            Slider selectableSlider;
+            Button selectableButton;
+
+            switch (_selectableObject)
+            {
+                case Toggle:
+                {
+                    selectableToggle =
+                        m_scrollViewContent.transform.GetChild(_targetIndex).GetComponent<Toggle>();
+                    return selectableToggle.GetComponent<Selectable>();
+                }
+                case Slider:
+                {
+                    selectableSlider =
+                        m_scrollViewContent.transform.GetChild(_targetIndex).GetComponent<Slider>();
+                    return selectableSlider.GetComponent<Selectable>();
+                }
+                case Button:
+                {
+                    selectableButton =
+                        m_scrollViewContent.transform.GetChild(_targetIndex).GetComponent<Button>();
+                    return selectableButton.GetComponent<Selectable>();
+                }
+                default:
+                    return null;
+            }
         }
         #endregion
     }
