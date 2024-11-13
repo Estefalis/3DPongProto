@@ -375,7 +375,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                 }
                 case ContentFillType.Instantiated:
                 {
-                    //TODO: Set Up/Down/Left/Right - ObjectNavigation for Hor/Ver/Grid Layouts. Including loop between indexObjectID45 0 - lastChild indexObjectID45.
                     if (containsToggle)
                         m_contentChildAnchorPos.Add(toggle.gameObject, _contentElementAnchorPos);
 
@@ -528,26 +527,24 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         private void SetGridSlotNavigation(Selectable _simpleSelectable, int _index, Navigation _navigation)
         {
             #region Border Booleans
-            bool topBorderIndex = _index < m_gridSettings.constraintCount;
+            //bool topBorderIndex = _index < m_gridSettings.constraintCount;
             bool leftBorderIndex = _index % m_gridSettings.constraintCount == 0;
-            bool rightBorderIndex = _index % m_gridSettings.constraintCount == m_gridSettings.constraintCount - 1;
-            bool bottomBorderIndex = m_rowCount == m_gridSize.y;    //On Fix Column Count. Fix Row Count equivalent: m_columnCount == m_gridSize.x;
+            //bool rightBorderIndex = _index % m_gridSettings.constraintCount == m_gridSettings.constraintCount - 1;
+            //bool bottomBorderIndex = m_rowCount == m_gridSize.y;    //On Fix Column Count.
             #endregion
 
             #region Edge Booleans
-            bool startIndex = _index == 0;
-            bool topRightIndex = topBorderIndex && rightBorderIndex;
-            bool leftBottomIndex = leftBorderIndex && bottomBorderIndex;
-            bool endIndex = _index == m_scrollViewContent.childCount - 1;
-            bool leftBottomEndIndex = _index % (m_scrollViewContent.childCount - 1) == 0 && leftBorderIndex && endIndex;
+            //bool startIndex = _index == 0;
+            //bool topRightIndex = topBorderIndex && rightBorderIndex;
+            //bool leftBottomIndex = leftBorderIndex && bottomBorderIndex;
+            //bool endIndex = _index == m_scrollViewContent.childCount - 1;
+            //bool leftBottomEndIndex = _index % (m_scrollViewContent.childCount - 1) == 0 && leftBorderIndex && endIndex;
             #endregion
 
             #region Must have to count rows!
             if (leftBorderIndex)
                 m_rowCount++;
             #endregion
-
-            //Debug.Log($"ModuloIndex: {_index % m_gridSettings.constraintCount} Row: {m_rowCount}");
 
             #region Considered steps while progressing
             _navigation.selectOnUp = GetGridNavigationUp(_simpleSelectable, _index);
@@ -611,128 +608,151 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
         private Selectable GetGridNavigationUp(Selectable _selectable, int _currentIndex)
         {
-            bool topBorderIndex = _currentIndex < m_gridSettings.constraintCount;
-            bool bottomBorderIndex = m_rowCount == m_gridSize.y;    //On Fix Column Count. Fix Row Count equivalent: m_columnCount == m_gridSize.x;
-
-            switch (topBorderIndex)
+            switch (m_gridSettings.constraint)
             {
-                case true:
+                case GridLayoutGroup.Constraint.FixedColumnCount:
                 {
-                    switch (m_borderLoop)
+                    bool topBorderIndex = _currentIndex < m_gridSettings.constraintCount;
+
+                    int targetIndex = _currentIndex + m_gridSettings.constraintCount * m_gridSize.y - m_gridSettings.constraintCount;
+                    int alternativeTargetIndex = _currentIndex + m_gridSettings.constraintCount * m_gridSize.y - (m_gridSettings.constraintCount * 2);
+
+                    switch (topBorderIndex)
                     {
                         case false:
-                            return null;
+                        {
+                            return _ = GetSelectableComponent(_selectable, _currentIndex - m_gridSettings.constraintCount);
+                        }
                         case true:
                         {
-                            //TODO: Looping from the topBorderIndices shall navigate up directly down to the indices of bottomBorder of the same column. Independent of the 'm_gridSettings.constraintCount'.
-
-                            return null;
+                            switch (m_borderLoop)
+                            {
+                                case false:
+                                    return null;
+                                case true:
+                                {
+                                    if (targetIndex <= m_scrollViewContent.childCount - 1)
+                                        return _ = GetSelectableComponent(_selectable, targetIndex);
+                                    else if (alternativeTargetIndex != _currentIndex)
+                                        return _ = GetSelectableComponent(_selectable, alternativeTargetIndex);
+                                    else
+                                        return null;
+                                }
+                            }
                         }
                     }
                 }
-                case false:
+                case GridLayoutGroup.Constraint.FixedRowCount:
                 {
-                    return _ = GetSelectableComponent(_selectable, _currentIndex - m_gridSettings.constraintCount);
+                    return null;
                 }
             }
 
-            //switch (m_borderLoop)
-            //{
-            //    case false:
-            //    {
-            //        if (!topBorderIndex)
-            //            return _ = GetSelectableComponent(_selectable, _currentIndex - m_gridSettings.constraintCount);
-            //        //Get Category-Button on first row.
-            //        break;
-            //    }
-            //    case true:
-            //    {
-            //        if (topBorderIndex)
-            //        {
-            //            //Debug.Log(m_scrollViewContent.childCount % m_gridSettings.constraintCount); //Indices in last row, yes... .
-            //        }
-            //        /*else */
-            //        if (!topBorderIndex)
-            //            return _ = GetSelectableComponent(_selectable, _currentIndex - m_gridSettings.constraintCount);
-            //        break;
-            //    }
-            //}
-            //return null;
+            return null;
         }
 
         private Selectable GetGridNavigationDown(Selectable _selectable, int _currentIndex)
         {
-            bool indexOutOfRange = _currentIndex + m_gridSettings.constraintCount > m_scrollViewContent.childCount - 1; //>= on childCount.
-
-            switch (indexOutOfRange)
+            switch (m_gridSettings.constraint)
             {
-                case false:
+                case GridLayoutGroup.Constraint.FixedColumnCount:
                 {
-                    return _ = GetSelectableComponent(_selectable, _currentIndex + m_gridSettings.constraintCount);
-                }
-                case true:
-                {
-                    switch (m_borderLoop)
+                    bool indexOutOfRange = _currentIndex + m_gridSettings.constraintCount > m_scrollViewContent.childCount - 1; //>= on childCount.
+
+                    switch (indexOutOfRange)
                     {
                         case false:
-                            return null;
+                        {
+                            return _ = GetSelectableComponent(_selectable, _currentIndex + m_gridSettings.constraintCount);
+                        }
                         case true:
-                            return _ = GetSelectableComponent(_selectable, _currentIndex % m_gridSettings.constraintCount);
+                        {
+                            switch (m_borderLoop)
+                            {
+                                case false:
+                                    return null;
+                                case true:
+                                {
+                                    if (_currentIndex % m_gridSettings.constraintCount != _currentIndex)
+                                        return _ = GetSelectableComponent(_selectable, _currentIndex % m_gridSettings.constraintCount);
+                                    else
+                                        return null;
+                                }
+                            }
+                        }
                     }
                 }
+                case GridLayoutGroup.Constraint.FixedRowCount:
+                {
+                    return null;
+                }
             }
+
+            return null;
         }
 
         private Selectable GetGridNavigationLeft(Selectable _selectable, int _currentIndex)
         {
-            bool indexSaveWithinRange = _currentIndex > 0;
-            bool leftBorderIndex = _currentIndex % m_gridSettings.constraintCount == 0;
-
-            if (indexSaveWithinRange)
+            switch (m_gridSettings.constraint)
             {
-                switch (leftBorderIndex)
+                case GridLayoutGroup.Constraint.FixedColumnCount:
                 {
-                    case false:
-                        return _ = GetSelectableComponent(_selectable, _currentIndex - 1);
-                    case true:
+                    bool indexSaveWithinRange = _currentIndex > 0;
+                    bool leftBorderIndex = _currentIndex % m_gridSettings.constraintCount == 0;
+
+                    if (indexSaveWithinRange)
                     {
-                        //HINT: childIndex 0 got excluded above to prevent an exception. So contentChild-IDs == _currentIndex.
-                        if (m_borderLoop && _currentIndex % m_gridSettings.constraintCount != (m_scrollViewContent.childCount - 1) % m_gridSettings.constraintCount - _currentIndex)
+                        switch (leftBorderIndex)
                         {
-                            switch (_currentIndex + m_gridSettings.constraintCount - 1 <= m_scrollViewContent.childCount - 1)
+                            case false:
+                                return _ = GetSelectableComponent(_selectable, _currentIndex - 1);
+                            case true:
                             {
-                                case true:  //TargetIndices are rightBorderIndices.
-                                    return _ = GetSelectableComponent(_selectable, _currentIndex + (m_gridSettings.constraintCount - 1));
-                                case false: //TargetIndex is the last childIndex, if the common TargetIndex would be out of range.
+                                //HINT: childIndex 0 got excluded above to prevent an exception. So contentChild-IDs == _currentIndex.
+                                if (m_borderLoop && _currentIndex % m_gridSettings.constraintCount != (m_scrollViewContent.childCount - 1) % m_gridSettings.constraintCount - _currentIndex)
                                 {
-                                    if (leftBorderIndex && _currentIndex % m_gridSettings.constraintCount != (m_scrollViewContent.childCount - 1) % m_gridSettings.constraintCount)
+                                    switch (_currentIndex + m_gridSettings.constraintCount - 1 <= m_scrollViewContent.childCount - 1)
                                     {
-                                        return _ = GetSelectableComponent(_selectable, _currentIndex + (m_scrollViewContent.childCount - 1) % m_gridSettings.constraintCount);
+                                        case true:  //TargetIndices are rightBorderIndices.
+                                            return _ = GetSelectableComponent(_selectable, _currentIndex + (m_gridSettings.constraintCount - 1));
+                                        case false: //TargetIndex is the last childIndex, if the common TargetIndex would be out of range.
+                                        {
+                                            if (leftBorderIndex && _currentIndex % m_gridSettings.constraintCount != (m_scrollViewContent.childCount - 1) % m_gridSettings.constraintCount)
+                                            {
+                                                return _ = GetSelectableComponent(_selectable, _currentIndex + (m_scrollViewContent.childCount - 1) % m_gridSettings.constraintCount);
+                                            }
+                                            //else
+                                            return null;
+                                        }
                                     }
-                                    //else
-                                    return null;
                                 }
+                                //else
+                                return null;
                             }
                         }
-                        //else
-                        return null;
                     }
-                }
-            }
-            else
-            {
-                if (_currentIndex == 0)
-                {
-                    switch (m_borderLoop)
+                    else
                     {
-                        case false:
+                        if (_currentIndex == 0)
                         {
-                            //TODO: //Get/Find components out of UI. Or last button of the same line on looping.
-                            return null;
+                            switch (m_borderLoop)
+                            {
+                                case false:
+                                {
+                                    //TODO: //Get/Find components out of UI. Or last button of the same line on looping.
+                                    return null;
+                                }
+                                case true: //Case for excluded Index 0 from 'leftBorderIndex'.
+                                    return _ = GetSelectableComponent(_selectable, _currentIndex + (m_gridSettings.constraintCount - 1));
+                            }
                         }
-                        case true: //Case for excluded Index 0 from 'leftBorderIndex'.
-                            return _ = GetSelectableComponent(_selectable, _currentIndex + (m_gridSettings.constraintCount - 1));
                     }
+
+                    return null;
+                }
+                case GridLayoutGroup.Constraint.FixedRowCount:
+                {
+                    return null;
                 }
             }
 
@@ -741,50 +761,65 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
         private Selectable GetGridNavigationRight(Selectable _selectable, int _currentIndex)
         {
-            bool indexSaveWithinRange = _currentIndex < m_scrollViewContent.childCount - 1;  //2nd last indexObjectID45.
-            bool rightBorderIndex = _currentIndex % m_gridSettings.constraintCount == m_gridSettings.constraintCount - 1;
-            bool leftBorderIndex = _currentIndex % m_gridSettings.constraintCount == 0;
-
-            if (indexSaveWithinRange)
+            switch (m_gridSettings.constraint)
             {
-                switch (rightBorderIndex)
+                case GridLayoutGroup.Constraint.FixedColumnCount:
                 {
-                    case false:
-                        return _ = GetSelectableComponent(_selectable, _currentIndex + 1);
-                    case true:
+
+
+
+                    bool indexSaveWithinRange = _currentIndex < m_scrollViewContent.childCount - 1;  //2nd last indexObjectID45.
+                    bool rightBorderIndex = _currentIndex % m_gridSettings.constraintCount == m_gridSettings.constraintCount - 1;
+                    bool leftBorderIndex = _currentIndex % m_gridSettings.constraintCount == 0;
+
+                    if (indexSaveWithinRange)
                     {
-                        switch (m_borderLoop)
+                        switch (rightBorderIndex)
                         {
                             case false:
-                                return null;
+                                return _ = GetSelectableComponent(_selectable, _currentIndex + 1);
                             case true:
                             {
-                                //Loop for full filled rows with 'rightBorderIndex'.
-                                return _ = GetSelectableComponent(_selectable, _currentIndex - (m_gridSettings.constraintCount - 1));
+                                switch (m_borderLoop)
+                                {
+                                    case false:
+                                        return null;
+                                    case true:
+                                    {
+                                        //Loop for full filled rows with 'rightBorderIndex'.
+                                        return _ = GetSelectableComponent(_selectable, _currentIndex - (m_gridSettings.constraintCount - 1));
+                                    }
+                                }
                             }
                         }
                     }
-                }
-            }
-            else
-            {
-                if (_currentIndex == m_scrollViewContent.childCount - 1)
-                {
-                    switch (m_borderLoop)
+                    else
                     {
-                        case false:
+                        if (_currentIndex == m_scrollViewContent.childCount - 1)
                         {
-                            //TODO: //Get/Find components out of UI. Or first button of the same line on looping.
-                            return null;
-                        }
-                        case true: //Case for incomplete rows without 'rightBorderIndex'.
-                        {
-                            if (!leftBorderIndex)
-                                return _ = GetSelectableComponent(_selectable, _currentIndex - (_currentIndex % m_gridSettings.constraintCount));
-                            else
-                                return null; //TODO: //Get/Find components out of UI. Or first button of the same line on looping.
+                            switch (m_borderLoop)
+                            {
+                                case false:
+                                {
+                                    //TODO: //Get/Find components out of UI. Or first button of the same line on looping.
+                                    return null;
+                                }
+                                case true: //Case for incomplete rows without 'rightBorderIndex'.
+                                {
+                                    if (!leftBorderIndex)
+                                        return _ = GetSelectableComponent(_selectable, _currentIndex - (_currentIndex % m_gridSettings.constraintCount));
+                                    else
+                                        return null; //TODO: //Get/Find components out of UI. Or first button of the same line on looping.
+                                }
+                            }
                         }
                     }
+
+                    return null;
+                }
+                case GridLayoutGroup.Constraint.FixedRowCount:
+                {
+                    return null;
                 }
             }
 
