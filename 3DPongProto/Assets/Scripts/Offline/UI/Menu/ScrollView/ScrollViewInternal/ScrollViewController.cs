@@ -644,6 +644,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                 }
                 case GridLayoutGroup.Constraint.FixedRowCount:
                 {
+                    //The amount of childObjects in 1 Row need to be calculated, to know the next navigationUp object.
                     return null;
                 }
             }
@@ -684,6 +685,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                 }
                 case GridLayoutGroup.Constraint.FixedRowCount:
                 {
+                    //The amount of childObjects in 1 Row need to be calculated, to know the next navigationDown object.
+                    //Last Row IS the bottomBorder!
                     return null;
                 }
             }
@@ -699,6 +702,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                 {
                     bool indexSaveWithinRange = _currentIndex > 0;
                     bool leftBorderIndex = _currentIndex % m_gridSettings.constraintCount == 0;
+                    int scrollViewChildModulo = (m_scrollViewContent.childCount - 1) % m_gridSettings.constraintCount;
 
                     if (indexSaveWithinRange)
                     {
@@ -717,9 +721,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                                             return _ = GetSelectableComponent(_selectable, _currentIndex + (m_gridSettings.constraintCount - 1));
                                         case false: //TargetIndex is the last childIndex, if the common TargetIndex would be out of range.
                                         {
-                                            if (leftBorderIndex && _currentIndex % m_gridSettings.constraintCount != (m_scrollViewContent.childCount - 1) % m_gridSettings.constraintCount)
+                                            if (leftBorderIndex && _currentIndex % m_gridSettings.constraintCount != scrollViewChildModulo)
                                             {
-                                                return _ = GetSelectableComponent(_selectable, _currentIndex + (m_scrollViewContent.childCount - 1) % m_gridSettings.constraintCount);
+                                                return _ = GetSelectableComponent(_selectable, _currentIndex + scrollViewChildModulo);
                                             }
                                             //else
                                             return null;
@@ -752,6 +756,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                 }
                 case GridLayoutGroup.Constraint.FixedRowCount:
                 {
+                    //The amount of childObjects in 1 Row need to be calculated, to know how often to navigate to the left.
                     return null;
                 }
             }
@@ -765,9 +770,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             {
                 case GridLayoutGroup.Constraint.FixedColumnCount:
                 {
-
-
-
                     bool indexSaveWithinRange = _currentIndex < m_scrollViewContent.childCount - 1;  //2nd last indexObjectID45.
                     bool rightBorderIndex = _currentIndex % m_gridSettings.constraintCount == m_gridSettings.constraintCount - 1;
                     bool leftBorderIndex = _currentIndex % m_gridSettings.constraintCount == 0;
@@ -819,6 +821,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                 }
                 case GridLayoutGroup.Constraint.FixedRowCount:
                 {
+                    //TODO: Since the amount of Rows are fixed now, the amount of childObjects in 1 Row need to be calculated.
                     return null;
                 }
             }
