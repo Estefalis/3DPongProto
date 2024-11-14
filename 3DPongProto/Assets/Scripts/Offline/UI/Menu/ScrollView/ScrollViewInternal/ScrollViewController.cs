@@ -613,7 +613,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                 case GridLayoutGroup.Constraint.FixedColumnCount:
                 {
                     bool topBorderIndex = _currentIndex < m_gridSettings.constraintCount;
-
                     int targetIndex = _currentIndex + m_gridSettings.constraintCount * m_gridSize.y - m_gridSettings.constraintCount;
                     int alternativeTargetIndex = _currentIndex + m_gridSettings.constraintCount * m_gridSize.y - (m_gridSettings.constraintCount * 2);
 
@@ -696,11 +695,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
         private Selectable GetGridNavigationLeft(Selectable _selectable, int _currentIndex)
         {
+            bool indexSaveWithinRange = _currentIndex > 0;
+
             switch (m_gridSettings.constraint)
             {
                 case GridLayoutGroup.Constraint.FixedColumnCount:
                 {
-                    bool indexSaveWithinRange = _currentIndex > 0;
                     bool leftBorderIndex = _currentIndex % m_gridSettings.constraintCount == 0;
                     int scrollViewChildModulo = (m_scrollViewContent.childCount - 1) % m_gridSettings.constraintCount;
 
@@ -722,9 +722,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                                         case false: //TargetIndex is the last childIndex, if the common TargetIndex would be out of range.
                                         {
                                             if (leftBorderIndex && _currentIndex % m_gridSettings.constraintCount != scrollViewChildModulo)
-                                            {
                                                 return _ = GetSelectableComponent(_selectable, _currentIndex + scrollViewChildModulo);
-                                            }
                                             //else
                                             return null;
                                         }
@@ -766,11 +764,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
         private Selectable GetGridNavigationRight(Selectable _selectable, int _currentIndex)
         {
+            bool indexSaveWithinRange = _currentIndex < m_scrollViewContent.childCount - 1;
+
             switch (m_gridSettings.constraint)
             {
                 case GridLayoutGroup.Constraint.FixedColumnCount:
                 {
-                    bool indexSaveWithinRange = _currentIndex < m_scrollViewContent.childCount - 1;  //2nd last indexObjectID45.
                     bool rightBorderIndex = _currentIndex % m_gridSettings.constraintCount == m_gridSettings.constraintCount - 1;
                     bool leftBorderIndex = _currentIndex % m_gridSettings.constraintCount == 0;
 
@@ -787,10 +786,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                                     case false:
                                         return null;
                                     case true:
-                                    {
                                         //Loop for full filled rows with 'rightBorderIndex'.
                                         return _ = GetSelectableComponent(_selectable, _currentIndex - (m_gridSettings.constraintCount - 1));
-                                    }
                                 }
                             }
                         }
@@ -802,10 +799,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                             switch (m_borderLoop)
                             {
                                 case false:
-                                {
                                     //TODO: //Get/Find components out of UI. Or first button of the same line on looping.
                                     return null;
-                                }
                                 case true: //Case for incomplete rows without 'rightBorderIndex'.
                                 {
                                     if (!leftBorderIndex)
@@ -821,12 +816,58 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                 }
                 case GridLayoutGroup.Constraint.FixedRowCount:
                 {
-                    //TODO: Since the amount of Rows are fixed now, the amount of childObjects in 1 Row need to be calculated.
+                    bool topBorderIndex = _currentIndex < m_gridSize.x;
+                    bool leftBorderIndex = _currentIndex % m_gridSize.x == 0;
+                    bool rightBorderIndex = _currentIndex % m_gridSize.x == m_gridSize.x - 1;
+
+                    if (indexSaveWithinRange)
+                    {
+                        switch (rightBorderIndex)
+                        {
+                            case false:
+                                return _ = GetSelectableComponent(_selectable, _currentIndex + 1);
+                            case true:
+                            {
+                                switch (m_borderLoop)
+                                {
+                                    case false:
+                                        return null;
+                                    case true:
+                                        //Loop for full filled rows with 'rightBorderIndex'.
+                                        return _ = GetSelectableComponent(_selectable, _currentIndex - (m_gridSize.x - 1));
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (_currentIndex == m_scrollViewContent.childCount - 1)
+                        {
+                            switch (m_borderLoop)
+                            {
+                                case false:
+                                    //TODO: //Get/Find components out of UI. Or first button of the same line on looping.
+                                    return null;
+                                case true: //Case for incomplete rows without 'rightBorderIndex'.
+                                {
+                                    if (!leftBorderIndex)
+                                        return _ = GetSelectableComponent(_selectable, _currentIndex - (_currentIndex % m_gridSize.x));
+                                    else
+                                        return null; //TODO: //Get/Find components out of UI. Or first button of the same line on looping.
+                                }
+                            }
+                        }
+                    }
+#if UNITY_EDITOR
+                    //if (_currentIndex % m_gridSize.x == 0)
+                    //Debug.Log($"Modulo0: {_currentIndex} | Modulo-GridX: {_currentIndex + (m_gridSize.x + m_gridSize.x % m_gridSize.x - 1)}");
+#endif
                     return null;
                 }
+                case GridLayoutGroup.Constraint.Flexible:
+                default:
+                    return null;
             }
-
-            return null;
         }
 
         private Selectable GetSelectableComponent(Selectable _selectableObject, int _targetIndex)
