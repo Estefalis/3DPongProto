@@ -655,17 +655,35 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
         private Selectable GetGridNavigationDown(Selectable _selectable, int _currentIndex)
         {
+            //'gridSize.y' == 'm_gridSettings.constraintCount' on FixedRowCount and Start Axis Horizontal.
             switch (m_gridSettings.constraint)
             {
                 case GridLayoutGroup.Constraint.FixedColumnCount:
+                case GridLayoutGroup.Constraint.FixedRowCount:
                 {
-                    bool indexOutOfRange = _currentIndex + m_gridSettings.constraintCount > m_scrollViewContent.childCount - 1;
+                    bool indexOutOfRangeFixedColumn = _currentIndex + m_gridSettings.constraintCount > m_scrollViewContent.childCount - 1;
+                    bool indexOutOfRangeFixedRow = _currentIndex + m_gridSize.x > m_scrollViewContent.childCount - 1;
 
-                    switch (indexOutOfRange)
+                    bool indexOufOfRangedSwitch =
+                        m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? indexOutOfRangeFixedColumn : indexOutOfRangeFixedRow;
+
+                    switch (indexOufOfRangedSwitch)
                     {
                         case false:
                         {
-                            return _ = GetSelectableComponent(_selectable, _currentIndex + m_gridSettings.constraintCount);
+                            switch (m_gridSettings.constraint)
+                            {
+                                case GridLayoutGroup.Constraint.FixedColumnCount:
+                                {
+                                    return _ = GetSelectableComponent(_selectable, _currentIndex + m_gridSettings.constraintCount);
+                                }
+                                case GridLayoutGroup.Constraint.FixedRowCount:
+                                {
+                                    return _ = GetSelectableComponent(_selectable, _currentIndex + m_gridSize.x);
+                                }
+                                default:
+                                    return null;
+                            }
                         }
                         case true:
                         {
@@ -675,19 +693,32 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                                     return null;
                                 case true:
                                 {
-                                    if (_currentIndex % m_gridSettings.constraintCount != _currentIndex)
-                                        return _ = GetSelectableComponent(_selectable, _currentIndex % m_gridSettings.constraintCount);
-                                    else
-                                        return null;
+                                    switch (m_gridSettings.constraint)
+                                    {
+                                        case GridLayoutGroup.Constraint.FixedColumnCount:
+                                        {
+                                            if (_currentIndex % m_gridSettings.constraintCount != _currentIndex)
+                                                return _ = GetSelectableComponent(_selectable, _currentIndex % m_gridSettings.constraintCount);
+                                            else
+                                                return null;
+                                        }
+                                        case GridLayoutGroup.Constraint.FixedRowCount:
+                                        {
+                                            if (_currentIndex % m_gridSize.x != _currentIndex)
+                                                return _ = GetSelectableComponent(_selectable, _currentIndex % m_gridSize.x);
+                                            else
+                                                return null;
+                                        }
+                                        default:
+                                            return null;
+                                    }
                                 }
                             }
                         }
                     }
                 }
-                case GridLayoutGroup.Constraint.FixedRowCount:
+                case GridLayoutGroup.Constraint.Flexible:
                 {
-                    //The amount of childObjects in 1 Row need to be calculated, to know the next navigationDown object.
-                    //Last Row IS the bottomBorder!
                     return null;
                 }
             }
@@ -744,7 +775,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                                                     case GridLayoutGroup.Constraint.FixedColumnCount:
                                                     {
                                                         if (_currentIndex % m_gridSettings.constraintCount != lastChildIndexFixedColumn)
-                                                            return _ = 
+                                                            return _ =
                                                                 GetSelectableComponent(_selectable, _currentIndex + lastChildIndexFixedColumn);
                                                         //else
                                                         return null;    //'return null' prevents the object to set itself to navigate to.
