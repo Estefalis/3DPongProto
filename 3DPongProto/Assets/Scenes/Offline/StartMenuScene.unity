@@ -25555,7 +25555,7 @@ MonoBehaviour:
   m_spawnablePrefab: {fileID: 7390952189908015992, guid: 7b32bb407247aca499404a73eafef717,
     type: 3}
   m_setChildAmount: 50
-  m_borderLoop: 1
+  m_borderLoop: 0
   m_gridSize: {x: 0, y: 0}
 --- !u!1 &1839044203
 GameObject:

@@ -31,7 +31,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
         [SerializeField] internal AutoScroll m_autoScrolling;
 
-        //GridLayoutGroup: StartCorner: Upper Left, StartAxis Horizontal, ChildAlignment Upper Left!
+        //GridLayoutGroup: StartCorner: Upper Left, StartAxis: Horizontal, ChildAlignment: Upper Left, HorFit: Preferred, VerFit: Min.
         [SerializeField] internal ScrollDirection m_scrollDirection = ScrollDirection.Grid;
         [SerializeField] private ContentFillType m_contentFillType = ContentFillType.Filled;
         [SerializeField] private NavigationLevel m_navigationLevel = NavigationLevel.Simple;
@@ -78,7 +78,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         private GridLayoutGroup m_gridSettings;
         [SerializeField]
         private Vector2Int m_gridSize;
-        private int m_rowCount, m_columnCount;
 
         internal Dictionary<GameObject, RectTransform> m_contentChildAnchorPos = new Dictionary<GameObject, RectTransform>();
         internal Dictionary<GameObject, Navigation> m_objectNavigation = new Dictionary<GameObject, Navigation>();
@@ -89,8 +88,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             m_objectNavigation.Clear();
             m_dictKeys = new();
             m_dictKeys.Clear();
-            m_rowCount = 0;
-            m_columnCount = 0;
 
             GetScrollViewComponents();
             GetScrollOptionAndLayout(m_scrollViewRect);
@@ -430,7 +427,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                                 navigation.selectOnUp = GetTopNavigation(m_simpleSelectable, i);
                                 navigation.selectOnDown = GetBottomNavigation(m_simpleSelectable, i);
 
-                                SetSimpleSelectableNavigation(m_simpleSelectable, i, navigation);
+                                SetSimpleScrollViewNavigation(m_simpleSelectable, i, navigation);
                             }
 
                             break;
@@ -446,7 +443,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                                 navigation.selectOnLeft = GetTopNavigation(m_simpleSelectable, i);
                                 navigation.selectOnRight = GetBottomNavigation(m_simpleSelectable, i);
 
-                                SetSimpleSelectableNavigation(m_simpleSelectable, i, navigation);
+                                SetSimpleScrollViewNavigation(m_simpleSelectable, i, navigation);
                             }
 
                             break;
@@ -500,7 +497,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             return navigation;
         }
 
-        private void SetSimpleSelectableNavigation(Selectable _simpleSelectable, int _index, Navigation _navigation)
+        private void SetSimpleScrollViewNavigation(Selectable _simpleSelectable, int _index, Navigation _navigation)
         {
             switch (_simpleSelectable)
             {
@@ -527,33 +524,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
         private void SetGridSlotNavigation(Selectable _simpleSelectable, int _index, Navigation _navigation)
         {
-            #region Border Booleans
-            //bool topBorderFixedRow = _index < m_gridSettings.constraintCount;
-            bool leftBorderIndex = _index % m_gridSettings.constraintCount == 0;
-            //bool rightBorderFixedColumn = _index % m_gridSettings.constraintCount == m_gridSettings.constraintCount - 1;
-            //bool bottomBorderIndex = m_rowCount == m_gridSize.y;    //On Fix Column Count.
-            #endregion
-
-            #region Edge Booleans
-            //bool startIndex = _index == 0;
-            //bool topRightIndex = topBorderFixedRow && rightBorderFixedColumn;
-            //bool leftBottomIndex = leftBorderFixedColumn && bottomBorderIndex;
-            //bool endIndex = _index == m_scrollViewContent.childCount - 1;
-            //bool leftBottomEndIndex = _index % (m_scrollViewContent.childCount - 1) == 0 && leftBorderFixedColumn && endIndex;
-            #endregion
-
-            #region Must have to count rows!
-            if (leftBorderIndex)
-                m_rowCount++;
-            #endregion
-
-            #region Considered steps while progressing
             _navigation.selectOnUp = GetGridNavigationUp(_simpleSelectable, _index);
             _navigation.selectOnDown = GetGridNavigationDown(_simpleSelectable, _index);
             _navigation.selectOnLeft = GetGridNavigationLeft(_simpleSelectable, _index);
             _navigation.selectOnRight = GetGridNavigationRight(_simpleSelectable, _index);
 
-            //SetSimpleSelectableNavigation-Part.
+            //SetSimpleScrollViewNavigation-Part.
             switch (_simpleSelectable)
             {
                 case Toggle:
@@ -572,9 +548,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                     break;
                 }
             }
-            #endregion
         }
 
+        #region ScrollView Navigation Directions
+        #region Vertical & Horizontal Navigation
         private Selectable GetTopNavigation(Selectable _simpleSelectable, int _objectIndex)
         {
             if (_objectIndex == 0 && m_borderLoop)
@@ -606,22 +583,41 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                 return _ = GetSelectableComponent(_simpleSelectable, _objectIndex + 1);
             }
         }
+        #endregion
 
+        #region Grid Navigation
         private Selectable GetGridNavigationUp(Selectable _selectable, int _currentIndex)
         {
             switch (m_gridSettings.constraint)
             {
                 case GridLayoutGroup.Constraint.FixedColumnCount:
+                case GridLayoutGroup.Constraint.FixedRowCount:
                 {
-                    bool topBorderIndex = _currentIndex < m_gridSettings.constraintCount;
-                    int targetIndex = _currentIndex + m_gridSettings.constraintCount * m_gridSize.y - m_gridSettings.constraintCount;
-                    int alternativeTargetIndex = _currentIndex + m_gridSettings.constraintCount * m_gridSize.y - (m_gridSettings.constraintCount * 2);
+                    bool topBorderFixedColumn = _currentIndex < m_gridSettings.constraintCount;
+                    bool topBorderFixedRow = _currentIndex < m_gridSize.x;
+                    bool topBorderIndexSwitch =
+                        m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? topBorderFixedColumn : topBorderFixedRow;
 
-                    switch (topBorderIndex)
+                    int targetIndexFixedColumn = _currentIndex + m_gridSettings.constraintCount * m_gridSize.y - m_gridSettings.constraintCount;
+                    int targetIndexFixedRow = _currentIndex + m_gridSize.x * m_gridSize.y - m_gridSize.x;
+                    //int targetIndexSwitch = m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? targetIndexFixedColumn : targetIndexFixedRow;
+
+                    int altTargetIndexFixedColumn =
+                        _currentIndex + m_gridSettings.constraintCount * m_gridSize.y - (m_gridSettings.constraintCount * 2);
+                    int altTargetIndexFixedRow =
+                        _currentIndex + m_gridSize.x * m_gridSize.y - (m_gridSize.x * 2);
+                    //int altTargetSwitch = m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? altTargetIndexFixedColumn : altTargetIndexFixedRow;
+
+                    switch (topBorderIndexSwitch)
                     {
                         case false:
                         {
-                            return _ = GetSelectableComponent(_selectable, _currentIndex - m_gridSettings.constraintCount);
+                            return m_gridSettings.constraint switch
+                            {
+                                GridLayoutGroup.Constraint.FixedColumnCount => _ = GetSelectableComponent(_selectable, _currentIndex - m_gridSettings.constraintCount),
+                                GridLayoutGroup.Constraint.FixedRowCount => _ = GetSelectableComponent(_selectable, _currentIndex - m_gridSize.x),
+                                _ => null,
+                            };
                         }
                         case true:
                         {
@@ -631,21 +627,36 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                                     return null;
                                 case true:
                                 {
-                                    if (targetIndex <= m_scrollViewContent.childCount - 1)
-                                        return _ = GetSelectableComponent(_selectable, targetIndex);
-                                    else if (alternativeTargetIndex != _currentIndex)
-                                        return _ = GetSelectableComponent(_selectable, alternativeTargetIndex);
-                                    else
-                                        return null;
+                                    switch (m_gridSettings.constraint)
+                                    {
+                                        case GridLayoutGroup.Constraint.FixedColumnCount:
+                                        {
+                                            if (targetIndexFixedColumn <= m_scrollViewContent.childCount - 1)
+                                                return _ = GetSelectableComponent(_selectable, targetIndexFixedColumn);
+                                            else if (altTargetIndexFixedColumn != _currentIndex)
+                                                return _ = GetSelectableComponent(_selectable, altTargetIndexFixedColumn);
+                                            else
+                                                return null;    //'else if' and 'return null' prevent the object to set itself to navigate to.
+                                        }
+                                        case GridLayoutGroup.Constraint.FixedRowCount:
+                                        {
+                                            if (targetIndexFixedRow <= m_scrollViewContent.childCount - 1)
+                                                return _ = GetSelectableComponent(_selectable, targetIndexFixedRow);
+                                            else if (altTargetIndexFixedRow != _currentIndex)
+                                                return _ = GetSelectableComponent(_selectable, altTargetIndexFixedRow);
+                                            else
+                                                return null;    //'else if' and 'return null' prevent the object to set itself to navigate to.
+                                        }
+                                        default:
+                                            return null;
+                                    }
                                 }
                             }
                         }
                     }
                 }
-                case GridLayoutGroup.Constraint.FixedRowCount:
+                case GridLayoutGroup.Constraint.Flexible:
                 {
-                    bool topBorderFixedRow = _currentIndex < m_gridSize.x;
-                    //The amount of childObjects in 1 Row need to be calculated, to know the next navigationUp object.
                     return null;
                 }
             }
@@ -654,8 +665,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         }
 
         private Selectable GetGridNavigationDown(Selectable _selectable, int _currentIndex)
-        {
-            //'gridSize.y' == 'm_gridSettings.constraintCount' on FixedRowCount and Start Axis Horizontal.
+        {////'gridSize.y' == 'm_gridSettings.constraintCount' on FixedRowCount.
             switch (m_gridSettings.constraint)
             {
                 case GridLayoutGroup.Constraint.FixedColumnCount:
@@ -700,14 +710,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                                             if (_currentIndex % m_gridSettings.constraintCount != _currentIndex)
                                                 return _ = GetSelectableComponent(_selectable, _currentIndex % m_gridSettings.constraintCount);
                                             else
-                                                return null;
+                                                return null;    //'return null' prevents the object to set itself to navigate to.
                                         }
                                         case GridLayoutGroup.Constraint.FixedRowCount:
                                         {
                                             if (_currentIndex % m_gridSize.x != _currentIndex)
                                                 return _ = GetSelectableComponent(_selectable, _currentIndex % m_gridSize.x);
                                             else
-                                                return null;
+                                                return null;    //'return null' prevents the object to set itself to navigate to.
                                         }
                                         default:
                                             return null;
@@ -943,6 +953,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                     return null;
             }
         }
+        #endregion 
+        #endregion
 
         private Selectable GetSelectableComponent(Selectable _selectableObject, int _targetIndex)
         {
