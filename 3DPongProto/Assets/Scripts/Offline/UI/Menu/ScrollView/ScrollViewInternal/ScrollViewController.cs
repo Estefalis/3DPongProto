@@ -697,41 +697,72 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
         private Selectable GetGridNavigationLeft(Selectable _selectable, int _currentIndex)
         {
-            bool indexSaveWithinRange = _currentIndex > 0;
+            bool indexSaveWithinRange = _currentIndex > 0;  //Index 0 gets handled in 'else case'.
+
+            bool leftBorderFixedColumn = _currentIndex % m_gridSettings.constraintCount == 0;
+            int lastChildIndexFixedColumn = (m_scrollViewContent.childCount - 1) % m_gridSettings.constraintCount;
+
+            bool leftBorderFixedRow = _currentIndex % m_gridSize.x == 0;
+            int lastChildIndexFixedRow = (m_scrollViewContent.childCount - 1) % m_gridSize.x;
 
             switch (m_gridSettings.constraint)
             {
                 case GridLayoutGroup.Constraint.FixedColumnCount:
+                case GridLayoutGroup.Constraint.FixedRowCount:
                 {
-                    bool leftBorderIndex = _currentIndex % m_gridSettings.constraintCount == 0;
-                    int scrollViewChildModulo = (m_scrollViewContent.childCount - 1) % m_gridSettings.constraintCount;
+                    bool leftBorderIndexSwitch =
+                        m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? leftBorderFixedColumn : leftBorderFixedRow;
+
+                    //int lastChildIndexSwitch =
+                    //    m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? lastChildIndexFixedColumn : lastChildIndexFixedRow;
+
+                    int targetIndex = m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? _currentIndex + (m_gridSettings.constraintCount - 1) : _currentIndex + (m_gridSize.x - 1);
 
                     if (indexSaveWithinRange)
                     {
-                        switch (leftBorderIndex)
+                        switch (leftBorderIndexSwitch)
                         {
                             case false:
                                 return _ = GetSelectableComponent(_selectable, _currentIndex - 1);
                             case true:
                             {
                                 //HINT: childIndex 0 got excluded above to prevent an exception. So contentChild-IDs == _currentIndex.
-                                if (m_borderLoop && _currentIndex % m_gridSettings.constraintCount != (m_scrollViewContent.childCount - 1) % m_gridSettings.constraintCount - _currentIndex)
+                                switch (m_borderLoop)
                                 {
-                                    switch (_currentIndex + m_gridSettings.constraintCount - 1 <= m_scrollViewContent.childCount - 1)
+                                    case false:
+                                        return null;
+                                    case true:
                                     {
-                                        case true:  //TargetIndices are rightBorderIndices.
-                                            return _ = GetSelectableComponent(_selectable, _currentIndex + (m_gridSettings.constraintCount - 1));
-                                        case false: //TargetIndex is the last childIndex, if the common TargetIndex would be out of range.
+                                        switch (targetIndex <= m_scrollViewContent.childCount - 1)
                                         {
-                                            if (leftBorderIndex && _currentIndex % m_gridSettings.constraintCount != scrollViewChildModulo)
-                                                return _ = GetSelectableComponent(_selectable, _currentIndex + scrollViewChildModulo);
-                                            //else
-                                            return null;
+                                            case true:  //TargetIndices are rightBorderIndices from full rows.
+                                                return _ = GetSelectableComponent(_selectable, targetIndex);
+                                            case false: //TargetIndex is the last childIndex, if the common TargetIndex would be out of range.
+                                            {
+                                                switch (m_gridSettings.constraint)
+                                                {
+                                                    case GridLayoutGroup.Constraint.FixedColumnCount:
+                                                    {
+                                                        if (_currentIndex % m_gridSettings.constraintCount != lastChildIndexFixedColumn)
+                                                            return _ = 
+                                                                GetSelectableComponent(_selectable, _currentIndex + lastChildIndexFixedColumn);
+                                                        //else
+                                                        return null;    //'return null' prevents the object to set itself to navigate to.
+                                                    }
+                                                    case GridLayoutGroup.Constraint.FixedRowCount:
+                                                    {
+                                                        if (_currentIndex % m_gridSize.x != lastChildIndexFixedRow)
+                                                            return _ = GetSelectableComponent(_selectable, _currentIndex + lastChildIndexFixedRow);
+                                                        //else
+                                                        return null;    //'return null' prevents the object to set itself to navigate to.
+                                                    }
+                                                    default:
+                                                        return null;
+                                                }
+                                            }
                                         }
                                     }
                                 }
-                                //else
-                                return null;
                             }
                         }
                     }
@@ -746,17 +777,31 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                                     //TODO: //Get/Find components out of UI. Or last button of the same line on looping.
                                     return null;
                                 }
-                                case true: //Case for excluded Index 0 from 'leftBorderFixedColumn'.
-                                    return _ = GetSelectableComponent(_selectable, _currentIndex + (m_gridSettings.constraintCount - 1));
+                                case true: //Case for excluded Index 0 from 'leftBorderFixedColumn' or 'leftBorderFixedRow'.
+                                {
+                                    switch (m_gridSettings.constraint)
+                                    {
+                                        case GridLayoutGroup.Constraint.FixedColumnCount:
+                                        {
+                                            return _ = GetSelectableComponent(_selectable, _currentIndex + (m_gridSettings.constraintCount - 1));
+                                        }
+                                        case GridLayoutGroup.Constraint.FixedRowCount:
+                                        {
+                                            return _ = GetSelectableComponent(_selectable, _currentIndex + (m_gridSize.x - 1));
+                                        }
+                                        default:
+                                            return null;
+                                    }
+                                }
+
                             }
                         }
                     }
 
                     return null;
                 }
-                case GridLayoutGroup.Constraint.FixedRowCount:
+                case GridLayoutGroup.Constraint.Flexible:
                 {
-                    //The amount of childObjects in 1 Row need to be calculated, to know how often to navigate to the left.
                     return null;
                 }
             }
@@ -768,8 +813,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         {
             bool indexSaveWithinRange = _currentIndex < m_scrollViewContent.childCount - 1;
 
-            bool rightBorderFixedColumn = _currentIndex % m_gridSettings.constraintCount == m_gridSettings.constraintCount - 1;
             bool leftBorderFixedColumn = _currentIndex % m_gridSettings.constraintCount == 0;
+            bool rightBorderFixedColumn = _currentIndex % m_gridSettings.constraintCount == m_gridSettings.constraintCount - 1;
 
 #if UNITY_EDITOR
             //if (_currentIndex % m_gridSize.x == 0)

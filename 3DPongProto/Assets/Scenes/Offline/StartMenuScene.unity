@@ -3126,7 +3126,7 @@ MonoBehaviour:
   m_StartAxis: 0
   m_CellSize: {x: 100, y: 100}
   m_Spacing: {x: 2, y: 2}
-  m_Constraint: 2
+  m_Constraint: 1
   m_ConstraintCount: 7
 --- !u!114 &285261684
 MonoBehaviour:
@@ -7684,7 +7684,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 641281395}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
   m_Name: 
@@ -25555,7 +25555,7 @@ MonoBehaviour:
   m_spawnablePrefab: {fileID: 7390952189908015992, guid: 7b32bb407247aca499404a73eafef717,
     type: 3}
   m_setChildAmount: 50
-  m_borderLoop: 0
+  m_borderLoop: 1
   m_gridSize: {x: 0, y: 0}
 --- !u!1 &1839044203
 GameObject:
