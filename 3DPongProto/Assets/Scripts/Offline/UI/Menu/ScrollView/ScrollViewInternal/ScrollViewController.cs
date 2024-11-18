@@ -31,7 +31,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
         [SerializeField] internal AutoScroll m_autoScrolling;
 
-        //GridLayoutGroup: StartCorner: Upper Left, StartAxis: Horizontal, ChildAlignment: Upper Left, HorFit: Preferred, VerFit: Min.
+        //GridLayoutGroup: StartCorner: Upper Left, StartAxis: Horizontal, ChildAlignment: Upper Left.
         [SerializeField] internal ScrollDirection m_scrollDirection = ScrollDirection.Grid;
         [SerializeField] private ContentFillType m_contentFillType = ContentFillType.Filled;
         [SerializeField] private NavigationLevel m_navigationLevel = NavigationLevel.Simple;
@@ -75,9 +75,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         private RectTransform m_childRect;      //Rect for each child of the Content and it's '.anchoredPosition'.
         internal Vector2 m_firstChildRT;
 
-        private GridLayoutGroup m_gridSettings;
+        internal GridLayoutGroup m_gridSettings;
         [SerializeField]
-        private Vector2Int m_gridSize;
+        internal Vector2Int m_gridSize;
 
         internal Dictionary<GameObject, RectTransform> m_contentChildAnchorPos = new Dictionary<GameObject, RectTransform>();
         internal Dictionary<GameObject, Navigation> m_objectNavigation = new Dictionary<GameObject, Navigation>();
@@ -457,7 +457,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                             for (int i = 0; i < m_scrollViewContent.childCount; i++)
                             {
                                 navigation = GetSimpleSelectableNavigation(m_simpleSelectable, i);
-                                SetGridSlotNavigation(m_simpleSelectable, i, navigation);
+                                
+                                navigation.selectOnUp = GetGridNavigationUp(m_simpleSelectable, i);
+                                navigation.selectOnDown = GetGridNavigationDown(m_simpleSelectable, i);
+                                navigation.selectOnLeft = GetGridNavigationLeft(m_simpleSelectable, i);
+                                navigation.selectOnRight = GetGridNavigationRight(m_simpleSelectable, i);
+
+                                SetSimpleScrollViewNavigation(m_simpleSelectable, i, navigation);
                             }
                             break;
                         }
@@ -520,34 +526,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 #if UNITY_EDITOR
             //Debug.Log(m_contentChildAnchorPos[m_scrollViewContent.transform.GetChild(_index).gameObject].name);
 #endif
-        }
-
-        private void SetGridSlotNavigation(Selectable _simpleSelectable, int _index, Navigation _navigation)
-        {
-            _navigation.selectOnUp = GetGridNavigationUp(_simpleSelectable, _index);
-            _navigation.selectOnDown = GetGridNavigationDown(_simpleSelectable, _index);
-            _navigation.selectOnLeft = GetGridNavigationLeft(_simpleSelectable, _index);
-            _navigation.selectOnRight = GetGridNavigationRight(_simpleSelectable, _index);
-
-            //SetSimpleScrollViewNavigation-Part.
-            switch (_simpleSelectable)
-            {
-                case Toggle:
-                {
-                    m_dictKeys[_index].GetComponent<Toggle>().navigation = _navigation;
-                    break;
-                }
-                case Slider:
-                {
-                    m_dictKeys[_index].GetComponent<Slider>().navigation = _navigation;
-                    break;
-                }
-                case Button:
-                {
-                    m_dictKeys[_index].GetComponent<Button>().navigation = _navigation;
-                    break;
-                }
-            }
         }
 
         #region ScrollView Navigation Directions

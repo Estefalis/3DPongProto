@@ -44,7 +44,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             m_playerInputActions.UI.Enable();
 
             ResetVariables();
-            
+
             m_scrollViewController.m_scrollViewRect.scrollSensitivity = m_setScrollSensitivity;
 
             if (EventSystem.current.currentSelectedGameObject != null)
@@ -179,8 +179,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                 }
                 case ScrollDirection.Grid:
                 {
-                    //ScrollVertical(_gameObject);
-                    //ScrollHorizontal(_gameObject);
+                    ScrollVertical(_gameObject);
+                    ScrollHorizontal(_gameObject);
                     break;
                 }
                 case ScrollDirection.None:
@@ -422,7 +422,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             m_currentPosition.x = Mathf.Lerp(m_positionFrom.x, m_positionTo.x, m_progress);
             m_currentPosition.y = Mathf.Lerp(m_positionFrom.y, m_positionTo.y, m_progress);
         }
-        
+
         private void TransitionFromTo(Vector2 _positionFrom, Vector2 _positionTo, float _duration)
         {
             ResetVariables();
