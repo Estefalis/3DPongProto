@@ -450,7 +450,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                         }
                         case ScrollDirection.Grid:  //Instantiate case gets set in 'GetScrollViewObjects()'.
                         {
-                            //TODO: Get Naviation to all 4 MoveDirections, depending on GridConstraints.
                             m_dictKeys = new(m_contentChildAnchorPos.Keys);
                             m_gridSize = CustomGridLayoutSetup.GetGridSize(m_gridSettings);
 
@@ -523,6 +522,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                     break;
                 }
             }
+
+            m_objectNavigation.Add(m_dictKeys[_index], _navigation);
 #if UNITY_EDITOR
             //Debug.Log(m_contentChildAnchorPos[m_scrollViewContent.transform.GetChild(_index).gameObject].name);
 #endif

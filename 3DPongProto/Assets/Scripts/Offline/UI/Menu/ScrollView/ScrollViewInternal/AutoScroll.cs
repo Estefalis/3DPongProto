@@ -160,8 +160,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         {
             if (!m_autoScrollingEnabled || !m_selectedObjectInScrollView/* || Cursor.lockState == CursorLockMode.None*/)
             {
-                if (m_scrollViewController.m_scrollViewRect.scrollSensitivity != m_setScrollSensitivity)
-                    m_scrollViewController.m_scrollViewRect.scrollSensitivity = m_setScrollSensitivity;
+                //if (m_scrollViewController.m_scrollViewRect.scrollSensitivity != m_setScrollSensitivity)
+                //    m_scrollViewController.m_scrollViewRect.scrollSensitivity = m_setScrollSensitivity;
                 return;
             }
 
@@ -342,6 +342,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                 switch (m_scrollViewController.m_scrollDirection)
                 {
                     case ScrollDirection.Vertical:
+                    case ScrollDirection.Grid:
                     {
                         switch (m_mouseScrollValue.y > 0)
                         {
@@ -377,11 +378,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
                         break;
                     }
-                    case ScrollDirection.Grid:
-                    {
-                        //TODO: MoveToNextObject on DetectedScrollOption.Grid.
-                        break;
-                    }
                     case ScrollDirection.None:
                     default:
                         break;
@@ -407,6 +403,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             if (m_inProgress == false)
                 return;
 
+            if (m_scrollViewController.m_scrollViewRect.scrollSensitivity == 0)
+                m_scrollViewController.m_scrollViewRect.scrollSensitivity = m_setScrollSensitivity;
+
             m_timeElapsed += Time.unscaledDeltaTime;
             m_progress = m_timeElapsed / m_duration;
 
@@ -414,6 +413,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             {
                 m_inProgress = false;
                 m_progress = 1.0f;
+
+                if (m_scrollViewController.m_scrollViewRect.scrollSensitivity != 0)
+                    m_scrollViewController.m_scrollViewRect.scrollSensitivity = 0.0f;
             }
         }
 
