@@ -11,8 +11,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         private PlayerInputActions m_playerInputActions;
         [SerializeField] internal ScrollViewController m_scrollViewController;
 
-        [SerializeField] private float m_setScrollSensitivity = 10.0f;
-
         #region AutoScroll Transition
         [Header("Transition")]
         [SerializeField] private float m_transitionDuration = 0.05f;
@@ -20,7 +18,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         private float m_timeElapsed = 0.0f;
         private float m_progress = 0.0f;
 
-        private bool m_inProgress = false;
+        [SerializeField] private bool m_inProgress = false;
 
         private Vector2 m_currentPosition;
         private Vector2 m_positionFrom;
@@ -45,7 +43,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
             ResetVariables();
 
-            m_scrollViewController.m_scrollViewRect.scrollSensitivity = m_setScrollSensitivity;
+            m_scrollViewController.m_scrollViewRect.scrollSensitivity = 0.0f;
 
             if (EventSystem.current.currentSelectedGameObject != null)
             {
@@ -160,30 +158,28 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         {
             if (!m_autoScrollingEnabled || !m_selectedObjectInScrollView/* || Cursor.lockState == CursorLockMode.None*/)
             {
-                //if (m_scrollViewController.m_scrollViewRect.scrollSensitivity != m_setScrollSensitivity)
-                //    m_scrollViewController.m_scrollViewRect.scrollSensitivity = m_setScrollSensitivity;
                 return;
             }
 
             switch (m_scrollViewController.m_scrollDirection)
             {
-                case ScrollDirection.Vertical:
+                case ScrollType.Vertical:
                 {
                     ScrollVertical(_gameObject);
                     break;
                 }
-                case ScrollDirection.Horizontal:
+                case ScrollType.Horizontal:
                 {
                     ScrollHorizontal(_gameObject);
                     break;
                 }
-                case ScrollDirection.Grid:
+                case ScrollType.Grid:
                 {
                     ScrollVertical(_gameObject);
                     ScrollHorizontal(_gameObject);
                     break;
                 }
-                case ScrollDirection.None:
+                case ScrollType.None:
                 default:
                     break;
             }
@@ -246,6 +242,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             Vector2 scrollPosFrom = m_scrollViewController.m_scrollViewContent.localPosition;
             Vector2 scrollPosTo = scrollPosFrom;
             scrollPosTo.y -= _distanceY;
+            //scrollPosTo.y = Mathf.Clamp(scrollPosTo.y -= _distanceY, 0.0f, m_scrollViewController.m_scrollViewContent.rect.height);
             TransitionFromTo(scrollPosFrom, scrollPosTo, m_transitionDuration);
         }
 
@@ -254,6 +251,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             Vector2 scrollPosFrom = m_scrollViewController.m_scrollViewContent.localPosition;
             Vector2 scrollPosTo = scrollPosFrom;
             scrollPosTo.x += _distanceX;
+            //scrollPosTo.x = Mathf.Clamp(scrollPosTo.x += _distanceX, -m_scrollViewController.m_scrollViewContent.rect.width, 0.0f);
             TransitionFromTo(scrollPosFrom, scrollPosTo, m_transitionDuration);
         }
 
@@ -341,8 +339,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             {
                 switch (m_scrollViewController.m_scrollDirection)
                 {
-                    case ScrollDirection.Vertical:
-                    case ScrollDirection.Grid:
+                    case ScrollType.Vertical:
+                    case ScrollType.Grid:
                     {
                         switch (m_mouseScrollValue.y > 0)
                         {
@@ -360,7 +358,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
                         break;
                     }
-                    case ScrollDirection.Horizontal:
+                    case ScrollType.Horizontal:
                     {
                         switch (m_mouseScrollValue.y > 0)
                         {
@@ -378,7 +376,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
                         break;
                     }
-                    case ScrollDirection.None:
+                    case ScrollType.None:
                     default:
                         break;
                 }
@@ -403,19 +401,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             if (m_inProgress == false)
                 return;
 
-            if (m_scrollViewController.m_scrollViewRect.scrollSensitivity == 0)
-                m_scrollViewController.m_scrollViewRect.scrollSensitivity = m_setScrollSensitivity;
-
             m_timeElapsed += Time.unscaledDeltaTime;
             m_progress = m_timeElapsed / m_duration;
 
             if (m_progress > 1.0f)
             {
-                m_inProgress = false;
                 m_progress = 1.0f;
-
-                if (m_scrollViewController.m_scrollViewRect.scrollSensitivity != 0)
-                    m_scrollViewController.m_scrollViewRect.scrollSensitivity = 0.0f;
+                m_inProgress = false;
             }
         }
 
@@ -423,6 +415,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         {
             m_currentPosition.x = Mathf.Lerp(m_positionFrom.x, m_positionTo.x, m_progress);
             m_currentPosition.y = Mathf.Lerp(m_positionFrom.y, m_positionTo.y, m_progress);
+            //m_currentPosition = Vector2.Lerp(m_positionFrom, m_positionTo, m_progress);
         }
 
         private void TransitionFromTo(Vector2 _positionFrom, Vector2 _positionTo, float _duration)

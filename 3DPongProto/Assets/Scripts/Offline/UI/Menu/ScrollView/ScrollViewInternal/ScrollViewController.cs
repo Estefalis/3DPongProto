@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 {
-    internal enum ScrollDirection
+    internal enum ScrollType
     {
         None,
         Vertical,
@@ -14,7 +14,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         Grid
     }
 
-    internal enum NavigationLevel
+    internal enum NavigationType
     {
         None,
         Simple,
@@ -32,9 +32,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         [SerializeField] internal AutoScroll m_autoScrolling;
 
         //GridLayoutGroup: StartCorner: Upper Left, StartAxis: Horizontal, ChildAlignment: Upper Left.
-        [SerializeField] internal ScrollDirection m_scrollDirection = ScrollDirection.Grid;
+        [SerializeField] internal ScrollType m_scrollDirection = ScrollType.Grid;
         [SerializeField] private ContentFillType m_contentFillType = ContentFillType.Filled;
-        [SerializeField] private NavigationLevel m_navigationLevel = NavigationLevel.Simple;
+        [SerializeField] private NavigationType m_navigationLevel = NavigationType.Simple;
+        [SerializeField] private float m_scrollSensitivity = 10.0f;
 
         [Header("ScrollView Components")]
         [SerializeField] internal ScrollRect m_scrollViewRect;
@@ -112,6 +113,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         private void GetScrollViewComponents()
         {
             m_scrollViewRect = GetComponent<ScrollRect>();
+            m_scrollViewRect.scrollSensitivity = m_scrollSensitivity;
             m_scrollViewRectTransform = m_scrollViewRect.GetComponent<RectTransform>();
             m_scrollViewContent = m_scrollViewRect.content.GetComponent<RectTransform>();
         }
@@ -131,7 +133,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             {
                 case true:
                 {
-                    m_scrollDirection = ScrollDirection.Grid;
+                    m_scrollDirection = ScrollType.Grid;
                     break;
                 }
                 case false:
@@ -140,7 +142,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                     {
                         case true:
                         {
-                            m_scrollDirection = ScrollDirection.Vertical;
+                            m_scrollDirection = ScrollType.Vertical;
                             break;
                         }
                         case false:
@@ -149,12 +151,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                             {
                                 case true:
                                 {
-                                    m_scrollDirection = ScrollDirection.Horizontal;
+                                    m_scrollDirection = ScrollType.Horizontal;
                                     break;
                                 }
                                 case false:
                                 {
-                                    m_scrollDirection = ScrollDirection.None;
+                                    m_scrollDirection = ScrollType.None;
                                     break;
                                 }
                             }
@@ -257,11 +259,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             switch (navObjCount)    //determine how many NavigationObjects the contentChild Prefab has on each one.
             {
                 case 0:
-                    m_navigationLevel = NavigationLevel.None;
+                    m_navigationLevel = NavigationType.None;
                     return;
                 case 1:
                 {
-                    m_navigationLevel = NavigationLevel.Simple;
+                    m_navigationLevel = NavigationType.Simple;
 
                     if (containsToggle)
                         m_simpleSelectable = toggle;
@@ -274,7 +276,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                 }
                 default:
                 {
-                    m_navigationLevel = NavigationLevel.Nested;
+                    m_navigationLevel = NavigationType.Nested;
                     break;
                 }
             }
@@ -400,23 +402,23 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         }
 
         #region InstaniateNavigation
-        private void SetInstaniateNavigation(NavigationLevel _navigationLevel)
+        private void SetInstaniateNavigation(NavigationType _navigationLevel)
         {
             Navigation navigation;
 
             switch (_navigationLevel)
             {
-                case NavigationLevel.None:
+                case NavigationType.None:
                 default:
                     break;
-                case NavigationLevel.Simple:
+                case NavigationType.Simple:
                 {
                     switch (m_scrollDirection)
                     {
-                        case ScrollDirection.None:
+                        case ScrollType.None:
                         default:
                             break;
-                        case ScrollDirection.Vertical:
+                        case ScrollType.Vertical:
                         {
                             m_dictKeys = new(m_contentChildAnchorPos.Keys);
 
@@ -432,7 +434,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
                             break;
                         }
-                        case ScrollDirection.Horizontal:
+                        case ScrollType.Horizontal:
                         {
                             m_dictKeys = new(m_contentChildAnchorPos.Keys);
 
@@ -448,7 +450,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
                             break;
                         }
-                        case ScrollDirection.Grid:  //Instantiate case gets set in 'GetScrollViewObjects()'.
+                        case ScrollType.Grid:  //Instantiate case gets set in 'GetScrollViewObjects()'.
                         {
                             m_dictKeys = new(m_contentChildAnchorPos.Keys);
                             m_gridSize = CustomGridLayoutSetup.GetGridSize(m_gridSettings);
@@ -469,7 +471,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                     }
                     break;
                 }
-                case NavigationLevel.Nested:
+                case NavigationType.Nested:
                 {
                     break;
                 }

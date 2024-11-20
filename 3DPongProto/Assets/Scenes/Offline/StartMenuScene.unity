@@ -788,8 +788,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_scrollViewController: {fileID: 32744711}
-  m_setScrollSensitivity: 10
   m_transitionDuration: 0.05
+  m_inProgress: 0
 --- !u!114 &32744711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -806,6 +806,7 @@ MonoBehaviour:
   m_scrollDirection: 3
   m_contentFillType: 0
   m_navigationLevel: 1
+  m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
@@ -10798,8 +10799,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_scrollViewController: {fileID: 903394535}
-  m_setScrollSensitivity: 10
   m_transitionDuration: 0.05
+  m_inProgress: 0
 --- !u!114 &903394535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10816,6 +10817,7 @@ MonoBehaviour:
   m_scrollDirection: 3
   m_contentFillType: 0
   m_navigationLevel: 1
+  m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
@@ -25631,8 +25633,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_scrollViewController: {fileID: 1836731500}
-  m_setScrollSensitivity: 10
   m_transitionDuration: 0.05
+  m_inProgress: 0
 --- !u!114 &1836731500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25649,13 +25651,14 @@ MonoBehaviour:
   m_scrollDirection: 3
   m_contentFillType: 0
   m_navigationLevel: 1
+  m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
   m_spawnablePrefab: {fileID: 7390952189908015992, guid: 7b32bb407247aca499404a73eafef717,
     type: 3}
   m_setChildAmount: 50
-  m_borderLoop: 0
+  m_borderLoop: 1
   m_gridSize: {x: 0, y: 0}
 --- !u!1 &1839044203
 GameObject:
