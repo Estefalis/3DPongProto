@@ -6012,9 +6012,9 @@ GameObject:
   m_Component:
   - component: {fileID: 503422966}
   - component: {fileID: 503422968}
-  - component: {fileID: 503422967}
+  - component: {fileID: 503422969}
   m_Layer: 5
-  m_Name: Cursor
+  m_Name: GamepadCrosshair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6040,7 +6040,15 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &503422967
+--- !u!222 &503422968
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 503422965}
+  m_CullTransparentMesh: 1
+--- !u!114 &503422969
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6060,7 +6068,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: a9bc161374d98ba4f985ac84d10cc58f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6070,14 +6078,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!222 &503422968
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 503422965}
-  m_CullTransparentMesh: 1
 --- !u!1 &517172676
 GameObject:
   m_ObjectHideFlags: 0
@@ -21040,13 +21040,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1621836601}
+  - component: {fileID: 1621836602}
+  - component: {fileID: 1621836603}
   m_Layer: 0
-  m_Name: GamepadCursor
+  m_Name: CursorManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1621836601
 Transform:
   m_ObjectHideFlags: 0
@@ -21062,6 +21064,35 @@ Transform:
   m_Father: {fileID: 159073940}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1621836602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1621836600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1505d04ec66459e469db608086e2ac3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_cursorLockMode: 0
+  m_cursorVisibility: 0
+--- !u!114 &1621836603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1621836600}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7bd06eb995c57f4c9788052a5563ba4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_playerInput: {fileID: 0}
+  m_cursorTransform: {fileID: 0}
+  m_cursorSpeed: 1000
 --- !u!1 &1625258438
 GameObject:
   m_ObjectHideFlags: 0
@@ -29429,7 +29460,6 @@ GameObject:
   - component: {fileID: 2136304135}
   - component: {fileID: 2136304140}
   - component: {fileID: 2136304136}
-  - component: {fileID: 2136304141}
   - component: {fileID: 2136304137}
   m_Layer: 0
   m_Name: MenuManager
@@ -29547,20 +29577,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 21b573c09ff18ba4893ceecaaf9c5756, type: 2}
   - {fileID: 11400000, guid: 862bfec20d10c5049a46b7b03f906cd9, type: 2}
   - {fileID: 11400000, guid: 0a4b44b7dfa182243ab981955eda3e67, type: 2}
---- !u!114 &2136304141
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2136304134}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1505d04ec66459e469db608086e2ac3a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_cursorLockMode: 0
-  m_cursorVisibility: 0
 --- !u!1001 &2144383698
 PrefabInstance:
   m_ObjectHideFlags: 0
