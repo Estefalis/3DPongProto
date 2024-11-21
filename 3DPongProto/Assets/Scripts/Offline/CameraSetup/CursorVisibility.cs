@@ -2,7 +2,7 @@ using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class MenuCamera : MonoBehaviour
+public class CursorVisibility : MonoBehaviour
 {
     private PlayerInputActions m_playerInputActions;
 
@@ -80,10 +80,8 @@ public class MenuCamera : MonoBehaviour
         Cursor.visible = _visibility;   //true = visible, false = invisible.
     }
 
-    #region CallbackContext
     private void SwitchCursorVisibility(InputAction.CallbackContext _callbackContext)
     {
         SwitchCursorState();
     }
-    #endregion
 }
