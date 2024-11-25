@@ -157,7 +157,7 @@ namespace ThreeDeePongProto.Offline.UI
                             Cursor.visible = true;
                             m_physicalMouse.WarpCursorPosition(m_virtualMouse.position.ReadValue());
                             m_previousControlScheme = m_keyboardMouseScheme;
-                            Debug.Log($"String: {m_previousControlScheme} | Method: {_inputUser.controlScheme.Value.name}");
+                            //Debug.Log($"String: {m_previousControlScheme} | Method: {_inputUser.controlScheme.Value.name}");
                         }
                         break;
                     }
@@ -170,7 +170,7 @@ namespace ThreeDeePongProto.Offline.UI
                             InputState.Change(m_virtualMouse.position, m_physicalMouse.position.ReadValue());
                             ReplaceCursorAt(m_physicalMouse.position.ReadValue());
                             m_previousControlScheme = m_gamePadScheme;
-                            Debug.Log($"String: {m_previousControlScheme} | Method: {_inputUser.controlScheme.Value.name}");
+                            //Debug.Log($"String: {m_previousControlScheme} | Method: {_inputUser.controlScheme.Value.name}");
                         }
                         break;
                     }

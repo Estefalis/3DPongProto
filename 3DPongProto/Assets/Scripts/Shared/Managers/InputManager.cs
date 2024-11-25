@@ -7,6 +7,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using ThreeDeePongProto.Shared.HelperClasses;
+using UnityEngine.InputSystem.Users;
+using UnityEngine.InputSystem.LowLevel; //InputState.Change.
 
 namespace ThreeDeePongProto.Shared.InputActions
 {
@@ -18,7 +20,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 #endif
         [SerializeField] private bool m_loadRebindDicts = true;
 
-        #region Change Action Maps
+        #region ChangeActionMaps
         //ActionEvent to switch between ActionMaps within the InputActionAsset.
         public static event Action<InputActionMap> m_changeActiveActionMap;
 
@@ -98,6 +100,8 @@ namespace ThreeDeePongProto.Shared.InputActions
             SceneManager.sceneLoaded += OnSceneFinishedLoading;
             m_extractButtonImage += ExtractImage;
             ControlSettings.PlayerViewIndex += PlayerIndex;
+
+            InputUser.onChange += OnChangedToNewDevice;
         }
 
         private void OnDisable()
@@ -105,6 +109,8 @@ namespace ThreeDeePongProto.Shared.InputActions
             SceneManager.sceneLoaded -= OnSceneFinishedLoading;
             m_extractButtonImage -= ExtractImage;
             ControlSettings.PlayerViewIndex -= PlayerIndex;
+
+            InputUser.onChange -= OnChangedToNewDevice;
         }
 
         private static void PlayerIndex(int _playerIndex)
@@ -179,8 +185,6 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private Sprite ExtractImage(string _controlScheme, string _controlPath)
         {
-            Sprite buttonImage = default;
-
             switch (_controlScheme)
             {
                 case m_keyboardMouseScheme:
@@ -193,6 +197,8 @@ namespace ThreeDeePongProto.Shared.InputActions
 #if UNITY_EDITOR
                     //Debug.Log($"Start-{devicePath}-End");
 #endif
+                    Sprite buttonImage;
+
                     switch (devicePath)
                     {
                         case m_gamepadPath:
@@ -226,30 +232,6 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             return null;
         }
-        #endregion
-
-        #region Helper Method(s) moved to HelperClass nameSpace
-        //internal static string GetWordBetweenArgs(string _source, string _firstArg, string _secondArg)
-        //{
-        //    if (_source.Contains(_firstArg) && _source.Contains(_secondArg))
-        //    {
-        //        int start = _source.IndexOf(_firstArg, 0) + _firstArg.Length;
-        //        int end = _source.IndexOf(_secondArg, start);
-        //        return _source.Substring(start, end - start);
-        //    }
-
-        //    return "";
-        //}
-
-        //internal static string ToUpperFirstCharacter(string _source)
-        //{
-        //    if (string.IsNullOrEmpty(_source))
-        //        return _source;
-
-        //    char[] letters = _source.ToCharArray();
-        //    letters[0] = char.ToUpper(letters[0]);
-        //    return new string(letters);
-        //}
         #endregion
 
         #region KeyRebinding
@@ -319,7 +301,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     case true:  //For all Composite for future projects.
                     {
-                        if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _statusText, _controlScheme, _excludeMouse))
+                        if (DuplicateBindingCheck(_actionToRebind, _bindingIndex))
                         {
                             //Duplicate case.
                             _actionToRebind.RemoveBindingOverride(_bindingIndex);   //Required, or the new effectivePath gets displayed still.
@@ -343,7 +325,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     }
                     case false: //For all Rebinds in this project.
                     {
-                        if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _statusText, _controlScheme, _excludeMouse))
+                        if (DuplicateBindingCheck(_actionToRebind, _bindingIndex))
                         {
                             //if DuplicateCheck true. Canceling rebind right away.
                             _actionToRebind.RemoveBindingOverride(_bindingIndex);   //Required, or the new effectivePath gets displayed still.
@@ -420,7 +402,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             rebind.Start(); //Real Start of the rebind process.
         }
 
-        private static bool DuplicateBindingCheck(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI _statusText, string _controlScheme, bool _excludeMouse)
+        private static bool DuplicateBindingCheck(InputAction _actionToRebind, int _bindingIndex)
         {
             InputBinding newBinding = _actionToRebind.bindings[_bindingIndex];
 
@@ -432,9 +414,9 @@ namespace ThreeDeePongProto.Shared.InputActions
 #if UNITY_EDITOR
                     #region Flag Debug Logs
                     //if (!binding.isPartOfComposite)
-                    //    Debug.Log($"'None' flag {binding.effectivePath} in {binding.action}.");
+                    //    Debug.Log($"None flag {binding.effectivePath} in {binding.action}.");
                     //if (binding.isPartOfComposite)
-                    //    Debug.Log($"'isPartOfComposite' flag {binding.effectivePath} in {binding.action}.");
+                    //    Debug.Log($"PartOfComposite flag {binding.effectivePath} in {binding.action}.");
                     #endregion
 #endif
                     if (binding.action == newBinding.action)                                //If actions are the same.
@@ -455,7 +437,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                                 string bindingName = StringManipulation.ToUpperFirstCharacter(binding.name);
                                 Debug.Log($"Duplicate binding {newBinding.effectivePath} found in own Composite Part {bindingName}. Canceling rebind.");
 #endif
-                                return true;                                                //Call out a duplicate, if one if found.
+                                return true;                                                //Call out a duplicate, if one is found.
                             }
                         }
                     }
@@ -474,14 +456,14 @@ namespace ThreeDeePongProto.Shared.InputActions
                                         string bindingName = StringManipulation.ToUpperFirstCharacter(binding.name);
                                         Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}, Composite Part {bindingName}. Canceling rebind.");
 #endif
-                                        return true;                                        //Call out a duplicate, if one if found.
+                                        return true;                                        //Call out a duplicate, if one is found.
                                     }
                                     case false:
                                     {
 #if UNITY_EDITOR
                                         Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
 #endif
-                                        return true;                                        //Call out a duplicate, if one if found.
+                                        return true;                                        //Call out a duplicate, if one is found.
                                     }
                                 }
                             }
@@ -843,7 +825,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     {
                         break;
                     }
-                } 
+                }
                 #endregion
 
                 m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
@@ -866,7 +848,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{buttonIndexGuid}");
 
                 #region Using unique Guid to remove the specific Gamepad Override
-                //If the dictionary has the guidKey, save the entry. Else create a new entry with the new informations. 
+                //If the dictionary has the guidKey, save the entry. Else create a new entry with the new information. 
                 switch (dictHasKey)
                 {
                     case true:
@@ -892,17 +874,14 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// <param name="_inputAction"></param>
         private static void ResetCompositeOverrides(InputAction _inputAction)
         {
-            string deviceScheme;
-            Guid childIndexGuid;
-
             for (int i = 0; i < _inputAction.bindings.Count; i++)
             {
                 if (!_inputAction.bindings[i].isComposite)              //'!.isComposite' excludes 'WASD' parent.
                 {
-                    deviceScheme = _inputAction.bindings[i].groups;     //Get the deviceScheme for each Index.
-                    childIndexGuid = _inputAction.bindings[i].id;       //Get the child's Guid for each Index.
+                    var deviceScheme = _inputAction.bindings[i].groups;
+                    var childIndexGuid = _inputAction.bindings[i].id;
 
-                    switch (deviceScheme)                               //Check and remove child's Guid "guided" by it's deviceScheme.
+                    switch (deviceScheme)                               //Check and remove child's Guid "guided" by its deviceScheme.
                     {
                         #region Using unique Guid to remove the specific Keyboard Override in Composites
                         case m_keyboardMouseScheme:
@@ -950,6 +929,28 @@ namespace ThreeDeePongProto.Shared.InputActions
                         #endregion
                         default:
                             break;
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region onDeviceChange
+        private void OnChangedToNewDevice(InputUser _inputUser, InputUserChange _inputUserChange, InputDevice _inputDevice)
+        {
+            if (_inputUserChange == InputUserChange.ControlSchemeChanged)
+            {
+                switch (_inputUser.controlScheme.Value.name)
+                {
+                    case m_keyboardMouseScheme:
+                    {
+                        Debug.Log($"Active Scheme: {_inputUser.controlScheme.Value.name}");
+                        break;
+                    }
+                    case m_gamePadScheme:
+                    {
+                        Debug.Log($"Active Scheme: {_inputUser.controlScheme.Value.name}");
+                        break;
                     }
                 }
             }

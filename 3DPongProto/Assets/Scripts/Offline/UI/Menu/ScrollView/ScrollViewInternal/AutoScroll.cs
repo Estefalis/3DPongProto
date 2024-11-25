@@ -59,7 +59,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             GetMouseValues();
             UpdateCurrentObject();
 
-            if (m_scrollViewController.m_contentChildAnchorPos.ContainsKey(m_lastSelectedGameObject))
+            if (m_scrollViewController.m_contentChildAnchorPos.ContainsKey(EventSystem.current.currentSelectedGameObject))
             {
                 AutoScrollToNextGameObject(m_lastSelectedGameObject);
                 ScrollSelectNextGameObject();       //'AutoScrollToNextGameObject();' above SETS the object to compare in the dict!
