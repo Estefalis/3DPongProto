@@ -186,11 +186,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void GetMousePosition()
         {
-#if ENABLE_INPUT_SYSTEM
-            m_mousePosition = m_cameraInputActions.PlayerActions.MousePosition.ReadValue<Vector2>();
-#else
-            m_mousePosition = Input.mousePosition;
-#endif
+            m_mousePosition = InputManager.GetMousePosition();
         }
 
         private void FollowUnsmoothed()

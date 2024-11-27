@@ -59,9 +59,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             GetMouseValues();
             UpdateCurrentObject();
 
-            if (m_scrollViewController.m_contentChildAnchorPos.ContainsKey(EventSystem.current.currentSelectedGameObject))
+            var currentObject = EventSystem.current.currentSelectedGameObject;
+            if (m_scrollViewController.m_contentChildAnchorPos.ContainsKey(currentObject))
             {
-                AutoScrollToNextGameObject(m_lastSelectedGameObject);
+                AutoScrollToNextGameObject(currentObject);
                 ScrollSelectNextGameObject();       //'AutoScrollToNextGameObject();' above SETS the object to compare in the dict!
             }
             //TODO: Implement Gamepad Mouse.
@@ -78,7 +79,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         {
             m_mouseScrollValue = m_playerInputActions.UI.ScrollWheel.ReadValue<Vector2>();
             m_mouseScrollValue.Normalize();
-            m_mousePosition = m_playerInputActions.UI.MousePosition.ReadValue<Vector2>();
+            m_mousePosition = InputManager.GetMousePosition();
 
             switch (MouseIsInScrollView(m_mousePosition))
             {

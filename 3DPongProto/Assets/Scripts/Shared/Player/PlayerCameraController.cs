@@ -32,7 +32,8 @@ namespace ThreeDeePongProto.Shared.Player
         [SerializeField, Min(0.001f)] private float m_zoomSpeed;
         [SerializeField] private float m_zoomStep;
         [SerializeField] private float m_zoomDampening;
-        private Vector3 m_mousePosition, m_zoomTarget;
+        private Vector3 m_zoomTarget;
+        private Vector2 m_mousePosition;
 
         private CameraManager m_cameraManager;
 
@@ -186,11 +187,7 @@ namespace ThreeDeePongProto.Shared.Player
 
         private void GetMousePosition()
         {
-#if ENABLE_INPUT_SYSTEM
-            m_mousePosition = m_cameraInputActions.PlayerActions.MousePosition.ReadValue<Vector2>();
-#else
-            m_mousePosition = Input.mousePosition;
-#endif
+            m_mousePosition = InputManager.GetMousePosition();
         }
 
         private void FollowUnsmoothed()

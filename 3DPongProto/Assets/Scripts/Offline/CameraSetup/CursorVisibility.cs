@@ -41,14 +41,14 @@ namespace ThreeDeePongProto.Offline.UI
                 {
                     GetMousePosition();
                     SetCursorRestrictions(CursorLockMode.Confined, false);
-                    m_playerInputActions.UI.MousePosition.Disable();
+                    m_playerInputActions.UI.Point.Disable();
                     break;
                 }
                 case false: //Cursor is currently invisible.
                 {
                     Mouse.current.WarpCursorPosition(m_lastMousePosition);  //Set Mouse to it's last visible Position.
                     SetCursorRestrictions(CursorLockMode.None, true);
-                    m_playerInputActions.UI.MousePosition.Enable();
+                    m_playerInputActions.UI.Point.Enable();
                     break;
                 }
             }
@@ -56,11 +56,7 @@ namespace ThreeDeePongProto.Offline.UI
 
         private void GetMousePosition()
         {
-#if ENABLE_INPUT_SYSTEM
-            m_mousePosition = m_playerInputActions.UI.MousePosition.ReadValue<Vector2>();
-#else
-            m_mousePosition = Input.mousePosition;
-#endif
+            m_mousePosition = InputManager.GetMousePosition();
         }
 
         private void SetCursorRestrictions(CursorLockMode _lockMode, bool _visibility)

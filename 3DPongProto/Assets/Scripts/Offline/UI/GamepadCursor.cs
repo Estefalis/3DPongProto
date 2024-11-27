@@ -1,6 +1,7 @@
 using System;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Users;
@@ -25,10 +26,14 @@ namespace ThreeDeePongProto.Offline.UI
         private Mouse m_virtualMouse;
         private bool m_previousMouseState;
 
-        private string m_previousControlScheme = "";
+        private GameObject m_tempSaveObject;
+
+        private string m_activeControlScheme = "";
         private const string m_virtualMouseString = "VirtualMouse";
         private const string m_keyboardMouseScheme = "KeyboardMouse";           //Inputsystem's KeyboardMouse scheme. (groups)
         private const string m_gamePadScheme = "Gamepad";                       //Inputsystem's Gamepad scheme. (groups)
+
+        public static event Action<bool> AReleaseObject;
 
         private void Awake()
         {
@@ -45,12 +50,6 @@ namespace ThreeDeePongProto.Offline.UI
 
             //Pairs the device to use the PlayerInput-Component.
             InputUser.PerformPairingWithDevice(m_virtualMouse, m_playerInput.user);
-            //if (Gamepad.current != null)
-            //{
-            //    m_gamepadUser = InputUser.PerformPairingWithDevice(Gamepad.current);
-            //    InputUser.PerformPairingWithDevice(m_virtualMouse, _inputUser: m_gamepadUser);
-            //    m_gamepadUser.AssociateActionsWithUser(m_playerInputActions);
-            //}
 
             if (m_gamepadCursor != null)
             {
@@ -61,8 +60,8 @@ namespace ThreeDeePongProto.Offline.UI
             InputSystem.onAfterUpdate += UpdateVirtualMousePosition;
             //m_playerInput.onControlsChanged += OnInputDeviceChanged;
 
-            InputUser.onChange += OnChangedToNewDevice;
-            m_previousControlScheme = m_keyboardMouseScheme;
+            InputUser.onChange += OnDeviceChange;
+            m_activeControlScheme = m_keyboardMouseScheme;
         }
 
         private void OnDisable()
@@ -76,7 +75,7 @@ namespace ThreeDeePongProto.Offline.UI
             InputSystem.onAfterUpdate -= UpdateVirtualMousePosition;
             //m_playerInput.onControlsChanged -= OnInputDeviceChanged;
 
-            InputUser.onChange -= OnChangedToNewDevice;
+            InputUser.onChange -= OnDeviceChange;
         }
 
         private void Start()
@@ -90,7 +89,7 @@ namespace ThreeDeePongProto.Offline.UI
             if (m_virtualMouse == null || Gamepad.current == null)
                 return;
 
-            Vector2 deltaValue = m_playerInputActions.UI.Navigate.ReadValue<Vector2>();
+            Vector2 deltaValue = Gamepad.current.leftStick.ReadValue();
             deltaValue *= m_cursorSpeed * Time.unscaledDeltaTime;  //'deltaTime' or 'unscaledDeltaTime'?
 
             Vector2 virtualMousePos = m_virtualMouse.position.ReadValue();
@@ -106,44 +105,55 @@ namespace ThreeDeePongProto.Offline.UI
             //bool submitButtonIsPressed = m_playerInputActions.PlayerActions.enabled ? m_playerInputActions.PlayerActions.XYZ.IsPressed() : m_playerInputActions.UI.Submit.IsPressed();
             if (m_previousMouseState != submitButtonIsPressed)
             {
-                //Copy the state of the virtualMouse and map it to the leftMouseButton.
                 m_virtualMouse.CopyState<MouseState>(out var mouseState);
                 mouseState.WithButton(MouseButton.Left, submitButtonIsPressed);
                 InputState.Change(m_virtualMouse, mouseState);
                 m_previousMouseState = submitButtonIsPressed;
             }
 
+            bool submitButtonIsReleased = m_playerInputActions.UI.Submit.WasReleasedThisFrame();
+            if (m_previousMouseState != submitButtonIsReleased)
+            {
+                //Copy the state of the virtualMouse and map it to the leftMouseButton.
+                m_virtualMouse.CopyState<MouseState>(out var mouseState);
+                mouseState.WithButton(MouseButton.Left, submitButtonIsReleased);
+                InputState.Change(m_virtualMouse, mouseState);
+                m_previousMouseState = submitButtonIsReleased;
+            }
+
             ReplaceCursorAt(newPosition);
         }
 
-        private void ReplaceCursorAt(Vector2 _newPosition)
+        private void ReplaceCursorAt(Vector2 _exchangePosition)
         {
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(m_canvasRectTransform, _newPosition, m_mainCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : m_myCamera, out Vector2 newPosition);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(m_canvasRectTransform, _exchangePosition, m_mainCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : m_myCamera, out Vector2 newPosition);
             m_gamepadCursor.anchoredPosition = newPosition;
         }
 
+        #region Samyam's Version
         //private void OnInputDeviceChanged(PlayerInput _playerInput)
         //{
-        //    if (m_playerInput.currentControlScheme == m_keyboardMouseScheme && m_previousControlScheme != m_keyboardMouseScheme)
+        //    if (m_playerInput.currentControlScheme == m_keyboardMouseScheme && m_activeControlScheme != m_keyboardMouseScheme)
         //    {
         //        m_gamepadCursor.gameObject.SetActive(false);
         //        Cursor.visible = true;
         //        m_physicalMouse.WarpCursorPosition(m_virtualMouse.position.ReadValue());
-        //        m_previousControlScheme = m_keyboardMouseScheme;
+        //        m_activeControlScheme = m_keyboardMouseScheme;
         //    }
-        //    else if (m_playerInput.currentControlScheme == m_gamePadScheme && m_previousControlScheme != m_gamePadScheme)
+        //    else if (m_playerInput.currentControlScheme == m_gamePadScheme && m_activeControlScheme != m_gamePadScheme)
         //    {
         //        m_gamepadCursor.gameObject.SetActive(true);
         //        Cursor.visible = false;
         //        InputState.Change(m_virtualMouse.position, m_physicalMouse.position.ReadValue());
         //        ReplaceCursorAt(m_physicalMouse.position.ReadValue());
-        //        m_previousControlScheme = m_keyboardMouseScheme;
+        //        m_activeControlScheme = m_keyboardMouseScheme;
         //    }
         //}
 
-        //May Update() 'if(m_previousControlScheme != m_playerInput.currentControlScheme) with an own 'OnControlsChanged()' method. And update 'm_previousControlScheme = m_playerInput.currentControlScheme;' to it.
+        //May Update() 'if(m_activeControlScheme != m_playerInput.currentControlScheme) with an own 'OnControlsChanged()' method. And update 'm_activeControlScheme = m_playerInput.currentControlScheme;' to it.
+        #endregion
 
-        private void OnChangedToNewDevice(InputUser _inputUser, InputUserChange _inputUserChange, InputDevice _inputDevice)
+        private void OnDeviceChange(InputUser _inputUser, InputUserChange _inputUserChange, InputDevice _inputDevice)
         {
             if (_inputUserChange == InputUserChange.ControlSchemeChanged)
             {
@@ -151,30 +161,30 @@ namespace ThreeDeePongProto.Offline.UI
                 {
                     case m_keyboardMouseScheme:
                     {
-                        if (m_previousControlScheme != m_keyboardMouseScheme)
-                        {
-                            m_gamepadCursor.gameObject.SetActive(false);
-                            Cursor.visible = true;
-                            m_physicalMouse.WarpCursorPosition(m_virtualMouse.position.ReadValue());
-                            m_previousControlScheme = m_keyboardMouseScheme;
-                            //Debug.Log($"String: {m_previousControlScheme} | Method: {_inputUser.controlScheme.Value.name}");
-                        }
+                        AReleaseObject?.Invoke(false);
+                        EventSystem.current.SetSelectedGameObject(m_tempSaveObject);
+                        m_gamepadCursor.gameObject.SetActive(false);
+                        Cursor.visible = true;
+                        m_physicalMouse.WarpCursorPosition(m_virtualMouse.position.ReadValue());
+                        m_activeControlScheme = m_keyboardMouseScheme;
                         break;
                     }
                     case m_gamePadScheme:
                     {
-                        if (m_previousControlScheme != m_gamePadScheme)
-                        {
-                            m_gamepadCursor.gameObject.SetActive(true);
-                            Cursor.visible = false;
-                            InputState.Change(m_virtualMouse.position, m_physicalMouse.position.ReadValue());
-                            ReplaceCursorAt(m_physicalMouse.position.ReadValue());
-                            m_previousControlScheme = m_gamePadScheme;
-                            //Debug.Log($"String: {m_previousControlScheme} | Method: {_inputUser.controlScheme.Value.name}");
-                        }
+                        m_tempSaveObject = EventSystem.current.currentSelectedGameObject;
+                        AReleaseObject?.Invoke(true);
+                        m_gamepadCursor.gameObject.SetActive(true);
+                        Cursor.visible = false;
+                        InputState.Change(m_virtualMouse.position, m_physicalMouse.position.ReadValue());
+                        ReplaceCursorAt(m_physicalMouse.position.ReadValue());
+                        m_activeControlScheme = m_gamePadScheme;
                         break;
                     }
+                    default:
+                        break;
                 }
+
+                //Debug.Log($"Active Scheme: {_inputUser.controlScheme.Value.name}");
             }
         }
     }

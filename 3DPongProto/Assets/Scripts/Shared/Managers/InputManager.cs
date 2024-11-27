@@ -8,16 +8,23 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using ThreeDeePongProto.Shared.HelperClasses;
 using UnityEngine.InputSystem.Users;
-using UnityEngine.InputSystem.LowLevel; //InputState.Change.
 
 namespace ThreeDeePongProto.Shared.InputActions
 {
     public class InputManager : MonoBehaviour
     {
+        private enum ActiveInputActionMap
+        {
+            None,
+            PlayerActions,
+            UI
+        }
+
         public static PlayerInputActions m_PlayerInputActions;  //Reference to the PlayerAction-InputAsset.
-#if UNITY_EDITOR
-        [SerializeField] private bool m_deleteAllPlayerPrefs = false;
-#endif
+        #region PlayerPref Example
+        //[SerializeField] private bool m_deleteAllPlayerPrefs = false;
+        #endregion
+
         [SerializeField] private bool m_loadRebindDicts = true;
 
         #region ChangeActionMaps
@@ -54,6 +61,9 @@ namespace ThreeDeePongProto.Shared.InputActions
         private static event Func<string, string, Sprite> m_extractButtonImage;
         #endregion
 
+        private static ActiveInputActionMap m_activeInputActionMap;
+        private static Vector2 m_mousePosition;
+
         #region Serialization
         private static int m_playerIndex;
         private static readonly string m_keyBindingOverrideFolderPath = "/SaveData/KeyReBinds";
@@ -74,19 +84,17 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_keyboardRebindDict.Clear();
             m_gamepadRebindDict.Clear();
 
-#if UNITY_EDITOR
-            if (m_deleteAllPlayerPrefs)
-            {
-                PlayerPrefs.DeleteAll();
-                Debug.Log("All PlayerPrefs deleted!");
-            }
-#endif
+            #region PlayerPref Example
+            //if (m_deleteAllPlayerPrefs)
+            //{
+            //    PlayerPrefs.DeleteAll();
+            //    Debug.Log("All PlayerPrefs deleted!");
+            //}
+            #endregion
 
             //Alternative: m_PlayerInputActions ??= new PlayerInputActions();
             if (m_PlayerInputActions == null)
-            {
                 m_PlayerInputActions = new PlayerInputActions();
-            }
         }
 
         private void OnEnable()
@@ -100,8 +108,6 @@ namespace ThreeDeePongProto.Shared.InputActions
             SceneManager.sceneLoaded += OnSceneFinishedLoading;
             m_extractButtonImage += ExtractImage;
             ControlSettings.PlayerViewIndex += PlayerIndex;
-
-            InputUser.onChange += OnChangedToNewDevice;
         }
 
         private void OnDisable()
@@ -109,8 +115,31 @@ namespace ThreeDeePongProto.Shared.InputActions
             SceneManager.sceneLoaded -= OnSceneFinishedLoading;
             m_extractButtonImage -= ExtractImage;
             ControlSettings.PlayerViewIndex -= PlayerIndex;
+        }
 
-            InputUser.onChange -= OnChangedToNewDevice;
+        public static Vector2 GetMousePosition()
+        {
+#if ENABLE_INPUT_SYSTEM
+            switch (m_activeInputActionMap)
+            {
+                case ActiveInputActionMap.PlayerActions:
+                {
+                    m_mousePosition = m_PlayerInputActions.PlayerActions.MousePosition.ReadValue<Vector2>();
+                    break;
+                }
+                case ActiveInputActionMap.UI:
+                {
+                    m_mousePosition = m_PlayerInputActions.UI.Point.ReadValue<Vector2>();
+                    break;
+                }
+                default:
+                    m_mousePosition = Vector2.zero;
+                    break;
+            }
+#else
+            m_mousePosition = Input.mousePosition;
+#endif
+            return m_mousePosition;
         }
 
         private static void PlayerIndex(int _playerIndex)
@@ -130,30 +159,44 @@ namespace ThreeDeePongProto.Shared.InputActions
             switch (m_currentSceneName)
             {
                 case "StartMenuScene":
+                {
+                    m_activeInputActionMap = ActiveInputActionMap.UI;
                     ToggleActionMaps(m_PlayerInputActions.UI);
                     break;
+                }
                 case "LocalGameScene":
                 {
+                    m_activeInputActionMap = ActiveInputActionMap.PlayerActions;
                     ToggleActionMaps(m_PlayerInputActions.PlayerActions);
                     break;
                 }
                 case "LanGameScene":
                 {
+                    m_activeInputActionMap = ActiveInputActionMap.PlayerActions;
                     ToggleActionMaps(m_PlayerInputActions.PlayerActions);
                     break;
                 }
                 case "NetGameScene":
                 {
+                    m_activeInputActionMap = ActiveInputActionMap.PlayerActions;
                     ToggleActionMaps(m_PlayerInputActions.PlayerActions);
                     break;
                 }
                 case "WinScene":
+                {
+                    m_activeInputActionMap = ActiveInputActionMap.UI;
                     ToggleActionMaps(m_PlayerInputActions.UI);
                     break;
+                }
                 default:
+                {
+                    m_activeInputActionMap = ActiveInputActionMap.UI;
                     ToggleActionMaps(m_PlayerInputActions.UI);
                     break;
+                }
             }
+
+            //m_activeControlScheme = m_keyboardMouseScheme;
         }
 
         /// <summary>
@@ -929,28 +972,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                         #endregion
                         default:
                             break;
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region onDeviceChange
-        private void OnChangedToNewDevice(InputUser _inputUser, InputUserChange _inputUserChange, InputDevice _inputDevice)
-        {
-            if (_inputUserChange == InputUserChange.ControlSchemeChanged)
-            {
-                switch (_inputUser.controlScheme.Value.name)
-                {
-                    case m_keyboardMouseScheme:
-                    {
-                        Debug.Log($"Active Scheme: {_inputUser.controlScheme.Value.name}");
-                        break;
-                    }
-                    case m_gamePadScheme:
-                    {
-                        Debug.Log($"Active Scheme: {_inputUser.controlScheme.Value.name}");
-                        break;
                     }
                 }
             }
