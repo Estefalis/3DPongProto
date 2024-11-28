@@ -29,8 +29,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         private bool m_mouseIsInScrollView;
         private Vector2 m_mouseScrollValue, m_mousePosition;
 
-        private GameObject m_lastSelectedGameObject, m_fallbackGameObject;
-
         private void OnDisable()
         {
             m_playerInputActions.UI.Disable();
@@ -45,27 +43,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
 
             m_scrollViewController.m_scrollViewRect.scrollSensitivity = 0.0f;
 
-            if (EventSystem.current.currentSelectedGameObject != null)
-            {
-                m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
-                m_fallbackGameObject = m_lastSelectedGameObject;
-            }
-
             m_autoScrollingEnabled = m_scrollViewController.ContentChildrenSet & m_scrollViewController.ObjectNavigationSet;
         }
 
         private void Update()
         {
             GetMouseValues();
-            UpdateCurrentObject();
-
-            var currentObject = EventSystem.current.currentSelectedGameObject;
-            if (m_scrollViewController.m_contentChildAnchorPos.ContainsKey(currentObject))
-            {
-                AutoScrollToNextGameObject(currentObject);
-                ScrollSelectNextGameObject();       //'AutoScrollToNextGameObject();' above SETS the object to compare in the dict!
-            }
-            //TODO: Implement Gamepad Mouse.
+            UpdateCurrentObject(MenuOrganisation.LastSelectedGameObject);
 
             TransitionProgress();
             CalculatePosition();
@@ -108,45 +92,25 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         }
         #endregion
 
-        private void UpdateCurrentObject()
+        private void UpdateCurrentObject(GameObject _lastSelectedObject)
         {
-            switch (m_lastSelectedGameObject == null)
+            switch (m_scrollViewController.m_contentChildAnchorPos.ContainsKey(_lastSelectedObject))
             {
-                case true:  //Dicts don't allow null on keys. And just 'return;' disables the autoscrolling.
+                case true:
                 {
-                    if (EventSystem.current.currentSelectedGameObject != null)
-                    {
-                        m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
-                        m_fallbackGameObject = m_lastSelectedGameObject;
-                    }
-                    else
-                        m_lastSelectedGameObject = m_fallbackGameObject;
+                    m_selectedObjectInScrollView = true;
+                    AutoScrollToNextGameObject(_lastSelectedObject);
+                    ScrollSelectNextGameObject(_lastSelectedObject);
+                    //TODO: Implement Gamepad Mouse.
                     break;
                 }
                 case false:
                 {
-                    if (m_lastSelectedGameObject != EventSystem.current.currentSelectedGameObject && EventSystem.current.currentSelectedGameObject != null)
-                    {
-                        m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
-                        m_fallbackGameObject = m_lastSelectedGameObject;
-
-                        switch (m_scrollViewController.m_contentChildAnchorPos.ContainsKey(m_lastSelectedGameObject))
-                        {
-                            case true:
-                            {
-                                m_selectedObjectInScrollView = true;
-                                break;
-                            }
-                            case false:
-                            {
-                                m_selectedObjectInScrollView = false;
-                                break;
-                            }
-                        }
-                    }
+                    m_selectedObjectInScrollView = false;
                     break;
                 }
             }
+
         }
 
         #region AutoScroll to next GameObject
@@ -155,7 +119,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         /// </summary>
         /// <param name="_newGOTo"></param>
         /// <param name="_taskDelay"></param>
-        private void AutoScrollToNextGameObject(GameObject _gameObject)
+        private void AutoScrollToNextGameObject(GameObject _selectedObject)
         {
             if (!m_autoScrollingEnabled || !m_selectedObjectInScrollView/* || Cursor.lockState == CursorLockMode.None*/)
             {
@@ -166,18 +130,18 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
             {
                 case ScrollType.Vertical:
                 {
-                    ScrollVertical(_gameObject);
+                    ScrollVertical(_selectedObject);
                     break;
                 }
                 case ScrollType.Horizontal:
                 {
-                    ScrollHorizontal(_gameObject);
+                    ScrollHorizontal(_selectedObject);
                     break;
                 }
                 case ScrollType.Grid:
                 {
-                    ScrollVertical(_gameObject);
-                    ScrollHorizontal(_gameObject);
+                    ScrollVertical(_selectedObject);
+                    ScrollHorizontal(_selectedObject);
                     break;
                 }
                 case ScrollType.None:
@@ -334,7 +298,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         }
         #endregion
 
-        private void ScrollSelectNextGameObject()
+        private void ScrollSelectNextGameObject(GameObject _selectedObject)
         {
             if (m_mouseScrollValue.y != 0 && m_mouseIsInScrollView)
             {
@@ -347,12 +311,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                         {
                             case true:
                             {
-                                MoveToNextObject(m_scrollViewController.m_objectNavigation[m_lastSelectedGameObject].selectOnUp);
+                                MoveToNextObject(m_scrollViewController.m_objectNavigation[_selectedObject].selectOnUp);
                                 break;
                             }
                             case false:
                             {
-                                MoveToNextObject(m_scrollViewController.m_objectNavigation[m_lastSelectedGameObject].selectOnDown);
+                                MoveToNextObject(m_scrollViewController.m_objectNavigation[_selectedObject].selectOnDown);
                                 break;
                             }
                         }
@@ -365,12 +329,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                         {
                             case true:
                             {
-                                MoveToNextObject(m_scrollViewController.m_objectNavigation[m_lastSelectedGameObject].selectOnLeft);
+                                MoveToNextObject(m_scrollViewController.m_objectNavigation[_selectedObject].selectOnLeft);
                                 break;
                             }
                             case false:
                             {
-                                MoveToNextObject(m_scrollViewController.m_objectNavigation[m_lastSelectedGameObject].selectOnRight);
+                                MoveToNextObject(m_scrollViewController.m_objectNavigation[_selectedObject].selectOnRight);
                                 break;
                             }
                         }

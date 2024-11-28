@@ -78,10 +78,7 @@ namespace ThreeDeePongProto.Offline.Settings
         #endregion
         #endregion
 
-        #region Non-SerializeField-Member-Variables
-        private GameObject m_lastSelectedGameObject, m_fallbackGameObject;
         private readonly int m_firstRoundOffset = 1, m_firstPointOffset = 1, m_firstWidthOffset = 25, m_firstLengthOffset = 50;
-        #endregion
 
         #region Scriptable-Objects
         [Header("Scriptable Objects")]
@@ -103,8 +100,6 @@ namespace ThreeDeePongProto.Offline.Settings
 
         private void Awake()
         {
-            m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
-            m_fallbackGameObject = m_lastSelectedGameObject;
             //PreparationWindow.PlayerAmountUpdated += UpdateObjectsVisibility;
             SetupLineDictionaries();
 
@@ -428,11 +423,6 @@ namespace ThreeDeePongProto.Offline.Settings
         }
         #endregion
         #endregion
-
-        private void Update()
-        {
-            UpdateCurrentGameObject();
-        }
 
         #region Custom-Methods
         private void InitializeUISetup()
@@ -779,19 +769,6 @@ namespace ThreeDeePongProto.Offline.Settings
                             m_matchSetupDropdowns[i].value++;
                     break;
                 }
-            }
-        }
-
-        private void UpdateCurrentGameObject()
-        {
-            if (m_lastSelectedGameObject != EventSystem.current.currentSelectedGameObject && EventSystem.current.currentSelectedGameObject != null)
-            {
-                m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
-                m_fallbackGameObject = m_lastSelectedGameObject;
-            }
-            else
-            {
-                m_lastSelectedGameObject = m_fallbackGameObject;
             }
         }
 

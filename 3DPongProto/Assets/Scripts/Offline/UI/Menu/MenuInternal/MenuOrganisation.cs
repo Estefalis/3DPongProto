@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using ThreeDeePongProto.Shared.InputActions;
 
 namespace ThreeDeePongProto.Offline.UI.Menu
 {
@@ -9,6 +10,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [Header("Internal Connections")]
         [SerializeField] internal MenuNavigation m_menuNavigation;
         [SerializeField] internal InGameMenuActions m_inGameMenuActions;
+
+        internal static GameObject LastSelectedGameObject { get => m_lastSelectedGameObject; }
+        private static GameObject m_lastMenuSceneObject, m_lastGameSceneObject, m_lastSelectedGameObject;
 
         #region Scriptable Object
         [Header("Scriptable Objects")]
@@ -21,11 +25,18 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             if (m_eventSystem == null)
                 m_eventSystem = EventSystem.current;
+
+            m_lastSelectedGameObject = null;
         }
 
         private void Start()
         {
             PreSetUpPlayerAmount(m_matchUIStates.EPlayerAmount);
+        }
+
+        private void Update()
+        {
+            UpdateLastSelectedObject();
         }
 
         /// <summary>
@@ -44,6 +55,42 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             for (uint i = 0; i < playerAmount; i++)
             {
                 m_matchValues.PlayerData.Add(m_playerIDData[(int)i]);
+            }
+        }
+
+        private void UpdateLastSelectedObject()
+        {
+            switch (EventSystem.current.currentSelectedGameObject == null)
+            {
+                case false:
+                {
+                    switch (m_lastSelectedGameObject != EventSystem.current.currentSelectedGameObject)
+                    {
+                        case false:
+                            break;
+                        case true:
+                        {
+                            m_lastSelectedGameObject = InputManager.m_PlayerInputActions.UI.enabled ? m_lastMenuSceneObject = EventSystem.current.currentSelectedGameObject : m_lastGameSceneObject = EventSystem.current.currentSelectedGameObject;
+#if UNITY_EDITOR
+                            //Debug.Log(m_lastSelectedGameObject);
+#endif
+                            break;
+                        }
+                    }
+                    break;
+                }
+                case true:
+                {
+                    switch (m_lastSelectedGameObject == null)
+                    {
+                        case false:
+                            m_eventSystem.SetSelectedGameObject(m_lastSelectedGameObject);
+                            break;
+                        case true:
+                            break;
+                    }
+                    break;
+                }
             }
         }
 

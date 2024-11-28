@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +12,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #region Select First Elements by using the EventSystem.
         [Header("Select First Elements")]
         [SerializeField] internal Transform m_firstElement;
-        private Transform m_lastSelectedTransform;
         private Stack<Transform> m_activeElement = new();
 
         //Key-/Value-Pair component-arrays to set the selected GameObject for menu navigation with a dictionary.
@@ -33,40 +31,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] private Transform[] m_subPageTransforms;
         #endregion
 
-        private GameObject m_lastSelectedGameObject;
-
-        private event Action<GameObject> ALastSelectedGameObject;
-
         private void Awake()
         {
             SetFirstStackElement(m_firstElement);
-            ALastSelectedGameObject += UpdateCurrentGameObject;
-        }
-
-        private void OnDisable()
-        {
-            m_lastSelectedTransform = null;
-            ALastSelectedGameObject -= UpdateCurrentGameObject;
-        }
-
-        private void Start()
-        {
-            SetUIElements();
-        }
-
-        private void Update()
-        {
-            if (InputManager.m_PlayerInputActions.UI.enabled)
-            {
-                if (m_menuOrganisation.m_eventSystem.currentSelectedGameObject == null)
-                {
-                    m_menuOrganisation.m_eventSystem.SetSelectedGameObject(m_lastSelectedGameObject);
-                }
-                else if (m_menuOrganisation.m_eventSystem.currentSelectedGameObject != m_lastSelectedGameObject)
-                {
-                    ALastSelectedGameObject?.Invoke(m_menuOrganisation.m_eventSystem.currentSelectedGameObject);
-                }
-            }
+            SetUIElements();    //Also sets the lastSelectedElement in 'MenuOrganisation.cs'.
         }
 
         private void SetUIElements()
@@ -115,26 +83,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         /// <param name="_activeTransform"></param>
         internal void SetNavigationGameObject(Transform _activeTransform)
         {
-            switch (m_lastSelectedTransform == _activeTransform)
+            switch (_activeTransform == null)
             {
-                case true:
-                    return;
                 case false:
                 {
-                    m_lastSelectedTransform = _activeTransform;
                     GameObject selectElement = m_selectedElement[_activeTransform];
                     m_menuOrganisation.m_eventSystem.SetSelectedGameObject(selectElement);
-                    ALastSelectedGameObject?.Invoke(selectElement);
                     break;
                 }
+                case true:
+                    return;
             }
         }
         #endregion
-
-        private void UpdateCurrentGameObject(GameObject _gameObject)
-        {
-            m_lastSelectedGameObject = _gameObject;
-        }
 
         /// <summary>
         /// Each Button pressed sets the visibly activated/deactivated Button and enables/disables the corresponding Settings-SubPage.

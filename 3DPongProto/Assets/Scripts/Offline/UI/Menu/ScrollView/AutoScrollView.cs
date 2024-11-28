@@ -62,7 +62,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private Vector2Int m_gridSize;
         private Vector2 m_firstChildRT;
 
-        private GameObject m_lastSelectedGameObject, m_fallbackGameObject;
         internal RectTransform m_scrollViewRectTransform;
         private RectTransform m_childRect;      //Rect for each child of the Content and it's '.anchoredPosition'.
 
@@ -82,8 +81,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             m_contentChildAnchorPos.Clear();
             m_objectNavigation.Clear();
-            m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
-            m_fallbackGameObject = m_lastSelectedGameObject;
         }
 
         private void Start()
@@ -106,7 +103,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             GetMouseValues();
 
-            UpdateCurrentGameObject();
+            UpdateCurrentGameObject(MenuOrganisation.LastSelectedGameObject);
             AutoScrollToNextGameObject();
         }
 
@@ -425,14 +422,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             switch (m_detectedScrollOption)
             {
                 case DetectedScrollOption.Vertical:
-                    UpdateVerticalScrollPosition(m_contentChildAnchorPos[m_lastSelectedGameObject]);
+                    UpdateVerticalScrollPosition(m_contentChildAnchorPos[MenuOrganisation.LastSelectedGameObject]);
                     break;
                 case DetectedScrollOption.Horizontal:
-                    UpdateHorizontalScrollPosition(m_contentChildAnchorPos[m_lastSelectedGameObject]);
+                    UpdateHorizontalScrollPosition(m_contentChildAnchorPos[MenuOrganisation.LastSelectedGameObject]);
                     break;
                 case DetectedScrollOption.Both:
-                    UpdateVerticalScrollPosition(m_contentChildAnchorPos[m_lastSelectedGameObject]);
-                    UpdateHorizontalScrollPosition(m_contentChildAnchorPos[m_lastSelectedGameObject]);
+                    UpdateVerticalScrollPosition(m_contentChildAnchorPos[MenuOrganisation.LastSelectedGameObject]);
+                    UpdateHorizontalScrollPosition(m_contentChildAnchorPos[MenuOrganisation.LastSelectedGameObject]);
                     break;
                 case DetectedScrollOption.None:
                 default:
@@ -452,12 +449,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         {
                             case true:
                             {
-                                MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnUp);
+                                MoveToNextObject(m_objectNavigation[MenuOrganisation.LastSelectedGameObject].selectOnUp);
                                 break;
                             }
                             case false:
                             {
-                                MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnDown);
+                                MoveToNextObject(m_objectNavigation[MenuOrganisation.LastSelectedGameObject].selectOnDown);
                                 break;
                             }
                         }
@@ -470,12 +467,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         {
                             case true:
                             {
-                                MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnLeft);
+                                MoveToNextObject(m_objectNavigation[MenuOrganisation.LastSelectedGameObject].selectOnLeft);
                                 break;
                             }
                             case false:
                             {
-                                MoveToNextObject(m_objectNavigation[m_lastSelectedGameObject].selectOnRight);
+                                MoveToNextObject(m_objectNavigation[MenuOrganisation.LastSelectedGameObject].selectOnRight);
                                 break;
                             }
                         }
@@ -626,65 +623,40 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         /// Updates bool 'm_selectedObjectInScrollView', depending on GameObject related Dicts.
         /// </summary>
         /// <param name="_gameObject"></param>
-        private void UpdateCurrentGameObject()
+        private void UpdateCurrentGameObject(GameObject _lastSelectedObject)
         {
-            switch (m_lastSelectedGameObject == null)
+            #region Dict switch
+            switch (m_contentChildAnchorPos.ContainsKey(_lastSelectedObject))
             {
-                case true:  //Dicts don't allow null on keys. And just 'return;' disables the autoscrolling.
-                    if (EventSystem.current.currentSelectedGameObject != null)
+                case true:
+                {
+                    m_edgePosition = MaskedScrollRectEdgeCheck(m_scrollViewRectTransform, m_contentChildAnchorPos[_lastSelectedObject].anchoredPosition);
+#if UNITY_EDITOR
+                    //Debug.Log($"AtEdgePosition: {m_edgePosition}");
+#endif
+
+                    #region Switch helps to keep AutoScroll smooth, while using 'MoveToNextObject()' MouseScrolling.
+                    switch (m_edgePosition)
                     {
-                        m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
-                        m_fallbackGameObject = m_lastSelectedGameObject;
+                        case true:
+                            m_scrollViewRect.scrollSensitivity = 0.0f;
+                            break;
+                        case false:
+                            m_scrollViewRect.scrollSensitivity = m_setScrollSensitivity;
+                            break;
                     }
-                    else
-                        m_lastSelectedGameObject = m_fallbackGameObject;
+                    #endregion
+
+                    m_canAutoScroll = true;
                     break;
+                }
                 case false:
                 {
-                    if (m_lastSelectedGameObject != EventSystem.current.currentSelectedGameObject && EventSystem.current.currentSelectedGameObject != null)
-                    {
-                        m_lastSelectedGameObject = EventSystem.current.currentSelectedGameObject;
-                        m_fallbackGameObject = m_lastSelectedGameObject;
-
-                        #region Dict switch
-                        switch (m_contentChildAnchorPos.ContainsKey(m_lastSelectedGameObject))
-                        {
-                            case true:
-                            {
-                                m_edgePosition = MaskedScrollRectEdgeCheck(m_scrollViewRectTransform, m_contentChildAnchorPos[m_lastSelectedGameObject].anchoredPosition);
-#if UNITY_EDITOR
-                                //Debug.Log($"AtEdgePosition: {m_edgePosition}");
-#endif
-
-                                #region Switch helps to keep AutoScroll smooth, while using 'MoveToNextObject()' MouseScrolling.
-                                switch (m_edgePosition)
-                                {
-                                    case true:
-                                        m_scrollViewRect.scrollSensitivity = 0.0f;
-                                        break;
-                                    case false:
-                                        m_scrollViewRect.scrollSensitivity = m_setScrollSensitivity;
-                                        break;
-                                }
-                                #endregion
-
-                                m_canAutoScroll = true;
-                                break;
-                            }
-                            case false:
-                            {
-                                m_canAutoScroll = false;
-                                break;
-                            }
-                        }
-                        #endregion
-                    }
-#if UNITY_EDITOR
-                    //Debug.Log($"LastGO: {m_lastSelectedGameObject.name} - autoScroll: {m_selectedObjectInScrollView}");
-#endif
+                    m_canAutoScroll = false;
                     break;
                 }
             }
+            #endregion
         }
 
         private bool MaskedScrollRectEdgeCheck(RectTransform _scrollViewRect, Vector2 _lastGOAnchor)
