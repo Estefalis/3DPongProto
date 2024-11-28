@@ -71,9 +71,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         case true:
                         {
                             m_lastSelectedGameObject = InputManager.m_PlayerInputActions.UI.enabled ? m_lastMenuSceneObject = EventSystem.current.currentSelectedGameObject : m_lastGameSceneObject = EventSystem.current.currentSelectedGameObject;
-#if UNITY_EDITOR
-                            //Debug.Log(m_lastSelectedGameObject);
-#endif
                             break;
                         }
                     }
@@ -92,6 +89,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     break;
                 }
             }
+#if UNITY_EDITOR
+            //Debug.Log(m_lastSelectedGameObject);
+#endif
         }
 
         public void QuitGame()

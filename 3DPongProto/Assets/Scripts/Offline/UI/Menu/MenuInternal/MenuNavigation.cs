@@ -59,6 +59,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             Transform currentElement = m_activeElement.Peek();
             currentElement.gameObject.SetActive(false);
+            m_menuOrganisation.m_eventSystem.SetSelectedGameObject(null);   //The old selectedGO needs to be removed, or it can stay selected.
 
             m_activeElement.Push(_next);
             _next.gameObject.SetActive(true);
@@ -70,6 +71,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             Transform currentElement = m_activeElement.Pop();
             currentElement.gameObject.SetActive(false);
+            m_menuOrganisation.m_eventSystem.SetSelectedGameObject(null);   //The old selectedGO needs to be removed, or it can stay selected.
 
             Transform previousElement = m_activeElement.Peek();
             previousElement.gameObject.SetActive(true);
