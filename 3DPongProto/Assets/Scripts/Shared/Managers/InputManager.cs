@@ -196,7 +196,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 }
             }
 
-            //m_activeControlScheme = m_keyboardMouseScheme;
+            //m_lastControlSchemeChange = m_keyboardMouseScheme;
         }
 
         /// <summary>

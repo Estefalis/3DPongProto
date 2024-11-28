@@ -1,44 +1,48 @@
 using System;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Users;
 
-//HINT: Currently Point and MousePosition both positions of physical and virtual mouse.
 namespace ThreeDeePongProto.Offline.UI
 {
-    public class GamepadCursor : MonoBehaviour
+    public class CursorManager : MonoBehaviour
     {
-        //NOTE: May combine GamepadCursor & CursorVisibility scripts.
         private PlayerInputActions m_playerInputActions;
+
         [SerializeField] private PlayerInput m_playerInput;
 
-        [SerializeField] private RectTransform m_gamepadCursor;
+        [SerializeField] private RectTransform m_cursorTransform;
         [SerializeField] private Canvas m_mainCanvas;
-        private RectTransform m_canvasRectTransform;
         [SerializeField] private Camera m_myCamera; //If not 'm_camera = Camera.main;' without '[SerializeField]'.
         [SerializeField] private float m_cursorSpeed = 1000.0f;
         [SerializeField] private float m_borderZone = 30.0f;
 
-        private Mouse m_physicalMouse;
+        [Header("Cursor Restrictions")]
+        [SerializeField] private CursorLockMode m_cursorLockMode;
+        [SerializeField] private bool m_cursorVisibility = false;
+
+        private RectTransform m_canvasRectTransform;
+
         private Mouse m_virtualMouse;
+        private Mouse m_physicalMouse;
         private bool m_previousMouseState;
 
-        private GameObject m_tempSaveObject;
+        //private GameObject m_tempSaveObject;
 
-        private string m_activeControlScheme = "";
+        private string m_lastControlSchemeChange = "";
         private const string m_virtualMouseString = "VirtualMouse";
         private const string m_keyboardMouseScheme = "KeyboardMouse";           //Inputsystem's KeyboardMouse scheme. (groups)
         private const string m_gamePadScheme = "Gamepad";                       //Inputsystem's Gamepad scheme. (groups)
-
-        public static event Action<bool> AReleaseObject;
 
         private void Awake()
         {
             m_canvasRectTransform = m_mainCanvas.GetComponent<RectTransform>();
             m_physicalMouse = Mouse.current;
+
+            m_cursorTransform.SetAsLastSibling();
+            SetCursorRestrictions(m_cursorLockMode, m_cursorVisibility);
         }
 
         private void OnEnable()
@@ -51,17 +55,16 @@ namespace ThreeDeePongProto.Offline.UI
             //Pairs the device to use the PlayerInput-Component.
             InputUser.PerformPairingWithDevice(m_virtualMouse, m_playerInput.user);
 
-            if (m_gamepadCursor != null)
+            if (m_cursorTransform != null)
             {
-                Vector2 cursorPosition = m_gamepadCursor.anchoredPosition;
+                Vector2 cursorPosition = m_cursorTransform.anchoredPosition;
                 InputState.Change(m_virtualMouse.position, cursorPosition); //New virtualMouse position = old mouse position.
             }
 
-            InputSystem.onAfterUpdate += UpdateVirtualMousePosition;
+            InputSystem.onAfterUpdate += UpdateMicePositions;
             //m_playerInput.onControlsChanged += OnInputDeviceChanged;
 
             InputUser.onChange += OnDeviceChange;
-            m_activeControlScheme = m_keyboardMouseScheme;
         }
 
         private void OnDisable()
@@ -72,25 +75,30 @@ namespace ThreeDeePongProto.Offline.UI
                 InputSystem.RemoveDevice(m_virtualMouse);
             }
 
-            InputSystem.onAfterUpdate -= UpdateVirtualMousePosition;
+            InputSystem.onAfterUpdate -= UpdateMicePositions;
             //m_playerInput.onControlsChanged -= OnInputDeviceChanged;
 
             InputUser.onChange -= OnDeviceChange;
+
+            m_playerInputActions.UI.Disable();
+            m_playerInputActions.UI.CursorVisibility.performed -= SwitchCursorVisibility;
         }
 
         private void Start()
         {
             m_playerInputActions = InputManager.m_PlayerInputActions;
             m_playerInputActions.UI.Enable();
+
+            m_playerInputActions.UI.CursorVisibility.performed += SwitchCursorVisibility;
         }
 
-        private void UpdateVirtualMousePosition()
+        private void UpdateMicePositions()
         {
             if (m_virtualMouse == null || Gamepad.current == null)
                 return;
 
             Vector2 deltaValue = Gamepad.current.leftStick.ReadValue();
-            deltaValue *= m_cursorSpeed * Time.unscaledDeltaTime;  //'deltaTime' or 'unscaledDeltaTime'?
+            deltaValue *= m_cursorSpeed * Time.unscaledDeltaTime;
 
             Vector2 virtualMousePos = m_virtualMouse.position.ReadValue();
             Vector2 newPosition = virtualMousePos + deltaValue;
@@ -101,24 +109,23 @@ namespace ThreeDeePongProto.Offline.UI
             InputState.Change(m_virtualMouse.position, newPosition);
             InputState.Change(m_virtualMouse.delta, deltaValue);
 
-            bool submitButtonIsPressed = m_playerInputActions.UI.Submit.IsPressed();    //Or Gamepad.current.a/xButton.IsPressed().
-            //bool submitButtonIsPressed = m_playerInputActions.PlayerActions.enabled ? m_playerInputActions.PlayerActions.XYZ.IsPressed() : m_playerInputActions.UI.Submit.IsPressed();
-            if (m_previousMouseState != submitButtonIsPressed)
+            bool southButtonIsPressed = Gamepad.current.buttonSouth.isPressed;
+            if (m_previousMouseState != southButtonIsPressed)
             {
                 m_virtualMouse.CopyState<MouseState>(out var mouseState);
-                mouseState.WithButton(MouseButton.Left, submitButtonIsPressed);
+                mouseState.WithButton(MouseButton.Left, southButtonIsPressed);
                 InputState.Change(m_virtualMouse, mouseState);
-                m_previousMouseState = submitButtonIsPressed;
+                m_previousMouseState = southButtonIsPressed;
             }
 
-            bool submitButtonIsReleased = m_playerInputActions.UI.Submit.WasReleasedThisFrame();
-            if (m_previousMouseState != submitButtonIsReleased)
+            bool southButtonIsReleased = !Gamepad.current.buttonSouth.isPressed;
+            if (m_previousMouseState != southButtonIsReleased)
             {
                 //Copy the state of the virtualMouse and map it to the leftMouseButton.
                 m_virtualMouse.CopyState<MouseState>(out var mouseState);
-                mouseState.WithButton(MouseButton.Left, submitButtonIsReleased);
+                mouseState.WithButton(MouseButton.Left, southButtonIsReleased);
                 InputState.Change(m_virtualMouse, mouseState);
-                m_previousMouseState = submitButtonIsReleased;
+                m_previousMouseState = southButtonIsReleased;
             }
 
             ReplaceCursorAt(newPosition);
@@ -127,30 +134,30 @@ namespace ThreeDeePongProto.Offline.UI
         private void ReplaceCursorAt(Vector2 _exchangePosition)
         {
             RectTransformUtility.ScreenPointToLocalPointInRectangle(m_canvasRectTransform, _exchangePosition, m_mainCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : m_myCamera, out Vector2 newPosition);
-            m_gamepadCursor.anchoredPosition = newPosition;
+            m_cursorTransform.anchoredPosition = newPosition;
         }
 
         #region Samyam's Version
         //private void OnInputDeviceChanged(PlayerInput _playerInput)
         //{
-        //    if (m_playerInput.currentControlScheme == m_keyboardMouseScheme && m_activeControlScheme != m_keyboardMouseScheme)
+        //    if (m_playerInput.currentControlScheme == m_keyboardMouseScheme && m_lastControlSchemeChange != m_keyboardMouseScheme)
         //    {
-        //        m_gamepadCursor.gameObject.SetActive(false);
+        //        m_cursorTransform.gameObject.SetActive(false);
         //        Cursor.visible = true;
         //        m_physicalMouse.WarpCursorPosition(m_virtualMouse.position.ReadValue());
-        //        m_activeControlScheme = m_keyboardMouseScheme;
+        //        m_lastControlSchemeChange = m_keyboardMouseScheme;
         //    }
-        //    else if (m_playerInput.currentControlScheme == m_gamePadScheme && m_activeControlScheme != m_gamePadScheme)
+        //    else if (m_playerInput.currentControlScheme == m_gamePadScheme && m_lastControlSchemeChange != m_gamePadScheme)
         //    {
-        //        m_gamepadCursor.gameObject.SetActive(true);
+        //        m_cursorTransform.gameObject.SetActive(true);
         //        Cursor.visible = false;
         //        InputState.Change(m_virtualMouse.position, m_physicalMouse.position.ReadValue());
         //        ReplaceCursorAt(m_physicalMouse.position.ReadValue());
-        //        m_activeControlScheme = m_keyboardMouseScheme;
+        //        m_lastControlSchemeChange = m_keyboardMouseScheme;
         //    }
         //}
 
-        //May Update() 'if(m_activeControlScheme != m_playerInput.currentControlScheme) with an own 'OnControlsChanged()' method. And update 'm_activeControlScheme = m_playerInput.currentControlScheme;' to it.
+        //May Update() 'if(m_lastControlSchemeChange != m_playerInput.currentControlScheme) with an own 'OnControlsChanged()' method. And update 'm_lastControlSchemeChange = m_playerInput.currentControlScheme;' to it.
         #endregion
 
         private void OnDeviceChange(InputUser _inputUser, InputUserChange _inputUserChange, InputDevice _inputDevice)
@@ -161,31 +168,54 @@ namespace ThreeDeePongProto.Offline.UI
                 {
                     case m_keyboardMouseScheme:
                     {
-                        AReleaseObject?.Invoke(false);
-                        EventSystem.current.SetSelectedGameObject(m_tempSaveObject);
-                        m_gamepadCursor.gameObject.SetActive(false);
+                        m_cursorTransform.gameObject.SetActive(false);
                         Cursor.visible = true;
                         m_physicalMouse.WarpCursorPosition(m_virtualMouse.position.ReadValue());
-                        m_activeControlScheme = m_keyboardMouseScheme;
                         break;
                     }
                     case m_gamePadScheme:
                     {
-                        m_tempSaveObject = EventSystem.current.currentSelectedGameObject;
-                        AReleaseObject?.Invoke(true);
-                        m_gamepadCursor.gameObject.SetActive(true);
+                        m_cursorTransform.gameObject.SetActive(true);
                         Cursor.visible = false;
                         InputState.Change(m_virtualMouse.position, m_physicalMouse.position.ReadValue());
                         ReplaceCursorAt(m_physicalMouse.position.ReadValue());
-                        m_activeControlScheme = m_gamePadScheme;
                         break;
                     }
                     default:
                         break;
                 }
 
-                //Debug.Log($"Active Scheme: {_inputUser.controlScheme.Value.name}");
+                m_lastControlSchemeChange = _inputUser.controlScheme.Value.name;
             }
+        }
+
+        private void SwitchCursorVisibility()
+        {
+            switch (Cursor.visible)
+            {
+                case true:  //Cursor is currently visible.
+                {
+                    SetCursorRestrictions(m_cursorLockMode, false);
+                    break;
+                }
+                case false: //Cursor is currently invisible.
+                {
+                    SetCursorRestrictions(m_cursorLockMode, true);
+                    break;
+                }
+            }
+        }
+
+        private void SetCursorRestrictions(CursorLockMode _lockMode, bool _visibility)
+        {
+            Cursor.lockState = _lockMode;   //Lock Cursor inside the Screen with '.Confined'. Unlocks the Cursor with '.None'.
+            Cursor.visible = _visibility;   //true = visible, false = invisible.
+            //TODO: If mouseCursor shall be invisible, it needs to get locked at a certain position and objectDetection to be disabled.
+        }
+
+        private void SwitchCursorVisibility(InputAction.CallbackContext _callbackContext)
+        {
+            SwitchCursorVisibility();
         }
     }
 }
