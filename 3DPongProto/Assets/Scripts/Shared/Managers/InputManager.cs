@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using ThreeDeePongProto.Offline.Settings;
 using ThreeDeePongProto.Offline.UI;
+using ThreeDeePongProto.Shared.HelperClasses;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using ThreeDeePongProto.Shared.HelperClasses;
-using UnityEngine.InputSystem.Users;
 
 namespace ThreeDeePongProto.Shared.InputActions
 {

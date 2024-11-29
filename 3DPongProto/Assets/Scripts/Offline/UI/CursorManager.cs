@@ -1,4 +1,3 @@
-using System;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.InputSystem;

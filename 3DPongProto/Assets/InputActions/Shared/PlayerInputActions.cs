@@ -1226,6 +1226,17 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": """",
+                    ""id"": ""b7d0e008-37c7-4aaa-8793-972221db9dda"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""f1a593fc-22ae-4638-9a84-dc8a47c03ebf"",
                     ""path"": ""*/{Cancel}"",
                     ""interactions"": """",
@@ -1270,6 +1281,17 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": """",
+                    ""id"": ""ae810de2-bca6-4842-a343-2ee66b37d1a0"",
+                    ""path"": ""<VirtualMouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Point"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""a0802b94-799c-46fd-83bb-c2c0ddbde5c1"",
                     ""path"": ""<Pen>/position"",
                     ""interactions"": """",
@@ -1292,22 +1314,33 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": """",
-                    ""id"": ""ae810de2-bca6-4842-a343-2ee66b37d1a0"",
-                    ""path"": ""<VirtualMouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Point"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""47b13d59-10fc-45d8-95de-0130fea247cd"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse;KeyboardMouse"",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2b0f0099-196c-4a53-954e-4e2cf889560b"",
+                    ""path"": ""<VirtualMouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""35867239-96a7-47c9-aaac-57c2c04dd5a6"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -1341,28 +1374,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
                     ""groups"": ""XR"",
-                    ""action"": ""Click"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""2b0f0099-196c-4a53-954e-4e2cf889560b"",
-                    ""path"": ""<VirtualMouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Click"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""35867239-96a7-47c9-aaac-57c2c04dd5a6"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
                     ""action"": ""Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false

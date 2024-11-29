@@ -18,7 +18,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         private float m_timeElapsed = 0.0f;
         private float m_progress = 0.0f;
 
-        [SerializeField] private bool m_inProgress = false;
+        private bool m_inProgress = false;
 
         private Vector2 m_currentPosition;
         private Vector2 m_positionFrom;
@@ -101,7 +101,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
                     m_selectedObjectInScrollView = true;
                     AutoScrollToNextGameObject(_lastSelectedObject);
                     ScrollSelectNextGameObject(_lastSelectedObject);
-                    //TODO: Implement Gamepad Mouse.
                     break;
                 }
                 case false:
