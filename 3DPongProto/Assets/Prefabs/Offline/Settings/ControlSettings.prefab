@@ -203,16 +203,15 @@ MonoBehaviour:
   m_autoScrolling: {fileID: 5085451031949723596}
   m_scrollDirection: 3
   m_contentFillType: 0
+  m_navigationLevel: 1
+  m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_contentChildCount: 0
-  m_maskedScrollWindow: {x: 0, y: 0}
-  m_fullContentWindow: {x: 0, y: 0}
-  m_instantiatedContent: 0
   m_spawnablePrefab: {fileID: 0}
   m_setChildAmount: 50
-  m_childsSpawned: 0
+  m_borderLoop: 0
+  m_gridSize: {x: 0, y: 0}
 --- !u!114 &5085451031949723596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,7 +225,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_scrollViewController: {fileID: 7912759037043962377}
-  m_setScrollSensitivity: 10
   m_transitionDuration: 0.05
 --- !u!1 &42570364796873869
 GameObject:
@@ -6915,16 +6913,15 @@ MonoBehaviour:
   m_autoScrolling: {fileID: 3266120978525128475}
   m_scrollDirection: 3
   m_contentFillType: 0
+  m_navigationLevel: 1
+  m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_contentChildCount: 0
-  m_maskedScrollWindow: {x: 0, y: 0}
-  m_fullContentWindow: {x: 0, y: 0}
-  m_instantiatedContent: 0
   m_spawnablePrefab: {fileID: 0}
   m_setChildAmount: 50
-  m_childsSpawned: 0
+  m_borderLoop: 0
+  m_gridSize: {x: 0, y: 0}
 --- !u!114 &3266120978525128475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6938,7 +6935,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_scrollViewController: {fileID: 8316847790391705985}
-  m_setScrollSensitivity: 10
   m_transitionDuration: 0.05
 --- !u!1 &3560525716519637838
 GameObject:
@@ -9142,16 +9138,15 @@ MonoBehaviour:
   m_autoScrolling: {fileID: 8960790372921050509}
   m_scrollDirection: 3
   m_contentFillType: 0
+  m_navigationLevel: 1
+  m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_contentChildCount: 0
-  m_maskedScrollWindow: {x: 0, y: 0}
-  m_fullContentWindow: {x: 0, y: 0}
-  m_instantiatedContent: 0
   m_spawnablePrefab: {fileID: 0}
   m_setChildAmount: 50
-  m_childsSpawned: 0
+  m_borderLoop: 0
+  m_gridSize: {x: 0, y: 0}
 --- !u!114 &8960790372921050509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9165,7 +9160,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_scrollViewController: {fileID: 3814381460879673614}
-  m_setScrollSensitivity: 10
   m_transitionDuration: 0.05
 --- !u!1 &4676749264564885076
 GameObject:
@@ -22612,16 +22606,15 @@ MonoBehaviour:
   m_autoScrolling: {fileID: 3907735708998854579}
   m_scrollDirection: 3
   m_contentFillType: 0
+  m_navigationLevel: 1
+  m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_contentChildCount: 0
-  m_maskedScrollWindow: {x: 0, y: 0}
-  m_fullContentWindow: {x: 0, y: 0}
-  m_instantiatedContent: 0
   m_spawnablePrefab: {fileID: 0}
   m_setChildAmount: 8
-  m_childsSpawned: 0
+  m_borderLoop: 0
+  m_gridSize: {x: 0, y: 0}
 --- !u!114 &3907735708998854579
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22635,7 +22628,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_scrollViewController: {fileID: 1121124822620312290}
-  m_setScrollSensitivity: 10
   m_transitionDuration: 0.05
 --- !u!1 &7993449986529936593
 GameObject:
