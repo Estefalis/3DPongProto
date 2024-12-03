@@ -5144,7 +5144,6 @@ GameObject:
   - component: {fileID: 1008670894}
   - component: {fileID: 1008670891}
   - component: {fileID: 1008670893}
-  - component: {fileID: 1008670895}
   m_Layer: 0
   m_Name: PauseMenuManager
   m_TagString: Untagged
@@ -5235,20 +5234,6 @@ MonoBehaviour:
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
   m_playerIDData: []
---- !u!114 &1008670895
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1008670889}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1505d04ec66459e469db608086e2ac3a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_cursorLockMode: 0
-  m_cursorVisibility: 0
 --- !u!1 &1016119921
 GameObject:
   m_ObjectHideFlags: 0

@@ -58,7 +58,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         public void NextElement(Transform _next)
         {
             //m_menuOrganisation.m_eventSystem.SetSelectedGameObject(null);
-
+            
             Transform currentElement = m_activeElement.Peek();
             currentElement.gameObject.SetActive(false);
 

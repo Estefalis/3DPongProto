@@ -60,17 +60,17 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void UpdateLastSelectedObject()
         {
-            switch (EventSystem.current.currentSelectedGameObject == null)
+            switch (m_eventSystem.currentSelectedGameObject == null)
             {
                 case false:
                 {
-                    switch (m_lastSelectedGameObject != EventSystem.current.currentSelectedGameObject)
+                    switch (m_lastSelectedGameObject != m_eventSystem.currentSelectedGameObject)
                     {
                         case false:
                             break;
                         case true:
                         {
-                            m_lastSelectedGameObject = InputManager.m_PlayerInputActions.UI.enabled ? m_lastMenuSceneObject = EventSystem.current.currentSelectedGameObject : m_lastGameSceneObject = EventSystem.current.currentSelectedGameObject;
+                            m_lastSelectedGameObject = InputManager.m_PlayerInputActions.UI.enabled ? m_lastMenuSceneObject = m_eventSystem.currentSelectedGameObject : m_lastGameSceneObject = m_eventSystem.currentSelectedGameObject;
                             break;
                         }
                     }
