@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using ThreeDeePongProto.Offline.Managers;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,6 +8,7 @@ namespace ThreeDeePongProto.Shared.Player
 {
     internal class PlayerMovement : MonoBehaviour
     {
+        private PlayerInputActions m_playerInputActions;
         [SerializeField] internal PlayerController m_playerController;
 
         [Header("Player Details")]
@@ -52,6 +52,8 @@ namespace ThreeDeePongProto.Shared.Player
 
         private void OnDisable()
         {
+            m_playerInputActions.PlayerActions.Disable();
+
             Ball.HitGoalOne -= LetsResetPaddleRotation;
             Ball.HitGoalTwo -= LetsResetPaddleRotation;
 
@@ -60,6 +62,9 @@ namespace ThreeDeePongProto.Shared.Player
 
         private void Start()
         {
+            m_playerInputActions = InputManager.m_PlayerInputActions;
+            m_playerInputActions.PlayerActions.Enable();
+
             Ball.HitGoalOne += LetsResetPaddleRotation;
             Ball.HitGoalTwo += LetsResetPaddleRotation;
 
@@ -95,8 +100,11 @@ namespace ThreeDeePongProto.Shared.Player
 
         private void FixedUpdate()
         {
-            MovePaddle();
-            RotatePaddle();
+            if (m_playerInputActions.PlayerActions.enabled)
+            {
+                MovePaddle();
+                RotatePaddle();
+            }
         }
 
         #region Custom Methods

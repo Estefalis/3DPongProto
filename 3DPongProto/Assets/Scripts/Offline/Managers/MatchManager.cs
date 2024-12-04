@@ -1,8 +1,9 @@
 using System;
 using System.Collections;
-using ThreeDeePongProto.Offline.Player.Inputs;
 using ThreeDeePongProto.Offline.UI.Menu;
+using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum EGameModi
 {
@@ -15,6 +16,7 @@ namespace ThreeDeePongProto.Offline.Managers
 {
     public class MatchManager : MonoBehaviour
     {
+        private PlayerInputActions m_inputActions;
         #region SerializeField-Member-Variables
         [SerializeField] private string m_NPCName = "Some Test-NPC";    //TODO: Implement NPC for solo play!
         [SerializeField] private GameObject m_playGround;
@@ -58,7 +60,7 @@ namespace ThreeDeePongProto.Offline.Managers
         private bool m_nextRoundConditionIsMet;
         private string m_scoredPlayer;
 
-        private bool m_matchHasStarted = false;
+        [SerializeField] private bool m_matchHasStarted = false;
         private float m_matchStartTime, m_ballYPos;
         private Vector3 m_ballPopPos;
 
@@ -104,12 +106,9 @@ namespace ThreeDeePongProto.Offline.Managers
 
         private void OnEnable()
         {
-            PlayerControlMain.InGameMenuOpens += PauseAndTimeScale;
-
-            InGameMenuActions.CloseInGameMenu += ResetPauseAndTimescale;
-            InGameMenuActions.OnLoadMainScene += SceneRestartActions;
-            InGameMenuActions.RestartGameLevel += ReSetMatch;
-            InGameMenuActions.EndInfiniteMatch += LetsEndInfiniteMatch;
+            MenuManager.CloseInGameMenu += SceneRestartActions;
+            MenuManager.RestartGameLevel += ReSetMatch;
+            MenuManager.EndInfiniteMatch += LetsEndInfiniteMatch;
 
             Ball.RoundCountStarts += MatchStartValues;
             Ball.HitGoalOne += UpdateTPTwoPoints;
@@ -119,8 +118,36 @@ namespace ThreeDeePongProto.Offline.Managers
             StartWinProcedure += LetsStartWinProcedure;
         }
 
+        private void OnDisable()
+        {
+            MenuManager.CloseInGameMenu -= SceneRestartActions;
+            MenuManager.RestartGameLevel -= ReSetMatch;
+            MenuManager.EndInfiniteMatch -= LetsEndInfiniteMatch;
+
+            Ball.RoundCountStarts -= MatchStartValues;
+            Ball.HitGoalOne -= UpdateTPTwoPoints;
+            Ball.HitGoalTwo -= UpdateTPOnePoints;
+
+            StartNextRound -= LetsStartNextRound;
+            StartWinProcedure -= LetsStartWinProcedure;
+
+            //Useable for Infinite Matches.
+            m_matchValues.TotalPointsTPOne = 0;
+            m_matchValues.TotalPointsTPTwo = 0;
+            m_matchUIStates.GameRuns = false;
+
+            m_inputActions.PlayerActions.Disable();
+            m_inputActions.PlayerActions.ToggleGameMenu.performed -= PauseAndTimeScale;
+            m_inputActions.UI.ToggleGameMenu.performed -= ResetPauseAndTimescale;
+        }
+
         private IEnumerator Start()
         {
+            m_inputActions = InputManager.m_PlayerInputActions;
+            m_inputActions.PlayerActions.Enable();
+            m_inputActions.PlayerActions.ToggleGameMenu.performed += PauseAndTimeScale;
+            m_inputActions.UI.ToggleGameMenu.performed += ResetPauseAndTimescale;
+
             uint setPlayerByEnum = (uint)m_matchUIStates.EPlayerAmount;
             //1. Instantiate all Players related to the PlayerCount in game.
             for (int i = 0; i < setPlayerByEnum; i++)
@@ -142,28 +169,6 @@ namespace ThreeDeePongProto.Offline.Managers
             //2. Allow the Cameras to add themselves in the AvailableCamera-List in the CameraManager.
             AddCamerasNow?.Invoke();
             return null;
-        }
-
-        private void OnDisable()
-        {
-            PlayerControlMain.InGameMenuOpens -= PauseAndTimeScale;
-
-            InGameMenuActions.CloseInGameMenu -= ResetPauseAndTimescale;
-            InGameMenuActions.OnLoadMainScene -= SceneRestartActions;
-            InGameMenuActions.RestartGameLevel -= ReSetMatch;
-            InGameMenuActions.EndInfiniteMatch -= LetsEndInfiniteMatch;
-
-            Ball.RoundCountStarts -= MatchStartValues;
-            Ball.HitGoalOne -= UpdateTPTwoPoints;
-            Ball.HitGoalTwo -= UpdateTPOnePoints;
-
-            StartNextRound -= LetsStartNextRound;
-            StartWinProcedure -= LetsStartWinProcedure;
-
-            //Useable for Infinite Matches.
-            m_matchValues.TotalPointsTPOne = 0;
-            m_matchValues.TotalPointsTPTwo = 0;
-            m_matchUIStates.GameRuns = false;
         }
 
         private void PrepareMatchStart()
@@ -309,13 +314,13 @@ namespace ThreeDeePongProto.Offline.Managers
                 Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
 #endif
                 DefaultPlayfield();
-                ResetPauseAndTimescale();
+                SetPauseAndTimeScale(m_gameIsPaused);
                 return;
             }
 
             ReSetPlayfield();
             ResetRoundValues();
-            ResetPauseAndTimescale();
+            SetPauseAndTimeScale(m_gameIsPaused);
         }
 
         private void DefaultPlayfield()
@@ -484,21 +489,38 @@ namespace ThreeDeePongProto.Offline.Managers
             //TODO: Start WinProcedure.
         }
 
-        private void PauseAndTimeScale()
+        private void PauseAndTimeScale(InputAction.CallbackContext _callbackContext)
         {
-            Time.timeScale = 0f;
-            m_gameIsPaused = true;
+            SetPauseAndTimeScale(true);
         }
 
-        private void ResetPauseAndTimescale()
+        private void ResetPauseAndTimescale(InputAction.CallbackContext _callbackContext)
         {
-            Time.timeScale = 1f;
-            m_gameIsPaused = false;
+            SetPauseAndTimeScale(false);
         }
 
         private void SceneRestartActions()
         {
-            ResetPauseAndTimescale();
+            SetPauseAndTimeScale(false);
+        }
+
+        private void SetPauseAndTimeScale(bool _isPaused)
+        {
+            switch (_isPaused)
+            {
+                case false:
+                {
+                    Time.timeScale = 1f;
+                    m_gameIsPaused = false;
+                    break;
+                }
+                case true:
+                {
+                    Time.timeScale = 0f;
+                    m_gameIsPaused = true;
+                    break;
+                }
+            }
         }
     }
 }

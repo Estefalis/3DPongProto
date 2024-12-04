@@ -17,7 +17,7 @@ public class Ball : MonoBehaviour
 
     #region Script-References
     private MatchManager m_matchManager;
-    private PlayerInputActions m_ballMovement;
+    private PlayerInputActions m_inputActions;
     [SerializeField] private AudioSource m_ballAudioSource;
     private int m_trackId = 0;
     #endregion
@@ -62,15 +62,15 @@ public class Ball : MonoBehaviour
     {
         AudioManager.LetsRegisterAudioSources(m_ballAudioSource);
 
-        m_ballMovement = InputManager.m_PlayerInputActions;
-        m_ballMovement.PlayerActions.Enable();
-        m_ballMovement.PlayerActions.PokeTheBall.performed += StartBallMovement;
+        m_inputActions = InputManager.m_PlayerInputActions;
+        m_inputActions.PlayerActions.Enable();
+        m_inputActions.PlayerActions.PokeTheBall.performed += StartBallMovement;
     }
 
     private void OnDisable()
     {
-        m_ballMovement.PlayerActions.Disable();
-        m_ballMovement.PlayerActions.PokeTheBall.performed -= StartBallMovement;
+        m_inputActions.PlayerActions.Disable();
+        m_inputActions.PlayerActions.PokeTheBall.performed -= StartBallMovement;
     }
 
     private void ResetBall()
@@ -79,6 +79,27 @@ public class Ball : MonoBehaviour
         m_rigidbody.velocity = Vector3.zero;
         m_rigidbody.position = m_ballPopPosition;
         m_rigidbody.rotation = m_ballPopRotation;
+    }
+
+    private void StartBallMovement(InputAction.CallbackContext _callbackContext)
+    {
+        if (!m_matchManager.GameIsPaused)
+        {
+            switch (m_matchManager.MatchStarted)
+            {
+                case false:
+                {
+                    RoundCountStarts?.Invoke();
+                }
+                break;
+                case true:
+                    break;
+            }
+
+            ApplyForceOnBall();
+            //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
+            PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);   //BallstartSound
+        }
     }
 
     private void ApplyForceOnBall()
@@ -107,21 +128,6 @@ public class Ball : MonoBehaviour
         };
 
         m_rigidbody.AddRelativeForce(transform.forward * m_impulseForce, ForceMode.Impulse);
-    }
-
-    private void StartBallMovement(InputAction.CallbackContext _callbackContext)
-    {
-        if (!m_matchManager.GameIsPaused)
-        {            
-            ApplyForceOnBall();
-
-            if (!m_matchManager.MatchStarted)
-            {
-                RoundCountStarts?.Invoke();
-                //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
-                PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);   //BallstartSound
-            }
-        }
     }
 
     private void OnTriggerEnter(Collider _other)

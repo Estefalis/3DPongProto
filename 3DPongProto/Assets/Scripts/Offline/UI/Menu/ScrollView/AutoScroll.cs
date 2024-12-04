@@ -49,7 +49,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         private void Update()
         {
             GetMouseValues();
-            UpdateCurrentObject(MenuOrganisation.LastSelectedGameObject);
+            UpdateCurrentObject(MenuManager.LastSelectedGameObject);
 
             TransitionProgress();
             CalculatePosition();

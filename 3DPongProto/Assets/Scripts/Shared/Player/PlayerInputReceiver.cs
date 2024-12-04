@@ -1,6 +1,3 @@
-using System;
-using ThreeDeePongProto.Offline.Managers;
-using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -14,16 +11,12 @@ namespace ThreeDeePongProto.Shared.Player
 
         private Vector3 m_sideMoveVector;
 
-        //MatchManager pauses the Game. Coroutines and the Inputsystem.PlayerActions get disabled inside this class.
-        public static event Action InGameMenuOpens;
+        ////MatchManager pauses the Game. Coroutines and the Inputsystem.PlayerActions get disabled inside this class.
+        //public static event Action InGameMenuOpens;
 
         private void OnDisable()
         {
             m_playerInputActions.PlayerActions.Disable();
-
-            InGameMenuOpens -= DisablePlayerActions;
-            InGameMenuActions.CloseInGameMenu -= ReEnablePlayerActions;
-            DisablePlayerActions();
 
             m_playerInputActions.PlayerActions.PushPaddleNegZP1.performed -= PaddlePushInputP1;
             m_playerInputActions.PlayerActions.PushPaddleNegZP1.canceled -= CanceledPaddlePushInputP1;
@@ -33,6 +26,9 @@ namespace ThreeDeePongProto.Shared.Player
             m_playerInputActions.PlayerActions.PushPaddleNegZP3.canceled -= CanceledPaddlePushInputP3;
             m_playerInputActions.PlayerActions.PushPaddlePosZP4.performed -= PaddlePushInputP4;
             m_playerInputActions.PlayerActions.PushPaddlePosZP4.canceled -= CanceledPaddlePushInputP4;
+
+            m_playerInputActions.UI.ToggleGameMenu.performed -= EnablePlayerControls;
+            m_playerInputActions.PlayerActions.ToggleGameMenu.performed -= DisablePlayerControls;
         }
 
         /// <summary>
@@ -43,10 +39,6 @@ namespace ThreeDeePongProto.Shared.Player
             m_playerInputActions = InputManager.m_PlayerInputActions;
             m_playerInputActions.PlayerActions.Enable();
 
-            InGameMenuOpens += DisablePlayerActions;
-            InGameMenuActions.CloseInGameMenu += ReEnablePlayerActions;
-            ReEnablePlayerActions();
-
             m_playerInputActions.PlayerActions.PushPaddleNegZP1.performed += PaddlePushInputP1;
             m_playerInputActions.PlayerActions.PushPaddleNegZP1.canceled += CanceledPaddlePushInputP1;
             m_playerInputActions.PlayerActions.PushPaddlePosZP2.performed += PaddlePushInputP2;
@@ -55,6 +47,9 @@ namespace ThreeDeePongProto.Shared.Player
             m_playerInputActions.PlayerActions.PushPaddleNegZP3.canceled += CanceledPaddlePushInputP3;
             m_playerInputActions.PlayerActions.PushPaddlePosZP4.performed += PaddlePushInputP4;
             m_playerInputActions.PlayerActions.PushPaddlePosZP4.canceled += CanceledPaddlePushInputP4;
+
+            m_playerInputActions.UI.ToggleGameMenu.performed += EnablePlayerControls;
+            m_playerInputActions.PlayerActions.ToggleGameMenu.performed += DisablePlayerControls;
         }
 
         private void FixedUpdate()
@@ -98,34 +93,17 @@ namespace ThreeDeePongProto.Shared.Player
             }
         }
 
-        #region Custom Methods
-        /// <summary>
-        /// Get's called at Start and when the Menu closes again.
-        /// </summary>
-        private void ReEnablePlayerActions()
+        #region CallbackContext Methods
+        private void EnablePlayerControls(InputAction.CallbackContext _callbackContext)
         {
             m_playerInputActions.Enable();
             m_playerController.m_playerMovement.ReStartPushCoroutine();
         }
 
-        private void DisablePlayerActions()
+        private void DisablePlayerControls(InputAction.CallbackContext _callbackContext)
         {
             m_playerInputActions.Disable();
             m_playerController.m_playerMovement.StopPushCoroutine();
-        }
-        #endregion
-
-        #region CallbackContext Methods
-        protected void ToggleMenu(InputAction.CallbackContext _callbackContext)
-        {
-            if (m_playerController.m_matchManager == null)
-                m_playerController.m_matchManager = FindObjectOfType<MatchManager>();  //Required, if not catched with '[SerializeField]'.
-
-            if (!m_playerController.m_matchManager.GameIsPaused && m_playerInputActions.PlayerActions.enabled)
-            {
-                InGameMenuOpens?.Invoke();
-                InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.UI);
-            }
         }
 
         private void PaddlePushInputP1(InputAction.CallbackContext _callbackContext)

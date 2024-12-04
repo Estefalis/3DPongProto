@@ -80,7 +80,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         protected virtual void OnDisable()
         {
             m_playerMovement.PlayerActions.Disable();                                                                       //PlayerInputReceiver
-            m_playerMovement.PlayerActions.ToggleGameMenu.performed -= ToggleMenu;                                          //PlayerInputReceiver
+            m_playerMovement.PlayerActions.ToggleGameMenu.performed -= OpenPauseMenu;                                          //PlayerInputReceiver
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         {
             m_playerMovement = InputManager.m_PlayerInputActions;                                                           //PlayerInputReceiver
             m_playerMovement.PlayerActions.Enable();                                                                        //PlayerInputReceiver
-            m_playerMovement.PlayerActions.ToggleGameMenu.performed += ToggleMenu;                                          //PlayerInputReceiver
+            m_playerMovement.PlayerActions.ToggleGameMenu.performed += OpenPauseMenu;                                          //PlayerInputReceiver
         }
 
         protected virtual void Update()
@@ -208,7 +208,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
         }
 
         #region CallbackContext Methods
-        protected void ToggleMenu(InputAction.CallbackContext _callbackContext)                                             //PlayerInputReceiver
+        protected void OpenPauseMenu(InputAction.CallbackContext _callbackContext)                                             //PlayerInputReceiver
         {
             if (m_matchManager == null)
                 m_matchManager = FindObjectOfType<MatchManager>();  //Required, if not catched with '[SerializeField]'.

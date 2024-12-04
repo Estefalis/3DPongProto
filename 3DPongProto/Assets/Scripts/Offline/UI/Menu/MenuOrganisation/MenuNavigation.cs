@@ -7,7 +7,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 {
     public class MenuNavigation : MonoBehaviour
     {
-        [SerializeField] internal MenuOrganisation m_menuOrganisation;
+        [SerializeField] internal MenuManager m_menuOrganisation;
 
         #region Select First Elements by using the EventSystem.
         [Header("Select First Elements")]
@@ -34,7 +34,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void Awake()
         {
             SetFirstStackElement(m_firstElement);
-            SetUIElements();    //Also sets the lastSelectedElement in 'MenuOrganisation.cs'.
+            SetUIElements();    //Also sets the lastSelectedElement in 'MenuManager.cs'.
         }
 
         private void SetUIElements()
@@ -57,10 +57,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         public void NextElement(Transform _next)
         {
-            //m_menuOrganisation.m_eventSystem.SetSelectedGameObject(null);
-            
             Transform currentElement = m_activeElement.Peek();
             currentElement.gameObject.SetActive(false);
+            
+            //m_menuOrganisation.m_eventSystem.SetSelectedGameObject(null);
 
             m_activeElement.Push(_next);
             _next.gameObject.SetActive(true);
@@ -70,10 +70,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         public void CloseToPreviousElement()
         {
-            //m_menuOrganisation.m_eventSystem.SetSelectedGameObject(null);
-
             Transform currentElement = m_activeElement.Pop();
             currentElement.gameObject.SetActive(false);
+
+            //m_menuOrganisation.m_eventSystem.SetSelectedGameObject(null);
 
             Transform previousElement = m_activeElement.Peek();
             previousElement.gameObject.SetActive(true);

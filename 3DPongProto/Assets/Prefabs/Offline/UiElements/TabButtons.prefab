@@ -191,7 +191,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuManager,
           Assembly-CSharp
         m_MethodName: SetButtonAlpha
         m_Mode: 2
@@ -461,7 +461,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuManager,
           Assembly-CSharp
         m_MethodName: SetButtonAlpha
         m_Mode: 2
@@ -1001,7 +1001,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuManager,
           Assembly-CSharp
         m_MethodName: SetButtonAlpha
         m_Mode: 2
@@ -1136,7 +1136,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuManager,
           Assembly-CSharp
         m_MethodName: SetButtonAlpha
         m_Mode: 2
@@ -1271,7 +1271,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuManager,
           Assembly-CSharp
         m_MethodName: SetButtonAlpha
         m_Mode: 2

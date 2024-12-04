@@ -407,8 +407,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2136304136}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
           Assembly-CSharp
         m_MethodName: CloseToPreviousElement
         m_Mode: 1
@@ -4220,8 +4220,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2136304136}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
           Assembly-CSharp
         m_MethodName: NextElement
         m_Mode: 2
@@ -4728,8 +4728,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2136304136}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
           Assembly-CSharp
         m_MethodName: CloseToPreviousElement
         m_Mode: 1
@@ -4960,8 +4960,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MenuOrganisation, Assembly-CSharp
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
+          Assembly-CSharp
         m_MethodName: NextElement
         m_Mode: 2
         m_Arguments:
@@ -5962,8 +5963,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2136304136}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
           Assembly-CSharp
         m_MethodName: NextElement
         m_Mode: 2
@@ -7244,8 +7245,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2136304136}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
           Assembly-CSharp
         m_MethodName: CloseToPreviousElement
         m_Mode: 1
@@ -7477,8 +7478,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MenuOrganisation, Assembly-CSharp
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
+          Assembly-CSharp
         m_MethodName: CloseToPreviousElement
         m_Mode: 1
         m_Arguments:
@@ -8775,8 +8777,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2136304136}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
           Assembly-CSharp
         m_MethodName: NextElement
         m_Mode: 2
@@ -11803,8 +11805,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2136304136}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
           Assembly-CSharp
         m_MethodName: NextElement
         m_Mode: 2
@@ -12641,8 +12643,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2136304136}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
           Assembly-CSharp
         m_MethodName: NextElement
         m_Mode: 2
@@ -17476,8 +17478,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2136304136}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
           Assembly-CSharp
         m_MethodName: NextElement
         m_Mode: 2
@@ -20237,8 +20239,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2136304136}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
           Assembly-CSharp
         m_MethodName: NextElement
         m_Mode: 2
@@ -20491,8 +20493,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2136304136}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
           Assembly-CSharp
         m_MethodName: NextElement
         m_Mode: 2
@@ -20831,8 +20833,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2136304136}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
           Assembly-CSharp
         m_MethodName: NextElement
         m_Mode: 2
@@ -21269,8 +21271,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2136304136}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
           Assembly-CSharp
         m_MethodName: CloseToPreviousElement
         m_Mode: 1
@@ -22005,9 +22007,13 @@ PrefabInstance:
       value: TabButtons
       objectReference: {fileID: 0}
     - target: {fileID: 5422136428263519, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 1480635289225637274}
+    - target: {fileID: 5422136428263519, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2136304136}
+      objectReference: {fileID: 2136304140}
     - target: {fileID: 5422136671982765, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
@@ -22015,7 +22021,7 @@ PrefabInstance:
     - target: {fileID: 5422136671982765, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2136304136}
+      objectReference: {fileID: 2136304140}
     - target: {fileID: 5422137896713478, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
@@ -22023,7 +22029,7 @@ PrefabInstance:
     - target: {fileID: 5422137896713478, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2136304136}
+      objectReference: {fileID: 2136304140}
     - target: {fileID: 5422137939896439, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
@@ -22031,7 +22037,7 @@ PrefabInstance:
     - target: {fileID: 5422137939896439, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2136304136}
+      objectReference: {fileID: 2136304140}
     - target: {fileID: 5422138135313803, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
@@ -22039,7 +22045,7 @@ PrefabInstance:
     - target: {fileID: 5422138135313803, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2136304136}
+      objectReference: {fileID: 2136304140}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf067c36ec1381742a9398a8cf109ae8, type: 3}
 --- !u!114 &1739567778 stripped
@@ -24657,8 +24663,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2136304136}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
           Assembly-CSharp
         m_MethodName: NextElement
         m_Mode: 2
@@ -27658,7 +27664,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2136304135}
   - component: {fileID: 2136304140}
-  - component: {fileID: 2136304136}
   - component: {fileID: 2136304137}
   m_Layer: 0
   m_Name: MenuManager
@@ -27682,50 +27687,6 @@ Transform:
   m_Father: {fileID: 159073940}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2136304136
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2136304134}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8da2c558ed6364144990e6fbc7872677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_menuOrganisation: {fileID: 2136304140}
-  m_firstElement: {fileID: 433312016}
-  m_keyTransform:
-  - {fileID: 433312016}
-  - {fileID: 703546890}
-  - {fileID: 1667658035}
-  - {fileID: 1866858701}
-  - {fileID: 1288155608}
-  - {fileID: 1605107464}
-  - {fileID: 1480635289379432788}
-  m_valueGameObject:
-  - {fileID: 1637870756}
-  - {fileID: 395195817}
-  - {fileID: 366048201}
-  - {fileID: 2100956298}
-  - {fileID: 1392629918}
-  - {fileID: 703761461}
-  - {fileID: 1545012585}
-  m_alphaButtons:
-  - {fileID: 1739567778}
-  - {fileID: 1739567779}
-  - {fileID: 1739567780}
-  - {fileID: 1739567782}
-  - {fileID: 1739567783}
-  m_reducedAlphaValue: 0.5
-  m_maxAlphaValue: 1
-  m_subPageTransforms:
-  - {fileID: 200942820132933060}
-  - {fileID: 200942820132933059}
-  - {fileID: 1480635289120328398}
-  - {fileID: 1108786669}
-  - {fileID: 1480635289435456337}
 --- !u!114 &2136304137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27767,8 +27728,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_eventSystem: {fileID: 1805932207}
-  m_menuNavigation: {fileID: 2136304136}
   m_inGameMenuActions: {fileID: 0}
+  m_firstElement: {fileID: 433312016}
+  m_keyTransform:
+  - {fileID: 433312016}
+  - {fileID: 703546890}
+  - {fileID: 1667658035}
+  - {fileID: 1866858701}
+  - {fileID: 1288155608}
+  - {fileID: 1605107464}
+  - {fileID: 1480635289379432788}
+  m_valueGameObject:
+  - {fileID: 1637870756}
+  - {fileID: 395195817}
+  - {fileID: 366048201}
+  - {fileID: 2100956298}
+  - {fileID: 1392629918}
+  - {fileID: 703761461}
+  - {fileID: 1545012585}
+  m_reducedAlphaValue: 0.5
+  m_maxAlphaValue: 1
+  m_alphaButtons:
+  - {fileID: 1739567778}
+  - {fileID: 1739567779}
+  - {fileID: 1739567780}
+  - {fileID: 1739567782}
+  - {fileID: 1739567783}
+  m_subPageTransforms:
+  - {fileID: 200942820132933060}
+  - {fileID: 200942820132933059}
+  - {fileID: 1480635289120328398}
+  - {fileID: 1108786669}
+  - {fileID: 1480635289435456337}
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
   m_playerIDData:
@@ -27860,8 +27851,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2136304136}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
           Assembly-CSharp
         m_MethodName: NextElement
         m_Mode: 2
@@ -28060,7 +28051,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2136304136}
+      objectReference: {fileID: 2136304140}
     - target: {fileID: 7313720338195380836, guid: 5d99c73a2379ef643b2423fb48c9661c,
         type: 3}
       propertyPath: m_Pivot.x
@@ -29166,8 +29157,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2136304136}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+      - m_Target: {fileID: 2136304140}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuOrganisation,
           Assembly-CSharp
         m_MethodName: CloseToPreviousElement
         m_Mode: 1
@@ -30849,7 +30840,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2136304136}
+      objectReference: {fileID: 2136304140}
     - target: {fileID: 5575190014900076001, guid: 55fb1881186267542992d56e3f7720d3,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
@@ -30963,7 +30954,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2136304136}
+      objectReference: {fileID: 2136304140}
     - target: {fileID: 2996707030087504961, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -30973,7 +30964,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2136304136}
+      objectReference: {fileID: 2136304140}
     - target: {fileID: 3389943104105735208, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -30998,7 +30989,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2136304136}
+      objectReference: {fileID: 2136304140}
     - target: {fileID: 4852882518049100156, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_Pivot.x
@@ -31133,7 +31124,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2136304136}
+      objectReference: {fileID: 2136304140}
     - target: {fileID: 8974016841704842662, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -31588,7 +31579,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2136304136}
+      objectReference: {fileID: 2136304140}
     - target: {fileID: 8735401617816517676, guid: d5d526be9fc149148aeb5951486723ed,
         type: 3}
       propertyPath: m_Pivot.x
