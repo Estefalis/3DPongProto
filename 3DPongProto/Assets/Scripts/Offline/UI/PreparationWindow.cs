@@ -223,7 +223,7 @@ namespace ThreeDeePongProto.Offline.UI
                 //if (m_inputFields[i].text.IsNullOrWhitespace())   //Sirenix.Utilities.
                 if (string.IsNullOrWhiteSpace(m_inputFields[i].text))
                 {
-                    //TODO: Set a PopUp here!!!                    
+                    //TODO: Set a PopUp here.                    
                     m_startButton.interactable = false; //StartButton
                     m_joinButton.interactable = false; //JoinButton
                     return;
@@ -268,7 +268,7 @@ namespace ThreeDeePongProto.Offline.UI
                     break;
             }
 
-            //WHENEVER YOU GOT THE SAME CLASS IN MULTIPLE SCENES (like MENUORGANISATION) SAVE CHANGED DATA!!! OR old RELOADED DATA WILL OVERWRITE IT!!! AND YOU DON'T KNOW WHY...!
+            //WHENEVER YOU GOT THE SAME CLASS IN MULTIPLE SCENES (like MENUMANAGER) SAVE CHANGED DATA!!! OR old RELOADED DATA WILL OVERWRITE IT!!! AND YOU DON'T KNOW WHY...!
             m_persistentData.SaveData(m_settingsStatesFolderPath, m_matchFileName, m_fileFormat, m_matchUIStates, m_encryptionEnabled, true);
             m_persistentData.SaveData(m_settingsStatesFolderPath, m_graphicFileName, m_fileFormat, m_graphicUiStates, m_encryptionEnabled, true);
             SetUpPlayerAmount(m_matchUIStates.EPlayerAmount);
