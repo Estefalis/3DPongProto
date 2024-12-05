@@ -20,8 +20,8 @@ namespace ThreeDeePongProto.Offline.UI
         [SerializeField] private List<TextMeshProUGUI> m_playerNamesTMPList;
         [SerializeField] private List<TextMeshProUGUI> m_totalPointsTMPList;
         [SerializeField] private List<GameObject> m_playerAvatarList = new();
-        [SerializeField] private float m_AdjustxPos = 5f;
-        [SerializeField] private float m_AdjustyPos = -5f;
+        [SerializeField] private float m_playerInfoXPos = 2f;
+        [SerializeField] private float m_playerInfoYPos = -2f;
 
         [Header("Round-Details")]
         [SerializeField] private TextMeshProUGUI m_roundNrTMP;
@@ -114,24 +114,24 @@ namespace ThreeDeePongProto.Offline.UI
                 }
                 case ECameraModi.TwoVertical:
                 {
-                    m_playerParentTransform[0].position = new Vector3(0 + m_AdjustxPos, _runtimeFullsizeRect.height + m_AdjustyPos, 0);
-                    m_playerParentTransform[1].position = new Vector3(_runtimeFullsizeRect.width * 0.5f + m_AdjustxPos, _runtimeFullsizeRect.height + m_AdjustyPos, 0);
+                    m_playerParentTransform[0].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height + m_playerInfoYPos, 0);
+                    m_playerParentTransform[1].position = new Vector3(_runtimeFullsizeRect.width * 0.5f + m_playerInfoXPos, _runtimeFullsizeRect.height + m_playerInfoYPos, 0);
                     UpdateVisibleTransformList(m_playerParentTransform[0], m_playerParentTransform[1]);
                     break;
                 }
                 case ECameraModi.TwoHorizontal:
                 {
-                    m_playerParentTransform[0].position = new Vector3(0 + m_AdjustxPos, _runtimeFullsizeRect.height * 0.5f + m_AdjustyPos, 0);
-                    m_playerParentTransform[1].position = new Vector3(0 + m_AdjustxPos, _runtimeFullsizeRect.height + m_AdjustyPos, 0);
+                    m_playerParentTransform[0].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height * 0.5f + m_playerInfoYPos, 0);
+                    m_playerParentTransform[1].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height + m_playerInfoYPos, 0);
                     UpdateVisibleTransformList(m_playerParentTransform[0], m_playerParentTransform[1]);
                     break;
                 }
                 case ECameraModi.FourSplit:
                 {
-                    m_playerParentTransform[0].position = new Vector3(0 + m_AdjustxPos, _runtimeFullsizeRect.height * 0.5f + m_AdjustyPos, 0);
-                    m_playerParentTransform[1].position = new Vector3(_runtimeFullsizeRect.width * 0.5f + m_AdjustxPos, _runtimeFullsizeRect.height * 0.5f + m_AdjustyPos, 0);
-                    m_playerParentTransform[2].position = new Vector3(0 + m_AdjustxPos, _runtimeFullsizeRect.height + m_AdjustyPos, 0);
-                    m_playerParentTransform[3].position = new Vector3(_runtimeFullsizeRect.width * 0.5f + m_AdjustxPos, _runtimeFullsizeRect.height + m_AdjustyPos, 0);
+                    m_playerParentTransform[0].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height * 0.5f + m_playerInfoYPos, 0);
+                    m_playerParentTransform[1].position = new Vector3(_runtimeFullsizeRect.width * 0.5f + m_playerInfoXPos, _runtimeFullsizeRect.height * 0.5f + m_playerInfoYPos, 0);
+                    m_playerParentTransform[2].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height + m_playerInfoYPos, 0);
+                    m_playerParentTransform[3].position = new Vector3(_runtimeFullsizeRect.width * 0.5f + m_playerInfoXPos, _runtimeFullsizeRect.height + m_playerInfoYPos, 0);
                     UpdateVisibleTransformList(m_playerParentTransform[0], m_playerParentTransform[1], m_playerParentTransform[2], m_playerParentTransform[3]);
                     break;
                 }

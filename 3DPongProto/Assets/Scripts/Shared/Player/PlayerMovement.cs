@@ -68,6 +68,7 @@ namespace ThreeDeePongProto.Shared.Player
             Ball.HitGoalOne += LetsResetPaddleRotation;
             Ball.HitGoalTwo += LetsResetPaddleRotation;
 
+            ReStartPushCoroutine();
             ClampMoveRange();   //PlayerController gets Variables in (Awake()'.
         }
 

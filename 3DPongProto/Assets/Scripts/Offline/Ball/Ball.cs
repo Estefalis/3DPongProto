@@ -85,20 +85,12 @@ public class Ball : MonoBehaviour
     {
         if (!m_matchManager.GameIsPaused)
         {
-            switch (m_matchManager.MatchStarted)
-            {
-                case false:
-                {
-                    RoundCountStarts?.Invoke();
-                }
-                break;
-                case true:
-                    break;
-            }
+            if (!m_matchManager.MatchStarted)
+                RoundCountStarts?.Invoke(); //Has to stay below 'ApplyForceOnBall();', if the ApplyForce button is the same as Submit/Click as now.
 
             ApplyForceOnBall();
             //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
-            PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);   //BallstartSound
+            PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);   //BallstartSound 
         }
     }
 

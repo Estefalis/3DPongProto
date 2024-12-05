@@ -308,7 +308,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""name"": """",
                     ""id"": ""d7bbe063-46b8-41e1-b083-20a8255c6a5a"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -998,15 +998,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ToggleGameMenu"",
-                    ""type"": ""Button"",
-                    ""id"": ""5afb6f62-4bc8-4391-8b61-e5c2f08385a7"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""TrackedDevicePosition"",
                     ""type"": ""PassThrough"",
                     ""id"": ""40b1d236-4280-45ee-bab6-d382a5bc61d0"",
@@ -1446,28 +1437,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": """",
-                    ""id"": ""51c713a3-8ce8-451d-938b-47551117b8c5"",
-                    ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
-                    ""action"": ""ToggleGameMenu"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""43089c8d-3fac-4a0c-8761-d114c9d7f8a3"",
-                    ""path"": ""<Gamepad>/start"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""ToggleGameMenu"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""c4d9138b-a922-4234-8da0-954a193a8d15"",
                     ""path"": ""<Keyboard>/c"",
                     ""interactions"": """",
@@ -1566,7 +1535,6 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_UI_MiddleClick = m_UI.FindAction("MiddleClick", throwIfNotFound: true);
             m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
             m_UI_CursorVisibility = m_UI.FindAction("CursorVisibility", throwIfNotFound: true);
-            m_UI_ToggleGameMenu = m_UI.FindAction("ToggleGameMenu", throwIfNotFound: true);
             m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
             m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         }
@@ -1813,7 +1781,6 @@ namespace ThreeDeePongProto.Shared.InputActions
         private readonly InputAction m_UI_MiddleClick;
         private readonly InputAction m_UI_RightClick;
         private readonly InputAction m_UI_CursorVisibility;
-        private readonly InputAction m_UI_ToggleGameMenu;
         private readonly InputAction m_UI_TrackedDevicePosition;
         private readonly InputAction m_UI_TrackedDeviceOrientation;
         public struct UIActions
@@ -1829,7 +1796,6 @@ namespace ThreeDeePongProto.Shared.InputActions
             public InputAction @MiddleClick => m_Wrapper.m_UI_MiddleClick;
             public InputAction @RightClick => m_Wrapper.m_UI_RightClick;
             public InputAction @CursorVisibility => m_Wrapper.m_UI_CursorVisibility;
-            public InputAction @ToggleGameMenu => m_Wrapper.m_UI_ToggleGameMenu;
             public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
             public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
             public InputActionMap Get() { return m_Wrapper.m_UI; }
@@ -1868,9 +1834,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @CursorVisibility.started += instance.OnCursorVisibility;
                 @CursorVisibility.performed += instance.OnCursorVisibility;
                 @CursorVisibility.canceled += instance.OnCursorVisibility;
-                @ToggleGameMenu.started += instance.OnToggleGameMenu;
-                @ToggleGameMenu.performed += instance.OnToggleGameMenu;
-                @ToggleGameMenu.canceled += instance.OnToggleGameMenu;
                 @TrackedDevicePosition.started += instance.OnTrackedDevicePosition;
                 @TrackedDevicePosition.performed += instance.OnTrackedDevicePosition;
                 @TrackedDevicePosition.canceled += instance.OnTrackedDevicePosition;
@@ -1908,9 +1871,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @CursorVisibility.started -= instance.OnCursorVisibility;
                 @CursorVisibility.performed -= instance.OnCursorVisibility;
                 @CursorVisibility.canceled -= instance.OnCursorVisibility;
-                @ToggleGameMenu.started -= instance.OnToggleGameMenu;
-                @ToggleGameMenu.performed -= instance.OnToggleGameMenu;
-                @ToggleGameMenu.canceled -= instance.OnToggleGameMenu;
                 @TrackedDevicePosition.started -= instance.OnTrackedDevicePosition;
                 @TrackedDevicePosition.performed -= instance.OnTrackedDevicePosition;
                 @TrackedDevicePosition.canceled -= instance.OnTrackedDevicePosition;
@@ -1983,7 +1943,6 @@ namespace ThreeDeePongProto.Shared.InputActions
             void OnMiddleClick(InputAction.CallbackContext context);
             void OnRightClick(InputAction.CallbackContext context);
             void OnCursorVisibility(InputAction.CallbackContext context);
-            void OnToggleGameMenu(InputAction.CallbackContext context);
             void OnTrackedDevicePosition(InputAction.CallbackContext context);
             void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
         }

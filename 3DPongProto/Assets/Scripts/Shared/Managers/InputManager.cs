@@ -60,7 +60,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         private static event Func<string, string, Sprite> m_extractButtonImage;
         #endregion
 
-        private static ActiveInputActionMap m_activeInputActionMap;
+        private static ActiveInputActionMap m_activeInputActionMap = ActiveInputActionMap.None;
         private static Vector2 m_mousePosition;
 
         #region Serialization
@@ -105,15 +105,19 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
 
             SceneManager.sceneLoaded += OnSceneFinishedLoading;
-            m_extractButtonImage += ExtractImage;
             ControlSettings.PlayerViewIndex += PlayerIndex;
+
+            m_extractButtonImage += ExtractImage;
+            m_changeActiveActionMap += UpdateActiveActionMap;
         }
 
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneFinishedLoading;
-            m_extractButtonImage -= ExtractImage;
             ControlSettings.PlayerViewIndex -= PlayerIndex;
+
+            m_extractButtonImage -= ExtractImage;
+            m_changeActiveActionMap -= UpdateActiveActionMap;
         }
 
         public static Vector2 GetMousePosition()
@@ -159,37 +163,31 @@ namespace ThreeDeePongProto.Shared.InputActions
             {
                 case "StartMenuScene":
                 {
-                    m_activeInputActionMap = ActiveInputActionMap.UI;
                     ToggleActionMaps(m_PlayerInputActions.UI);
                     break;
                 }
                 case "LocalGameScene":
                 {
-                    m_activeInputActionMap = ActiveInputActionMap.PlayerActions;
                     ToggleActionMaps(m_PlayerInputActions.PlayerActions);
                     break;
                 }
                 case "LanGameScene":
                 {
-                    m_activeInputActionMap = ActiveInputActionMap.PlayerActions;
                     ToggleActionMaps(m_PlayerInputActions.PlayerActions);
                     break;
                 }
                 case "NetGameScene":
                 {
-                    m_activeInputActionMap = ActiveInputActionMap.PlayerActions;
                     ToggleActionMaps(m_PlayerInputActions.PlayerActions);
                     break;
                 }
                 case "WinScene":
                 {
-                    m_activeInputActionMap = ActiveInputActionMap.UI;
                     ToggleActionMaps(m_PlayerInputActions.UI);
                     break;
                 }
                 default:
                 {
-                    m_activeInputActionMap = ActiveInputActionMap.UI;
                     ToggleActionMaps(m_PlayerInputActions.UI);
                     break;
                 }
@@ -212,6 +210,15 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_PlayerInputActions.Disable();
             m_changeActiveActionMap?.Invoke(_actionMap);
             _actionMap.Enable();
+        }
+
+        private void UpdateActiveActionMap(InputActionMap _inputActionMap)
+        {
+            if (_inputActionMap.name == ActiveInputActionMap.PlayerActions.ToString())
+                m_activeInputActionMap = ActiveInputActionMap.PlayerActions;
+
+            if (_inputActionMap.name == ActiveInputActionMap.UI.ToString())
+                m_activeInputActionMap = ActiveInputActionMap.UI;
         }
         #endregion
 

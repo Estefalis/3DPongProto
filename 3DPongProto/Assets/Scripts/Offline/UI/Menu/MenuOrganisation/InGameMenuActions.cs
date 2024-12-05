@@ -15,9 +15,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         //[SerializeField] private Button m_hiddenFinishButton;
 
         ////MatchManager unpauses the Game. - PlayerController restarts Coroutines and Inputsystem.PlayerActions.
-        //public static event Action CloseInGameMenu;
+        //public static event Action BackToGame;
         ////MatchManager unpauses the Game.
-        //public static event Action RestartGameLevel;
+        //public static event Action RestartGame;
         ////MatchManager unpauses the Game.
         //public static event Action OnLoadMainScene;
 
@@ -28,7 +28,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void OnDisable()
         {
             m_menuActions.PlayerActions.Disable();
-            //m_menuActions.PlayerActions.ToggleGameMenu.performed -= SetSelectedMenuButton;
+            //m_menuActions.PlayerActions.ToggleGameMenu.performed -= OpenMenu;
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             m_menuActions = InputManager.m_PlayerInputActions;
             m_menuActions.PlayerActions.Enable();
-            //m_menuActions.PlayerActions.ToggleGameMenu.performed += SetSelectedMenuButton;
+            //m_menuActions.PlayerActions.ToggleGameMenu.performed += OpenMenu;
 
             //if (m_hiddenFinishButton != null)
             //    InVisibleButton(m_menuOrganisation.GetMatchUIStates.InfiniteMatch); //m_matchUIStates get load in LoadSettingsValues > Awake().
@@ -57,7 +57,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         //    }
         //}
 
-        //private void SetSelectedMenuButton(InputAction.CallbackContext _callbackContext)
+        //private void OpenMenu(InputAction.CallbackContext _callbackContext)
         //{
         //    if (!m_menuOrganisation.FirstElement.gameObject.activeInHierarchy)
         //    {
@@ -68,14 +68,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         //public void ResumeGame()
         //{
-        //    CloseInGameMenu?.Invoke();
+        //    BackToGame?.Invoke();
         //    m_menuOrganisation.FirstElement.gameObject.SetActive(false);
         //    InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.PlayerActions);
         //}
 
         //public void RestartLevel()
         //{
-        //    RestartGameLevel?.Invoke();
+        //    RestartGame?.Invoke();
         //    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         //    InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.PlayerActions);
         //}

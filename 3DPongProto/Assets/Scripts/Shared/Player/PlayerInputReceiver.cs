@@ -1,3 +1,4 @@
+using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,9 +11,6 @@ namespace ThreeDeePongProto.Shared.Player
         [SerializeField] internal PlayerController m_playerController;
 
         private Vector3 m_sideMoveVector;
-
-        ////MatchManager pauses the Game. Coroutines and the Inputsystem.PlayerActions get disabled inside this class.
-        //public static event Action InGameMenuOpens;
 
         private void OnDisable()
         {
@@ -27,8 +25,9 @@ namespace ThreeDeePongProto.Shared.Player
             m_playerInputActions.PlayerActions.PushPaddlePosZP4.performed -= PaddlePushInputP4;
             m_playerInputActions.PlayerActions.PushPaddlePosZP4.canceled -= CanceledPaddlePushInputP4;
 
-            m_playerInputActions.UI.ToggleGameMenu.performed -= EnablePlayerControls;
-            m_playerInputActions.PlayerActions.ToggleGameMenu.performed -= DisablePlayerControls;
+            m_playerInputActions.PlayerActions.ToggleGameMenu.performed -= OnMenuOpening;
+            MenuManager.BackToGame += OnMenuClosing;
+            MenuManager.RestartGame += OnMenuClosing;
         }
 
         /// <summary>
@@ -48,8 +47,9 @@ namespace ThreeDeePongProto.Shared.Player
             m_playerInputActions.PlayerActions.PushPaddlePosZP4.performed += PaddlePushInputP4;
             m_playerInputActions.PlayerActions.PushPaddlePosZP4.canceled += CanceledPaddlePushInputP4;
 
-            m_playerInputActions.UI.ToggleGameMenu.performed += EnablePlayerControls;
-            m_playerInputActions.PlayerActions.ToggleGameMenu.performed += DisablePlayerControls;
+            m_playerInputActions.PlayerActions.ToggleGameMenu.performed += OnMenuOpening;
+            MenuManager.BackToGame -= OnMenuClosing;
+            MenuManager.RestartGame -= OnMenuClosing;
         }
 
         private void FixedUpdate()
@@ -93,16 +93,17 @@ namespace ThreeDeePongProto.Shared.Player
             }
         }
 
-        #region CallbackContext Methods
-        private void EnablePlayerControls(InputAction.CallbackContext _callbackContext)
+        private void OnMenuClosing()
         {
             m_playerInputActions.Enable();
             m_playerController.m_playerMovement.ReStartPushCoroutine();
         }
 
-        private void DisablePlayerControls(InputAction.CallbackContext _callbackContext)
+        #region CallbackContext Methods
+        private void OnMenuOpening(InputAction.CallbackContext _callbackContext)
         {
-            m_playerInputActions.Disable();
+            m_playerInputActions.Disable();  //Paddles can still be moved, if 'm_playerInputActions' here isn't disabled.
+            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.UI);
             m_playerController.m_playerMovement.StopPushCoroutine();
         }
 

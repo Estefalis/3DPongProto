@@ -39,7 +39,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             base.OnDisable();
             StopAllCoroutines();
             InGameMenuOpens -= DisablePlayerActions;                                                                        //PlayerInputReceiver
-            MenuManager.CloseInGameMenu -= StartCoroutinesAndActions;                                                 //PlayerInputReceiver
+            MenuManager.BackToGame -= StartCoroutinesAndActions;                                                 //PlayerInputReceiver
             Ball.HitGoalOne -= LetsResetPaddleRotation;                                                                     //PlayerMovement
             Ball.HitGoalTwo -= LetsResetPaddleRotation;                                                                     //PlayerMovement
         }
@@ -53,7 +53,7 @@ namespace ThreeDeePongProto.Offline.Player.Inputs
             m_playerMovement.PlayerActions.PushPaddleNegZP3.canceled += CanceledInputPlayerThree;
 
             InGameMenuOpens += DisablePlayerActions;                                                                        //PlayerInputReceiver
-            MenuManager.CloseInGameMenu += StartCoroutinesAndActions;                                                 //PlayerInputReceiver
+            MenuManager.BackToGame += StartCoroutinesAndActions;                                                 //PlayerInputReceiver
             StartCoroutinesAndActions();                                                                                    //PlayerInputReceiver
 
             AudioManager.LetsRegisterAudioSources(m_audioSource);                                                           //PlayerController

@@ -106,8 +106,8 @@ namespace ThreeDeePongProto.Offline.Managers
 
         private void OnEnable()
         {
-            MenuManager.CloseInGameMenu += SceneRestartActions;
-            MenuManager.RestartGameLevel += ReSetMatch;
+            MenuManager.BackToGame += SceneRestartActions;
+            MenuManager.RestartGame += ReSetMatch;
             MenuManager.EndInfiniteMatch += LetsEndInfiniteMatch;
 
             Ball.RoundCountStarts += MatchStartValues;
@@ -120,8 +120,8 @@ namespace ThreeDeePongProto.Offline.Managers
 
         private void OnDisable()
         {
-            MenuManager.CloseInGameMenu -= SceneRestartActions;
-            MenuManager.RestartGameLevel -= ReSetMatch;
+            MenuManager.BackToGame -= SceneRestartActions;
+            MenuManager.RestartGame -= ReSetMatch;
             MenuManager.EndInfiniteMatch -= LetsEndInfiniteMatch;
 
             Ball.RoundCountStarts -= MatchStartValues;
@@ -138,7 +138,9 @@ namespace ThreeDeePongProto.Offline.Managers
 
             m_inputActions.PlayerActions.Disable();
             m_inputActions.PlayerActions.ToggleGameMenu.performed -= PauseAndTimeScale;
-            m_inputActions.UI.ToggleGameMenu.performed -= ResetPauseAndTimescale;
+
+            MenuManager.BackToGame -= ResetPauseAndTimescale;
+            MenuManager.RestartGame -= ResetPauseAndTimescale;
         }
 
         private IEnumerator Start()
@@ -146,7 +148,9 @@ namespace ThreeDeePongProto.Offline.Managers
             m_inputActions = InputManager.m_PlayerInputActions;
             m_inputActions.PlayerActions.Enable();
             m_inputActions.PlayerActions.ToggleGameMenu.performed += PauseAndTimeScale;
-            m_inputActions.UI.ToggleGameMenu.performed += ResetPauseAndTimescale;
+
+            MenuManager.BackToGame += ResetPauseAndTimescale;
+            MenuManager.RestartGame += ResetPauseAndTimescale;
 
             uint setPlayerByEnum = (uint)m_matchUIStates.EPlayerAmount;
             //1. Instantiate all Players related to the PlayerCount in game.
@@ -329,6 +333,15 @@ namespace ThreeDeePongProto.Offline.Managers
             m_playGround.transform.localScale = new Vector3(m_playGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_playGroundLength * m_playGroundLengthScale);
         }
 
+        private void ResetRoundValues()
+        {
+            if (m_matchValues != null)
+            {
+                m_matchValues.MatchPointsTPOne = 0;
+                m_matchValues.MatchPointsTPTwo = 0;
+            }
+        }
+
         #region Match-Presets
         private void ReSetPlayfield()
         {
@@ -337,15 +350,6 @@ namespace ThreeDeePongProto.Offline.Managers
 
             Instantiate(m_playGround, Vector3.zero, Quaternion.Euler(0, 0, 0), m_prefabParent);
             Instantiate(m_ballPrefab, m_ballPopPos, Quaternion.Euler(0, 0, 0), m_prefabParent);
-        }
-
-        private void ResetRoundValues()
-        {
-            if (m_matchValues != null)
-            {
-                m_matchValues.MatchPointsTPOne = 0;
-                m_matchValues.MatchPointsTPTwo = 0;
-            }
         }
         #endregion
 
@@ -489,14 +493,14 @@ namespace ThreeDeePongProto.Offline.Managers
             //TODO: Start WinProcedure.
         }
 
+        private void ResetPauseAndTimescale()
+        {
+            SetPauseAndTimeScale(false);
+        }
+
         private void PauseAndTimeScale(InputAction.CallbackContext _callbackContext)
         {
             SetPauseAndTimeScale(true);
-        }
-
-        private void ResetPauseAndTimescale(InputAction.CallbackContext _callbackContext)
-        {
-            SetPauseAndTimeScale(false);
         }
 
         private void SceneRestartActions()
