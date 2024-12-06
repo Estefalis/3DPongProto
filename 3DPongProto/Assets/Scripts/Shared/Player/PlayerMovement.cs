@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -35,7 +36,7 @@ namespace ThreeDeePongProto.Shared.Player
         private Vector3 m_rotateVector;
         private Quaternion m_deltaRotation;
         private Vector3 m_rbPosition;
-        private IEnumerator m_paddlePushCoroutineP1, m_paddlePushCoroutineP2, m_paddlePushCoroutineP3, m_paddlePushCoroutineP4;
+        private IEnumerator m_paddlePushCoroutine, m_paddlePushCoroutineP2, m_paddlePushCoroutineP3, m_paddlePushCoroutineP4;
 
         internal bool m_pushPlayer = false;
         internal bool m_tempBlocked = false;
@@ -43,11 +44,7 @@ namespace ThreeDeePongProto.Shared.Player
         private void OnEnable()
         {
             SetPlayerOrientation(m_playerController.m_rigidbody.transform.position.z < 0);  //PlayerController gets Rb in 'Awake()'.
-            m_paddlePushCoroutineP1 = PushPaddleP1(m_lerpDuration);
-            //m_paddlePushCoroutineP2 = PushPaddleP2(m_lerpDuration);
-            //m_paddlePushCoroutineP3 = PushPaddleP3(m_lerpDuration);
-            //m_paddlePushCoroutineP4 = PushPaddleP4(m_lerpDuration);
-            //TODO: Coroutines for other 3 Paddles have to get added, or pushInputs separated. (After some sleep... .)
+            m_paddlePushCoroutine = PushPaddle(m_lerpDuration);
         }
 
         private void OnDisable()
@@ -56,6 +53,9 @@ namespace ThreeDeePongProto.Shared.Player
 
             Ball.HitGoalOne -= LetsResetPaddleRotation;
             Ball.HitGoalTwo -= LetsResetPaddleRotation;
+
+            MenuManager.BackToGame -= OnMenuClosing;
+            MenuManager.RestartGame -= OnMenuClosing;
 
             StopPushCoroutine();
         }
@@ -67,6 +67,9 @@ namespace ThreeDeePongProto.Shared.Player
 
             Ball.HitGoalOne += LetsResetPaddleRotation;
             Ball.HitGoalTwo += LetsResetPaddleRotation;
+
+            MenuManager.BackToGame += OnMenuClosing;
+            MenuManager.RestartGame += OnMenuClosing;
 
             ReStartPushCoroutine();
             ClampMoveRange();   //PlayerController gets Variables in (Awake()'.
@@ -134,7 +137,7 @@ namespace ThreeDeePongProto.Shared.Player
         private void MovePaddle()
         {
             var xInvert = m_playerController.m_controlUIStates.InvertXAxis ? -1 : 1;   //ReadValue.x * (m_controlUIStates.InvertXAxis ? -1 : 1)
-            switch (m_playerController.m_playerIDData.PlayerId)
+            switch (m_playerController.m_playerId)
             {
                 case 0:
                 {
@@ -173,8 +176,34 @@ namespace ThreeDeePongProto.Shared.Player
 
         private void RotatePaddle()
         {
-            var yInvert = m_playerController.m_controlUIStates.InvertYAxis ? -1 : 1;
-            m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (m_rotateVector * yInvert)).normalized;
+            switch (m_playerController.m_playerId)
+            {
+                case 0:
+                {
+                    var yInvert = m_playerController.m_controlUIStates.InvertYAxis ? -1 : 1;
+                    m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (m_rotateVector * yInvert)).normalized;
+                    break;
+                }
+                case 1:
+                {
+                    var yInvert = m_playerController.m_controlUIStates.InvertYAxis ? -1 : 1;
+                    m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (m_rotateVector * yInvert)).normalized;
+                    break;
+                }
+                case 2:
+                {
+                    var yInvert = m_playerController.m_controlUIStates.InvertYAxis ? -1 : 1;
+                    m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (m_rotateVector * yInvert)).normalized;
+                    break;
+                }
+                case 3:
+                {
+                    var yInvert = m_playerController.m_controlUIStates.InvertYAxis ? -1 : 1;
+                    m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (m_rotateVector * yInvert)).normalized;
+                    break;
+                }
+            }
+
             m_playerController.m_rigidbody.MoveRotation(m_playerController.m_rigidbody.rotation * m_deltaRotation);
         }
 
@@ -240,15 +269,17 @@ namespace ThreeDeePongProto.Shared.Player
             }
         }
 
-        internal void ReStartPushCoroutine()
+        private void OnMenuClosing()    //From MenuManager's Event.
         {
-            StartCoroutine(m_paddlePushCoroutineP1);
-            //StartCoroutine(m_paddlePushCoroutineP2);
-            //StartCoroutine(m_paddlePushCoroutineP3);
-            //StartCoroutine(m_paddlePushCoroutineP4);
+            ReStartPushCoroutine();
         }
 
-        internal void StopPushCoroutine()
+        internal void ReStartPushCoroutine()
+        {
+            StartCoroutine(m_paddlePushCoroutine);
+        }
+
+        internal void StopPushCoroutine()   //From PlayerInputReceiver's UnityEngine InputSystem.
         {
             StopAllCoroutines();
         }
@@ -260,7 +291,7 @@ namespace ThreeDeePongProto.Shared.Player
         /// '_lerpDuration' also works as maximal Time in the whileLoop, but could be replaced with a fix floatAmount.
         /// <param name="_lerpDuration"></param>
         /// <returns></returns>
-        private IEnumerator PushPaddleP1(float _lerpDuration)
+        private IEnumerator PushPaddle(float _lerpDuration)
         {
             float currentTime = 0;
 
@@ -271,31 +302,31 @@ namespace ThreeDeePongProto.Shared.Player
                     currentTime += Time.deltaTime;
 
                     #region zFloat Mathf.MoveTowards
-                    //if (m_playerId == 0)  //TODO: Updating Id on each Coroutine all 4 Paddles.
-                    //{
-                    float startZPos = m_playerController.m_rigidbody.transform.localPosition.z;
-                    float endZPos = m_playerController.m_rigidbody.transform.localPosition.z - -m_playerController.m_maxPushDistance;
-
-                    m_playerController.m_rigidbody.transform.localPosition = new Vector3(m_playerController.m_rigidbody.transform.localPosition.x, m_playerController.m_rigidbody.transform.localPosition.y, endZPos = Mathf.MoveTowards(startZPos, endZPos, _lerpDuration)) + m_playerController.m_rigidbody.transform.forward;
-                    m_playerController.m_rigidbody.transform.localPosition = new Vector3(m_playerController.m_rigidbody.transform.localPosition.x, m_playerController.m_rigidbody.transform.localPosition.y, endZPos);
-
-                    yield return new WaitForSeconds(m_delayRetreat);
-                    m_pushPlayer = false;
-
-                    m_playerController.m_rigidbody.transform.localPosition = new Vector3(m_playerController.m_rigidbody.transform.localPosition.x, m_playerController.m_rigidbody.transform.localPosition.y, startZPos = Mathf.MoveTowards(endZPos, startZPos, _lerpDuration)) + -m_playerController.m_rigidbody.transform.forward;
-                    m_playerController.m_rigidbody.transform.localPosition = new Vector3(m_playerController.m_rigidbody.transform.localPosition.x, m_playerController.m_rigidbody.transform.localPosition.y, startZPos);
-
-                    #region Nested Coroutine
-                    //Coroutine to restrict paddleForwardMovement by a certain amount of time.
-                    if (m_enablePushDelay)
+                    if (m_playerController.m_playerId == m_receivedPlayerId)  //TODO: Updating Id on each Coroutine all 4 Paddles.
                     {
-                        m_tempBlocked = true;
-                        Coroutine pushRestriction = StartCoroutine(RestrictPushP1());
-                        yield return pushRestriction;
-                        m_tempBlocked = false;
+                        float startZPos = m_playerController.m_rigidbody.transform.localPosition.z;
+                        float endZPos = m_playerController.m_rigidbody.transform.localPosition.z - -m_playerController.m_maxPushDistance;
+
+                        m_playerController.m_rigidbody.transform.localPosition = new Vector3(m_playerController.m_rigidbody.transform.localPosition.x, m_playerController.m_rigidbody.transform.localPosition.y, endZPos = Mathf.MoveTowards(startZPos, endZPos, _lerpDuration)) + m_playerController.m_rigidbody.transform.forward;
+                        m_playerController.m_rigidbody.transform.localPosition = new Vector3(m_playerController.m_rigidbody.transform.localPosition.x, m_playerController.m_rigidbody.transform.localPosition.y, endZPos);
+
+                        yield return new WaitForSeconds(m_delayRetreat);
+                        m_pushPlayer = false;
+
+                        m_playerController.m_rigidbody.transform.localPosition = new Vector3(m_playerController.m_rigidbody.transform.localPosition.x, m_playerController.m_rigidbody.transform.localPosition.y, startZPos = Mathf.MoveTowards(endZPos, startZPos, _lerpDuration)) + -m_playerController.m_rigidbody.transform.forward;
+                        m_playerController.m_rigidbody.transform.localPosition = new Vector3(m_playerController.m_rigidbody.transform.localPosition.x, m_playerController.m_rigidbody.transform.localPosition.y, startZPos);
+
+                        #region Nested Coroutine
+                        //Coroutine to restrict paddleForwardMovement by a certain amount of time.
+                        if (m_enablePushDelay)
+                        {
+                            m_tempBlocked = true;
+                            Coroutine pushRestriction = StartCoroutine(RestrictPush());
+                            yield return pushRestriction;
+                            m_tempBlocked = false;
+                        }
+                        #endregion
                     }
-                    #endregion
-                    //}
                     #endregion
                 }
                 else
@@ -305,7 +336,7 @@ namespace ThreeDeePongProto.Shared.Player
             }
         }
 
-        private IEnumerator RestrictPushP1()
+        private IEnumerator RestrictPush()
         {
             float countdown = m_delayRepetition;
 

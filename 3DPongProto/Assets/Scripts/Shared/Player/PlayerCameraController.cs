@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 namespace ThreeDeePongProto.Shared.Player
 {
     internal class PlayerCameraController : MonoBehaviour
-	{
+    {
         private PlayerInputActions m_cameraInputActions;
         [SerializeField] internal PlayerController m_playerController;
 
@@ -20,7 +20,7 @@ namespace ThreeDeePongProto.Shared.Player
         [Header("Smooth Following")]
         [SerializeField] private Rigidbody m_RbPlayer;
         [SerializeField] private Camera m_followCamera;
-        [SerializeField] private bool m_enableSmoothFollow;
+        //[SerializeField] private bool m_enableSmoothFollow = true;
         [SerializeField] private Vector3 m_desiredOffset;
         [Range(1.0f, 30.0f)]
         [SerializeField] private float m_smoothfactor;
@@ -56,8 +56,7 @@ namespace ThreeDeePongProto.Shared.Player
             m_playerId = m_playerController.m_playerId;
 
             m_setGroundWidth = m_basicFieldValues.SetGroundWidth;
-            //TODO: Move Setting of 'm_enableSmoothFollow' boolean into UI-Settings.
-            m_enableSmoothFollow = true;
+            //m_enableSmoothFollow = true;
         }
 
         private void Start()
@@ -96,15 +95,11 @@ namespace ThreeDeePongProto.Shared.Player
 
         private void FixedUpdate()
         {
-            if (!m_enableSmoothFollow)
-            {
-                FollowUnsmoothed();
-            }
+            //if (!m_enableSmoothFollow)
+            //    FollowUnsmoothed();
 
-            if (m_enableSmoothFollow)
-            {
+            //if (m_enableSmoothFollow)
                 FollowSmoothly();
-            }
 
             UpdateZoomPosition();
         }
@@ -190,14 +185,14 @@ namespace ThreeDeePongProto.Shared.Player
             m_mousePosition = InputManager.GetMousePosition();
         }
 
-        private void FollowUnsmoothed()
-        {
-            //Follows directly in xPosition, but the visible push looks buggy, if not lerped.
-            Vector3 desiredPosition = new Vector3(m_RbPlayer.transform.localPosition.x/* + m_desiredOffset.x*/, m_RbPlayer.transform.localPosition.y + m_desiredOffset.y, m_RbPlayer.transform.localPosition.z + -m_desiredOffset.z);
-            Vector3 smoothedFollowing = Vector3.Lerp(m_followCamera.transform.localPosition, desiredPosition, Mathf.Max(m_smoothfactor, 30.0f) * Time.fixedDeltaTime);
-            //m_followCamera.transform.localPosition = desiredPosition;
-            m_followCamera.transform.localPosition = smoothedFollowing;
-        }
+        //private void FollowUnsmoothed()
+        //{
+        //    //Follows directly in xPosition, but the visible push looks buggy, if not lerped.
+        //    Vector3 desiredPosition = new Vector3(m_RbPlayer.transform.localPosition.x/* + m_desiredOffset.x*/, m_RbPlayer.transform.localPosition.y + m_desiredOffset.y, m_RbPlayer.transform.localPosition.z + -m_desiredOffset.z);
+        //    Vector3 smoothedFollowing = Vector3.Lerp(m_followCamera.transform.localPosition, desiredPosition, Mathf.Max(m_smoothfactor, 30.0f) * Time.fixedDeltaTime);
+        //    //m_followCamera.transform.localPosition = desiredPosition;
+        //    m_followCamera.transform.localPosition = smoothedFollowing;
+        //}
 
         private void FollowSmoothly()
         {

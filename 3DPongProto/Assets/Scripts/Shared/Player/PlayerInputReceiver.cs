@@ -16,18 +16,37 @@ namespace ThreeDeePongProto.Shared.Player
         {
             m_playerInputActions.PlayerActions.Disable();
 
-            m_playerInputActions.PlayerActions.PushPaddleNegZP1.performed -= PaddlePushInputP1;
-            m_playerInputActions.PlayerActions.PushPaddleNegZP1.canceled -= CanceledPaddlePushInputP1;
-            m_playerInputActions.PlayerActions.PushPaddlePosZP2.performed -= PaddlePushInputP2;
-            m_playerInputActions.PlayerActions.PushPaddlePosZP2.canceled -= CanceledPaddlePushInputP2;
-            m_playerInputActions.PlayerActions.PushPaddleNegZP3.performed -= PaddlePushInputP3;
-            m_playerInputActions.PlayerActions.PushPaddleNegZP3.canceled -= CanceledPaddlePushInputP3;
-            m_playerInputActions.PlayerActions.PushPaddlePosZP4.performed -= PaddlePushInputP4;
-            m_playerInputActions.PlayerActions.PushPaddlePosZP4.canceled -= CanceledPaddlePushInputP4;
+            switch (m_playerController.m_playerId)
+            {
+                case 0:
+                {
+                    m_playerInputActions.PlayerActions.PushPaddleNegZP1.performed -= PaddlePushInputP1;
+                    m_playerInputActions.PlayerActions.PushPaddleNegZP1.canceled -= CanceledPaddlePushInputP1;
+                    break;
+                }
+                case 1:
+                {
+                    m_playerInputActions.PlayerActions.PushPaddlePosZP2.performed -= PaddlePushInputP2;
+                    m_playerInputActions.PlayerActions.PushPaddlePosZP2.canceled -= CanceledPaddlePushInputP2;
+                    break;
+                }
+                case 2:
+                {
+                    m_playerInputActions.PlayerActions.PushPaddleNegZP3.performed -= PaddlePushInputP3;
+                    m_playerInputActions.PlayerActions.PushPaddleNegZP3.canceled -= CanceledPaddlePushInputP3;
+                    break;
+                }
+                case 3:
+                {
+                    m_playerInputActions.PlayerActions.PushPaddlePosZP4.performed -= PaddlePushInputP4;
+                    m_playerInputActions.PlayerActions.PushPaddlePosZP4.canceled -= CanceledPaddlePushInputP4;
+                    break;
+                }
+            }
 
             m_playerInputActions.PlayerActions.ToggleGameMenu.performed -= OnMenuOpening;
-            MenuManager.BackToGame += OnMenuClosing;
-            MenuManager.RestartGame += OnMenuClosing;
+            MenuManager.BackToGame -= OnMenuClosing;
+            MenuManager.RestartGame -= OnMenuClosing;
         }
 
         /// <summary>
@@ -38,23 +57,42 @@ namespace ThreeDeePongProto.Shared.Player
             m_playerInputActions = InputManager.m_PlayerInputActions;
             m_playerInputActions.PlayerActions.Enable();
 
-            m_playerInputActions.PlayerActions.PushPaddleNegZP1.performed += PaddlePushInputP1;
-            m_playerInputActions.PlayerActions.PushPaddleNegZP1.canceled += CanceledPaddlePushInputP1;
-            m_playerInputActions.PlayerActions.PushPaddlePosZP2.performed += PaddlePushInputP2;
-            m_playerInputActions.PlayerActions.PushPaddlePosZP2.canceled += CanceledPaddlePushInputP2;
-            m_playerInputActions.PlayerActions.PushPaddleNegZP3.performed += PaddlePushInputP3;
-            m_playerInputActions.PlayerActions.PushPaddleNegZP3.canceled += CanceledPaddlePushInputP3;
-            m_playerInputActions.PlayerActions.PushPaddlePosZP4.performed += PaddlePushInputP4;
-            m_playerInputActions.PlayerActions.PushPaddlePosZP4.canceled += CanceledPaddlePushInputP4;
+            switch (m_playerController.m_playerId)
+            {
+                case 0:
+                {
+                    m_playerInputActions.PlayerActions.PushPaddleNegZP1.performed += PaddlePushInputP1;
+                    m_playerInputActions.PlayerActions.PushPaddleNegZP1.canceled += CanceledPaddlePushInputP1;
+                    break;
+                }
+                case 1:
+                {
+                    m_playerInputActions.PlayerActions.PushPaddlePosZP2.performed += PaddlePushInputP2;
+                    m_playerInputActions.PlayerActions.PushPaddlePosZP2.canceled += CanceledPaddlePushInputP2;
+                    break;
+                }
+                case 2:
+                {
+                    m_playerInputActions.PlayerActions.PushPaddleNegZP3.performed += PaddlePushInputP3;
+                    m_playerInputActions.PlayerActions.PushPaddleNegZP3.canceled += CanceledPaddlePushInputP3;
+                    break;
+                }
+                case 3:
+                {
+                    m_playerInputActions.PlayerActions.PushPaddlePosZP4.performed += PaddlePushInputP4;
+                    m_playerInputActions.PlayerActions.PushPaddlePosZP4.canceled += CanceledPaddlePushInputP4;
+                    break;
+                }
+            }
 
             m_playerInputActions.PlayerActions.ToggleGameMenu.performed += OnMenuOpening;
-            MenuManager.BackToGame -= OnMenuClosing;
-            MenuManager.RestartGame -= OnMenuClosing;
+            MenuManager.BackToGame += OnMenuClosing;
+            MenuManager.RestartGame += OnMenuClosing;
         }
 
         private void FixedUpdate()
         {
-            switch (m_playerController.m_playerIDData.PlayerId)
+            switch (m_playerController.m_playerId)
             {
                 case 0:
                 {
@@ -96,7 +134,6 @@ namespace ThreeDeePongProto.Shared.Player
         private void OnMenuClosing()
         {
             m_playerInputActions.Enable();
-            m_playerController.m_playerMovement.ReStartPushCoroutine();
         }
 
         #region CallbackContext Methods
@@ -114,8 +151,8 @@ namespace ThreeDeePongProto.Shared.Player
                 if (!m_playerController.m_playerMovement.m_tempBlocked)
                 {
                     //'ReadValueAsButton()' is only available inside these CallbackContext-Methods.
-                    m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerIDData.PlayerId;
                     m_playerController.m_playerMovement.m_pushPlayer = _callbackContext.ReadValueAsButton();
+                    m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerId;
                 }
             }
         }
@@ -132,8 +169,8 @@ namespace ThreeDeePongProto.Shared.Player
                 if (!m_playerController.m_playerMovement.m_tempBlocked)
                 {
                     //'ReadValueAsButton()' is only available inside these CallbackContext-Methods.
-                    m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerIDData.PlayerId;
                     m_playerController.m_playerMovement.m_pushPlayer = _callbackContext.ReadValueAsButton();
+                    m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerId;
                 }
             }
         }
@@ -150,8 +187,8 @@ namespace ThreeDeePongProto.Shared.Player
                 if (!m_playerController.m_playerMovement.m_tempBlocked)
                 {
                     //'ReadValueAsButton()' is only available inside these CallbackContext-Methods.
-                    m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerIDData.PlayerId;
                     m_playerController.m_playerMovement.m_pushPlayer = _callbackContext.ReadValueAsButton();
+                    m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerId;
                 }
             }
         }
@@ -168,8 +205,8 @@ namespace ThreeDeePongProto.Shared.Player
                 if (!m_playerController.m_playerMovement.m_tempBlocked)
                 {
                     //'ReadValueAsButton()' is only available inside these CallbackContext-Methods.
-                    m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerIDData.PlayerId;
                     m_playerController.m_playerMovement.m_pushPlayer = _callbackContext.ReadValueAsButton();
+                    m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerId;
                 }
             }
         }
