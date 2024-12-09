@@ -23,5 +23,22 @@ namespace ThreeDeePongProto.Shared.HelperClasses
             letters[0] = char.ToUpper(letters[0]);
             return new string(letters);
         }
+
+        /// <summary>
+        /// Returns int.MinValue, once the submitted digit amount hits the first none-int letter on TryParse.
+        /// </summary>
+        /// <param name="_source"></param>
+        /// <param name="_digitsLikeInteger"></param>
+        /// <returns></returns>
+        internal static int GetIndexAtStringEnd(string _source, int _digitsLikeInteger = 0)
+        {
+            string parseSlots = _source.Substring(_source.Length - (1 + _digitsLikeInteger));
+            bool returnSlots = int.TryParse(parseSlots, out int result);
+
+            if (returnSlots)
+                return result;
+            else
+                return int.MinValue;
+        }
     }
 }

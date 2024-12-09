@@ -350,7 +350,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     case true:  //For all Composite for future projects.
                     {
-                        if (DuplicateBindingCheck(_actionToRebind, _bindingIndex))
+                        if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _controlScheme))
                         {
                             //Duplicate case.
                             _actionToRebind.RemoveBindingOverride(_bindingIndex);   //Required, or the new effectivePath gets displayed still.
@@ -374,7 +374,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     }
                     case false: //For all Rebinds in this project.
                     {
-                        if (DuplicateBindingCheck(_actionToRebind, _bindingIndex))
+                        if (DuplicateBindingCheck(_actionToRebind, _bindingIndex, _controlScheme))
                         {
                             //if DuplicateCheck true. Canceling rebind right away.
                             _actionToRebind.RemoveBindingOverride(_bindingIndex);   //Required, or the new effectivePath gets displayed still.
@@ -451,10 +451,12 @@ namespace ThreeDeePongProto.Shared.InputActions
             rebind.Start(); //Real Start of the rebind process.
         }
 
-        private static bool DuplicateBindingCheck(InputAction _actionToRebind, int _bindingIndex)
+        private static bool DuplicateBindingCheck(InputAction _actionToRebind, int _bindingIndex, string _controlScheme = "")
         {
             InputBinding newBinding = _actionToRebind.bindings[_bindingIndex];
-
+#if UNITY_EDITOR
+            //Debug.Log(StringManipulation.GetIndexAtStringEnd(newBinding.action));
+#endif
             foreach (InputBinding binding in _actionToRebind.actionMap.bindings)
             {
                 #region Compare ActionBindings in the actionMap.
