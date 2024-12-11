@@ -460,65 +460,142 @@ namespace ThreeDeePongProto.Shared.InputActions
             foreach (InputBinding binding in _actionToRebind.actionMap.bindings)
             {
                 #region Compare ActionBindings in the actionMap.
-                if (!binding.isComposite)                                                   //Excludes Composites.
+                switch (_controlScheme)
                 {
-#if UNITY_EDITOR
-                    #region Flag Debug Logs
-                    //if (!binding.isPartOfComposite)
-                    //    Debug.Log($"None flag {binding.effectivePath} in {binding.action}.");
-                    //if (binding.isPartOfComposite)
-                    //    Debug.Log($"PartOfComposite flag {binding.effectivePath} in {binding.action}.");
-                    #endregion
-#endif
-                    if (binding.action == newBinding.action)                                //If actions are the same.
+                    case m_keyboardMouseScheme:
                     {
-                        if (binding.id == newBinding.id)                                    //Act by binding ID.
+                        if (!binding.isComposite)                                                   //Excludes Composites.
                         {
 #if UNITY_EDITOR
-                            Debug.Log("Same Binding. Skipped Duplicate-Check.");            //Skips itself on same ID. (Can set binding.)
+                            #region Flag Debug Logs
+                            //if (!binding.isPartOfComposite)
+                            //    Debug.Log($"None flag {binding.effectivePath} in {binding.action}.");
+                            //if (binding.isPartOfComposite)
+                            //    Debug.Log($"PartOfComposite flag {binding.effectivePath} in {binding.action}.");
+                            #endregion
 #endif
-                            continue;                                                       //And continues.
-                        }
-
-                        for (int i = 0; i < binding.action.Length; i++)                     //Old 'if(binding.id != newBinding.id)'.
-                        {
-                            if (binding.effectivePath == newBinding.effectivePath)
+                            if (binding.action == newBinding.action)                                //If actions are the same.
                             {
-#if UNITY_EDITOR
-                                string bindingName = StringManipulation.ToUpperFirstCharacter(binding.name);
-                                Debug.Log($"Duplicate binding {newBinding.effectivePath} found in own Composite Part {bindingName}. Canceling rebind.");
-#endif
-                                return true;                                                //Call out a duplicate, if one is found.
-                            }
-                        }
-                    }
-
-                    if (binding.action != newBinding.action/* && !_allCompositeParts*/)     //If actions are different.
-                    {
-                        for (int j = 0; j < _actionToRebind.actionMap.bindings.Count; j++)
-                        {
-                            if (binding.effectivePath == newBinding.effectivePath)          //Compare paths on (different) actions & IDs.
-                            {
-                                switch (binding.isPartOfComposite)
+                                if (binding.id == newBinding.id)                                    //Act by binding ID.
                                 {
-                                    case true:
-                                    {
 #if UNITY_EDITOR
+                                    Debug.Log("Same Binding. Skipped Duplicate-Check.");            //Skips itself on same ID. (Can set binding.)
+#endif
+                                    continue;                                                       //And continues.
+                                }
+
+                                for (int i = 0; i < binding.action.Length; i++)                     //Old 'if(binding.id != newBinding.id)'.
+                                {
+                                    if (binding.effectivePath == newBinding.effectivePath)
+                                    {
                                         string bindingName = StringManipulation.ToUpperFirstCharacter(binding.name);
-                                        Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}, Composite Part {bindingName}. Canceling rebind.");
-#endif
-                                        return true;                                        //Call out a duplicate, if one is found.
-                                    }
-                                    case false:
-                                    {
 #if UNITY_EDITOR
-                                        Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
+                                        Debug.Log($"Duplicate binding {newBinding.effectivePath} found in own Composite Part {bindingName}. Canceling rebind.");
 #endif
-                                        return true;                                        //Call out a duplicate, if one is found.
+                                        return true;                                                //Call out a duplicate, if one is found.
+                                    }
+                                }
+                            }
+
+                            if (binding.action != newBinding.action/* && !_allCompositeParts*/)     //If actions are different.
+                            {
+                                for (int j = 0; j < _actionToRebind.actionMap.bindings.Count; j++)
+                                {
+                                    if (binding.effectivePath == newBinding.effectivePath)          //Compare paths on (different) actions & IDs.
+                                    {
+                                        switch (binding.isPartOfComposite)
+                                        {
+                                            case true:
+                                            {
+                                                string bindingName = StringManipulation.ToUpperFirstCharacter(binding.name);
+#if UNITY_EDITOR
+                                                Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}, Composite Part {bindingName}. Canceling rebind.");
+#endif
+                                                return true;                                        //Call out a duplicate, if one is found.
+                                            }
+                                            case false:
+                                            {
+#if UNITY_EDITOR
+                                                Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
+#endif
+                                                return true;                                        //Call out a duplicate, if one is found.
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
+
+                        break;
+                    }
+                    case m_gamePadScheme:
+                    {
+                        if (!binding.isComposite)                                                   //Excludes Composites.
+                        {
+#if UNITY_EDITOR
+                            #region Flag Debug Logs
+                            //if (!binding.isPartOfComposite)
+                            //    Debug.Log($"None flag {binding.effectivePath} in {binding.action}.");
+                            //if (binding.isPartOfComposite)
+                            //    Debug.Log($"PartOfComposite flag {binding.effectivePath} in {binding.action}.");
+                            #endregion
+#endif
+                            if (StringManipulation.GetIndexAtStringEnd(binding.action) == StringManipulation.GetIndexAtStringEnd(newBinding.action))
+                            {
+                                if (binding.action == newBinding.action)                                //If actions are the same.
+                                {
+                                    if (binding.id == newBinding.id)                                    //Act by binding ID.
+                                    {
+#if UNITY_EDITOR
+                                        Debug.Log("Same Binding. Skipped Duplicate-Check.");            //Skips itself on same ID. (Can set binding.)
+#endif
+                                        continue;                                                       //And continues.
+                                    }
+
+                                    for (int i = 0; i < binding.action.Length; i++)                     //Old 'if(binding.id != newBinding.id)'.
+                                    {
+                                        if (binding.effectivePath == newBinding.effectivePath)
+                                        {
+                                            string bindingName = StringManipulation.ToUpperFirstCharacter(binding.name);
+#if UNITY_EDITOR
+                                            Debug.Log($"Duplicate binding {newBinding.effectivePath} found in own Composite Part {bindingName}. Canceling rebind.");
+#endif
+                                            return true;                                                //Call out a duplicate, if one is found.
+                                        }
+                                    }
+                                }
+
+                                if (binding.action != newBinding.action/* && !_allCompositeParts*/)     //If actions are different.
+                                {
+                                    for (int j = 0; j < _actionToRebind.actionMap.bindings.Count; j++)
+                                    {
+                                        if (binding.effectivePath == newBinding.effectivePath)          //Compare paths on (different) actions & IDs.
+                                        {
+                                            switch (binding.isPartOfComposite)
+                                            {
+                                                case true:
+                                                {
+                                                    string bindingName = StringManipulation.ToUpperFirstCharacter(binding.name);
+#if UNITY_EDITOR
+                                                    Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}, Composite Part {bindingName}. Canceling rebind.");
+#endif
+                                                    return true;                                        //Call out a duplicate, if one is found.
+                                                }
+                                                case false:
+                                                {
+#if UNITY_EDITOR
+                                                    Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}. Canceling rebind.");
+#endif
+                                                    return true;                                        //Call out a duplicate, if one is found.
+                                                }
+                                            }
+                                        }
+                                    }
+                                } 
+                            }
+                        }
+
+                        break;
                     }
                 }
                 #endregion

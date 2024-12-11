@@ -25,14 +25,14 @@ namespace ThreeDeePongProto.Shared.HelperClasses
         }
 
         /// <summary>
-        /// Returns int.MinValue, once the submitted digit amount hits the first none-int letter on TryParse.
+        /// Returns int.MinValue, once the submitted digit amount hits the first none-int letter on TryParse. 0 = 1 digit.
         /// </summary>
         /// <param name="_source"></param>
-        /// <param name="_digitsLikeInteger"></param>
+        /// <param name="_digitsLikeIndexCount"></param>
         /// <returns></returns>
-        internal static int GetIndexAtStringEnd(string _source, int _digitsLikeInteger = 0)
+        internal static int GetIndexAtStringEnd(string _source, int _digitsLikeIndexCount = 0)
         {
-            string parseSlots = _source.Substring(_source.Length - (1 + _digitsLikeInteger));
+            string parseSlots = _source.Substring(_source.Length - (1 + _digitsLikeIndexCount));
             bool returnSlots = int.TryParse(parseSlots, out int result);
 
             if (returnSlots)
