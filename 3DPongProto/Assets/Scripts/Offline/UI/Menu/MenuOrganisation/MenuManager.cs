@@ -47,6 +47,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [Header("GameScene Variables")]
         [SerializeField] private Button m_hiddenFinishButton;
         private const string m_startMenuScene = "StartMenuScene";
+        private InputActionMap m_currentActionMap = null;
 
         //MatchManager unpauses the Game. - PlayerController restarts Coroutines and Inputsystem.PlayerActions.
         public static event Action BackToGame;
@@ -81,11 +82,21 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             SetUIElements();    //Also sets the lastSelectedElement.
         }
 
+        private void OnDisable()
+        {
+            m_inputActions.Disable();
+
+            //m_inputActions.PlayerActions.ToggleGameMenu.performed -= OpenMenu;
+            m_inputActions.Playfield.ToggleGameMenu.performed -= OpenMenu;
+        }
+
         private void Start()
         {
             m_inputActions = InputManager.m_PlayerInputActions;
-            m_inputActions.UI.Enable();
-            m_inputActions.PlayerActions.ToggleGameMenu.performed += OpenMenu;
+            m_inputActions.Enable();
+
+            //m_inputActions.PlayerActions.ToggleGameMenu.performed += OpenMenu;
+            m_inputActions.Playfield.ToggleGameMenu.performed += OpenMenu;
 
             PreSetUpPlayerAmount(m_matchUIStates.EPlayerAmount);
 
@@ -93,17 +104,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 InVisibleButton(m_matchUIStates.InfiniteMatch); //m_matchUIStates get load in LoadSettingsValues > Awake().
         }
 
-        private void OnDisable()
-        {
-            m_inputActions.UI.Disable();
-            m_inputActions.PlayerActions.ToggleGameMenu.performed -= OpenMenu;
-        }
-
         private void Update()
         {
             UpdateLastSelectedObject();
         }
 
+        #region Custom-Methods
         /// <summary>
         /// Required, so MatchSettings right at start can fill the Front-/Backline-Dropdowns.
         /// </summary>
@@ -135,7 +141,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                             break;
                         case true:
                         {
-                            m_lastSelectedGameObject = InputManager.m_PlayerInputActions.UI.enabled ? m_lastMenuSceneObject = m_eventSystem.currentSelectedGameObject : m_lastGameSceneObject = m_eventSystem.currentSelectedGameObject;
+                            m_lastSelectedGameObject = InputManager.m_PlayerInputActions.UIActions.enabled ? m_lastMenuSceneObject = m_eventSystem.currentSelectedGameObject : m_lastGameSceneObject = m_eventSystem.currentSelectedGameObject;
                             break;
                         }
                     }
@@ -159,7 +165,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 #endif
         }
 
-        #region Navigation-Methods
         private void SetUIElements()
         {
             for (int i = 0; i < m_keyTransform.Length; i++)
@@ -168,7 +173,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             SetNavigationGameObject(m_firstElement);
         }
 
-        #region Methods to (de-)activate Menu-Transforms with a stack and to set the active Element in each UI-Window.
+        #region Stack-Methods to (de-)activate Menu-Transforms and set the active UI-Element.
         /// <summary>
         /// 'm_activeElement' Stack requires a set element to start with, to prevent a null error.
         /// </summary>
@@ -247,28 +252,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         }
         #endregion
 
-        #region Ingame-Methods
-        private void OpenMenu(InputAction.CallbackContext _callbackContext)
-        {
-            if (!m_firstElement.gameObject.activeInHierarchy && InputManager.m_PlayerInputActions.PlayerActions.enabled)
-            {
-                m_firstElement.gameObject.SetActive(true);
-                SetNavigationGameObject(m_firstElement);
-            }
-        }
-
+        #region MenuButton-Methods
         public void ResumeGame()
         {
             BackToGame?.Invoke();
             m_firstElement.gameObject.SetActive(false);
-            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.PlayerActions);
+            //InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.PlayerActions);
         }
 
         public void RestartLevel()
         {
             RestartGame?.Invoke();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.PlayerActions);
+            //InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.PlayerActions);
         }
 
         public void ReturnToMainScene()
@@ -299,7 +295,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     break;
             }
         }
-        #endregion
 
         public void QuitGame()
         {
@@ -309,5 +304,17 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             Application.Quit();
 #endif
         }
+        #endregion
+
+        #region CallbackContext-Methods
+        private void OpenMenu(InputAction.CallbackContext _callbackContext)
+        {
+            if (!m_firstElement.gameObject.activeInHierarchy)
+            {
+                m_firstElement.gameObject.SetActive(true);
+                SetNavigationGameObject(m_firstElement);
+            }
+        }
+        #endregion
     }
 }

@@ -6,7 +6,7 @@ using ThreeDeePongProto.Shared.HelperClasses;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
+//using UnityEngine.SceneManagement;
 
 namespace ThreeDeePongProto.Shared.InputActions
 {
@@ -104,7 +104,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 m_gamepadRebindDict = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_encryptionEnabled);
             }
 
-            SceneManager.sceneLoaded += OnSceneFinishedLoading;
+            //SceneManager.sceneLoaded += OnSceneFinishedLoading;
             ControlSettings.PlayerViewIndex += PlayerIndex;
 
             m_extractButtonImage += ExtractImage;
@@ -113,7 +113,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private void OnDisable()
         {
-            SceneManager.sceneLoaded -= OnSceneFinishedLoading;
+            //SceneManager.sceneLoaded -= OnSceneFinishedLoading;
             ControlSettings.PlayerViewIndex -= PlayerIndex;
 
             m_extractButtonImage -= ExtractImage;
@@ -127,17 +127,20 @@ namespace ThreeDeePongProto.Shared.InputActions
             {
                 case ActiveInputActionMap.PlayerActions:
                 {
-                    m_mousePosition = m_PlayerInputActions.PlayerActions.MousePosition.ReadValue<Vector2>();
+                    //m_mousePosition = m_PlayerInputActions.PlayerActions.MousePosition.ReadValue<Vector2>();
+                    m_mousePosition = m_PlayerInputActions.Playfield.MousePosition.ReadValue<Vector2>();
                     break;
                 }
                 case ActiveInputActionMap.UI:
                 {
-                    m_mousePosition = m_PlayerInputActions.UI.Point.ReadValue<Vector2>();
+                    m_mousePosition = m_PlayerInputActions.UIActions.Point.ReadValue<Vector2>();
                     break;
                 }
                 default:
+                {
                     m_mousePosition = Vector2.zero;
                     break;
+                }
             }
 #else
             m_mousePosition = Input.mousePosition;
@@ -154,47 +157,47 @@ namespace ThreeDeePongProto.Shared.InputActions
         }
 
         #region Change Action Maps
-        private void OnSceneFinishedLoading(Scene _scene, LoadSceneMode _mode)
-        {
-            m_currentSceneIndex = _scene.buildIndex; //TODO: Change to SceneIndex after development.
-            m_currentSceneName = _scene.name;
+        //private void OnSceneFinishedLoading(Scene _scene, LoadSceneMode _mode)
+        //{
+        //    m_currentSceneIndex = _scene.buildIndex; //TODO: Change to SceneIndex after development.
+        //    m_currentSceneName = _scene.name;
 
-            switch (m_currentSceneName)
-            {
-                case "StartMenuScene":
-                {
-                    ToggleActionMaps(m_PlayerInputActions.UI);
-                    break;
-                }
-                case "LocalGameScene":
-                {
-                    ToggleActionMaps(m_PlayerInputActions.PlayerActions);
-                    break;
-                }
-                case "LanGameScene":
-                {
-                    ToggleActionMaps(m_PlayerInputActions.PlayerActions);
-                    break;
-                }
-                case "NetGameScene":
-                {
-                    ToggleActionMaps(m_PlayerInputActions.PlayerActions);
-                    break;
-                }
-                case "WinScene":
-                {
-                    ToggleActionMaps(m_PlayerInputActions.UI);
-                    break;
-                }
-                default:
-                {
-                    ToggleActionMaps(m_PlayerInputActions.UI);
-                    break;
-                }
-            }
+        //    switch (m_currentSceneName)
+        //    {
+        //        case "StartMenuScene":
+        //        {
+        //            ToggleActionMaps(m_PlayerInputActions.UIActions);
+        //            break;
+        //        }
+        //        case "LocalGameScene":
+        //        {
+        //            ToggleActionMaps(m_PlayerInputActions.PlayerActions);
+        //            break;
+        //        }
+        //        case "LanGameScene":
+        //        {
+        //            ToggleActionMaps(m_PlayerInputActions.PlayerActions);
+        //            break;
+        //        }
+        //        case "NetGameScene":
+        //        {
+        //            ToggleActionMaps(m_PlayerInputActions.PlayerActions);
+        //            break;
+        //        }
+        //        case "WinScene":
+        //        {
+        //            ToggleActionMaps(m_PlayerInputActions.UIActions);
+        //            break;
+        //        }
+        //        default:
+        //        {
+        //            ToggleActionMaps(m_PlayerInputActions.UIActions);
+        //            break;
+        //        }
+        //    }
 
-            //m_lastControlSchemeChange = m_keyboardMouseScheme;
-        }
+        //    //m_lastControlSchemeChange = m_keyboardMouseScheme;
+        //}
 
         /// <summary>
         /// Switches ActionMaps, if the active actionMap isn't equal to the submitted one. But does not disable the old actionMaps!
@@ -214,7 +217,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private void UpdateActiveActionMap(InputActionMap _inputActionMap)
         {
-            if (_inputActionMap.name == ActiveInputActionMap.PlayerActions.ToString())
+            if(_inputActionMap.name == ActiveInputActionMap.PlayerActions.ToString())
                 m_activeInputActionMap = ActiveInputActionMap.PlayerActions;
 
             if (_inputActionMap.name == ActiveInputActionMap.UI.ToString())
@@ -591,7 +594,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                                             }
                                         }
                                     }
-                                } 
+                                }
                             }
                         }
 

@@ -59,27 +59,98 @@ namespace ThreeDeePongProto.Shared.Player
             //m_enableSmoothFollow = true;
         }
 
+        private void OnDisable()
+        {
+            //m_cameraInputActions?.Disable();
+            //m_cameraInputActions.PlayerActions.Zoom.performed -= Zooming;
+            ActionMapDeActivation(m_playerId, false);
+
+            MatchManager.AddCamerasNow -= AddCameras;
+            CameraManager.LetsRemoveCamera(m_followCamera, m_playerId);
+        }
+
         private void Start()
         {
             MaxSideMovement();
 
             //CameraActions need to be in Start to prevent NullReferenceExceptions due to relation to the InputManager.
             m_cameraInputActions = InputManager.m_PlayerInputActions;
-            m_cameraInputActions.Enable();
-            m_cameraInputActions.PlayerActions.Zoom.performed += Zooming;
-
+            //m_cameraInputActions.Enable();
+            //m_cameraInputActions.PlayerActions.Zoom.performed += Zooming;
+            ActionMapDeActivation(m_playerId, true);
+            
             m_cameraManager = FindObjectOfType<CameraManager>();
 
             //Saved vector to keep the playerCamera-startposition.
             CameraPositions(m_cameraManager.AvailableCameras[m_playerId]);
         }
 
-        private void OnDisable()
+        #region Custom-Methods
+        private void ActionMapDeActivation(int _playerID, bool _onOff)
         {
-            m_cameraInputActions?.Disable();
-            m_cameraInputActions.PlayerActions.Zoom.performed -= Zooming;
-            MatchManager.AddCamerasNow -= AddCameras;
-            CameraManager.LetsRemoveCamera(m_followCamera, m_playerId);
+            switch (_onOff)
+            {
+                case true:
+                {
+                    switch (_playerID)
+                    {
+                        case 0:
+                        {
+                            m_cameraInputActions?.PlayfieldActionsP1.Enable();
+                            m_cameraInputActions.PlayfieldActionsP1.ZoomP1.performed += Zooming;
+                            break;
+                        }
+                        case 1:
+                        {
+                            m_cameraInputActions?.PlayfieldActionsP2.Enable();
+                            m_cameraInputActions.PlayfieldActionsP2.ZoomP2.performed += Zooming;
+                            break;
+                        }
+                        case 2:
+                        {
+                            m_cameraInputActions?.PlayfieldActionsP3.Enable();
+                            m_cameraInputActions.PlayfieldActionsP3.ZoomP3.performed += Zooming;
+                            break;
+                        }
+                        case 3:
+                        {
+                            m_cameraInputActions?.PlayfieldActionsP4.Enable();
+                            m_cameraInputActions.PlayfieldActionsP4.ZoomP4.performed += Zooming;
+                            break;
+                        }
+                    }
+
+                    break;
+                }
+                case false:
+                {
+                    switch (_playerID)
+                    {
+                        case 0:
+                        {
+                            m_cameraInputActions?.PlayfieldActionsP1.Disable();
+                            m_cameraInputActions.PlayfieldActionsP1.ZoomP1.performed -= Zooming;
+                            break;
+                        }
+                        case 1:
+                            m_cameraInputActions?.PlayfieldActionsP2.Disable();
+                            m_cameraInputActions.PlayfieldActionsP2.ZoomP2.performed -= Zooming;
+                            break;
+                        case 2:
+                            m_cameraInputActions?.PlayfieldActionsP3.Disable();
+                            m_cameraInputActions.PlayfieldActionsP3.ZoomP3.performed -= Zooming;
+                            break;
+                        case 3:
+                        {
+                            m_cameraInputActions?.PlayfieldActionsP4.Disable();
+                            m_cameraInputActions.PlayfieldActionsP4.ZoomP4.performed -= Zooming;
+                            break;
+                        }
+                    }
+
+                    break;
+                }
+            }
         }
 
         private void AddCameras()
@@ -99,7 +170,7 @@ namespace ThreeDeePongProto.Shared.Player
             //    FollowUnsmoothed();
 
             //if (m_enableSmoothFollow)
-                FollowSmoothly();
+            FollowSmoothly();
 
             UpdateZoomPosition();
         }
@@ -204,7 +275,7 @@ namespace ThreeDeePongProto.Shared.Player
         private void UpdateZoomPosition()
         {
             //The 'zoomTarget' and 'm_currentHeight' shall only change, while the PlayerController in the 'PlayerActions' is enabled.
-            if (m_cameraInputActions.PlayerActions.enabled)
+            if (!m_cameraInputActions.UIActions.enabled)
             {
                 m_zoomTarget = new Vector3(m_followCamera.transform.localPosition.x, m_currentHeight, m_followCamera.transform.localPosition.z);
 
@@ -212,7 +283,9 @@ namespace ThreeDeePongProto.Shared.Player
                 m_followCamera.transform.localPosition = Vector3.Lerp(m_followCamera.transform.localPosition, m_zoomTarget, Time.fixedDeltaTime * m_zoomDampening);
             }
         }
+        #endregion
 
+        #region CallbackContext-Methods
         private void Zooming(InputAction.CallbackContext _callbackContext)
         {
             //Zooming limited to the inside of the gameWindow.
@@ -237,5 +310,6 @@ namespace ThreeDeePongProto.Shared.Player
                 }
             }
         }
+        #endregion
     }
 }

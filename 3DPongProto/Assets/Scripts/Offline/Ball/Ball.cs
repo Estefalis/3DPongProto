@@ -63,14 +63,16 @@ public class Ball : MonoBehaviour
         AudioManager.LetsRegisterAudioSources(m_ballAudioSource);
 
         m_inputActions = InputManager.m_PlayerInputActions;
-        m_inputActions.PlayerActions.Enable();
-        m_inputActions.PlayerActions.PokeTheBall.performed += StartBallMovement;
+        m_inputActions.Enable();
+        m_inputActions.Playfield.PokeTheBall.performed += StartBallMovement;
+        //m_inputActions.PlayerActions.PokeTheBall.performed += StartBallMovement;
     }
 
     private void OnDisable()
     {
-        m_inputActions.PlayerActions.Disable();
-        m_inputActions.PlayerActions.PokeTheBall.performed -= StartBallMovement;
+        m_inputActions.Disable();
+        m_inputActions.Playfield.PokeTheBall.performed -= StartBallMovement;
+        //m_inputActions.PlayerActions.PokeTheBall.performed -= StartBallMovement;
     }
 
     private void ResetBall()
