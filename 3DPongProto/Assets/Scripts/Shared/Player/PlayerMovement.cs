@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using ThreeDeePongProto.Offline.UI.Menu;
-using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,7 +8,6 @@ namespace ThreeDeePongProto.Shared.Player
 {
     internal class PlayerMovement : MonoBehaviour
     {
-        private PlayerInputActions m_playerInputActions;
         [SerializeField] internal PlayerController m_playerController;
 
         [Header("Player Details")]
@@ -36,7 +34,7 @@ namespace ThreeDeePongProto.Shared.Player
         private Vector3 m_rotateVector;
         private Quaternion m_deltaRotation;
         private Vector3 m_rbPosition;
-        private IEnumerator m_paddlePushCoroutine, m_paddlePushCoroutineP2, m_paddlePushCoroutineP3, m_paddlePushCoroutineP4;
+        private IEnumerator m_paddlePushCoroutine;
 
         internal bool m_pushPlayer = false;
         internal bool m_tempBlocked = false;
@@ -49,8 +47,6 @@ namespace ThreeDeePongProto.Shared.Player
 
         private void OnDisable()
         {
-            m_playerInputActions.PlayerActions.Disable();
-
             Ball.HitGoalOne -= LetsResetPaddleRotation;
             Ball.HitGoalTwo -= LetsResetPaddleRotation;
 
@@ -62,9 +58,6 @@ namespace ThreeDeePongProto.Shared.Player
 
         private void Start()
         {
-            m_playerInputActions = InputManager.m_PlayerInputActions;
-            m_playerInputActions.PlayerActions.Enable();
-
             Ball.HitGoalOne += LetsResetPaddleRotation;
             Ball.HitGoalTwo += LetsResetPaddleRotation;
 
@@ -104,17 +97,26 @@ namespace ThreeDeePongProto.Shared.Player
 
         private void FixedUpdate()
         {
-            if (m_playerInputActions.PlayerActions.enabled)
+            if (!m_playerController.m_matchManager.GameIsPaused)
             {
-                MovePaddle();
-                RotatePaddle();
+                switch (m_playerController.m_playerId == m_receivedPlayerId)
+                {
+                    case false:
+                        break;
+                    case true:
+                    {
+                        MovePaddle(m_playerController.m_playerId);
+                        RotatePaddle(m_playerController.m_playerId);
+                        break;
+                    }
+                }
             }
         }
 
-        #region Custom Methods
-        private void SetPlayerOrientation(bool _negPaddlePosZ)
+        #region Custom-Methods
+        private void SetPlayerOrientation(bool _PosZIsNegative)
         {
-            switch (_negPaddlePosZ)
+            switch (_PosZIsNegative)
             {
                 case true:
                 {
@@ -134,36 +136,37 @@ namespace ThreeDeePongProto.Shared.Player
             m_playerController.m_rigidbody.transform.localRotation = m_paddleStartRotation;
         }
 
-        private void MovePaddle()
+        private void MovePaddle(int _ownPlayerID)
         {
-            var xInvert = m_playerController.m_controlUIStates.InvertXAxis ? -1 : 1;   //ReadValue.x * (m_controlUIStates.InvertXAxis ? -1 : 1)
-            switch (m_playerController.m_playerId)
+            var xInvert = m_playerController.m_controlUIStates.InvertXAxis ? -1 : 1;    //Value from Scriptable in the Inspector.
+
+            switch (_ownPlayerID)
             {
                 case 0:
                 {
                     m_rbPosition = m_playerController.m_rigidbody.transform.localPosition;
-                    m_moveVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_sideMoveVector.x * xInvert, 0, m_sideMoveVector.y).normalized;   //Player1 ID
+                    m_moveVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_sideMoveVector.x * xInvert, 0, m_sideMoveVector.y).normalized;   //Player1
                     m_rotateVector = new Vector3(0.0f, m_axisRotation.x, 0.0f);
                     break;
                 }
                 case 1:
                 {
                     m_rbPosition = -m_playerController.m_rigidbody.transform.localPosition;
-                    m_moveVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_sideMoveVector.x * xInvert, 0, m_sideMoveVector.y).normalized;   //Player2 ID
+                    m_moveVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_sideMoveVector.x * xInvert, 0, m_sideMoveVector.y).normalized;   //Player2
                     m_rotateVector = new Vector3(0.0f, m_axisRotation.x, 0.0f);
                     break;
                 }
                 case 2:
                 {
                     m_rbPosition = m_playerController.m_rigidbody.transform.localPosition;
-                    m_moveVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_sideMoveVector.x * xInvert, 0, m_sideMoveVector.y).normalized;   //Player3 ID
+                    m_moveVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_sideMoveVector.x * xInvert, 0, m_sideMoveVector.y).normalized;   //Player3
                     m_rotateVector = new Vector3(0.0f, m_axisRotation.x, 0.0f);
                     break;
                 }
                 case 3:
                 {
                     m_rbPosition = -m_playerController.m_rigidbody.transform.localPosition;
-                    m_moveVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_sideMoveVector.x * xInvert, 0, m_sideMoveVector.y).normalized;   //Player4 ID
+                    m_moveVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_sideMoveVector.x * xInvert, 0, m_sideMoveVector.y).normalized;   //Player4
                     m_rotateVector = new Vector3(0.0f, m_axisRotation.x, 0.0f);
                     break;
                 }
@@ -174,31 +177,29 @@ namespace ThreeDeePongProto.Shared.Player
             m_playerController.m_rigidbody.MovePosition(m_rbPosition + m_moveVector);
         }
 
-        private void RotatePaddle()
+        private void RotatePaddle(int _ownPlayerID)
         {
-            switch (m_playerController.m_playerId)
+            var yInvert = m_playerController.m_controlUIStates.InvertYAxis ? -1 : 1;    //Value from Scriptable in the Inspector.
+
+            switch (_ownPlayerID)
             {
                 case 0:
                 {
-                    var yInvert = m_playerController.m_controlUIStates.InvertYAxis ? -1 : 1;
                     m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (m_rotateVector * yInvert)).normalized;
                     break;
                 }
                 case 1:
                 {
-                    var yInvert = m_playerController.m_controlUIStates.InvertYAxis ? -1 : 1;
                     m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (m_rotateVector * yInvert)).normalized;
                     break;
                 }
                 case 2:
                 {
-                    var yInvert = m_playerController.m_controlUIStates.InvertYAxis ? -1 : 1;
                     m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (m_rotateVector * yInvert)).normalized;
                     break;
                 }
                 case 3:
                 {
-                    var yInvert = m_playerController.m_controlUIStates.InvertYAxis ? -1 : 1;
                     m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (m_rotateVector * yInvert)).normalized;
                     break;
                 }
