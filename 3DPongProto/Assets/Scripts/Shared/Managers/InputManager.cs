@@ -16,7 +16,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         {
             None,
             PlayerActions,
-            UI
+            UserInterface
         }
 
         public static PlayerInputActions m_PlayerInputActions;  //Reference to the PlayerAction-InputAsset.
@@ -28,10 +28,12 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         #region ChangeActionMaps
         //ActionEvent to switch between ActionMaps within the InputActionAsset.
-        public static event Action<InputActionMap> m_changeActiveActionMap;
+        public static event Action<InputActionMap> m_changeActiveActionMap;     //For subscriptions.
+        public static InputActionMap m_LastSetActionMap { get => m_lastSetActionMap; }
+        private static InputActionMap m_lastSetActionMap = null;                //For runtime classes.
 
         private int m_currentSceneIndex;
-        private string m_currentSceneName;
+        //private string m_currentSceneName;
         #endregion
 
         #region KeyRebinding
@@ -127,13 +129,12 @@ namespace ThreeDeePongProto.Shared.InputActions
             {
                 case ActiveInputActionMap.PlayerActions:
                 {
-                    //m_mousePosition = m_PlayerInputActions.PlayerActions.MousePosition.ReadValue<Vector2>();
-                    m_mousePosition = m_PlayerInputActions.Playfield.MousePosition.ReadValue<Vector2>();
+                    m_mousePosition = m_PlayerInputActions.PlayerActions.MousePosition.ReadValue<Vector2>();
                     break;
                 }
-                case ActiveInputActionMap.UI:
+                case ActiveInputActionMap.UserInterface:
                 {
-                    m_mousePosition = m_PlayerInputActions.UIActions.Point.ReadValue<Vector2>();
+                    m_mousePosition = m_PlayerInputActions.UserInterface.Point.ReadValue<Vector2>();
                     break;
                 }
                 default:
@@ -159,42 +160,42 @@ namespace ThreeDeePongProto.Shared.InputActions
         #region Change Action Maps
         //private void OnSceneFinishedLoading(Scene _scene, LoadSceneMode _mode)
         //{
-        //    m_currentSceneIndex = _scene.buildIndex; //TODO: Change to SceneIndex after development.
-        //    m_currentSceneName = _scene.name;
+        //    m_currentSceneIndex = _scene.buildIndex;
+        //    //m_currentSceneName = _scene.name;
 
-        //    switch (m_currentSceneName)
-        //    {
-        //        case "StartMenuScene":
-        //        {
-        //            ToggleActionMaps(m_PlayerInputActions.UIActions);
-        //            break;
-        //        }
-        //        case "LocalGameScene":
-        //        {
-        //            ToggleActionMaps(m_PlayerInputActions.PlayerActions);
-        //            break;
-        //        }
-        //        case "LanGameScene":
-        //        {
-        //            ToggleActionMaps(m_PlayerInputActions.PlayerActions);
-        //            break;
-        //        }
-        //        case "NetGameScene":
-        //        {
-        //            ToggleActionMaps(m_PlayerInputActions.PlayerActions);
-        //            break;
-        //        }
-        //        case "WinScene":
-        //        {
-        //            ToggleActionMaps(m_PlayerInputActions.UIActions);
-        //            break;
-        //        }
-        //        default:
-        //        {
-        //            ToggleActionMaps(m_PlayerInputActions.UIActions);
-        //            break;
-        //        }
-        //    }
+        //    //switch (m_currentSceneIndex)
+        //    //{
+        //    //    case 0:
+        //    //    {
+        //    //        ToggleActionMaps(m_PlayerInputActions.UserInterface);
+        //    //        break;
+        //    //    }
+        //    //    //case "LocalGameScene":
+        //    //    //{
+        //    //    //    ToggleActionMaps(m_PlayerInputActions.PlayerActions);
+        //    //    //    break;
+        //    //    //}
+        //    //    //case "LanGameScene":
+        //    //    //{
+        //    //    //    ToggleActionMaps(m_PlayerInputActions.PlayerActions);
+        //    //    //    break;
+        //    //    //}
+        //    //    //case "NetGameScene":
+        //    //    //{
+        //    //    //    ToggleActionMaps(m_PlayerInputActions.PlayerActions);
+        //    //    //    break;
+        //    //    //}
+        //    //    //case "WinScene":
+        //    //    //{
+        //    //    //    ToggleActionMaps(m_PlayerInputActions.UserInterface);
+        //    //    //    break;
+        //    //    //}
+        //    //    default:
+        //    //    {
+        //    //        ToggleActionMaps(m_PlayerInputActions.UserInterface);
+        //    //        break;
+        //    //    }
+        //    //}
 
         //    //m_lastControlSchemeChange = m_keyboardMouseScheme;
         //}
@@ -217,11 +218,16 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private void UpdateActiveActionMap(InputActionMap _inputActionMap)
         {
-            if(_inputActionMap.name == ActiveInputActionMap.PlayerActions.ToString())
+            if (_inputActionMap.name == ActiveInputActionMap.PlayerActions.ToString())
                 m_activeInputActionMap = ActiveInputActionMap.PlayerActions;
 
-            if (_inputActionMap.name == ActiveInputActionMap.UI.ToString())
-                m_activeInputActionMap = ActiveInputActionMap.UI;
+            if (_inputActionMap.name == ActiveInputActionMap.UserInterface.ToString())
+                m_activeInputActionMap = ActiveInputActionMap.UserInterface;
+
+            m_lastSetActionMap = _inputActionMap;
+#if UNITY_EDITOR
+            Debug.Log($"InputActionMap gets changed to {_inputActionMap.name}.");
+#endif
         }
         #endregion
 

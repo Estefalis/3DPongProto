@@ -889,7 +889,7 @@
             ]
         },
         {
-            "name": "UI",
+            "name": "UserInterface",
             "id": "6e03657e-2fc1-4b9b-8318-6465f9a04409",
             "actions": [
                 {
@@ -968,6 +968,15 @@
                     "name": "CursorVisibility",
                     "type": "Button",
                     "id": "43e61106-20c5-460e-9808-fcbc8d998ff2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ToggleGameMenu",
+                    "type": "Button",
+                    "id": "93bd3d6a-dfbd-481a-9dba-edb23f65a905",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -1430,6 +1439,28 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "CursorVisibility",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "679960ed-3ab7-4095-800e-dc90afd5b13f",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "ToggleGameMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f36b5a07-6ae5-4e0b-9188-dfdc3514cc87",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "ToggleGameMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

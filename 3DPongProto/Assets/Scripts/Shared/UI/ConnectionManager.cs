@@ -1,4 +1,5 @@
 //using System;     //Used by Actions.
+using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -40,14 +41,14 @@ namespace ThreeDeePongProto.Shared.UI
             {
                 SetConnectionInfo(EGameModi.Internet/*, InternetGameAnnounced*/);
             }
-#if UNITY_EDITOR
-            Debug.Log("Meldung für Spiel-Modus: " + m_matchUIStates.EGameConnectModi);
-#endif
         }
 
         private void SetConnectionInfo(EGameModi _eGameModi/*, Action _action*/)
         {
             m_matchUIStates.EGameConnectModi = _eGameModi;
+#if UNITY_EDITOR
+            Debug.Log($"Spiel-Modus: {_eGameModi}");
+#endif
             //_action?.Invoke();
         }
 

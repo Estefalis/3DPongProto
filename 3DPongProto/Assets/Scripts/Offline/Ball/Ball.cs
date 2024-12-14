@@ -64,15 +64,13 @@ public class Ball : MonoBehaviour
 
         m_inputActions = InputManager.m_PlayerInputActions;
         m_inputActions.Enable();
-        m_inputActions.Playfield.PokeTheBall.performed += StartBallMovement;
-        //m_inputActions.PlayerActions.PokeTheBall.performed += StartBallMovement;
+        m_inputActions.PlayerActions.PokeTheBall.performed += StartBallMovement;
     }
 
     private void OnDisable()
     {
         m_inputActions.Disable();
-        m_inputActions.Playfield.PokeTheBall.performed -= StartBallMovement;
-        //m_inputActions.PlayerActions.PokeTheBall.performed -= StartBallMovement;
+        m_inputActions.PlayerActions.PokeTheBall.performed -= StartBallMovement;
     }
 
     private void ResetBall()

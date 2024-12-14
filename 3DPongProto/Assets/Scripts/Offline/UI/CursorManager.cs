@@ -80,7 +80,7 @@ namespace ThreeDeePongProto.Offline.UI
             InputUser.onChange -= OnDeviceChange;
 
             m_playerInputActions.Disable();
-            m_playerInputActions.UIActions.CursorVisibility.performed -= SwitchCursorVisibility;
+            m_playerInputActions.UserInterface.CursorVisibility.performed -= SwitchCursorVisibility;
         }
 
         private void Start()
@@ -88,7 +88,7 @@ namespace ThreeDeePongProto.Offline.UI
             m_playerInputActions = InputManager.m_PlayerInputActions;
             m_playerInputActions.Enable();
 
-            m_playerInputActions.UIActions.CursorVisibility.performed += SwitchCursorVisibility;
+            m_playerInputActions.UserInterface.CursorVisibility.performed += SwitchCursorVisibility;
         }
 
         private void UpdateMicePositions()

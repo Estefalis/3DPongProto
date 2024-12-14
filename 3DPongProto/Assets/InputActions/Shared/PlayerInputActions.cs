@@ -913,7 +913,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             ]
         },
         {
-            ""name"": ""UI"",
+            ""name"": ""UserInterface"",
             ""id"": ""6e03657e-2fc1-4b9b-8318-6465f9a04409"",
             ""actions"": [
                 {
@@ -992,6 +992,15 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""name"": ""CursorVisibility"",
                     ""type"": ""Button"",
                     ""id"": ""43e61106-20c5-460e-9808-fcbc8d998ff2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleGameMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""93bd3d6a-dfbd-481a-9dba-edb23f65a905"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -1456,6 +1465,28 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""action"": ""CursorVisibility"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""679960ed-3ab7-4095-800e-dc90afd5b13f"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""ToggleGameMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f36b5a07-6ae5-4e0b-9188-dfdc3514cc87"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ToggleGameMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1524,19 +1555,20 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_PlayerActions_MousePosition = m_PlayerActions.FindAction("MousePosition", throwIfNotFound: true);
             m_PlayerActions_CursorVisibility = m_PlayerActions.FindAction("CursorVisibility", throwIfNotFound: true);
             m_PlayerActions_ToggleGameMenu = m_PlayerActions.FindAction("ToggleGameMenu", throwIfNotFound: true);
-            // UI
-            m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
-            m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
-            m_UI_Submit = m_UI.FindAction("Submit", throwIfNotFound: true);
-            m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
-            m_UI_Point = m_UI.FindAction("Point", throwIfNotFound: true);
-            m_UI_Click = m_UI.FindAction("Click", throwIfNotFound: true);
-            m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
-            m_UI_MiddleClick = m_UI.FindAction("MiddleClick", throwIfNotFound: true);
-            m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
-            m_UI_CursorVisibility = m_UI.FindAction("CursorVisibility", throwIfNotFound: true);
-            m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
-            m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+            // UserInterface
+            m_UserInterface = asset.FindActionMap("UserInterface", throwIfNotFound: true);
+            m_UserInterface_Navigate = m_UserInterface.FindAction("Navigate", throwIfNotFound: true);
+            m_UserInterface_Submit = m_UserInterface.FindAction("Submit", throwIfNotFound: true);
+            m_UserInterface_Cancel = m_UserInterface.FindAction("Cancel", throwIfNotFound: true);
+            m_UserInterface_Point = m_UserInterface.FindAction("Point", throwIfNotFound: true);
+            m_UserInterface_Click = m_UserInterface.FindAction("Click", throwIfNotFound: true);
+            m_UserInterface_ScrollWheel = m_UserInterface.FindAction("ScrollWheel", throwIfNotFound: true);
+            m_UserInterface_MiddleClick = m_UserInterface.FindAction("MiddleClick", throwIfNotFound: true);
+            m_UserInterface_RightClick = m_UserInterface.FindAction("RightClick", throwIfNotFound: true);
+            m_UserInterface_CursorVisibility = m_UserInterface.FindAction("CursorVisibility", throwIfNotFound: true);
+            m_UserInterface_ToggleGameMenu = m_UserInterface.FindAction("ToggleGameMenu", throwIfNotFound: true);
+            m_UserInterface_TrackedDevicePosition = m_UserInterface.FindAction("TrackedDevicePosition", throwIfNotFound: true);
+            m_UserInterface_TrackedDeviceOrientation = m_UserInterface.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -1769,44 +1801,46 @@ namespace ThreeDeePongProto.Shared.InputActions
         }
         public PlayerActionsActions @PlayerActions => new PlayerActionsActions(this);
 
-        // UI
-        private readonly InputActionMap m_UI;
-        private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
-        private readonly InputAction m_UI_Navigate;
-        private readonly InputAction m_UI_Submit;
-        private readonly InputAction m_UI_Cancel;
-        private readonly InputAction m_UI_Point;
-        private readonly InputAction m_UI_Click;
-        private readonly InputAction m_UI_ScrollWheel;
-        private readonly InputAction m_UI_MiddleClick;
-        private readonly InputAction m_UI_RightClick;
-        private readonly InputAction m_UI_CursorVisibility;
-        private readonly InputAction m_UI_TrackedDevicePosition;
-        private readonly InputAction m_UI_TrackedDeviceOrientation;
-        public struct UIActions
+        // UserInterface
+        private readonly InputActionMap m_UserInterface;
+        private List<IUserInterfaceActions> m_UserInterfaceActionsCallbackInterfaces = new List<IUserInterfaceActions>();
+        private readonly InputAction m_UserInterface_Navigate;
+        private readonly InputAction m_UserInterface_Submit;
+        private readonly InputAction m_UserInterface_Cancel;
+        private readonly InputAction m_UserInterface_Point;
+        private readonly InputAction m_UserInterface_Click;
+        private readonly InputAction m_UserInterface_ScrollWheel;
+        private readonly InputAction m_UserInterface_MiddleClick;
+        private readonly InputAction m_UserInterface_RightClick;
+        private readonly InputAction m_UserInterface_CursorVisibility;
+        private readonly InputAction m_UserInterface_ToggleGameMenu;
+        private readonly InputAction m_UserInterface_TrackedDevicePosition;
+        private readonly InputAction m_UserInterface_TrackedDeviceOrientation;
+        public struct UserInterfaceActions
         {
             private @PlayerInputActions m_Wrapper;
-            public UIActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-            public InputAction @Navigate => m_Wrapper.m_UI_Navigate;
-            public InputAction @Submit => m_Wrapper.m_UI_Submit;
-            public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
-            public InputAction @Point => m_Wrapper.m_UI_Point;
-            public InputAction @Click => m_Wrapper.m_UI_Click;
-            public InputAction @ScrollWheel => m_Wrapper.m_UI_ScrollWheel;
-            public InputAction @MiddleClick => m_Wrapper.m_UI_MiddleClick;
-            public InputAction @RightClick => m_Wrapper.m_UI_RightClick;
-            public InputAction @CursorVisibility => m_Wrapper.m_UI_CursorVisibility;
-            public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
-            public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
-            public InputActionMap Get() { return m_Wrapper.m_UI; }
+            public UserInterfaceActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Navigate => m_Wrapper.m_UserInterface_Navigate;
+            public InputAction @Submit => m_Wrapper.m_UserInterface_Submit;
+            public InputAction @Cancel => m_Wrapper.m_UserInterface_Cancel;
+            public InputAction @Point => m_Wrapper.m_UserInterface_Point;
+            public InputAction @Click => m_Wrapper.m_UserInterface_Click;
+            public InputAction @ScrollWheel => m_Wrapper.m_UserInterface_ScrollWheel;
+            public InputAction @MiddleClick => m_Wrapper.m_UserInterface_MiddleClick;
+            public InputAction @RightClick => m_Wrapper.m_UserInterface_RightClick;
+            public InputAction @CursorVisibility => m_Wrapper.m_UserInterface_CursorVisibility;
+            public InputAction @ToggleGameMenu => m_Wrapper.m_UserInterface_ToggleGameMenu;
+            public InputAction @TrackedDevicePosition => m_Wrapper.m_UserInterface_TrackedDevicePosition;
+            public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UserInterface_TrackedDeviceOrientation;
+            public InputActionMap Get() { return m_Wrapper.m_UserInterface; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
             public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
-            public void AddCallbacks(IUIActions instance)
+            public static implicit operator InputActionMap(UserInterfaceActions set) { return set.Get(); }
+            public void AddCallbacks(IUserInterfaceActions instance)
             {
-                if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
-                m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
+                if (instance == null || m_Wrapper.m_UserInterfaceActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_UserInterfaceActionsCallbackInterfaces.Add(instance);
                 @Navigate.started += instance.OnNavigate;
                 @Navigate.performed += instance.OnNavigate;
                 @Navigate.canceled += instance.OnNavigate;
@@ -1834,6 +1868,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @CursorVisibility.started += instance.OnCursorVisibility;
                 @CursorVisibility.performed += instance.OnCursorVisibility;
                 @CursorVisibility.canceled += instance.OnCursorVisibility;
+                @ToggleGameMenu.started += instance.OnToggleGameMenu;
+                @ToggleGameMenu.performed += instance.OnToggleGameMenu;
+                @ToggleGameMenu.canceled += instance.OnToggleGameMenu;
                 @TrackedDevicePosition.started += instance.OnTrackedDevicePosition;
                 @TrackedDevicePosition.performed += instance.OnTrackedDevicePosition;
                 @TrackedDevicePosition.canceled += instance.OnTrackedDevicePosition;
@@ -1842,7 +1879,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @TrackedDeviceOrientation.canceled += instance.OnTrackedDeviceOrientation;
             }
 
-            private void UnregisterCallbacks(IUIActions instance)
+            private void UnregisterCallbacks(IUserInterfaceActions instance)
             {
                 @Navigate.started -= instance.OnNavigate;
                 @Navigate.performed -= instance.OnNavigate;
@@ -1871,6 +1908,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @CursorVisibility.started -= instance.OnCursorVisibility;
                 @CursorVisibility.performed -= instance.OnCursorVisibility;
                 @CursorVisibility.canceled -= instance.OnCursorVisibility;
+                @ToggleGameMenu.started -= instance.OnToggleGameMenu;
+                @ToggleGameMenu.performed -= instance.OnToggleGameMenu;
+                @ToggleGameMenu.canceled -= instance.OnToggleGameMenu;
                 @TrackedDevicePosition.started -= instance.OnTrackedDevicePosition;
                 @TrackedDevicePosition.performed -= instance.OnTrackedDevicePosition;
                 @TrackedDevicePosition.canceled -= instance.OnTrackedDevicePosition;
@@ -1879,21 +1919,21 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @TrackedDeviceOrientation.canceled -= instance.OnTrackedDeviceOrientation;
             }
 
-            public void RemoveCallbacks(IUIActions instance)
+            public void RemoveCallbacks(IUserInterfaceActions instance)
             {
-                if (m_Wrapper.m_UIActionsCallbackInterfaces.Remove(instance))
+                if (m_Wrapper.m_UserInterfaceActionsCallbackInterfaces.Remove(instance))
                     UnregisterCallbacks(instance);
             }
 
-            public void SetCallbacks(IUIActions instance)
+            public void SetCallbacks(IUserInterfaceActions instance)
             {
-                foreach (var item in m_Wrapper.m_UIActionsCallbackInterfaces)
+                foreach (var item in m_Wrapper.m_UserInterfaceActionsCallbackInterfaces)
                     UnregisterCallbacks(item);
-                m_Wrapper.m_UIActionsCallbackInterfaces.Clear();
+                m_Wrapper.m_UserInterfaceActionsCallbackInterfaces.Clear();
                 AddCallbacks(instance);
             }
         }
-        public UIActions @UI => new UIActions(this);
+        public UserInterfaceActions @UserInterface => new UserInterfaceActions(this);
         private int m_KeyboardMouseSchemeIndex = -1;
         public InputControlScheme KeyboardMouseScheme
         {
@@ -1932,7 +1972,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             void OnCursorVisibility(InputAction.CallbackContext context);
             void OnToggleGameMenu(InputAction.CallbackContext context);
         }
-        public interface IUIActions
+        public interface IUserInterfaceActions
         {
             void OnNavigate(InputAction.CallbackContext context);
             void OnSubmit(InputAction.CallbackContext context);
@@ -1943,6 +1983,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             void OnMiddleClick(InputAction.CallbackContext context);
             void OnRightClick(InputAction.CallbackContext context);
             void OnCursorVisibility(InputAction.CallbackContext context);
+            void OnToggleGameMenu(InputAction.CallbackContext context);
             void OnTrackedDevicePosition(InputAction.CallbackContext context);
             void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
         }

@@ -61,7 +61,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
         #region GetMouseValues
         private void GetMouseValues()
         {
-            m_mouseScrollValue = m_playerInputActions.UIActions.ScrollWheel.ReadValue<Vector2>();
+            m_mouseScrollValue = m_playerInputActions.UserInterface.ScrollWheel.ReadValue<Vector2>();
             m_mouseScrollValue.Normalize();
             m_mousePosition = InputManager.GetMousePosition();
 
