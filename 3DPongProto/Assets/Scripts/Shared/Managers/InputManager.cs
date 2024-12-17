@@ -6,7 +6,6 @@ using ThreeDeePongProto.Shared.HelperClasses;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-//using UnityEngine.SceneManagement;
 
 namespace ThreeDeePongProto.Shared.InputActions
 {
@@ -31,9 +30,6 @@ namespace ThreeDeePongProto.Shared.InputActions
         public static event Action<InputActionMap> m_changeActiveActionMap;     //For subscriptions.
         public static InputActionMap m_LastSetActionMap { get => m_lastSetActionMap; }
         private static InputActionMap m_lastSetActionMap = null;                //For runtime classes.
-
-        private int m_currentSceneIndex;
-        //private string m_currentSceneName;
         #endregion
 
         #region KeyRebinding
@@ -106,7 +102,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 m_gamepadRebindDict = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_encryptionEnabled);
             }
 
-            //SceneManager.sceneLoaded += OnSceneFinishedLoading;
             ControlSettings.PlayerViewIndex += PlayerIndex;
 
             m_extractButtonImage += ExtractImage;
@@ -115,7 +110,6 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         private void OnDisable()
         {
-            //SceneManager.sceneLoaded -= OnSceneFinishedLoading;
             ControlSettings.PlayerViewIndex -= PlayerIndex;
 
             m_extractButtonImage -= ExtractImage;
@@ -158,48 +152,6 @@ namespace ThreeDeePongProto.Shared.InputActions
         }
 
         #region Change Action Maps
-        //private void OnSceneFinishedLoading(Scene _scene, LoadSceneMode _mode)
-        //{
-        //    m_currentSceneIndex = _scene.buildIndex;
-        //    //m_currentSceneName = _scene.name;
-
-        //    //switch (m_currentSceneIndex)
-        //    //{
-        //    //    case 0:
-        //    //    {
-        //    //        ToggleActionMaps(m_PlayerInputActions.UserInterface);
-        //    //        break;
-        //    //    }
-        //    //    //case "LocalGameScene":
-        //    //    //{
-        //    //    //    ToggleActionMaps(m_PlayerInputActions.PlayerActions);
-        //    //    //    break;
-        //    //    //}
-        //    //    //case "LanGameScene":
-        //    //    //{
-        //    //    //    ToggleActionMaps(m_PlayerInputActions.PlayerActions);
-        //    //    //    break;
-        //    //    //}
-        //    //    //case "NetGameScene":
-        //    //    //{
-        //    //    //    ToggleActionMaps(m_PlayerInputActions.PlayerActions);
-        //    //    //    break;
-        //    //    //}
-        //    //    //case "WinScene":
-        //    //    //{
-        //    //    //    ToggleActionMaps(m_PlayerInputActions.UserInterface);
-        //    //    //    break;
-        //    //    //}
-        //    //    default:
-        //    //    {
-        //    //        ToggleActionMaps(m_PlayerInputActions.UserInterface);
-        //    //        break;
-        //    //    }
-        //    //}
-
-        //    //m_lastControlSchemeChange = m_keyboardMouseScheme;
-        //}
-
         /// <summary>
         /// Switches ActionMaps, if the active actionMap isn't equal to the submitted one. But does not disable the old actionMaps!
         /// </summary>
