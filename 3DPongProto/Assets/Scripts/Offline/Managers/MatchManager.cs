@@ -95,6 +95,9 @@ namespace ThreeDeePongProto.Offline.Managers
         #endregion
 
         //private Dictionary<PlayerIDData, GameObject> m_idGameObjectDict;
+        private const string m_resourcesFolder = "Resources";
+        private const string m_inputActionsFolder = "InputActions";
+        private const string m_requiredData = "PlayerInputActions";
 
         #region Serialization
         private readonly string m_fieldSettingsPath = "/SaveData/FieldSettings";
@@ -176,15 +179,12 @@ namespace ThreeDeePongProto.Offline.Managers
                     //1. Instantiate all Players related to the PlayerCount in game.
                     for (int i = 0; i < setPlayerByEnum; i++)
                     {
-                        if (i % 2 == 0)
-                        {
-                            Instantiate(m_matchValues.PlayerData[i].Prefab, Vector3.zero, Quaternion.Euler(0, 0, 0), m_prefabParent);
-                        }
+                        //'playerRotation i == playerIndex from the scriptable object.
+                        Quaternion playerRotation = (i % 2 == 0) ? Quaternion.Euler(0, 0, 0) : Quaternion.Euler(0, 180, 0);
+                        Transform spawnParent = m_prefabParent;
+                        InputDevice deviceToPair = (Gamepad.all.Count > i) ? Gamepad.all[i] : Keyboard.current;
 
-                        if (i % 2 != 0)
-                        {
-                            Instantiate(m_matchValues.PlayerData[i].Prefab, Vector3.zero, Quaternion.Euler(0, 180, 0), m_prefabParent);
-                        }
+                        Instantiate(m_matchValues.PlayerData[i].Prefab, Vector3.zero, playerRotation, spawnParent);
                     }
 
                     break;
@@ -196,6 +196,7 @@ namespace ThreeDeePongProto.Offline.Managers
                 }
             }
         }
+
         private void PrepareMatchStart()
         {
             m_matchUIStates.MaxRounds = m_setMaxRounds;
