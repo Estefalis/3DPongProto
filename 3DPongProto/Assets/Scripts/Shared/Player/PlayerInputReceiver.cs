@@ -185,9 +185,9 @@ namespace ThreeDeePongProto.Shared.Player
         #region CallbackContext-Methods
         private void OnMenuOpening(InputAction.CallbackContext _callbackContext)
         {
+            //if (m_playerController.m_playerId == 0)     //Equal to Master on Online Games?
+            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.UserInterface);
             m_playerInputActions.Disable();  //Paddles can still be moved, if 'm_playerInputActions' here isn't disabled.
-            if (m_playerController.m_playerId == 0)     //Equal to Master on Online Games?
-                InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.UserInterface);
             m_playerController.m_playerMovement.StopPushCoroutine();
         }
 

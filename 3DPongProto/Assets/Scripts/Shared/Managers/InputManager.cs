@@ -28,7 +28,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         #region ChangeActionMaps
         //ActionEvent to switch between ActionMaps within the InputActionAsset.
         public static event Action<InputActionMap> m_changeActiveActionMap;     //For subscriptions.
-        public static InputActionMap m_LastSetActionMap { get => m_lastSetActionMap; }
+        //public static InputActionMap m_LastSetActionMap { get => m_lastSetActionMap; }
         private static InputActionMap m_lastSetActionMap = null;                //For runtime classes.
         #endregion
 

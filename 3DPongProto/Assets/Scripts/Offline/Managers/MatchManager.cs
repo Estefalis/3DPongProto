@@ -16,6 +16,15 @@ namespace ThreeDeePongProto.Offline.Managers
 {
     public class MatchManager : MonoBehaviour
     {
+        private enum InstantiateContext
+        {
+            None,
+            Start,
+            NewDevice,
+            General
+        }
+        private InstantiateContext m_instantiateContext;    //Yet unused.
+
         private PlayerInputActions m_inputActions;
         #region SerializeField-Member-Variables
         [SerializeField] private string m_NPCName = "Some Test-NPC";    //TODO: Implement NPC for solo play!
@@ -148,23 +157,7 @@ namespace ThreeDeePongProto.Offline.Managers
             m_inputActions.Enable();
             m_inputActions.PlayerActions.ToggleGameMenu.performed += PauseAndTimeScale;
 
-            uint setPlayerByEnum = (uint)m_matchUIStates.EPlayerAmount;
-            //1. Instantiate all Players related to the PlayerCount in game.
-            for (int i = 0; i < setPlayerByEnum; i++)
-            {
-                //m_idGameObjectDict.Add(m_matchValues.PlayerData[i], m_matchValues.PlayerPrefabs[i]);
-                if (i % 2 == 0)
-                {
-                    //player = m_idGameObjectDict[m_matchValues.PlayerData[i]];
-                    Instantiate(m_matchValues.PlayerData[i].Prefab, Vector3.zero, Quaternion.Euler(0, 0, 0), m_prefabParent);
-                }
-
-                if (i % 2 != 0)
-                {
-                    //player = m_idGameObjectDict[m_matchValues.PlayerData[i]];
-                    Instantiate(m_matchValues.PlayerData[i].Prefab, Vector3.zero, Quaternion.Euler(0, 180, 0), m_prefabParent);
-                }
-            }
+            InstantiatePlayer(InstantiateContext.Start);
 
             //2. Allow the Cameras to add themselves in the AvailableCamera-List in the CameraManager.
             AddCamerasNow?.Invoke();
@@ -172,6 +165,37 @@ namespace ThreeDeePongProto.Offline.Managers
         }
 
         #region Custom-Methods
+        private void InstantiatePlayer(InstantiateContext _instantiateContext)
+        {
+            uint setPlayerByEnum = (uint)m_matchUIStates.EPlayerAmount;     //Scriptable Object.
+
+            switch (_instantiateContext)
+            {
+                case InstantiateContext.Start:
+                {
+                    //1. Instantiate all Players related to the PlayerCount in game.
+                    for (int i = 0; i < setPlayerByEnum; i++)
+                    {
+                        if (i % 2 == 0)
+                        {
+                            Instantiate(m_matchValues.PlayerData[i].Prefab, Vector3.zero, Quaternion.Euler(0, 0, 0), m_prefabParent);
+                        }
+
+                        if (i % 2 != 0)
+                        {
+                            Instantiate(m_matchValues.PlayerData[i].Prefab, Vector3.zero, Quaternion.Euler(0, 180, 0), m_prefabParent);
+                        }
+                    }
+
+                    break;
+                }
+                default:
+                {
+                    Debug.Log("Case not added, yet.");
+                    break;
+                }
+            }
+        }
         private void PrepareMatchStart()
         {
             m_matchUIStates.MaxRounds = m_setMaxRounds;
