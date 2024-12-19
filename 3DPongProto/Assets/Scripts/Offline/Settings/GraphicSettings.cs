@@ -12,7 +12,7 @@ public enum ECameraModi
     EndCount
 }
 
-namespace ThreeDeePongProto.Offline.Settings
+namespace ThreeDeePongProto.Shared.Settings
 {
     public class GraphicSettings : MonoBehaviour
     {

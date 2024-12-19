@@ -1,6 +1,6 @@
 using System;
 
-namespace ThreeDeePongProto.Offline.Highscores
+namespace ThreeDeePongProto.Shared.Highscores
 {
     [Serializable]
     public struct HighscoreEntryData

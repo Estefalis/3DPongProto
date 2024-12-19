@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
-using ThreeDeePongProto.Offline.Managers;
+using ThreeDeePongProto.Shared.Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace ThreeDeePongProto.Offline.Highscores
+namespace ThreeDeePongProto.Shared.Highscores
 {
     public class HighscoreBoard : MonoBehaviour
     {

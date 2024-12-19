@@ -12,7 +12,7 @@ public enum EGameModi
     Internet
 }
 
-namespace ThreeDeePongProto.Offline.Managers
+namespace ThreeDeePongProto.Shared.Managers
 {
     public class MatchManager : MonoBehaviour
     {
@@ -95,9 +95,8 @@ namespace ThreeDeePongProto.Offline.Managers
         #endregion
 
         //private Dictionary<PlayerIDData, GameObject> m_idGameObjectDict;
-        private const string m_resourcesFolder = "Resources";
-        private const string m_inputActionsFolder = "InputActions";
-        private const string m_requiredData = "PlayerInputActions";
+
+        private const string m_targetData = "PlayerInputActions";
 
         #region Serialization
         private readonly string m_fieldSettingsPath = "/SaveData/FieldSettings";
@@ -184,7 +183,18 @@ namespace ThreeDeePongProto.Offline.Managers
                         Transform spawnParent = m_prefabParent;
                         InputDevice deviceToPair = (Gamepad.all.Count > i) ? Gamepad.all[i] : Keyboard.current;
 
-                        Instantiate(m_matchValues.PlayerData[i].Prefab, Vector3.zero, playerRotation, spawnParent);
+                        GameObject playerAvatar = Instantiate(m_matchValues.PlayerData[i].Prefab, Vector3.zero, playerRotation, spawnParent);
+
+                        //PlayerInput playerInput = playerAvatar.GetComponent<PlayerInput>();
+                        //if (playerInput == null)
+                        //{
+                        //    playerInput = playerAvatar.AddComponent<PlayerInput>();
+                        //    playerInput.actions = Resources.Load<InputActionAsset>(m_targetData); // Load Input Actions
+                        //    playerInput.defaultControlScheme = "Gamepad";
+                        //    playerInput.neverAutoSwitchControlSchemes = false; // Allow switching
+                        //}
+
+                        //Debug.Log($"Player {i + 1} instantiated.");
                     }
 
                     break;

@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
+namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 {
     internal enum ScrollType
     {

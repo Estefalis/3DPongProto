@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using ThreeDeePongProto.Offline.Managers;
+using ThreeDeePongProto.Shared.Managers;
 using ThreeDeePongProto.Offline.CameraSetup;
 using TMPro;
 using UnityEngine;

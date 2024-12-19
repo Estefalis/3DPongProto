@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace ThreeDeePongProto.Offline.Highscores
+namespace ThreeDeePongProto.Shared.Highscores
 {
     public class HighscoreEntryPrefab : MonoBehaviour
     {

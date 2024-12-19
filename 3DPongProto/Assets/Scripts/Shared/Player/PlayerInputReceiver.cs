@@ -183,6 +183,27 @@ namespace ThreeDeePongProto.Shared.Player
         #endregion
 
         #region CallbackContext-Methods
+        /// <summary>
+        /// Use 'var _control = _callbackContext._control;' to get the _control that triggered the action. 
+        /// Receive 'var currentControlScheme = GetActiveControlScheme(_control);' to display the triggered controlScheme and action part that triggered the change.
+        /// Example: Debug.Log($"Control Scheme: {currentControlScheme} (Triggered by: {_control.displayName}).");
+        /// </summary>
+        /// <param name="_control"></param>
+        /// <returns></returns>
+        private string GetActiveControlScheme(InputControl _control)
+        {
+            foreach (var scheme in m_playerInputActions.controlSchemes)
+            {
+                //Check if the '_control' belongs to this scheme.
+                if (scheme.SupportsDevice(_control.device))
+                {
+                    return scheme.name; //Return the name of the matched scheme.
+                }
+            }
+
+            return "Unknown Control Scheme";
+        }
+
         private void OnMenuOpening(InputAction.CallbackContext _callbackContext)
         {
             //if (m_playerController.m_playerId == 0)     //Equal to Master on Online Games?

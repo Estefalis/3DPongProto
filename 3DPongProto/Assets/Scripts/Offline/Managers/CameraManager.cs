@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using ThreeDeePongProto.Offline.Settings;
+using ThreeDeePongProto.Shared.Settings;
 using UnityEngine;
 
 namespace ThreeDeePongProto.Offline.CameraSetup

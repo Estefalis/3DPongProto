@@ -1,3 +1,7 @@
+using System.IO;
+using System.Linq;
+using System;
+
 namespace ThreeDeePongProto.Shared.HelperClasses
 {
     internal static class StringManipulation
@@ -39,6 +43,15 @@ namespace ThreeDeePongProto.Shared.HelperClasses
                 return result;
             else
                 return int.MinValue;
+        }
+
+        internal static string CombinePaths(params string[] paths)
+        {
+            if (paths == null)
+            {
+                throw new ArgumentNullException("Paths are null.");
+            }
+            return paths.Aggregate(Path.Combine);
         }
     }
 }

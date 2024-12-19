@@ -1,5 +1,5 @@
 using ThreeDeePongProto.Offline.CameraSetup;
-using ThreeDeePongProto.Offline.Managers;
+using ThreeDeePongProto.Shared.Managers;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -76,7 +76,7 @@ namespace ThreeDeePongProto.Shared.Player
             m_cameraInputActions = InputManager.m_PlayerInputActions;
             m_cameraInputActions.Enable();
             m_cameraInputActions.PlayerActions.Zoom.performed += Zooming;
-            
+
             m_cameraManager = FindObjectOfType<CameraManager>();
 
             //Saved vector to keep the playerCamera-startposition.

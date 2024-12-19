@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ThreeDeePongProto.Offline.Settings
+namespace ThreeDeePongProto.Shared.Settings
 {
     public class NetworkSettings : MonoBehaviour
     {

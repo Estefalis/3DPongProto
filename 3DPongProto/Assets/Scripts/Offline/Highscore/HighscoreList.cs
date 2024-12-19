@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ThreeDeePongProto.Offline.Highscores
+namespace ThreeDeePongProto.Shared.Highscores
 {
     [Serializable]
     public class HighscoreList

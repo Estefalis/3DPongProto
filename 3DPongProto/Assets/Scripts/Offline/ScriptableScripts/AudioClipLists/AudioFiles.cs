@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using ThreeDeePongProto.Offline.AudioManagement;
+using ThreeDeePongProto.Shared.AudioManagement;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "ScriptableObjects/AudioClipLists", menuName = "AudioClipList")]

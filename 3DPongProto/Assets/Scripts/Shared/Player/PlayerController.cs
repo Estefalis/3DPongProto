@@ -1,5 +1,5 @@
-using ThreeDeePongProto.Offline.AudioManagement;
-using ThreeDeePongProto.Offline.Managers;
+using ThreeDeePongProto.Shared.AudioManagement;
+using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 
 namespace ThreeDeePongProto.Shared.Player

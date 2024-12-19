@@ -7821,7 +7821,6 @@ GameObject:
   m_Component:
   - component: {fileID: 719459911}
   - component: {fileID: 719459913}
-  - component: {fileID: 719459912}
   m_Layer: 0
   m_Name: CursorManager
   m_TagString: Untagged
@@ -7844,37 +7843,6 @@ Transform:
   m_Father: {fileID: 159073940}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &719459912
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 719459910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 10bcd34be915850428dc91a0ac6c1a9f,
-    type: 3}
-  m_NotificationBehavior: 3
-  m_UIInputModule: {fileID: 1805932209}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: PlayerActions
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 330585545}
 --- !u!114 &719459913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7882,12 +7850,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 719459910}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7bd06eb995c57f4c9788052a5563ba4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_playerInput: {fileID: 719459912}
+  m_playerInput: {fileID: 0}
   m_cursorTransform: {fileID: 264062950}
   m_mainCanvas: {fileID: 975557201}
   m_myCamera: {fileID: 330585545}
@@ -14846,6 +14814,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1303007594}
   - component: {fileID: 1303007595}
+  - component: {fileID: 1303007596}
   m_Layer: 0
   m_Name: InputManager
   m_TagString: Untagged
@@ -14952,6 +14921,37 @@ MonoBehaviour:
     leftStickPress: {fileID: 0}
     rightStickPress: {fileID: 0}
     touchpadButtonPress: {fileID: 0}
+--- !u!114 &1303007596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1303007592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 10bcd34be915850428dc91a0ac6c1a9f,
+    type: 3}
+  m_NotificationBehavior: 3
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: PlayerActions
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &1306855478
 GameObject:
   m_ObjectHideFlags: 0
@@ -31201,12 +31201,12 @@ PrefabInstance:
     - target: {fileID: 3683833498868704263, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_text
-      value: ' /D/ /D'
+      value: ' /A/ /D'
       objectReference: {fileID: 0}
     - target: {fileID: 3683833498952347609, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_text
-      value: ' /D/ /D'
+      value: ' /A/ /D'
       objectReference: {fileID: 0}
     - target: {fileID: 3683833499082757264, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
@@ -31417,12 +31417,12 @@ PrefabInstance:
     - target: {fileID: 6267188320837882353, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_text
-      value: ' /D/ /D'
+      value: ' /A/ /D'
       objectReference: {fileID: 0}
     - target: {fileID: 6267188321030052399, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}
       propertyPath: m_text
-      value: ' /D/ /D'
+      value: ' /A/ /D'
       objectReference: {fileID: 0}
     - target: {fileID: 6267188321244080824, guid: 706ee50c909a6454e91a530a8c3361e8,
         type: 3}

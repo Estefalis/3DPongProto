@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
-using ThreeDeePongProto.Offline.Settings;
-using ThreeDeePongProto.Offline.UI;
+using ThreeDeePongProto.Shared.Settings;
+using ThreeDeePongProto.Shared.UI;
 using ThreeDeePongProto.Shared.HelperClasses;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 
 namespace ThreeDeePongProto.Shared.InputActions
 {
@@ -29,7 +30,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         //ActionEvent to switch between ActionMaps within the InputActionAsset.
         public static event Action<InputActionMap> m_changeActiveActionMap;     //For subscriptions.
         //public static InputActionMap m_LastSetActionMap { get => m_lastSetActionMap; }
-        private static InputActionMap m_lastSetActionMap = null;                //For runtime classes.
+        private static InputActionMap m_lastSetActionMap;                       //For runtime classes.
         #endregion
 
         #region KeyRebinding
@@ -106,6 +107,8 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             m_extractButtonImage += ExtractImage;
             m_changeActiveActionMap += UpdateActiveActionMap;
+
+            InputUser.onChange += OnChange;
         }
 
         private void OnDisable()
@@ -114,6 +117,8 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             m_extractButtonImage -= ExtractImage;
             m_changeActiveActionMap -= UpdateActiveActionMap;
+
+            InputUser.onChange -= OnChange;
         }
 
         public static Vector2 GetMousePosition()
@@ -958,7 +963,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         }
 
         /// <summary>
-        /// Resets each Composite child. Control Schemes are still required to 'switch' between the corresponding device Type dicts.
+        /// Resets each Composite child. Control Schemes are still required to 'switch' between the corresponding _device Type dicts.
         /// </summary>
         /// <param name="_inputAction"></param>
         private static void ResetCompositeOverrides(InputAction _inputAction)
@@ -1020,6 +1025,18 @@ namespace ThreeDeePongProto.Shared.InputActions
                             break;
                     }
                 }
+            }
+        }
+        #endregion
+
+        #region On-Device-Change
+        private void OnChange(InputUser _inputUser, InputUserChange _inputUserChange, InputDevice _inputDevice)
+        {
+            //Only works with adding a 'PlayerInput component'. Avoid conflicts with another 'PlayerInput component', if more are set.
+            switch (_inputUserChange)
+            {
+                case InputUserChange.ControlSchemeChanged: Debug.Log(_inputUser.controlScheme.Value.name); break;
+                default: break;
             }
         }
         #endregion

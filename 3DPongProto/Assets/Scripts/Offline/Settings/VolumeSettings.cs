@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
-namespace ThreeDeePongProto.Offline.Settings
+namespace ThreeDeePongProto.Shared.Settings
 {
     public class VolumeSettings : MonoBehaviour
     {

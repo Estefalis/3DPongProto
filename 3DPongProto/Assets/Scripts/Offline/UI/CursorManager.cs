@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Users;
 
-namespace ThreeDeePongProto.Offline.UI
+namespace ThreeDeePongProto.Shared.UI
 {
     public class CursorManager : MonoBehaviour
     {
@@ -139,14 +139,14 @@ namespace ThreeDeePongProto.Offline.UI
         #region Samyam's Version
         //private void OnInputDeviceChanged(PlayerInput _playerInput)
         //{
-        //    if (m_playerInput.currentControlScheme == m_keyboardMouseScheme && m_lastControlSchemeChange != m_keyboardMouseScheme)
+        //    if (m_playerInput.m_currentControlScheme == m_keyboardMouseScheme && m_lastControlSchemeChange != m_keyboardMouseScheme)
         //    {
         //        m_cursorTransform.gameObject.SetActive(false);
         //        Cursor.visible = true;
         //        m_physicalMouse.WarpCursorPosition(m_virtualMouse.position.ReadValue());
         //        m_lastControlSchemeChange = m_keyboardMouseScheme;
         //    }
-        //    else if (m_playerInput.currentControlScheme == m_gamePadScheme && m_lastControlSchemeChange != m_gamePadScheme)
+        //    else if (m_playerInput.m_currentControlScheme == m_gamePadScheme && m_lastControlSchemeChange != m_gamePadScheme)
         //    {
         //        m_cursorTransform.gameObject.SetActive(true);
         //        Cursor.visible = false;
@@ -156,7 +156,7 @@ namespace ThreeDeePongProto.Offline.UI
         //    }
         //}
 
-        //May Update() 'if(m_lastControlSchemeChange != m_playerInput.currentControlScheme) with an own 'OnControlsChanged()' method. And update 'm_lastControlSchemeChange = m_playerInput.currentControlScheme;' to it.
+        //May Update() 'if(m_lastControlSchemeChange != m_playerInput.m_currentControlScheme) with an own 'OnControlsChanged()' method. And update 'm_lastControlSchemeChange = m_playerInput.m_currentControlScheme;' to it.
         #endregion
 
         private void OnDeviceChange(InputUser _inputUser, InputUserChange _inputUserChange, InputDevice _inputDevice)

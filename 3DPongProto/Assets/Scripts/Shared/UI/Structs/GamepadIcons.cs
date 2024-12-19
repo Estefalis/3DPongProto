@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace ThreeDeePongProto.Offline.UI
+namespace ThreeDeePongProto.Shared.UI
 {
     [Serializable]
     public struct GamepadIcons  //struct and Sprites NEVER readonly! Because that RESETS the button-assignments in the inspector! :(

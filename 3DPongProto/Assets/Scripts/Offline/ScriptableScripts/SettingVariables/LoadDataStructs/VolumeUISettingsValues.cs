@@ -1,6 +1,6 @@
 using System;
 
-namespace ThreeDeePongProto.Offline.Settings
+namespace ThreeDeePongProto.Shared.Settings
 {
     [Serializable]
     public struct VolumeUISettingsValues

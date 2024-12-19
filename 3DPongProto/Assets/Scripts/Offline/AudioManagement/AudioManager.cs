@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace ThreeDeePongProto.Offline.AudioManagement
+namespace ThreeDeePongProto.Shared.AudioManagement
 {
     public enum EAudiotrackControlOptions
     {

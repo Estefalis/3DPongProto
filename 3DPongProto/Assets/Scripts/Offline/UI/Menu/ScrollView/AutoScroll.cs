@@ -1,10 +1,11 @@
+using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 //Credit to: Unity ScrollView Auto Scroll from 'Des CSK'. https://www.youtube.com/watch?v=l2_rHUffkJw 
-namespace ThreeDeePongProto.Offline.UI.Menu.ScrollViews
+namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 {
     internal class AutoScroll : MonoBehaviour
     {

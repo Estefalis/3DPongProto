@@ -286,7 +286,7 @@
                     "id": "d7bbe063-46b8-41e1-b083-20a8255c6a5a",
                     "path": "<Gamepad>/leftTrigger",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "AxisDeadzone",
                     "groups": "Gamepad",
                     "action": "PokeTheBall",
                     "isComposite": false,
@@ -308,7 +308,7 @@
                     "id": "d830b3e4-5071-4b33-a452-04738e7df886",
                     "path": "<VirtualMouse>/position",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "StickDeadzone",
                     "groups": "Gamepad",
                     "action": "MousePosition",
                     "isComposite": false,
@@ -1260,7 +1260,7 @@
                     "id": "ae810de2-bca6-4842-a343-2ee66b37d1a0",
                     "path": "<VirtualMouse>/position",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "StickDeadzone",
                     "groups": "Gamepad",
                     "action": "Point",
                     "isComposite": false,
@@ -1304,7 +1304,7 @@
                     "id": "2b0f0099-196c-4a53-954e-4e2cf889560b",
                     "path": "<VirtualMouse>/leftButton",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "AxisDeadzone",
                     "groups": "Gamepad",
                     "action": "Click",
                     "isComposite": false,
@@ -1370,7 +1370,7 @@
                     "id": "f8ee7f90-abb1-47a5-8ffd-bea5205e368f",
                     "path": "<VirtualMouse>/scroll",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "StickDeadzone",
                     "groups": "Gamepad",
                     "action": "ScrollWheel",
                     "isComposite": false,
@@ -1491,16 +1491,6 @@
                 {
                     "devicePath": "<Gamepad>",
                     "isOptional": false,
-                    "isOR": false
-                },
-                {
-                    "devicePath": "<DualShockGamepad>",
-                    "isOptional": true,
-                    "isOR": false
-                },
-                {
-                    "devicePath": "<XInputController>",
-                    "isOptional": true,
                     "isOR": false
                 },
                 {

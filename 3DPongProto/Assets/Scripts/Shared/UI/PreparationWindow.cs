@@ -19,7 +19,7 @@ public enum ETeamChoice
     Two
 }
 
-namespace ThreeDeePongProto.Offline.UI
+namespace ThreeDeePongProto.Shared.UI
 {
     public class PreparationWindow : MonoBehaviour
     {
@@ -65,7 +65,7 @@ namespace ThreeDeePongProto.Offline.UI
 
         private void OnEnable()
         {
-            ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
+            ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
             AddGroupListener();
         }
 
@@ -103,7 +103,7 @@ namespace ThreeDeePongProto.Offline.UI
                 {
                     switch (_ePlayerAmount)
                     {
-                        //TODO: PlayerAmount 1 vs NPC in Offline mode?
+                        //TODO: PlayerAmount 1 vs NPC in Shared mode?
                         case EPlayerAmount.One:
                             ObjectsToHide(false, false, false, 437.0f);
                             break;
@@ -216,22 +216,29 @@ namespace ThreeDeePongProto.Offline.UI
             m_playerTextTwo.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _textWidth);
         }
 
-        private void ObjectsToInteractOn(EPlayerAmount _ePlayerAmount)
+        private void ObjectsToInteractOn(int _ePlayerAmount)
         {
-            for (int i = 0; i < (int)_ePlayerAmount; i++)
+            for (int i = 0; i < _ePlayerAmount; i++)
             {
+                bool isEmptyText = string.IsNullOrWhiteSpace(m_inputFields[i].text);
                 //if (m_inputFields[i].text.IsNullOrWhitespace())   //Sirenix.Utilities.
-                if (string.IsNullOrWhiteSpace(m_inputFields[i].text))
+                switch (isEmptyText)
                 {
-                    //TODO: Set a PopUp here.                    
-                    m_startButton.interactable = false; //StartButton
-                    m_joinButton.interactable = false; //JoinButton
-                    return;
+                    case true:
+                    {
+                        //TODO: Set a PopUp here.                    
+                        m_startButton.interactable = false; //StartButton
+                        m_joinButton.interactable = false; //JoinButton
+                        break;
+                    }
+                    case false:
+                    {
+                        m_startButton.interactable = true;  //StartButton
+                        m_joinButton.interactable = true;  //JoinButton
+                        break;
+                    }
                 }
             }
-
-            m_startButton.interactable = true;  //StartButton
-            m_joinButton.interactable = true;  //JoinButton
         }
 
         #region OnValueChanged
@@ -245,7 +252,7 @@ namespace ThreeDeePongProto.Offline.UI
                     m_matchUIStates.EPlayerAmount = EPlayerAmount.One;
                     m_graphicUiStates.SetCameraMode = ECameraModi.SingleCam;
                     ObjectsToHide(false, false, false, 437.0f);
-                    ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
+                    ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
                     break;
                 }
                 case 1:
@@ -253,7 +260,7 @@ namespace ThreeDeePongProto.Offline.UI
                     m_matchUIStates.EPlayerAmount = EPlayerAmount.Two;
                     m_graphicUiStates.SetCameraMode = ECameraModi.TwoHorizontal;
                     ObjectsToHide(false, false, true, 437.0f);
-                    ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
+                    ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
                     break;
                 }
                 case 2:
@@ -261,7 +268,7 @@ namespace ThreeDeePongProto.Offline.UI
                     m_matchUIStates.EPlayerAmount = EPlayerAmount.Four;
                     m_graphicUiStates.SetCameraMode = ECameraModi.FourSplit;
                     ObjectsToHide(true, true, true, 110.0f);
-                    ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
+                    ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
                     break;
                 }
                 default:
@@ -297,12 +304,12 @@ namespace ThreeDeePongProto.Offline.UI
             if (string.IsNullOrWhiteSpace(m_inputFields[0].text))
             {
                 Debug.Log($"PlayerName for Player {m_playerIDData[0].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for Player 1-4.
-                ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
+                ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
                 return;
             }
 
             m_matchValues.PlayerData[0].PlayerName = m_inputFields[0].text;
-            ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
+            ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
         }
 
         public void PlayerTwoInput()
@@ -313,12 +320,12 @@ namespace ThreeDeePongProto.Offline.UI
             if (string.IsNullOrWhiteSpace(m_inputFields[1].text))
             {
                 Debug.Log($"PlayerName for Player {m_playerIDData[1].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for Player 1-4.
-                ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
+                ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
                 return;
             }
 
             m_matchValues.PlayerData[1].PlayerName = m_inputFields[1].text;
-            ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
+            ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
         }
 
         public void PlayerThreeInput()
@@ -329,12 +336,12 @@ namespace ThreeDeePongProto.Offline.UI
             if (string.IsNullOrWhiteSpace(m_inputFields[2].text))
             {
                 Debug.Log($"PlayerName for Player {m_playerIDData[2].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for Player 1-4.
-                ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
+                ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
                 return;
             }
 
             m_matchValues.PlayerData[2].PlayerName = m_inputFields[2].text;
-            ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
+            ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
         }
 
         public void PlayerFourInput()
@@ -345,12 +352,12 @@ namespace ThreeDeePongProto.Offline.UI
             if (string.IsNullOrWhiteSpace(m_inputFields[3].text))
             {
                 Debug.Log($"PlayerName for Player {m_playerIDData[3].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for Player 1-4.
-                ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
+                ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
                 return;
             }
 
             m_matchValues.PlayerData[3].PlayerName = m_inputFields[3].text;
-            ObjectsToInteractOn(m_matchUIStates.EPlayerAmount);
+            ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
         }
         #endregion
 

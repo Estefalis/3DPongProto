@@ -1,5 +1,5 @@
 using System;
-using ThreeDeePongProto.Offline.Settings;
+using ThreeDeePongProto.Shared.Settings;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;

@@ -1,6 +1,6 @@
 using System;
-using ThreeDeePongProto.Offline.AudioManagement;
-using ThreeDeePongProto.Offline.Managers;
+using ThreeDeePongProto.Shared.AudioManagement;
+using ThreeDeePongProto.Shared.Managers;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
