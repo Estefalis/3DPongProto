@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
+using ThreeDeePongProto.Shared.HelperClasses;
 using ThreeDeePongProto.Shared.Settings;
 using ThreeDeePongProto.Shared.UI;
-using ThreeDeePongProto.Shared.HelperClasses;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Users;
 
 namespace ThreeDeePongProto.Shared.InputActions
 {
@@ -108,7 +107,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_extractButtonImage += ExtractImage;
             m_changeActiveActionMap += UpdateActiveActionMap;
 
-            InputUser.onChange += OnChange;
+            //InputUser.onChange += OnChange;
         }
 
         private void OnDisable()
@@ -118,7 +117,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_extractButtonImage -= ExtractImage;
             m_changeActiveActionMap -= UpdateActiveActionMap;
 
-            InputUser.onChange -= OnChange;
+            //InputUser.onChange -= OnChange;
         }
 
         public static Vector2 GetMousePosition()
@@ -1030,15 +1029,18 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         #region On-Device-Change
-        private void OnChange(InputUser _inputUser, InputUserChange _inputUserChange, InputDevice _inputDevice)
-        {
-            //Only works with adding a 'PlayerInput component'. Avoid conflicts with another 'PlayerInput component', if more are set.
-            switch (_inputUserChange)
-            {
-                case InputUserChange.ControlSchemeChanged: Debug.Log(_inputUser.controlScheme.Value.name); break;
-                default: break;
-            }
-        }
+        //private void OnChange(InputUser _inputUser, InputUserChange _inputUserChange, InputDevice _inputDevice)
+        //{
+        //    //if (_inputUser.controlScheme.Value.name == null)
+        //    //    return;
+
+        //    ////Only works with adding a 'PlayerInput component'. Avoid conflicts with another 'PlayerInput component', if more are set.
+        //    //switch (_inputUserChange)
+        //    //{
+        //    //    case InputUserChange.ControlSchemeChanged: Debug.Log(_inputUser.controlScheme.Value.name); break;
+        //    //    default: break;
+        //    //}
+        //}
         #endregion
     }
 }

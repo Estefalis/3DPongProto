@@ -195,7 +195,7 @@ namespace ThreeDeePongProto.Shared.Player
             foreach (var scheme in m_playerInputActions.controlSchemes)
             {
                 //Check if the '_control' belongs to this scheme.
-                if (scheme.SupportsDevice(_control.device))
+                if (scheme.SupportsDevice(_control.device))     //'_control.device' contains 'device' and 'deviceId' to compare devices.
                 {
                     return scheme.name; //Return the name of the matched scheme.
                 }

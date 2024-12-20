@@ -205,14 +205,10 @@ namespace ThreeDeePongProto.Shared.Player
 
         private void UpdateZoomPosition()
         {
-            //The 'zoomTarget' and 'm_currentHeight' shall only change, while the PlayerController in the 'PlayerActions' is enabled.
-            if (!m_cameraInputActions.UserInterface.enabled)
-            {
-                m_zoomTarget = new Vector3(m_followCamera.transform.localPosition.x, m_currentHeight, m_followCamera.transform.localPosition.z);
+            m_zoomTarget = new Vector3(m_followCamera.transform.localPosition.x, m_currentHeight, m_followCamera.transform.localPosition.z);
 
-                m_zoomTarget -= m_zoomStep * (m_currentHeight - m_followCamera.transform.localPosition.y) * Vector3.forward;
-                m_followCamera.transform.localPosition = Vector3.Lerp(m_followCamera.transform.localPosition, m_zoomTarget, Time.fixedDeltaTime * m_zoomDampening);
-            }
+            m_zoomTarget -= m_zoomStep * (m_currentHeight - m_followCamera.transform.localPosition.y) * Vector3.forward;
+            m_followCamera.transform.localPosition = Vector3.Lerp(m_followCamera.transform.localPosition, m_zoomTarget, Time.fixedDeltaTime * m_zoomDampening);
         }
         #endregion
 
@@ -226,7 +222,7 @@ namespace ThreeDeePongProto.Shared.Player
             {
                 float zoomValue = -_callbackContext.ReadValue<Vector2>().y * m_zoomSpeed;
 #if UNITY_EDITOR
-                //Debug.Log(zoomValue);
+                //Debug.Log($"ZoomValue: {zoomValue} PlayerWindowId: {m_playerWindowId} PlayerId: {m_playerId}");
 #endif
                 if (Mathf.Abs(zoomValue) > m_minAbsLimit)
                 {
