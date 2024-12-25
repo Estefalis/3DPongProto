@@ -50,6 +50,7 @@ namespace ThreeDeePongProto.Shared.UI
         #endregion
         #endregion
 
+        private bool m_reCheckIF = false;
         private const uint m_MINPLAYER = 1;
         private List<string> m_maxPlayerAmount;
 
@@ -78,6 +79,22 @@ namespace ThreeDeePongProto.Shared.UI
         {
             SetupWindow(m_matchUIStates.EGameConnectModi, m_matchUIStates.EPlayerAmount);
             SetupMatchDropdowns();
+        }
+
+        private void Update()
+        {
+            switch (m_reCheckIF)
+            {
+                case false:
+                    break;
+                case true:
+                {
+                    //Required, or else 'm_startButton' and 'm_joinButton' could remain disabled, even if InputFields are filled.
+                    ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
+                    m_reCheckIF = false;
+                    break;
+                }
+            }
         }
 
         private void AddGroupListener()
@@ -274,6 +291,8 @@ namespace ThreeDeePongProto.Shared.UI
                 default:
                     break;
             }
+
+            m_reCheckIF = true;
 
             //WHENEVER YOU GOT THE SAME CLASS IN MULTIPLE SCENES (like MENUMANAGER) SAVE CHANGED DATA!!! OR old RELOADED DATA WILL OVERWRITE IT!!! AND YOU DON'T KNOW WHY...!
             m_persistentData.SaveData(m_settingsStatesFolderPath, m_matchFileName, m_fileFormat, m_matchUIStates, m_encryptionEnabled, true);
