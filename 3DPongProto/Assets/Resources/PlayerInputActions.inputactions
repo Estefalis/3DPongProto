@@ -6,7 +6,7 @@
             "id": "526c9e06-ccf1-4cdc-8f6c-76780cdabe0a",
             "actions": [
                 {
-                    "name": "SideMovementNegZP1",
+                    "name": "MoveSidewardNegZP1",
                     "type": "Value",
                     "id": "7c6a3161-3337-423d-8b1e-29133147bf87",
                     "expectedControlType": "Vector2",
@@ -15,7 +15,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "SideMovementPosZP2",
+                    "name": "MoveSidewardPosZP2",
                     "type": "Value",
                     "id": "db838e41-ad3f-4391-af3c-e8821c470014",
                     "expectedControlType": "Vector2",
@@ -24,7 +24,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "SideMovementNegZP3",
+                    "name": "MoveSidewardNegZP3",
                     "type": "Value",
                     "id": "c47b532f-f363-4d75-8f72-40853901a4e6",
                     "expectedControlType": "Vector2",
@@ -33,7 +33,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "SideMovementPosZP4",
+                    "name": "MoveSidewardPosZP4",
                     "type": "Value",
                     "id": "1e5b0ca7-4ca3-4df3-bd68-ac8cb737ca60",
                     "expectedControlType": "Vector2",
@@ -167,7 +167,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMovementNegZP1",
+                    "action": "MoveSidewardNegZP1",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -178,7 +178,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "SideMovementNegZP1",
+                    "action": "MoveSidewardNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -189,7 +189,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "SideMovementNegZP1",
+                    "action": "MoveSidewardNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -200,7 +200,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMovementNegZP1",
+                    "action": "MoveSidewardNegZP1",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -211,7 +211,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "SideMovementNegZP1",
+                    "action": "MoveSidewardNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -222,7 +222,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "SideMovementNegZP1",
+                    "action": "MoveSidewardNegZP1",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -431,7 +431,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMovementPosZP2",
+                    "action": "MoveSidewardPosZP2",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -442,7 +442,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "SideMovementPosZP2",
+                    "action": "MoveSidewardPosZP2",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -453,7 +453,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "SideMovementPosZP2",
+                    "action": "MoveSidewardPosZP2",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -464,7 +464,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMovementPosZP2",
+                    "action": "MoveSidewardPosZP2",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -475,7 +475,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "SideMovementPosZP2",
+                    "action": "MoveSidewardPosZP2",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -486,7 +486,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "SideMovementPosZP2",
+                    "action": "MoveSidewardPosZP2",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -497,7 +497,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMovementNegZP3",
+                    "action": "MoveSidewardNegZP3",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -508,7 +508,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "SideMovementNegZP3",
+                    "action": "MoveSidewardNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -519,7 +519,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "SideMovementNegZP3",
+                    "action": "MoveSidewardNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -530,7 +530,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMovementNegZP3",
+                    "action": "MoveSidewardNegZP3",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -541,7 +541,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "SideMovementNegZP3",
+                    "action": "MoveSidewardNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -552,7 +552,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "SideMovementNegZP3",
+                    "action": "MoveSidewardNegZP3",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -805,7 +805,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMovementPosZP4",
+                    "action": "MoveSidewardPosZP4",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -816,7 +816,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "SideMovementPosZP4",
+                    "action": "MoveSidewardPosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -827,7 +827,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "SideMovementPosZP4",
+                    "action": "MoveSidewardPosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -838,7 +838,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SideMovementPosZP4",
+                    "action": "MoveSidewardPosZP4",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -849,7 +849,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "SideMovementPosZP4",
+                    "action": "MoveSidewardPosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -860,7 +860,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "SideMovementPosZP4",
+                    "action": "MoveSidewardPosZP4",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -929,15 +929,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Click",
-                    "type": "PassThrough",
-                    "id": "abf902fb-cc82-413e-bf4f-44771fc7c6cb",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "ScrollWheel",
                     "type": "PassThrough",
                     "id": "71e1bb7e-25ae-49da-ada3-13a58d2ee226",
@@ -945,6 +936,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "LeftClick",
+                    "type": "PassThrough",
+                    "id": "abf902fb-cc82-413e-bf4f-44771fc7c6cb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "MiddleClick",
@@ -1290,72 +1290,6 @@
                 },
                 {
                     "name": "",
-                    "id": "47b13d59-10fc-45d8-95de-0130fea247cd",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse;KeyboardMouse",
-                    "action": "Click",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2b0f0099-196c-4a53-954e-4e2cf889560b",
-                    "path": "<VirtualMouse>/leftButton",
-                    "interactions": "",
-                    "processors": "AxisDeadzone",
-                    "groups": "Gamepad",
-                    "action": "Click",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "35867239-96a7-47c9-aaac-57c2c04dd5a6",
-                    "path": "<Gamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Click",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b68ed94c-29a1-47e7-9100-3e83f7a7a6e2",
-                    "path": "<Pen>/tip",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Click",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "56fd2926-b330-4d37-89bb-6a4ee5ef4138",
-                    "path": "<Touchscreen>/touch*/press",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Touch",
-                    "action": "Click",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "54ff1a8f-e7ca-49e9-89c2-f54a6c4cd056",
-                    "path": "<XRController>/trigger",
-                    "interactions": "",
-                    "processors": "AxisDeadzone",
-                    "groups": "XR",
-                    "action": "Click",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "7faf2df8-c148-492f-a455-600e113bccaf",
                     "path": "<Mouse>/scroll",
                     "interactions": "",
@@ -1461,6 +1395,72 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "ToggleGameMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "47b13d59-10fc-45d8-95de-0130fea247cd",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "LeftClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2b0f0099-196c-4a53-954e-4e2cf889560b",
+                    "path": "<VirtualMouse>/leftButton",
+                    "interactions": "",
+                    "processors": "AxisDeadzone",
+                    "groups": "Gamepad",
+                    "action": "LeftClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "35867239-96a7-47c9-aaac-57c2c04dd5a6",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "LeftClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b68ed94c-29a1-47e7-9100-3e83f7a7a6e2",
+                    "path": "<Pen>/tip",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "56fd2926-b330-4d37-89bb-6a4ee5ef4138",
+                    "path": "<Touchscreen>/touch*/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "54ff1a8f-e7ca-49e9-89c2-f54a6c4cd056",
+                    "path": "<XRController>/trigger",
+                    "interactions": "",
+                    "processors": "AxisDeadzone",
+                    "groups": "",
+                    "action": "LeftClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

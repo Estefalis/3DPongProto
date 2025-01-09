@@ -10,6 +10,9 @@ namespace ThreeDeePongProto.Shared.Player
         private PlayerInputActions m_playerInputActions;
         [SerializeField] internal PlayerController m_playerController;
 
+        //private PlayerInput m_playerInput;
+        //private PlayerInput[] m_allPlayerInputs = new PlayerInput[4];
+
         private Vector2 m_sideMoveVectorP1, m_sideMoveVectorP2, m_sideMoveVectorP3, m_sideMoveVectorP4;
         private Vector2 m_axisRotation1, m_axisRotation2, m_axisRotation3, m_axisRotation4;
 
@@ -17,6 +20,7 @@ namespace ThreeDeePongProto.Shared.Player
         {
             SetActionMaps(m_playerController.m_playerId, false);
 
+            InputSystem.onDeviceChange -= OnDeviceChange;
             MenuManager.BackToGame -= ButtonClosesMenu;
             MenuManager.RestartGame -= ButtonClosesMenu;
         }
@@ -29,6 +33,28 @@ namespace ThreeDeePongProto.Shared.Player
             m_playerInputActions = InputManager.m_PlayerInputActions;
             SetActionMaps(m_playerController.m_playerId, true);
 
+            //for (int i = 0; i < m_allPlayerInputs.Length; i++)
+            //{
+            //    if (m_playerController.m_playerId == i) //'m_playerInput.playerIndex' equals 'm_playerController.m_playerId'.
+            //    {
+            //        m_allPlayerInputs[i] = gameObject.GetComponentInParent<PlayerInput>();
+
+            //        if (m_playerInput == null)
+            //        {
+            //            var parent = gameObject.transform.parent.parent;
+            //            m_allPlayerInputs[i] = parent.gameObject.AddComponent<PlayerInput>();
+            //            //var addedPlayerInput = gameObject.AddComponent<PlayerInput>();
+            //            //m_allPlayerInputs[i] = addedPlayerInput;
+            //            m_allPlayerInputs[i].actions = m_playerInputActions.asset;
+            //            m_allPlayerInputs[i].neverAutoSwitchControlSchemes = false;
+            //            m_allPlayerInputs[i].notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
+            //        }
+            //        //m_allPlayerInputs[m_playerController.m_playerId] = m_playerInput;
+            //        //Debug.Log($"{m_playerInput.playerIndex} - {m_playerController.m_playerId} - {i} - {m_allPlayerInputs[i].name}");
+            //    }
+            //}
+
+            InputSystem.onDeviceChange += OnDeviceChange;
             MenuManager.BackToGame += ButtonClosesMenu;
             MenuManager.RestartGame += ButtonClosesMenu;
         }
@@ -80,8 +106,8 @@ namespace ThreeDeePongProto.Shared.Player
                     {
                         case 0:
                         {
-                            m_playerInputActions.PlayerActions.SideMovementNegZP1.performed += MoveSidewardsP1;
-                            m_playerInputActions.PlayerActions.SideMovementNegZP1.canceled += CancelMoveSidewardsP1;
+                            m_playerInputActions.PlayerActions.MoveSidewardNegZP1.performed += MoveSidewardsP1;
+                            m_playerInputActions.PlayerActions.MoveSidewardNegZP1.canceled += CancelMoveSidewardsP1;
                             m_playerInputActions.PlayerActions.RotatePaddleNegZP1.performed += RotatePaddleP1;
                             m_playerInputActions.PlayerActions.RotatePaddleNegZP1.canceled += CancelRotatePaddleP1;
                             m_playerInputActions.PlayerActions.PushPaddleNegZP1.performed += PushInputP1;
@@ -90,8 +116,8 @@ namespace ThreeDeePongProto.Shared.Player
                         }
                         case 1:
                         {
-                            m_playerInputActions.PlayerActions.SideMovementPosZP2.performed += MoveSidewardsP2;
-                            m_playerInputActions.PlayerActions.SideMovementPosZP2.canceled += CancelMoveSidewardsP2;
+                            m_playerInputActions.PlayerActions.MoveSidewardPosZP2.performed += MoveSidewardsP2;
+                            m_playerInputActions.PlayerActions.MoveSidewardPosZP2.canceled += CancelMoveSidewardsP2;
                             m_playerInputActions.PlayerActions.RotatePaddlePosZP2.performed += RotatePaddleP2;
                             m_playerInputActions.PlayerActions.RotatePaddlePosZP2.canceled += CancelRotatePaddleP2;
                             m_playerInputActions.PlayerActions.PushPaddlePosZP2.performed += PushInputP2;
@@ -100,8 +126,8 @@ namespace ThreeDeePongProto.Shared.Player
                         }
                         case 2:
                         {
-                            m_playerInputActions.PlayerActions.SideMovementNegZP3.performed += MoveSidewardsP3;
-                            m_playerInputActions.PlayerActions.SideMovementNegZP3.canceled += CancelMoveSidewardsP3;
+                            m_playerInputActions.PlayerActions.MoveSidewardNegZP3.performed += MoveSidewardsP3;
+                            m_playerInputActions.PlayerActions.MoveSidewardNegZP3.canceled += CancelMoveSidewardsP3;
                             m_playerInputActions.PlayerActions.RotatePaddleNegZP3.performed += RotatePaddleP3;
                             m_playerInputActions.PlayerActions.RotatePaddleNegZP3.canceled += CancelRotatePaddleP3;
                             m_playerInputActions.PlayerActions.PushPaddleNegZP3.performed += PushInputP3;
@@ -110,8 +136,8 @@ namespace ThreeDeePongProto.Shared.Player
                         }
                         case 3:
                         {
-                            m_playerInputActions.PlayerActions.SideMovementPosZP4.performed += MoveSidewardsP4;
-                            m_playerInputActions.PlayerActions.SideMovementPosZP4.canceled += CancelMoveSidewardsP4;
+                            m_playerInputActions.PlayerActions.MoveSidewardPosZP4.performed += MoveSidewardsP4;
+                            m_playerInputActions.PlayerActions.MoveSidewardPosZP4.canceled += CancelMoveSidewardsP4;
                             m_playerInputActions.PlayerActions.RotatePaddlePosZP4.performed += RotatePaddleP4;
                             m_playerInputActions.PlayerActions.RotatePaddlePosZP4.canceled += CancelRotatePaddleP4;
                             m_playerInputActions.PlayerActions.PushPaddlePosZP4.performed += PushInputP4;
@@ -131,8 +157,8 @@ namespace ThreeDeePongProto.Shared.Player
                     {
                         case 0:
                         {
-                            m_playerInputActions.PlayerActions.SideMovementNegZP1.performed -= MoveSidewardsP1;
-                            m_playerInputActions.PlayerActions.SideMovementNegZP1.canceled -= CancelMoveSidewardsP1;
+                            m_playerInputActions.PlayerActions.MoveSidewardNegZP1.performed -= MoveSidewardsP1;
+                            m_playerInputActions.PlayerActions.MoveSidewardNegZP1.canceled -= CancelMoveSidewardsP1;
                             m_playerInputActions.PlayerActions.RotatePaddleNegZP1.performed -= RotatePaddleP1;
                             m_playerInputActions.PlayerActions.RotatePaddleNegZP1.canceled -= CancelRotatePaddleP1;
                             m_playerInputActions.PlayerActions.PushPaddleNegZP1.performed -= PushInputP1;
@@ -141,8 +167,8 @@ namespace ThreeDeePongProto.Shared.Player
                         }
                         case 1:
                         {
-                            m_playerInputActions.PlayerActions.SideMovementPosZP2.performed -= MoveSidewardsP2;
-                            m_playerInputActions.PlayerActions.SideMovementPosZP2.canceled -= CancelMoveSidewardsP2;
+                            m_playerInputActions.PlayerActions.MoveSidewardPosZP2.performed -= MoveSidewardsP2;
+                            m_playerInputActions.PlayerActions.MoveSidewardPosZP2.canceled -= CancelMoveSidewardsP2;
                             m_playerInputActions.PlayerActions.RotatePaddlePosZP2.performed -= RotatePaddleP2;
                             m_playerInputActions.PlayerActions.RotatePaddlePosZP2.canceled -= CancelRotatePaddleP2;
                             m_playerInputActions.PlayerActions.PushPaddlePosZP2.performed -= PushInputP2;
@@ -151,8 +177,8 @@ namespace ThreeDeePongProto.Shared.Player
                         }
                         case 2:
                         {
-                            m_playerInputActions.PlayerActions.SideMovementNegZP3.performed -= MoveSidewardsP3;
-                            m_playerInputActions.PlayerActions.SideMovementNegZP3.canceled -= CancelMoveSidewardsP3;
+                            m_playerInputActions.PlayerActions.MoveSidewardNegZP3.performed -= MoveSidewardsP3;
+                            m_playerInputActions.PlayerActions.MoveSidewardNegZP3.canceled -= CancelMoveSidewardsP3;
                             m_playerInputActions.PlayerActions.RotatePaddleNegZP3.performed -= RotatePaddleP3;
                             m_playerInputActions.PlayerActions.RotatePaddleNegZP3.canceled -= CancelRotatePaddleP3;
                             m_playerInputActions.PlayerActions.PushPaddleNegZP3.performed -= PushInputP3;
@@ -161,8 +187,8 @@ namespace ThreeDeePongProto.Shared.Player
                         }
                         case 3:
                         {
-                            m_playerInputActions.PlayerActions.SideMovementPosZP4.performed -= MoveSidewardsP4;
-                            m_playerInputActions.PlayerActions.SideMovementPosZP4.canceled -= CancelMoveSidewardsP4;
+                            m_playerInputActions.PlayerActions.MoveSidewardPosZP4.performed -= MoveSidewardsP4;
+                            m_playerInputActions.PlayerActions.MoveSidewardPosZP4.canceled -= CancelMoveSidewardsP4;
                             m_playerInputActions.PlayerActions.RotatePaddlePosZP4.performed -= RotatePaddleP4;
                             m_playerInputActions.PlayerActions.RotatePaddlePosZP4.canceled -= CancelRotatePaddleP4;
                             m_playerInputActions.PlayerActions.PushPaddlePosZP4.performed -= PushInputP4;
@@ -380,5 +406,33 @@ namespace ThreeDeePongProto.Shared.Player
         }
         #endregion
         #endregion
+
+        private void OnDeviceChange(InputDevice _inputDevice, InputDeviceChange _deviceChange)
+        {
+            if (m_playerController.m_playerId != 0)
+                return;
+            switch (_deviceChange)
+            {
+                case InputDeviceChange.Added:
+                    //New Device.
+                    Debug.Log($"{_inputDevice} got added.");
+                    break;
+                case InputDeviceChange.Removed:
+                    //Remove from Input System entirely; by default, Devices stay in the system once discovered.
+                    Debug.Log($"{_inputDevice} got removed.");
+                    break;
+                case InputDeviceChange.Disconnected:
+                    //If this is happening, activate some boolean that will tell the game that a controller is now "missing".
+                    Debug.Log($"{_inputDevice} got disconnected.");
+                    break;
+                case InputDeviceChange.Reconnected:
+                    //Plugged back in.
+                    Debug.Log($"{_inputDevice} got reconnected.");
+                    break;
+                default:
+                    //Always includes a default case for when a unused case is being called. Leave it empty.
+                    break;
+            }
+        }
     }
 }

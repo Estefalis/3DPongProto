@@ -30,7 +30,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             ""id"": ""526c9e06-ccf1-4cdc-8f6c-76780cdabe0a"",
             ""actions"": [
                 {
-                    ""name"": ""SideMovementNegZP1"",
+                    ""name"": ""MoveSidewardNegZP1"",
                     ""type"": ""Value"",
                     ""id"": ""7c6a3161-3337-423d-8b1e-29133147bf87"",
                     ""expectedControlType"": ""Vector2"",
@@ -39,7 +39,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""SideMovementPosZP2"",
+                    ""name"": ""MoveSidewardPosZP2"",
                     ""type"": ""Value"",
                     ""id"": ""db838e41-ad3f-4391-af3c-e8821c470014"",
                     ""expectedControlType"": ""Vector2"",
@@ -48,7 +48,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""SideMovementNegZP3"",
+                    ""name"": ""MoveSidewardNegZP3"",
                     ""type"": ""Value"",
                     ""id"": ""c47b532f-f363-4d75-8f72-40853901a4e6"",
                     ""expectedControlType"": ""Vector2"",
@@ -57,7 +57,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""SideMovementPosZP4"",
+                    ""name"": ""MoveSidewardPosZP4"",
                     ""type"": ""Value"",
                     ""id"": ""1e5b0ca7-4ca3-4df3-bd68-ac8cb737ca60"",
                     ""expectedControlType"": ""Vector2"",
@@ -191,7 +191,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SideMovementNegZP1"",
+                    ""action"": ""MoveSidewardNegZP1"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -202,7 +202,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
-                    ""action"": ""SideMovementNegZP1"",
+                    ""action"": ""MoveSidewardNegZP1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -213,7 +213,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
-                    ""action"": ""SideMovementNegZP1"",
+                    ""action"": ""MoveSidewardNegZP1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -224,7 +224,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SideMovementNegZP1"",
+                    ""action"": ""MoveSidewardNegZP1"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -235,7 +235,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""SideMovementNegZP1"",
+                    ""action"": ""MoveSidewardNegZP1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -246,7 +246,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""SideMovementNegZP1"",
+                    ""action"": ""MoveSidewardNegZP1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -455,7 +455,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SideMovementPosZP2"",
+                    ""action"": ""MoveSidewardPosZP2"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -466,7 +466,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
-                    ""action"": ""SideMovementPosZP2"",
+                    ""action"": ""MoveSidewardPosZP2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -477,7 +477,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
-                    ""action"": ""SideMovementPosZP2"",
+                    ""action"": ""MoveSidewardPosZP2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -488,7 +488,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SideMovementPosZP2"",
+                    ""action"": ""MoveSidewardPosZP2"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -499,7 +499,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""SideMovementPosZP2"",
+                    ""action"": ""MoveSidewardPosZP2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -510,7 +510,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""SideMovementPosZP2"",
+                    ""action"": ""MoveSidewardPosZP2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -521,7 +521,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SideMovementNegZP3"",
+                    ""action"": ""MoveSidewardNegZP3"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -532,7 +532,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
-                    ""action"": ""SideMovementNegZP3"",
+                    ""action"": ""MoveSidewardNegZP3"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -543,7 +543,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
-                    ""action"": ""SideMovementNegZP3"",
+                    ""action"": ""MoveSidewardNegZP3"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -554,7 +554,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SideMovementNegZP3"",
+                    ""action"": ""MoveSidewardNegZP3"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -565,7 +565,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""SideMovementNegZP3"",
+                    ""action"": ""MoveSidewardNegZP3"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -576,7 +576,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""SideMovementNegZP3"",
+                    ""action"": ""MoveSidewardNegZP3"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -829,7 +829,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SideMovementPosZP4"",
+                    ""action"": ""MoveSidewardPosZP4"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -840,7 +840,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
-                    ""action"": ""SideMovementPosZP4"",
+                    ""action"": ""MoveSidewardPosZP4"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -851,7 +851,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
-                    ""action"": ""SideMovementPosZP4"",
+                    ""action"": ""MoveSidewardPosZP4"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -862,7 +862,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SideMovementPosZP4"",
+                    ""action"": ""MoveSidewardPosZP4"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -873,7 +873,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""SideMovementPosZP4"",
+                    ""action"": ""MoveSidewardPosZP4"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -884,7 +884,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""SideMovementPosZP4"",
+                    ""action"": ""MoveSidewardPosZP4"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -953,15 +953,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Click"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""abf902fb-cc82-413e-bf4f-44771fc7c6cb"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
                     ""name"": ""ScrollWheel"",
                     ""type"": ""PassThrough"",
                     ""id"": ""71e1bb7e-25ae-49da-ada3-13a58d2ee226"",
@@ -969,6 +960,15 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LeftClick"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""abf902fb-cc82-413e-bf4f-44771fc7c6cb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""MiddleClick"",
@@ -1314,72 +1314,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": """",
-                    ""id"": ""47b13d59-10fc-45d8-95de-0130fea247cd"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse;KeyboardMouse"",
-                    ""action"": ""Click"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""2b0f0099-196c-4a53-954e-4e2cf889560b"",
-                    ""path"": ""<VirtualMouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Click"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""35867239-96a7-47c9-aaac-57c2c04dd5a6"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Click"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b68ed94c-29a1-47e7-9100-3e83f7a7a6e2"",
-                    ""path"": ""<Pen>/tip"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Click"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""56fd2926-b330-4d37-89bb-6a4ee5ef4138"",
-                    ""path"": ""<Touchscreen>/touch*/press"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Touch"",
-                    ""action"": ""Click"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""54ff1a8f-e7ca-49e9-89c2-f54a6c4cd056"",
-                    ""path"": ""<XRController>/trigger"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""XR"",
-                    ""action"": ""Click"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""7faf2df8-c148-492f-a455-600e113bccaf"",
                     ""path"": ""<Mouse>/scroll"",
                     ""interactions"": """",
@@ -1487,6 +1421,72 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""action"": ""ToggleGameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""47b13d59-10fc-45d8-95de-0130fea247cd"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""LeftClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2b0f0099-196c-4a53-954e-4e2cf889560b"",
+                    ""path"": ""<VirtualMouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""LeftClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""35867239-96a7-47c9-aaac-57c2c04dd5a6"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""LeftClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b68ed94c-29a1-47e7-9100-3e83f7a7a6e2"",
+                    ""path"": ""<Pen>/tip"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""56fd2926-b330-4d37-89bb-6a4ee5ef4138"",
+                    ""path"": ""<Touchscreen>/touch*/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""54ff1a8f-e7ca-49e9-89c2-f54a6c4cd056"",
+                    ""path"": ""<XRController>/trigger"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": """",
+                    ""action"": ""LeftClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1528,10 +1528,10 @@ namespace ThreeDeePongProto.Shared.InputActions
 }");
             // PlayerActions
             m_PlayerActions = asset.FindActionMap("PlayerActions", throwIfNotFound: true);
-            m_PlayerActions_SideMovementNegZP1 = m_PlayerActions.FindAction("SideMovementNegZP1", throwIfNotFound: true);
-            m_PlayerActions_SideMovementPosZP2 = m_PlayerActions.FindAction("SideMovementPosZP2", throwIfNotFound: true);
-            m_PlayerActions_SideMovementNegZP3 = m_PlayerActions.FindAction("SideMovementNegZP3", throwIfNotFound: true);
-            m_PlayerActions_SideMovementPosZP4 = m_PlayerActions.FindAction("SideMovementPosZP4", throwIfNotFound: true);
+            m_PlayerActions_MoveSidewardNegZP1 = m_PlayerActions.FindAction("MoveSidewardNegZP1", throwIfNotFound: true);
+            m_PlayerActions_MoveSidewardPosZP2 = m_PlayerActions.FindAction("MoveSidewardPosZP2", throwIfNotFound: true);
+            m_PlayerActions_MoveSidewardNegZP3 = m_PlayerActions.FindAction("MoveSidewardNegZP3", throwIfNotFound: true);
+            m_PlayerActions_MoveSidewardPosZP4 = m_PlayerActions.FindAction("MoveSidewardPosZP4", throwIfNotFound: true);
             m_PlayerActions_RotatePaddleNegZP1 = m_PlayerActions.FindAction("RotatePaddleNegZP1", throwIfNotFound: true);
             m_PlayerActions_RotatePaddlePosZP2 = m_PlayerActions.FindAction("RotatePaddlePosZP2", throwIfNotFound: true);
             m_PlayerActions_RotatePaddleNegZP3 = m_PlayerActions.FindAction("RotatePaddleNegZP3", throwIfNotFound: true);
@@ -1551,8 +1551,8 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_UserInterface_Submit = m_UserInterface.FindAction("Submit", throwIfNotFound: true);
             m_UserInterface_Cancel = m_UserInterface.FindAction("Cancel", throwIfNotFound: true);
             m_UserInterface_Point = m_UserInterface.FindAction("Point", throwIfNotFound: true);
-            m_UserInterface_Click = m_UserInterface.FindAction("Click", throwIfNotFound: true);
             m_UserInterface_ScrollWheel = m_UserInterface.FindAction("ScrollWheel", throwIfNotFound: true);
+            m_UserInterface_LeftClick = m_UserInterface.FindAction("LeftClick", throwIfNotFound: true);
             m_UserInterface_MiddleClick = m_UserInterface.FindAction("MiddleClick", throwIfNotFound: true);
             m_UserInterface_RightClick = m_UserInterface.FindAction("RightClick", throwIfNotFound: true);
             m_UserInterface_CursorVisibility = m_UserInterface.FindAction("CursorVisibility", throwIfNotFound: true);
@@ -1620,10 +1620,10 @@ namespace ThreeDeePongProto.Shared.InputActions
         // PlayerActions
         private readonly InputActionMap m_PlayerActions;
         private List<IPlayerActionsActions> m_PlayerActionsActionsCallbackInterfaces = new List<IPlayerActionsActions>();
-        private readonly InputAction m_PlayerActions_SideMovementNegZP1;
-        private readonly InputAction m_PlayerActions_SideMovementPosZP2;
-        private readonly InputAction m_PlayerActions_SideMovementNegZP3;
-        private readonly InputAction m_PlayerActions_SideMovementPosZP4;
+        private readonly InputAction m_PlayerActions_MoveSidewardNegZP1;
+        private readonly InputAction m_PlayerActions_MoveSidewardPosZP2;
+        private readonly InputAction m_PlayerActions_MoveSidewardNegZP3;
+        private readonly InputAction m_PlayerActions_MoveSidewardPosZP4;
         private readonly InputAction m_PlayerActions_RotatePaddleNegZP1;
         private readonly InputAction m_PlayerActions_RotatePaddlePosZP2;
         private readonly InputAction m_PlayerActions_RotatePaddleNegZP3;
@@ -1641,10 +1641,10 @@ namespace ThreeDeePongProto.Shared.InputActions
         {
             private @PlayerInputActions m_Wrapper;
             public PlayerActionsActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-            public InputAction @SideMovementNegZP1 => m_Wrapper.m_PlayerActions_SideMovementNegZP1;
-            public InputAction @SideMovementPosZP2 => m_Wrapper.m_PlayerActions_SideMovementPosZP2;
-            public InputAction @SideMovementNegZP3 => m_Wrapper.m_PlayerActions_SideMovementNegZP3;
-            public InputAction @SideMovementPosZP4 => m_Wrapper.m_PlayerActions_SideMovementPosZP4;
+            public InputAction @MoveSidewardNegZP1 => m_Wrapper.m_PlayerActions_MoveSidewardNegZP1;
+            public InputAction @MoveSidewardPosZP2 => m_Wrapper.m_PlayerActions_MoveSidewardPosZP2;
+            public InputAction @MoveSidewardNegZP3 => m_Wrapper.m_PlayerActions_MoveSidewardNegZP3;
+            public InputAction @MoveSidewardPosZP4 => m_Wrapper.m_PlayerActions_MoveSidewardPosZP4;
             public InputAction @RotatePaddleNegZP1 => m_Wrapper.m_PlayerActions_RotatePaddleNegZP1;
             public InputAction @RotatePaddlePosZP2 => m_Wrapper.m_PlayerActions_RotatePaddlePosZP2;
             public InputAction @RotatePaddleNegZP3 => m_Wrapper.m_PlayerActions_RotatePaddleNegZP3;
@@ -1667,18 +1667,18 @@ namespace ThreeDeePongProto.Shared.InputActions
             {
                 if (instance == null || m_Wrapper.m_PlayerActionsActionsCallbackInterfaces.Contains(instance)) return;
                 m_Wrapper.m_PlayerActionsActionsCallbackInterfaces.Add(instance);
-                @SideMovementNegZP1.started += instance.OnSideMovementNegZP1;
-                @SideMovementNegZP1.performed += instance.OnSideMovementNegZP1;
-                @SideMovementNegZP1.canceled += instance.OnSideMovementNegZP1;
-                @SideMovementPosZP2.started += instance.OnSideMovementPosZP2;
-                @SideMovementPosZP2.performed += instance.OnSideMovementPosZP2;
-                @SideMovementPosZP2.canceled += instance.OnSideMovementPosZP2;
-                @SideMovementNegZP3.started += instance.OnSideMovementNegZP3;
-                @SideMovementNegZP3.performed += instance.OnSideMovementNegZP3;
-                @SideMovementNegZP3.canceled += instance.OnSideMovementNegZP3;
-                @SideMovementPosZP4.started += instance.OnSideMovementPosZP4;
-                @SideMovementPosZP4.performed += instance.OnSideMovementPosZP4;
-                @SideMovementPosZP4.canceled += instance.OnSideMovementPosZP4;
+                @MoveSidewardNegZP1.started += instance.OnMoveSidewardNegZP1;
+                @MoveSidewardNegZP1.performed += instance.OnMoveSidewardNegZP1;
+                @MoveSidewardNegZP1.canceled += instance.OnMoveSidewardNegZP1;
+                @MoveSidewardPosZP2.started += instance.OnMoveSidewardPosZP2;
+                @MoveSidewardPosZP2.performed += instance.OnMoveSidewardPosZP2;
+                @MoveSidewardPosZP2.canceled += instance.OnMoveSidewardPosZP2;
+                @MoveSidewardNegZP3.started += instance.OnMoveSidewardNegZP3;
+                @MoveSidewardNegZP3.performed += instance.OnMoveSidewardNegZP3;
+                @MoveSidewardNegZP3.canceled += instance.OnMoveSidewardNegZP3;
+                @MoveSidewardPosZP4.started += instance.OnMoveSidewardPosZP4;
+                @MoveSidewardPosZP4.performed += instance.OnMoveSidewardPosZP4;
+                @MoveSidewardPosZP4.canceled += instance.OnMoveSidewardPosZP4;
                 @RotatePaddleNegZP1.started += instance.OnRotatePaddleNegZP1;
                 @RotatePaddleNegZP1.performed += instance.OnRotatePaddleNegZP1;
                 @RotatePaddleNegZP1.canceled += instance.OnRotatePaddleNegZP1;
@@ -1722,18 +1722,18 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             private void UnregisterCallbacks(IPlayerActionsActions instance)
             {
-                @SideMovementNegZP1.started -= instance.OnSideMovementNegZP1;
-                @SideMovementNegZP1.performed -= instance.OnSideMovementNegZP1;
-                @SideMovementNegZP1.canceled -= instance.OnSideMovementNegZP1;
-                @SideMovementPosZP2.started -= instance.OnSideMovementPosZP2;
-                @SideMovementPosZP2.performed -= instance.OnSideMovementPosZP2;
-                @SideMovementPosZP2.canceled -= instance.OnSideMovementPosZP2;
-                @SideMovementNegZP3.started -= instance.OnSideMovementNegZP3;
-                @SideMovementNegZP3.performed -= instance.OnSideMovementNegZP3;
-                @SideMovementNegZP3.canceled -= instance.OnSideMovementNegZP3;
-                @SideMovementPosZP4.started -= instance.OnSideMovementPosZP4;
-                @SideMovementPosZP4.performed -= instance.OnSideMovementPosZP4;
-                @SideMovementPosZP4.canceled -= instance.OnSideMovementPosZP4;
+                @MoveSidewardNegZP1.started -= instance.OnMoveSidewardNegZP1;
+                @MoveSidewardNegZP1.performed -= instance.OnMoveSidewardNegZP1;
+                @MoveSidewardNegZP1.canceled -= instance.OnMoveSidewardNegZP1;
+                @MoveSidewardPosZP2.started -= instance.OnMoveSidewardPosZP2;
+                @MoveSidewardPosZP2.performed -= instance.OnMoveSidewardPosZP2;
+                @MoveSidewardPosZP2.canceled -= instance.OnMoveSidewardPosZP2;
+                @MoveSidewardNegZP3.started -= instance.OnMoveSidewardNegZP3;
+                @MoveSidewardNegZP3.performed -= instance.OnMoveSidewardNegZP3;
+                @MoveSidewardNegZP3.canceled -= instance.OnMoveSidewardNegZP3;
+                @MoveSidewardPosZP4.started -= instance.OnMoveSidewardPosZP4;
+                @MoveSidewardPosZP4.performed -= instance.OnMoveSidewardPosZP4;
+                @MoveSidewardPosZP4.canceled -= instance.OnMoveSidewardPosZP4;
                 @RotatePaddleNegZP1.started -= instance.OnRotatePaddleNegZP1;
                 @RotatePaddleNegZP1.performed -= instance.OnRotatePaddleNegZP1;
                 @RotatePaddleNegZP1.canceled -= instance.OnRotatePaddleNegZP1;
@@ -1798,8 +1798,8 @@ namespace ThreeDeePongProto.Shared.InputActions
         private readonly InputAction m_UserInterface_Submit;
         private readonly InputAction m_UserInterface_Cancel;
         private readonly InputAction m_UserInterface_Point;
-        private readonly InputAction m_UserInterface_Click;
         private readonly InputAction m_UserInterface_ScrollWheel;
+        private readonly InputAction m_UserInterface_LeftClick;
         private readonly InputAction m_UserInterface_MiddleClick;
         private readonly InputAction m_UserInterface_RightClick;
         private readonly InputAction m_UserInterface_CursorVisibility;
@@ -1814,8 +1814,8 @@ namespace ThreeDeePongProto.Shared.InputActions
             public InputAction @Submit => m_Wrapper.m_UserInterface_Submit;
             public InputAction @Cancel => m_Wrapper.m_UserInterface_Cancel;
             public InputAction @Point => m_Wrapper.m_UserInterface_Point;
-            public InputAction @Click => m_Wrapper.m_UserInterface_Click;
             public InputAction @ScrollWheel => m_Wrapper.m_UserInterface_ScrollWheel;
+            public InputAction @LeftClick => m_Wrapper.m_UserInterface_LeftClick;
             public InputAction @MiddleClick => m_Wrapper.m_UserInterface_MiddleClick;
             public InputAction @RightClick => m_Wrapper.m_UserInterface_RightClick;
             public InputAction @CursorVisibility => m_Wrapper.m_UserInterface_CursorVisibility;
@@ -1843,12 +1843,12 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @Point.started += instance.OnPoint;
                 @Point.performed += instance.OnPoint;
                 @Point.canceled += instance.OnPoint;
-                @Click.started += instance.OnClick;
-                @Click.performed += instance.OnClick;
-                @Click.canceled += instance.OnClick;
                 @ScrollWheel.started += instance.OnScrollWheel;
                 @ScrollWheel.performed += instance.OnScrollWheel;
                 @ScrollWheel.canceled += instance.OnScrollWheel;
+                @LeftClick.started += instance.OnLeftClick;
+                @LeftClick.performed += instance.OnLeftClick;
+                @LeftClick.canceled += instance.OnLeftClick;
                 @MiddleClick.started += instance.OnMiddleClick;
                 @MiddleClick.performed += instance.OnMiddleClick;
                 @MiddleClick.canceled += instance.OnMiddleClick;
@@ -1883,12 +1883,12 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @Point.started -= instance.OnPoint;
                 @Point.performed -= instance.OnPoint;
                 @Point.canceled -= instance.OnPoint;
-                @Click.started -= instance.OnClick;
-                @Click.performed -= instance.OnClick;
-                @Click.canceled -= instance.OnClick;
                 @ScrollWheel.started -= instance.OnScrollWheel;
                 @ScrollWheel.performed -= instance.OnScrollWheel;
                 @ScrollWheel.canceled -= instance.OnScrollWheel;
+                @LeftClick.started -= instance.OnLeftClick;
+                @LeftClick.performed -= instance.OnLeftClick;
+                @LeftClick.canceled -= instance.OnLeftClick;
                 @MiddleClick.started -= instance.OnMiddleClick;
                 @MiddleClick.performed -= instance.OnMiddleClick;
                 @MiddleClick.canceled -= instance.OnMiddleClick;
@@ -1944,10 +1944,10 @@ namespace ThreeDeePongProto.Shared.InputActions
         }
         public interface IPlayerActionsActions
         {
-            void OnSideMovementNegZP1(InputAction.CallbackContext context);
-            void OnSideMovementPosZP2(InputAction.CallbackContext context);
-            void OnSideMovementNegZP3(InputAction.CallbackContext context);
-            void OnSideMovementPosZP4(InputAction.CallbackContext context);
+            void OnMoveSidewardNegZP1(InputAction.CallbackContext context);
+            void OnMoveSidewardPosZP2(InputAction.CallbackContext context);
+            void OnMoveSidewardNegZP3(InputAction.CallbackContext context);
+            void OnMoveSidewardPosZP4(InputAction.CallbackContext context);
             void OnRotatePaddleNegZP1(InputAction.CallbackContext context);
             void OnRotatePaddlePosZP2(InputAction.CallbackContext context);
             void OnRotatePaddleNegZP3(InputAction.CallbackContext context);
@@ -1968,8 +1968,8 @@ namespace ThreeDeePongProto.Shared.InputActions
             void OnSubmit(InputAction.CallbackContext context);
             void OnCancel(InputAction.CallbackContext context);
             void OnPoint(InputAction.CallbackContext context);
-            void OnClick(InputAction.CallbackContext context);
             void OnScrollWheel(InputAction.CallbackContext context);
+            void OnLeftClick(InputAction.CallbackContext context);
             void OnMiddleClick(InputAction.CallbackContext context);
             void OnRightClick(InputAction.CallbackContext context);
             void OnCursorVisibility(InputAction.CallbackContext context);

@@ -105,8 +105,8 @@ namespace ThreeDeePongProto.Shared.Player
                         break;
                     case true:
                     {
-                        MovePaddle(m_playerController.m_playerId);
-                        RotatePaddle(m_playerController.m_playerId);
+                        MovePaddle();
+                        RotatePaddle();
                         break;
                     }
                 }
@@ -136,11 +136,11 @@ namespace ThreeDeePongProto.Shared.Player
             m_playerController.m_rigidbody.transform.localRotation = m_paddleStartRotation;
         }
 
-        private void MovePaddle(int _ownPlayerID)
+        private void MovePaddle()
         {
             var xInvert = m_playerController.m_controlUIStates.InvertXAxis ? -1 : 1;    //Value from Scriptable in the Inspector.
 
-            switch (_ownPlayerID)
+            switch (m_receivedPlayerId)
             {
                 case 0:
                 {
@@ -177,11 +177,11 @@ namespace ThreeDeePongProto.Shared.Player
             m_playerController.m_rigidbody.MovePosition(m_rbPosition + m_moveVector);
         }
 
-        private void RotatePaddle(int _ownPlayerID)
+        private void RotatePaddle()
         {
             var yInvert = m_playerController.m_controlUIStates.InvertYAxis ? -1 : 1;    //Value from Scriptable in the Inspector.
 
-            switch (_ownPlayerID)
+            switch (m_receivedPlayerId)
             {
                 case 0:
                 {

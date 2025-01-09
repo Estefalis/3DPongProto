@@ -29,7 +29,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         //ActionEvent to switch between ActionMaps within the InputActionAsset.
         public static event Action<InputActionMap> m_changeActiveActionMap;     //For subscriptions.
         //public static InputActionMap m_LastSetActionMap { get => m_lastSetActionMap; }
-        private static InputActionMap m_lastSetActionMap;                       //For runtime classes.
+        //private static InputActionMap m_lastSetActionMap;                       //For runtime classes.
         #endregion
 
         #region KeyRebinding
@@ -180,9 +180,9 @@ namespace ThreeDeePongProto.Shared.InputActions
             if (_inputActionMap.name == ActiveInputActionMap.UserInterface.ToString())
                 m_activeInputActionMap = ActiveInputActionMap.UserInterface;
 
-            m_lastSetActionMap = _inputActionMap;
+            //m_lastSetActionMap = _inputActionMap;
 #if UNITY_EDITOR
-            Debug.Log($"InputActionMap gets changed to {_inputActionMap.name}.");
+            //Debug.Log($"InputActionMap gets changed to {_inputActionMap.name}.");
 #endif
         }
         #endregion
