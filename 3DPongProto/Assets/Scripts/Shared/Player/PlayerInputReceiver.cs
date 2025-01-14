@@ -106,42 +106,42 @@ namespace ThreeDeePongProto.Shared.Player
                     {
                         case 0:
                         {
-                            m_playerInputActions.PlayerActions.MoveNegZP1.performed += MoveSidewardsP1;
-                            m_playerInputActions.PlayerActions.MoveNegZP1.canceled += CancelMoveSidewardsP1;
-                            m_playerInputActions.PlayerActions.RotateNegZP1.performed += RotatePaddleP1;
-                            m_playerInputActions.PlayerActions.RotateNegZP1.canceled += CancelRotatePaddleP1;
-                            m_playerInputActions.PlayerActions.PushNegZP1.performed += PushInputP1;
-                            m_playerInputActions.PlayerActions.PushNegZP1.canceled += CancelPushInputP1;
+                            m_playerInputActions.PlayerActions.MoveP1ZNeg.performed += MoveSidewardsP1;
+                            m_playerInputActions.PlayerActions.MoveP1ZNeg.canceled += CancelMoveSidewardsP1;
+                            m_playerInputActions.PlayerActions.RotateP1ZNeg.performed += RotatePaddleP1;
+                            m_playerInputActions.PlayerActions.RotateP1ZNeg.canceled += CancelRotatePaddleP1;
+                            m_playerInputActions.PlayerActions.PushP1ZNeg.performed += PushInputP1;
+                            m_playerInputActions.PlayerActions.PushP1ZNeg.canceled += CancelPushInputP1;
                             break;
                         }
                         case 1:
                         {
-                            m_playerInputActions.PlayerActions.MovePosZP2.performed += MoveSidewardsP2;
-                            m_playerInputActions.PlayerActions.MovePosZP2.canceled += CancelMoveSidewardsP2;
-                            m_playerInputActions.PlayerActions.RotatePosZP2.performed += RotatePaddleP2;
-                            m_playerInputActions.PlayerActions.RotatePosZP2.canceled += CancelRotatePaddleP2;
-                            m_playerInputActions.PlayerActions.PushPosZP2.performed += PushInputP2;
-                            m_playerInputActions.PlayerActions.PushPosZP2.canceled += CancelPushInputP2;
+                            m_playerInputActions.PlayerActions.MoveP2ZPos.performed += MoveSidewardsP2;
+                            m_playerInputActions.PlayerActions.MoveP2ZPos.canceled += CancelMoveSidewardsP2;
+                            m_playerInputActions.PlayerActions.RotateP2ZPos.performed += RotatePaddleP2;
+                            m_playerInputActions.PlayerActions.RotateP2ZPos.canceled += CancelRotatePaddleP2;
+                            m_playerInputActions.PlayerActions.PushP2ZPos.performed += PushInputP2;
+                            m_playerInputActions.PlayerActions.PushP2ZPos.canceled += CancelPushInputP2;
                             break;
                         }
                         case 2:
                         {
-                            m_playerInputActions.PlayerActions.MoveNegZP3.performed += MoveSidewardsP3;
-                            m_playerInputActions.PlayerActions.MoveNegZP3.canceled += CancelMoveSidewardsP3;
-                            m_playerInputActions.PlayerActions.RotateNegZP3.performed += RotatePaddleP3;
-                            m_playerInputActions.PlayerActions.RotateNegZP3.canceled += CancelRotatePaddleP3;
-                            m_playerInputActions.PlayerActions.PushNegZP3.performed += PushInputP3;
-                            m_playerInputActions.PlayerActions.PushNegZP3.canceled += CancelPushInputP3;
+                            m_playerInputActions.PlayerActions.MoveP3ZNeg.performed += MoveSidewardsP3;
+                            m_playerInputActions.PlayerActions.MoveP3ZNeg.canceled += CancelMoveSidewardsP3;
+                            m_playerInputActions.PlayerActions.RotateP3ZNeg.performed += RotatePaddleP3;
+                            m_playerInputActions.PlayerActions.RotateP3ZNeg.canceled += CancelRotatePaddleP3;
+                            m_playerInputActions.PlayerActions.PushP3ZNeg.performed += PushInputP3;
+                            m_playerInputActions.PlayerActions.PushP3ZNeg.canceled += CancelPushInputP3;
                             break;
                         }
                         case 3:
                         {
-                            m_playerInputActions.PlayerActions.MovePosZP4.performed += MoveSidewardsP4;
-                            m_playerInputActions.PlayerActions.MovePosZP4.canceled += CancelMoveSidewardsP4;
-                            m_playerInputActions.PlayerActions.RotatePosZP4.performed += RotatePaddleP4;
-                            m_playerInputActions.PlayerActions.RotatePosZP4.canceled += CancelRotatePaddleP4;
-                            m_playerInputActions.PlayerActions.PushPosZP4.performed += PushInputP4;
-                            m_playerInputActions.PlayerActions.PushPosZP4.canceled += CancelPushInputP4;
+                            m_playerInputActions.PlayerActions.MoveP4ZPos.performed += MoveSidewardsP4;
+                            m_playerInputActions.PlayerActions.MoveP4ZPos.canceled += CancelMoveSidewardsP4;
+                            m_playerInputActions.PlayerActions.RotateP4ZPos.performed += RotatePaddleP4;
+                            m_playerInputActions.PlayerActions.RotateP4ZPos.canceled += CancelRotatePaddleP4;
+                            m_playerInputActions.PlayerActions.PushP4ZPos.performed += PushInputP4;
+                            m_playerInputActions.PlayerActions.PushP4ZPos.canceled += CancelPushInputP4;
                             break;
                         }
                     }
@@ -157,42 +157,42 @@ namespace ThreeDeePongProto.Shared.Player
                     {
                         case 0:
                         {
-                            m_playerInputActions.PlayerActions.MoveNegZP1.performed -= MoveSidewardsP1;
-                            m_playerInputActions.PlayerActions.MoveNegZP1.canceled -= CancelMoveSidewardsP1;
-                            m_playerInputActions.PlayerActions.RotateNegZP1.performed -= RotatePaddleP1;
-                            m_playerInputActions.PlayerActions.RotateNegZP1.canceled -= CancelRotatePaddleP1;
-                            m_playerInputActions.PlayerActions.PushNegZP1.performed -= PushInputP1;
-                            m_playerInputActions.PlayerActions.PushNegZP1.canceled -= CancelPushInputP1;
+                            m_playerInputActions.PlayerActions.MoveP1ZNeg.performed -= MoveSidewardsP1;
+                            m_playerInputActions.PlayerActions.MoveP1ZNeg.canceled -= CancelMoveSidewardsP1;
+                            m_playerInputActions.PlayerActions.RotateP1ZNeg.performed -= RotatePaddleP1;
+                            m_playerInputActions.PlayerActions.RotateP1ZNeg.canceled -= CancelRotatePaddleP1;
+                            m_playerInputActions.PlayerActions.PushP1ZNeg.performed -= PushInputP1;
+                            m_playerInputActions.PlayerActions.PushP1ZNeg.canceled -= CancelPushInputP1;
                             break;
                         }
                         case 1:
                         {
-                            m_playerInputActions.PlayerActions.MovePosZP2.performed -= MoveSidewardsP2;
-                            m_playerInputActions.PlayerActions.MovePosZP2.canceled -= CancelMoveSidewardsP2;
-                            m_playerInputActions.PlayerActions.RotatePosZP2.performed -= RotatePaddleP2;
-                            m_playerInputActions.PlayerActions.RotatePosZP2.canceled -= CancelRotatePaddleP2;
-                            m_playerInputActions.PlayerActions.PushPosZP2.performed -= PushInputP2;
-                            m_playerInputActions.PlayerActions.PushPosZP2.canceled -= CancelPushInputP2;
+                            m_playerInputActions.PlayerActions.MoveP2ZPos.performed -= MoveSidewardsP2;
+                            m_playerInputActions.PlayerActions.MoveP2ZPos.canceled -= CancelMoveSidewardsP2;
+                            m_playerInputActions.PlayerActions.RotateP2ZPos.performed -= RotatePaddleP2;
+                            m_playerInputActions.PlayerActions.RotateP2ZPos.canceled -= CancelRotatePaddleP2;
+                            m_playerInputActions.PlayerActions.PushP2ZPos.performed -= PushInputP2;
+                            m_playerInputActions.PlayerActions.PushP2ZPos.canceled -= CancelPushInputP2;
                             break;
                         }
                         case 2:
                         {
-                            m_playerInputActions.PlayerActions.MoveNegZP3.performed -= MoveSidewardsP3;
-                            m_playerInputActions.PlayerActions.MoveNegZP3.canceled -= CancelMoveSidewardsP3;
-                            m_playerInputActions.PlayerActions.RotateNegZP3.performed -= RotatePaddleP3;
-                            m_playerInputActions.PlayerActions.RotateNegZP3.canceled -= CancelRotatePaddleP3;
-                            m_playerInputActions.PlayerActions.PushNegZP3.performed -= PushInputP3;
-                            m_playerInputActions.PlayerActions.PushNegZP3.canceled -= CancelPushInputP3;
+                            m_playerInputActions.PlayerActions.MoveP3ZNeg.performed -= MoveSidewardsP3;
+                            m_playerInputActions.PlayerActions.MoveP3ZNeg.canceled -= CancelMoveSidewardsP3;
+                            m_playerInputActions.PlayerActions.RotateP3ZNeg.performed -= RotatePaddleP3;
+                            m_playerInputActions.PlayerActions.RotateP3ZNeg.canceled -= CancelRotatePaddleP3;
+                            m_playerInputActions.PlayerActions.PushP3ZNeg.performed -= PushInputP3;
+                            m_playerInputActions.PlayerActions.PushP3ZNeg.canceled -= CancelPushInputP3;
                             break;
                         }
                         case 3:
                         {
-                            m_playerInputActions.PlayerActions.MovePosZP4.performed -= MoveSidewardsP4;
-                            m_playerInputActions.PlayerActions.MovePosZP4.canceled -= CancelMoveSidewardsP4;
-                            m_playerInputActions.PlayerActions.RotatePosZP4.performed -= RotatePaddleP4;
-                            m_playerInputActions.PlayerActions.RotatePosZP4.canceled -= CancelRotatePaddleP4;
-                            m_playerInputActions.PlayerActions.PushPosZP4.performed -= PushInputP4;
-                            m_playerInputActions.PlayerActions.PushPosZP4.canceled -= CancelPushInputP4;
+                            m_playerInputActions.PlayerActions.MoveP4ZPos.performed -= MoveSidewardsP4;
+                            m_playerInputActions.PlayerActions.MoveP4ZPos.canceled -= CancelMoveSidewardsP4;
+                            m_playerInputActions.PlayerActions.RotateP4ZPos.performed -= RotatePaddleP4;
+                            m_playerInputActions.PlayerActions.RotateP4ZPos.canceled -= CancelRotatePaddleP4;
+                            m_playerInputActions.PlayerActions.PushP4ZPos.performed -= PushInputP4;
+                            m_playerInputActions.PlayerActions.PushP4ZPos.canceled -= CancelPushInputP4;
                             break;
                         }
                     }

@@ -207,7 +207,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 }
                 case m_gamePadScheme:
                 {
-                    string devicePath = StringManipulation.GetWordBetweenArgs(_controlPath, "<", ">");
+                    string devicePath = StringManipulation.GetCharacterBetweenArgs(_controlPath, "<", ">");
 #if UNITY_EDITOR
                     //Debug.Log($"Start-{devicePath}-End");
 #endif
@@ -453,7 +453,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                                 {
                                     if (binding.effectivePath == newBinding.effectivePath)
                                     {
-                                        string bindingName = StringManipulation.ToUpperFirstCharacter(binding.name);
+                                        string bindingName = StringManipulation.ToUpperCharacterAtIndex(binding.name);
 #if UNITY_EDITOR
                                         Debug.Log($"Duplicate binding {newBinding.effectivePath} found in own Composite Part {bindingName}. Canceling rebind.");
 #endif
@@ -472,7 +472,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                                         {
                                             case true:
                                             {
-                                                string bindingName = StringManipulation.ToUpperFirstCharacter(binding.name);
+                                                string bindingName = StringManipulation.ToUpperCharacterAtIndex(binding.name);
 #if UNITY_EDITOR
                                                 Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}, Composite Part {bindingName}. Canceling rebind.");
 #endif
@@ -505,7 +505,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                             //    Debug.Log($"PartOfComposite flag {binding.effectivePath} in {binding.action}.");
                             #endregion
 #endif
-                            if (StringManipulation.GetIndexAtStringEnd(binding.action) == StringManipulation.GetIndexAtStringEnd(newBinding.action))
+                            if (StringManipulation.GetIntBetweenArgs(binding.action, "P", "Z") == StringManipulation.GetIntBetweenArgs(newBinding.action, "P", "Z"))
                             {
                                 if (binding.action == newBinding.action)                                //If actions are the same.
                                 {
@@ -521,7 +521,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                                     {
                                         if (binding.effectivePath == newBinding.effectivePath)
                                         {
-                                            string bindingName = StringManipulation.ToUpperFirstCharacter(binding.name);
+                                            string bindingName = StringManipulation.ToUpperCharacterAtIndex(binding.name);
 #if UNITY_EDITOR
                                             Debug.Log($"Duplicate binding {newBinding.effectivePath} found in own Composite Part {bindingName}. Canceling rebind.");
 #endif
@@ -540,7 +540,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                                             {
                                                 case true:
                                                 {
-                                                    string bindingName = StringManipulation.ToUpperFirstCharacter(binding.name);
+                                                    string bindingName = StringManipulation.ToUpperCharacterAtIndex(binding.name);
 #if UNITY_EDITOR
                                                     Debug.Log($"Duplicate binding {newBinding.effectivePath} found in {binding.action}, Composite Part {bindingName}. Canceling rebind.");
 #endif
@@ -738,7 +738,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// <param name="_bindingIndex"></param>
         private static void SaveCompositeOverrides(InputAction _inputAction, int _bindingIndex)
         {
-            string deviceType = StringManipulation.GetWordBetweenArgs(_inputAction.bindings[_bindingIndex].effectivePath, "<", ">");
+            string deviceType = StringManipulation.GetCharacterBetweenArgs(_inputAction.bindings[_bindingIndex].effectivePath, "<", ">");
             Guid indexGuid = _inputAction.bindings[_bindingIndex].id;
 
             switch (deviceType)
@@ -832,9 +832,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                     foreach (var entry in m_keyboardRebindDict)
                     {
                         uniqueGuid = Guid.Parse(entry.Key);
-                        //actionMap = StringManipulation.GetWordBetweenArgs(entry.Value, "[", "]");
-                        bindingIndex = int.Parse(StringManipulation.GetWordBetweenArgs(entry.Value, "]", ".")); //Dict Value directly into int.
-                        overridePath = StringManipulation.GetWordBetweenArgs(entry.Value, ".", "!");
+                        //actionMap = StringManipulation.GetCharacterBetweenArgs(entry.Value, "[", "]");
+                        bindingIndex = int.Parse(StringManipulation.GetCharacterBetweenArgs(entry.Value, "]", ".")); //Dict Value directly into int.
+                        overridePath = StringManipulation.GetCharacterBetweenArgs(entry.Value, ".", "!");
 
                         switch (uniqueGuid == inputAction.bindings[_bindingIndex].id)
                         {
@@ -863,9 +863,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                     foreach (var entry in m_gamepadRebindDict)
                     {
                         uniqueGuid = Guid.Parse(entry.Key);
-                        //actionMap = StringManipulation.GetWordBetweenArgs(entry.Value, "[", "]");
-                        bindingIndex = int.Parse(StringManipulation.GetWordBetweenArgs(entry.Value, "]", ".")); //Dict Value directly into int.
-                        overridePath = StringManipulation.GetWordBetweenArgs(entry.Value, ".", "!");
+                        //actionMap = StringManipulation.GetCharacterBetweenArgs(entry.Value, "[", "]");
+                        bindingIndex = int.Parse(StringManipulation.GetCharacterBetweenArgs(entry.Value, "]", ".")); //Dict Value directly into int.
+                        overridePath = StringManipulation.GetCharacterBetweenArgs(entry.Value, ".", "!");
 
                         switch (uniqueGuid == inputAction.bindings[_bindingIndex].id)
                         {

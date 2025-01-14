@@ -39,6 +39,11 @@ namespace ThreeDeePongProto.Shared.Player
         internal bool m_pushPlayer = false;
         internal bool m_tempBlocked = false;
 
+        private void Awake()
+        {
+            SetPlayerRotation(m_playerController.m_playerId);
+        }
+
         private void OnEnable()
         {
             SetPlayerOrientation(m_playerController.m_rigidbody.transform.position.z < 0);  //PlayerController gets Rb in 'Awake()'.
@@ -105,8 +110,8 @@ namespace ThreeDeePongProto.Shared.Player
                         break;
                     case true:
                     {
-                        MovePaddle();
-                        RotatePaddle();
+                        Move();
+                        Rotate();
                         break;
                     }
                 }
@@ -114,6 +119,18 @@ namespace ThreeDeePongProto.Shared.Player
         }
 
         #region Custom-Methods
+
+        /// <summary>
+        /// Rotations of top parent Transform and Rigidbody need to be adjusted to move correct, depending on positive or negative Z-values.
+        /// </summary>
+        /// <param name="_playerId"></param>
+        private void SetPlayerRotation(int _playerId)
+        {
+            Quaternion playerRotation = (_playerId % 2 == 0) ? Quaternion.Euler(0, 0, 0) : Quaternion.Euler(0, 180, 0);
+            m_playerController.transform.rotation = playerRotation;
+            m_playerController.m_rigidbody.transform.rotation = playerRotation;
+        }
+
         private void SetPlayerOrientation(bool _PosZIsNegative)
         {
             switch (_PosZIsNegative)
@@ -136,7 +153,7 @@ namespace ThreeDeePongProto.Shared.Player
             m_playerController.m_rigidbody.transform.localRotation = m_paddleStartRotation;
         }
 
-        private void MovePaddle()
+        private void Move()
         {
             var xInvert = m_playerController.m_controlUIStates.InvertXAxis ? -1 : 1;    //Value from Scriptable in the Inspector.
 
@@ -177,7 +194,7 @@ namespace ThreeDeePongProto.Shared.Player
             m_playerController.m_rigidbody.MovePosition(m_rbPosition + m_moveVector);
         }
 
-        private void RotatePaddle()
+        private void Rotate()
         {
             var yInvert = m_playerController.m_controlUIStates.InvertYAxis ? -1 : 1;    //Value from Scriptable in the Inspector.
 

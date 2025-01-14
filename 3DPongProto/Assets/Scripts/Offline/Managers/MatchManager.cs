@@ -159,7 +159,7 @@ namespace ThreeDeePongProto.Shared.Managers
             m_inputActions.Enable();
             m_inputActions.PlayerActions.ToggleGameMenu.performed += PauseAndTimeScale;
 
-            InstantiatePlayer(InstantiateContext.Start);
+            InstantiatePlayer();
 
             //2. Allow the Cameras to add themselves in the AvailableCamera-List in the CameraManager.
             AddCamerasNow?.Invoke();
@@ -167,43 +167,29 @@ namespace ThreeDeePongProto.Shared.Managers
         }
 
         #region Custom-Methods
-        private void InstantiatePlayer(InstantiateContext _instantiateContext)
+        private void InstantiatePlayer()
         {
             uint setPlayerByEnum = (uint)m_matchUIStates.EPlayerAmount;     //Scriptable Object.
 
-            switch (_instantiateContext)
+            //1. Instantiate all Players related to the PlayerCount in game.
+            for (int i = 0; i < setPlayerByEnum; i++)
             {
-                case InstantiateContext.Start:
-                {
-                    //1. Instantiate all Players related to the PlayerCount in game.
-                    for (int i = 0; i < setPlayerByEnum; i++)
-                    {
-                        //'playerRotation i == playerIndex from the scriptable object.
-                        Quaternion playerRotation = (i % 2 == 0) ? Quaternion.Euler(0, 0, 0) : Quaternion.Euler(0, 180, 0);
-                        Transform spawnParent = m_prefabParent;
-                        InputDevice deviceToPair = (Gamepad.all.Count > i) ? Gamepad.all[i] : Keyboard.current;
+                Transform spawnParent = m_prefabParent;
+                InputDevice deviceToPair = (Gamepad.all.Count > i) ? Gamepad.all[i] : Keyboard.current;
 
-                        GameObject playerAvatar = Instantiate(m_matchValues.PlayerData[i].Prefab, Vector3.zero, playerRotation, spawnParent);
+                //'Quaternion playerRotation' setup moved to 'PlayerMovement.cs', to separate it from the instantiation.
+                GameObject playerAvatar = Instantiate(m_matchValues.PlayerData[i].Prefab, spawnParent);
 
-                        //PlayerInput playerInput = playerAvatar.GetComponent<PlayerInput>();
-                        //if (playerInput == null)
-                        //{
-                        //    playerInput = playerAvatar.AddComponent<PlayerInput>();
-                        //    playerInput.actions = Resources.Load<InputActionAsset>(m_targetData); // Load Input Actions
-                        //    playerInput.defaultControlScheme = "Gamepad";
-                        //    playerInput.neverAutoSwitchControlSchemes = false; // Allow switching
-                        //}
+                //PlayerInput playerInput = playerAvatar.GetComponent<PlayerInput>();
+                //if (playerInput == null)
+                //{
+                //    playerInput = playerAvatar.AddComponent<PlayerInput>();
+                //    playerInput.actions = Resources.Load<InputActionAsset>(m_targetData); // Load Input Actions
+                //    playerInput.defaultControlScheme = "Gamepad";
+                //    playerInput.neverAutoSwitchControlSchemes = false; // Allow switching
+                //}
 
-                        //Debug.Log($"Player {i + 1} instantiated.");
-                    }
-
-                    break;
-                }
-                default:
-                {
-                    Debug.Log("Case not added, yet.");
-                    break;
-                }
+                //Debug.Log($"Player {i + 1} instantiated.");
             }
         }
 
