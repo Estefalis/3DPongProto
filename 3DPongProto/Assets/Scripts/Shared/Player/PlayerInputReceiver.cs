@@ -10,429 +10,170 @@ namespace ThreeDeePongProto.Shared.Player
         private PlayerInputActions m_playerInputActions;
         [SerializeField] internal PlayerController m_playerController;
 
-        //private PlayerInput m_playerInput;
-        //private PlayerInput[] m_allPlayerInputs = new PlayerInput[4];
+        private Vector2 m_currentRotationInput; //Save currentRotationInput.
 
-        private Vector2 m_sideMoveVectorP1, m_sideMoveVectorP2, m_sideMoveVectorP3, m_sideMoveVectorP4;
-        private Vector2 m_axisRotation1, m_axisRotation2, m_axisRotation3, m_axisRotation4;
+        //private Vector2 m_sideMoveVector;
+        //private bool m_isPushing;
+
+        private void Awake()
+        {
+            m_playerInputActions = new PlayerInputActions();
+        }
+
+        private void OnEnable()
+        {
+            var playerInput = m_playerController.GetComponent<PlayerInput>();
+            playerInput.onActionTriggered += OnActionTriggered;
+            //m_playerInputActions.Enable();
+            //BindPlayerInputs();
+        }
 
         private void OnDisable()
         {
-            SetActionMaps(m_playerController.m_playerId, false);
-
-            InputSystem.onDeviceChange -= OnDeviceChange;
-            MenuManager.BackToGame -= ButtonClosesMenu;
-            MenuManager.RestartGame -= ButtonClosesMenu;
+            var playerInput = m_playerController.GetComponent<PlayerInput>();
+            playerInput.onActionTriggered -= OnActionTriggered;
+            //m_playerInputActions.Disable();
+            //UnbindPlayerInputs();
         }
 
-        /// <summary>
-        /// PlayerController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the InputManager into 'Awake()', to prevent Exceptions.
-        /// </summary>
-        private void Start()
+        private void Update()
         {
-            m_playerInputActions = InputManager.m_PlayerInputActions;
-            SetActionMaps(m_playerController.m_playerId, true);
-
-            //for (int i = 0; i < m_allPlayerInputs.Length; i++)
+            //Vector2 rotationInput = m_playerInputActions.PlayerActions.Rotate.ReadValue<Vector2>();
+            //if (rotationInput != Vector2.zero)
             //{
-            //    if (m_playerController.m_playerId == i) //'m_playerInput.playerIndex' equals 'm_playerController.m_playerId'.
-            //    {
-            //        m_allPlayerInputs[i] = gameObject.GetComponentInParent<PlayerInput>();
-
-            //        if (m_playerInput == null)
-            //        {
-            //            var parent = gameObject.transform.parent.parent;
-            //            m_allPlayerInputs[i] = parent.gameObject.AddComponent<PlayerInput>();
-            //            //var addedPlayerInput = gameObject.AddComponent<PlayerInput>();
-            //            //m_allPlayerInputs[i] = addedPlayerInput;
-            //            m_allPlayerInputs[i].actions = m_playerInputActions.asset;
-            //            m_allPlayerInputs[i].neverAutoSwitchControlSchemes = false;
-            //            m_allPlayerInputs[i].notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
-            //        }
-            //        //m_allPlayerInputs[m_playerController.m_playerId] = m_playerInput;
-            //        //Debug.Log($"{m_playerInput.playerIndex} - {m_playerController.m_playerId} - {i} - {m_allPlayerInputs[i].name}");
-            //    }
+            //    //if (_playerId == m_playerController.m_playerId) // Ensure correct player
+            //    //{
+            //    m_playerController.m_playerMovement.SetInputVector(rotationInput, m_playerController.m_playerId, true);
             //}
-
-            InputSystem.onDeviceChange += OnDeviceChange;
-            MenuManager.BackToGame += ButtonClosesMenu;
-            MenuManager.RestartGame += ButtonClosesMenu;
+            ////}
         }
 
         private void FixedUpdate()
         {
-            switch (m_playerController.m_playerId)
+            // Rotation kontinuierlich anwenden
+            if (m_currentRotationInput != Vector2.zero)
             {
-                case 0:
-                {
-                    m_playerController.m_playerMovement.m_sideMoveVector = m_sideMoveVectorP1;
-                    m_playerController.m_playerMovement.m_axisRotation = m_axisRotation1;
+                m_playerController.m_playerMovement.SetInputVector(m_currentRotationInput, m_playerController.m_playerId, true);
+            }
+        }
+
+        #region Removed_Methods_before_PlayerInput_Component
+        //private void BindPlayerInputs()
+        //{
+        //    // Bind Move input (all players)
+        //    m_playerInputActions.PlayerActions.Move.performed += _callbackContext => HandleMove(_callbackContext, m_playerController.m_playerId);
+        //    m_playerInputActions.PlayerActions.Move.canceled += _callbackContext => HandleMoveCancel(_callbackContext, m_playerController.m_playerId);
+
+        //    // Bind Push input (all players)
+        //    m_playerInputActions.PlayerActions.Push.performed += _callbackContext => HandlePush(_callbackContext, m_playerController.m_playerId);
+        //    m_playerInputActions.PlayerActions.Push.canceled += _callbackContext => HandlePushCancel(_callbackContext, m_playerController.m_playerId);
+        //}
+
+        //private void UnbindPlayerInputs()
+        //{
+        //    // Unbind Move input
+        //    m_playerInputActions.PlayerActions.Move.performed -= _callbackContext => HandleMove(_callbackContext, m_playerController.m_playerId);
+        //    m_playerInputActions.PlayerActions.Move.canceled -= _callbackContext => HandleMoveCancel(_callbackContext, m_playerController.m_playerId);
+
+        //    // Unbind Push input
+        //    m_playerInputActions.PlayerActions.Push.performed -= _callbackContext => HandlePush(_callbackContext, m_playerController.m_playerId);
+        //    m_playerInputActions.PlayerActions.Push.canceled -= _callbackContext => HandlePushCancel(_callbackContext, m_playerController.m_playerId);
+        //}
+
+        //private void HandleMove(InputAction.CallbackContext _callbackContext, int _playerId)
+        //{
+        //    if (_playerId == m_playerController.m_playerId) // Ensure correct player
+        //    {
+        //        m_sideMoveVector = _callbackContext.ReadValue<Vector2>();
+        //        m_playerController.m_playerMovement.SetInputVector(m_sideMoveVector, m_playerController.m_playerId, false);
+        //    }
+        //}
+
+        //private void HandleMoveCancel(InputAction.CallbackContext _callbackContext, int _playerId)
+        //{
+        //    if (_playerId == m_playerController.m_playerId) // Ensure correct player
+        //    {
+        //        m_sideMoveVector = Vector2.zero;
+        //        m_playerController.m_playerMovement.SetInputVector(m_sideMoveVector, m_playerController.m_playerId, false);
+        //    }
+        //}
+
+        //private void HandlePush(InputAction.CallbackContext _callbackContext, int _playerId)
+        //{
+        //    if (_playerId == m_playerController.m_playerId) // Ensure correct player
+        //    {
+        //        bool isPushing = _callbackContext.ReadValue<float>() > 0; // Push-Button pressed?
+        //        m_playerController.m_playerMovement.PushProgress(isPushing);
+        //    }
+        //}
+
+        //private void HandlePushCancel(InputAction.CallbackContext _callbackContext, int _playerId)
+        //{
+        //    if (_playerId == m_playerController.m_playerId) // Ensure correct player
+        //    {
+        //        m_isPushing = false;
+        //        m_playerController.m_playerMovement.PushProgress(m_isPushing);
+        //    }
+        //}
+        #endregion
+
+        #region PlayerInput_Component
+        // Verarbeite alle Aktionen zentral
+        private void OnActionTriggered(InputAction.CallbackContext _context)
+        {
+            // Identifiziere die Aktion anhand ihres Namens
+            switch (_context.action.name)
+            {
+                case "Move":
+                    HandleMove(_context);
                     break;
-                }
-                case 1:
-                {
-                    m_playerController.m_playerMovement.m_sideMoveVector = m_sideMoveVectorP2;
-                    m_playerController.m_playerMovement.m_axisRotation = m_axisRotation2;
+
+                case "Rotate":
+                    HandleRotate(_context);
                     break;
-                }
-                case 2:
-                {
-                    m_playerController.m_playerMovement.m_sideMoveVector = m_sideMoveVectorP3;
-                    m_playerController.m_playerMovement.m_axisRotation = m_axisRotation3;
+
+                case "Push":
+                    HandlePush(_context);
                     break;
-                }
-                case 3:
-                {
-                    m_playerController.m_playerMovement.m_sideMoveVector = m_sideMoveVectorP4;
-                    m_playerController.m_playerMovement.m_axisRotation = m_axisRotation4;
-                    break;
-                }
+
                 default:
+                    Debug.LogWarning($"Unbekannte Aktion: {_context.action.name}");
                     break;
             }
         }
 
-        #region Custom-Methods
-        private void SetActionMaps(int _ownPlayerID, bool _onOff)
+        // Verarbeitet die "Move"-Aktion
+        private void HandleMove(InputAction.CallbackContext _context)
         {
-            switch (_onOff)
+            Vector2 moveInput = _context.ReadValue<Vector2>();
+            m_playerController.m_playerMovement.SetInputVector(moveInput, m_playerController.m_playerId, false);
+        }
+
+        // Verarbeitet die "Rotate"-Aktion
+        private void HandleRotate(InputAction.CallbackContext _context)
+        {
+            if (_context.phase == InputActionPhase.Performed || _context.phase == InputActionPhase.Started)
             {
-                case true:
-                {
-                    m_playerInputActions.Enable();
-                    m_playerInputActions.PlayerActions.ToggleGameMenu.performed += OnMenuOpening;
-
-                    switch (_ownPlayerID)
-                    {
-                        case 0:
-                        {
-                            m_playerInputActions.PlayerActions.MoveP1ZNeg.performed += MoveSidewardsP1;
-                            m_playerInputActions.PlayerActions.MoveP1ZNeg.canceled += CancelMoveSidewardsP1;
-                            m_playerInputActions.PlayerActions.RotateP1ZNeg.performed += RotatePaddleP1;
-                            m_playerInputActions.PlayerActions.RotateP1ZNeg.canceled += CancelRotatePaddleP1;
-                            m_playerInputActions.PlayerActions.PushP1ZNeg.performed += PushInputP1;
-                            m_playerInputActions.PlayerActions.PushP1ZNeg.canceled += CancelPushInputP1;
-                            break;
-                        }
-                        case 1:
-                        {
-                            m_playerInputActions.PlayerActions.MoveP2ZPos.performed += MoveSidewardsP2;
-                            m_playerInputActions.PlayerActions.MoveP2ZPos.canceled += CancelMoveSidewardsP2;
-                            m_playerInputActions.PlayerActions.RotateP2ZPos.performed += RotatePaddleP2;
-                            m_playerInputActions.PlayerActions.RotateP2ZPos.canceled += CancelRotatePaddleP2;
-                            m_playerInputActions.PlayerActions.PushP2ZPos.performed += PushInputP2;
-                            m_playerInputActions.PlayerActions.PushP2ZPos.canceled += CancelPushInputP2;
-                            break;
-                        }
-                        case 2:
-                        {
-                            m_playerInputActions.PlayerActions.MoveP3ZNeg.performed += MoveSidewardsP3;
-                            m_playerInputActions.PlayerActions.MoveP3ZNeg.canceled += CancelMoveSidewardsP3;
-                            m_playerInputActions.PlayerActions.RotateP3ZNeg.performed += RotatePaddleP3;
-                            m_playerInputActions.PlayerActions.RotateP3ZNeg.canceled += CancelRotatePaddleP3;
-                            m_playerInputActions.PlayerActions.PushP3ZNeg.performed += PushInputP3;
-                            m_playerInputActions.PlayerActions.PushP3ZNeg.canceled += CancelPushInputP3;
-                            break;
-                        }
-                        case 3:
-                        {
-                            m_playerInputActions.PlayerActions.MoveP4ZPos.performed += MoveSidewardsP4;
-                            m_playerInputActions.PlayerActions.MoveP4ZPos.canceled += CancelMoveSidewardsP4;
-                            m_playerInputActions.PlayerActions.RotateP4ZPos.performed += RotatePaddleP4;
-                            m_playerInputActions.PlayerActions.RotateP4ZPos.canceled += CancelRotatePaddleP4;
-                            m_playerInputActions.PlayerActions.PushP4ZPos.performed += PushInputP4;
-                            m_playerInputActions.PlayerActions.PushP4ZPos.canceled += CancelPushInputP4;
-                            break;
-                        }
-                    }
-
-                    break;
-                }
-                case false:
-                {
-                    m_playerInputActions.Disable();
-                    m_playerInputActions.PlayerActions.ToggleGameMenu.performed -= OnMenuOpening;
-
-                    switch (_ownPlayerID)
-                    {
-                        case 0:
-                        {
-                            m_playerInputActions.PlayerActions.MoveP1ZNeg.performed -= MoveSidewardsP1;
-                            m_playerInputActions.PlayerActions.MoveP1ZNeg.canceled -= CancelMoveSidewardsP1;
-                            m_playerInputActions.PlayerActions.RotateP1ZNeg.performed -= RotatePaddleP1;
-                            m_playerInputActions.PlayerActions.RotateP1ZNeg.canceled -= CancelRotatePaddleP1;
-                            m_playerInputActions.PlayerActions.PushP1ZNeg.performed -= PushInputP1;
-                            m_playerInputActions.PlayerActions.PushP1ZNeg.canceled -= CancelPushInputP1;
-                            break;
-                        }
-                        case 1:
-                        {
-                            m_playerInputActions.PlayerActions.MoveP2ZPos.performed -= MoveSidewardsP2;
-                            m_playerInputActions.PlayerActions.MoveP2ZPos.canceled -= CancelMoveSidewardsP2;
-                            m_playerInputActions.PlayerActions.RotateP2ZPos.performed -= RotatePaddleP2;
-                            m_playerInputActions.PlayerActions.RotateP2ZPos.canceled -= CancelRotatePaddleP2;
-                            m_playerInputActions.PlayerActions.PushP2ZPos.performed -= PushInputP2;
-                            m_playerInputActions.PlayerActions.PushP2ZPos.canceled -= CancelPushInputP2;
-                            break;
-                        }
-                        case 2:
-                        {
-                            m_playerInputActions.PlayerActions.MoveP3ZNeg.performed -= MoveSidewardsP3;
-                            m_playerInputActions.PlayerActions.MoveP3ZNeg.canceled -= CancelMoveSidewardsP3;
-                            m_playerInputActions.PlayerActions.RotateP3ZNeg.performed -= RotatePaddleP3;
-                            m_playerInputActions.PlayerActions.RotateP3ZNeg.canceled -= CancelRotatePaddleP3;
-                            m_playerInputActions.PlayerActions.PushP3ZNeg.performed -= PushInputP3;
-                            m_playerInputActions.PlayerActions.PushP3ZNeg.canceled -= CancelPushInputP3;
-                            break;
-                        }
-                        case 3:
-                        {
-                            m_playerInputActions.PlayerActions.MoveP4ZPos.performed -= MoveSidewardsP4;
-                            m_playerInputActions.PlayerActions.MoveP4ZPos.canceled -= CancelMoveSidewardsP4;
-                            m_playerInputActions.PlayerActions.RotateP4ZPos.performed -= RotatePaddleP4;
-                            m_playerInputActions.PlayerActions.RotateP4ZPos.canceled -= CancelRotatePaddleP4;
-                            m_playerInputActions.PlayerActions.PushP4ZPos.performed -= PushInputP4;
-                            m_playerInputActions.PlayerActions.PushP4ZPos.canceled -= CancelPushInputP4;
-                            break;
-                        }
-                    }
-
-                    break;
-                }
+                m_currentRotationInput = _context.ReadValue<Vector2>(); // Eingabe speichern
+            }
+            else if (_context.phase == InputActionPhase.Canceled)
+            {
+                m_currentRotationInput = Vector2.zero; // Eingabe zurücksetzen, wenn Taste losgelassen wird
             }
         }
 
-        private void ButtonClosesMenu()
+        // Verarbeitet die "Push"-Aktion
+        private void HandlePush(InputAction.CallbackContext _context)
         {
-            m_playerInputActions.Enable();
+            if (_context.performed) // Button gedrückt
+            {
+                m_playerController.m_playerMovement.PushProgress(true);
+            }
+            else if (_context.canceled) // Button losgelassen
+            {
+                m_playerController.m_playerMovement.PushProgress(false);
+            }
         }
         #endregion
-
-        #region CallbackContext-Methods
-        /// <summary>
-        /// Use 'var _control = _callbackContext._control;' to get the _control that triggered the action. 
-        /// Receive 'var currentControlScheme = GetActiveControlScheme(_control);' to display the triggered controlScheme and action part that triggered the change.
-        /// Example: Debug.Log($"Control Scheme: {currentControlScheme} (Triggered by: {_control.displayName}).");
-        /// </summary>
-        /// <param name="_control"></param>
-        /// <returns></returns>
-        private string GetActiveControlScheme(InputControl _control)
-        {
-            foreach (var scheme in m_playerInputActions.controlSchemes)
-            {
-                //Check if the '_control' belongs to this scheme.
-                if (scheme.SupportsDevice(_control.device))     //'_control.device' contains 'device' and 'deviceId' to compare devices.
-                {
-                    return scheme.name; //Return the name of the matched scheme.
-                }
-            }
-
-            return "Unknown Control Scheme";
-        }
-
-        private void OnMenuOpening(InputAction.CallbackContext _callbackContext)
-        {
-            //if (m_playerController.m_playerId == 0)     //Equal to Master on Online Games?
-            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.UserInterface);
-            m_playerInputActions.Disable();  //Paddles can still be moved, if 'm_playerInputActions' here isn't disabled.
-            m_playerController.m_playerMovement.StopPushCoroutine();
-        }
-
-        #region Player1
-        private void MoveSidewardsP1(InputAction.CallbackContext _callbackContext)
-        {
-            m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerId;
-            m_sideMoveVectorP1 = _callbackContext.ReadValue<Vector2>();
-        }
-
-        private void CancelMoveSidewardsP1(InputAction.CallbackContext _callbackContext)
-        {
-            m_sideMoveVectorP1 = Vector2.zero;
-        }
-
-        private void RotatePaddleP1(InputAction.CallbackContext _callbackContext)
-        {
-            m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerId;
-            m_axisRotation1 = _callbackContext.ReadValue<Vector2>();
-        }
-
-        private void CancelRotatePaddleP1(InputAction.CallbackContext __callbackContext)
-        {
-            m_axisRotation1 = Vector2.zero;
-        }
-
-        private void PushInputP1(InputAction.CallbackContext _callbackContext)
-        {
-            if (!m_playerController.m_playerMovement.m_blockPushInput)
-            {
-                if (!m_playerController.m_playerMovement.m_tempBlocked)
-                {
-                    //'ReadValueAsButton()' is only available inside these CallbackContext-Methods.
-                    m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerId;
-                    m_playerController.m_playerMovement.m_pushPlayer = _callbackContext.ReadValueAsButton();
-                }
-            }
-        }
-
-        private void CancelPushInputP1(InputAction.CallbackContext _callbackContext)
-        {
-            m_playerController.m_playerMovement.m_pushPlayer = false;
-        }
-        #endregion
-
-        #region Player2
-        private void MoveSidewardsP2(InputAction.CallbackContext _callbackContext)
-        {
-            m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerId;
-            m_sideMoveVectorP2 = _callbackContext.ReadValue<Vector2>();
-        }
-
-        private void CancelMoveSidewardsP2(InputAction.CallbackContext _callbackContext)
-        {
-            m_sideMoveVectorP2 = Vector2.zero;
-        }
-
-        private void RotatePaddleP2(InputAction.CallbackContext _callbackContext)
-        {
-            m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerId;
-            m_axisRotation2 = _callbackContext.ReadValue<Vector2>();
-        }
-
-        private void CancelRotatePaddleP2(InputAction.CallbackContext _callbackContext)
-        {
-            m_axisRotation2 = Vector2.zero;
-        }
-
-        private void PushInputP2(InputAction.CallbackContext _callbackContext)
-        {
-            if (!m_playerController.m_playerMovement.m_blockPushInput)
-            {
-                if (!m_playerController.m_playerMovement.m_tempBlocked)
-                {
-                    //'ReadValueAsButton()' is only available inside these CallbackContext-Methods.
-                    m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerId;
-                    m_playerController.m_playerMovement.m_pushPlayer = _callbackContext.ReadValueAsButton();
-                }
-            }
-        }
-
-        private void CancelPushInputP2(InputAction.CallbackContext _callbackContext)
-        {
-            m_playerController.m_playerMovement.m_pushPlayer = false;
-        }
-        #endregion
-
-        #region Player3
-        private void MoveSidewardsP3(InputAction.CallbackContext _callbackContext)
-        {
-            m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerId;
-            m_sideMoveVectorP3 = _callbackContext.ReadValue<Vector2>();
-        }
-
-        private void CancelMoveSidewardsP3(InputAction.CallbackContext _callbackContext)
-        {
-            m_sideMoveVectorP3 = Vector2.zero;
-        }
-
-        private void RotatePaddleP3(InputAction.CallbackContext _callbackContext)
-        {
-            m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerId;
-            m_axisRotation3 = _callbackContext.ReadValue<Vector2>();
-        }
-
-        private void CancelRotatePaddleP3(InputAction.CallbackContext _callbackContext)
-        {
-            m_axisRotation3 = Vector2.zero;
-        }
-
-        private void PushInputP3(InputAction.CallbackContext _callbackContext)
-        {
-            if (!m_playerController.m_playerMovement.m_blockPushInput)
-            {
-                if (!m_playerController.m_playerMovement.m_tempBlocked)
-                {
-                    //'ReadValueAsButton()' is only available inside these CallbackContext-Methods.
-                    m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerId;
-                    m_playerController.m_playerMovement.m_pushPlayer = _callbackContext.ReadValueAsButton();
-                }
-            }
-        }
-
-        private void CancelPushInputP3(InputAction.CallbackContext _callbackContext)
-        {
-            m_playerController.m_playerMovement.m_pushPlayer = false;
-        }
-        #endregion
-
-        #region Player4
-        private void MoveSidewardsP4(InputAction.CallbackContext _callbackContext)
-        {
-            m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerId;
-            m_sideMoveVectorP4 = _callbackContext.ReadValue<Vector2>();
-        }
-
-        private void CancelMoveSidewardsP4(InputAction.CallbackContext _callbackContext)
-        {
-            m_sideMoveVectorP4 = Vector2.zero;
-        }
-
-        private void RotatePaddleP4(InputAction.CallbackContext _callbackContext)
-        {
-            m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerId;
-            m_axisRotation4 = _callbackContext.ReadValue<Vector2>();
-        }
-
-        private void CancelRotatePaddleP4(InputAction.CallbackContext _callbackContext)
-        {
-            m_axisRotation4 = Vector2.zero;
-        }
-
-        private void PushInputP4(InputAction.CallbackContext _callbackContext)
-        {
-            if (!m_playerController.m_playerMovement.m_blockPushInput)
-            {
-                if (!m_playerController.m_playerMovement.m_tempBlocked)
-                {
-                    //'ReadValueAsButton()' is only available inside these CallbackContext-Methods.
-                    m_playerController.m_playerMovement.m_receivedPlayerId = m_playerController.m_playerId;
-                    m_playerController.m_playerMovement.m_pushPlayer = _callbackContext.ReadValueAsButton();
-                }
-            }
-        }
-
-        private void CancelPushInputP4(InputAction.CallbackContext _callbackContext)
-        {
-            m_playerController.m_playerMovement.m_pushPlayer = false;
-        }
-        #endregion
-        #endregion
-
-        private void OnDeviceChange(InputDevice _inputDevice, InputDeviceChange _deviceChange)
-        {
-            if (m_playerController.m_playerId != 0)
-                return;
-            switch (_deviceChange)
-            {
-                case InputDeviceChange.Added:
-                    //New Device.
-                    Debug.Log($"{_inputDevice} got added.");
-                    break;
-                case InputDeviceChange.Removed:
-                    //Remove from Input System entirely; by default, Devices stay in the system once discovered.
-                    Debug.Log($"{_inputDevice} got removed.");
-                    break;
-                case InputDeviceChange.Disconnected:
-                    //If this is happening, activate some boolean that will tell the game that a controller is now "missing".
-                    Debug.Log($"{_inputDevice} got disconnected.");
-                    break;
-                case InputDeviceChange.Reconnected:
-                    //Plugged back in.
-                    Debug.Log($"{_inputDevice} got reconnected.");
-                    break;
-                default:
-                    //Always includes a default case for when a unused case is being called. Leave it empty.
-                    break;
-            }
-        }
     }
 }

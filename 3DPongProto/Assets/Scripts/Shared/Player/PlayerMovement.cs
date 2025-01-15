@@ -1,124 +1,71 @@
-using System;
 using System.Collections;
-using ThreeDeePongProto.Offline.UI.Menu;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace ThreeDeePongProto.Shared.Player
 {
     internal class PlayerMovement : MonoBehaviour
     {
-        [SerializeField] internal PlayerController m_playerController;
+        [SerializeField] private PlayerController m_playerController;
+        [SerializeField] private Rigidbody m_rigidbody;
 
-        [Header("Player Details")]
-        [SerializeField] private float m_maxRotationAngle;
-        [SerializeField, Range(1, 20)] protected float m_movementSpeed = 10.0f;
-        [SerializeField, Range(1, 5)] protected float m_rotationSpeed = 2.5f;
-
-        [Header("Forward-Movement")]
-        //PushDistance for 'Mathf.MoveTowards'.
-        [SerializeField] protected float m_lerpDuration = 1.5f;
-        [SerializeField] protected float m_delayRetreat;
-        [SerializeField] protected float m_delayRepetition;
-        [SerializeField] protected bool m_enablePushDelay = false;
-        [SerializeField] internal bool m_blockPushInput;
-
-        internal int m_receivedPlayerId;
-        private readonly float m_baseRotationSpeed = 100;
+        [Header("Movement")]
+        [SerializeField, Range(1.0f, 20.0f)] private float m_moveSpeed = 10.0f;
         private float m_maxSideMovement;
-        private float m_paddleWidthAdjustment;
-        private Quaternion m_paddleStartRotation;
-        internal Vector2 m_sideMoveVector;
-        private Vector3 m_moveVector;
-        internal Vector2 m_axisRotation;
-        private Vector3 m_rotateVector;
-        private Quaternion m_deltaRotation;
         private Vector3 m_rbPosition;
-        private IEnumerator m_paddlePushCoroutine;
+        private Vector3 m_moveVector;
 
-        internal bool m_pushPlayer = false;
-        internal bool m_tempBlocked = false;
+        [Header("Rotation")]
+        [SerializeField, Range(1.0f, 5.0f)] protected float m_rotationSpeed = 2.5f;
+        [SerializeField] private float m_maxRotationAngle = 45.0f; // Maximum angle (±45 degrees)
+        private readonly float m_baseRotationSpeed = 100.0f;
+        internal Vector2 m_rotationVector;
+        private Quaternion m_deltaRotation;
+
+        [Header("Push")]
+        [SerializeField, Range(1.0f, 20.0f)] private float m_pushSpeed = 10.0f;
+        [SerializeField, Range(1.0f, 30.0f)] private float m_retreatSpeed = 15.0f;
+        [SerializeField, Range(0.5f, 2.0f)] private float m_pushDistance = 1.0f;
+
+        private int m_receivedID;
+        private bool m_isPushing;
+        private float m_currentPushProgress;
+        private float m_paddleWidthAdjustment;
+
+        private Vector3 m_initialPosition;
 
         private void Awake()
         {
             SetPlayerRotation(m_playerController.m_playerId);
         }
 
-        private void OnEnable()
-        {
-            SetPlayerOrientation(m_playerController.m_rigidbody.transform.position.z < 0);  //PlayerController gets Rb in 'Awake()'.
-            m_paddlePushCoroutine = PushPaddle(m_lerpDuration);
-        }
-
-        private void OnDisable()
-        {
-            Ball.HitGoalOne -= LetsResetPaddleRotation;
-            Ball.HitGoalTwo -= LetsResetPaddleRotation;
-
-            MenuManager.BackToGame -= OnMenuClosing;
-            MenuManager.RestartGame -= OnMenuClosing;
-
-            StopPushCoroutine();
-        }
-
         private void Start()
         {
-            Ball.HitGoalOne += LetsResetPaddleRotation;
-            Ball.HitGoalTwo += LetsResetPaddleRotation;
-
-            MenuManager.BackToGame += OnMenuClosing;
-            MenuManager.RestartGame += OnMenuClosing;
-
-            ReStartPushCoroutine();
-            ClampMoveRange();   //PlayerController gets Variables in (Awake()'.
+            m_initialPosition = transform.localPosition;
         }
 
-        private void Update()
+        private void LateUpdate()   //Either in Update() or LateUpdate()!!!
         {
             ClampMoveRange();
-            ClampRotationAngle();
-
-            //TODO: MUST be removed after testing is completed!!!_______________________________
-            //TODO: MatchManager shall pass PaddleWidthAdjustment-Changes after hitting objects to each individual player.
-            if (Keyboard.current.pKey.wasPressedThisFrame)
-            {
-                if (m_playerController.m_matchValues != null)
-                {
-                    //m_matchManager = FindObjectOfType<MatchManager>();
-                    m_playerController.m_matchValues.PaddleWidthAdjustment += m_playerController.m_matchManager.PaddleWidthAdjustStep;
-                }
-            }
-
-            if (Keyboard.current.pKey.wasReleasedThisFrame)
-            {
-                if (m_playerController.m_matchValues != null)
-                {
-                    //m_matchManager = FindObjectOfType<MatchManager>();
-                    m_playerController.m_matchValues.PaddleWidthAdjustment -= m_playerController.m_matchManager.PaddleWidthAdjustStep;
-                }
-            }
-            //__________________________________________________________________________________
         }
 
         private void FixedUpdate()
         {
-            if (!m_playerController.m_matchManager.GameIsPaused)
+            switch (m_isPushing)
             {
-                switch (m_playerController.m_playerId == m_receivedPlayerId)
+                case true:
+                    HandlePushMovement();
+                    break;
+                case false:
                 {
-                    case false:
-                        break;
-                    case true:
-                    {
-                        Move();
-                        Rotate();
-                        break;
-                    }
+                    if (transform.localPosition != m_initialPosition)
+                        StartCoroutine(HandleRetreat());
+                    break;
                 }
             }
-        }
 
-        #region Custom-Methods
+            HandleMovement();
+            HandleRotation();
+        }
 
         /// <summary>
         /// Rotations of top parent Transform and Rigidbody need to be adjusted to move correct, depending on positive or negative Z-values.
@@ -131,98 +78,35 @@ namespace ThreeDeePongProto.Shared.Player
             m_playerController.m_rigidbody.transform.rotation = playerRotation;
         }
 
-        private void SetPlayerOrientation(bool _PosZIsNegative)
+        #region Movement
+        public void SetInputVector(Vector2 _inputVector, int _receivedID, bool _isRotation)
         {
-            switch (_PosZIsNegative)
+            if (_receivedID != m_playerController.m_playerId)
+                return;
+
+            switch (_isRotation)
             {
                 case true:
-                {
-                    m_playerController.transform.rotation = Quaternion.Euler(m_playerController.m_rigidbody.rotation.x, 0.0f, m_playerController.m_rigidbody.rotation.z);
-                    m_playerController.m_rigidbody.rotation = Quaternion.Euler(m_playerController.m_rigidbody.rotation.x, 0.0f, m_playerController.m_rigidbody.rotation.z);
-                    break;           //NegativeZPosition.
-                }
+                    m_rotationVector = _inputVector;
+                    break;
                 case false:
-                {
-                    m_playerController.transform.rotation = Quaternion.Euler(m_playerController.m_rigidbody.rotation.x, +180.0f, m_playerController.m_rigidbody.rotation.z);
-                    m_playerController.m_rigidbody.rotation = Quaternion.Euler(m_playerController.m_rigidbody.rotation.x, +180.0f, m_playerController.m_rigidbody.rotation.z);
-                    break;          //PositiveZPosition.
-                }
+                    m_moveVector = _inputVector;
+                    break;
             }
-
-            m_paddleStartRotation = m_playerController.m_rigidbody.rotation;
-            m_playerController.m_rigidbody.transform.localRotation = m_paddleStartRotation;
         }
 
-        private void Move()
+        private void HandleMovement()
         {
-            var xInvert = m_playerController.m_controlUIStates.InvertXAxis ? -1 : 1;    //Value from Scriptable in the Inspector.
+            if (m_receivedID != m_playerController.m_playerId)
+                return;
 
-            switch (m_receivedPlayerId)
-            {
-                case 0:
-                {
-                    m_rbPosition = m_playerController.m_rigidbody.transform.localPosition;
-                    m_moveVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_sideMoveVector.x * xInvert, 0, m_sideMoveVector.y).normalized;   //Player1
-                    m_rotateVector = new Vector3(0.0f, m_axisRotation.x, 0.0f);
-                    break;
-                }
-                case 1:
-                {
-                    m_rbPosition = -m_playerController.m_rigidbody.transform.localPosition;
-                    m_moveVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_sideMoveVector.x * xInvert, 0, m_sideMoveVector.y).normalized;   //Player2
-                    m_rotateVector = new Vector3(0.0f, m_axisRotation.x, 0.0f);
-                    break;
-                }
-                case 2:
-                {
-                    m_rbPosition = m_playerController.m_rigidbody.transform.localPosition;
-                    m_moveVector = m_movementSpeed * Time.fixedDeltaTime * new Vector3(m_sideMoveVector.x * xInvert, 0, m_sideMoveVector.y).normalized;   //Player3
-                    m_rotateVector = new Vector3(0.0f, m_axisRotation.x, 0.0f);
-                    break;
-                }
-                case 3:
-                {
-                    m_rbPosition = -m_playerController.m_rigidbody.transform.localPosition;
-                    m_moveVector = m_movementSpeed * Time.fixedDeltaTime * -new Vector3(m_sideMoveVector.x * xInvert, 0, m_sideMoveVector.y).normalized;   //Player4
-                    m_rotateVector = new Vector3(0.0f, m_axisRotation.x, 0.0f);
-                    break;
-                }
-                default:
-                    break;
-            }
+            var xInvert = GetInversion(m_playerController.m_controlUIStates.InvertXAxis);   //Value from Scriptable in the Inspector.
 
-            m_playerController.m_rigidbody.MovePosition(m_rbPosition + m_moveVector);
-        }
+            m_rbPosition = m_rigidbody.transform.localPosition;
+            m_moveVector = m_moveSpeed * Time.fixedDeltaTime * new Vector3(m_moveVector.x * xInvert, 0.0f, m_moveVector.y).normalized;
+            m_rotationVector = new Vector3(0.0f, m_rotationVector.x, 0.0f);
 
-        private void Rotate()
-        {
-            var yInvert = m_playerController.m_controlUIStates.InvertYAxis ? -1 : 1;    //Value from Scriptable in the Inspector.
-
-            switch (m_receivedPlayerId)
-            {
-                case 0:
-                {
-                    m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (m_rotateVector * yInvert)).normalized;
-                    break;
-                }
-                case 1:
-                {
-                    m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (m_rotateVector * yInvert)).normalized;
-                    break;
-                }
-                case 2:
-                {
-                    m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (m_rotateVector * yInvert)).normalized;
-                    break;
-                }
-                case 3:
-                {
-                    m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (m_rotateVector * yInvert)).normalized;
-                    break;
-                }
-            }
-
-            m_playerController.m_rigidbody.MoveRotation(m_playerController.m_rigidbody.rotation * m_deltaRotation);
+            m_rigidbody.MovePosition(m_rbPosition + m_moveVector);
         }
 
         /// <summary>
@@ -231,138 +115,127 @@ namespace ThreeDeePongProto.Shared.Player
         /// </summary>
         public void ClampMoveRange()
         {
-            m_playerController.m_rigidbody.transform.localPosition = new Vector3(m_playerController.m_rigidbody.transform.localPosition.x, m_playerController.m_rigidbody.transform.localPosition.y, -m_playerController.m_groundLength * 0.5f - -m_playerController.m_goalDistance);
+            // Aktualisiere Skalierung des Paddles basierend auf Match-Werten
+            m_paddleWidthAdjustment = GetPaddleWidthAdjustment();
 
-            m_maxSideMovement = m_playerController.m_groundWidth * 0.5f - m_playerController.m_rigidbody.transform.localScale.x * 0.5f;
+            m_rigidbody.transform.localScale = new Vector3(
+                m_playerController.m_localPaddleScale.x + m_paddleWidthAdjustment,
+                m_playerController.m_localPaddleScale.y,
+                m_playerController.m_localPaddleScale.z
+            );
 
-            if (m_playerController.m_matchValues == null)
-                m_paddleWidthAdjustment = 0;
-            else
-                m_paddleWidthAdjustment = m_playerController.m_matchValues.PaddleWidthAdjustment;
+            // Berechne Bewegungsbereiche
+            m_maxSideMovement = m_playerController.m_groundWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
 
-            m_playerController.m_rigidbody.transform.localScale = new Vector3(m_playerController.m_localPaddleScale.x + m_paddleWidthAdjustment, m_playerController.m_localPaddleScale.y, m_playerController.m_localPaddleScale.z);
+            float minZ = -m_playerController.m_groundLength * 0.5f + m_playerController.m_goalDistance;
+            float maxZ = minZ + m_playerController.m_maxPushDistance;
 
-            m_playerController.m_rigidbody.transform.localPosition = new Vector3(Mathf.Clamp(m_playerController.m_rigidbody.transform.localPosition.x, -m_maxSideMovement, m_maxSideMovement),
-                m_playerController.m_rigidbody.transform.localPosition.y,
-                Mathf.Clamp(m_playerController.m_rigidbody.transform.localPosition.z, -m_playerController.m_groundLength * 0.5f - -m_playerController.m_goalDistance, -m_playerController.m_groundLength * 0.5f - -(m_playerController.m_goalDistance + m_playerController.m_maxPushDistance)));
-        }
-
-        /// <summary>
-        /// Clamps the maximal rotationAngle based on 'Quaternion.LookRotation, rigidbody's forwardVector and Vector3.up'.
-        /// </summary>
-        private void ClampRotationAngle()
-        {
-            Quaternion rotation = Quaternion.LookRotation(m_playerController.m_rigidbody.transform.forward, Vector3.up);
-            rotation.ToAngleAxis(out float angle, out Vector3 axis);
-            angle = Mathf.Clamp(angle, -m_maxRotationAngle, m_maxRotationAngle);
-            m_playerController.m_rigidbody/*.transform*/.rotation = Quaternion.AngleAxis(angle, axis);
-        }
-
-        private void LetsResetPaddleRotation()
-        {
-            #region Saved for a potential Coroutine.
-            //float currentTime = 0;
-            //float endValue = 0;
-
-            //Quaternion currentValue =
-            //    Quaternion.Euler(m_rigidbody.transform.localRotation.x, m_rigidbody.transform.localRotation.y, m_rigidbody.transform.localRotation.z);
-            //Quaternion targetValue = Quaternion.Euler(m_rigidbody.transform.localRotation.x, endValue, m_rigidbody.transform.localRotation.z);
-
-            //while (currentTime < m_lerpDuration)
-            //{
-            //    m_rigidbody.transform.rotation =
-            //        Quaternion.Slerp(Quaternion.identity, Quaternion.Euler(m_rigidbody.transform.rotation.x, 0, m_rigidbody.transform.rotation.z), currentTime);
-            //    currentTime += Time.deltaTime * m_lerpDuration;
-            //}
-
-            //m_rigidbody.transform.localRotation = targetValue;
-            #endregion
-            switch (m_playerController.m_matchUIStates.RotationReset)
-            {
-                case true:
-                    m_playerController.m_rigidbody.transform.localRotation = m_paddleStartRotation;
-                    break;
-                case false:
-                    break;
-            }
-        }
-
-        private void OnMenuClosing()    //From MenuManager's Event.
-        {
-            ReStartPushCoroutine();
-        }
-
-        internal void ReStartPushCoroutine()
-        {
-            StartCoroutine(m_paddlePushCoroutine);
-        }
-
-        internal void StopPushCoroutine()   //From PlayerInputReceiver's UnityEngine InputSystem.
-        {
-            StopAllCoroutines();
+            // Clamp Rigidbody moveRange on X-Axis.
+            m_rigidbody.transform.localPosition = new Vector3(
+                Mathf.Clamp(m_rigidbody.transform.localPosition.x, -m_maxSideMovement, m_maxSideMovement),
+                m_rigidbody.transform.localPosition.y,
+                Mathf.Clamp(m_rigidbody.transform.localPosition.z, minZ, maxZ)
+            );
         }
         #endregion
 
-        #region IEnumerators
-        /// <summary>
-        /// MoveForthAndBack handles forward- and backwardPushes of the playerPaddle.
-        /// '_lerpDuration' also works as maximal Time in the whileLoop, but could be replaced with a fix floatAmount.
-        /// <param name="_lerpDuration"></param>
-        /// <returns></returns>
-        private IEnumerator PushPaddle(float _lerpDuration)
+        #region Rotation
+        private void HandleRotation()
         {
-            float currentTime = 0;
+            if (m_receivedID != m_playerController.m_playerId)
+                return;
 
-            while (currentTime < _lerpDuration)
+            var yInvert = GetInversion(m_playerController.m_controlUIStates.InvertYAxis);
+
+            // Berechne die Rotation basierend auf der Eingabe
+            m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (m_rotationVector * yInvert)).normalized;
+
+            // Wende die Rotation an
+            Quaternion newRotation = m_rigidbody.rotation * m_deltaRotation;
+
+            // Begrenze den Winkel auf den Maximalwert
+            newRotation.ToAngleAxis(out float angle, out Vector3 axis);
+            angle = Mathf.Clamp(angle, -m_maxRotationAngle, m_maxRotationAngle);
+
+            m_rigidbody.MoveRotation(Quaternion.AngleAxis(angle, axis));
+        }
+        #endregion
+
+        #region Push
+        private void HandlePushMovement()
+        {
+            // Calculate the forward push
+            m_currentPushProgress += Time.fixedDeltaTime * m_pushSpeed;
+            float clampedProgress = Mathf.Clamp01(m_currentPushProgress);
+
+            Vector3 targetPosition = m_initialPosition + transform.forward * (m_pushDistance * clampedProgress);
+            transform.localPosition = targetPosition;
+
+            if (clampedProgress >= 1.0f)
             {
-                if (m_pushPlayer)
-                {
-                    currentTime += Time.deltaTime;
-
-                    #region zFloat Mathf.MoveTowards
-                    if (m_playerController.m_playerId == m_receivedPlayerId)  //TODO: Updating Id on each Coroutine all 4 Paddles.
-                    {
-                        float startZPos = m_playerController.m_rigidbody.transform.localPosition.z;
-                        float endZPos = m_playerController.m_rigidbody.transform.localPosition.z - -m_playerController.m_maxPushDistance;
-
-                        m_playerController.m_rigidbody.transform.localPosition = new Vector3(m_playerController.m_rigidbody.transform.localPosition.x, m_playerController.m_rigidbody.transform.localPosition.y, endZPos = Mathf.MoveTowards(startZPos, endZPos, _lerpDuration)) + m_playerController.m_rigidbody.transform.forward;
-                        m_playerController.m_rigidbody.transform.localPosition = new Vector3(m_playerController.m_rigidbody.transform.localPosition.x, m_playerController.m_rigidbody.transform.localPosition.y, endZPos);
-
-                        yield return new WaitForSeconds(m_delayRetreat);
-                        m_pushPlayer = false;
-
-                        m_playerController.m_rigidbody.transform.localPosition = new Vector3(m_playerController.m_rigidbody.transform.localPosition.x, m_playerController.m_rigidbody.transform.localPosition.y, startZPos = Mathf.MoveTowards(endZPos, startZPos, _lerpDuration)) + -m_playerController.m_rigidbody.transform.forward;
-                        m_playerController.m_rigidbody.transform.localPosition = new Vector3(m_playerController.m_rigidbody.transform.localPosition.x, m_playerController.m_rigidbody.transform.localPosition.y, startZPos);
-
-                        #region Nested Coroutine
-                        //Coroutine to restrict paddleForwardMovement by a certain amount of time.
-                        if (m_enablePushDelay)
-                        {
-                            m_tempBlocked = true;
-                            Coroutine pushRestriction = StartCoroutine(RestrictPush());
-                            yield return pushRestriction;
-                            m_tempBlocked = false;
-                        }
-                        #endregion
-                    }
-                    #endregion
-                }
-                else
-                {
-                    yield return null;
-                }
+                // Push is complete, stop pushing
+                m_isPushing = false;
+                StartCoroutine(HandleRetreat());
             }
         }
 
-        private IEnumerator RestrictPush()
+        public void PushProgress(bool _isPushing)
         {
-            float countdown = m_delayRepetition;
+            if (m_receivedID != m_playerController.m_playerId)
+                return;
 
-            while (countdown > 0)
+            if (_isPushing && !m_isPushing)
             {
-                countdown -= Time.deltaTime;
+                // Start pushing
+                m_isPushing = true;
+                m_currentPushProgress = 0.0f;
+            }
+            else if (!_isPushing && m_isPushing)
+            {
+                // Stop pushing and return
+                m_isPushing = false;
+                StartCoroutine(HandleRetreat());
+            }
+        }
+
+        private IEnumerator HandleRetreat()
+        {
+            #region Vector3_MoveTowards
+            //// Smoothly move the paddle back to its initial position
+            //while (Vector3.Distance(transform.localPosition, m_initialPosition) > 0.01f)
+            //{
+            //    transform.localPosition = Vector3.MoveTowards(transform.localPosition, m_initialPosition, m_retreatSpeed * Time.deltaTime);
+            //    yield return null;
+            //}
+
+            //transform.localPosition = m_initialPosition; // Snap to the initial position 
+            #endregion
+
+            #region Vector3_Lerp
+            float progress = 0.0f;
+            Vector3 startPosition = transform.localPosition;
+
+            while (progress < 1.0f)
+            {
+                progress += Time.deltaTime * m_retreatSpeed;
+                transform.localPosition = Vector3.Lerp(startPosition, m_initialPosition, progress);
                 yield return null;
             }
+
+            transform.localPosition = m_initialPosition;
+            #endregion
+        }
+        #endregion
+
+        #region Helper-Methods
+        private float GetPaddleWidthAdjustment()
+        {
+            return m_playerController.m_matchValues != null ? m_playerController.m_matchValues.PaddleWidthAdjustment : 0.0f;
+        }
+
+        private float GetInversion(bool _invertAxis)
+        {
+            return _invertAxis ? -1.0f : 1.0f;
         }
         #endregion
     }

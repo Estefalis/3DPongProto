@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1514124386352258762}
   - component: {fileID: 1514124386352258756}
-  - component: {fileID: 2343868035824463507}
+  - component: {fileID: 7534366394202099577}
   m_Layer: 0
   m_Name: PlayerControllerBase
   m_TagString: TpOne
@@ -63,7 +63,7 @@ MonoBehaviour:
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
   m_basicFieldValues: {fileID: 11400000, guid: b7c0516de58b3a240a6970d999010f71, type: 2}
---- !u!114 &2343868035824463507
+--- !u!114 &7534366394202099577
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -88,10 +88,158 @@ MonoBehaviour:
   m_ControlsChangedEvent:
     m_PersistentCalls:
       m_Calls: []
-  m_ActionEvents: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7c6a3161-3337-423d-8b1e-29133147bf87
+    m_ActionName: PlayerActions/Move[/Keyboard/a,/Keyboard/d,/DualSenseGamepadHID/dpad/left,/DualSenseGamepadHID/dpad/right]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e97003bb-4773-4c8e-aecb-922c50060b22
+    m_ActionName: PlayerActions/Rotate[/Keyboard/q,/Keyboard/e,/DualSenseGamepadHID/leftShoulder,/DualSenseGamepadHID/rightShoulder]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 4ad07715-00a1-4463-9d52-fd9c38b9cb23
+    m_ActionName: PlayerActions/Push[/Keyboard/w,/DualSenseGamepadHID/rightTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1637802a-7a64-4501-b2dc-90018ecdf3d7
+    m_ActionName: PlayerActions/PokeTheBall[/Keyboard/b,/DualSenseGamepadHID/leftTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 4d87abec-b5b1-491c-8e08-6723d51b35fa
+    m_ActionName: PlayerActions/Zoom[/Mouse/scroll,/DualSenseGamepadHID/leftStick]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c4240df0-389e-40ee-b595-a3955f3a745d
+    m_ActionName: PlayerActions/MousePosition[/Mouse/position]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: acc02fc3-ae13-4b92-9014-16d11745dfe7
+    m_ActionName: PlayerActions/CursorVisibility[/Keyboard/c,/DualSenseGamepadHID/select]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 10c55572-7a33-47de-aec8-fe3fe0adbad2
+    m_ActionName: PlayerActions/ToggleGameMenu[/Keyboard/escape,/DualSenseGamepadHID/start]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e1cbac8e-8adc-41a9-b9cd-ae192901a21f
+    m_ActionName: OldPlayerActions/MoveP1ZNeg[/Keyboard/a,/Keyboard/d,/DualSenseGamepadHID/dpad/left,/DualSenseGamepadHID/dpad/right]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: de593f32-66ea-4843-8d7d-dad678b9c71b
+    m_ActionName: OldPlayerActions/MoveP2ZPos[/Keyboard/leftArrow,/Keyboard/rightArrow,/DualSenseGamepadHID/dpad/left,/DualSenseGamepadHID/dpad/right]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a14f4b64-0a9d-4483-ad66-28c7e260bddd
+    m_ActionName: OldPlayerActions/MoveP3ZNeg[/Keyboard/f,/Keyboard/h,/DualSenseGamepadHID/dpad/left,/DualSenseGamepadHID/dpad/right]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: bb3d25ee-b284-4564-b616-5770c9df194a
+    m_ActionName: OldPlayerActions/MoveP4ZPos[/Keyboard/j,/Keyboard/l,/DualSenseGamepadHID/dpad/left,/DualSenseGamepadHID/dpad/right]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b3ee0a0d-c7d4-468d-a60e-ec49ee212e37
+    m_ActionName: OldPlayerActions/RotateP1ZNeg[/Keyboard/q,/Keyboard/e,/DualSenseGamepadHID/leftShoulder,/DualSenseGamepadHID/rightShoulder]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ce09a839-51d3-4dfc-913e-24df083a5ef8
+    m_ActionName: OldPlayerActions/RotateP2ZPos[/Keyboard/rightShift,/Keyboard/numpad1,/DualSenseGamepadHID/leftShoulder,/DualSenseGamepadHID/rightShoulder]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: bac3250c-3b24-4e0a-b18a-280cb3147bd1
+    m_ActionName: OldPlayerActions/RotateP3ZNeg[/Keyboard/r,/Keyboard/y,/DualSenseGamepadHID/leftShoulder,/DualSenseGamepadHID/rightShoulder]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a3a153b9-4038-40df-aa1c-fa97f9ea288b
+    m_ActionName: OldPlayerActions/RotateP4ZPos[/Keyboard/u,/Keyboard/o,/DualSenseGamepadHID/leftShoulder,/DualSenseGamepadHID/rightShoulder]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6d626a78-41e2-4335-a2eb-cfa7c68c93c0
+    m_ActionName: OldPlayerActions/PushP1ZNeg[/Keyboard/w,/DualSenseGamepadHID/rightTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 795d1dc4-dc16-450b-97b0-86abd1b81c35
+    m_ActionName: OldPlayerActions/PushP2ZPos[/Keyboard/upArrow,/DualSenseGamepadHID/rightTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0a138a6c-3720-4e53-bd30-f9e74b477d06
+    m_ActionName: OldPlayerActions/PushP3ZNeg[/Keyboard/t,/DualSenseGamepadHID/rightTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ed3c0c72-c46b-4966-8d65-6ab2899cc839
+    m_ActionName: OldPlayerActions/PushP4ZPos[/Keyboard/i,/DualSenseGamepadHID/rightTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6898c02f-a7ca-4205-a8ec-7ad5b4001ad6
+    m_ActionName: OldPlayerActions/PokeTheBall[/Keyboard/b,/DualSenseGamepadHID/leftTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8cd19acb-16b2-4855-978b-64e7bb7a2a9c
+    m_ActionName: OldPlayerActions/Zoom[/Mouse/scroll,/DualSenseGamepadHID/leftStick]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0b5b5cfa-f116-48ac-a358-88e017b818f8
+    m_ActionName: OldPlayerActions/MousePosition[/Mouse/position]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 14b9a3d0-a4b7-4151-81cb-d1d69570a7df
+    m_ActionName: OldPlayerActions/CursorVisibility[/Keyboard/c,/DualSenseGamepadHID/select]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 39e3f2fd-1378-4483-b36f-367bbed3e353
+    m_ActionName: OldPlayerActions/ToggleGameMenu[/Keyboard/escape,/DualSenseGamepadHID/start]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 21bfa009-9e05-4669-a790-562c554e886d
+    m_ActionName: UserInterface/Navigate[/DualSenseGamepadHID/dpad/up,/DualSenseGamepadHID/dpad/down,/DualSenseGamepadHID/dpad/left,/DualSenseGamepadHID/dpad/right,/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: bad25697-7888-45b7-9b5c-83eade88e255
+    m_ActionName: UserInterface/Submit[/Keyboard/enter,/DualSenseGamepadHID/buttonSouth,/Keyboard/numpadEnter]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0a6b9d65-f440-4e13-bd61-dde0898d9501
+    m_ActionName: UserInterface/Cancel[/Keyboard/escape,/DualSenseGamepadHID/buttonEast]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f9fcc59c-63a3-420f-9034-d411ca85a8c1
+    m_ActionName: UserInterface/Point[/Mouse/position]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 71e1bb7e-25ae-49da-ada3-13a58d2ee226
+    m_ActionName: UserInterface/ScrollWheel[/Mouse/scroll]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: abf902fb-cc82-413e-bf4f-44771fc7c6cb
+    m_ActionName: UserInterface/LeftClick[/Mouse/leftButton,/DualSenseGamepadHID/buttonSouth]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2eafd06f-d0b9-4578-89f1-11fa63b74fed
+    m_ActionName: UserInterface/MiddleClick[/Mouse/middleButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 258f1994-ef21-48b2-931d-12018c3181b6
+    m_ActionName: UserInterface/RightClick[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 43e61106-20c5-460e-9808-fcbc8d998ff2
+    m_ActionName: UserInterface/CursorVisibility[/Keyboard/c,/DualSenseGamepadHID/select]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 93bd3d6a-dfbd-481a-9dba-edb23f65a905
+    m_ActionName: UserInterface/ToggleGameMenu[/Keyboard/escape,/DualSenseGamepadHID/start]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 40b1d236-4280-45ee-bab6-d382a5bc61d0
+    m_ActionName: UserInterface/TrackedDevicePosition
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 3a705899-d2a2-4222-a9e0-8ba2f8684c60
+    m_ActionName: UserInterface/TrackedDeviceOrientation
   m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: 
+  m_DefaultControlScheme: KeyboardMouse
+  m_DefaultActionMap: PlayerActions
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!1001 &4297264331869225740
@@ -288,11 +436,56 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1514124386352258762}
     m_Modifications:
+    - target: {fileID: 3019389867501711666, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3019389867501711666, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3019389867575858760, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
+        type: 3}
+      propertyPath: m_moveSpeed
+      value: 12.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3019389867575858760, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
+        type: 3}
+      propertyPath: m_pushSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3019389867575858760, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
+        type: 3}
+      propertyPath: m_rigidbody
+      value: 
+      objectReference: {fileID: 1514124386283540311}
     - target: {fileID: 3019389867575858760, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
         type: 3}
       propertyPath: m_lerpDuration
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 3019389867575858760, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
+        type: 3}
+      propertyPath: m_pushDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3019389867575858760, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
+        type: 3}
+      propertyPath: m_retreatSpeed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3019389867575858760, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
+        type: 3}
+      propertyPath: m_rotationSpeed
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3019389867575858760, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
+        type: 3}
+      propertyPath: m_rotationAnchor
+      value: 
+      objectReference: {fileID: 1514124386283540309}
     - target: {fileID: 3019389867575858760, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
         type: 3}
       propertyPath: m_enablePushDelay
@@ -380,6 +573,12 @@ PrefabInstance:
       objectReference: {fileID: 1514124386352258756}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e, type: 3}
+--- !u!4 &1514124386283540309 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7150750110298139777, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
+    type: 3}
+  m_PrefabInstance: {fileID: 8520759151465866196}
+  m_PrefabAsset: {fileID: 0}
 --- !u!54 &1514124386283540311 stripped
 Rigidbody:
   m_CorrespondingSourceObject: {fileID: 7150750110298139779, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
