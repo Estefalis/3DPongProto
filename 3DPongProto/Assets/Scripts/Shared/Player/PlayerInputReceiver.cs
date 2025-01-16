@@ -1,4 +1,4 @@
-using ThreeDeePongProto.Offline.UI.Menu;
+using System;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,10 +10,10 @@ namespace ThreeDeePongProto.Shared.Player
         private PlayerInputActions m_playerInputActions;
         [SerializeField] internal PlayerController m_playerController;
 
-        private Vector2 m_currentRotationInput; //Save currentRotationInput.
+        private Vector2 m_currentRotationInput; //Save current rotationInput.
+        private const string m_MoveAction = "Move", m_RotateAction = "Rotate", m_PushAction = "Push", m_Kick = "Kick";
 
-        //private Vector2 m_sideMoveVector;
-        //private bool m_isPushing;
+        public static event Action<int> m_KickBall;
 
         private void Awake()
         {
@@ -24,37 +24,19 @@ namespace ThreeDeePongProto.Shared.Player
         {
             var playerInput = m_playerController.GetComponent<PlayerInput>();
             playerInput.onActionTriggered += OnActionTriggered;
-            //m_playerInputActions.Enable();
-            //BindPlayerInputs();
         }
 
         private void OnDisable()
         {
             var playerInput = m_playerController.GetComponent<PlayerInput>();
             playerInput.onActionTriggered -= OnActionTriggered;
-            //m_playerInputActions.Disable();
-            //UnbindPlayerInputs();
-        }
-
-        private void Update()
-        {
-            //Vector2 rotationInput = m_playerInputActions.PlayerActions.Rotate.ReadValue<Vector2>();
-            //if (rotationInput != Vector2.zero)
-            //{
-            //    //if (_playerId == m_playerController.m_playerId) // Ensure correct player
-            //    //{
-            //    m_playerController.m_playerMovement.SetInputVector(rotationInput, m_playerController.m_playerId, true);
-            //}
-            ////}
         }
 
         private void FixedUpdate()
         {
-            // Rotation kontinuierlich anwenden
+            //Use Rotation constantly.
             if (m_currentRotationInput != Vector2.zero)
-            {
                 m_playerController.m_playerMovement.SetInputVector(m_currentRotationInput, m_playerController.m_playerId, true);
-            }
         }
 
         #region Removed_Methods_before_PlayerInput_Component
@@ -118,38 +100,41 @@ namespace ThreeDeePongProto.Shared.Player
         #endregion
 
         #region PlayerInput_Component
-        // Verarbeite alle Aktionen zentral
+        //Process all actions central.
         private void OnActionTriggered(InputAction.CallbackContext _context)
         {
-            // Identifiziere die Aktion anhand ihres Namens
+            //Identify Actions by their Names.
             switch (_context.action.name)
             {
-                case "Move":
+                case m_MoveAction:
                     HandleMove(_context);
                     break;
-
-                case "Rotate":
+                case m_RotateAction:
                     HandleRotate(_context);
                     break;
-
-                case "Push":
+                case m_PushAction:
                     HandlePush(_context);
                     break;
-
+                case m_Kick:
+                {
+                    if (_context.action.WasPerformedThisFrame())    //Else started- & canceled-Phase invoke the event as well.
+                        m_KickBall?.Invoke(m_playerController.m_playerId);
+                    break;
+                }
                 default:
-                    Debug.LogWarning($"Unbekannte Aktion: {_context.action.name}");
+                    //Debug.LogWarning($"Unknown Action: {_context.action.name}!");
                     break;
             }
         }
 
-        // Verarbeitet die "Move"-Aktion
+        //Process 'Move'-Action.
         private void HandleMove(InputAction.CallbackContext _context)
         {
             Vector2 moveInput = _context.ReadValue<Vector2>();
             m_playerController.m_playerMovement.SetInputVector(moveInput, m_playerController.m_playerId, false);
         }
 
-        // Verarbeitet die "Rotate"-Aktion
+        //Process 'Rotate'-Action.
         private void HandleRotate(InputAction.CallbackContext _context)
         {
             if (_context.phase == InputActionPhase.Performed || _context.phase == InputActionPhase.Started)
@@ -162,7 +147,7 @@ namespace ThreeDeePongProto.Shared.Player
             }
         }
 
-        // Verarbeitet die "Push"-Aktion
+        //Process 'Push'-Action.
         private void HandlePush(InputAction.CallbackContext _context)
         {
             if (_context.performed) // Button gedrückt

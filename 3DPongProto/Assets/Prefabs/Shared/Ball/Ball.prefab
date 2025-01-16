@@ -290,6 +290,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_rigidbody: {fileID: 6371200284859616810}
   m_impulseForce: 10
-  m_offWallAngle: 15
+  m_offWallAngle: 25
   m_offPaddleAngle: 0.1
   m_ballAudioSource: {fileID: 6371200284859616809}

@@ -33,7 +33,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "PokeTheBall",
+                    "name": "Kick",
                     "type": "Button",
                     "id": "1637802a-7a64-4501-b2dc-90018ecdf3d7",
                     "expectedControlType": "Button",
@@ -196,7 +196,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "PokeTheBall",
+                    "action": "Kick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -207,7 +207,7 @@
                     "interactions": "",
                     "processors": "AxisDeadzone",
                     "groups": "Gamepad",
-                    "action": "PokeTheBall",
+                    "action": "Kick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

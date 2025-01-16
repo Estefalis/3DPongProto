@@ -7,8 +7,6 @@ namespace ThreeDeePongProto.Shared.Player
     public class PlayerController : MonoBehaviour
     {
         internal MatchManager m_matchManager;
-        [SerializeField] internal Rigidbody m_rigidbody;
-        [SerializeField] protected AudioSource m_audioSource;
 
         [SerializeField] internal Transform m_inputAndCamComponent;
         [SerializeField] internal PlayerInputReceiver m_playerInputReceiver;
@@ -38,12 +36,9 @@ namespace ThreeDeePongProto.Shared.Player
 
         private void Awake()
         {
-            m_matchManager = FindObjectOfType<MatchManager>();
-            if(m_rigidbody == null)
-                m_rigidbody = GetComponent<Rigidbody>();
+            m_matchManager = FindObjectOfType<MatchManager>();            
 
             m_playerIDData.PlayerId = m_playerId;
-            AudioManager.LetsRegisterAudioSources(m_audioSource);
 
             GetFieldDetails();
             GetPlayerDetails();

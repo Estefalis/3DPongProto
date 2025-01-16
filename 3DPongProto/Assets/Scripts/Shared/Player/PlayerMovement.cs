@@ -1,4 +1,5 @@
 using System.Collections;
+using ThreeDeePongProto.Shared.AudioManagement;
 using UnityEngine;
 
 namespace ThreeDeePongProto.Shared.Player
@@ -7,6 +8,7 @@ namespace ThreeDeePongProto.Shared.Player
     {
         [SerializeField] private PlayerController m_playerController;
         [SerializeField] private Rigidbody m_rigidbody;
+        [SerializeField] protected AudioSource m_audioSource;
 
         [Header("Movement")]
         [SerializeField, Range(1.0f, 20.0f)] private float m_moveSpeed = 10.0f;
@@ -19,7 +21,7 @@ namespace ThreeDeePongProto.Shared.Player
         [SerializeField] private float m_maxRotationAngle = 45.0f; // Maximum angle (±45 degrees)
         private readonly float m_baseRotationSpeed = 100.0f;
         internal Vector2 m_rotationVector;
-        private Quaternion m_deltaRotation;
+        private Quaternion m_deltaRotation, m_initialRotation;
 
         [Header("Push")]
         [SerializeField, Range(1.0f, 20.0f)] private float m_pushSpeed = 10.0f;
@@ -35,15 +37,35 @@ namespace ThreeDeePongProto.Shared.Player
 
         private void Awake()
         {
+            if (m_rigidbody == null)
+                m_rigidbody = GetComponent<Rigidbody>();
+
             SetPlayerRotation(m_playerController.m_playerId);
+        }
+
+        private void OnDisable()
+        {
+            if (m_audioSource != null)
+                AudioManager.LetsRemoveAudioSources(m_audioSource);
+
+            Ball.HitGoalOne -= ResetPlayerRotation;
+            Ball.HitGoalTwo -= ResetPlayerRotation;
         }
 
         private void Start()
         {
             m_initialPosition = transform.localPosition;
+            m_initialRotation = m_rigidbody.transform.rotation;
+            m_rigidbody.transform.localRotation = m_initialRotation;
+
+            if (m_audioSource != null)
+                AudioManager.LetsRegisterAudioSources(m_audioSource);
+
+            Ball.HitGoalOne += ResetPlayerRotation;
+            Ball.HitGoalTwo += ResetPlayerRotation;
         }
 
-        private void LateUpdate()   //Either in Update() or LateUpdate()!!!
+        private void LateUpdate()   //Either in Update() or LateUpdate()!
         {
             ClampMoveRange();
         }
@@ -75,7 +97,19 @@ namespace ThreeDeePongProto.Shared.Player
         {
             Quaternion playerRotation = (_playerId % 2 == 0) ? Quaternion.Euler(0, 0, 0) : Quaternion.Euler(0, 180, 0);
             m_playerController.transform.rotation = playerRotation;
-            m_playerController.m_rigidbody.transform.rotation = playerRotation;
+            m_rigidbody.transform.rotation = playerRotation;
+        }
+
+        private void ResetPlayerRotation()
+        {
+            switch (m_playerController.m_matchUIStates.RotationReset)
+            {
+                case true:
+                    m_rigidbody.transform.localRotation = m_initialRotation;
+                    break;
+                case false:
+                    break;
+            }
         }
 
         #region Movement

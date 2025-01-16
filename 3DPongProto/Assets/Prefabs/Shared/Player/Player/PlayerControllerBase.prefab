@@ -47,8 +47,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26c7c84218db8094bbb002a7cceb0c83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_rigidbody: {fileID: 1514124386283540311}
-  m_audioSource: {fileID: 2562273096893088642}
   m_inputAndCamComponent: {fileID: 6906505718523990414}
   m_playerInputReceiver: {fileID: 6906505718174328188}
   m_playerMovement: {fileID: 6906505718804641180}
@@ -461,6 +459,11 @@ PrefabInstance:
       propertyPath: m_rigidbody
       value: 
       objectReference: {fileID: 1514124386283540311}
+    - target: {fileID: 3019389867575858760, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
+        type: 3}
+      propertyPath: m_audioSource
+      value: 
+      objectReference: {fileID: 2562273096893088642}
     - target: {fileID: 3019389867575858760, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
         type: 3}
       propertyPath: m_lerpDuration

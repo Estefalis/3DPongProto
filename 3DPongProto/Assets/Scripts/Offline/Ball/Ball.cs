@@ -3,15 +3,15 @@ using ThreeDeePongProto.Shared.AudioManagement;
 using ThreeDeePongProto.Shared.Managers;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using ThreeDeePongProto.Shared.Player;
 
 public class Ball : MonoBehaviour
 {
     #region #region SerializeField-Member-Variables
     [SerializeField] private Rigidbody m_rigidbody;
     [SerializeField] private float m_impulseForce;
-    [SerializeField] private float m_offWallAngle = 15.0f;
-    [SerializeField] private float m_offPaddleAngle = 0.1f;
+    [SerializeField, Min(25.0f)] private float m_offWallAngle = 25.0f;
+    [SerializeField, Min(0.1f)] private float m_offPaddleAngle = 0.1f;
     //[SerializeField] float m_onContactAddUp = 1.10f;
     #endregion
 
@@ -58,19 +58,18 @@ public class Ball : MonoBehaviour
         m_ballPopRotation = m_rigidbody.rotation;
     }
 
+    private void OnDisable()
+    {
+        AudioManager.LetsRemoveAudioSources(m_ballAudioSource);
+
+        PlayerInputReceiver.m_KickBall -= BallStart;
+    }
+
     private void Start()
     {
         AudioManager.LetsRegisterAudioSources(m_ballAudioSource);
 
-        m_inputActions = InputManager.m_PlayerInputActions;
-        m_inputActions.Enable();
-        m_inputActions.PlayerActions.PokeTheBall.performed += StartBallMovement;
-    }
-
-    private void OnDisable()
-    {
-        m_inputActions.Disable();
-        m_inputActions.PlayerActions.PokeTheBall.performed -= StartBallMovement;
+        PlayerInputReceiver.m_KickBall += BallStart;
     }
 
     private void ResetBall()
@@ -81,16 +80,14 @@ public class Ball : MonoBehaviour
         m_rigidbody.rotation = m_ballPopRotation;
     }
 
-    private void StartBallMovement(InputAction.CallbackContext _callbackContext)
+    private void BallStart(int _masterID)
     {
-        if (!m_matchManager.GameIsPaused)
+        if (!m_matchManager.GameIsPaused && _masterID == 0) //Host on Online-Gaming?
         {
             if (!m_matchManager.MatchStarted)
                 RoundCountStarts?.Invoke(); //Has to stay below 'ApplyForceOnBall();', if the ApplyForce button is the same as Submit/Click as now.
 
             ApplyForceOnBall();
-            //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
-            PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);   //BallstartSound 
         }
     }
 
@@ -120,6 +117,9 @@ public class Ball : MonoBehaviour
         };
 
         m_rigidbody.AddRelativeForce(transform.forward * m_impulseForce, ForceMode.Impulse);
+
+        //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
+        PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);   //BallstartSound
     }
 
     private void OnTriggerEnter(Collider _other)
