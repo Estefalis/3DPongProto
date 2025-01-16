@@ -7,18 +7,16 @@ namespace ThreeDeePongProto.Shared.Player
 {
     internal class PlayerInputReceiver : MonoBehaviour
     {
-        private PlayerInputActions m_playerInputActions;
         [SerializeField] internal PlayerController m_playerController;
 
         private Vector2 m_currentRotationInput; //Save current rotationInput.
-        private const string m_MoveAction = "Move", m_RotateAction = "Rotate", m_PushAction = "Push", m_Kick = "Kick";
+        private const string m_moveAction = "Move", m_rotateAction = "Rotate", m_pushAction = "Push";
+        private const string m_kickAction = "Kick";
+        private const string m_zoomAction = "Zoom", m_mousePosAction = "MousePosition";
+        private const string m_toggleMenuAction = "ToggleGameMenu", m_CursorVisAction = "CursorVisibility";
 
         public static event Action<int> m_KickBall;
-
-        private void Awake()
-        {
-            m_playerInputActions = new PlayerInputActions();
-        }
+        public static event Action m_menuOpens;
 
         private void OnEnable()
         {
@@ -101,63 +99,92 @@ namespace ThreeDeePongProto.Shared.Player
 
         #region PlayerInput_Component
         //Process all actions central.
-        private void OnActionTriggered(InputAction.CallbackContext _context)
+        private void OnActionTriggered(InputAction.CallbackContext _callbackContext)
         {
+            //switch (_callbackContext.action.actionMap)
+            //{
+            //}
+
             //Identify Actions by their Names.
-            switch (_context.action.name)
+            switch (_callbackContext.action.name)
             {
-                case m_MoveAction:
-                    HandleMove(_context);
+                case m_moveAction:
+                    HandleMove(_callbackContext);
                     break;
-                case m_RotateAction:
-                    HandleRotate(_context);
+                case m_rotateAction:
+                    HandleRotate(_callbackContext);
                     break;
-                case m_PushAction:
-                    HandlePush(_context);
+                case m_pushAction:
+                    HandlePush(_callbackContext);
                     break;
-                case m_Kick:
+                case m_kickAction:
                 {
-                    if (_context.action.WasPerformedThisFrame())    //Else started- & canceled-Phase invoke the event as well.
-                        m_KickBall?.Invoke(m_playerController.m_playerId);
+                    if (_callbackContext.action.WasPerformedThisFrame())    //Else started- & canceled-Phase invoke the event as well.
+                        m_KickBall?.Invoke(m_playerController.m_playerId);  //Tell the Ball, that it has been kicked! *kick*
                     break;
                 }
+                case m_zoomAction:
+                {
+                    //m_playerController.m_playerCameraController.Zooming(_callbackContext.ReadValue<Vector2>());
+                    break;
+                }
+                case m_mousePosAction:
+                {
+                    //m_playerController.m_playerCameraController.m_mousePosition = _callbackContext.ReadValue<Vector2>();
+                    break;
+                }
+                case m_toggleMenuAction:
+                    OpenMenu(_callbackContext);
+                    break;
+                case m_CursorVisAction:
+                    break;
                 default:
-                    //Debug.LogWarning($"Unknown Action: {_context.action.name}!");
+                    Debug.LogWarning($"Unknown Action: {_callbackContext.action.name}!");
                     break;
             }
         }
 
         //Process 'Move'-Action.
-        private void HandleMove(InputAction.CallbackContext _context)
+        private void HandleMove(InputAction.CallbackContext _callbackContext)
         {
-            Vector2 moveInput = _context.ReadValue<Vector2>();
+            Vector2 moveInput = _callbackContext.ReadValue<Vector2>();
             m_playerController.m_playerMovement.SetInputVector(moveInput, m_playerController.m_playerId, false);
         }
 
         //Process 'Rotate'-Action.
-        private void HandleRotate(InputAction.CallbackContext _context)
+        private void HandleRotate(InputAction.CallbackContext _callbackContext)
         {
-            if (_context.phase == InputActionPhase.Performed || _context.phase == InputActionPhase.Started)
+            if (_callbackContext.phase == InputActionPhase.Performed || _callbackContext.phase == InputActionPhase.Started)
             {
-                m_currentRotationInput = _context.ReadValue<Vector2>(); // Eingabe speichern
+                m_currentRotationInput = _callbackContext.ReadValue<Vector2>(); // Eingabe speichern
             }
-            else if (_context.phase == InputActionPhase.Canceled)
+            else if (_callbackContext.phase == InputActionPhase.Canceled)
             {
                 m_currentRotationInput = Vector2.zero; // Eingabe zurücksetzen, wenn Taste losgelassen wird
             }
         }
 
         //Process 'Push'-Action.
-        private void HandlePush(InputAction.CallbackContext _context)
+        private void HandlePush(InputAction.CallbackContext _callbackContext)
         {
-            if (_context.performed) // Button gedrückt
+            if (_callbackContext.performed) // Button gedrückt
             {
                 m_playerController.m_playerMovement.PushProgress(true);
             }
-            else if (_context.canceled) // Button losgelassen
+            else if (_callbackContext.canceled) // Button losgelassen
             {
                 m_playerController.m_playerMovement.PushProgress(false);
             }
+        }
+
+        private void OpenMenu(InputAction.CallbackContext _callbackContext)
+        {
+            //if (m_playerController.m_playerId == 0)     //Equal to Master on Online Games?
+            //TODO: All scripts that depend on Menu Opening need to subscribe here. 
+            m_menuOpens?.Invoke();
+            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.UserInterface);
+            //m_playerInputActions.Disable();  //Paddles can still be moved, if 'm_playerInputActions' here isn't disabled.
+            //m_playerController.m_playerMovement.StopPushCoroutine();
         }
         #endregion
     }

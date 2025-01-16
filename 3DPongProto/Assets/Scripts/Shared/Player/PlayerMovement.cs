@@ -18,7 +18,7 @@ namespace ThreeDeePongProto.Shared.Player
 
         [Header("Rotation")]
         [SerializeField, Range(1.0f, 5.0f)] protected float m_rotationSpeed = 2.5f;
-        [SerializeField] private float m_maxRotationAngle = 45.0f; // Maximum angle (±45 degrees)
+        [SerializeField] private float m_maxRotationAngle = 45.0f; //Maximum angle (±45 degrees).
         private readonly float m_baseRotationSpeed = 100.0f;
         internal Vector2 m_rotationVector;
         private Quaternion m_deltaRotation, m_initialRotation;
@@ -149,7 +149,7 @@ namespace ThreeDeePongProto.Shared.Player
         /// </summary>
         public void ClampMoveRange()
         {
-            // Aktualisiere Skalierung des Paddles basierend auf Match-Werten
+            //Update Paddle scaling based on current matchValues.
             m_paddleWidthAdjustment = GetPaddleWidthAdjustment();
 
             m_rigidbody.transform.localScale = new Vector3(
@@ -158,13 +158,13 @@ namespace ThreeDeePongProto.Shared.Player
                 m_playerController.m_localPaddleScale.z
             );
 
-            // Berechne Bewegungsbereiche
+            //Calculate MoveRange.
             m_maxSideMovement = m_playerController.m_groundWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
 
             float minZ = -m_playerController.m_groundLength * 0.5f + m_playerController.m_goalDistance;
             float maxZ = minZ + m_playerController.m_maxPushDistance;
 
-            // Clamp Rigidbody moveRange on X-Axis.
+            //Clamp Rigidbody moveRange on X-Axis.
             m_rigidbody.transform.localPosition = new Vector3(
                 Mathf.Clamp(m_rigidbody.transform.localPosition.x, -m_maxSideMovement, m_maxSideMovement),
                 m_rigidbody.transform.localPosition.y,
@@ -181,13 +181,13 @@ namespace ThreeDeePongProto.Shared.Player
 
             var yInvert = GetInversion(m_playerController.m_controlUIStates.InvertYAxis);
 
-            // Berechne die Rotation basierend auf der Eingabe
+            //Calculate rotation based on input.
             m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (m_rotationVector * yInvert)).normalized;
 
-            // Wende die Rotation an
+            //Apply rotation.
             Quaternion newRotation = m_rigidbody.rotation * m_deltaRotation;
 
-            // Begrenze den Winkel auf den Maximalwert
+            //Clamp rotationAngle on maxValue(s).
             newRotation.ToAngleAxis(out float angle, out Vector3 axis);
             angle = Mathf.Clamp(angle, -m_maxRotationAngle, m_maxRotationAngle);
 
@@ -198,7 +198,7 @@ namespace ThreeDeePongProto.Shared.Player
         #region Push
         private void HandlePushMovement()
         {
-            // Calculate the forward push
+            //Calculate the forward push.
             m_currentPushProgress += Time.fixedDeltaTime * m_pushSpeed;
             float clampedProgress = Mathf.Clamp01(m_currentPushProgress);
 
@@ -207,7 +207,7 @@ namespace ThreeDeePongProto.Shared.Player
 
             if (clampedProgress >= 1.0f)
             {
-                // Push is complete, stop pushing
+                //Push is complete, stop pushing.
                 m_isPushing = false;
                 StartCoroutine(HandleRetreat());
             }
@@ -220,13 +220,13 @@ namespace ThreeDeePongProto.Shared.Player
 
             if (_isPushing && !m_isPushing)
             {
-                // Start pushing
+                //Start pushing.
                 m_isPushing = true;
                 m_currentPushProgress = 0.0f;
             }
             else if (!_isPushing && m_isPushing)
             {
-                // Stop pushing and return
+                //Stop pushing and return.
                 m_isPushing = false;
                 StartCoroutine(HandleRetreat());
             }

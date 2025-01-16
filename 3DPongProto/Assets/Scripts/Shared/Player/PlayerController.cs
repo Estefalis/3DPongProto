@@ -1,4 +1,3 @@
-using ThreeDeePongProto.Shared.AudioManagement;
 using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 
@@ -13,7 +12,7 @@ namespace ThreeDeePongProto.Shared.Player
         [SerializeField] internal PlayerMovement m_playerMovement;
         [SerializeField] internal PlayerInteractions m_playerInteractions;
         [SerializeField] internal PlayerHealth m_playerHealth;
-        [SerializeField] internal PlayerCameraController m_playerCameraControl;
+        [SerializeField] internal PlayerCameraController m_playerCameraController;
 
         [Header("Player Details")]
         [SerializeField] internal int m_playerId;
