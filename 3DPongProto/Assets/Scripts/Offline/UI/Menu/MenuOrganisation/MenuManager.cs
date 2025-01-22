@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using ThreeDeePongProto.Shared.InputActions;
+using ThreeDeePongProto.Shared.Player;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
+//using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -11,7 +12,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 {
     public class MenuManager : MonoBehaviour
     {
-        private PlayerInputActions m_inputActions;
+        //private PlayerInputActions m_inputActions;
         [SerializeField] internal EventSystem m_eventSystem;
 
         #region MenuNavigation
@@ -49,9 +50,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private const string m_startMenuScene = "StartMenuScene";
 
         //MatchManager unpauses the Game. - PlayerController restarts Coroutines and Inputsystem.PlayerActions.
-        public static event Action BackToGame;
+        public static event Action ResumeTheGame;
         //MatchManager unpauses the Game.
-        public static event Action RestartGame;
+        //public static event Action RestartTheGame;
         //MatchManager unpauses the Game.
         public static event Action OnLoadMainScene;
 
@@ -83,17 +84,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnDisable()
         {
-            m_inputActions.Disable();
+            //m_inputActions.Disable();
 
-            m_inputActions.PlayerActions.ToggleGameMenu.performed -= OpenMenu;
+            //m_inputActions.PlayerActions.ToggleGameMenu.performed -= OpenMenu;
+            PlayerInputReceiver.m_menuOpens -= OpenMenu;
         }
 
         private void Start()
         {
-            m_inputActions = InputManager.m_PlayerInputActions;
-            m_inputActions.Enable();
+            //m_inputActions = InputManager.m_PlayerInputActions;
+            //m_inputActions.Enable();
 
-            m_inputActions.PlayerActions.ToggleGameMenu.performed += OpenMenu;
+            //m_inputActions.PlayerActions.ToggleGameMenu.performed += OpenMenu;
+            PlayerInputReceiver.m_menuOpens += OpenMenu;
             PreSetUpPlayerAmount(m_matchUIStates.EPlayerAmount);
 
             if (m_hiddenFinishButton != null)
@@ -251,16 +254,15 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #region MenuButton-Methods
         public void ResumeGame()
         {
-            BackToGame?.Invoke();
+            ResumeTheGame?.Invoke();
             m_firstElement.gameObject.SetActive(false);
             InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.PlayerActions);
         }
 
-        public void RestartLevel()
+        public void RestartGameScene()
         {
-            RestartGame?.Invoke();
+            //MatchManager toggles ActionMap in ReSetMatch()-method on Scene-reload.
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.PlayerActions);
         }
 
         public void ReturnToMainScene()
@@ -303,8 +305,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         }
         #endregion
 
-        #region CallbackContext-Methods
-        private void OpenMenu(InputAction.CallbackContext _callbackContext)
+        //#region CallbackContext-Methods
+        private void OpenMenu(/*InputAction.CallbackContext _callbackContext*/)
         {
             if (!m_firstElement.gameObject.activeInHierarchy)
             {
@@ -312,6 +314,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 SetNavigationGameObject(m_firstElement);
             }
         }
-        #endregion
+        //#endregion
     }
 }

@@ -92,6 +92,18 @@ namespace ThreeDeePongProto.Shared.InputActions
             //Alternative: m_PlayerInputActions ??= new PlayerInputActions();
             if (m_PlayerInputActions == null)
                 m_PlayerInputActions = new PlayerInputActions();
+
+            var playerInput = FindObjectOfType<PlayerInput>();
+            if (playerInput != null)
+            {
+                if (playerInput.actions != m_PlayerInputActions.asset)
+                {
+                    Debug.LogWarning("PlayerInput and InputManager use different ActionAssets. Please synchronize them.");
+                    playerInput.actions = m_PlayerInputActions.asset;
+                }
+            }
+
+            m_PlayerInputActions.PlayerActions.Enable();
         }
 
         private void OnEnable()
@@ -102,50 +114,54 @@ namespace ThreeDeePongProto.Shared.InputActions
                 m_gamepadRebindDict = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_encryptionEnabled);
             }
 
-            ControlSettings.PlayerViewIndex += PlayerIndex;
-
             m_extractButtonImage += ExtractImage;
-            m_changeActiveActionMap += UpdateActiveActionMap;
+
+            ControlSettings.PlayerViewIndex += PlayerIndex;
 
             //InputUser.onChange += OnChange;
         }
 
         private void OnDisable()
         {
+            m_extractButtonImage -= ExtractImage;
+
             ControlSettings.PlayerViewIndex -= PlayerIndex;
 
-            m_extractButtonImage -= ExtractImage;
-            m_changeActiveActionMap -= UpdateActiveActionMap;
-
             //InputUser.onChange -= OnChange;
+            m_PlayerInputActions.Disable();
         }
 
-        public static Vector2 GetMousePosition()
+        private void OnDestroy()
         {
-#if ENABLE_INPUT_SYSTEM
-            switch (m_activeInputActionMap)
-            {
-                case ActiveInputActionMap.PlayerActions:
-                {
-                    m_mousePosition = m_PlayerInputActions.PlayerActions.MousePosition.ReadValue<Vector2>();
-                    break;
-                }
-                case ActiveInputActionMap.UserInterface:
-                {
-                    m_mousePosition = m_PlayerInputActions.UserInterface.Point.ReadValue<Vector2>();
-                    break;
-                }
-                default:
-                {
-                    m_mousePosition = Vector2.zero;
-                    break;
-                }
-            }
-#else
-            m_mousePosition = Input.mousePosition;
-#endif
-            return m_mousePosition;
+            m_PlayerInputActions.Disable();
         }
+
+//        public static Vector2 GetMousePosition()
+//        {
+//#if ENABLE_INPUT_SYSTEM
+//            switch (m_activeInputActionMap)
+//            {
+//                case ActiveInputActionMap.PlayerActions:
+//                {
+//                    m_mousePosition = m_PlayerInputActions.PlayerActions.MousePosition.ReadValue<Vector2>();
+//                    break;
+//                }
+//                case ActiveInputActionMap.UserInterface:
+//                {
+//                    m_mousePosition = m_PlayerInputActions.UserInterface.Point.ReadValue<Vector2>();
+//                    break;
+//                }
+//                default:
+//                {
+//                    m_mousePosition = Vector2.zero;
+//                    break;
+//                }
+//            }
+//#else
+//            m_mousePosition = Input.mousePosition;
+//#endif
+//            return m_mousePosition;
+//        }
 
         private static void PlayerIndex(int _playerIndex)
         {
@@ -159,31 +175,37 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// <summary>
         /// Switches ActionMaps, if the active actionMap isn't equal to the submitted one. But does not disable the old actionMaps!
         /// </summary>
-        /// <param name="_actionMap"></param>
-        internal static void ToggleActionMaps(InputActionMap _actionMap)
+        /// <param name="_receivedActionMap"></param>
+        internal static void ToggleActionMaps(InputActionMap _receivedActionMap)
         {
-            //if you try to change to the same ActionMap skip the rest.
-            if (_actionMap.enabled)
+            #region Old_Version
+            ////if you try to change to the same ActionMap skip the rest.
+            //if (_receivedActionMap.enabled)
+            //    return;
+
+            ////else disable the current ActionMap to switch to the next.
+            //m_PlayerInputActions.Disable();
+            //_receivedActionMap.Enable();
+
+            //m_changeActiveActionMap?.Invoke(_receivedActionMap);
+            #endregion
+
+            if (_receivedActionMap.enabled)
                 return;
 
-            //else disable the current ActionMap to switch to the next.
-            m_PlayerInputActions.Disable();
-            m_changeActiveActionMap?.Invoke(_actionMap);
-            _actionMap.Enable();
-        }
+            foreach (var actionMap in m_PlayerInputActions.asset.actionMaps)
+            {
+                actionMap.Disable();
+            }
 
-        private void UpdateActiveActionMap(InputActionMap _inputActionMap)
-        {
-            if (_inputActionMap.name == ActiveInputActionMap.PlayerActions.ToString())
-                m_activeInputActionMap = ActiveInputActionMap.PlayerActions;
+            _receivedActionMap.Enable();
 
-            if (_inputActionMap.name == ActiveInputActionMap.UserInterface.ToString())
-                m_activeInputActionMap = ActiveInputActionMap.UserInterface;
+            m_activeInputActionMap = _receivedActionMap.name == ActiveInputActionMap.PlayerActions.ToString()
+                ? ActiveInputActionMap.PlayerActions : ActiveInputActionMap.UserInterface;
 
-            //m_lastSetActionMap = _inputActionMap;
-#if UNITY_EDITOR
-            //Debug.Log($"InputActionMap gets changed to {_inputActionMap.name}.");
-#endif
+            m_changeActiveActionMap?.Invoke(_receivedActionMap);
+
+            Debug.Log($"Switched to ActionMap: {_receivedActionMap.name}.");
         }
         #endregion
 

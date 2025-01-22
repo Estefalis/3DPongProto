@@ -1,0 +1,34 @@
+GameEngine & API: Unity 2021.3.28f1 als Start-Version & Visual Studio 2022 mit C#.
+
+Projektbeschreibung
+
+Menu Scene:
+
+Aktuell lädt mein MenuManager in der MenuScene die Daten. (Könnte ich in ein anderes Script auslagern.) 
+Im PreparationWindow Script stelle ich die Spieleranzahl und Namen ein und speichere die Spielerdaten in Scriptable Objects, entsprechend 
+der eingestellten Spieleranzahl.
+Grundsätzlich habe ich keinen GameManager. Der Gedanke dahinter war zum einen, dass ich die Szenen unabhängiger von einander programmieren wollte.
+Und zum anderen will ich so programmieren, damit es Cheater möglichst schwer haben zu betrügen. Ohne dass das Spiel darunter leidet.
+In jeder Szene soll es ein Script geben, dass die Szene verwaltet und benötigte Speicherdaten bei Bedarf lädt. Danach sollen 
+Scriptable Objects dazu dienen, die Daten zwischen den Szenen zu halten. Und bei Änderungen werden diese Daten gespeichtert.
+
+Ich hatte damit experimentiert, den InputManager als child eines Transforms zu setzen, das durch 'Don't destroy on load." des ParentTransforms zwischen 
+den Szenen mitgenommen wird. Der InputManager war dafür gedacht, dass Spieler, Kameras und Menüs die actions des InputManager übernehmen.
+(ownActions = InputManager.PlayerActions) Dadurch konnte ich mit einem Wechsel im InputManager gleich Spieler, Kamera und Menü beeinflussen.
+Wenn die PlayerInput Component des Spieler nun die zentrale Steuereinheit darstellt, muss der InputManager die Änderung der aktiven ActionMap
+entsprechend der Richtlinien der PlayerInput Component abgeben, oder umsetzen. Bei dieser Änderung bin ich auf CodeGPT (Dich) angewiesen.
+
+LocalGame Scene:
+
+Entsprechend der Anzahl der PlayerData im einem Scriptable Objects Array, spawned der MatchManager nun die Spieler. 
+(Muss hier der PlayerInputManager des Inputsystems als Component hinzugefügt sein? Oder an anderer Stelle?)
+In den Daten ist bereits Name, Index, usw. eingesetzt, sodass sie richtig gespawned werden. 
+
+Ziel dieses Prototyp ist das lokale Spiel, dass sich auf den Laptop beschränkt. Dafür habe ich bei Keyboard jeweils die Tastenkombinationen WAD, 
+Pfeiltasten UP/LEFT/RIGHT, TFH und IJL für Bewegung und Push vorgesehen. Und jeweils QE, RightShift/NumbPad1, RZ, UO für Rotationen vorgesehen.
+Ich will ein lokales Spiel fertigstellen, auf dem 1 (mit zukünftigen NPC Gegner) bis 4 Spielern (in zweier Teams) auf dem Spielfeld steuerbar sind.
+Es soll zuerst KeyboardMaus als Schema bei allen aktiviert sein, aber über abgespeicherte Daten (wie z.B. in Scriptable Objects) auch modifizierbar
+und auf Gamepad dauerhaft änderbar sein. 
+Im Moment habe ich nur je eine Action in der PlayerActions ActionMap für Move, Rotate und Push. Ich benötige hier explizit Hilfe, um das System so
+umzustellen, dass PlayerActionAsset, die zentrale Steuerung der PlayerInput Component, PlayerInputManager und die Rebindfunktion meines alten 
+InputManager fehlerfrei zusammen arbeiten. Das zu verstehen und zu realisieren, ist mir wichtig.

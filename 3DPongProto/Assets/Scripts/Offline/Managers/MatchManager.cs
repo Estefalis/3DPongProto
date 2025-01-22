@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.InputActions;
+using ThreeDeePongProto.Shared.Player;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,16 +17,8 @@ namespace ThreeDeePongProto.Shared.Managers
 {
     public class MatchManager : MonoBehaviour
     {
-        private enum InstantiateContext
-        {
-            None,
-            Start,
-            NewDevice,
-            General
-        }
-        private InstantiateContext m_instantiateContext;    //Yet unused.
-
-        private PlayerInputActions m_inputActions;
+        private PlayerInputManager m_playerInputManager;
+        //private PlayerInputActions m_inputActions;
         #region SerializeField-Member-Variables
         [SerializeField] private string m_NPCName = "Some Test-NPC";    //TODO: Implement NPC for solo play!
         [SerializeField] private GameObject m_playGround;
@@ -55,7 +48,7 @@ namespace ThreeDeePongProto.Shared.Managers
         [SerializeField] private Vector3 m_defaultPaddleScale;
         #endregion
 
-        [SerializeField] private bool m_gameIsPaused;
+        [SerializeField] private bool m_gameIsPaused = false;
         [Space]
 
         #region Scriptable Objects
@@ -96,7 +89,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         //private Dictionary<PlayerIDData, GameObject> m_idGameObjectDict;
 
-        private const string m_targetData = "PlayerInputActions";
+        //private const string m_targetData = "PlayerInputActions";
 
         #region Serialization
         private readonly string m_fieldSettingsPath = "/SaveData/FieldSettings";
@@ -109,6 +102,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void Awake()
         {
+            m_playerInputManager = GetComponent<PlayerInputManager>();
             m_matchUIStates.GameRuns = true;
             PrepareMatchStart();
             LoadMatchSettings();
@@ -117,8 +111,8 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void OnEnable()
         {
-            MenuManager.BackToGame += SceneRestartActionMaps;
-            MenuManager.RestartGame += ReSetMatch;
+            MenuManager.ResumeTheGame += ResumeGame;
+            //MenuManager.RestartTheGame += ReSetMatch;
             MenuManager.EndInfiniteMatch += LetsEndInfiniteMatch;
             MenuManager.OnLoadMainScene += ResetPauseAndTimescale;
 
@@ -130,10 +124,21 @@ namespace ThreeDeePongProto.Shared.Managers
             StartWinProcedure += LetsStartWinProcedure;
         }
 
+        private void OnPlayerJoined(PlayerInput _playerInput)
+        {
+            if (_playerInput.defaultControlScheme == null || _playerInput.currentControlScheme == null)
+            {
+                // Automatisch ein ControlScheme setzen (z. B. "KeyboardMouse" oder "Gamepad")
+                _playerInput.SwitchCurrentControlScheme("KeyboardMouse", Keyboard.current, Mouse.current);
+            }
+
+            Debug.Log($"Player {_playerInput.playerIndex} joined with ControlScheme: {_playerInput.currentControlScheme}");
+        }
+
         private void OnDisable()
         {
-            MenuManager.BackToGame -= SceneRestartActionMaps;
-            MenuManager.RestartGame -= ReSetMatch;
+            MenuManager.ResumeTheGame -= ResumeGame;
+            //MenuManager.RestartTheGame -= ReSetMatch;
             MenuManager.EndInfiniteMatch -= LetsEndInfiniteMatch;
             MenuManager.OnLoadMainScene -= ResetPauseAndTimescale;
 
@@ -149,15 +154,19 @@ namespace ThreeDeePongProto.Shared.Managers
             StartNextRound -= LetsStartNextRound;
             StartWinProcedure -= LetsStartWinProcedure;
 
-            m_inputActions.Disable();
-            m_inputActions.PlayerActions.ToggleGameMenu.performed -= PauseAndTimeScale;
+            //m_inputActions.Disable();
+            //m_inputActions.PlayerActions.ToggleGameMenu.performed -= PauseAndTimeScale;
+            PlayerInputReceiver.m_menuOpens -= PauseAndTimeScale;
+            m_playerInputManager.onPlayerJoined -= OnPlayerJoined;
         }
 
         private IEnumerator Start()
         {
-            m_inputActions = InputManager.m_PlayerInputActions;
-            m_inputActions.Enable();
-            m_inputActions.PlayerActions.ToggleGameMenu.performed += PauseAndTimeScale;
+            //m_inputActions = InputManager.m_PlayerInputActions;
+            //m_inputActions.Enable();
+            //m_inputActions.PlayerActions.ToggleGameMenu.performed += PauseAndTimeScale;
+            PlayerInputReceiver.m_menuOpens += PauseAndTimeScale;
+            m_playerInputManager.onPlayerJoined += OnPlayerJoined;
 
             InstantiatePlayer();
 
@@ -185,7 +194,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 //{
                 //    playerInput = playerAvatar.AddComponent<PlayerInput>();
                 //    playerInput.actions = Resources.Load<InputActionAsset>(m_targetData); // Load Input Actions
-                //    playerInput.defaultControlScheme = "Gamepad";
+                //    playerInput.defaultControlScheme = "Keyboard";
                 //    playerInput.neverAutoSwitchControlSchemes = false; // Allow switching
                 //}
 
@@ -518,10 +527,10 @@ namespace ThreeDeePongProto.Shared.Managers
             SetPauseAndTimeScale(false);
         }
 
-        private void SceneRestartActionMaps()
+        private void ResumeGame()
         {
             SetPauseAndTimeScale(false);
-            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.PlayerActions);
+            //InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.PlayerActions);
         }
 
         private void SetPauseAndTimeScale(bool _isPaused)
@@ -542,10 +551,10 @@ namespace ThreeDeePongProto.Shared.Managers
                 }
             }
         }
-        #endregion
+        //#endregion
 
-        #region CallbackContexts
-        private void PauseAndTimeScale(InputAction.CallbackContext _callbackContext)
+        //#region CallbackContexts
+        private void PauseAndTimeScale(/*InputAction.CallbackContext _callbackContext*/)
         {
             SetPauseAndTimeScale(true);
         }

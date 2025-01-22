@@ -72,5 +72,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerControllerVarP1
       objectReference: {fileID: 0}
+    - target: {fileID: 7534366394202099577, guid: ba00057dcc1283d429076dee8979ce96,
+        type: 3}
+      propertyPath: m_DefaultActionMap
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba00057dcc1283d429076dee8979ce96, type: 3}

@@ -1,14 +1,11 @@
 using ThreeDeePongProto.Offline.CameraSetup;
 using ThreeDeePongProto.Shared.Managers;
-using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace ThreeDeePongProto.Shared.Player
 {
     internal class PlayerCameraController : MonoBehaviour
     {
-        private PlayerInputActions m_cameraInputActions;
         [SerializeField] internal PlayerController m_playerController;
 
         [Header("Camera-Positions")]
@@ -33,7 +30,7 @@ namespace ThreeDeePongProto.Shared.Player
         [SerializeField] private float m_zoomStep;
         [SerializeField] private float m_zoomDampening;
         private Vector3 m_zoomTarget;
-        private Vector2 m_mousePosition;
+        internal Vector2 m_mousePosition;
 
         private CameraManager m_cameraManager;
 
@@ -61,26 +58,24 @@ namespace ThreeDeePongProto.Shared.Player
 
         private void OnDisable()
         {
-            m_cameraInputActions?.Disable();
-            m_cameraInputActions.PlayerActions.Zoom.performed -= Zooming;
-
             MatchManager.AddCamerasNow -= AddCameras;
             CameraManager.LetsRemoveCamera(m_followCamera, m_playerId);
+
+            PlayerInputReceiver.m_sendScrollVector -= Zooming;
+            PlayerInputReceiver.m_sendMousePosition -= NewMousePosition;
         }
 
         private void Start()
         {
             MaxSideMovement();
 
-            //CameraActions need to be in Start to prevent NullReferenceExceptions due to relation to the InputManager.
-            m_cameraInputActions = InputManager.m_PlayerInputActions;
-            m_cameraInputActions.Enable();
-            m_cameraInputActions.PlayerActions.Zoom.performed += Zooming;
-
             m_cameraManager = FindObjectOfType<CameraManager>();
 
             //Saved vector to keep the playerCamera-startposition.
             CameraPositions(m_cameraManager.AvailableCameras[m_playerId]);
+
+            PlayerInputReceiver.m_sendScrollVector += Zooming;
+            PlayerInputReceiver.m_sendMousePosition += NewMousePosition;
         }
 
         #region Custom-Methods
@@ -91,8 +86,7 @@ namespace ThreeDeePongProto.Shared.Player
 
         private void Update()
         {
-            GetMousePosition();
-            SelectCameraToZoom();
+            SelectCameraToZoom(m_mousePosition);
         }
 
         private void FixedUpdate()
@@ -106,6 +100,11 @@ namespace ThreeDeePongProto.Shared.Player
             UpdateZoomPosition();
         }
 
+        private void MaxSideMovement()
+        {
+            m_maxSideMovement = m_setGroundWidth * 0.5f - m_RbPlayer.transform.localScale.x * 0.5f;
+        }
+
         private void CameraPositions(Camera _camera)
         {
             m_cameraPosition = -(_camera.transform.localPosition - Vector3.zero);
@@ -114,12 +113,12 @@ namespace ThreeDeePongProto.Shared.Player
             m_cameraPosition = new Vector3(m_cameraPosition.x, m_currentHeight, -m_cameraZPos);
         }
 
-        private void SelectCameraToZoom()
+        private void SelectCameraToZoom(Vector2 _mousePosition)
         {
             //Sets the camera only, if the mouse is within the gameWindow. width/height > 0 and not more than max width/height.)
             //xMin (Rect.width - Rect.width), yMin (Rect.height - Rect.height). xMax Rect.width, yMax Rect.height.
-            if (!(m_mousePosition.x < CameraManager.RuntimeFullsizeRect.xMin) && !(m_mousePosition.x > CameraManager.RuntimeFullsizeRect.xMax) &&
-                !(m_mousePosition.y < CameraManager.RuntimeFullsizeRect.yMin) && !(m_mousePosition.y > CameraManager.RuntimeFullsizeRect.yMax))
+            if (!(_mousePosition.x < CameraManager.RuntimeFullsizeRect.xMin) && !(_mousePosition.x > CameraManager.RuntimeFullsizeRect.xMax) &&
+                !(_mousePosition.y < CameraManager.RuntimeFullsizeRect.yMin) && !(_mousePosition.y > CameraManager.RuntimeFullsizeRect.yMax))
             {
                 switch (m_graphicUiStates.SetCameraMode)
                 {
@@ -132,8 +131,8 @@ namespace ThreeDeePongProto.Shared.Player
                     //TwoVertical
                     case ECameraModi.TwoVertical:
                     {
-                        //if m_mousePosition.x > Cam1.xMin m_playerWindowId = IndexOf Cam1, else IndexOf Cam0.
-                        m_playerWindowId = m_mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin
+                        //if _mousePosition.x > Cam1.xMin m_playerWindowId = IndexOf Cam1, else IndexOf Cam0.
+                        m_playerWindowId = _mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin
                             ? m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1])
                             : m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
                         break;
@@ -141,8 +140,8 @@ namespace ThreeDeePongProto.Shared.Player
                     //TwoHorizontal
                     case ECameraModi.TwoHorizontal:
                     {
-                        //if m_mousePosition.y > Cam1.yMin m_playerWindowId = IndexOf Cam1, else IndexOf Cam0.
-                        m_playerWindowId = m_mousePosition.y >= m_cameraManager.AvailableCameras[1].pixelRect.yMin
+                        //if _mousePosition.y > Cam1.yMin m_playerWindowId = IndexOf Cam1, else IndexOf Cam0.
+                        m_playerWindowId = _mousePosition.y >= m_cameraManager.AvailableCameras[1].pixelRect.yMin
                             ? m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1])
                             : m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
                         break;
@@ -150,15 +149,15 @@ namespace ThreeDeePongProto.Shared.Player
                     //FourSplit
                     case ECameraModi.FourSplit:
                     {
-                        if (m_mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin && m_mousePosition.y < m_cameraManager.AvailableCameras[3].pixelRect.yMin)
+                        if (_mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin && _mousePosition.y < m_cameraManager.AvailableCameras[3].pixelRect.yMin)
                         {
                             m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1]);
                         }
-                        else if (m_mousePosition.x < m_cameraManager.AvailableCameras[1].pixelRect.xMin && m_mousePosition.y >= m_cameraManager.AvailableCameras[2].pixelRect.yMin)
+                        else if (_mousePosition.x < m_cameraManager.AvailableCameras[1].pixelRect.xMin && _mousePosition.y >= m_cameraManager.AvailableCameras[2].pixelRect.yMin)
                         {
                             m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[2]);
                         }
-                        else if (m_mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin && m_mousePosition.y >= m_cameraManager.AvailableCameras[3].pixelRect.yMin)
+                        else if (_mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin && _mousePosition.y >= m_cameraManager.AvailableCameras[3].pixelRect.yMin)
                         {
                             m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[3]);
                         }
@@ -175,16 +174,6 @@ namespace ThreeDeePongProto.Shared.Player
                     }
                 }
             }
-        }
-
-        private void MaxSideMovement()
-        {
-            m_maxSideMovement = m_setGroundWidth * 0.5f - m_RbPlayer.transform.localScale.x * 0.5f;
-        }
-
-        private void GetMousePosition()
-        {
-            m_mousePosition = InputManager.GetMousePosition();
         }
 
         //private void FollowUnsmoothed()
@@ -210,17 +199,38 @@ namespace ThreeDeePongProto.Shared.Player
             m_zoomTarget -= m_zoomStep * (m_currentHeight - m_followCamera.transform.localPosition.y) * Vector3.forward;
             m_followCamera.transform.localPosition = Vector3.Lerp(m_followCamera.transform.localPosition, m_zoomTarget, Time.fixedDeltaTime * m_zoomDampening);
         }
+
+        private void NewMousePosition(Vector2 _mousePosition)
+        {
+            m_mousePosition = _mousePosition;
+        }
+
+        /// <summary>
+        /// Limit zoom to the inside of the current gameWindow by it's ID.
+        /// </summary>
+        /// <returns></returns>
+        private int GetWindowId()
+        {
+            return m_playerWindowId;
+        }
+
+        private bool MouseIsWithinWindow(Vector2 _mousePosition)
+        {
+            Rect fullsizeRect = CameraManager.RuntimeFullsizeRect;            
+            //x/yMin == (Rect.width - Rect.width) or (Rect.height - Rect.height). x/yMax == Rect.width or Rect.height.
+            bool mouseIsWithinWindow = _mousePosition.x > fullsizeRect.xMin && _mousePosition.x < fullsizeRect.xMax &&
+                _mousePosition.y > fullsizeRect.yMin && _mousePosition.y < fullsizeRect.yMax;
+
+            return mouseIsWithinWindow;
+        }
         #endregion
 
         #region CallbackContext-Methods
-        private void Zooming(InputAction.CallbackContext _callbackContext)
+        private void Zooming(Vector2 _scrollVector)
         {
-            //Zooming limited to the inside of the gameWindow.
-            //x/yMin == (Rect.width - Rect.width) or (Rect.height - Rect.height). x/yMax == Rect.width or Rect.height.
-            if (m_mousePosition.x > CameraManager.RuntimeFullsizeRect.xMin && m_mousePosition.x < CameraManager.RuntimeFullsizeRect.xMax &&
-                m_mousePosition.y > CameraManager.RuntimeFullsizeRect.yMin && m_mousePosition.y < CameraManager.RuntimeFullsizeRect.yMax)
+            if (m_playerController.m_playerId == GetWindowId() && MouseIsWithinWindow(m_mousePosition))
             {
-                float zoomValue = -_callbackContext.ReadValue<Vector2>().y * m_zoomSpeed;
+                float zoomValue = -_scrollVector.y * m_zoomSpeed;
 #if UNITY_EDITOR
                 //Debug.Log($"ZoomValue: {zoomValue} PlayerWindowId: {m_playerWindowId} PlayerId: {m_playerId}");
 #endif

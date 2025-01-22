@@ -35,7 +35,7 @@ namespace ThreeDeePongProto.Shared.Player
 
         private void Awake()
         {
-            m_matchManager = FindObjectOfType<MatchManager>();            
+            m_matchManager = FindObjectOfType<MatchManager>();
 
             m_playerIDData.PlayerId = m_playerId;
 

@@ -1,5 +1,6 @@
 using System;
 using ThreeDeePongProto.Shared.InputActions;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,6 +8,8 @@ namespace ThreeDeePongProto.Shared.Player
 {
     internal class PlayerInputReceiver : MonoBehaviour
     {
+        private PlayerInput m_playerInput;
+        //private static PlayerInputActions m_PlayerInputActions;
         [SerializeField] internal PlayerController m_playerController;
 
         private Vector2 m_currentRotationInput; //Save current rotationInput.
@@ -15,19 +18,46 @@ namespace ThreeDeePongProto.Shared.Player
         private const string m_zoomAction = "Zoom", m_mousePosAction = "MousePosition";
         private const string m_toggleMenuAction = "ToggleGameMenu", m_CursorVisAction = "CursorVisibility";
 
-        public static event Action<int> m_KickBall;
-        public static event Action m_menuOpens;
+        internal static event Action<int> m_KickBall;
+        internal static event Action m_menuOpens;   //MenuManager and MatchManager subscribed to react on menu open/close.
+        internal static event Action<Vector2> m_sendScrollVector;
+        internal static event Action<Vector2> m_sendMousePosition;
 
-        private void OnEnable()
+        private void Awake()
         {
-            var playerInput = m_playerController.GetComponent<PlayerInput>();
-            playerInput.onActionTriggered += OnActionTriggered;
+            //if (m_PlayerInputActions == null)
+            //    m_PlayerInputActions = new PlayerInputActions();
+
+            switch (m_playerController.GetComponent<PlayerInput>() == null)
+            {
+                case true:
+                {
+                    m_playerController.AddComponent<PlayerInput>();
+                    //playerInput.actions = Resources.Load<InputActionAsset>(m_targetData); //Load Input Actions.
+                    //playerInput.defaultControlScheme = "KeyboardMouse";
+                    //playerInput.neverAutoSwitchControlSchemes = false; //Allow switching.
+                    break;
+                }
+                case false:
+                {
+                    m_playerInput = m_playerController.GetComponent<PlayerInput>();
+
+                    if (m_playerInput == null)
+                    {
+                        Debug.LogError("PlayerInput not found!");
+                        return;
+                    }
+
+                    break;
+                }
+            }
+
+            m_playerInput.onActionTriggered += OnActionTriggered;
         }
 
         private void OnDisable()
         {
-            var playerInput = m_playerController.GetComponent<PlayerInput>();
-            playerInput.onActionTriggered -= OnActionTriggered;
+            m_playerInput.onActionTriggered -= OnActionTriggered;
         }
 
         private void FixedUpdate()
@@ -101,9 +131,17 @@ namespace ThreeDeePongProto.Shared.Player
         //Process all actions central.
         private void OnActionTriggered(InputAction.CallbackContext _callbackContext)
         {
-            //switch (_callbackContext.action.actionMap)
+            //Return InputActionMap from a generated Wrapper.
+            //var uiActionMap = InputManager.m_PlayerInputActions.UserInterface.Get();
+            //var playerActionsMap = InputManager.m_PlayerInputActions.PlayerActions.Get();
+
+            //if (_callbackContext.action.actionMap != playerActionsMap)
             //{
+            //    Debug.Log($"Ignored action: {_callbackContext.action.name} (not part of PlayerActions)");
+            //    return;
             //}
+
+            //Debug.Log(playerActionsMap == _callbackContext.action.actionMap);
 
             //Identify Actions by their Names.
             switch (_callbackContext.action.name)
@@ -120,26 +158,29 @@ namespace ThreeDeePongProto.Shared.Player
                 case m_kickAction:
                 {
                     if (_callbackContext.action.WasPerformedThisFrame())    //Else started- & canceled-Phase invoke the event as well.
-                        m_KickBall?.Invoke(m_playerController.m_playerId);  //Tell the Ball, that it has been kicked! *kick*
+                        HandleKick(_callbackContext);
                     break;
                 }
                 case m_zoomAction:
                 {
-                    //m_playerController.m_playerCameraController.Zooming(_callbackContext.ReadValue<Vector2>());
+                    if (_callbackContext.action.WasPerformedThisFrame())
+                        HandleZoom(_callbackContext);
                     break;
                 }
                 case m_mousePosAction:
                 {
-                    //m_playerController.m_playerCameraController.m_mousePosition = _callbackContext.ReadValue<Vector2>();
+                    if (_callbackContext.action.WasPerformedThisFrame())
+                        HandleMousePosition(_callbackContext);
                     break;
                 }
                 case m_toggleMenuAction:
-                    OpenMenu(_callbackContext);
+                    if (_callbackContext.action.WasPerformedThisFrame())
+                        OpenMenu();
                     break;
                 case m_CursorVisAction:
                     break;
                 default:
-                    Debug.LogWarning($"Unknown Action: {_callbackContext.action.name}!");
+                    Debug.LogWarning($"Unhandled Action: {_callbackContext.action.name}.");
                     break;
             }
         }
@@ -154,37 +195,57 @@ namespace ThreeDeePongProto.Shared.Player
         //Process 'Rotate'-Action.
         private void HandleRotate(InputAction.CallbackContext _callbackContext)
         {
-            if (_callbackContext.phase == InputActionPhase.Performed || _callbackContext.phase == InputActionPhase.Started)
+            switch (_callbackContext.phase)
             {
-                m_currentRotationInput = _callbackContext.ReadValue<Vector2>(); // Eingabe speichern
-            }
-            else if (_callbackContext.phase == InputActionPhase.Canceled)
-            {
-                m_currentRotationInput = Vector2.zero; // Eingabe zurücksetzen, wenn Taste losgelassen wird
+                case InputActionPhase.Started:
+                case InputActionPhase.Performed:
+                    m_currentRotationInput = _callbackContext.ReadValue<Vector2>(); //Tempsave InputVector.
+                    break;
+                case InputActionPhase.Canceled:
+                    m_currentRotationInput = Vector2.zero; //Reset InputVector, once button is released/action is canceled.
+                    break;
             }
         }
 
         //Process 'Push'-Action.
         private void HandlePush(InputAction.CallbackContext _callbackContext)
         {
-            if (_callbackContext.performed) // Button gedrückt
+            switch (_callbackContext.phase)
             {
-                m_playerController.m_playerMovement.PushProgress(true);
-            }
-            else if (_callbackContext.canceled) // Button losgelassen
-            {
-                m_playerController.m_playerMovement.PushProgress(false);
+                case InputActionPhase.Performed:    //If button is pressed.
+                    m_playerController.m_playerMovement.PushProgress(true);
+                    break;
+                case InputActionPhase.Canceled:     //If button is released.
+                    m_playerController.m_playerMovement.PushProgress(false);
+                    break;
+                case InputActionPhase.Started:
+                default:
+                    break;
             }
         }
 
-        private void OpenMenu(InputAction.CallbackContext _callbackContext)
+        private void HandleKick(InputAction.CallbackContext _callbackContext)
         {
-            //if (m_playerController.m_playerId == 0)     //Equal to Master on Online Games?
-            //TODO: All scripts that depend on Menu Opening need to subscribe here. 
+            m_KickBall?.Invoke(m_playerController.m_playerId);  //Tell the Ball, that it has been kicked! *kick*
+        }
+
+        private void HandleZoom(InputAction.CallbackContext _callbackContext)
+        {
+            Vector2 scrollVector = _callbackContext.ReadValue<Vector2>();
+            m_sendScrollVector?.Invoke(scrollVector);
+        }
+
+        private void HandleMousePosition(InputAction.CallbackContext _callbackContext)
+        {
+            Vector2 mousePosition = _callbackContext.ReadValue<Vector2>();
+            m_sendMousePosition?.Invoke(mousePosition);
+        }
+
+        private void OpenMenu()
+        {
+            //if (m_playerController.m_playerId == 0)     //Equal to Master on Online Games? 
             m_menuOpens?.Invoke();
             InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.UserInterface);
-            //m_playerInputActions.Disable();  //Paddles can still be moved, if 'm_playerInputActions' here isn't disabled.
-            //m_playerController.m_playerMovement.StopPushCoroutine();
         }
         #endregion
     }

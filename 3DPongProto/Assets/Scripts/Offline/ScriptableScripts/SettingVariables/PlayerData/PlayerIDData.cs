@@ -11,6 +11,5 @@ public class PlayerIDData : ScriptableObject
     public int PlayerId;
     public Image Avatar;
 
-    public ETeamChoice ETeamChoice;
     public bool PlayerOnFrontline;
 }
