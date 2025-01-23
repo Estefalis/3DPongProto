@@ -39,13 +39,13 @@ namespace ThreeDeePongProto.Shared.InputActions
 
             ControlSettings.ResetPlayerViewRebinds += ResetRebinding;
 
-            InputManager.m_RebindComplete += UpdateRebindUI;
-            InputManager.m_RebindCanceled += UpdateRebindUI;
+            RebindManager.m_RebindComplete += UpdateRebindUI;
+            RebindManager.m_RebindCanceled += UpdateRebindUI;
 
             if (m_inputActionReference != null)
             {
                 GetBindingInformation();
-                InputManager.LoadKeyRebindOverrides(m_actionName, m_bindingIndex); //MUST be below 'GetBindingInformation()', else Exception!
+                RebindManager.LoadKeyRebindOverrides(m_actionName, m_bindingIndex); //MUST be below 'GetBindingInformation()', else Exception!
                 UpdateRebindUI();
             }
         }
@@ -54,8 +54,8 @@ namespace ThreeDeePongProto.Shared.InputActions
         {
             ControlSettings.ResetPlayerViewRebinds -= ResetRebinding;
 
-            InputManager.m_RebindComplete -= UpdateRebindUI;
-            InputManager.m_RebindCanceled -= UpdateRebindUI;
+            RebindManager.m_RebindComplete -= UpdateRebindUI;
+            RebindManager.m_RebindCanceled -= UpdateRebindUI;
         }
 
         private void OnValidate()
@@ -95,30 +95,30 @@ namespace ThreeDeePongProto.Shared.InputActions
                     {
                         case m_keyboardMouseScheme:
                         {
-                            m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex).ToUpper();
+                            m_rebindText.text = RebindManager.GetBindingName(m_actionName, m_bindingIndex).ToUpper();
                             break;
                         }
                         case m_gamePadScheme:
                         {
-                            m_rebindText.text = InputControlPath.ToHumanReadableString(InputManager.GetBindingName(m_actionName, m_bindingIndex), m_humanReadableStringOptions);
+                            m_rebindText.text = InputControlPath.ToHumanReadableString(RebindManager.GetBindingName(m_actionName, m_bindingIndex), m_humanReadableStringOptions);
                             break;
                         }
                         default:
-                            m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex).ToUpper();
+                            m_rebindText.text = RebindManager.GetBindingName(m_actionName, m_bindingIndex).ToUpper();
                             break;
                     }
                 }
                 else
                 {
-                    m_rebindText.text = InputManager.GetBindingName(m_actionName, m_bindingIndex).ToUpper();
-                    //m_rebindText.text = InputControlPath.ToHumanReadableString(InputManager.GetBindingName(m_actionName, m_bindingIndex), options: InputControlPath.HumanReadableStringOptions.OmitDevice);
+                    m_rebindText.text = RebindManager.GetBindingName(m_actionName, m_bindingIndex).ToUpper();
+                    //m_rebindText.text = InputControlPath.ToHumanReadableString(RebindManager.GetBindingName(m_actionName, m_bindingIndex), options: InputControlPath.HumanReadableStringOptions.OmitDevice);
                 }
             }
 
             if (m_buttonImage != null && m_buttonImage.gameObject.activeInHierarchy)
             {
                 Image buttonImage = m_buttonImage.GetComponent<Image>();
-                buttonImage.sprite = InputManager.GetControllerIcons(m_controlScheme, InputManager.GetEffectiveBindingPath(m_actionName, m_bindingIndex));
+                buttonImage.sprite = RebindManager.GetControllerIcons(m_controlScheme, RebindManager.GetEffectiveBindingPath(m_actionName, m_bindingIndex));
                 m_buttonImage.sprite = buttonImage.sprite;
             }
         }
@@ -128,7 +128,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ExecuteKeyRebind()
         {
-            InputManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_controlScheme, m_excludeMouse);
+            RebindManager.StartRebindProcess(m_actionName, m_bindingIndex, m_rebindText, m_controlScheme, m_excludeMouse);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// </summary>
         private void ResetRebinding()
         {
-            InputManager.ResetRebinding(m_actionName, m_bindingIndex, m_controlScheme);
+            RebindManager.ResetRebinding(m_actionName, m_bindingIndex, m_controlScheme);
             UpdateRebindUI();
         }
     }

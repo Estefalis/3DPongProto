@@ -2,7 +2,7 @@
 using Fusion;
 
 /// <summary>
-/// Prototyping component for spawning Player avatars.
+/// Prototyping component for spawning PlayerCharacter avatars.
 /// </summary>
 [SimulationBehaviour(Stages = SimulationStages.Forward, Modes =  SimulationModes.Server | SimulationModes.Host)]
 public class PlayerSpawnerPrototype : SpawnerPrototype<PlayerSpawnPointPrototype>, IPlayerJoined, IPlayerLeft, ISceneLoadDone {

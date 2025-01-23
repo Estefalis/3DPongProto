@@ -37,7 +37,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         private void Start()
         {
-            m_playerInputActions = InputManager.m_PlayerInputActions;
+            m_playerInputActions = RebindManager.m_PlayerInputActions;
             m_playerInputActions.Enable();
 
             ResetVariables();
@@ -64,7 +64,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         {
             m_mouseScrollValue = m_playerInputActions.UserInterface.ScrollWheel.ReadValue<Vector2>();
             m_mouseScrollValue.Normalize();
-            //m_mousePosition = InputManager.GetMousePosition();
+            //m_mousePosition = RebindManager.GetMousePosition();
             m_mousePosition = m_playerInputActions.UserInterface.Point.ReadValue<Vector2>();
 
             switch (MouseIsInScrollView(m_mousePosition))

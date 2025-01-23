@@ -4,13 +4,13 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace ThreeDeePongProto.Shared.Player
+namespace ThreeDeePongProto.Shared.PlayerCharacter
 {
-    internal class PlayerInputReceiver : MonoBehaviour
+    internal class CharacterInput : MonoBehaviour
     {
         private PlayerInput m_playerInput;
         //private static PlayerInputActions m_PlayerInputActions;
-        [SerializeField] internal PlayerController m_playerController;
+        [SerializeField] internal CharacterMainController m_playerController;
 
         private Vector2 m_currentRotationInput; //Save current rotationInput.
         private const string m_moveAction = "Move", m_rotateAction = "Rotate", m_pushAction = "Push";
@@ -132,8 +132,8 @@ namespace ThreeDeePongProto.Shared.Player
         private void OnActionTriggered(InputAction.CallbackContext _callbackContext)
         {
             //Return InputActionMap from a generated Wrapper.
-            //var uiActionMap = InputManager.m_PlayerInputActions.UserInterface.Get();
-            //var playerActionsMap = InputManager.m_PlayerInputActions.PlayerActions.Get();
+            //var uiActionMap = RebindManager.m_PlayerInputActions.UserInterface.Get();
+            //var playerActionsMap = RebindManager.m_PlayerInputActions.PlayerActions.Get();
 
             //if (_callbackContext.action.actionMap != playerActionsMap)
             //{
@@ -245,7 +245,7 @@ namespace ThreeDeePongProto.Shared.Player
         {
             //if (m_playerController.m_playerId == 0)     //Equal to Master on Online Games? 
             m_menuOpens?.Invoke();
-            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.UserInterface);
+            RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.UserInterface);
         }
         #endregion
     }

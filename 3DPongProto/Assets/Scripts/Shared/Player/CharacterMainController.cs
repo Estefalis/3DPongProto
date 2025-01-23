@@ -1,18 +1,18 @@
 using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 
-namespace ThreeDeePongProto.Shared.Player
+namespace ThreeDeePongProto.Shared.PlayerCharacter
 {
-    public class PlayerController : MonoBehaviour
+    public class CharacterMainController : MonoBehaviour
     {
         internal MatchManager m_matchManager;
 
         [SerializeField] internal Transform m_inputAndCamComponent;
-        [SerializeField] internal PlayerInputReceiver m_playerInputReceiver;
-        [SerializeField] internal PlayerMovement m_playerMovement;
-        [SerializeField] internal PlayerInteractions m_playerInteractions;
-        [SerializeField] internal PlayerHealth m_playerHealth;
-        [SerializeField] internal PlayerCameraController m_playerCameraController;
+        [SerializeField] internal CharacterInput m_playerInputHandler;
+        [SerializeField] internal CharacterMovement m_playerMovement;
+        [SerializeField] internal CharacterInteractions m_playerInteractions;
+        [SerializeField] internal CharacterHealth m_playerHealth;
+        [SerializeField] internal CharacterCameraController m_playerCameraController;
 
         [Header("Player Details")]
         [SerializeField] internal int m_playerId;

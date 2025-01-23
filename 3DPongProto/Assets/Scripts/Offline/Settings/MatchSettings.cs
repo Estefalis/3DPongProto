@@ -145,7 +145,7 @@ namespace ThreeDeePongProto.Shared.Settings
 
             if ((int)m_matchUIStates.EPlayerAmount > 3)
             {
-                //Player-Set-Frontline
+                //PlayerCharacter-Set-Frontline
                 m_frontLineDds[0].onValueChanged.AddListener(delegate
                 { OnTeamOneFrontlineDropdownValueChanged(m_frontLineDds[0]); });
                 m_frontLineDds[1].onValueChanged.AddListener(delegate
@@ -153,7 +153,7 @@ namespace ThreeDeePongProto.Shared.Settings
                 m_distanceSliderValues[0].onValueChanged.AddListener(OnFrontlineSliderValueChanged);
             }
 
-            //Player-Set-Backline
+            //PlayerCharacter-Set-Backline
             m_backLineDds[0].onValueChanged.AddListener(delegate
             { OnTeamOneBacklineDropdownValueChanged(m_backLineDds[0]); });
             m_backLineDds[1].onValueChanged.AddListener(delegate
@@ -184,7 +184,7 @@ namespace ThreeDeePongProto.Shared.Settings
 
             if (m_matchValues.PlayerData.Count > 3)
             {
-                //Player-Set-Frontline
+                //PlayerCharacter-Set-Frontline
                 m_frontLineDds[0].onValueChanged.RemoveListener(delegate
                 { OnTeamOneFrontlineDropdownValueChanged(m_frontLineDds[0]); });
                 m_frontLineDds[1].onValueChanged.RemoveListener(delegate
@@ -192,7 +192,7 @@ namespace ThreeDeePongProto.Shared.Settings
                 m_distanceSliderValues[0].onValueChanged.RemoveListener(OnFrontlineSliderValueChanged);
             }
 
-            //Player-Set-Backline
+            //PlayerCharacter-Set-Backline
             m_backLineDds[0].onValueChanged.RemoveListener(delegate
             { OnTeamOneBacklineDropdownValueChanged(m_backLineDds[0]); });
             m_backLineDds[1].onValueChanged.RemoveListener(delegate
@@ -299,7 +299,7 @@ namespace ThreeDeePongProto.Shared.Settings
             {
                 case 0:
                 {
-                    //Frontline Player 1 (Team 1, ID 0) = Backline Player 3 (Team 1, ID 2).
+                    //Frontline PlayerCharacter 1 (Team 1, ID 0) = Backline PlayerCharacter 3 (Team 1, ID 2).
                     m_backLineDds[0].value = 1;
                     m_matchUIStates.TPOneFrontlineDdIndex = 0;
                     UpdateFrontlineSetup(m_matchValues.PlayerData[0].PlayerId);
@@ -307,7 +307,7 @@ namespace ThreeDeePongProto.Shared.Settings
                 }
                 case 1:
                 {
-                    //Frontline Player 3 (Team 1, ID 2) = Backline Player 1 (Team 1, ID 0).
+                    //Frontline PlayerCharacter 3 (Team 1, ID 2) = Backline PlayerCharacter 1 (Team 1, ID 0).
                     m_backLineDds[0].value = 0;
                     m_matchUIStates.TPOneFrontlineDdIndex = 1;
                     UpdateFrontlineSetup(m_matchValues.PlayerData[2].PlayerId);
@@ -328,7 +328,7 @@ namespace ThreeDeePongProto.Shared.Settings
             {
                 case 0:
                 {
-                    //Frontline Player 2 (Team 2, ID 1) = Backline Player 4 (Team 2, ID 3).
+                    //Frontline PlayerCharacter 2 (Team 2, ID 1) = Backline PlayerCharacter 4 (Team 2, ID 3).
                     m_backLineDds[1].value = 1;
                     m_matchUIStates.TPTwoFrontlineDdIndex = 0;
                     UpdateFrontlineSetup(m_matchValues.PlayerData[1].PlayerId);
@@ -336,7 +336,7 @@ namespace ThreeDeePongProto.Shared.Settings
                 }
                 case 1:
                 {
-                    //Frontline Player 4 (Team 2, ID 3) = Backline Player 2 (Team 2, ID 1).
+                    //Frontline PlayerCharacter 4 (Team 2, ID 3) = Backline PlayerCharacter 2 (Team 2, ID 1).
                     m_backLineDds[1].value = 0;
                     m_matchUIStates.TPTwoFrontlineDdIndex = 1;
                     UpdateFrontlineSetup(m_matchValues.PlayerData[3].PlayerId);
@@ -357,7 +357,7 @@ namespace ThreeDeePongProto.Shared.Settings
             {
                 case 0:
                 {
-                    //Backline Player 1 (Team 1, ID 0) = Frontline Player 3 (Team 1, ID 2).
+                    //Backline PlayerCharacter 1 (Team 1, ID 0) = Frontline PlayerCharacter 3 (Team 1, ID 2).
                     m_frontLineDds[0].value = 1;
                     m_matchUIStates.TPOneBacklineDdIndex = 0;
                     UpdateBacklineSetup(m_matchValues.PlayerData[0].PlayerId);
@@ -365,7 +365,7 @@ namespace ThreeDeePongProto.Shared.Settings
                 }
                 case 1:
                 {
-                    //Backline Player 3 (Team 1, ID 2) = Frontline Player 1 (Team 1, ID 0).
+                    //Backline PlayerCharacter 3 (Team 1, ID 2) = Frontline PlayerCharacter 1 (Team 1, ID 0).
                     m_frontLineDds[0].value = 0;
                     m_matchUIStates.TPOneBacklineDdIndex = 1;
                     UpdateBacklineSetup(m_matchValues.PlayerData[2].PlayerId);
@@ -386,7 +386,7 @@ namespace ThreeDeePongProto.Shared.Settings
             {
                 case 0:
                 {
-                    //Backline Player 2 (Team 2, ID 1) = Frontline Player 4 (Team 2, ID 3).
+                    //Backline PlayerCharacter 2 (Team 2, ID 1) = Frontline PlayerCharacter 4 (Team 2, ID 3).
                     m_frontLineDds[1].value = 1;
                     m_matchUIStates.TPTwoBacklineDdIndex = 0;
                     UpdateBacklineSetup(m_matchValues.PlayerData[1].PlayerId);
@@ -394,7 +394,7 @@ namespace ThreeDeePongProto.Shared.Settings
                 }
                 case 1:
                 {
-                    //Backline Player 4 (Team 2, ID 3) = Frontline Player 2 (Team 2, ID 1).
+                    //Backline PlayerCharacter 4 (Team 2, ID 3) = Frontline PlayerCharacter 2 (Team 2, ID 1).
                     m_frontLineDds[1].value = 0;
                     m_matchUIStates.TPTwoBacklineDdIndex = 1;
                     UpdateBacklineSetup(m_matchValues.PlayerData[3].PlayerId);
@@ -466,7 +466,7 @@ namespace ThreeDeePongProto.Shared.Settings
             {
                 case 4:
                 {
-                    ////In case 4 Player shall play, set the Splitscreen Mode to load to ECameraModi.FourSplit.
+                    ////In case 4 PlayerCharacter shall play, set the Splitscreen Mode to load to ECameraModi.FourSplit.
                     m_graphicUiStates.SetCameraMode = ECameraModi.FourSplit;
                     ObjectsToHide(true, true, 225.0f);
                     SetupFrontlineDropdowns();
@@ -474,7 +474,7 @@ namespace ThreeDeePongProto.Shared.Settings
                 }
                 case 2:
                 {
-                    ////In case 2 Player shall play, set the Splitscreen Mode to load to ECameraModi.TwoHorizontal.
+                    ////In case 2 PlayerCharacter shall play, set the Splitscreen Mode to load to ECameraModi.TwoHorizontal.
                     m_graphicUiStates.SetCameraMode = ECameraModi.TwoHorizontal;
                     ObjectsToHide(false, false, 714.0f);
                     break;

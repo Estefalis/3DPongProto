@@ -1554,6 +1554,7 @@ Transform:
   m_Children:
   - {fileID: 2093391958}
   - {fileID: 2136304135}
+  - {fileID: 1303007594}
   - {fileID: 719459911}
   m_Father: {fileID: 0}
   m_RootOrder: 5
@@ -7841,7 +7842,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 159073940}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &719459913
 MonoBehaviour:
@@ -15635,8 +15636,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1303007594}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -28207,17 +28207,17 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 1362999632}
+    m_TransformParent: {fileID: 159073940}
     m_Modifications:
     - target: {fileID: 706858084997270176, guid: 31c7a707940f85244a29e4c5915787e1,
         type: 3}
       propertyPath: m_Name
-      value: InputManager
+      value: RebindManager
       objectReference: {fileID: 0}
     - target: {fileID: 706858084997270178, guid: 31c7a707940f85244a29e4c5915787e1,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 706858084997270178, guid: 31c7a707940f85244a29e4c5915787e1,
         type: 3}

@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 
 namespace ThreeDeePongProto.Shared.InputActions
 {
-    public class InputManager : MonoBehaviour
+    public class RebindManager : MonoBehaviour
     {
         private enum ActiveInputActionMap
         {
@@ -73,7 +73,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         /// <summary>
-        /// PlayerController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the InputManager into 'Awake()', to prevent Exceptions.
+        /// CharacterMainController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the RebindManager into 'Awake()', to prevent Exceptions.
         /// </summary>
         private void Awake()
         {
@@ -342,7 +342,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                             //Duplicate case.
                             _actionToRebind.RemoveBindingOverride(_bindingIndex);   //Required, or the new effectivePath gets displayed still.
 
-                            //Gives the Player the option to retry and rebind another buttonKey with '_bindingIndex'. Or to press Escape.
+                            //Gives the PlayerCharacter the option to retry and rebind another buttonKey with '_bindingIndex'. Or to press Escape.
                             if (_bindingIndex < _actionToRebind.bindings.Count && _actionToRebind.bindings[_bindingIndex].isPartOfComposite)
                                 ExecuteKeyRebind(_actionToRebind, _bindingIndex, _statusText, _controlScheme, _excludeMouse, _allCompositeParts);
                         }

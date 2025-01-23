@@ -2,11 +2,11 @@ using ThreeDeePongProto.Offline.CameraSetup;
 using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 
-namespace ThreeDeePongProto.Shared.Player
+namespace ThreeDeePongProto.Shared.PlayerCharacter
 {
-    internal class PlayerCameraController : MonoBehaviour
+    internal class CharacterCameraController : MonoBehaviour
     {
-        [SerializeField] internal PlayerController m_playerController;
+        [SerializeField] internal CharacterMainController m_playerController;
 
         [Header("Camera-Positions")]
         [SerializeField] private float m_lowestHeight;
@@ -61,8 +61,8 @@ namespace ThreeDeePongProto.Shared.Player
             MatchManager.AddCamerasNow -= AddCameras;
             CameraManager.LetsRemoveCamera(m_followCamera, m_playerId);
 
-            PlayerInputReceiver.m_sendScrollVector -= Zooming;
-            PlayerInputReceiver.m_sendMousePosition -= NewMousePosition;
+            CharacterInput.m_sendScrollVector -= Zooming;
+            CharacterInput.m_sendMousePosition -= NewMousePosition;
         }
 
         private void Start()
@@ -74,8 +74,8 @@ namespace ThreeDeePongProto.Shared.Player
             //Saved vector to keep the playerCamera-startposition.
             CameraPositions(m_cameraManager.AvailableCameras[m_playerId]);
 
-            PlayerInputReceiver.m_sendScrollVector += Zooming;
-            PlayerInputReceiver.m_sendMousePosition += NewMousePosition;
+            CharacterInput.m_sendScrollVector += Zooming;
+            CharacterInput.m_sendMousePosition += NewMousePosition;
         }
 
         #region Custom-Methods

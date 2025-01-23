@@ -3,7 +3,7 @@ using ThreeDeePongProto.Shared.AudioManagement;
 using ThreeDeePongProto.Shared.Managers;
 using ThreeDeePongProto.Shared.InputActions;
 using UnityEngine;
-using ThreeDeePongProto.Shared.Player;
+using ThreeDeePongProto.Shared.PlayerCharacter;
 
 public class Ball : MonoBehaviour
 {
@@ -62,14 +62,14 @@ public class Ball : MonoBehaviour
     {
         AudioManager.LetsRemoveAudioSources(m_ballAudioSource);
 
-        PlayerInputReceiver.m_KickBall -= BallStart;
+        CharacterInput.m_KickBall -= BallStart;
     }
 
     private void Start()
     {
         AudioManager.LetsRegisterAudioSources(m_ballAudioSource);
 
-        PlayerInputReceiver.m_KickBall += BallStart;
+        CharacterInput.m_KickBall += BallStart;
     }
 
     private void ResetBall()
@@ -126,7 +126,7 @@ public class Ball : MonoBehaviour
     {
         if (_other.gameObject.CompareTag(m_goalOne))
         {
-            //MatchManager: WinCondition-Check & increases Match-Points of Player/Team 2 - MatchUserInterface: Updates MatchUI - PlayerControls: Resets Paddle on Goal.
+            //MatchManager: WinCondition-Check & increases Match-Points of PlayerCharacter/Team 2 - MatchUserInterface: Updates MatchUI - PlayerControls: Resets Paddle on Goal.
             HitGoalOne?.Invoke();
             //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
             PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
@@ -135,7 +135,7 @@ public class Ball : MonoBehaviour
 
         if (_other.gameObject.CompareTag(m_goalTwo))
         {
-            //MatchManager: WinCondition-Check & increases Match-Points of Player/Team 1 - MatchUserInterface: Updates MatchUI - PlayerControls: Resets Paddle on Goal.
+            //MatchManager: WinCondition-Check & increases Match-Points of PlayerCharacter/Team 1 - MatchUserInterface: Updates MatchUI - PlayerControls: Resets Paddle on Goal.
             HitGoalTwo?.Invoke();
             //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
             PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
@@ -169,8 +169,8 @@ public class Ball : MonoBehaviour
             PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.Diegetic, m_trackId, false);
         }
 
-        //TODO: Player 1 & 2, if AdditionalSpeed (m_onContactAddUp) shall be applied?
-        //if (_collision.gameObject.CompareTag("Player"))
+        //TODO: PlayerCharacter 1 & 2, if AdditionalSpeed (m_onContactAddUp) shall be applied?
+        //if (_collision.gameObject.CompareTag("PlayerCharacter"))
         //{
         //    m_rigidbody.AddForce(_collision.GetContact(0).normal * m_onContactAddUp, ForceMode.Impulse);
         //}

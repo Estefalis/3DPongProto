@@ -2,11 +2,11 @@ using System.Collections;
 using ThreeDeePongProto.Shared.AudioManagement;
 using UnityEngine;
 
-namespace ThreeDeePongProto.Shared.Player
+namespace ThreeDeePongProto.Shared.PlayerCharacter
 {
-    internal class PlayerMovement : MonoBehaviour
+    internal class CharacterMovement : MonoBehaviour
     {
-        [SerializeField] private PlayerController m_playerController;
+        [SerializeField] private CharacterMainController m_playerController;
         [SerializeField] private Rigidbody m_rigidbody;
         [SerializeField] protected AudioSource m_audioSource;
 

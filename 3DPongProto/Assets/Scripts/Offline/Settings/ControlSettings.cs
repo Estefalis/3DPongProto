@@ -17,8 +17,8 @@ namespace ThreeDeePongProto.Shared.Settings
         [SerializeField, Range(0.5f, 1f)] private float m_maxAlphaValue = 1f;
 
         private int m_currentViewIndex;
-        public static event Action<int> PlayerViewIndex;        //Subscriber: InputManager.
-        public static event Action ResetPlayerViewRebinds;      //Subscriber: InputManager.
+        public static event Action<int> PlayerViewIndex;        //Subscriber: RebindManager.
+        public static event Action ResetPlayerViewRebinds;      //Subscriber: RebindManager.
         #endregion
 
         #region Axis Inversion
@@ -312,7 +312,7 @@ namespace ThreeDeePongProto.Shared.Settings
         {
             switch (m_currentViewIndex)
             {
-                case 0: //Player 1
+                case 0: //PlayerCharacter 1
                 {
                     m_controlUIStatesEP[0].CustomXSensitivity = _toggleX;
 
@@ -335,7 +335,7 @@ namespace ThreeDeePongProto.Shared.Settings
                     }
                     break;
                 }
-                case 1: //Player 2
+                case 1: //PlayerCharacter 2
                 {
                     m_controlUIStatesEP[1].CustomXSensitivity = _toggleX;
 
@@ -358,7 +358,7 @@ namespace ThreeDeePongProto.Shared.Settings
                     }
                     break;
                 }
-                case 2: //Player 3
+                case 2: //PlayerCharacter 3
                 {
                     m_controlUIStatesEP[2].CustomXSensitivity = _toggleX;
 
@@ -381,7 +381,7 @@ namespace ThreeDeePongProto.Shared.Settings
                     }
                     break;
                 }
-                case 3: //Player 4
+                case 3: //PlayerCharacter 4
                 {
                     m_controlUIStatesEP[3].CustomXSensitivity = _toggleX;
 
@@ -413,7 +413,7 @@ namespace ThreeDeePongProto.Shared.Settings
         {
             switch (m_currentViewIndex)
             {
-                case 0: //Player 1
+                case 0: //PlayerCharacter 1
                 {
                     m_controlUIStatesEP[0].CustomYSensitivity = _toggleY;
 
@@ -436,7 +436,7 @@ namespace ThreeDeePongProto.Shared.Settings
                     }
                     break;
                 }
-                case 1: //Player 2
+                case 1: //PlayerCharacter 2
                 {
                     m_controlUIStatesEP[1].CustomYSensitivity = _toggleY;
 
@@ -459,7 +459,7 @@ namespace ThreeDeePongProto.Shared.Settings
                     }
                     break;
                 }
-                case 2: //Player 3
+                case 2: //PlayerCharacter 3
                 {
                     m_controlUIStatesEP[2].CustomYSensitivity = _toggleY;
 
@@ -482,7 +482,7 @@ namespace ThreeDeePongProto.Shared.Settings
                     }
                     break;
                 }
-                case 3: //Player 4
+                case 3: //PlayerCharacter 4
                 {
                     m_controlUIStatesEP[3].CustomYSensitivity = _toggleY;
 

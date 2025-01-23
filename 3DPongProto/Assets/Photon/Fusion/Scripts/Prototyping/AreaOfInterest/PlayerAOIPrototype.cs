@@ -3,7 +3,7 @@ using Fusion;
 using UnityEngine;
 
 /// <summary>
-/// Prototyping component for Fusion. Updates the Player's AOI every tick to be a radius around this object.
+/// Prototyping component for Fusion. Updates the PlayerCharacter's AOI every tick to be a radius around this object.
 /// </summary>
 [ScriptHelp(BackColor = EditorHeaderBackColor.Steel)]
 public class PlayerAOIPrototype : NetworkBehaviour {

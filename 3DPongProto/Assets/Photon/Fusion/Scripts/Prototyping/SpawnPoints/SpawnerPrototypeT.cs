@@ -25,7 +25,7 @@ public class SpawnerPrototype<T> : SimulationBehaviour, IPlayerJoined, IPlayerLe
   public SpawnMethods SpawnMethod;
 
   /// <summary>
-  /// This allows players to be spawned with Player StateAuthority. Only applicable to Shared Mode.
+  /// This allows players to be spawned with PlayerCharacter StateAuthority. Only applicable to Shared Mode.
   /// </summary>
   [InlineHelp]
   [DrawIf(nameof(_AllowClientObjects), Hide = true)]

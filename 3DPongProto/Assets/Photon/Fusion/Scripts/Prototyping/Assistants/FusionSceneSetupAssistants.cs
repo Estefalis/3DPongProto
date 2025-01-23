@@ -119,7 +119,7 @@ namespace Fusion.Assistants {
       return (nds, nr);
     }
 
-    //[MenuItem("GameObject/Fusion/Setup/Add Player Spawner", false, FusionAssistants.PRIORITY)]
+    //[MenuItem("GameObject/Fusion/Setup/Add PlayerCharacter Spawner", false, FusionAssistants.PRIORITY)]
     public static void AddPlayerSpawner() { AddPlayerSpawner(null); }
     public static PlayerSpawnerPrototype AddPlayerSpawner(GameObject addTo) {
       if (addTo == null) {
@@ -136,7 +136,7 @@ namespace Fusion.Assistants {
       return spawner;
     }
 
-    //[MenuItem("GameObject/Fusion/Setup/Add Player Spawn Point", false, FusionAssistants.PRIORITY)]
+    //[MenuItem("GameObject/Fusion/Setup/Add PlayerCharacter Spawn Point", false, FusionAssistants.PRIORITY)]
     public static void AddPlayerSpawnPoint() {
       var parent = Selection.activeGameObject ? Selection.activeGameObject.transform : null;
       var point = FusionAssistants.CreatePrimitive(null, "Player SpawnPoint", null, null, null, parent, null, typeof(PlayerSpawnPointPrototype));

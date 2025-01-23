@@ -120,13 +120,13 @@ namespace ThreeDeePongProto.Shared.UI
                             break;
                         case EPlayerAmount.Two:
                         {
-                            //Player 3 invisible, Player 4 invisible, Group 2 visible, TextWidths large.
+                            //PlayerCharacter 3 invisible, PlayerCharacter 4 invisible, Group 2 visible, TextWidths large.
                             ObjectsToHide(false, false, true, 437.0f);
                             break;
                         }
                         case EPlayerAmount.Four:
                         {
-                            //Player 3 visible, Player 4 visible, Group 2 visible, TextWidths small.
+                            //PlayerCharacter 3 visible, PlayerCharacter 4 visible, Group 2 visible, TextWidths small.
                             ObjectsToHide(true, true, true, 110.0f);
                             break;
                         }
@@ -142,13 +142,13 @@ namespace ThreeDeePongProto.Shared.UI
                     {
                         case EPlayerAmount.One:
                         {
-                            //Only Player 1 visible for Lan 1 vs 1 Matches.
+                            //Only PlayerCharacter 1 visible for Lan 1 vs 1 Matches.
                             ObjectsToHide(false, false, false, 437.0f);
                             break;
                         }
                         case EPlayerAmount.Two:
                         {
-                            //Player 3 invisible, Player 4 invisible, Group 2 visible, TextWidths large.
+                            //PlayerCharacter 3 invisible, PlayerCharacter 4 invisible, Group 2 visible, TextWidths large.
                             ObjectsToHide(false, false, true, 437.0f);
                             break;
                         }
@@ -165,13 +165,13 @@ namespace ThreeDeePongProto.Shared.UI
                     {
                         case EPlayerAmount.One:
                         {
-                            //Only Player 1 visible for Lan 1 vs 1 Matches.
+                            //Only PlayerCharacter 1 visible for Lan 1 vs 1 Matches.
                             ObjectsToHide(false, false, false, 437.0f);
                             break;
                         }
                         case EPlayerAmount.Two:
                         {
-                            //Player 3 invisible, Player 4 invisible, Group 2 visible, TextWidths large.
+                            //PlayerCharacter 3 invisible, PlayerCharacter 4 invisible, Group 2 visible, TextWidths large.
                             ObjectsToHide(false, false, true, 437.0f);
                             break;
                         }
@@ -309,14 +309,14 @@ namespace ThreeDeePongProto.Shared.UI
         }
 
         #region Name-Inputfields
-        public void PlayerOneInput()  //TODO: Optional Random a playername, or set Player 1-4.
+        public void PlayerOneInput()  //TODO: Optional Random a playername, or set PlayerCharacter 1-4.
         {
             m_matchValues.PlayerData[0].PlayerId = 0;
 
             //if (m_inputFields[0].text.IsNullOrWhitespace())   //Sirenix.Utilities.
             if (string.IsNullOrWhiteSpace(m_inputFields[0].text))
             {
-                Debug.Log($"PlayerName for Player {m_playerIDData[0].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for Player 1-4.
+                Debug.Log($"PlayerName for Player {m_playerIDData[0].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for PlayerCharacter 1-4.
                 ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
                 return;
             }
@@ -332,7 +332,7 @@ namespace ThreeDeePongProto.Shared.UI
             //if (m_inputFields[1].text.IsNullOrWhitespace())   //Sirenix.Utilities.
             if (string.IsNullOrWhiteSpace(m_inputFields[1].text))
             {
-                Debug.Log($"PlayerName for Player {m_playerIDData[1].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for Player 1-4.
+                Debug.Log($"PlayerName for Player {m_playerIDData[1].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for PlayerCharacter 1-4.
                 ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
                 return;
             }
@@ -348,7 +348,7 @@ namespace ThreeDeePongProto.Shared.UI
             //if (m_inputFields[2].text.IsNullOrWhitespace())   //Sirenix.Utilities.
             if (string.IsNullOrWhiteSpace(m_inputFields[2].text))
             {
-                Debug.Log($"PlayerName for Player {m_playerIDData[2].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for Player 1-4.
+                Debug.Log($"PlayerName for Player {m_playerIDData[2].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for PlayerCharacter 1-4.
                 ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
                 return;
             }
@@ -364,7 +364,7 @@ namespace ThreeDeePongProto.Shared.UI
             //if (m_inputFields[3].text.IsNullOrWhitespace())   //Sirenix.Utilities.
             if (string.IsNullOrWhiteSpace(m_inputFields[3].text))
             {
-                Debug.Log($"PlayerName for Player {m_playerIDData[3].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for Player 1-4.
+                Debug.Log($"PlayerName for Player {m_playerIDData[3].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for PlayerCharacter 1-4.
                 ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
                 return;
             }

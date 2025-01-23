@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.InputActions;
-using ThreeDeePongProto.Shared.Player;
+using ThreeDeePongProto.Shared.PlayerCharacter;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -156,16 +156,16 @@ namespace ThreeDeePongProto.Shared.Managers
 
             //m_inputActions.Disable();
             //m_inputActions.PlayerActions.ToggleGameMenu.performed -= PauseAndTimeScale;
-            PlayerInputReceiver.m_menuOpens -= PauseAndTimeScale;
+            CharacterInput.m_menuOpens -= PauseAndTimeScale;
             m_playerInputManager.onPlayerJoined -= OnPlayerJoined;
         }
 
         private IEnumerator Start()
         {
-            //m_inputActions = InputManager.m_PlayerInputActions;
+            //m_inputActions = RebindManager.m_PlayerInputActions;
             //m_inputActions.Enable();
             //m_inputActions.PlayerActions.ToggleGameMenu.performed += PauseAndTimeScale;
-            PlayerInputReceiver.m_menuOpens += PauseAndTimeScale;
+            CharacterInput.m_menuOpens += PauseAndTimeScale;
             m_playerInputManager.onPlayerJoined += OnPlayerJoined;
 
             InstantiatePlayer();
@@ -186,7 +186,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 Transform spawnParent = m_prefabParent;
                 InputDevice deviceToPair = (Gamepad.all.Count > i) ? Gamepad.all[i] : Keyboard.current;
 
-                //'Quaternion playerRotation' setup moved to 'PlayerMovement.cs', to separate it from the instantiation.
+                //'Quaternion playerRotation' setup moved to 'CharacterMovement.cs', to separate it from the instantiation.
                 GameObject playerAvatar = Instantiate(m_matchValues.PlayerData[i].Prefab, spawnParent);
 
                 //PlayerInput playerInput = playerAvatar.GetComponent<PlayerInput>();
@@ -198,7 +198,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 //    playerInput.neverAutoSwitchControlSchemes = false; // Allow switching
                 //}
 
-                //Debug.Log($"Player {i + 1} instantiated.");
+                //Debug.Log($"PlayerCharacter {i + 1} instantiated.");
             }
         }
 
@@ -353,7 +353,7 @@ namespace ThreeDeePongProto.Shared.Managers
             ResetRoundValues();
             SetPauseAndTimeScale(m_gameIsPaused);
 
-            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.PlayerActions);
+            RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.PlayerActions);
         }
 
         private void DefaultPlayfield()
@@ -403,7 +403,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 m_matchValues.MatchPointsTPTwo >= m_matchValues.MatchPointsTPOne + m_matchValues.WinPointDifference;
             }
 
-            //WinCondition is true, when the current RoundNumber equals the max set roundAmount AND the winpointDifference (Player 1 <-> Player 2) triggers a new round.
+            //WinCondition is true, when the current RoundNumber equals the max set roundAmount AND the winpointDifference (PlayerCharacter 1 <-> PlayerCharacter 2) triggers a new round.
             bool winConditionIsMet = m_matchValues.CurrentRoundNr == m_matchUIStates.LastRoundDdIndex && m_nextRoundConditionIsMet;
 
             if (winConditionIsMet)
@@ -530,7 +530,7 @@ namespace ThreeDeePongProto.Shared.Managers
         private void ResumeGame()
         {
             SetPauseAndTimeScale(false);
-            //InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.PlayerActions);
+            //RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.PlayerActions);
         }
 
         private void SetPauseAndTimeScale(bool _isPaused)

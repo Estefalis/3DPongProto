@@ -85,7 +85,7 @@ namespace ThreeDeePongProto.Shared.UI
 
         private void Start()
         {
-            m_playerInputActions = InputManager.m_PlayerInputActions;
+            m_playerInputActions = RebindManager.m_PlayerInputActions;
             m_playerInputActions.Enable();
 
             m_playerInputActions.UserInterface.CursorVisibility.performed += SwitchCursorVisibility;
