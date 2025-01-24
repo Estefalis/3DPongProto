@@ -33,7 +33,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Kick",
+                    "name": "KickBall",
                     "type": "Button",
                     "id": "1637802a-7a64-4501-b2dc-90018ecdf3d7",
                     "expectedControlType": "Button",
@@ -196,7 +196,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "Kick",
+                    "action": "KickBall",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -207,7 +207,7 @@
                     "interactions": "",
                     "processors": "AxisDeadzone",
                     "groups": "Gamepad",
-                    "action": "Kick",
+                    "action": "KickBall",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

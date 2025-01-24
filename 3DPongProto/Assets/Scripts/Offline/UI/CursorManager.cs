@@ -1,4 +1,5 @@
 using ThreeDeePongProto.Shared.InputActions;
+using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
@@ -8,7 +9,7 @@ namespace ThreeDeePongProto.Shared.UI
 {
     public class CursorManager : MonoBehaviour
     {
-        private PlayerInputActions m_playerInputActions;
+        private PlayerInputActions m_characterInputActions;
 
         [SerializeField] private PlayerInput m_playerInput;
 
@@ -79,16 +80,16 @@ namespace ThreeDeePongProto.Shared.UI
 
             InputUser.onChange -= OnDeviceChange;
 
-            m_playerInputActions.Disable();
-            m_playerInputActions.UserInterface.CursorVisibility.performed -= SwitchCursorVisibility;
+            m_characterInputActions.Disable();
+            m_characterInputActions.UserInterface.CursorVisibility.performed -= SwitchCursorVisibility;
         }
 
         private void Start()
         {
-            m_playerInputActions = RebindManager.m_PlayerInputActions;
-            m_playerInputActions.Enable();
+            m_characterInputActions = InputManager.m_PlayerInputActions;
+            m_characterInputActions.Enable();
 
-            m_playerInputActions.UserInterface.CursorVisibility.performed += SwitchCursorVisibility;
+            m_characterInputActions.UserInterface.CursorVisibility.performed += SwitchCursorVisibility;
         }
 
         private void UpdateMicePositions()

@@ -1,5 +1,6 @@
 using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.InputActions;
+using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,7 +10,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 {
     internal class AutoScroll : MonoBehaviour
     {
-        private PlayerInputActions m_playerInputActions;
+        private PlayerInputActions m_characterInputActions;
         [SerializeField] internal ScrollViewController m_scrollViewController;
 
         #region AutoScroll Transition
@@ -32,13 +33,13 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         private void OnDisable()
         {
-            m_playerInputActions.Disable();
+            m_characterInputActions.Disable();
         }
 
         private void Start()
         {
-            m_playerInputActions = RebindManager.m_PlayerInputActions;
-            m_playerInputActions.Enable();
+            m_characterInputActions = InputManager.m_PlayerInputActions;
+            m_characterInputActions.Enable();
 
             ResetVariables();
 
@@ -62,10 +63,10 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         #region GetMouseValues
         private void GetMouseValues()
         {
-            m_mouseScrollValue = m_playerInputActions.UserInterface.ScrollWheel.ReadValue<Vector2>();
+            m_mouseScrollValue = m_characterInputActions.UserInterface.ScrollWheel.ReadValue<Vector2>();
             m_mouseScrollValue.Normalize();
-            //m_mousePosition = RebindManager.GetMousePosition();
-            m_mousePosition = m_playerInputActions.UserInterface.Point.ReadValue<Vector2>();
+            //m_mousePosition = InputManager.GetMousePosition();
+            m_mousePosition = m_characterInputActions.UserInterface.Point.ReadValue<Vector2>();
 
             switch (MouseIsInScrollView(m_mousePosition))
             {

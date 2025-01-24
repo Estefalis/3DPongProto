@@ -8,7 +8,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         internal MatchManager m_matchManager;
 
         [SerializeField] internal Transform m_inputAndCamComponent;
-        [SerializeField] internal CharacterInput m_playerInputHandler;
+        [SerializeField] internal CharacterInputHandler m_playerInputHandler;
         [SerializeField] internal CharacterMovement m_playerMovement;
         [SerializeField] internal CharacterInteractions m_playerInteractions;
         [SerializeField] internal CharacterHealth m_playerHealth;

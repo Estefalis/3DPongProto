@@ -62,14 +62,14 @@ public class Ball : MonoBehaviour
     {
         AudioManager.LetsRemoveAudioSources(m_ballAudioSource);
 
-        CharacterInput.m_KickBall -= BallStart;
+        CharacterInputHandler.m_KickBall -= BallStart;
     }
 
     private void Start()
     {
         AudioManager.LetsRegisterAudioSources(m_ballAudioSource);
 
-        CharacterInput.m_KickBall += BallStart;
+        CharacterInputHandler.m_KickBall += BallStart;
     }
 
     private void ResetBall()

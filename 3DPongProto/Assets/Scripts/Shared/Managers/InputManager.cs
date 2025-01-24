@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
 using ThreeDeePongProto.Shared.HelperClasses;
+using ThreeDeePongProto.Shared.InputActions;
 using ThreeDeePongProto.Shared.Settings;
 using ThreeDeePongProto.Shared.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace ThreeDeePongProto.Shared.InputActions
+namespace ThreeDeePongProto.Shared.Managers
 {
-    public class RebindManager : MonoBehaviour
+    public class InputManager : MonoBehaviour
     {
         private enum ActiveInputActionMap
         {
@@ -27,9 +28,7 @@ namespace ThreeDeePongProto.Shared.InputActions
 
         #region ChangeActionMaps
         //ActionEvent to switch between ActionMaps within the InputActionAsset.
-        public static event Action<InputActionMap> m_changeActiveActionMap;     //For subscriptions.
-        //public static InputActionMap m_LastSetActionMap { get => m_lastSetActionMap; }
-        //private static InputActionMap m_lastSetActionMap;                       //For runtime classes.
+        public static event Action<InputActionMap> m_changeActiveActionMap;
         #endregion
 
         #region KeyRebinding
@@ -59,7 +58,6 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         private static ActiveInputActionMap m_activeInputActionMap = ActiveInputActionMap.None;
-        private static Vector2 m_mousePosition;
 
         #region Serialization
         private static int m_playerIndex;
@@ -73,7 +71,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         #endregion
 
         /// <summary>
-        /// CharacterMainController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the RebindManager into 'Awake()', to prevent Exceptions.
+        /// CharacterMainController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the InputManager into 'Awake()', to prevent Exceptions.
         /// </summary>
         private void Awake()
         {
@@ -93,15 +91,15 @@ namespace ThreeDeePongProto.Shared.InputActions
             if (m_PlayerInputActions == null)
                 m_PlayerInputActions = new PlayerInputActions();
 
-            var playerInput = FindObjectOfType<PlayerInput>();
-            if (playerInput != null)
-            {
-                if (playerInput.actions != m_PlayerInputActions.asset)
-                {
-                    Debug.LogWarning("PlayerInput and InputManager use different ActionAssets. Please synchronize them.");
-                    playerInput.actions = m_PlayerInputActions.asset;
-                }
-            }
+            //var playerInput = FindObjectOfType<PlayerInput>();
+            //if (playerInput != null)
+            //{
+            //    if (playerInput.actions != m_PlayerInputActions.asset)
+            //    {
+            //        Debug.LogWarning("PlayerInput and InputManager use different ActionAssets. Please synchronize them.");
+            //        playerInput.actions = m_PlayerInputActions.asset;
+            //    }
+            //}
 
             m_PlayerInputActions.PlayerActions.Enable();
         }
@@ -135,33 +133,6 @@ namespace ThreeDeePongProto.Shared.InputActions
         {
             m_PlayerInputActions.Disable();
         }
-
-//        public static Vector2 GetMousePosition()
-//        {
-//#if ENABLE_INPUT_SYSTEM
-//            switch (m_activeInputActionMap)
-//            {
-//                case ActiveInputActionMap.PlayerActions:
-//                {
-//                    m_mousePosition = m_PlayerInputActions.PlayerActions.MousePosition.ReadValue<Vector2>();
-//                    break;
-//                }
-//                case ActiveInputActionMap.UserInterface:
-//                {
-//                    m_mousePosition = m_PlayerInputActions.UserInterface.Point.ReadValue<Vector2>();
-//                    break;
-//                }
-//                default:
-//                {
-//                    m_mousePosition = Vector2.zero;
-//                    break;
-//                }
-//            }
-//#else
-//            m_mousePosition = Input.mousePosition;
-//#endif
-//            return m_mousePosition;
-//        }
 
         private static void PlayerIndex(int _playerIndex)
         {

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using ThreeDeePongProto.Shared.InputActions;
-using ThreeDeePongProto.Shared.PlayerCharacter;
+using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 using UnityEngine.EventSystems;
-//using UnityEngine.InputSystem;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -12,7 +12,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 {
     public class MenuManager : MonoBehaviour
     {
-        //private PlayerInputActions m_inputActions;
+        private PlayerInputActions m_playerInputActions;
         [SerializeField] internal EventSystem m_eventSystem;
 
         #region MenuNavigation
@@ -51,12 +51,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         //MatchManager unpauses the Game. - CharacterMainController restarts Coroutines and Inputsystem.PlayerActions.
         public static event Action ResumeTheGame;
-        //MatchManager unpauses the Game.
-        //public static event Action RestartTheGame;
-        //MatchManager unpauses the Game.
         public static event Action OnLoadMainScene;
-
         public static event Action EndInfiniteMatch;
+
+        private const string m_userInterfaceName = "UserInterface";
         #endregion
 
         #region Scriptable Object
@@ -80,23 +78,35 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             SetFirstStackElement(m_firstElement);
             SetUIElements();    //Also sets the lastSelectedElement.
+
+            m_playerInputActions = new PlayerInputActions();
+            m_playerInputActions.UserInterface.Enable();
+        }
+
+        private void OnEnable()
+        {
+            m_playerInputActions.UserInterface.ToggleGameMenu.performed += CloseMenu;
+            InputManager.m_changeActiveActionMap += OnInputManagerChangedActionMap;
         }
 
         private void OnDisable()
         {
-            //m_inputActions.Disable();
+            m_playerInputActions.UserInterface.ToggleGameMenu.performed -= CloseMenu;
+            InputManager.m_changeActiveActionMap -= OnInputManagerChangedActionMap;
 
-            //m_inputActions.PlayerActions.ToggleGameMenu.performed -= OpenMenu;
-            CharacterInput.m_menuOpens -= OpenMenu;
+            m_playerInputActions.UserInterface.Disable();
+        }
+
+        private void OnDestroy()
+        {
+            m_playerInputActions.UserInterface.ToggleGameMenu.performed -= CloseMenu;
+            InputManager.m_changeActiveActionMap -= OnInputManagerChangedActionMap;
+
+            m_playerInputActions.Dispose();
         }
 
         private void Start()
         {
-            //m_inputActions = RebindManager.m_PlayerInputActions;
-            //m_inputActions.Enable();
-
-            //m_inputActions.PlayerActions.ToggleGameMenu.performed += OpenMenu;
-            CharacterInput.m_menuOpens += OpenMenu;
             PreSetUpPlayerAmount(m_matchUIStates.EPlayerAmount);
 
             if (m_hiddenFinishButton != null)
@@ -140,7 +150,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                             break;
                         case true:
                         {
-                            m_lastSelectedGameObject = RebindManager.m_PlayerInputActions.UserInterface.enabled ? m_lastMenuSceneObject = m_eventSystem.currentSelectedGameObject : m_lastGameSceneObject = m_eventSystem.currentSelectedGameObject;
+                            m_lastSelectedGameObject = InputManager.m_PlayerInputActions.UserInterface.enabled ? m_lastMenuSceneObject = m_eventSystem.currentSelectedGameObject : m_lastGameSceneObject = m_eventSystem.currentSelectedGameObject;
                             break;
                         }
                     }
@@ -256,7 +266,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             ResumeTheGame?.Invoke();
             m_firstElement.gameObject.SetActive(false);
-            RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.PlayerActions);
         }
 
         public void RestartGameScene()
@@ -268,7 +277,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         public void ReturnToMainScene()
         {
             OnLoadMainScene?.Invoke();
-            RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.UserInterface);
+            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.UserInterface);
             //Action to reset timescale inside the Matchmanager. And other possible settings on returning to the main menu scene.
             SceneManager.LoadScene(m_startMenuScene);
         }
@@ -305,15 +314,31 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         }
         #endregion
 
-        //#region CallbackContext-Methods
-        private void OpenMenu(/*InputAction.CallbackContext _callbackContext*/)
+        private void CloseMenu(InputAction.CallbackContext _callbackContext)
         {
-            if (!m_firstElement.gameObject.activeInHierarchy)
+            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.PlayerActions);
+        }
+
+        private void OnInputManagerChangedActionMap(InputActionMap _inputActionMap)
+        {
+            switch (_inputActionMap.name == m_userInterfaceName)
+            {
+                case true:
+                    m_playerInputActions.UserInterface.Enable();
+                    break;
+                case false:
+                    m_playerInputActions.UserInterface.Disable();
+                    break;
+            }
+
+            if (!m_firstElement.gameObject.activeInHierarchy && m_playerInputActions.UserInterface.enabled)
             {
                 m_firstElement.gameObject.SetActive(true);
                 SetNavigationGameObject(m_firstElement);
             }
+
+            if (m_firstElement.gameObject.activeInHierarchy && !m_playerInputActions.UserInterface.enabled)
+                ResumeGame();
         }
-        //#endregion
     }
 }

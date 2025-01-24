@@ -41,6 +41,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 m_rigidbody = GetComponent<Rigidbody>();
 
             SetPlayerRotation(m_playerController.m_playerId);
+
+            m_isPushing = false;
         }
 
         private void OnDisable()
@@ -79,8 +81,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                     break;
                 case false:
                 {
-                    if (transform.localPosition != m_initialPosition)
-                        StartCoroutine(HandleRetreat());
                     break;
                 }
             }
@@ -213,22 +213,16 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             }
         }
 
-        public void PushProgress(bool _isPushing)
+        public void InitializePush(bool _initializePush)
         {
             if (m_receivedID != m_playerController.m_playerId)
                 return;
 
-            if (_isPushing && !m_isPushing)
+            if (_initializePush && !m_isPushing)
             {
                 //Start pushing.
                 m_isPushing = true;
                 m_currentPushProgress = 0.0f;
-            }
-            else if (!_isPushing && m_isPushing)
-            {
-                //Stop pushing and return.
-                m_isPushing = false;
-                StartCoroutine(HandleRetreat());
             }
         }
 
@@ -251,7 +245,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
             while (progress < 1.0f)
             {
-                progress += Time.deltaTime * m_retreatSpeed;
+                progress += Time.fixedDeltaTime * m_retreatSpeed;
                 transform.localPosition = Vector3.Lerp(startPosition, m_initialPosition, progress);
                 yield return null;
             }

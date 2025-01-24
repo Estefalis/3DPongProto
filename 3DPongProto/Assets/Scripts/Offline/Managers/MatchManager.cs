@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using ThreeDeePongProto.Offline.UI.Menu;
-using ThreeDeePongProto.Shared.InputActions;
 using ThreeDeePongProto.Shared.PlayerCharacter;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -112,7 +111,6 @@ namespace ThreeDeePongProto.Shared.Managers
         private void OnEnable()
         {
             MenuManager.ResumeTheGame += ResumeGame;
-            //MenuManager.RestartTheGame += ReSetMatch;
             MenuManager.EndInfiniteMatch += LetsEndInfiniteMatch;
             MenuManager.OnLoadMainScene += ResetPauseAndTimescale;
 
@@ -138,7 +136,6 @@ namespace ThreeDeePongProto.Shared.Managers
         private void OnDisable()
         {
             MenuManager.ResumeTheGame -= ResumeGame;
-            //MenuManager.RestartTheGame -= ReSetMatch;
             MenuManager.EndInfiniteMatch -= LetsEndInfiniteMatch;
             MenuManager.OnLoadMainScene -= ResetPauseAndTimescale;
 
@@ -156,16 +153,16 @@ namespace ThreeDeePongProto.Shared.Managers
 
             //m_inputActions.Disable();
             //m_inputActions.PlayerActions.ToggleGameMenu.performed -= PauseAndTimeScale;
-            CharacterInput.m_menuOpens -= PauseAndTimeScale;
+            CharacterInputHandler.m_menuOpens -= PauseAndTimeScale;
             m_playerInputManager.onPlayerJoined -= OnPlayerJoined;
         }
 
         private IEnumerator Start()
         {
-            //m_inputActions = RebindManager.m_PlayerInputActions;
+            //m_inputActions = InputManager.m_PlayerInputActions;
             //m_inputActions.Enable();
             //m_inputActions.PlayerActions.ToggleGameMenu.performed += PauseAndTimeScale;
-            CharacterInput.m_menuOpens += PauseAndTimeScale;
+            CharacterInputHandler.m_menuOpens += PauseAndTimeScale;
             m_playerInputManager.onPlayerJoined += OnPlayerJoined;
 
             InstantiatePlayer();
@@ -353,7 +350,7 @@ namespace ThreeDeePongProto.Shared.Managers
             ResetRoundValues();
             SetPauseAndTimeScale(m_gameIsPaused);
 
-            RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.PlayerActions);
+            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.PlayerActions);
         }
 
         private void DefaultPlayfield()
@@ -530,7 +527,6 @@ namespace ThreeDeePongProto.Shared.Managers
         private void ResumeGame()
         {
             SetPauseAndTimeScale(false);
-            //RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.PlayerActions);
         }
 
         private void SetPauseAndTimeScale(bool _isPaused)
@@ -551,10 +547,10 @@ namespace ThreeDeePongProto.Shared.Managers
                 }
             }
         }
-        //#endregion
+        #endregion
 
-        //#region CallbackContexts
-        private void PauseAndTimeScale(/*InputAction.CallbackContext _callbackContext*/)
+        #region CallbackContexts
+        private void PauseAndTimeScale()
         {
             SetPauseAndTimeScale(true);
         }

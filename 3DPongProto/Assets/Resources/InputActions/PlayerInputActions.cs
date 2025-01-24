@@ -17,13 +17,13 @@ using UnityEngine.InputSystem.Utilities;
 
 namespace ThreeDeePongProto.Shared.InputActions
 {
-    public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
+    public partial class PlayerInputActions: IInputActionCollection2, IDisposable
     {
         public InputActionAsset asset { get; }
-        public @PlayerInputActions()
+        public PlayerInputActions()
         {
             asset = InputActionAsset.FromJson(@"{
-    ""name"": ""PlayerInputActions"",
+    ""name"": ""CharacterInputActions"",
     ""maps"": [
         {
             ""name"": ""PlayerActions"",
@@ -57,7 +57,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Kick"",
+                    ""name"": ""KickBall"",
                     ""type"": ""Button"",
                     ""id"": ""1637802a-7a64-4501-b2dc-90018ecdf3d7"",
                     ""expectedControlType"": ""Button"",
@@ -220,7 +220,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
-                    ""action"": ""Kick"",
+                    ""action"": ""KickBall"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -231,7 +231,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Kick"",
+                    ""action"": ""KickBall"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1875,7 +1875,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_PlayerActions_Move = m_PlayerActions.FindAction("Move", throwIfNotFound: true);
             m_PlayerActions_Rotate = m_PlayerActions.FindAction("Rotate", throwIfNotFound: true);
             m_PlayerActions_Push = m_PlayerActions.FindAction("Push", throwIfNotFound: true);
-            m_PlayerActions_Kick = m_PlayerActions.FindAction("Kick", throwIfNotFound: true);
+            m_PlayerActions_KickBall = m_PlayerActions.FindAction("KickBall", throwIfNotFound: true);
             m_PlayerActions_Zoom = m_PlayerActions.FindAction("Zoom", throwIfNotFound: true);
             m_PlayerActions_MousePosition = m_PlayerActions.FindAction("MousePosition", throwIfNotFound: true);
             m_PlayerActions_CursorVisibility = m_PlayerActions.FindAction("CursorVisibility", throwIfNotFound: true);
@@ -1977,19 +1977,19 @@ namespace ThreeDeePongProto.Shared.InputActions
         private readonly InputAction m_PlayerActions_Move;
         private readonly InputAction m_PlayerActions_Rotate;
         private readonly InputAction m_PlayerActions_Push;
-        private readonly InputAction m_PlayerActions_Kick;
+        private readonly InputAction m_PlayerActions_KickBall;
         private readonly InputAction m_PlayerActions_Zoom;
         private readonly InputAction m_PlayerActions_MousePosition;
         private readonly InputAction m_PlayerActions_CursorVisibility;
         private readonly InputAction m_PlayerActions_ToggleGameMenu;
         public struct PlayerActionsActions
         {
-            private @PlayerInputActions m_Wrapper;
-            public PlayerActionsActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+            private PlayerInputActions m_Wrapper;
+            public PlayerActionsActions(PlayerInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @Move => m_Wrapper.m_PlayerActions_Move;
             public InputAction @Rotate => m_Wrapper.m_PlayerActions_Rotate;
             public InputAction @Push => m_Wrapper.m_PlayerActions_Push;
-            public InputAction @Kick => m_Wrapper.m_PlayerActions_Kick;
+            public InputAction @KickBall => m_Wrapper.m_PlayerActions_KickBall;
             public InputAction @Zoom => m_Wrapper.m_PlayerActions_Zoom;
             public InputAction @MousePosition => m_Wrapper.m_PlayerActions_MousePosition;
             public InputAction @CursorVisibility => m_Wrapper.m_PlayerActions_CursorVisibility;
@@ -2012,9 +2012,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @Push.started += instance.OnPush;
                 @Push.performed += instance.OnPush;
                 @Push.canceled += instance.OnPush;
-                @Kick.started += instance.OnKick;
-                @Kick.performed += instance.OnKick;
-                @Kick.canceled += instance.OnKick;
+                @KickBall.started += instance.OnKickBall;
+                @KickBall.performed += instance.OnKickBall;
+                @KickBall.canceled += instance.OnKickBall;
                 @Zoom.started += instance.OnZoom;
                 @Zoom.performed += instance.OnZoom;
                 @Zoom.canceled += instance.OnZoom;
@@ -2040,9 +2040,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @Push.started -= instance.OnPush;
                 @Push.performed -= instance.OnPush;
                 @Push.canceled -= instance.OnPush;
-                @Kick.started -= instance.OnKick;
-                @Kick.performed -= instance.OnKick;
-                @Kick.canceled -= instance.OnKick;
+                @KickBall.started -= instance.OnKickBall;
+                @KickBall.performed -= instance.OnKickBall;
+                @KickBall.canceled -= instance.OnKickBall;
                 @Zoom.started -= instance.OnZoom;
                 @Zoom.performed -= instance.OnZoom;
                 @Zoom.canceled -= instance.OnZoom;
@@ -2095,8 +2095,8 @@ namespace ThreeDeePongProto.Shared.InputActions
         private readonly InputAction m_OldPlayerActions_ToggleGameMenu;
         public struct OldPlayerActionsActions
         {
-            private @PlayerInputActions m_Wrapper;
-            public OldPlayerActionsActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+            private PlayerInputActions m_Wrapper;
+            public OldPlayerActionsActions(PlayerInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @MoveP1ZNeg => m_Wrapper.m_OldPlayerActions_MoveP1ZNeg;
             public InputAction @MoveP2ZPos => m_Wrapper.m_OldPlayerActions_MoveP2ZPos;
             public InputAction @MoveP3ZNeg => m_Wrapper.m_OldPlayerActions_MoveP3ZNeg;
@@ -2264,8 +2264,8 @@ namespace ThreeDeePongProto.Shared.InputActions
         private readonly InputAction m_UserInterface_TrackedDeviceOrientation;
         public struct UserInterfaceActions
         {
-            private @PlayerInputActions m_Wrapper;
-            public UserInterfaceActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+            private PlayerInputActions m_Wrapper;
+            public UserInterfaceActions(PlayerInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @Navigate => m_Wrapper.m_UserInterface_Navigate;
             public InputAction @Submit => m_Wrapper.m_UserInterface_Submit;
             public InputAction @Cancel => m_Wrapper.m_UserInterface_Cancel;
@@ -2403,7 +2403,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             void OnMove(InputAction.CallbackContext context);
             void OnRotate(InputAction.CallbackContext context);
             void OnPush(InputAction.CallbackContext context);
-            void OnKick(InputAction.CallbackContext context);
+            void OnKickBall(InputAction.CallbackContext context);
             void OnZoom(InputAction.CallbackContext context);
             void OnMousePosition(InputAction.CallbackContext context);
             void OnCursorVisibility(InputAction.CallbackContext context);
