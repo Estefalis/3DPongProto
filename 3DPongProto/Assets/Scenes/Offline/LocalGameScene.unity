@@ -2947,7 +2947,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 911050366}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa87d98a60e35c54fa579723f8db7449, type: 3}
+  m_Script: {fileID: 11500000, guid: 839cf8860557c624f9c03f420d9d1e7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_NPCName: Some Test-NPC
@@ -2988,7 +2988,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_NotificationBehavior: 3
   m_MaxPlayerCount: -1
-  m_AllowJoining: 0
+  m_AllowJoining: 1
   m_JoinBehavior: 2
   m_PlayerJoinedEvent:
     m_PersistentCalls:
@@ -3401,6 +3401,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: InputManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 706858084997270176, guid: 31c7a707940f85244a29e4c5915787e1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 706858084997270178, guid: 31c7a707940f85244a29e4c5915787e1,
         type: 3}

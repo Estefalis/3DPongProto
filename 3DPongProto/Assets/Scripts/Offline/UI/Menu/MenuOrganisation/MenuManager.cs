@@ -49,7 +49,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] private Button m_hiddenFinishButton;
         private const string m_startMenuScene = "StartMenuScene";
 
-        //MatchManager unpauses the Game. - CharacterMainController restarts Coroutines and Inputsystem.PlayerActions.
+        //LocalMatchManager unpauses the Game. - CharacterMainController restarts Coroutines and Inputsystem.PlayerActions.
         public static event Action ResumeTheGame;
         public static event Action OnLoadMainScene;
         public static event Action EndInfiniteMatch;
@@ -79,7 +79,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             SetFirstStackElement(m_firstElement);
             SetUIElements();    //Also sets the lastSelectedElement.
 
-            m_playerInputActions = new PlayerInputActions();
+            m_playerInputActions = InputManager.m_PlayerInputActions;
             m_playerInputActions.UserInterface.Enable();
         }
 
@@ -116,6 +116,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void Update()
         {
             UpdateLastSelectedObject();
+            //Debug.Log($"UI: {InputManager.m_PlayerInputActions.UserInterface.enabled} - timeScale: {Time.timeScale}");
         }
 
         #region Custom-Methods
@@ -270,7 +271,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         public void RestartGameScene()
         {
-            //MatchManager toggles ActionMap in ReSetMatch()-method on Scene-reload.
+            //LocalMatchManager toggles ActionMap in ReSetMatch()-method on Scene-reload.
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 

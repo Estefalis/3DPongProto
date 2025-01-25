@@ -16,7 +16,7 @@ public class Ball : MonoBehaviour
     #endregion
 
     #region Script-References
-    private MatchManager m_matchManager;
+    private LocalMatchManager m_matchManager;
     private PlayerInputActions m_inputActions;
     [SerializeField] private AudioSource m_ballAudioSource;
     private int m_trackId = 0;
@@ -38,7 +38,7 @@ public class Ball : MonoBehaviour
 
     #region Actions
     public static event Action HitGoalOne, HitGoalTwo;  //Updates UserInterface in MatchUserInterface.cs
-    public static event Action RoundCountStarts;        //MatchManager saves MatchStartTime and sets 'MatchHasStarted'-Bool to true.
+    public static event Action RoundCountStarts;        //LocalMatchManager saves MatchStartTime and sets 'MatchHasStarted'-Bool to true.
 
     //TODO: Audioplay-Structure: (Emitter, AudioSourceSettings (Diegetic/NonDiegetic), Track-ID (if not random), RandomBool);
     public static event Action<ESoundEmittingObjects, EAudioType, int, bool> PlaySpecificAudio;
@@ -46,7 +46,7 @@ public class Ball : MonoBehaviour
 
     private void Awake()
     {
-        m_matchManager = FindObjectOfType<MatchManager>();
+        m_matchManager = FindObjectOfType<LocalMatchManager>();
 
         if (m_rigidbody == null)
             m_rigidbody = GetComponent<Rigidbody>();
@@ -126,7 +126,7 @@ public class Ball : MonoBehaviour
     {
         if (_other.gameObject.CompareTag(m_goalOne))
         {
-            //MatchManager: WinCondition-Check & increases Match-Points of PlayerCharacter/Team 2 - MatchUserInterface: Updates MatchUI - PlayerControls: Resets Paddle on Goal.
+            //LocalMatchManager: WinCondition-Check & increases Match-Points of PlayerCharacter/Team 2 - MatchUserInterface: Updates MatchUI - PlayerControls: Resets Paddle on Goal.
             HitGoalOne?.Invoke();
             //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
             PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
@@ -135,7 +135,7 @@ public class Ball : MonoBehaviour
 
         if (_other.gameObject.CompareTag(m_goalTwo))
         {
-            //MatchManager: WinCondition-Check & increases Match-Points of PlayerCharacter/Team 1 - MatchUserInterface: Updates MatchUI - PlayerControls: Resets Paddle on Goal.
+            //LocalMatchManager: WinCondition-Check & increases Match-Points of PlayerCharacter/Team 1 - MatchUserInterface: Updates MatchUI - PlayerControls: Resets Paddle on Goal.
             HitGoalTwo?.Invoke();
             //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
             PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);

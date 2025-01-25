@@ -12,7 +12,7 @@ public class MatchValues : ScriptableObject
     [Header("Round-Details")]
     public float StartTime;             //each Match
     public uint CurrentRoundNr;         //each Match
-    public int WinPointDifference;      //each Match (MatchManager)    
+    public int WinPointDifference;      //each Match (LocalMatchManager)    
 
     public double TotalPoints;          //each Match
     public string WinningPlayer;        //each Match

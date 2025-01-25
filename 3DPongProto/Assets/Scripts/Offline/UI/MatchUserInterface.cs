@@ -10,7 +10,7 @@ namespace ThreeDeePongProto.Offline.UI
     public class MatchUserInterface : MonoBehaviour
     {
         #region Script-References
-        [SerializeField] private MatchManager m_matchManager;
+        [SerializeField] private LocalMatchManager m_matchManager;
         [SerializeField] private CameraManager m_cameraManager;
         #endregion
 
@@ -53,14 +53,14 @@ namespace ThreeDeePongProto.Offline.UI
 
             Ball.HitGoalOne += UpdateUserInterface;
             Ball.HitGoalTwo += UpdateUserInterface;
-            MatchManager.StartNextRound += UpdateUserInterface;
+            LocalMatchManager.StartNextRound += UpdateUserInterface;
         }
 
         private void OnDisable()
         {
             Ball.HitGoalOne -= UpdateUserInterface;
             Ball.HitGoalTwo -= UpdateUserInterface;
-            MatchManager.StartNextRound -= UpdateUserInterface;
+            LocalMatchManager.StartNextRound -= UpdateUserInterface;
         }
 
         private IEnumerator Start()

@@ -5,7 +5,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 {
     public class CharacterMainController : MonoBehaviour
     {
-        internal MatchManager m_matchManager;
+        internal LocalMatchManager m_matchManager;
 
         [SerializeField] internal Transform m_inputAndCamComponent;
         [SerializeField] internal CharacterInputHandler m_playerInputHandler;
@@ -35,7 +35,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void Awake()
         {
-            m_matchManager = FindObjectOfType<MatchManager>();
+            m_matchManager = FindObjectOfType<LocalMatchManager>();
 
             m_playerIDData.PlayerId = m_playerId;
 

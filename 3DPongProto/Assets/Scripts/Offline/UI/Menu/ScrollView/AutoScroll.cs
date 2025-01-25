@@ -65,7 +65,6 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         {
             m_mouseScrollValue = m_characterInputActions.UserInterface.ScrollWheel.ReadValue<Vector2>();
             m_mouseScrollValue.Normalize();
-            //m_mousePosition = InputManager.GetMousePosition();
             m_mousePosition = m_characterInputActions.UserInterface.Point.ReadValue<Vector2>();
 
             switch (MouseIsInScrollView(m_mousePosition))

@@ -44,8 +44,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void Awake()
         {
-            //3. After Players are instantiated and the MatchManager invokes the Event, the Camera can add itself to the availableCamera-List in the CameraManager.
-            MatchManager.AddCamerasNow += AddCameras;
+            //3. After Players are instantiated and the LocalMatchManager invokes the Event, the Camera can add itself to the availableCamera-List in the CameraManager.
+            LocalMatchManager.AddCamerasNow += AddCamera;
 
             if (m_RbPlayer == null)
                 m_RbPlayer = GetComponentInParent<Rigidbody>();
@@ -58,10 +58,10 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnDisable()
         {
-            MatchManager.AddCamerasNow -= AddCameras;
+            LocalMatchManager.AddCamerasNow -= AddCamera;
             CameraManager.LetsRemoveCamera(m_followCamera, m_playerId);
 
-            CharacterInputHandler.m_sendScrollVector -= Zooming;
+            //CharacterInputHandler.m_sendScrollVector -= Zooming;
             CharacterInputHandler.m_sendMousePosition -= NewMousePosition;
         }
 
@@ -74,14 +74,14 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             //Saved vector to keep the playerCamera-startposition.
             CameraPositions(m_cameraManager.AvailableCameras[m_playerId]);
 
-            CharacterInputHandler.m_sendScrollVector += Zooming;
+            //CharacterInputHandler.m_sendScrollVector += Zooming;
             CharacterInputHandler.m_sendMousePosition += NewMousePosition;
         }
 
         #region Custom-Methods
-        private void AddCameras()
+        private void AddCamera()
         {
-            CameraManager.LetsRegisterCameras(m_followCamera, m_playerId);
+            CameraManager.LetsRegisterCamera(m_followCamera, m_playerId);
         }
 
         private void Update()
@@ -216,7 +216,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private bool MouseIsWithinWindow(Vector2 _mousePosition)
         {
-            Rect fullsizeRect = CameraManager.RuntimeFullsizeRect;            
+            Rect fullsizeRect = CameraManager.RuntimeFullsizeRect;
             //x/yMin == (Rect.width - Rect.width) or (Rect.height - Rect.height). x/yMax == Rect.width or Rect.height.
             bool mouseIsWithinWindow = _mousePosition.x > fullsizeRect.xMin && _mousePosition.x < fullsizeRect.xMax &&
                 _mousePosition.y > fullsizeRect.yMin && _mousePosition.y < fullsizeRect.yMax;
@@ -226,7 +226,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         #endregion
 
         #region CallbackContext-Methods
-        private void Zooming(Vector2 _scrollVector)
+        internal void Zooming(Vector2 _scrollVector)
         {
             if (m_playerController.m_playerId == GetWindowId() && MouseIsWithinWindow(m_mousePosition))
             {

@@ -14,10 +14,10 @@ public enum EGameModi
 
 namespace ThreeDeePongProto.Shared.Managers
 {
-    public class MatchManager : MonoBehaviour
+    public class LocalMatchManager : MonoBehaviour
     {
         private PlayerInputManager m_playerInputManager;
-        //private PlayerInputActions m_inputActions;
+
         #region SerializeField-Member-Variables
         [SerializeField] private string m_NPCName = "Some Test-NPC";    //TODO: Implement NPC for solo play!
         [SerializeField] private GameObject m_playGround;
@@ -64,6 +64,7 @@ namespace ThreeDeePongProto.Shared.Managers
         [SerializeField] private bool m_matchHasStarted = false;
         private float m_matchStartTime, m_ballYPos;
         private Vector3 m_ballPopPos;
+        private int m_playerInitialized;
 
         #region Properties-Access
         public float DefaultBackLineDistance { get => m_minimalBackLineDistance; }
@@ -79,16 +80,13 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         #region Actions
-        public static event Action StartNextRound;
-        public static event Action StartWinProcedure;
-        public static event Action LoadUpHighscores;
-        public static event Action AddCamerasNow;
+        internal static event Action StartNextRound;
+        internal static event Action StartWinProcedure;
+        internal static event Action LoadUpHighscores;
+        internal static event Action AddCamerasNow;
+        internal static event Action<int> CheckForPlayerInput;
         #endregion
         #endregion
-
-        //private Dictionary<PlayerIDData, GameObject> m_idGameObjectDict;
-
-        //private const string m_targetData = "PlayerInputActions";
 
         #region Serialization
         private readonly string m_fieldSettingsPath = "/SaveData/FieldSettings";
@@ -101,11 +99,18 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void Awake()
         {
+            m_playerInitialized = 0;
+
+            if (m_defaultPaddleScale == Vector3.zero)
+                m_defaultPaddleScale = new Vector3(3.5f, 1.0f, 0.5f);
+
             m_playerInputManager = GetComponent<PlayerInputManager>();
             m_matchUIStates.GameRuns = true;
+
             PrepareMatchStart();
             LoadMatchSettings();
             ReSetMatch();
+            InstantiatePlayer();
         }
 
         private void OnEnable()
@@ -120,17 +125,6 @@ namespace ThreeDeePongProto.Shared.Managers
 
             StartNextRound += LetsStartNextRound;
             StartWinProcedure += LetsStartWinProcedure;
-        }
-
-        private void OnPlayerJoined(PlayerInput _playerInput)
-        {
-            if (_playerInput.defaultControlScheme == null || _playerInput.currentControlScheme == null)
-            {
-                // Automatisch ein ControlScheme setzen (z. B. "KeyboardMouse" oder "Gamepad")
-                _playerInput.SwitchCurrentControlScheme("KeyboardMouse", Keyboard.current, Mouse.current);
-            }
-
-            Debug.Log($"Player {_playerInput.playerIndex} joined with ControlScheme: {_playerInput.currentControlScheme}");
         }
 
         private void OnDisable()
@@ -151,54 +145,27 @@ namespace ThreeDeePongProto.Shared.Managers
             StartNextRound -= LetsStartNextRound;
             StartWinProcedure -= LetsStartWinProcedure;
 
-            //m_inputActions.Disable();
-            //m_inputActions.PlayerActions.ToggleGameMenu.performed -= PauseAndTimeScale;
             CharacterInputHandler.m_menuOpens -= PauseAndTimeScale;
             m_playerInputManager.onPlayerJoined -= OnPlayerJoined;
         }
 
         private IEnumerator Start()
         {
-            //m_inputActions = InputManager.m_PlayerInputActions;
-            //m_inputActions.Enable();
-            //m_inputActions.PlayerActions.ToggleGameMenu.performed += PauseAndTimeScale;
             CharacterInputHandler.m_menuOpens += PauseAndTimeScale;
             m_playerInputManager.onPlayerJoined += OnPlayerJoined;
 
-            InstantiatePlayer();
-
+            //yield return new WaitUntil(DelegateBool);
             //2. Allow the Cameras to add themselves in the AvailableCamera-List in the CameraManager.
             AddCamerasNow?.Invoke();
             return null;
         }
 
-        #region Custom-Methods
-        private void InstantiatePlayer()
+        private bool DelegateBool()
         {
-            uint setPlayerByEnum = (uint)m_matchUIStates.EPlayerAmount;     //Scriptable Object.
-
-            //1. Instantiate all Players related to the PlayerCount in game.
-            for (int i = 0; i < setPlayerByEnum; i++)
-            {
-                Transform spawnParent = m_prefabParent;
-                InputDevice deviceToPair = (Gamepad.all.Count > i) ? Gamepad.all[i] : Keyboard.current;
-
-                //'Quaternion playerRotation' setup moved to 'CharacterMovement.cs', to separate it from the instantiation.
-                GameObject playerAvatar = Instantiate(m_matchValues.PlayerData[i].Prefab, spawnParent);
-
-                //PlayerInput playerInput = playerAvatar.GetComponent<PlayerInput>();
-                //if (playerInput == null)
-                //{
-                //    playerInput = playerAvatar.AddComponent<PlayerInput>();
-                //    playerInput.actions = Resources.Load<InputActionAsset>(m_targetData); // Load Input Actions
-                //    playerInput.defaultControlScheme = "Keyboard";
-                //    playerInput.neverAutoSwitchControlSchemes = false; // Allow switching
-                //}
-
-                //Debug.Log($"PlayerCharacter {i + 1} instantiated.");
-            }
+            return m_playerInitialized == (int)m_matchUIStates.EPlayerAmount - 1;
         }
 
+        #region Custom-Methods
         private void PrepareMatchStart()
         {
             m_matchUIStates.MaxRounds = m_setMaxRounds;
@@ -546,6 +513,84 @@ namespace ThreeDeePongProto.Shared.Managers
                     break;
                 }
             }
+        }
+        #endregion
+
+        #region Spawn_and_set_up_Player
+        private void InstantiatePlayer()
+        {
+            uint playerCount = (uint)m_matchUIStates.EPlayerAmount;
+
+            for (int i = 0; i < playerCount; i++)
+            {
+                GameObject playerAvatar = Instantiate(m_matchValues.PlayerData[i].Prefab, m_prefabParent);
+                PlayerInput playerInput = playerAvatar.GetComponent<PlayerInput>();
+
+                if (playerInput == null)
+                    playerInput = playerAvatar.AddComponent<PlayerInput>();
+
+                ConfigurePlayerInput(playerInput, i);
+            }
+        }
+
+        private void OnPlayerJoined(PlayerInput _playerInput)
+        {
+            if (_playerInput == null)
+            {
+                Debug.LogError("PlayerInput is null!");
+                return;
+            }
+
+            //Configure PlayerInput only, if the controlScheme isn't set, yet.
+            if (_playerInput.currentControlScheme == null)
+            {
+                ConfigurePlayerInput(_playerInput, _playerInput.playerIndex);
+            }
+
+            Debug.Log($"Player {_playerInput.playerIndex + 1} joined with ControlScheme: {_playerInput.currentControlScheme}");
+        }
+
+        private void ConfigurePlayerInput(PlayerInput playerInput, int playerIndex)
+        {
+            //Load and set the InputActionAsset.
+            if (playerInput.actions == null)
+            {
+                playerInput.actions = Resources.Load<InputActionAsset>("InputActions/PlayerInputActions");
+            }
+
+            //Set default ControlDevice by connected device.
+            InputDevice device = Gamepad.all.Count > playerIndex ? Gamepad.all[playerIndex] : Keyboard.current;
+            InputDevice additionalDevice = device is Keyboard ? Mouse.current : null;
+            playerInput.defaultControlScheme = device is Gamepad ? "Gamepad" : "KeyboardMouse";
+
+            string controlScheme = device is Gamepad ? "Gamepad" : "KeyboardMouse";
+
+            if (device != null)
+            {
+                if (additionalDevice != null)
+                {
+                    playerInput.SwitchCurrentControlScheme(controlScheme, device, additionalDevice);
+                }
+                else
+                {
+                    playerInput.SwitchCurrentControlScheme(controlScheme, device);
+                }
+
+                //Enable active ControlScheme switch.
+                playerInput.neverAutoSwitchControlSchemes = false;
+                //Set the notificationBehavior of the PlayerInput component.
+                playerInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
+                //Set Default Map in the PlayerInput component.
+                playerInput.SwitchCurrentActionMap("PlayerActions");
+                Debug.Log($"Player {playerInput.playerIndex + 1} assigned ControlScheme: {controlScheme}, Device: {device}.");
+            }
+            else
+            {
+                Debug.LogError($"No valid device found for Player {playerInput.playerIndex + 1}.");
+            }
+
+            m_playerInitialized = playerIndex;
+            CheckForPlayerInput?.Invoke(playerIndex);
         }
         #endregion
 

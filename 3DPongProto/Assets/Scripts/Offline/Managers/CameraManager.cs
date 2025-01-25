@@ -20,10 +20,10 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         #endregion
 
         #region DeRegister Cameras with Queues and Actions
-        private static Queue<Camera> m_QRegisterCamera;
-        private static Queue<Camera> m_QRemoveCamera;
-        private static event Action<Queue<Camera>, int> m_ARegisterCamera;
-        private static event Action<Queue<Camera>, int> m_ARemoveCamera;
+        //private static Queue<Camera> m_QRegisterCamera;
+        //private static Queue<Camera> m_QRemoveCamera;
+        private static event Action<Camera, int> ARegisterCamera;
+        private static event Action<Camera, int> ARemoveCamera;
         #endregion
 
         private const float m_FullWidthHor = 1.0f;
@@ -42,17 +42,17 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void Awake()
         {
-            m_ARegisterCamera += AddIncomingCamera;
-            m_ARemoveCamera += RemoveAddedCameras;
+            ARegisterCamera += RegisterCamera;
+            ARemoveCamera += RemoveCameras;
 
-            m_QRegisterCamera = new();
-            m_QRemoveCamera = new();
+            //m_QRegisterCamera = new();
+            //m_QRemoveCamera = new();
         }
 
         private void OnDisable()
         {
-            m_ARegisterCamera -= AddIncomingCamera;
-            m_ARemoveCamera -= RemoveAddedCameras;
+            ARegisterCamera -= RegisterCamera;
+            ARemoveCamera -= RemoveCameras;
         }
 
         private IEnumerator Start()
@@ -79,18 +79,12 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
             SetCameraMode(m_lastSetCameraMode);
 
-            UpdateFullsizeRect();
+            //UpdateFullsizeRect();
         }
 
         private void Update()
         {
             UpdateFullsizeRect();
-#if UNITY_EDITOR
-            //Debug.Log($"Cam1 Height {m_cameraManager.AvailableCameras[0].pixelRect.height} -  Width {m_cameraManager.AvailableCameras[0].pixelRect.width}");
-            //Debug.Log($"Cam2 Height {m_cameraManager.AvailableCameras[1].pixelRect.height} -  Width {m_cameraManager.AvailableCameras[1].pixelRect.width}");
-            //Debug.Log($"Cam3 Height {m_cameraManager.AvailableCameras[2].pixelRect.height} -  Width {m_cameraManager.AvailableCameras[2].pixelRect.width}");
-            //Debug.Log($"Cam4 Height {m_cameraManager.AvailableCameras[3].pixelRect.height} -  Width {m_cameraManager.AvailableCameras[3].pixelRect.width}");
-#endif
         }
 
         /// <summary>
@@ -109,39 +103,49 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         }
 
         #region Register and Add Cameras
-        public static void LetsRegisterCameras(Camera _camera, int _cameraID)
+        /// <summary>
+        /// This static method invokes a class internal event, to 'RegisterCamera' and it's ID to a non static method.
+        /// </summary>
+        /// <param name="_camera"></param>
+        /// <param name="_cameraID"></param>
+        public static void LetsRegisterCamera(Camera _camera, int _cameraID)
         {
-            m_QRegisterCamera.Enqueue(_camera);
-            m_ARegisterCamera?.Invoke(m_QRegisterCamera, _cameraID);
+            //m_QRegisterCamera.Enqueue(_camera);
+            ARegisterCamera?.Invoke(_camera, _cameraID);
         }
 
-        private void AddIncomingCamera(Queue<Camera> _queue, int _cameraID)
+        private void RegisterCamera(Camera _camera, int _cameraID)
         {
-            if (_queue.Count > 0)
-            {
-                Camera camera = _queue.Peek();
-                m_availableCameras.Add(camera);
-                _queue.Dequeue();
-            }
+            //if (_queue.Count > 0)
+            //{
+            //    Camera camera = _queue.Peek();
+            m_availableCameras.Add(_camera);
+            //    _queue.Dequeue();
+            //}
         }
         #endregion
 
         #region DeRegister and Remove Cameras
+        /// <summary>
+        /// This static method invokes a class internal event, to 'RemoveCameras' and it's ID to a non static method.
+        /// </summary>
+        /// <param name="_camera"></param>
+        /// <param name="_cameraID"></param>
         public static void LetsRemoveCamera(Camera _camera, int _cameraID)
         {
-            m_QRemoveCamera.Enqueue(_camera);
-            m_ARemoveCamera?.Invoke(m_QRemoveCamera, _cameraID);
+            //m_QRemoveCamera.Enqueue(_camera);
+            ARemoveCamera?.Invoke(_camera, _cameraID);
         }
 
-        private void RemoveAddedCameras(Queue<Camera> _queue, int _cameraID)
+        private void RemoveCameras(Camera _camera, int _cameraID)
         {
-            Camera camera = _queue.Peek();
+            //Camera camera = _queue.Peek();
 
-            if (m_availableCameras.Contains(camera))
-            {
-                m_availableCameras.Remove(camera);
-                _queue.Dequeue();
-            }
+            //if (m_availableCameras.Contains(camera))
+            //{
+            m_availableCameras.Remove(_camera);
+            //    _queue.Dequeue();
+            //}
         }
         #endregion
 
