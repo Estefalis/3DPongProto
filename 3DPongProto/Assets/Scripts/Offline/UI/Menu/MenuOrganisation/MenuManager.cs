@@ -57,10 +57,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private const string m_userInterfaceName = "UserInterface";
         #endregion
 
-        #region Scriptable Object
-        internal MatchUIStates GetMatchUIStates { get => m_matchUIStates; }
-        internal MatchValues GetMatchValues { get => m_matchValues; }
-
+        #region Scriptable_Objects
         [Header("Scriptable Objects")]
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
@@ -80,6 +77,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             SetUIElements();    //Also sets the lastSelectedElement.
 
             m_playerInputActions = InputManager.m_PlayerInputActions;
+            //m_playerInputActions = new PlayerInputActions();
             m_playerInputActions.UserInterface.Enable();
         }
 
@@ -107,8 +105,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void Start()
         {
-            PreSetUpPlayerAmount(m_matchUIStates.EPlayerAmount);
-
             if (m_hiddenFinishButton != null)
                 InVisibleButton(m_matchUIStates.InfiniteMatch); //m_matchUIStates get load in LoadSettingsValues > Awake().
         }
@@ -116,29 +112,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void Update()
         {
             UpdateLastSelectedObject();
-            //Debug.Log($"UI: {InputManager.m_PlayerInputActions.UserInterface.enabled} - timeScale: {Time.timeScale}");
+            //Debug.Log($"InputManager: {InputManager.m_PlayerInputActions.UserInterface.enabled} - MenuManager: {m_playerInputActions.UserInterface.enabled}");
         }
 
         #region Custom-Methods
-        /// <summary>
-        /// Required, so MatchSettings right at start can fill the Front-/Backline-Dropdowns.
-        /// </summary>
-        /// <param name="_ePlayerAmount"></param>
-        private void PreSetUpPlayerAmount(EPlayerAmount _ePlayerAmount)
-        {
-            if (m_matchUIStates.GameRuns)
-                return;
-
-            m_matchValues.PlayerData.Clear();
-            m_matchValues.PlayerData = new();
-
-            uint playerAmount = (uint)_ePlayerAmount;    //EPlayerAmount.Four => int 4 || EPlayerAmount.Two => int 2
-            for (uint i = 0; i < playerAmount; i++)
-            {
-                m_matchValues.PlayerData.Add(m_playerIDData[(int)i]);
-            }
-        }
-
         private void UpdateLastSelectedObject()
         {
             switch (m_eventSystem.currentSelectedGameObject == null)
@@ -265,6 +242,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #region MenuButton-Methods
         public void ResumeGame()
         {
+            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.PlayerActions);
             ResumeTheGame?.Invoke();
             m_firstElement.gameObject.SetActive(false);
         }
@@ -278,7 +256,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         public void ReturnToMainScene()
         {
             OnLoadMainScene?.Invoke();
-            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.UserInterface);
             //Action to reset timescale inside the Matchmanager. And other possible settings on returning to the main menu scene.
             SceneManager.LoadScene(m_startMenuScene);
         }
@@ -339,7 +316,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             }
 
             if (m_firstElement.gameObject.activeInHierarchy && !m_playerInputActions.UserInterface.enabled)
+            {
                 ResumeGame();
+            }
         }
     }
 }

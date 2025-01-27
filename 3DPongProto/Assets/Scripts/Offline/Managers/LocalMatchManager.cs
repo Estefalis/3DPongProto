@@ -1,9 +1,9 @@
 using System;
-using System.Collections;
 using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.PlayerCharacter;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 
 public enum EGameModi
 {
@@ -64,7 +64,6 @@ namespace ThreeDeePongProto.Shared.Managers
         [SerializeField] private bool m_matchHasStarted = false;
         private float m_matchStartTime, m_ballYPos;
         private Vector3 m_ballPopPos;
-        private int m_playerInitialized;
 
         #region Properties-Access
         public float DefaultBackLineDistance { get => m_minimalBackLineDistance; }
@@ -83,7 +82,6 @@ namespace ThreeDeePongProto.Shared.Managers
         internal static event Action StartNextRound;
         internal static event Action StartWinProcedure;
         internal static event Action LoadUpHighscores;
-        internal static event Action AddCamerasNow;
         internal static event Action<int> CheckForPlayerInput;
         #endregion
         #endregion
@@ -99,8 +97,6 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void Awake()
         {
-            m_playerInitialized = 0;
-
             if (m_defaultPaddleScale == Vector3.zero)
                 m_defaultPaddleScale = new Vector3(3.5f, 1.0f, 0.5f);
 
@@ -149,20 +145,10 @@ namespace ThreeDeePongProto.Shared.Managers
             m_playerInputManager.onPlayerJoined -= OnPlayerJoined;
         }
 
-        private IEnumerator Start()
+        private void Start()
         {
             CharacterInputHandler.m_menuOpens += PauseAndTimeScale;
             m_playerInputManager.onPlayerJoined += OnPlayerJoined;
-
-            //yield return new WaitUntil(DelegateBool);
-            //2. Allow the Cameras to add themselves in the AvailableCamera-List in the CameraManager.
-            AddCamerasNow?.Invoke();
-            return null;
-        }
-
-        private bool DelegateBool()
-        {
-            return m_playerInitialized == (int)m_matchUIStates.EPlayerAmount - 1;
         }
 
         #region Custom-Methods
@@ -489,6 +475,11 @@ namespace ThreeDeePongProto.Shared.Managers
         private void ResetPauseAndTimescale()
         {
             SetPauseAndTimeScale(false);
+            //foreach (var player in FindObjectsOfType<PlayerInput>())
+            //{
+            //    player.SwitchCurrentActionMap("UserInterface");
+            //    Debug.Log($"Resetting PlayerInput for Player {player.playerIndex}");
+            //}
         }
 
         private void ResumeGame()
@@ -544,6 +535,7 @@ namespace ThreeDeePongProto.Shared.Managers
             //Configure PlayerInput only, if the controlScheme isn't set, yet.
             if (_playerInput.currentControlScheme == null)
             {
+                InputUser.PerformPairingWithDevice(null);
                 ConfigurePlayerInput(_playerInput, _playerInput.playerIndex);
             }
 
@@ -554,14 +546,23 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             //Load and set the InputActionAsset.
             if (playerInput.actions == null)
-            {
                 playerInput.actions = Resources.Load<InputActionAsset>("InputActions/PlayerInputActions");
+            else
+            {
+                Debug.LogError("PlayerInput actions are null!");
+                return;
             }
 
             //Set default ControlDevice by connected device.
-            InputDevice device = Gamepad.all.Count > playerIndex ? Gamepad.all[playerIndex] : Keyboard.current;
+            InputDevice device = Gamepad.all.Count > playerIndex ? Gamepad.all[playerIndex] : (InputDevice)Keyboard.current;
             InputDevice additionalDevice = device is Keyboard ? Mouse.current : null;
             playerInput.defaultControlScheme = device is Gamepad ? "Gamepad" : "KeyboardMouse";
+
+            if (device == null || (device is Keyboard && additionalDevice == null))
+            {
+                Debug.LogError($"Invalid device setup for Player {playerIndex + 1}. Device: {device}, AdditionalDevice: {additionalDevice}");
+                return;
+            }
 
             string controlScheme = device is Gamepad ? "Gamepad" : "KeyboardMouse";
 
@@ -569,7 +570,7 @@ namespace ThreeDeePongProto.Shared.Managers
             {
                 if (additionalDevice != null)
                 {
-                    playerInput.SwitchCurrentControlScheme(controlScheme, device, additionalDevice);
+                    playerInput.SwitchCurrentControlScheme(controlScheme, additionalDevice != null ? new[] { device, additionalDevice } : new[] { device });
                 }
                 else
                 {
@@ -582,14 +583,13 @@ namespace ThreeDeePongProto.Shared.Managers
                 playerInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
                 //Set Default Map in the PlayerInput component.
                 playerInput.SwitchCurrentActionMap("PlayerActions");
-                Debug.Log($"Player {playerInput.playerIndex + 1} assigned ControlScheme: {controlScheme}, Device: {device}.");
+                Debug.Log($"Player {playerInput.playerIndex + 1}, InputUser: {playerInput.user} initialized with ControlScheme: {controlScheme}, Device: {device}, NotificationBehavior: {playerInput.notificationBehavior}.");
             }
             else
             {
                 Debug.LogError($"No valid device found for Player {playerInput.playerIndex + 1}.");
             }
 
-            m_playerInitialized = playerIndex;
             CheckForPlayerInput?.Invoke(playerIndex);
         }
         #endregion

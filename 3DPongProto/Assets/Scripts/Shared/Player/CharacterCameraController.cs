@@ -1,5 +1,4 @@
 using ThreeDeePongProto.Offline.CameraSetup;
-using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 
 namespace ThreeDeePongProto.Shared.PlayerCharacter
@@ -16,7 +15,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         [Header("Smooth Following")]
         [SerializeField] private Rigidbody m_RbPlayer;
-        [SerializeField] private Camera m_followCamera;
+        [SerializeField] internal Camera m_followCamera;
         //[SerializeField] private bool m_enableSmoothFollow = true;
         [SerializeField] private Vector3 m_desiredOffset;
         [Range(1.0f, 30.0f)]
@@ -44,46 +43,36 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void Awake()
         {
-            //3. After Players are instantiated and the LocalMatchManager invokes the Event, the Camera can add itself to the availableCamera-List in the CameraManager.
-            LocalMatchManager.AddCamerasNow += AddCamera;
+            m_cameraManager = FindObjectOfType<CameraManager>();
 
             if (m_RbPlayer == null)
                 m_RbPlayer = GetComponentInParent<Rigidbody>();
 
             m_playerId = m_playerController.m_playerId;
-
             m_setGroundWidth = m_basicFieldValues.SetGroundWidth;
             //m_enableSmoothFollow = true;
         }
 
         private void OnDisable()
         {
-            LocalMatchManager.AddCamerasNow -= AddCamera;
             CameraManager.LetsRemoveCamera(m_followCamera, m_playerId);
 
-            //CharacterInputHandler.m_sendScrollVector -= Zooming;
             CharacterInputHandler.m_sendMousePosition -= NewMousePosition;
         }
 
         private void Start()
         {
+            //3. After Players are instantiated and the LocalMatchManager invokes the Event, the Camera can add itself to the availableCamera-List in the CameraManager.
+            CameraManager.LetsRegisterCamera(m_followCamera, m_playerId);
+
             MaxSideMovement();
-
-            m_cameraManager = FindObjectOfType<CameraManager>();
-
             //Saved vector to keep the playerCamera-startposition.
             CameraPositions(m_cameraManager.AvailableCameras[m_playerId]);
 
-            //CharacterInputHandler.m_sendScrollVector += Zooming;
             CharacterInputHandler.m_sendMousePosition += NewMousePosition;
         }
 
         #region Custom-Methods
-        private void AddCamera()
-        {
-            CameraManager.LetsRegisterCamera(m_followCamera, m_playerId);
-        }
-
         private void Update()
         {
             SelectCameraToZoom(m_mousePosition);

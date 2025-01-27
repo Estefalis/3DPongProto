@@ -84,6 +84,11 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void Update()
         {
+            if (AvailableCameras.Count < m_matchValues.PlayerData.Count)
+            {
+                Debug.LogError($"Not enough cameras available. Expected: {m_matchValues.PlayerData.Count}, Available: {AvailableCameras.Count}");
+                return;
+            }
             UpdateFullsizeRect();
         }
 

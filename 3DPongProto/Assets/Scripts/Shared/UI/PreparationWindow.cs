@@ -1,7 +1,10 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.ProBuilder.AutoUnwrapSettings;
 
 /// <summary>
 /// Indices set equal to the desired amount of players participating in matches of int 2 and/or 4.
@@ -291,6 +294,7 @@ namespace ThreeDeePongProto.Shared.UI
             //WHENEVER YOU GOT THE SAME CLASS IN MULTIPLE SCENES (like MENUMANAGER) SAVE CHANGED DATA!!! OR old RELOADED DATA WILL OVERWRITE IT!!! AND YOU DON'T KNOW WHY...!
             m_persistentData.SaveData(m_settingsStatesFolderPath, m_matchFileName, m_fileFormat, m_matchUIStates, m_encryptionEnabled, true);
             m_persistentData.SaveData(m_settingsStatesFolderPath, m_graphicFileName, m_fileFormat, m_graphicUiStates, m_encryptionEnabled, true);
+            //Required, so MatchSettings can set the Backline-Dropdown in the Settings-Menu visible/invisible.
             SetUpPlayerAmount(m_matchUIStates.EPlayerAmount);
         }
         #endregion
