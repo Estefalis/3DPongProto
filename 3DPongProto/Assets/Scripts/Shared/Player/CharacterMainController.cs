@@ -13,7 +13,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         [SerializeField] internal CharacterInteractions m_playerInteractions;
         [SerializeField] internal CharacterHealth m_playerHealth;
         [SerializeField] internal CharacterCameraController m_playerCameraController;
-
+        
         [Header("Player Details")]
         [SerializeField] internal int m_playerId;
         [SerializeField] protected bool m_defaultFrontLineUp;

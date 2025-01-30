@@ -12,4 +12,5 @@ public class PlayerIDData : ScriptableObject
     public Image Avatar;
 
     public bool PlayerOnFrontline;
+    public bool DefaultKeyboard;    //TODO: Implement a choice to prefer Keyboard and Mouse or Gamepad as main inputDevice.
 }

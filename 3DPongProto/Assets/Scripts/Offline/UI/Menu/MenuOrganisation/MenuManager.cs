@@ -61,8 +61,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [Header("Scriptable Objects")]
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
-        [Space]
-        [SerializeField] private PlayerIDData[] m_playerIDData;
         #endregion
 
         private void Awake()
@@ -76,8 +74,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             SetFirstStackElement(m_firstElement);
             SetUIElements();    //Also sets the lastSelectedElement.
 
-            m_playerInputActions = InputManager.m_PlayerInputActions;
-            //m_playerInputActions = new PlayerInputActions();
+            //m_playerInputActions = InputManager.m_PlayerInputActions;
+            m_playerInputActions = new PlayerInputActions();
             m_playerInputActions.UserInterface.Enable();
         }
 
@@ -308,7 +306,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     m_playerInputActions.UserInterface.Disable();
                     break;
             }
-
+            Debug.Log("!");
             if (!m_firstElement.gameObject.activeInHierarchy && m_playerInputActions.UserInterface.enabled)
             {
                 m_firstElement.gameObject.SetActive(true);

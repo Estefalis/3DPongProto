@@ -16,13 +16,12 @@ namespace ThreeDeePongProto.Shared.Managers
 {
     public class LocalMatchManager : MonoBehaviour
     {
-        private PlayerInputManager m_playerInputManager;
-
         #region SerializeField-Member-Variables
         [SerializeField] private string m_NPCName = "Some Test-NPC";    //TODO: Implement NPC for solo play!
         [SerializeField] private GameObject m_playGround;
         [SerializeField] private GameObject m_ballPrefab;
         [SerializeField] private Transform m_prefabParent;
+        public Transform m_PlayfieldParent { get => m_prefabParent; }
 
         [Header("Defaults")]
         #region Playground-Variables
@@ -50,7 +49,7 @@ namespace ThreeDeePongProto.Shared.Managers
         [SerializeField] private bool m_gameIsPaused = false;
         [Space]
 
-        #region Scriptable Objects
+        #region Scriptable_Objects
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private BasicFieldValues m_basicFieldValues;
         [SerializeField] private MatchValues m_matchValues;
@@ -100,13 +99,12 @@ namespace ThreeDeePongProto.Shared.Managers
             if (m_defaultPaddleScale == Vector3.zero)
                 m_defaultPaddleScale = new Vector3(3.5f, 1.0f, 0.5f);
 
-            m_playerInputManager = GetComponent<PlayerInputManager>();
             m_matchUIStates.GameRuns = true;
 
             PrepareMatchStart();
             LoadMatchSettings();
             ReSetMatch();
-            InstantiatePlayer();
+            //InstantiatePlayer();
         }
 
         private void OnEnable()
@@ -142,13 +140,13 @@ namespace ThreeDeePongProto.Shared.Managers
             StartWinProcedure -= LetsStartWinProcedure;
 
             CharacterInputHandler.m_menuOpens -= PauseAndTimeScale;
-            m_playerInputManager.onPlayerJoined -= OnPlayerJoined;
+            //m_playerInputManager.onPlayerJoined -= OnPlayerJoined;
         }
 
         private void Start()
         {
             CharacterInputHandler.m_menuOpens += PauseAndTimeScale;
-            m_playerInputManager.onPlayerJoined += OnPlayerJoined;
+            //m_playerInputManager.onPlayerJoined += OnPlayerJoined;
         }
 
         #region Custom-Methods
@@ -475,11 +473,6 @@ namespace ThreeDeePongProto.Shared.Managers
         private void ResetPauseAndTimescale()
         {
             SetPauseAndTimeScale(false);
-            //foreach (var player in FindObjectsOfType<PlayerInput>())
-            //{
-            //    player.SwitchCurrentActionMap("UserInterface");
-            //    Debug.Log($"Resetting PlayerInput for Player {player.playerIndex}");
-            //}
         }
 
         private void ResumeGame()
@@ -508,39 +501,39 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         #region Spawn_and_set_up_Player
-        private void InstantiatePlayer()
-        {
-            uint playerCount = (uint)m_matchUIStates.EPlayerAmount;
+        //private void InstantiatePlayer()
+        //{
+        //    uint playerCount = (uint)m_matchUIStates.EPlayerAmount;
 
-            for (int i = 0; i < playerCount; i++)
-            {
-                GameObject playerAvatar = Instantiate(m_matchValues.PlayerData[i].Prefab, m_prefabParent);
-                PlayerInput playerInput = playerAvatar.GetComponent<PlayerInput>();
+        //    for (int i = 0; i < playerCount; i++)
+        //    {
+        //        GameObject playerAvatar = Instantiate(m_matchValues.PlayerData[i].Prefab, m_prefabParent);
+        //        PlayerInput playerInput = playerAvatar.GetComponent<PlayerInput>();
 
-                if (playerInput == null)
-                    playerInput = playerAvatar.AddComponent<PlayerInput>();
+        //        if (playerInput == null)
+        //            playerInput = playerAvatar.AddComponent<PlayerInput>();
 
-                ConfigurePlayerInput(playerInput, i);
-            }
-        }
+        //        ConfigurePlayerInput(playerInput, i);
+        //    }
+        //}
 
-        private void OnPlayerJoined(PlayerInput _playerInput)
-        {
-            if (_playerInput == null)
-            {
-                Debug.LogError("PlayerInput is null!");
-                return;
-            }
+        //private void OnPlayerJoined(PlayerInput _playerInput)
+        //{
+        //    if (_playerInput == null)
+        //    {
+        //        Debug.LogError("PlayerInput is null!");
+        //        return;
+        //    }
 
-            //Configure PlayerInput only, if the controlScheme isn't set, yet.
-            if (_playerInput.currentControlScheme == null)
-            {
-                InputUser.PerformPairingWithDevice(null);
-                ConfigurePlayerInput(_playerInput, _playerInput.playerIndex);
-            }
+        //    //Configure PlayerInput only, if the controlScheme isn't set, yet.
+        //    if (_playerInput.currentControlScheme == null)
+        //    {
+        //        InputUser.PerformPairingWithDevice(null);
+        //        ConfigurePlayerInput(_playerInput, _playerInput.playerIndex);
+        //    }
 
-            Debug.Log($"Player {_playerInput.playerIndex + 1} joined with ControlScheme: {_playerInput.currentControlScheme}");
-        }
+        //    Debug.Log($"Player {_playerInput.playerIndex + 1} joined with ControlScheme: {_playerInput.currentControlScheme}");
+        //}
 
         private void ConfigurePlayerInput(PlayerInput playerInput, int playerIndex)
         {
