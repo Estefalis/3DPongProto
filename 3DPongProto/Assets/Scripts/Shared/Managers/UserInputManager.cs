@@ -10,7 +10,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         [SerializeField] private PlayerInputManager m_playerInputManager;
         [SerializeField] private bool m_joinByDefault = true;
-        [SerializeField] private bool m_keyboardHasPriority;
+        [SerializeField] private bool m_keyboardHasPriority = true;
 
         private int m_alreadySetGamepads;
         private Transform m_playfieldParent;
@@ -108,17 +108,20 @@ namespace ThreeDeePongProto.Shared.Managers
             if (_playerInput.actions == null)
                 _playerInput.actions = Resources.Load<InputActionAsset>("InputActions/PlayerInputActions");
 
-            //Set default ControlDevice by connected device.
+            ////Temporary condition, for which playerIDs keyboard shall be set as priority.
+            //m_keyboardHasPriority = _playerIndex >= 0 && _playerIndex < 2 ? m_keyboardHasPriority = true : m_keyboardHasPriority = false;
+
             int totalGamepadCount = Gamepad.all.Count;
+            //Determine, if gamepads are left to be set as device.
             int availableGamepads = totalGamepadCount - m_alreadySetGamepads;
 
-            InputDevice assignedDevice = null;
+            InputDevice assignedDevice;
             InputDevice mouseDevice = Mouse.current;
 
             string controlScheme = m_keyboardScheme; //Keyboard and Mouse as standard.
 
             //Set Gamepad or Keyboard as InputDevice.
-            switch (totalGamepadCount == 0 || availableGamepads > 0 && m_keyboardHasPriority)
+            switch (totalGamepadCount == 0 || availableGamepads <= 0 || m_keyboardHasPriority)
             {
                 //If no gamepad is available, or keyboard has priority for this player: Keyboard gets set as priority.
                 case true:
@@ -126,20 +129,10 @@ namespace ThreeDeePongProto.Shared.Managers
                     switch (_playerIndex)
                     {
                         case 0:
-                            assignedDevice = Keyboard.current; //Player1 (WASD)
-                            Debug.Log($"Player {_playerIndex + 1} uses Keyboard (WASD) & shared Mouse.");
-                            break;
                         case 1:
-                            assignedDevice = Keyboard.current; //Player2 (Arrow-Keys)
-                            Debug.Log($"Player {_playerIndex + 1} uses Keyboard (Arrow Keys) & shared Mouse.");
-                            break;
                         case 2:
-                            assignedDevice = Keyboard.current; //Player3 (TFGH)
-                            Debug.Log($"Player {_playerIndex + 1} uses Keyboard (TFGH) & shared Mouse.");
-                            break;
                         case 3:
-                            assignedDevice = Keyboard.current; //Player4 (IJKL)
-                            Debug.Log($"Player {_playerIndex + 1} uses Keyboard (IJKL) & shared Mouse.");
+                            assignedDevice = Keyboard.current; //Player1 (WASD) | Player2 (Arrow-Keys) | Player3 (TFGH) | Player4 (IJKL).
                             break;
                         default:
                             Debug.LogError($"No available device for Player {_playerIndex + 1}!");
@@ -148,6 +141,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
                     _playerInput.SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice, mouseDevice });
                     //PlayerInput.all[_playerIndex].SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice, mouseDevice });
+                    Debug.Log($"Player {_playerIndex + 1} uses a {assignedDevice?.name ?? "No"}-Device and a shared Mouse. TotalGamepads: {totalGamepadCount} | AvailableGamepads: {availableGamepads}");
                     break;
                 }
                 case false:
@@ -156,13 +150,14 @@ namespace ThreeDeePongProto.Shared.Managers
 
                     if (totalGamepadCount > 0 & availableGamepads > 0/* && _playerIndex + 1 <= totalGamepadCount*/)
                     {
-                        Debug.Log($"Player: {_playerIndex + 1} - Gamepads: {totalGamepadCount}");
                         //If a gamepad is connected and keyboard has no priority for this player: Gamepad gets set.
-                        assignedDevice = Gamepad.all[_playerIndex];
+                        assignedDevice = Gamepad.all[0];
+                        //assignedDevice = Gamepad.all[_playerIndex];
                         controlScheme = m_gamePadScheme;
 
                         _playerInput.SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice });
                         //PlayerInput.all[_playerIndex].SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice });
+                        Debug.Log($"Player {_playerIndex + 1} uses a {assignedDevice?.name ?? "No"}-Device. TotalGamepads: {totalGamepadCount} | AvailableGamepads: {availableGamepads}");
                     }
 
                     break;
@@ -215,8 +210,6 @@ namespace ThreeDeePongProto.Shared.Managers
             _playerInput.neverAutoSwitchControlSchemes = false;
             //Set the notificationBehavior of the PlayerInput component.
             _playerInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
-
-            Debug.Log($"✅ Player: Player{_playerIndex + 1} | ControlScheme: {controlScheme} | Device: {assignedDevice?.name ?? "None"} | ActionMap: {_playerInput.currentActionMap.name}");
         }
 
         private void CleanupPlayers()
