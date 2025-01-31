@@ -27,7 +27,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void Awake()
         {
-            InputManager.m_changeActiveActionMap += OnInputManagerChangedActionMap;
+            RebindManager.m_changeActiveActionMap += OnInputManagerChangedActionMap;
             LocalMatchManager.CheckForPlayerInput += PlayerInputCheck;
         }
 
@@ -46,7 +46,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (m_playerInput != null)
                 UnsubscribeToActions(m_playerInput);
 
-            InputManager.m_changeActiveActionMap -= OnInputManagerChangedActionMap;
+            RebindManager.m_changeActiveActionMap -= OnInputManagerChangedActionMap;
             LocalMatchManager.CheckForPlayerInput -= PlayerInputCheck;
         }
 
@@ -55,7 +55,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (m_playerInput != null)
                 UnsubscribeToActions(m_playerInput);
 
-            InputManager.m_changeActiveActionMap -= OnInputManagerChangedActionMap;
+            RebindManager.m_changeActiveActionMap -= OnInputManagerChangedActionMap;
             LocalMatchManager.CheckForPlayerInput -= PlayerInputCheck;
         }
 
@@ -181,7 +181,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnToggleMenu(InputAction.CallbackContext _callbackContext)
         {
-            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.UserInterface);
+            RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.UserInterface);
         }
 
         private void OnInputManagerChangedActionMap(InputActionMap _inputActionMap)

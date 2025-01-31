@@ -6,16 +6,16 @@ namespace ThreeDeePongProto.Shared.UI
     [Serializable]
     public struct GamepadIcons  //struct and Sprites NEVER readonly! Because that RESETS the button-assignments in the inspector! :(
     {
-        public Sprite buttonNorth;
-        public Sprite buttonSouth;
-        public Sprite buttonWest;
-        public Sprite buttonEast;
-        public Sprite startButton;
-        public Sprite selectButton;
-        public Sprite leftShoulder;
-        public Sprite rightShoulder;
-        public Sprite leftTrigger;
-        public Sprite rightTrigger;
+        public Sprite triangleNorth;
+        public Sprite crossSouth;
+        public Sprite squareWest;
+        public Sprite circleEast;
+        public Sprite startOptions;
+        public Sprite createShare;
+        public Sprite shoulderL1LB;
+        public Sprite shoulderR1RB;
+        public Sprite triggerL2LT;
+        public Sprite triggerR2RT;
         public Sprite dpad;
         public Sprite dpadX;
         public Sprite dpadY;
@@ -24,22 +24,22 @@ namespace ThreeDeePongProto.Shared.UI
         public Sprite dpadLeft;
         public Sprite dpadRight;
         public Sprite leftStick;
-        public Sprite leftStickX;
         public Sprite leftStickLeft;
         public Sprite leftStickRight;
-        public Sprite leftStickY;
+        public Sprite lStickLeftRight;
         public Sprite leftStickUp;
         public Sprite leftStickDown;
+        public Sprite lStickUpDown;
         public Sprite rightStick;
-        public Sprite rightStickX;
         public Sprite rightStickLeft;
         public Sprite rightStickRight;
-        public Sprite rightStickY;
+        public Sprite rStickLeftRight;
         public Sprite rightStickUp;
         public Sprite rightStickDown;
-        public Sprite leftStickPress;
-        public Sprite rightStickPress;
-        public Sprite touchpadButtonPress;
+        public Sprite rStickUpDown;
+        public Sprite lStickClickL3;
+        public Sprite rStickClickR3;
+        public Sprite touchpadPress;
         //public Sprite home;
 
         public Sprite GetGamepadSprite(string controlPath)
@@ -48,16 +48,16 @@ namespace ThreeDeePongProto.Shared.UI
             // map from that to the sprites we have for gamepads.
             return controlPath switch
             {
-                "<Gamepad>/buttonNorth" => buttonNorth,
-                "<Gamepad>/buttonSouth" => buttonSouth,
-                "<Gamepad>/buttonWest" => buttonWest,
-                "<Gamepad>/buttonEast" => buttonEast,
-                "<Gamepad>/start" => startButton,
-                "<Gamepad>/select" => selectButton,
-                "<Gamepad>/leftTrigger" => leftTrigger,
-                "<Gamepad>/rightTrigger" => rightTrigger,
-                "<Gamepad>/leftShoulder" => leftShoulder,
-                "<Gamepad>/rightShoulder" => rightShoulder,
+                "<Gamepad>/buttonNorth" => triangleNorth,
+                "<Gamepad>/buttonSouth" => crossSouth,
+                "<Gamepad>/buttonWest" => squareWest,
+                "<Gamepad>/buttonEast" => circleEast,
+                "<Gamepad>/start" => startOptions,
+                "<Gamepad>/select" => createShare,
+                "<Gamepad>/leftTrigger" => triggerL2LT,
+                "<Gamepad>/rightTrigger" => triggerR2RT,
+                "<Gamepad>/leftShoulder" => shoulderL1LB,
+                "<Gamepad>/rightShoulder" => shoulderR1RB,
                 "<Gamepad>/dpad" => dpad,
                 "<Gamepad>/dpad/x" => dpadX,
                 "<Gamepad>/dpad/y" => dpadY,
@@ -66,21 +66,21 @@ namespace ThreeDeePongProto.Shared.UI
                 "<Gamepad>/dpad/left" => dpadLeft,
                 "<Gamepad>/dpad/right" => dpadRight,
                 "<Gamepad>/leftStick" => leftStick,
-                "<Gamepad>/leftStick/x" => leftStickX,
+                "<Gamepad>/leftStick/x" => lStickLeftRight,
                 "<Gamepad>/leftStick/left" => leftStickLeft,
                 "<Gamepad>/leftStick/right" => leftStickRight,
-                "<Gamepad>/leftStick/y" => leftStickY,
+                "<Gamepad>/leftStick/y" => lStickUpDown,
                 "<Gamepad>/leftStick/up" => leftStickUp,
                 "<Gamepad>/leftStick/down" => leftStickDown,
                 "<Gamepad>/rightStick" => rightStick,
-                "<Gamepad>/rightStick/x" => rightStickX,
+                "<Gamepad>/rightStick/x" => rStickLeftRight,
                 "<Gamepad>/rightStick/left" => rightStickLeft,
                 "<Gamepad>/rightStick/right" => rightStickRight,
-                "<Gamepad>/rightStick/y" => rightStickY,
+                "<Gamepad>/rightStick/y" => rStickUpDown,
                 "<Gamepad>/rightStick/up" => rightStickUp,
                 "<Gamepad>/rightStick/down" => rightStickDown,
-                "<Gamepad>/leftStickPress" => leftStickPress,
-                "<Gamepad>/rightStickPress" => rightStickPress,
+                "<Gamepad>/leftStickPress" => lStickClickL3,
+                "<Gamepad>/rightStickPress" => rStickClickR3,
                 _ => null,
             };
         }
@@ -92,7 +92,7 @@ namespace ThreeDeePongProto.Shared.UI
             switch (controlPath)
             {
                 case "<DualShockGamepad>/touchpadButton":
-                    return touchpadButtonPress;
+                    return touchpadPress;
                 default:
                     return null;
             }
@@ -105,11 +105,11 @@ namespace ThreeDeePongProto.Shared.UI
             switch (controlPath)
             {
                 case "<DualSenseGamepadHID>/leftTriggerButton":
-                    return leftTrigger;
+                    return triggerL2LT;
                 case "<DualSenseGamepadHID>/rightTriggerButton":
-                    return rightTrigger;
+                    return triggerR2RT;
                 case "<DualSenseGamepadHID>/touchpadButton":
-                    return touchpadButtonPress;
+                    return touchpadPress;
                 //case "<DualSenseGamepadHID>/systemButton":
                 //    return home;  //Disabled for ControlRebinds.
                 //case "<DualSenseGamepadHID>/micButton":

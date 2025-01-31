@@ -78,7 +78,7 @@ public class CustomComposite : InputBindingComposite<Vector2>
         //
         //       myAction.AddCompositeBinding("Custom")
         //           .With("Stick", "<Gamepad>/leftStick")
-        //           .With("Multiplier", "<Gamepad>/rightTrigger");
+        //           .With("Multiplier", "<Gamepad>/triggerR2RT");
         InputSystem.RegisterBindingComposite<CustomComposite>();
     }
 
@@ -125,7 +125,7 @@ public class CustomComposite : InputBindingComposite<Vector2>
     // parameter like so:
     //
     //     myAction.AddCompositeBinding("Custom(scaleFactor=0.5)"
-    //         .With("Multiplier", "<Gamepad>/rightTrigger")
+    //         .With("Multiplier", "<Gamepad>/triggerR2RT")
     //         .With("Stick", "<Gamepad>/leftStick");
     public float scaleFactor = 1;
 

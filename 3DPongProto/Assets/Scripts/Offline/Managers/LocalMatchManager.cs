@@ -301,7 +301,7 @@ namespace ThreeDeePongProto.Shared.Managers
             ResetRoundValues();
             SetPauseAndTimeScale(m_gameIsPaused);
 
-            InputManager.ToggleActionMaps(InputManager.m_PlayerInputActions.PlayerActions);
+            RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.PlayerActions);
         }
 
         private void DefaultPlayfield()

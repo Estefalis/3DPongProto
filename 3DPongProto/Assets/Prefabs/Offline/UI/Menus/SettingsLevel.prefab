@@ -613,8 +613,8 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 4893181660222644221}
-    m_SelectOnDown: {fileID: 4893181660331641015}
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 1604866538673979863}
     m_SelectOnRight: {fileID: 1604866538440556890}
   m_Transition: 1
@@ -1676,7 +1676,7 @@ RectTransform:
   m_Children:
   - {fileID: 2160775239123284151}
   - {fileID: 7029103722765951544}
-  - {fileID: 6297254077948874412}
+  - {fileID: 264051593638398749}
   - {fileID: 1155580388200302785}
   - {fileID: 1604866539293839098}
   m_Father: {fileID: 1604866538457356761}
@@ -2876,35 +2876,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4852882518049100156, guid: 706ee50c909a6454e91a530a8c3361e8,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 706ee50c909a6454e91a530a8c3361e8, type: 3}
---- !u!114 &4893181660222644221 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 223752530586404252, guid: 706ee50c909a6454e91a530a8c3361e8,
-    type: 3}
-  m_PrefabInstance: {fileID: 4680083848287246945}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4893181660331641015 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 223752530695443158, guid: 706ee50c909a6454e91a530a8c3361e8,
-    type: 3}
-  m_PrefabInstance: {fileID: 4680083848287246945}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!224 &6297254077948874412 stripped
+--- !u!224 &264051593638398749 stripped
 RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1699730966512243917, guid: 706ee50c909a6454e91a530a8c3361e8,
+  m_CorrespondingSourceObject: {fileID: 4852882518049100156, guid: 706ee50c909a6454e91a530a8c3361e8,
     type: 3}
   m_PrefabInstance: {fileID: 4680083848287246945}
   m_PrefabAsset: {fileID: 0}

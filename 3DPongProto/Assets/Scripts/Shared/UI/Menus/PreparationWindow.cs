@@ -1,10 +1,7 @@
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.ProBuilder.AutoUnwrapSettings;
 
 /// <summary>
 /// Indices set equal to the desired amount of players participating in matches of int 2 and/or 4.
@@ -28,12 +25,12 @@ namespace ThreeDeePongProto.Shared.UI
         [Header("Textfields")]
         [SerializeField] private TextMeshProUGUI m_playerTextOne;
         [SerializeField] private TextMeshProUGUI m_playerTextTwo;
-
+        
         [Header("Inputfield-Group")]
         [SerializeField] private TMP_InputField[] m_inputFields;
+        [Space]
         [SerializeField] private Transform m_playerThreeIFGroup;
         [SerializeField] private Transform m_playerFourIFGroup;
-
         //[SerializeField] private Button[] m_startJoinButtons;
         [SerializeField] private Button m_startButton;
         [SerializeField] private Button m_joinButton;
@@ -80,18 +77,7 @@ namespace ThreeDeePongProto.Shared.UI
 
         private void Update()
         {
-            switch (m_reCheckIF)
-            {
-                case false:
-                    break;
-                case true:
-                {
-                    //Required, or else 'm_startButton' and 'm_joinButton' could remain disabled, even if InputFields are filled.
-                    ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
-                    m_reCheckIF = false;
-                    break;
-                }
-            }
+            EnableButtonCheck();
         }
 
         private void AddGroupListener()
@@ -375,6 +361,24 @@ namespace ThreeDeePongProto.Shared.UI
 
             m_matchValues.PlayerData[3].PlayerName = m_inputFields[3].text;
             ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
+        }
+        #endregion
+
+        #region Update_UI
+        private void EnableButtonCheck()
+        {
+            switch (m_reCheckIF)
+            {
+                case false:
+                    break;
+                case true:
+                {
+                    //Required, or else 'm_startButton' and 'm_joinButton' could remain disabled, even if InputFields are filled.
+                    ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
+                    m_reCheckIF = false;
+                    break;
+                }
+            }
         }
         #endregion
 

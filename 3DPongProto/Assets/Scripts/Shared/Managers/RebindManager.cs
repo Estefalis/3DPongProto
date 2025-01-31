@@ -10,7 +10,7 @@ using UnityEngine.InputSystem;
 
 namespace ThreeDeePongProto.Shared.Managers
 {
-    public class InputManager : MonoBehaviour
+    public class RebindManager : MonoBehaviour
     {
         private enum ActiveInputActionMap
         {
@@ -71,7 +71,7 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         /// <summary>
-        /// CharacterMainController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the InputManager into 'Awake()', to prevent Exceptions.
+        /// CharacterMainController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the RebindManager into 'Awake()', to prevent Exceptions.
         /// </summary>
         private void Awake()
         {
@@ -96,7 +96,7 @@ namespace ThreeDeePongProto.Shared.Managers
             //{
             //    if (playerInput.actions != m_PlayerInputActions.asset)
             //    {
-            //        Debug.LogWarning("PlayerInput and InputManager use different ActionAssets. Please synchronize them.");
+            //        Debug.LogWarning("PlayerInput and RebindManager use different ActionAssets. Please synchronize them.");
             //        playerInput.actions = m_PlayerInputActions.asset;
             //    }
             //}
