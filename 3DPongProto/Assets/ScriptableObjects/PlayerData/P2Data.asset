@@ -15,7 +15,7 @@ MonoBehaviour:
   Prefab: {fileID: 2647086753925811379, guid: efd7ee56e3f432a438cf295583530547, type: 3}
   PlayerName: Nyclia
   PlayerId: 1
-  Avatar: {fileID: 0}
-  PlayerOnFrontline: 0
+  Avatar: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   KeepNameOnLoad: 0
+  PlayerOnFrontline: 0
   DefaultKeyboard: 0

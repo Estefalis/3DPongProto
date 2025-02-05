@@ -57,7 +57,7 @@ namespace ThreeDeePongProto.Shared.Managers
         private static event Func<string, string, Sprite> m_extractButtonImage;
         #endregion
 
-        private static ActiveInputActionMap m_activeInputActionMap = ActiveInputActionMap.None;
+        private static ActiveInputActionMap m_activeInputActionMap = ActiveInputActionMap.None; //Inside ToggleActionMaps!
 
         #region Serialization
         private static int m_playerIndex;

@@ -15,7 +15,7 @@ MonoBehaviour:
   Prefab: {fileID: 4346485511625068478, guid: c0c19374c0ff8984ca12239d839971bb, type: 3}
   PlayerName: Rayago
   PlayerId: 2
-  Avatar: {fileID: 0}
-  PlayerOnFrontline: 1
+  Avatar: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
   KeepNameOnLoad: 0
+  PlayerOnFrontline: 1
   DefaultKeyboard: 0

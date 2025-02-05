@@ -9821,11 +9821,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 975557202}
     m_Modifications:
-    - target: {fileID: 6273071293113980463, guid: e12d58a5cd728d14b940072f671355ec,
-        type: 3}
-      propertyPath: m_IsOn
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6398030083901581606, guid: e12d58a5cd728d14b940072f671355ec,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -9956,6 +9951,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: LocalPreparationWindow
       objectReference: {fileID: 0}
+    - target: {fileID: 6398030085263205455, guid: e12d58a5cd728d14b940072f671355ec,
+        type: 3}
+      propertyPath: m_player1SOData
+      value: 
+      objectReference: {fileID: 11400000, guid: 533fe6eee149a3143aab50fbfb5541a8,
+        type: 2}
     - target: {fileID: 6398030085263205455, guid: e12d58a5cd728d14b940072f671355ec,
         type: 3}
       propertyPath: m_playerTextOne

@@ -47,8 +47,12 @@ namespace ThreeDeePongProto.Shared.UI
         private int m_currentPlayers;
         private List<string> m_maxPlayerAmount;
 
+        private Dictionary<Toggle, TMP_InputField> m_playerSODataDict = new Dictionary<Toggle, TMP_InputField>();
+
         #region Serialization
         private readonly string m_settingsStatesFolderPath = "/SaveData/Settings-States";
+        private readonly string m_playerDataFolderPath = "/SaveData/PlayerData";
+        private readonly string m_playerDatasubFolderPath = "/Player";
         private readonly string m_graphicFileName = "/Graphic";
         private readonly string m_matchFileName = "/Match";
         private readonly string m_fileFormat = ".json";
@@ -61,6 +65,7 @@ namespace ThreeDeePongProto.Shared.UI
 
         private void OnEnable()
         {
+            m_playerSODataDict.Clear();
             aToggleButtonAccess += ToggleButtonAccess;
             AddGroupListener();
         }
@@ -79,7 +84,7 @@ namespace ThreeDeePongProto.Shared.UI
             SetupMatchDropdowns();
 
             m_currentPlayers = (int)currentPlayers;
-            ToggleButtonAccess(m_currentPlayers);            
+            ToggleButtonAccess(m_currentPlayers);
         }
 
         private void AddGroupListener()
@@ -87,6 +92,10 @@ namespace ThreeDeePongProto.Shared.UI
             //PlayerAmount
             m_playerAmountDd.onValueChanged.AddListener(delegate
             { OnPlayerAmountChanged(m_playerAmountDd); });
+            m_inputFieldToggles[0].onValueChanged.AddListener(HandleToggleOneChanges);
+            m_inputFieldToggles[1].onValueChanged.AddListener(HandleToggleTwoChanges);
+            m_inputFieldToggles[2].onValueChanged.AddListener(HandleToggleThreeChanges);
+            m_inputFieldToggles[3].onValueChanged.AddListener(HandleToggleFourChanges);
         }
 
         private void RemoveGroupListener()
@@ -94,6 +103,10 @@ namespace ThreeDeePongProto.Shared.UI
             //PlayerAmount
             m_playerAmountDd.onValueChanged.RemoveListener(delegate
             { OnPlayerAmountChanged(m_playerAmountDd); });
+            m_inputFieldToggles[0].onValueChanged.RemoveListener(HandleToggleOneChanges);
+            m_inputFieldToggles[1].onValueChanged.RemoveListener(HandleToggleTwoChanges);
+            m_inputFieldToggles[2].onValueChanged.RemoveListener(HandleToggleThreeChanges);
+            m_inputFieldToggles[3].onValueChanged.RemoveListener(HandleToggleFourChanges);
         }
 
         #region Start Setup
@@ -198,8 +211,6 @@ namespace ThreeDeePongProto.Shared.UI
         #region OnValueChanged
         private void OnPlayerAmountChanged(TMP_Dropdown _dropdown)
         {
-            //int currentPlayers = (int)m_matchUIStates.EPlayerAmount;
-
             switch (_dropdown.value)
             {
                 case 0:
@@ -228,14 +239,40 @@ namespace ThreeDeePongProto.Shared.UI
                     break;
             }
 
-            //WHENEVER YOU GOT THE SAME CLASS IN MULTIPLE SCENES (like MENUMANAGER) SAVE CHANGED DATA!!! OR old RELOADED DATA WILL OVERWRITE IT!!! AND YOU DON'T KNOW WHY...!
-            m_persistentData.SaveData(m_settingsStatesFolderPath, m_matchFileName, m_fileFormat, m_matchUIStates, m_encryptionEnabled, true);
-            m_persistentData.SaveData(m_settingsStatesFolderPath, m_graphicFileName, m_fileFormat, m_graphicUiStates, m_encryptionEnabled, true);
-            
+            SaveSettingsStates();
+
             //Required, so MatchSettings can set the Backline-Dropdown in the Settings-Menu visible/invisible.
             SetUpPlayerAmount(m_matchUIStates.EPlayerAmount);
 
             aToggleButtonAccess?.Invoke(m_currentPlayers);
+        }
+
+        private void HandleToggleOneChanges(bool _toggle)
+        {
+            int inputFieldIndex = Array.IndexOf(m_inputFieldToggles, m_inputFieldToggles[0]);
+            m_playerSOData[inputFieldIndex].KeepNameOnLoad = _toggle;
+            SavePlayerData(inputFieldIndex);
+        }
+
+        private void HandleToggleTwoChanges(bool _toggle)
+        {
+            int inputFieldIndex = Array.IndexOf(m_inputFieldToggles, m_inputFieldToggles[1]);
+            m_playerSOData[inputFieldIndex].KeepNameOnLoad = _toggle;
+            SavePlayerData(inputFieldIndex);
+        }
+
+        private void HandleToggleThreeChanges(bool _toggle)
+        {
+            int inputFieldIndex = Array.IndexOf(m_inputFieldToggles, m_inputFieldToggles[2]);
+            m_playerSOData[inputFieldIndex].KeepNameOnLoad = _toggle;
+            SavePlayerData(inputFieldIndex);
+        }
+
+        private void HandleToggleFourChanges(bool _toggle)
+        {
+            int inputFieldIndex = Array.IndexOf(m_inputFieldToggles, m_inputFieldToggles[3]);
+            m_playerSOData[inputFieldIndex].KeepNameOnLoad = _toggle;
+            SavePlayerData(inputFieldIndex);
         }
         #endregion
 
@@ -255,68 +292,47 @@ namespace ThreeDeePongProto.Shared.UI
         #region Name-Inputfields
         public void PlayerOneInput()  //TODO: Optional Random a playername, or set PlayerCharacter 1-4.
         {
-            //int currentPlayers = (int)m_matchUIStates.EPlayerAmount;
-            m_matchValues.PlayerSOData[0].PlayerId = 0;
+            int inputFieldIndex = Array.IndexOf(m_nameInputFields, m_nameInputFields[0]);
 
-            //if (m_inputFields[0].text.IsNullOrWhitespace())   //Sirenix.Utilities.
-            if (string.IsNullOrWhiteSpace(m_nameInputFields[0].text))
-            {
-                aToggleButtonAccess?.Invoke(m_currentPlayers);
-                return;
-            }
-
-            m_matchValues.PlayerSOData[0].PlayerName = m_nameInputFields[0].text;
-
-            aToggleButtonAccess?.Invoke(m_currentPlayers);
+            UpdateUIAndScriptables(inputFieldIndex);
+            SavePlayerData(inputFieldIndex);
         }
 
         public void PlayerTwoInput()
         {
-            //int currentPlayers = (int)m_matchUIStates.EPlayerAmount;
-            m_matchValues.PlayerSOData[1].PlayerId = 1;
+            int inputFieldIndex = Array.IndexOf(m_nameInputFields, m_nameInputFields[1]);
 
-            //if (m_inputFields[1].text.IsNullOrWhitespace())   //Sirenix.Utilities.
-            if (string.IsNullOrWhiteSpace(m_nameInputFields[1].text))
-            {
-                aToggleButtonAccess?.Invoke(m_currentPlayers);
-                return;
-            }
-
-            m_matchValues.PlayerSOData[1].PlayerName = m_nameInputFields[1].text;
-
-            aToggleButtonAccess?.Invoke(m_currentPlayers);
+            UpdateUIAndScriptables(inputFieldIndex);
+            SavePlayerData(inputFieldIndex);
         }
 
         public void PlayerThreeInput()
         {
-            //int currentPlayers = (int)m_matchUIStates.EPlayerAmount;
-            m_matchValues.PlayerSOData[2].PlayerId = 2;
+            int inputFieldIndex = Array.IndexOf(m_nameInputFields, m_nameInputFields[2]);
 
-            //if (m_inputFields[2].text.IsNullOrWhitespace())   //Sirenix.Utilities.
-            if (string.IsNullOrWhiteSpace(m_nameInputFields[2].text))
-            {
-                aToggleButtonAccess?.Invoke(m_currentPlayers);
-                return;
-            }
-
-            m_matchValues.PlayerSOData[2].PlayerName = m_nameInputFields[2].text;
-
-            aToggleButtonAccess?.Invoke(m_currentPlayers);
+            UpdateUIAndScriptables(inputFieldIndex);
+            SavePlayerData(inputFieldIndex);
         }
 
         public void PlayerFourInput()
         {
-            //int currentPlayers = (int)m_matchUIStates.EPlayerAmount;
-            m_matchValues.PlayerSOData[3].PlayerId = 3;
+            int inputFieldIndex = Array.IndexOf(m_nameInputFields, m_nameInputFields[3]);
 
-            //if (m_inputFields[3].text.IsNullOrWhitespace())   //Sirenix.Utilities.
-            if (string.IsNullOrWhiteSpace(m_nameInputFields[3].text))
+            UpdateUIAndScriptables(inputFieldIndex);
+            SavePlayerData(inputFieldIndex);
+        }
+
+        private void UpdateUIAndScriptables(int _index)
+        {
+            m_matchValues.PlayerSOData[_index].PlayerId = _index;
+
+            if (string.IsNullOrWhiteSpace(m_nameInputFields[_index].text))
             {
                 aToggleButtonAccess?.Invoke(m_currentPlayers);
                 return;
             }
 
-            m_matchValues.PlayerSOData[3].PlayerName = m_nameInputFields[3].text;
+            m_matchValues.PlayerSOData[_index].PlayerName = m_nameInputFields[_index].text;
 
             aToggleButtonAccess?.Invoke(m_currentPlayers);
         }
@@ -348,6 +364,27 @@ namespace ThreeDeePongProto.Shared.UI
             }
         }
         #endregion
+
+        //GameObjects like Prefab or Sprite can't be null, to prevent NullReferenceExceptions.
+        private void SavePlayerData(int _index)
+        {
+            var playerSO = m_playerSOData[_index];
+            var prefabName = playerSO.Prefab.name;
+            var avatarName = playerSO.Avatar.name;
+            var toggleID = m_inputFieldToggles[_index].GetInstanceID();
+
+            PlayerData playerData = new(prefabName, playerSO.PlayerName, playerSO.PlayerId, avatarName, playerSO.KeepNameOnLoad, playerSO.PlayerOnFrontline, playerSO.DefaultKeyboard, toggleID);
+            m_persistentData.SaveData(m_playerDataFolderPath, m_playerDatasubFolderPath + $"{_index}", m_fileFormat, playerData, m_encryptionEnabled, true);
+        }
+
+        /// <summary>
+        /// WHENEVER YOU GOT THE SAME CLASS IN MULTIPLE SCENES (like MENUMANAGER) SAVE CHANGED DATA!!! OR old RELOADED DATA WILL OVERWRITE IT!!! AND YOU DON'T KNOW WHY...!
+        /// </summary>
+        private void SaveSettingsStates()
+        {
+            m_persistentData.SaveData(m_settingsStatesFolderPath, m_matchFileName, m_fileFormat, m_matchUIStates, m_encryptionEnabled, true);
+            m_persistentData.SaveData(m_settingsStatesFolderPath, m_graphicFileName, m_fileFormat, m_graphicUiStates, m_encryptionEnabled, true);
+        }
 
         private void ResetDefault()
         {

@@ -5471,8 +5471,6 @@ MonoBehaviour:
   m_playerTwoGroup: {fileID: 6144415440766160476}
   m_playerAmountDd: {fileID: 5854858772934603175}
   m_registeredPlayers: 2
-  m_playerTextOne: {fileID: 3122429240602838613}
-  m_playerTextTwo: {fileID: 6144415438886512924}
   m_nameInputFields:
   - {fileID: 3122429240402133904}
   - {fileID: 6144415440313265123}
