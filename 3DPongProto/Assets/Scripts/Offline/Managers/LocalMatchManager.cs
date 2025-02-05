@@ -193,7 +193,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void UpdateTPOnePoints()
         {
-            if (m_matchValues.PlayerData == null || m_matchValues == null)
+            if (m_matchValues.PlayerSOData == null || m_matchValues == null)
             {
 #if UNITY_EDITOR
                 Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
@@ -214,21 +214,21 @@ namespace ThreeDeePongProto.Shared.Managers
                     if (m_scoredPlayer == null)
                         m_scoredPlayer = $"{m_NPCName} from Team 1";
                     else
-                        m_scoredPlayer = m_matchValues.PlayerData[0].PlayerName;
+                        m_scoredPlayer = m_matchValues.PlayerSOData[0].PlayerName;
                     break;
                 }
                 //Solo
                 case 2:
                 {
                     if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
-                        m_scoredPlayer = m_matchValues.PlayerData[0].PlayerName;
+                        m_scoredPlayer = m_matchValues.PlayerSOData[0].PlayerName;
                     break;
                 }
                 //Team
                 case 4:
                 {
                     if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
-                        m_scoredPlayer = $"{m_matchValues.PlayerData[0].PlayerName} & {m_matchValues.PlayerData[2].PlayerName}";
+                        m_scoredPlayer = $"{m_matchValues.PlayerSOData[0].PlayerName} & {m_matchValues.PlayerSOData[2].PlayerName}";
                     break;
                 }
                 default:
@@ -240,7 +240,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void UpdateTPTwoPoints()
         {
-            if (m_matchValues.PlayerData == null || m_matchValues == null)
+            if (m_matchValues.PlayerSOData == null || m_matchValues == null)
             {
 #if UNITY_EDITOR
                 Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
@@ -261,21 +261,21 @@ namespace ThreeDeePongProto.Shared.Managers
                     if (m_scoredPlayer == null)
                         m_scoredPlayer = $"{m_NPCName} from Team 2";
                     else
-                        m_scoredPlayer = m_matchValues.PlayerData[1].PlayerName;
+                        m_scoredPlayer = m_matchValues.PlayerSOData[1].PlayerName;
                     break;
                 }
                 //Solo
                 case 2:
                 {
                     if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
-                        m_scoredPlayer = m_matchValues.PlayerData[1].PlayerName;
+                        m_scoredPlayer = m_matchValues.PlayerSOData[1].PlayerName;
                     break;
                 }
                 //Team
                 case 4:
                 {
                     if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
-                        m_scoredPlayer = $"{m_matchValues.PlayerData[1].PlayerName} & {m_matchValues.PlayerData[3].PlayerName}";
+                        m_scoredPlayer = $"{m_matchValues.PlayerSOData[1].PlayerName} & {m_matchValues.PlayerSOData[3].PlayerName}";
                     break;
                 }
                 default:
@@ -430,20 +430,20 @@ namespace ThreeDeePongProto.Shared.Managers
                     case true:
                     {
                         //Team One.
-                        m_matchValues.WinningPlayer = $"{m_matchValues.PlayerData[0].PlayerName} & {m_matchValues.PlayerData[2].PlayerName}";
+                        m_matchValues.WinningPlayer = $"{m_matchValues.PlayerSOData[0].PlayerName} & {m_matchValues.PlayerSOData[2].PlayerName}";
                         return _infinitePointsTPOne;
                     }
                     case false:
                     {
                         //Team Two.
-                        m_matchValues.WinningPlayer = $"{m_matchValues.PlayerData[1].PlayerName} & {m_matchValues.PlayerData[3].PlayerName}";
+                        m_matchValues.WinningPlayer = $"{m_matchValues.PlayerSOData[1].PlayerName} & {m_matchValues.PlayerSOData[3].PlayerName}";
                         return _infinitePointsTPTwo;
                     }
                 }
             }
             else
             {
-                m_matchValues.WinningPlayer = $"{m_matchValues.PlayerData[0].PlayerName} & {m_matchValues.PlayerData[2].PlayerName} draw \nto {m_matchValues.PlayerData[1].PlayerName} & {m_matchValues.PlayerData[3].PlayerName}";
+                m_matchValues.WinningPlayer = $"{m_matchValues.PlayerSOData[0].PlayerName} & {m_matchValues.PlayerSOData[2].PlayerName} draw \nto {m_matchValues.PlayerSOData[1].PlayerName} & {m_matchValues.PlayerSOData[3].PlayerName}";
                 return _infinitePointsTPOne;
             }
         }
@@ -507,7 +507,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         //    for (int i = 0; i < playerCount; i++)
         //    {
-        //        GameObject playerAvatar = Instantiate(m_matchValues.PlayerData[i].Prefab, m_prefabParent);
+        //        GameObject playerAvatar = Instantiate(m_matchValues.PlayerSOData[i].Prefab, m_prefabParent);
         //        PlayerInput playerInput = playerAvatar.GetComponent<PlayerInput>();
 
         //        if (playerInput == null)

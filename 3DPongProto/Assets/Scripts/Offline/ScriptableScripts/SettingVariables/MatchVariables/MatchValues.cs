@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptable Objects/Match Settings/Dimensions and Variables", fileName = "Match Variables")]
 public class MatchValues : ScriptableObject
 {
-    public List<PlayerIDData> PlayerData;
+    public List<PlayerSOData> PlayerSOData;
     //public List<GameObject> PlayerPrefabs;
     public uint MaxPlayerInGame;
     [Header("Round-Details")]

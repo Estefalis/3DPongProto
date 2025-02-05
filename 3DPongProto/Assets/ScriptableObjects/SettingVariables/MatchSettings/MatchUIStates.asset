@@ -12,14 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5fb24614f778d74e84f6d51abe4f095, type: 3}
   m_Name: MatchUIStates
   m_EditorClassIdentifier: 
-  EPlayerAmount: 4
+  EPlayerAmount: 1
   eGameConnectModi: 0
-  TpOneRotReset: 0
-  TpTwoRotReset: 0
+  RotationReset: 1
   GameRuns: 0
   InfiniteMatch: 0
   LastRoundDdIndex: 5
-  LastMaxPointDdIndex: 25
+  LastMaxPointDdIndex: 1
   MaxRounds: 5
   MaxPoints: 25
   FixRatio: 0

@@ -9,12 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23ae38de6bc0d3f4aaa8718fe9de0dee, type: 3}
+  m_Script: {fileID: 11500000, guid: 24585860303283f40a7bd7b92f15819c, type: 3}
   m_Name: P1Data
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 6448770841493022979, guid: 7bd79cfa5cbbd1f438412108551e4367, type: 3}
+  Prefab: {fileID: 8558195983882434023, guid: dbad03ba2983db345901c2d0b89a6a6e, type: 3}
   PlayerName: Estefalis
   PlayerId: 0
   Avatar: {fileID: 0}
-  ETeamChoice: 0
   PlayerOnFrontline: 0
+  KeepNameOnLoad: 0
+  DefaultKeyboard: 0

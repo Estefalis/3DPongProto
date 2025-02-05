@@ -182,7 +182,7 @@ namespace ThreeDeePongProto.Shared.Settings
             m_matchSetupDropdowns[3].onValueChanged.RemoveListener(delegate
             { OnLengthDropdownValueChanged(m_matchSetupDropdowns[3]); });
 
-            if (m_matchValues.PlayerData.Count > 3)
+            if (m_matchValues.PlayerSOData.Count > 3)
             {
                 //PlayerCharacter-Set-Frontline
                 m_frontLineDds[0].onValueChanged.RemoveListener(delegate
@@ -290,7 +290,7 @@ namespace ThreeDeePongProto.Shared.Settings
         }
 
         /// <summary>
-        /// dropdownIndex-Changes set Booleans on playerData-Scriptables to set their goalDistance-Positions on Match-Start.
+        /// dropdownIndex-Changes set Booleans on playerSOData-Scriptables to set their goalDistance-Positions on Match-Start.
         /// </summary>
         /// <param name="_dropdown"></param>
         private void OnTeamOneFrontlineDropdownValueChanged(TMP_Dropdown _dropdown)
@@ -302,7 +302,7 @@ namespace ThreeDeePongProto.Shared.Settings
                     //Frontline PlayerCharacter 1 (Team 1, ID 0) = Backline PlayerCharacter 3 (Team 1, ID 2).
                     m_backLineDds[0].value = 1;
                     m_matchUIStates.TPOneFrontlineDdIndex = 0;
-                    UpdateFrontlineSetup(m_matchValues.PlayerData[0].PlayerId);
+                    UpdateFrontlineSetup(m_matchValues.PlayerSOData[0].PlayerId);
                     break;
                 }
                 case 1:
@@ -310,7 +310,7 @@ namespace ThreeDeePongProto.Shared.Settings
                     //Frontline PlayerCharacter 3 (Team 1, ID 2) = Backline PlayerCharacter 1 (Team 1, ID 0).
                     m_backLineDds[0].value = 0;
                     m_matchUIStates.TPOneFrontlineDdIndex = 1;
-                    UpdateFrontlineSetup(m_matchValues.PlayerData[2].PlayerId);
+                    UpdateFrontlineSetup(m_matchValues.PlayerSOData[2].PlayerId);
                     break;
                 }
                 default:
@@ -319,7 +319,7 @@ namespace ThreeDeePongProto.Shared.Settings
         }
 
         /// <summary>
-        /// dropdownIndex-Changes set Booleans on playerData-Scriptables to set their goalDistance-Positions on Match-Start.
+        /// dropdownIndex-Changes set Booleans on playerSOData-Scriptables to set their goalDistance-Positions on Match-Start.
         /// </summary>
         /// <param name="_dropdown"></param>
         private void OnTeamTwoFrontlineDropdownValueChanged(TMP_Dropdown _dropdown)
@@ -331,7 +331,7 @@ namespace ThreeDeePongProto.Shared.Settings
                     //Frontline PlayerCharacter 2 (Team 2, ID 1) = Backline PlayerCharacter 4 (Team 2, ID 3).
                     m_backLineDds[1].value = 1;
                     m_matchUIStates.TPTwoFrontlineDdIndex = 0;
-                    UpdateFrontlineSetup(m_matchValues.PlayerData[1].PlayerId);
+                    UpdateFrontlineSetup(m_matchValues.PlayerSOData[1].PlayerId);
                     break;
                 }
                 case 1:
@@ -339,7 +339,7 @@ namespace ThreeDeePongProto.Shared.Settings
                     //Frontline PlayerCharacter 4 (Team 2, ID 3) = Backline PlayerCharacter 2 (Team 2, ID 1).
                     m_backLineDds[1].value = 0;
                     m_matchUIStates.TPTwoFrontlineDdIndex = 1;
-                    UpdateFrontlineSetup(m_matchValues.PlayerData[3].PlayerId);
+                    UpdateFrontlineSetup(m_matchValues.PlayerSOData[3].PlayerId);
                     break;
                 }
                 default:
@@ -348,7 +348,7 @@ namespace ThreeDeePongProto.Shared.Settings
         }
 
         /// <summary>
-        /// dropdownIndex-Changes set Booleans on playerData-Scriptables to set their goalDistance-Positions on Match-Start.
+        /// dropdownIndex-Changes set Booleans on playerSOData-Scriptables to set their goalDistance-Positions on Match-Start.
         /// </summary>
         /// <param name="_dropdown"></param>
         private void OnTeamOneBacklineDropdownValueChanged(TMP_Dropdown _dropdown)
@@ -360,7 +360,7 @@ namespace ThreeDeePongProto.Shared.Settings
                     //Backline PlayerCharacter 1 (Team 1, ID 0) = Frontline PlayerCharacter 3 (Team 1, ID 2).
                     m_frontLineDds[0].value = 1;
                     m_matchUIStates.TPOneBacklineDdIndex = 0;
-                    UpdateBacklineSetup(m_matchValues.PlayerData[0].PlayerId);
+                    UpdateBacklineSetup(m_matchValues.PlayerSOData[0].PlayerId);
                     break;
                 }
                 case 1:
@@ -368,7 +368,7 @@ namespace ThreeDeePongProto.Shared.Settings
                     //Backline PlayerCharacter 3 (Team 1, ID 2) = Frontline PlayerCharacter 1 (Team 1, ID 0).
                     m_frontLineDds[0].value = 0;
                     m_matchUIStates.TPOneBacklineDdIndex = 1;
-                    UpdateBacklineSetup(m_matchValues.PlayerData[2].PlayerId);
+                    UpdateBacklineSetup(m_matchValues.PlayerSOData[2].PlayerId);
                     break;
                 }
                 default:
@@ -377,7 +377,7 @@ namespace ThreeDeePongProto.Shared.Settings
         }
 
         /// <summary>
-        /// dropdownIndex-Changes set Booleans on playerData-Scriptables to set their goalDistance-Positions on Match-Start.
+        /// dropdownIndex-Changes set Booleans on playerSOData-Scriptables to set their goalDistance-Positions on Match-Start.
         /// </summary>
         /// <param name="_dropdown"></param>
         private void OnTeamTwoBacklineDropdownValueChanged(TMP_Dropdown _dropdown)
@@ -389,7 +389,7 @@ namespace ThreeDeePongProto.Shared.Settings
                     //Backline PlayerCharacter 2 (Team 2, ID 1) = Frontline PlayerCharacter 4 (Team 2, ID 3).
                     m_frontLineDds[1].value = 1;
                     m_matchUIStates.TPTwoBacklineDdIndex = 0;
-                    UpdateBacklineSetup(m_matchValues.PlayerData[1].PlayerId);
+                    UpdateBacklineSetup(m_matchValues.PlayerSOData[1].PlayerId);
                     break;
                 }
                 case 1:
@@ -397,7 +397,7 @@ namespace ThreeDeePongProto.Shared.Settings
                     //Backline PlayerCharacter 4 (Team 2, ID 3) = Frontline PlayerCharacter 2 (Team 2, ID 1).
                     m_frontLineDds[1].value = 0;
                     m_matchUIStates.TPTwoBacklineDdIndex = 1;
-                    UpdateBacklineSetup(m_matchValues.PlayerData[3].PlayerId);
+                    UpdateBacklineSetup(m_matchValues.PlayerSOData[3].PlayerId);
                     break;
                 }
                 default:
@@ -614,11 +614,11 @@ namespace ThreeDeePongProto.Shared.Settings
             m_playersTeamOne = new List<string>();
             m_playersTeamTwo = new List<string>();
 
-            for (int i = 0; i < m_matchValues.PlayerData.Count; i++)
+            for (int i = 0; i < m_matchValues.PlayerSOData.Count; i++)
             {
-                if (m_matchValues.PlayerData[i].PlayerId % 2 == 0)
+                if (m_matchValues.PlayerSOData[i].PlayerId % 2 == 0)
                     m_playersTeamOne.Add($"Player {i + 1}");
-                if (m_matchValues.PlayerData[i].PlayerId % 2 != 0)
+                if (m_matchValues.PlayerSOData[i].PlayerId % 2 != 0)
                     m_playersTeamTwo.Add($"Player {i + 1}");
             }
 
@@ -648,11 +648,11 @@ namespace ThreeDeePongProto.Shared.Settings
             m_playersTeamOne = new List<string>();
             m_playersTeamTwo = new List<string>();
 
-            for (int i = 0; i < m_matchValues.PlayerData.Count; i++)
+            for (int i = 0; i < m_matchValues.PlayerSOData.Count; i++)
             {
-                if (m_matchValues.PlayerData[i].PlayerId % 2 % 2 == 0)
+                if (m_matchValues.PlayerSOData[i].PlayerId % 2 % 2 == 0)
                     m_playersTeamOne.Add($"Player {i + 1}");
-                if (m_matchValues.PlayerData[i].PlayerId % 2 % 2 != 0)
+                if (m_matchValues.PlayerSOData[i].PlayerId % 2 % 2 != 0)
                     m_playersTeamTwo.Add($"Player {i + 1}");
             }
 
@@ -737,12 +737,12 @@ namespace ThreeDeePongProto.Shared.Settings
 
         private void UpdateFrontlineSetup(int _playerId)
         {
-            m_matchValues.PlayerData[_playerId].PlayerOnFrontline = true;
+            m_matchValues.PlayerSOData[_playerId].PlayerOnFrontline = true;
         }
 
         private void UpdateBacklineSetup(int _playerId)
         {
-            m_matchValues.PlayerData[_playerId].PlayerOnFrontline = false;
+            m_matchValues.PlayerSOData[_playerId].PlayerOnFrontline = false;
         }
 
         private void UpdateDropdowns(int _dropdownIndex)

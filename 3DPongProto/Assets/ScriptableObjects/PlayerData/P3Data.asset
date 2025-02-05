@@ -9,12 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23ae38de6bc0d3f4aaa8718fe9de0dee, type: 3}
+  m_Script: {fileID: 11500000, guid: 24585860303283f40a7bd7b92f15819c, type: 3}
   m_Name: P3Data
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 2725305223583310730, guid: 39e6455ada7e5c94b87fc299ee315894, type: 3}
+  Prefab: {fileID: 4346485511625068478, guid: c0c19374c0ff8984ca12239d839971bb, type: 3}
   PlayerName: Rayago
   PlayerId: 2
   Avatar: {fileID: 0}
-  ETeamChoice: 0
   PlayerOnFrontline: 1
+  KeepNameOnLoad: 0
+  DefaultKeyboard: 0

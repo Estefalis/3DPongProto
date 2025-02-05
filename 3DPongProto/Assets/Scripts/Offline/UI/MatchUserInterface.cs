@@ -78,12 +78,12 @@ namespace ThreeDeePongProto.Offline.UI
         }
 
         /// <summary>
-        /// Only returns true, after the activated PlayerCameras added themselves to the 'AvailableCameras'-List equal to the registered PlayerIDData.
+        /// Only returns true, after the activated PlayerCameras added themselves to the 'AvailableCameras'-List equal to the registered PlayerSOData.
         /// </summary>
         /// <returns></returns>
         private bool DelegateBool()
         {
-            if (m_cameraManager.AvailableCameras.Count == m_matchValues.PlayerData.Count)
+            if (m_cameraManager.AvailableCameras.Count == m_matchValues.PlayerSOData.Count)
                 return true;
             else if (m_matchValues == null)
                 return false;
@@ -176,10 +176,10 @@ namespace ThreeDeePongProto.Offline.UI
 
         private void DisplayPlayerNames()
         {
-            for (int i = 0; i < m_matchValues.PlayerData.Count; i++)
+            for (int i = 0; i < m_matchValues.PlayerSOData.Count; i++)
             {
-                if (m_matchValues.PlayerData[i] != null)
-                m_playerNamesTMPList[i].text = m_matchValues.PlayerData[i].PlayerName;
+                if (m_matchValues.PlayerSOData[i] != null)
+                m_playerNamesTMPList[i].text = m_matchValues.PlayerSOData[i].PlayerName;
             }
         }
 

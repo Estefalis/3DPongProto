@@ -84,21 +84,21 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void Update()
         {
-            if (AvailableCameras.Count < m_matchValues.PlayerData.Count)
+            if (AvailableCameras.Count < m_matchValues.PlayerSOData.Count)
             {
-                Debug.LogError($"Not enough cameras available. Expected: {m_matchValues.PlayerData.Count}, Available: {AvailableCameras.Count}");
+                Debug.LogError($"Not enough cameras available. Expected: {m_matchValues.PlayerSOData.Count}, Available: {AvailableCameras.Count}");
                 return;
             }
             UpdateFullsizeRect();
         }
 
         /// <summary>
-        /// Only returns true, after the activated PlayerCameras added themselves to the 'AvailableCameras'-List are equal to the registered PlayerIDData.
+        /// Only returns true, after the activated PlayerCameras added themselves to the 'AvailableCameras'-List are equal to the registered PlayerSOData.
         /// </summary>
         /// <returns></returns>
         private bool CamerasEqualPlayerCount()
         {
-            switch (AvailableCameras.Count == m_matchValues.PlayerData.Count)
+            switch (AvailableCameras.Count == m_matchValues.PlayerSOData.Count)
             {
                 case true:
                     return true;

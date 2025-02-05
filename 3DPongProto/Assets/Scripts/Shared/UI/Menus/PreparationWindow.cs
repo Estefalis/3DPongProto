@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -22,16 +23,14 @@ namespace ThreeDeePongProto.Shared.UI
         [SerializeField] private TMP_Dropdown m_playerAmountDd;
         [SerializeField] private EPlayerAmount m_registeredPlayers = EPlayerAmount.Two;
 
-        [Header("Textfields")]
-        [SerializeField] private TextMeshProUGUI m_playerTextOne;
-        [SerializeField] private TextMeshProUGUI m_playerTextTwo;
-        
         [Header("Inputfield-Group")]
-        [SerializeField] private TMP_InputField[] m_inputFields;
+        [SerializeField] private TMP_InputField[] m_nameInputFields;
+        [Space]
+        [SerializeField] private Toggle[] m_inputFieldToggles;
         [Space]
         [SerializeField] private Transform m_playerThreeIFGroup;
         [SerializeField] private Transform m_playerFourIFGroup;
-        //[SerializeField] private Button[] m_startJoinButtons;
+
         [SerializeField] private Button m_startButton;
         [SerializeField] private Button m_joinButton;
 
@@ -40,12 +39,12 @@ namespace ThreeDeePongProto.Shared.UI
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
         [SerializeField] private GraphicUIStates m_graphicUiStates;
-        [SerializeField] private PlayerIDData[] m_playerIDData;
+        [SerializeField] private PlayerSOData[] m_playerSOData;
         #endregion
         #endregion
 
-        private bool m_reCheckIF = false;
         private const uint m_MINPLAYER = 1;
+        private int m_currentPlayers;
         private List<string> m_maxPlayerAmount;
 
         #region Serialization
@@ -58,26 +57,29 @@ namespace ThreeDeePongProto.Shared.UI
         private bool m_encryptionEnabled = false;
         #endregion
 
+        private static event Action<int> aToggleButtonAccess;
+
         private void OnEnable()
         {
-            ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
+            aToggleButtonAccess += ToggleButtonAccess;
             AddGroupListener();
         }
 
         private void OnDisable()
         {
+            aToggleButtonAccess -= ToggleButtonAccess;
             RemoveGroupListener();
         }
 
         private void Start()
         {
-            SetupWindow(m_matchUIStates.EGameConnectModi, m_matchUIStates.EPlayerAmount);
-            SetupMatchDropdowns();
-        }
+            var currentPlayers = m_matchUIStates.EPlayerAmount;
+            SetupWindow(m_matchUIStates.EGameConnectModi, currentPlayers);
 
-        private void Update()
-        {
-            EnableButtonCheck();
+            SetupMatchDropdowns();
+
+            m_currentPlayers = (int)currentPlayers;
+            ToggleButtonAccess(m_currentPlayers);            
         }
 
         private void AddGroupListener()
@@ -105,49 +107,27 @@ namespace ThreeDeePongProto.Shared.UI
                     {
                         //TODO: PlayerAmount 1 vs NPC in Shared mode?
                         case EPlayerAmount.One:
-                            ObjectsToHide(false, false, false, 437.0f);
+                            ObjectsToHide(false, false, false);
                             break;
                         case EPlayerAmount.Two:
                         {
                             //PlayerCharacter 3 invisible, PlayerCharacter 4 invisible, Group 2 visible, TextWidths large.
-                            ObjectsToHide(false, false, true, 437.0f);
+                            ObjectsToHide(false, false, true);
                             break;
                         }
                         case EPlayerAmount.Four:
                         {
                             //PlayerCharacter 3 visible, PlayerCharacter 4 visible, Group 2 visible, TextWidths small.
-                            ObjectsToHide(true, true, true, 110.0f);
+                            ObjectsToHide(true, true, true);
                             break;
                         }
                         default:
-                            ObjectsToHide(false, false, true, 437.0f);
+                            ObjectsToHide(false, false, true);
                             break;
                     }
                     break;
                 }
                 case EGameModi.LAN:
-                {
-                    switch (_ePlayerAmount)
-                    {
-                        case EPlayerAmount.One:
-                        {
-                            //Only PlayerCharacter 1 visible for Lan 1 vs 1 Matches.
-                            ObjectsToHide(false, false, false, 437.0f);
-                            break;
-                        }
-                        case EPlayerAmount.Two:
-                        {
-                            //PlayerCharacter 3 invisible, PlayerCharacter 4 invisible, Group 2 visible, TextWidths large.
-                            ObjectsToHide(false, false, true, 437.0f);
-                            break;
-                        }
-                        //No 'EPlayerAmount.4', since the max playerAmount shall be 2 x 2 = 4.
-                        default:
-                            ObjectsToHide(false, false, false, 437.0f);
-                            break;
-                    }
-                    break;
-                }
                 case EGameModi.Internet:
                 {
                     switch (_ePlayerAmount)
@@ -155,18 +135,18 @@ namespace ThreeDeePongProto.Shared.UI
                         case EPlayerAmount.One:
                         {
                             //Only PlayerCharacter 1 visible for Lan 1 vs 1 Matches.
-                            ObjectsToHide(false, false, false, 437.0f);
+                            ObjectsToHide(false, false, false);
                             break;
                         }
                         case EPlayerAmount.Two:
                         {
                             //PlayerCharacter 3 invisible, PlayerCharacter 4 invisible, Group 2 visible, TextWidths large.
-                            ObjectsToHide(false, false, true, 437.0f);
+                            ObjectsToHide(false, false, true);
                             break;
                         }
                         //No 'EPlayerAmount.4', since the max playerAmount shall be 2 x 2 = 4.
                         default:
-                            ObjectsToHide(false, false, false, 437.0f);
+                            ObjectsToHide(false, false, false);
                             break;
                     }
                     break;
@@ -207,43 +187,19 @@ namespace ThreeDeePongProto.Shared.UI
         }
         #endregion
 
-        private void ObjectsToHide(bool _IFThree, bool _IFFour, bool _playerGroupTwo, float _textWidth)
+        private void ObjectsToHide(bool _IFThree, bool _IFFour, bool _playerGroupTwo)
         {
+            //Old adjustment values: 110.0f & 437.0f.
             m_playerThreeIFGroup.gameObject.SetActive(_IFThree);
             m_playerFourIFGroup.gameObject.SetActive(_IFFour);
             m_playerTwoGroup.gameObject.SetActive(_playerGroupTwo);
-            m_playerTextOne.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _textWidth);
-            m_playerTextTwo.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _textWidth);
-        }
-
-        private void ObjectsToInteractOn(int _ePlayerAmount)
-        {
-            for (int i = 0; i < _ePlayerAmount; i++)
-            {
-                bool isEmptyText = string.IsNullOrWhiteSpace(m_inputFields[i].text);
-                //if (m_inputFields[i].text.IsNullOrWhitespace())   //Sirenix.Utilities.
-                switch (isEmptyText)
-                {
-                    case true:
-                    {
-                        //TODO: Set a PopUp here.                    
-                        m_startButton.interactable = false; //StartButton
-                        m_joinButton.interactable = false; //JoinButton
-                        break;
-                    }
-                    case false:
-                    {
-                        m_startButton.interactable = true;  //StartButton
-                        m_joinButton.interactable = true;  //JoinButton
-                        break;
-                    }
-                }
-            }
         }
 
         #region OnValueChanged
         private void OnPlayerAmountChanged(TMP_Dropdown _dropdown)
         {
+            //int currentPlayers = (int)m_matchUIStates.EPlayerAmount;
+
             switch (_dropdown.value)
             {
                 case 0:
@@ -251,132 +207,143 @@ namespace ThreeDeePongProto.Shared.UI
                     //TODO: Change into 'EPlayerAmount.One', if implementing AI/NPC.
                     m_matchUIStates.EPlayerAmount = EPlayerAmount.One;
                     m_graphicUiStates.SetCameraMode = ECameraModi.SingleCam;
-                    ObjectsToHide(false, false, false, 437.0f);
-                    ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
+                    ObjectsToHide(false, false, false);
                     break;
                 }
                 case 1:
                 {
                     m_matchUIStates.EPlayerAmount = EPlayerAmount.Two;
                     m_graphicUiStates.SetCameraMode = ECameraModi.TwoHorizontal;
-                    ObjectsToHide(false, false, true, 437.0f);
-                    ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
+                    ObjectsToHide(false, false, true);
                     break;
                 }
                 case 2:
                 {
                     m_matchUIStates.EPlayerAmount = EPlayerAmount.Four;
                     m_graphicUiStates.SetCameraMode = ECameraModi.FourSplit;
-                    ObjectsToHide(true, true, true, 110.0f);
-                    ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
+                    ObjectsToHide(true, true, true);
                     break;
                 }
                 default:
                     break;
             }
 
-            m_reCheckIF = true;
-
             //WHENEVER YOU GOT THE SAME CLASS IN MULTIPLE SCENES (like MENUMANAGER) SAVE CHANGED DATA!!! OR old RELOADED DATA WILL OVERWRITE IT!!! AND YOU DON'T KNOW WHY...!
             m_persistentData.SaveData(m_settingsStatesFolderPath, m_matchFileName, m_fileFormat, m_matchUIStates, m_encryptionEnabled, true);
             m_persistentData.SaveData(m_settingsStatesFolderPath, m_graphicFileName, m_fileFormat, m_graphicUiStates, m_encryptionEnabled, true);
+            
             //Required, so MatchSettings can set the Backline-Dropdown in the Settings-Menu visible/invisible.
             SetUpPlayerAmount(m_matchUIStates.EPlayerAmount);
+
+            aToggleButtonAccess?.Invoke(m_currentPlayers);
         }
         #endregion
 
         private void SetUpPlayerAmount(EPlayerAmount _ePlayerAmount)
         {
-            m_matchValues.PlayerData.Clear();
-            m_matchValues.PlayerData = new();
+            m_matchValues.PlayerSOData.Clear();
+            m_matchValues.PlayerSOData = new();
 
-            uint playerAmount = (uint)_ePlayerAmount;    //EPlayerAmount.Four => int 4 || EPlayerAmount.Two => int 2
-            for (uint i = 0; i < playerAmount; i++)
+            int playerAmount = (int)_ePlayerAmount;    //EPlayerAmount.Four => int 4 || EPlayerAmount.Two => int 2
+            for (int i = 0; i < playerAmount; i++)
             {
-                m_matchValues.PlayerData.Add(m_playerIDData[(int)i]);
-                m_inputFields[i].text = m_playerIDData[i].PlayerName;
+                m_matchValues.PlayerSOData.Add(m_playerSOData[i]);
+                m_nameInputFields[i].text = m_playerSOData[i].PlayerName;
             }
         }
 
         #region Name-Inputfields
         public void PlayerOneInput()  //TODO: Optional Random a playername, or set PlayerCharacter 1-4.
         {
-            m_matchValues.PlayerData[0].PlayerId = 0;
+            //int currentPlayers = (int)m_matchUIStates.EPlayerAmount;
+            m_matchValues.PlayerSOData[0].PlayerId = 0;
 
             //if (m_inputFields[0].text.IsNullOrWhitespace())   //Sirenix.Utilities.
-            if (string.IsNullOrWhiteSpace(m_inputFields[0].text))
+            if (string.IsNullOrWhiteSpace(m_nameInputFields[0].text))
             {
-                Debug.Log($"PlayerName for Player {m_playerIDData[0].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for PlayerCharacter 1-4.
-                ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
+                aToggleButtonAccess?.Invoke(m_currentPlayers);
                 return;
             }
 
-            m_matchValues.PlayerData[0].PlayerName = m_inputFields[0].text;
-            ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
+            m_matchValues.PlayerSOData[0].PlayerName = m_nameInputFields[0].text;
+
+            aToggleButtonAccess?.Invoke(m_currentPlayers);
         }
 
         public void PlayerTwoInput()
         {
-            m_matchValues.PlayerData[1].PlayerId = 1;
+            //int currentPlayers = (int)m_matchUIStates.EPlayerAmount;
+            m_matchValues.PlayerSOData[1].PlayerId = 1;
 
             //if (m_inputFields[1].text.IsNullOrWhitespace())   //Sirenix.Utilities.
-            if (string.IsNullOrWhiteSpace(m_inputFields[1].text))
+            if (string.IsNullOrWhiteSpace(m_nameInputFields[1].text))
             {
-                Debug.Log($"PlayerName for Player {m_playerIDData[1].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for PlayerCharacter 1-4.
-                ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
+                aToggleButtonAccess?.Invoke(m_currentPlayers);
                 return;
             }
 
-            m_matchValues.PlayerData[1].PlayerName = m_inputFields[1].text;
-            ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
+            m_matchValues.PlayerSOData[1].PlayerName = m_nameInputFields[1].text;
+
+            aToggleButtonAccess?.Invoke(m_currentPlayers);
         }
 
         public void PlayerThreeInput()
         {
-            m_matchValues.PlayerData[2].PlayerId = 2;
+            //int currentPlayers = (int)m_matchUIStates.EPlayerAmount;
+            m_matchValues.PlayerSOData[2].PlayerId = 2;
 
             //if (m_inputFields[2].text.IsNullOrWhitespace())   //Sirenix.Utilities.
-            if (string.IsNullOrWhiteSpace(m_inputFields[2].text))
+            if (string.IsNullOrWhiteSpace(m_nameInputFields[2].text))
             {
-                Debug.Log($"PlayerName for Player {m_playerIDData[2].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for PlayerCharacter 1-4.
-                ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
+                aToggleButtonAccess?.Invoke(m_currentPlayers);
                 return;
             }
 
-            m_matchValues.PlayerData[2].PlayerName = m_inputFields[2].text;
-            ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
+            m_matchValues.PlayerSOData[2].PlayerName = m_nameInputFields[2].text;
+
+            aToggleButtonAccess?.Invoke(m_currentPlayers);
         }
 
         public void PlayerFourInput()
         {
-            m_matchValues.PlayerData[3].PlayerId = 3;
+            //int currentPlayers = (int)m_matchUIStates.EPlayerAmount;
+            m_matchValues.PlayerSOData[3].PlayerId = 3;
 
             //if (m_inputFields[3].text.IsNullOrWhitespace())   //Sirenix.Utilities.
-            if (string.IsNullOrWhiteSpace(m_inputFields[3].text))
+            if (string.IsNullOrWhiteSpace(m_nameInputFields[3].text))
             {
-                Debug.Log($"PlayerName for Player {m_playerIDData[3].PlayerId + 1} is not set! Please enter a Nickname.");  //Index + 1 for PlayerCharacter 1-4.
-                ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
+                aToggleButtonAccess?.Invoke(m_currentPlayers);
                 return;
             }
 
-            m_matchValues.PlayerData[3].PlayerName = m_inputFields[3].text;
-            ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
-        }
-        #endregion
+            m_matchValues.PlayerSOData[3].PlayerName = m_nameInputFields[3].text;
 
-        #region Update_UI
-        private void EnableButtonCheck()
+            aToggleButtonAccess?.Invoke(m_currentPlayers);
+        }
+
+        private void ToggleButtonAccess(int _ePlayerAmount)
         {
-            switch (m_reCheckIF)
+            for (int i = 0; i < _ePlayerAmount; i++)
             {
-                case false:
-                    break;
-                case true:
+                bool isEmptyText = string.IsNullOrWhiteSpace(m_nameInputFields[i].text);
+                //if (m_inputFields[i].text.IsNullOrWhitespace())   //Sirenix.Utilities.
+                switch (isEmptyText)
                 {
-                    //Required, or else 'm_startButton' and 'm_joinButton' could remain disabled, even if InputFields are filled.
-                    ObjectsToInteractOn((int)m_matchUIStates.EPlayerAmount);
-                    m_reCheckIF = false;
-                    break;
+                    case true:
+                    {
+                        //TODO: Set a PopUp here.                    
+                        m_startButton.interactable = false; //StartButton
+                        m_joinButton.interactable = false;  //JoinButton
+                        m_matchValues.PlayerSOData[i].PlayerName = "";
+                        //'return' replaces break, so other filled textFields won't enable these buttons again.
+                        return;
+                    }
+                    case false:
+                    {
+                        m_startButton.interactable = true;  //StartButton
+                        m_joinButton.interactable = true;   //JoinButton
+                        break;
+                    }
                 }
             }
         }

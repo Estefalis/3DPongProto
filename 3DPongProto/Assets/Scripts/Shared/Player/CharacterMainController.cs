@@ -20,7 +20,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         #region Scriptable References
         [Header("Scriptable References")]
-        [SerializeField] internal PlayerIDData m_playerIDData;
+        [SerializeField] internal PlayerSOData m_playerSOData;
         [SerializeField] internal ControlUIStates m_controlUIStates;
         [SerializeField] internal ControlUIValues m_controlUIValues;
         [SerializeField] internal MatchUIStates m_matchUIStates;
@@ -37,7 +37,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             m_matchManager = FindObjectOfType<LocalMatchManager>();
 
-            m_playerIDData.PlayerId = m_playerId;
+            m_playerSOData.PlayerId = m_playerId;
 
             GetFieldDetails();
             GetPlayerDetails();
@@ -59,7 +59,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void GetPlayerDetails()
         {
-            if (m_playerIDData == null ^ m_matchValues == null)
+            if (m_playerSOData == null ^ m_matchValues == null)
             {
                 switch (m_defaultFrontLineUp)
                 {
@@ -76,7 +76,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             }
             else
             {
-                switch (m_playerIDData.PlayerOnFrontline)
+                switch (m_playerSOData.PlayerOnFrontline)
                 {
                     case true:
                         m_goalDistance = m_basicFieldValues.MinFrontLineDistance + m_basicFieldValues.FrontlineAdjustment + m_basicFieldValues.BacklineAdjustment;

@@ -92,7 +92,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
             for (int i = 0; i < playerCount; i++)
             {
-                GameObject playerAvatar = Instantiate(m_matchValues.PlayerData[i].Prefab, m_playfieldParent);
+                GameObject playerAvatar = Instantiate(m_matchValues.PlayerSOData[i].Prefab, m_playfieldParent);
                 PlayerInput playerInput = playerAvatar.GetComponent<PlayerInput>();
 
                 if (playerInput == null)
@@ -216,7 +216,7 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             Debug.Log("Cleaning up players...");
 
-            m_matchValues.PlayerData.Clear();
+            m_matchValues.PlayerSOData.Clear();
         }
 
         private void ActivateMenuControls()

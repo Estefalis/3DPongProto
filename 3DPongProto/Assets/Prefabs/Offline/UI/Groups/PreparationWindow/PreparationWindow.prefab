@@ -797,7 +797,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PlaynerName 1
+  m_text: Enter Name P1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1087,7 +1087,7 @@ GameObject:
   - component: {fileID: 3122429240602838612}
   - component: {fileID: 3122429240602838613}
   m_Layer: 5
-  m_Name: Text
+  m_Name: TextP1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2033,7 +2033,7 @@ GameObject:
   - component: {fileID: 5505445116983208689}
   - component: {fileID: 6521610446128883561}
   m_Layer: 5
-  m_Name: ToggleTF1
+  m_Name: ToggleIF1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2121,7 +2121,7 @@ GameObject:
   - component: {fileID: 2399781199873622334}
   - component: {fileID: 6536209972347454070}
   m_Layer: 5
-  m_Name: Text
+  m_Name: TextP3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2604,7 +2604,7 @@ GameObject:
   - component: {fileID: 4680005698211787843}
   - component: {fileID: 986985488623597954}
   m_Layer: 5
-  m_Name: ToggleTF4
+  m_Name: ToggleIF4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2905,7 +2905,7 @@ GameObject:
   - component: {fileID: 6144415438886512923}
   - component: {fileID: 6144415438886512924}
   m_Layer: 5
-  m_Name: Text
+  m_Name: TextP2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3566,7 +3566,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PlaynerName 2
+  m_text: Enter Name P2
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4931,7 +4931,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PlaynerName 4
+  m_text: Enter Name P4
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5286,7 +5286,7 @@ GameObject:
   - component: {fileID: 6144415440270514431}
   - component: {fileID: 6144415440270514304}
   m_Layer: 5
-  m_Name: Text
+  m_Name: TextP4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5471,13 +5471,18 @@ MonoBehaviour:
   m_playerTwoGroup: {fileID: 6144415440766160476}
   m_playerAmountDd: {fileID: 5854858772934603175}
   m_registeredPlayers: 2
-  m_playerTextOne: {fileID: 3122429241018364536}
-  m_playerTextTwo: {fileID: 6144415439942323120}
-  m_inputFields:
+  m_playerTextOne: {fileID: 3122429240602838613}
+  m_playerTextTwo: {fileID: 6144415438886512924}
+  m_nameInputFields:
   - {fileID: 3122429240402133904}
   - {fileID: 6144415440313265123}
   - {fileID: 665298988484135939}
   - {fileID: 6144415440943882711}
+  m_inputFieldToggles:
+  - {fileID: 6521610446128883561}
+  - {fileID: 8442826563937945093}
+  - {fileID: 1851988436357489835}
+  - {fileID: 986985488623597954}
   m_playerThreeIFGroup: {fileID: 2688936488530790667}
   m_playerFourIFGroup: {fileID: 6144415439220409596}
   m_startButton: {fileID: 6144415439383975924}
@@ -5485,11 +5490,7 @@ MonoBehaviour:
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
   m_graphicUiStates: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11, type: 2}
-  m_playerIDData:
-  - {fileID: 11400000, guid: 533fe6eee149a3143aab50fbfb5541a8, type: 2}
-  - {fileID: 11400000, guid: 21b573c09ff18ba4893ceecaaf9c5756, type: 2}
-  - {fileID: 11400000, guid: 862bfec20d10c5049a46b7b03f906cd9, type: 2}
-  - {fileID: 11400000, guid: 0a4b44b7dfa182243ab981955eda3e67, type: 2}
+  m_playerSOData: []
 --- !u!1 &6144415440289715938
 GameObject:
   m_ObjectHideFlags: 0
@@ -7090,7 +7091,7 @@ GameObject:
   - component: {fileID: 5042661958625287453}
   - component: {fileID: 8442826563937945093}
   m_Layer: 5
-  m_Name: ToggleTF2
+  m_Name: ToggleIF2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7286,7 +7287,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PlaynerName 3
+  m_text: Enter Name P3
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7811,7 +7812,7 @@ GameObject:
   - component: {fileID: 8615941007714234074}
   - component: {fileID: 1851988436357489835}
   m_Layer: 5
-  m_Name: ToggleTF3
+  m_Name: ToggleIF3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
