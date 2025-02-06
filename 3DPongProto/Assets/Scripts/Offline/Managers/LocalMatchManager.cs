@@ -3,7 +3,6 @@ using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.PlayerCharacter;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Users;
 
 public enum EGameModi
 {

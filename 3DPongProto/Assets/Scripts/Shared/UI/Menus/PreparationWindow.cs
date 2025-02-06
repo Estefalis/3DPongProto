@@ -19,6 +19,7 @@ namespace ThreeDeePongProto.Shared.UI
     public class PreparationWindow : MonoBehaviour
     {
         #region SerializeField-Member-Variables
+        //TODO: Implementing RoomName for Lan-/Net-Games!
         [SerializeField] private Transform m_playerTwoGroup;
         [SerializeField] private TMP_Dropdown m_playerAmountDd;
         [SerializeField] private EPlayerAmount m_registeredPlayers = EPlayerAmount.Two;
@@ -47,12 +48,10 @@ namespace ThreeDeePongProto.Shared.UI
         private int m_currentPlayers;
         private List<string> m_maxPlayerAmount;
 
-        private Dictionary<Toggle, TMP_InputField> m_playerSODataDict = new Dictionary<Toggle, TMP_InputField>();
-
         #region Serialization
         private readonly string m_settingsStatesFolderPath = "/SaveData/Settings-States";
         private readonly string m_playerDataFolderPath = "/SaveData/PlayerData";
-        private readonly string m_playerDatasubFolderPath = "/Player";
+        private readonly string m_playerDatasubPath = "/Player";
         private readonly string m_graphicFileName = "/Graphic";
         private readonly string m_matchFileName = "/Match";
         private readonly string m_fileFormat = ".json";
@@ -62,10 +61,16 @@ namespace ThreeDeePongProto.Shared.UI
         #endregion
 
         private static event Action<int> aToggleButtonAccess;
+        PlayerData m_playerData;
+
+        private void Awake()
+        {
+            for (int i = 0; i < m_playerSOData.Length; i++)
+                ReSetPreparationUI(i);
+        }
 
         private void OnEnable()
         {
-            m_playerSODataDict.Clear();
             aToggleButtonAccess += ToggleButtonAccess;
             AddGroupListener();
         }
@@ -109,7 +114,35 @@ namespace ThreeDeePongProto.Shared.UI
             m_inputFieldToggles[3].onValueChanged.RemoveListener(HandleToggleFourChanges);
         }
 
-        #region Start Setup
+        #region Start_Setup
+        private void ReSetPreparationUI(int _playerIndex)
+        {
+            m_playerData = m_persistentData.LoadData<PlayerData>(m_playerDataFolderPath, m_playerDatasubPath + $"{_playerIndex}", m_fileFormat, m_encryptionEnabled);
+
+            switch (m_playerData.KeepNameOnLoad)
+            {
+                case true:
+                {
+                    m_playerSOData[_playerIndex].PlayerName = m_playerData.PlayerName;
+                    m_playerSOData[_playerIndex].KeepNameOnLoad = m_playerData.KeepNameOnLoad;
+                    m_playerSOData[_playerIndex].PlayerOnFrontline = m_playerData.PlayerOnFrontline;
+                    m_playerSOData[_playerIndex].DefaultKeyboard = m_playerData.DefaultKeyboard;
+                    break;
+                }
+                case false:
+                {
+                    m_playerSOData[_playerIndex].PlayerName = "";
+                    m_playerSOData[_playerIndex].KeepNameOnLoad = false;
+                    m_playerSOData[_playerIndex].PlayerOnFrontline = false;
+                    m_playerSOData[_playerIndex].DefaultKeyboard = false;
+                    break;
+                }
+            }
+
+            m_nameInputFields[_playerIndex].text = m_playerSOData[_playerIndex].PlayerName;
+            m_inputFieldToggles[_playerIndex].isOn = m_playerSOData[_playerIndex].KeepNameOnLoad;
+        }
+
         private void SetupWindow(EGameModi _connectMode, EPlayerAmount _ePlayerAmount)
         {
             switch (_connectMode)
@@ -244,6 +277,7 @@ namespace ThreeDeePongProto.Shared.UI
             //Required, so MatchSettings can set the Backline-Dropdown in the Settings-Menu visible/invisible.
             SetUpPlayerAmount(m_matchUIStates.EPlayerAmount);
 
+            m_currentPlayers = (int)m_matchUIStates.EPlayerAmount;
             aToggleButtonAccess?.Invoke(m_currentPlayers);
         }
 
@@ -374,7 +408,7 @@ namespace ThreeDeePongProto.Shared.UI
             var toggleID = m_inputFieldToggles[_index].GetInstanceID();
 
             PlayerData playerData = new(prefabName, playerSO.PlayerName, playerSO.PlayerId, avatarName, playerSO.KeepNameOnLoad, playerSO.PlayerOnFrontline, playerSO.DefaultKeyboard, toggleID);
-            m_persistentData.SaveData(m_playerDataFolderPath, m_playerDatasubFolderPath + $"{_index}", m_fileFormat, playerData, m_encryptionEnabled, true);
+            m_persistentData.SaveData(m_playerDataFolderPath, m_playerDatasubPath + $"{_index}", m_fileFormat, playerData, m_encryptionEnabled, true);
         }
 
         /// <summary>
