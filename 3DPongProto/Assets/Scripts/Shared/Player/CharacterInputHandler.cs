@@ -31,16 +31,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             LocalMatchManager.CheckForPlayerInput += PlayerInputCheck;
         }
 
-        private void PlayerInputCheck(int _playerIndex)
-        {
-            m_playerInput = m_playerController.GetComponent<PlayerInput>();
-            if (m_playerInput != null && _playerIndex == m_playerController.m_playerId)
-            {
-                m_playerInput.GetComponent<PlayerInput>();
-                SubscribeToActions(m_playerInput);
-            }
-        }
-
         private void OnDisable()
         {
             if (m_playerInput != null)
@@ -64,6 +54,16 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             //Use Rotation constantly.
             if (m_rotationVector != Vector2.zero)
                 m_playerController.m_playerMovement.SetInputVector(m_rotationVector, m_playerController.m_playerId, true);
+        }
+
+        private void PlayerInputCheck(int _playerIndex)
+        {
+            m_playerInput = m_playerController.GetComponent<PlayerInput>();
+            if (m_playerInput != null && _playerIndex == m_playerController.m_playerId)
+            {
+                m_playerInput.GetComponent<PlayerInput>();
+                SubscribeToActions(m_playerInput);
+            }
         }
 
         private void SubscribeToActions(PlayerInput _playerInput)

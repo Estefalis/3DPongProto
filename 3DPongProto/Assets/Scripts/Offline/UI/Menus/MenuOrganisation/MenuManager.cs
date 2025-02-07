@@ -74,8 +74,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             SetFirstStackElement(m_firstElement);
             SetUIElements();    //Also sets the lastSelectedElement.
 
-            //m_playerInputActions = RebindManager.m_PlayerInputActions;
-            m_playerInputActions = new PlayerInputActions();
+            m_playerInputActions = RebindManager.m_PlayerInputActions;
+            //m_playerInputActions = new PlayerInputActions();
             m_playerInputActions.UserInterface.Enable();
         }
 
@@ -110,7 +110,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void Update()
         {
             UpdateLastSelectedObject();
-            //Debug.Log($"RebindManager: {RebindManager.m_PlayerInputActions.UserInterface.enabled} - MenuManager: {m_playerInputActions.UserInterface.enabled}");
+            Debug.Log($"RebindManagerUIMap: {RebindManager.m_PlayerInputActions.UserInterface.enabled} - MenuManagerUIMap: {m_playerInputActions.UserInterface.enabled}");
         }
 
         #region Custom-Methods
@@ -306,7 +306,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     m_playerInputActions.UserInterface.Disable();
                     break;
             }
-            Debug.Log("!");
+            
             if (!m_firstElement.gameObject.activeInHierarchy && m_playerInputActions.UserInterface.enabled)
             {
                 m_firstElement.gameObject.SetActive(true);

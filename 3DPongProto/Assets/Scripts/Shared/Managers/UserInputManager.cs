@@ -54,7 +54,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
             if (isInGameScene)
             {
-                m_playfieldParent = FindObjectOfType<LocalMatchManager>()?.m_PlayfieldParent;   //Public getter => private Transform.
+                m_playfieldParent = FindObjectOfType<LocalMatchManager>().m_PlayfieldParent;   //Public getter => private Transform.
                 InstantiatePlayer();
             }
             else
@@ -93,9 +93,8 @@ namespace ThreeDeePongProto.Shared.Managers
             for (int i = 0; i < playerCount; i++)
             {
                 GameObject playerAvatar = Instantiate(m_matchValues.PlayerSOData[i].Prefab, m_playfieldParent);
-                PlayerInput playerInput = playerAvatar.GetComponent<PlayerInput>();
-
-                if (playerInput == null)
+                
+                if (!playerAvatar.TryGetComponent<PlayerInput>(out var playerInput))
                     playerInput = playerAvatar.AddComponent<PlayerInput>();
 
                 ConfigurePlayerInput(playerInput, i);
@@ -215,7 +214,6 @@ namespace ThreeDeePongProto.Shared.Managers
         private void CleanupPlayers()
         {
             Debug.Log("Cleaning up players...");
-
             m_matchValues.PlayerSOData.Clear();
         }
 
