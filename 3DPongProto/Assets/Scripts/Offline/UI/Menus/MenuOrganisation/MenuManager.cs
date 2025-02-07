@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
+//'UserInputManager.cs' adds PlayerInput component on runtime!
 namespace ThreeDeePongProto.Offline.UI.Menu
 {
     public class MenuManager : MonoBehaviour
@@ -73,14 +73,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             SetFirstStackElement(m_firstElement);
             SetUIElements();    //Also sets the lastSelectedElement.
-
-            m_playerInputActions = RebindManager.m_PlayerInputActions;
-            //m_playerInputActions = new PlayerInputActions();
-            m_playerInputActions.UserInterface.Enable();
         }
 
         private void OnEnable()
         {
+            m_playerInputActions = RebindManager.m_PlayerInputActions;
+            //m_playerInputActions = new PlayerInputActions();
+            m_playerInputActions.UserInterface.Enable();
+
             m_playerInputActions.UserInterface.ToggleGameMenu.performed += CloseMenu;
             RebindManager.m_changeActiveActionMap += OnInputManagerChangedActionMap;
         }
@@ -110,7 +110,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void Update()
         {
             UpdateLastSelectedObject();
-            Debug.Log($"RebindManagerUIMap: {RebindManager.m_PlayerInputActions.UserInterface.enabled} - MenuManagerUIMap: {m_playerInputActions.UserInterface.enabled}");
+            //Debug.Log($"RebindPlayerMap: {RebindManager.m_PlayerInputActions.PlayerActions.enabled} - RebindUIMap: {RebindManager.m_PlayerInputActions.UserInterface.enabled} - MenuPlayerMap: {m_playerInputActions.PlayerActions.enabled} - MenuUIMap: {m_playerInputActions.UserInterface.enabled}");
         }
 
         #region Custom-Methods
@@ -300,22 +300,24 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             switch (_inputActionMap.name == m_userInterfaceName)
             {
                 case true:
+                {
                     m_playerInputActions.UserInterface.Enable();
-                    break;
+                    if (!m_firstElement.gameObject.activeInHierarchy/* && m_playerInputActions.UserInterface.enabled*/)
+                    {
+                        m_firstElement.gameObject.SetActive(true);
+                        SetNavigationGameObject(m_firstElement);
+                    }
+                }
+                break;
                 case false:
+                {
                     m_playerInputActions.UserInterface.Disable();
-                    break;
-            }
-            
-            if (!m_firstElement.gameObject.activeInHierarchy && m_playerInputActions.UserInterface.enabled)
-            {
-                m_firstElement.gameObject.SetActive(true);
-                SetNavigationGameObject(m_firstElement);
-            }
-
-            if (m_firstElement.gameObject.activeInHierarchy && !m_playerInputActions.UserInterface.enabled)
-            {
-                ResumeGame();
+                    if (m_firstElement.gameObject.activeInHierarchy/* && !m_playerInputActions.UserInterface.enabled*/)
+                    {
+                        ResumeGame();
+                    }
+                }
+                break;
             }
         }
     }

@@ -9757,6 +9757,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: RebindManager
       objectReference: {fileID: 0}
+    - target: {fileID: 706858084997270176, guid: 31c7a707940f85244a29e4c5915787e1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 706858084997270178, guid: 31c7a707940f85244a29e4c5915787e1,
         type: 3}
       propertyPath: m_RootOrder

@@ -2,7 +2,6 @@ using System;
 using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.PlayerCharacter;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public enum EGameModi
 {
@@ -80,7 +79,6 @@ namespace ThreeDeePongProto.Shared.Managers
         internal static event Action StartNextRound;
         internal static event Action StartWinProcedure;
         internal static event Action LoadUpHighscores;
-        internal static event Action<int> CheckForPlayerInput;
         #endregion
         #endregion
 
@@ -103,7 +101,6 @@ namespace ThreeDeePongProto.Shared.Managers
             PrepareMatchStart();
             LoadMatchSettings();
             ReSetMatch();
-            //InstantiatePlayer();
         }
 
         private void OnEnable()
@@ -139,13 +136,11 @@ namespace ThreeDeePongProto.Shared.Managers
             StartWinProcedure -= LetsStartWinProcedure;
 
             CharacterInputHandler.m_menuOpens -= PauseAndTimeScale;
-            //m_playerInputManager.onPlayerJoined -= OnPlayerJoined;
         }
 
         private void Start()
         {
             CharacterInputHandler.m_menuOpens += PauseAndTimeScale;
-            //m_playerInputManager.onPlayerJoined += OnPlayerJoined;
         }
 
         #region Custom-Methods
@@ -299,8 +294,6 @@ namespace ThreeDeePongProto.Shared.Managers
             ReSetPlayfield();
             ResetRoundValues();
             SetPauseAndTimeScale(m_gameIsPaused);
-
-            RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.PlayerActions);
         }
 
         private void DefaultPlayfield()
@@ -496,93 +489,6 @@ namespace ThreeDeePongProto.Shared.Managers
                     break;
                 }
             }
-        }
-        #endregion
-
-        #region Spawn_and_set_up_Player
-        //private void InstantiatePlayer()
-        //{
-        //    uint playerCount = (uint)m_matchUIStates.EPlayerAmount;
-
-        //    for (int i = 0; i < playerCount; i++)
-        //    {
-        //        GameObject playerAvatar = Instantiate(m_matchValues.PlayerSOData[i].Prefab, m_prefabParent);
-        //        PlayerInput playerInput = playerAvatar.GetComponent<PlayerInput>();
-
-        //        if (playerInput == null)
-        //            playerInput = playerAvatar.AddComponent<PlayerInput>();
-
-        //        ConfigurePlayerInput(playerInput, i);
-        //    }
-        //}
-
-        //private void OnPlayerJoined(PlayerInput _playerInput)
-        //{
-        //    if (_playerInput == null)
-        //    {
-        //        Debug.LogError("PlayerInput is null!");
-        //        return;
-        //    }
-
-        //    //Configure PlayerInput only, if the controlScheme isn't set, yet.
-        //    if (_playerInput.currentControlScheme == null)
-        //    {
-        //        InputUser.PerformPairingWithDevice(null);
-        //        ConfigurePlayerInput(_playerInput, _playerInput.playerIndex);
-        //    }
-
-        //    Debug.Log($"Player {_playerInput.playerIndex + 1} joined with ControlScheme: {_playerInput.currentControlScheme}");
-        //}
-
-        private void ConfigurePlayerInput(PlayerInput playerInput, int playerIndex)
-        {
-            //Load and set the InputActionAsset.
-            if (playerInput.actions == null)
-                playerInput.actions = Resources.Load<InputActionAsset>("InputActions/PlayerInputActions");
-            else
-            {
-                Debug.LogError("PlayerInput actions are null!");
-                return;
-            }
-
-            //Set default ControlDevice by connected device.
-            InputDevice device = Gamepad.all.Count > playerIndex ? Gamepad.all[playerIndex] : (InputDevice)Keyboard.current;
-            InputDevice additionalDevice = device is Keyboard ? Mouse.current : null;
-            playerInput.defaultControlScheme = device is Gamepad ? "Gamepad" : "KeyboardMouse";
-
-            if (device == null || (device is Keyboard && additionalDevice == null))
-            {
-                Debug.LogError($"Invalid device setup for Player {playerIndex + 1}. Device: {device}, AdditionalDevice: {additionalDevice}");
-                return;
-            }
-
-            string controlScheme = device is Gamepad ? "Gamepad" : "KeyboardMouse";
-
-            if (device != null)
-            {
-                if (additionalDevice != null)
-                {
-                    playerInput.SwitchCurrentControlScheme(controlScheme, additionalDevice != null ? new[] { device, additionalDevice } : new[] { device });
-                }
-                else
-                {
-                    playerInput.SwitchCurrentControlScheme(controlScheme, device);
-                }
-
-                //Enable active ControlScheme switch.
-                playerInput.neverAutoSwitchControlSchemes = false;
-                //Set the notificationBehavior of the PlayerInput component.
-                playerInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
-                //Set Default Map in the PlayerInput component.
-                playerInput.SwitchCurrentActionMap("PlayerActions");
-                Debug.Log($"Player {playerInput.playerIndex + 1}, InputUser: {playerInput.user} initialized with ControlScheme: {controlScheme}, Device: {device}, NotificationBehavior: {playerInput.notificationBehavior}.");
-            }
-            else
-            {
-                Debug.LogError($"No valid device found for Player {playerInput.playerIndex + 1}.");
-            }
-
-            CheckForPlayerInput?.Invoke(playerIndex);
         }
         #endregion
 

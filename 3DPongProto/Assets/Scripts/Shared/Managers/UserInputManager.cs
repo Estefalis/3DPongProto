@@ -14,7 +14,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private int m_alreadySetGamepads;
         private Transform m_playfieldParent;
-        private bool isInGameScene = false;  //True, while being in a GameScene.
+        private bool isInGameScene;  //True, while being in a GameScene.
         private const string m_keyboardDevice = "Keyboard", m_keyboardScheme = "KeyboardMouse";
         private const string m_gamepadDevice = "Gamepad", m_gamePadScheme = "Gamepad";
 
@@ -50,17 +50,24 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            isInGameScene = scene.name.Contains(m_gameScene);
+            isInGameScene = scene.name.Contains(m_gameScene) ? isInGameScene = true : isInGameScene = false;
 
-            if (isInGameScene)
+            switch (isInGameScene)
             {
-                m_playfieldParent = FindObjectOfType<LocalMatchManager>().m_PlayfieldParent;   //Public getter => private Transform.
-                InstantiatePlayer();
-            }
-            else
-            {
-                CleanupPlayers();
-                ActivateMenuControls();
+                case true:
+                {
+                    RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.PlayerActions);
+                    m_playfieldParent = FindObjectOfType<LocalMatchManager>().m_PlayfieldParent;   //Public getter => private Transform.
+                    InstantiatePlayer();
+                    break;
+                }
+                case false:
+                {
+                    RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.UserInterface);
+                    CleanupPlayers();
+                    ActivateMenuControls();
+                    break;
+                }
             }
         }
 
@@ -93,7 +100,7 @@ namespace ThreeDeePongProto.Shared.Managers
             for (int i = 0; i < playerCount; i++)
             {
                 GameObject playerAvatar = Instantiate(m_matchValues.PlayerSOData[i].Prefab, m_playfieldParent);
-                
+
                 if (!playerAvatar.TryGetComponent<PlayerInput>(out var playerInput))
                     playerInput = playerAvatar.AddComponent<PlayerInput>();
 

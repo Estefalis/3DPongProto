@@ -28,7 +28,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private void Awake()
         {
             RebindManager.m_changeActiveActionMap += OnInputManagerChangedActionMap;
-            LocalMatchManager.CheckForPlayerInput += PlayerInputCheck;
+            PlayerInputCheck(m_playerInput.playerIndex);    //Or 'm_playerController.m_playerId'.
         }
 
         private void OnDisable()
@@ -37,7 +37,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 UnsubscribeToActions(m_playerInput);
 
             RebindManager.m_changeActiveActionMap -= OnInputManagerChangedActionMap;
-            LocalMatchManager.CheckForPlayerInput -= PlayerInputCheck;
         }
 
         private void OnDestroy()
@@ -46,7 +45,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 UnsubscribeToActions(m_playerInput);
 
             RebindManager.m_changeActiveActionMap -= OnInputManagerChangedActionMap;
-            LocalMatchManager.CheckForPlayerInput -= PlayerInputCheck;
         }
 
         private void FixedUpdate()
