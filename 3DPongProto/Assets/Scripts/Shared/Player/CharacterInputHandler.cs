@@ -28,7 +28,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private void Awake()
         {
             RebindManager.m_changeActiveActionMap += OnInputManagerChangedActionMap;
-            PlayerInputCheck(m_playerInput.playerIndex);    //Or 'm_playerController.m_playerId'.
+            PlayerInputCheck(m_playerInput.playerIndex);
         }
 
         private void OnDisable()
@@ -56,7 +56,9 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void PlayerInputCheck(int _playerIndex)
         {
-            m_playerInput = m_playerController.GetComponent<PlayerInput>();
+            if (m_playerInput == null)  //If the component is not set in the 'Player Input' script slot.
+                m_playerInput = m_playerController.GetComponent<PlayerInput>();
+
             if (m_playerInput != null && _playerIndex == m_playerController.m_playerId)
             {
                 m_playerInput.GetComponent<PlayerInput>();

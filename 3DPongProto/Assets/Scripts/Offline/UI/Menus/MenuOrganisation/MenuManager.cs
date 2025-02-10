@@ -77,8 +77,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnEnable()
         {
-            m_playerInputActions = RebindManager.m_PlayerInputActions;
             //m_playerInputActions = new PlayerInputActions();
+            m_playerInputActions = RebindManager.m_PlayerInputActions;
             m_playerInputActions.UserInterface.Enable();
 
             m_playerInputActions.UserInterface.ToggleGameMenu.performed += CloseMenu;
