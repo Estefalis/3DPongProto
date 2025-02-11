@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: P4Data
   m_EditorClassIdentifier: 
   Prefab: {fileID: 3323472091279812037, guid: e9bf4eba8aee7f641bd9f6d064c3823f, type: 3}
-  PlayerName: Mycandra
+  PlayerName: Rayago
   PlayerId: 3
   Avatar: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  KeepNameOnLoad: 0
+  KeepNameOnLoad: 1
   PlayerOnFrontline: 1
   DefaultKeyboard: 0

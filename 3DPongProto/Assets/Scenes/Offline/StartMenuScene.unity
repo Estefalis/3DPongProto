@@ -1491,7 +1491,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_playerInputManager: {fileID: 290600013}
   m_joinByDefault: 1
-  m_keyboardHasPriority: 0
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
 --- !u!114 &290600013

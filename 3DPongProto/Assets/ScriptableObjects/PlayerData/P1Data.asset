@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: P1Data
   m_EditorClassIdentifier: 
   Prefab: {fileID: 8558195983882434023, guid: dbad03ba2983db345901c2d0b89a6a6e, type: 3}
-  PlayerName: Estefalis
+  PlayerName: Nyclia
   PlayerId: 0
   Avatar: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   KeepNameOnLoad: 1
   PlayerOnFrontline: 0
-  DefaultKeyboard: 0
+  DefaultKeyboard: 1

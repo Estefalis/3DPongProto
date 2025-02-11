@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using ThreeDeePongProto.Offline.UI.Menu;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
@@ -10,7 +12,6 @@ namespace ThreeDeePongProto.Shared.Managers
 
         [SerializeField] private PlayerInputManager m_playerInputManager;
         [SerializeField] private bool m_joinByDefault = true;
-        [SerializeField] private bool m_keyboardHasPriority = true;
 
         private int m_alreadySetGamepads;
         private Transform m_playfieldParent;
@@ -20,6 +21,10 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private const string m_gameScene = "GameScene";
 
+        private const string m_uiActionMap = "UserInterface";
+        private MenuManager m_menuManager;
+        private List<Gamepad> m_availableGamepads = new List<Gamepad>();
+
         #region Scriptable_Objects
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
@@ -28,20 +33,23 @@ namespace ThreeDeePongProto.Shared.Managers
         private void Awake()
         {
             #region Custom_InstanceSetup_as_Child
-            //// Singleton-Pattern für globalen Zugriff
-            //if (Instance == null)
-            //{
-            Instance = this;
-            //    DontDestroyOnLoad(gameObject);
-            //}
-            //else
-            //{
-            //    Destroy(gameObject);
-            //    return;
-            //}
+            //Singleton-Pattern für globalen Zugriff.
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+                return;
+            }
             #endregion
 
+            for (int i = 0; i < Gamepad.all.Count; i++)
+                m_availableGamepads.Add(Gamepad.all[i]);
             m_alreadySetGamepads = 0;
+
             SceneManager.sceneLoaded += OnSceneLoaded;
 
             m_playerInputManager = GetComponent<PlayerInputManager>();
@@ -65,7 +73,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 {
                     RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.UserInterface);
                     CleanupPlayers();
-                    ActivateMenuControls();
+                    SetMenuPlayerInput();
                     break;
                 }
             }
@@ -114,102 +122,55 @@ namespace ThreeDeePongProto.Shared.Managers
             if (_playerInput.actions == null)
                 _playerInput.actions = Resources.Load<InputActionAsset>("InputActions/PlayerInputActions");
 
-            ////Temporary condition, for which playerIDs keyboard shall be set as priority.
-            //m_keyboardHasPriority = _playerIndex >= 0 && _playerIndex < 2 ? m_keyboardHasPriority = true : m_keyboardHasPriority = false;
-
-            int totalGamepadCount = Gamepad.all.Count;
             //Determine, if gamepads are left to be set as device.
-            int availableGamepads = totalGamepadCount - m_alreadySetGamepads;
+            int availableGamepads = Gamepad.all.Count - m_alreadySetGamepads;
 
             InputDevice assignedDevice;
             InputDevice mouseDevice = Mouse.current;
 
-            string controlScheme = m_keyboardScheme; //Keyboard and Mouse as standard.
+            string controlScheme;
 
             //Set Gamepad or Keyboard as InputDevice.
-            switch (totalGamepadCount == 0 || availableGamepads <= 0 || m_keyboardHasPriority)
+            switch (availableGamepads <= 0 || m_matchValues.PlayerSOData[_playerIndex].DefaultKeyboard)
             {
                 //If no gamepad is available, or keyboard has priority for this player: Keyboard gets set as priority.
                 case true:
                 {
-                    switch (_playerIndex)
-                    {
-                        case 0:
-                        case 1:
-                        case 2:
-                        case 3:
-                            assignedDevice = Keyboard.current; //Player1 (WASD) | Player2 (Arrow-Keys) | Player3 (TFGH) | Player4 (IJKL).
-                            break;
-                        default:
-                            Debug.LogError($"No available device for Player {_playerIndex + 1}!");
-                            return;
-                    }
-
-                    _playerInput.SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice, mouseDevice });
-                    //PlayerInput.all[_playerIndex].SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice, mouseDevice });
-                    Debug.Log($"Player {_playerIndex + 1} uses a {assignedDevice?.name ?? "No"}-Device and a shared Mouse. TotalGamepads: {totalGamepadCount} | AvailableGamepads: {availableGamepads}");
+                    assignedDevice = Keyboard.current; //Player1 (WASD) | Player2 (Arrow-Keys) | Player3 (TFGH) | Player4 (IJKL).
+                    controlScheme = m_keyboardScheme;
+                    AssignKeyboard(_playerInput, _playerIndex, availableGamepads, assignedDevice, mouseDevice, controlScheme);
                     break;
                 }
-                case false:
+                case false: //'availableGamepads > 0' and not 'm_matchValues.PlayerSOData[_playerIndex].DefaultKeyboard'
                 {
                     m_alreadySetGamepads += 1;
 
-                    if (totalGamepadCount > 0 & availableGamepads > 0/* && _playerIndex + 1 <= totalGamepadCount*/)
+                    switch (availableGamepads > 0)
                     {
-                        //If a gamepad is connected and keyboard has no priority for this player: Gamepad gets set.
-                        assignedDevice = Gamepad.all[0];
-                        //assignedDevice = Gamepad.all[_playerIndex];
-                        controlScheme = m_gamePadScheme;
-
-                        _playerInput.SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice });
-                        //PlayerInput.all[_playerIndex].SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice });
-                        Debug.Log($"Player {_playerIndex + 1} uses a {assignedDevice?.name ?? "No"}-Device. TotalGamepads: {totalGamepadCount} | AvailableGamepads: {availableGamepads}");
+                        case true:
+                        {
+                            //If a gamepad is connected and keyboard has no priority for this player: Gamepad gets set.
+                            for (int i = 0; i < m_availableGamepads.Count; i++)
+                            {
+                                assignedDevice = Gamepad.all[i];
+                                m_availableGamepads.Remove(Gamepad.all[i]);
+                                controlScheme = m_gamePadScheme;
+                                AssignGamepad(_playerInput, _playerIndex, availableGamepads, assignedDevice, controlScheme);
+                            }
+                            break;
+                        }
+                        case false:
+                        {
+                            assignedDevice = Keyboard.current;
+                            controlScheme = m_keyboardScheme;
+                            AssignKeyboard(_playerInput, _playerIndex, availableGamepads, assignedDevice, mouseDevice, controlScheme);
+                            break;
+                        }
                     }
 
                     break;
                 }
             }
-
-            #region Old_Version
-            ////Set Gamepad or Keyboard as InputDevice.
-            //switch (totalGamepadCount > _playerIndex)
-            //{
-            //    //If enough gamepads are connected, every player gets an own gamepad.
-            //    case true:
-            //    {
-            //        assignedDevice = Gamepad.all[_playerIndex];
-            //        controlScheme = m_gamePadScheme;
-            //        break;
-            //    }
-            //    //No gamepad is available. Keyboard gets set as priority.
-            //    case false:
-            //    {
-            //        switch (_playerIndex)
-            //        {
-            //            case 0:
-            //                assignedDevice = Keyboard.current; //Player1 (WASD)
-            //                Debug.Log($"Player {_playerIndex + 1} uses Keyboard (WASD) & shared Mouse.");
-            //                break;
-            //            case 1:
-            //                assignedDevice = Keyboard.current; //Player2 (Arrow-Keys)
-            //                Debug.Log($"Player {_playerIndex + 1} uses Keyboard (Arrow Keys) & shared Mouse.");
-            //                break;
-            //            case 2:
-            //                assignedDevice = Keyboard.current; //Player3 (TFGH)
-            //                Debug.Log($"Player {_playerIndex + 1} uses Keyboard (TFGH) & shared Mouse.");
-            //                break;
-            //            case 3:
-            //                assignedDevice = Keyboard.current; //Player4 (IJKL)
-            //                Debug.Log($"Player {_playerIndex + 1} uses Keyboard (IJKL) & shared Mouse.");
-            //                break;
-            //            default:
-            //                Debug.LogError($"No available device for Player {_playerIndex + 1}!");
-            //                return;
-            //        }
-            //        break;
-            //    }
-            //}
-            #endregion
 
             //Force activation of PlayerActions.
             _playerInput.SwitchCurrentActionMap("PlayerActions");
@@ -218,26 +179,43 @@ namespace ThreeDeePongProto.Shared.Managers
             _playerInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
         }
 
+        private static void AssignGamepad(PlayerInput _playerInput, int _playerIndex, int availableGamepads, InputDevice assignedDevice, string controlScheme)
+        {
+            _playerInput.SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice });
+            //PlayerInput.all[_playerIndex].SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice });
+            Debug.Log($"Player {_playerIndex + 1} uses a {assignedDevice?.name ?? "No"}-Device. TotalGamepads: {Gamepad.all.Count} | AvailableGamepads: {availableGamepads}");
+        }
+
+        private static void AssignKeyboard(PlayerInput _playerInput, int _playerIndex, int availableGamepads, InputDevice assignedDevice, InputDevice mouseDevice, string controlScheme)
+        {
+            _playerInput.SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice, mouseDevice });
+            //PlayerInput.all[_playerIndex].SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice, mouseDevice });
+            Debug.Log($"Player {_playerIndex + 1} uses a {assignedDevice?.name ?? "No"}-Device and a shared Mouse. TotalGamepads: {Gamepad.all.Count} | AvailableGamepads: {availableGamepads}");
+        }
+
         private void CleanupPlayers()
         {
             Debug.Log("Cleaning up players...");
             m_matchValues.PlayerSOData.Clear();
         }
 
-        private void ActivateMenuControls()
+        private void SetMenuPlayerInput()
         {
-            Debug.Log("Activating menu controls...");
-            var menuInput = FindObjectOfType<PlayerInput>();
+            m_menuManager = FindObjectOfType<MenuManager>();
+            m_menuManager.TryGetComponent<PlayerInput>(out var menuInput);
+
             if (menuInput == null)
             {
-                menuInput = gameObject.AddComponent<PlayerInput>();
+                menuInput = m_menuManager.gameObject.AddComponent<PlayerInput>();
                 menuInput.actions = Resources.Load<InputActionAsset>("InputActions/PlayerInputActions");
+                menuInput.defaultActionMap = m_uiActionMap;
                 //Enable active ControlScheme switch.
-                menuInput.neverAutoSwitchControlSchemes = true;
+                menuInput.neverAutoSwitchControlSchemes = false;
                 //Set the notificationBehavior of the PlayerInput component.
                 menuInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
             }
-            menuInput.SwitchCurrentActionMap("UserInterface");
+
+            menuInput.SwitchCurrentActionMap(m_uiActionMap);
         }
     }
 }

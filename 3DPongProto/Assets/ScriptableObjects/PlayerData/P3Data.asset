@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: P3Data
   m_EditorClassIdentifier: 
   Prefab: {fileID: 4346485511625068478, guid: c0c19374c0ff8984ca12239d839971bb, type: 3}
-  PlayerName: Rayago
+  PlayerName: Mycandra
   PlayerId: 2
   Avatar: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
-  KeepNameOnLoad: 0
+  KeepNameOnLoad: 1
   PlayerOnFrontline: 1
   DefaultKeyboard: 0
