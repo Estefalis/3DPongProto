@@ -7,6 +7,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1514124386014938132, guid: ba00057dcc1283d429076dee8979ce96,
+        type: 3}
+      propertyPath: m_enableSmoothFollow
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1514124386352258756, guid: ba00057dcc1283d429076dee8979ce96,
         type: 3}
       propertyPath: m_playerSOData

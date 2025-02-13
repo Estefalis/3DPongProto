@@ -1489,6 +1489,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8ec0eff8661f0547ba0411c873ff447, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_eTestConfigType: 0
   m_playerInputManager: {fileID: 290600013}
   m_joinByDefault: 1
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}

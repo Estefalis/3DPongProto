@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Reflection;
 using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,13 +13,10 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         [SerializeField] internal CharacterMainController m_playerController;
 
         private Vector2 m_rotationVector;   //Save current rotationInput.
-        //private Vector2 m_moveVector, m_zoomVector, m_mouseVector;
 
         internal static event Action<int> m_KickBall;
         internal static event Action m_menuOpens;   //LocalMatchManager subscribed to react on menu open/close.
-        //internal static event Action<Vector2> m_sendScrollVector;
         internal static event Action<Vector2> m_sendMousePosition;
-
 
         private const string m_moveString = "Move", m_rotateString = "Rotate", m_pushString = "Push", m_zoomString = "Zoom";
         private const string m_kickBallString = "KickBall", m_toggleGameMenuString = "ToggleGameMenu", m_mousePositionString = "MousePosition";
@@ -27,8 +26,9 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void Awake()
         {
+            UserInputManager.ACheckForPlayerInput += UserInputManagerSetPlayerInput;
             RebindManager.m_changeActiveActionMap += OnInputManagerChangedActionMap;
-            PlayerInputCheck(m_playerInput.playerIndex);
+            //PlayerInputCheck(m_playerInput.playerIndex);  //Without 'UserInputManager.ACheckForPlayerInput'.
         }
 
         private void OnDisable()
@@ -36,6 +36,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (m_playerInput != null)
                 UnsubscribeToActions(m_playerInput);
 
+            UserInputManager.ACheckForPlayerInput -= UserInputManagerSetPlayerInput;
             RebindManager.m_changeActiveActionMap -= OnInputManagerChangedActionMap;
         }
 
@@ -44,6 +45,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (m_playerInput != null)
                 UnsubscribeToActions(m_playerInput);
 
+            UserInputManager.ACheckForPlayerInput -= UserInputManagerSetPlayerInput;
             RebindManager.m_changeActiveActionMap -= OnInputManagerChangedActionMap;
         }
 
@@ -54,12 +56,21 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 m_playerController.m_playerMovement.SetInputVector(m_rotationVector, m_playerController.m_playerId, true);
         }
 
-        private void PlayerInputCheck(int _playerIndex)
+        private void UserInputManagerSetPlayerInput(int _index)
         {
-            if (m_playerInput == null)  //If the component is not set in the 'Player Input' script slot.
+            PlayerInputCheck(_index);   //With 'UserInputManager.ACheckForPlayerInput'.
+        }
+
+        private void PlayerInputCheck(int _playerIndex = 0)
+        {
+            if (m_playerController.m_playerId != _playerIndex)
+                return;
+
+            //If the component is not set in the 'Player Input' script slot.
+            if (m_playerInput == null)
                 m_playerInput = m_playerController.GetComponent<PlayerInput>();
 
-            if (m_playerInput != null && _playerIndex == m_playerController.m_playerId)
+            if (m_playerInput != null)
             {
                 m_playerInput.GetComponent<PlayerInput>();
                 SubscribeToActions(m_playerInput);
@@ -163,13 +174,11 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private void OnZoom(InputAction.CallbackContext _callbackContext)
         {
             Vector2 zoomVector = _callbackContext.ReadValue<Vector2>();
-            //m_sendScrollVector?.Invoke(zoomVector);
             m_playerController.m_playerCameraController.Zooming(zoomVector);
         }
 
         private void OnZoomCanceled(InputAction.CallbackContext _callbackContext)
         {
-            //m_zoomVector = Vector2.zero;
             m_playerController.m_playerCameraController.Zooming(Vector2.zero);
         }
 

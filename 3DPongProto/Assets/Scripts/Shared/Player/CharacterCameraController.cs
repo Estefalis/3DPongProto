@@ -16,7 +16,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         [Header("Smooth Following")]
         [SerializeField] private Rigidbody m_RbPlayer;
         [SerializeField] internal Camera m_followCamera;
-        //[SerializeField] private bool m_enableSmoothFollow = true;
+        [SerializeField] private bool m_enableSmoothFollow = true;
         [SerializeField] private Vector3 m_desiredOffset;
         [Range(1.0f, 30.0f)]
         [SerializeField] private float m_smoothfactor;
@@ -50,7 +50,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
             m_playerId = m_playerController.m_playerId;
             m_setGroundWidth = m_basicFieldValues.SetGroundWidth;
-            //m_enableSmoothFollow = true;
         }
 
         private void OnDisable()
@@ -80,11 +79,11 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void FixedUpdate()
         {
-            //if (!m_enableSmoothFollow)
-            //    FollowUnsmoothed();
+            if (!m_enableSmoothFollow)
+                FollowUnsmoothed();
 
-            //if (m_enableSmoothFollow)
-            FollowSmoothly();
+            if (m_enableSmoothFollow)
+                FollowSmoothly();
 
             UpdateZoomPosition();
         }
@@ -138,21 +137,24 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                     //FourSplit
                     case ECameraModi.FourSplit:
                     {
-                        if (_mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin && _mousePosition.y < m_cameraManager.AvailableCameras[3].pixelRect.yMin)
+                        if (m_mousePosition.x < m_cameraManager.AvailableCameras[0].pixelRect.xMax && m_mousePosition.y < m_cameraManager.AvailableCameras[0].pixelRect.yMax)
+                        {
+                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
+                        }
+
+                        if (_mousePosition.x > m_cameraManager.AvailableCameras[1].pixelRect.xMin && _mousePosition.y < m_cameraManager.AvailableCameras[1].pixelRect.yMax)
                         {
                             m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1]);
                         }
-                        else if (_mousePosition.x < m_cameraManager.AvailableCameras[1].pixelRect.xMin && _mousePosition.y >= m_cameraManager.AvailableCameras[2].pixelRect.yMin)
+
+                        if (_mousePosition.x < m_cameraManager.AvailableCameras[2].pixelRect.xMax && _mousePosition.y > m_cameraManager.AvailableCameras[2].pixelRect.yMin)
                         {
                             m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[2]);
                         }
-                        else if (_mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin && _mousePosition.y >= m_cameraManager.AvailableCameras[3].pixelRect.yMin)
+
+                        if (_mousePosition.x > m_cameraManager.AvailableCameras[3].pixelRect.xMin && _mousePosition.y > m_cameraManager.AvailableCameras[3].pixelRect.yMin)
                         {
                             m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[3]);
-                        }
-                        else
-                        {
-                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
                         }
                         break;
                     }
@@ -165,14 +167,14 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             }
         }
 
-        //private void FollowUnsmoothed()
-        //{
-        //    //Follows directly in xPosition, but the visible push looks buggy, if not lerped.
-        //    Vector3 desiredPosition = new Vector3(m_RbPlayer.transform.localPosition.x/* + m_desiredOffset.x*/, m_RbPlayer.transform.localPosition.y + m_desiredOffset.y, m_RbPlayer.transform.localPosition.z + -m_desiredOffset.z);
-        //    Vector3 smoothedFollowing = Vector3.Lerp(m_followCamera.transform.localPosition, desiredPosition, Mathf.Max(m_smoothfactor, 30.0f) * Time.fixedDeltaTime);
-        //    //m_followCamera.transform.localPosition = desiredPosition;
-        //    m_followCamera.transform.localPosition = smoothedFollowing;
-        //}
+        private void FollowUnsmoothed()
+        {
+            //Follows directly in xPosition, but the visible push looks buggy, if not lerped.
+            Vector3 desiredPosition = new Vector3(m_RbPlayer.transform.localPosition.x/* + m_desiredOffset.x*/, m_RbPlayer.transform.localPosition.y + m_desiredOffset.y, m_RbPlayer.transform.localPosition.z + -m_desiredOffset.z);
+            //Vector3 smoothedFollowing = Vector3.Lerp(m_followCamera.transform.localPosition, desiredPosition, Mathf.Max(m_smoothfactor, 30.0f) * Time.fixedDeltaTime);
+            m_followCamera.transform.localPosition = desiredPosition;
+            //m_followCamera.transform.localPosition = smoothedFollowing;
+        }
 
         private void FollowSmoothly()
         {
@@ -217,7 +219,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         #region CallbackContext-Methods
         internal void Zooming(Vector2 _scrollVector)
         {
-            if (m_playerController.m_playerId == GetWindowId() && MouseIsWithinWindow(m_mousePosition))
+            if (m_playerId == GetWindowId() && MouseIsWithinWindow(m_mousePosition))
             {
                 float zoomValue = -_scrollVector.y * m_zoomSpeed;
 #if UNITY_EDITOR
