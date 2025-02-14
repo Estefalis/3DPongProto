@@ -5,18 +5,18 @@ namespace ThreeDeePongProto.Shared.DayCircle
     [ExecuteAlways]
     public class LightingCircle : MonoBehaviour
     {
-        [SerializeField] private Light m_directionalLight;
+        [SerializeField] private Light m_sunLight;
         [SerializeField] private LightingConditions m_lightingConditions;
         [SerializeField, Range(0, 24)] private float m_timeOfDay;
         [SerializeField, Min(0.1f)] private float m_adjustDayLength;    //Ein höherer Float-Wert bei 'm_adjustDayLength' verlängert den Tag-/Nacht-Wechsel und umgekehrt.
 
         private void OnValidate()
         {
-            if (m_directionalLight != null)
+            if (m_sunLight != null)
                 return;
 
             if (RenderSettings.sun != null)
-                m_directionalLight = RenderSettings.sun;
+                m_sunLight = RenderSettings.sun;
             else
             {
                 Light[] lights = GameObject.FindObjectsOfType<Light>();
@@ -24,7 +24,7 @@ namespace ThreeDeePongProto.Shared.DayCircle
                 {
                     if (light.type == LightType.Directional)
                     {
-                        m_directionalLight = light;
+                        m_sunLight = light;
                         return;
                     }
                 }
@@ -51,10 +51,10 @@ namespace ThreeDeePongProto.Shared.DayCircle
             RenderSettings.ambientLight = m_lightingConditions.m_ambientColor.Evaluate(_timePercent);
             RenderSettings.fogColor = m_lightingConditions.m_fogcolor.Evaluate(_timePercent);
 
-            if (m_directionalLight != null)
+            if (m_sunLight != null)
             {
-                m_directionalLight.color = m_lightingConditions.m_directionColor.Evaluate(_timePercent);
-                m_directionalLight.transform.localRotation = Quaternion.Euler(new Vector3((_timePercent * 360f) - 90f, -90f, 170f));
+                m_sunLight.color = m_lightingConditions.m_directionColor.Evaluate(_timePercent);
+                m_sunLight.transform.localRotation = Quaternion.Euler(new Vector3((_timePercent * 360f) - 90f, -90f, 170f));
             }
         }
     }

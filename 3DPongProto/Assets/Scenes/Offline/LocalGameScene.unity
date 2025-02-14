@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731941, g: 0.13414885, b: 0.1210783, a: 1}
+  m_IndirectSpecularColor: {r: 0.17905562, g: 0.21854803, b: 0.27339426, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -517,7 +517,6 @@ GameObject:
   - component: {fileID: 203844589}
   - component: {fileID: 203844588}
   - component: {fileID: 203844587}
-  - component: {fileID: 203844590}
   m_Layer: 0
   m_Name: SunLight
   m_TagString: Untagged
@@ -557,7 +556,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.7
+  m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -614,31 +613,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 203844586}
-  m_LocalRotation: {x: -0.70441604, y: -0.061628457, z: 0.70441604, w: 0.061628457}
+  m_LocalRotation: {x: -0.6903455, y: -0.15304594, z: 0.7064338, w: -0.030843496}
   m_LocalPosition: {x: 0, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2007252742}
   m_Father: {fileID: 1870557048}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!114 &203844590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 203844586}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4edd92995ba84e046b01ae20ca7671c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_directionalLight: {fileID: 203844588}
-  m_lightingConditions: {fileID: 11400000, guid: f9492211b7b91c640b7ed8aceab85739,
-    type: 2}
-  m_timeOfDay: 6
-  m_adjustDayLength: 96
 --- !u!1001 &216069550
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5555,6 +5538,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1870557048}
+  - component: {fileID: 1870557049}
   m_Layer: 0
   m_Name: LIGHTS
   m_TagString: Untagged
@@ -5575,10 +5559,26 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 203844589}
-  - {fileID: 2007252742}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1870557049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870557047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4edd92995ba84e046b01ae20ca7671c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_sunLight: {fileID: 203844588}
+  m_lightingConditions: {fileID: 11400000, guid: f9492211b7b91c640b7ed8aceab85739,
+    type: 2}
+  m_timeOfDay: 7
+  m_adjustDayLength: 96
 --- !u!1 &1874074984
 GameObject:
   m_ObjectHideFlags: 0
@@ -5999,13 +5999,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2007252741}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 5, z: 0}
+  m_LocalRotation: {x: 0.1736483, y: -0.9848078, z: -0, w: 9.313226e-10}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1870557048}
-  m_RootOrder: 1
+  m_Father: {fileID: 203844589}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &2007252743
 MonoBehaviour:
@@ -6045,7 +6045,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1

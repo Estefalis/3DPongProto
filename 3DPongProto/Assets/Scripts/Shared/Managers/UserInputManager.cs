@@ -24,9 +24,9 @@ namespace ThreeDeePongProto.Shared.Managers
         private const string m_gamePadScheme = "Gamepad", m_gamepadDevice = "Gamepad";
         private const string m_uiActionMap = "UserInterface";
 
-        private readonly List<GameObject> m_listOfGameObjects = new List<GameObject>();
-        private List<InputDevice> m_usableGamepads = new List<InputDevice>();
+        private readonly List<InputDevice> m_usableGamepads = new();
         public static event Action<int> ACheckForPlayerInput;
+        private InputDevice m_gamepadToRemove;
 
         #region Scriptable_Objects
         [SerializeField] private MatchUIStates m_matchUIStates;
@@ -48,12 +48,10 @@ namespace ThreeDeePongProto.Shared.Managers
             }
             #endregion
 
-            m_listOfGameObjects.Clear();
-            m_usableGamepads.Clear();
-
             m_playerInputManager = GetComponent<PlayerInputManager>();
             SetUpPlayerInputManager(m_playerInputManager);
 
+            m_usableGamepads.Clear();
             m_usableGamepads.Add(GetConnectedGamepads());
         }
 
@@ -89,16 +87,6 @@ namespace ThreeDeePongProto.Shared.Managers
             }
         }
 
-        private InputDevice GetConnectedGamepads()
-        {
-            for (int i = 0; i < Gamepad.all.Count; i++)
-            {
-                if (Gamepad.all[i] != null && !m_usableGamepads.Contains(Gamepad.all[i]))
-                    return Gamepad.all[i];
-            }
-            return null;
-        }
-
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             isInGameScene = scene.name.Contains(m_gameScene) ? isInGameScene = true : isInGameScene = false;
@@ -107,14 +95,14 @@ namespace ThreeDeePongProto.Shared.Managers
             {
                 case true:
                 {
-                    RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.PlayerActions);
+                    //RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.PlayerActions);
                     m_playfieldParent = FindObjectOfType<LocalMatchManager>().m_PlayfieldParent;   //Public getter => private Transform.
                     InstantiatePlayer();
                     break;
                 }
                 case false:
                 {
-                    RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.UserInterface);
+                    //RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.UserInterface);
                     CleanupPlayers();
                     SetMenuPlayerInput();
                     break;
@@ -126,59 +114,104 @@ namespace ThreeDeePongProto.Shared.Managers
         private void InstantiatePlayer()
         {
             uint playerCount = (uint)m_matchUIStates.EPlayerAmount;
+            bool setKeyboard;
+            bool[] setDevices = new bool[playerCount];
 
-            for (int i = 0; i < playerCount; i++)
+            for (int b = 0; b < playerCount; b++)
             {
-                GameObject playerPrefab = Instantiate(m_matchValues.PlayerSOData[i].Prefab, m_playfieldParent);
+                setKeyboard = m_matchValues.PlayerSOData[b].DefaultKeyboard;
+                switch (setKeyboard)
+                {
+                    case true:
+                    {
+                        setDevices[b] = true;
+                        break;
+                    }
+                    case false:
+                    {
+                        switch (m_usableGamepads.Count <= 0)
+                        {
+                            case true:
+                            {
+                                setDevices[b] = true;   //No gamepads available = setKeyboard == true;
+                                break;
+                            }
+                            case false:
+                            {
+                                setDevices[b] = false;   //Gamepads available = setKeyboard == false;
+                                m_gamepadToRemove = m_usableGamepads[0];
+                                m_usableGamepads.Remove(m_gamepadToRemove);
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
 
+            for (int pp = 0; pp < playerCount; pp++)
+            {
+                GameObject playerPrefab = Instantiate(m_matchValues.PlayerSOData[pp].Prefab, m_playfieldParent);
                 if (!playerPrefab.TryGetComponent<PlayerInput>(out var playerInput))
                     playerInput = playerPrefab.AddComponent<PlayerInput>();
 
-                ConfigurePlayerInput(playerInput, i);
+                ConfigurePlayerInput(playerInput, pp, setDevices[pp]);
             }
         }
 
-        private void ConfigurePlayerInput(PlayerInput _playerInput, int _playerIndex)
+        private void ConfigurePlayerInput(PlayerInput _playerInput, int _playerIndex, bool _setKeyboard)
         {
             //Load and set the InputActionAsset.
             if (_playerInput.actions == null)
                 _playerInput.actions = Resources.Load<InputActionAsset>("InputActions/PlayerInputActions");
 
             InputDevice assignedDevice;
-            InputDevice mouseDevice = Mouse.current;
+            InputDevice mouseDevice;
 
             string controlScheme;
 
-            switch (m_matchValues.PlayerSOData[_playerIndex].DefaultKeyboard || m_usableGamepads.Count == 0)
+            if (!_setKeyboard)
             {
-                //If no gamepad is available, or playerPrefab shall use keyboard, keyboard gets set as priority.
-                case true:
-                {
-                    assignedDevice = Keyboard.current; //Player1 (WASD) | Player2 (Arrow-Keys) | Player3 (TFGH) | Player4 (IJKL).
-                    controlScheme = m_keyboardScheme;
+                //If a gamepad is connected, usable and keyboard has no priority gamepad gets set.
+                assignedDevice = m_gamepadToRemove;
+                controlScheme = m_gamePadScheme;
 
-                    _playerInput.SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice, mouseDevice });
-                    Debug.Log($"Player {_playerIndex + 1} uses a {assignedDevice?.name ?? "No"}-Device and a shared Mouse. TotalGamepads: {Gamepad.all.Count} | UsableGamepads: {m_usableGamepads.Count}");
-                    break;
-                }
-                case false: //'usableGamepads > 0' and '!m_matchValues.PlayerSOData[_playerIndex].DefaultKeyboard'.
-                {
-                    //If a gamepad is connected and keyboard has no priority for this playerPrefab: Gamepad gets set.
-                    for (int i = 0; i < Gamepad.all.Count; i++)
-                    {
-                        if (Gamepad.all[i] != null && m_usableGamepads.Contains(Gamepad.all[i]))
-                        {
-                            assignedDevice = Gamepad.all[i];
-                            m_usableGamepads.Remove(assignedDevice);
-                            controlScheme = m_gamePadScheme;
-
-                            _playerInput.SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice });
-                            Debug.Log($"Player {_playerIndex + 1} uses a {assignedDevice?.name ?? "No"}-Device. TotalGamepads: {Gamepad.all.Count} | UsableGamepads: {m_usableGamepads.Count}");
-                        }
-                    }
-                    break;
-                }
+                _playerInput.SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice });
+                Debug.Log($"Player {_playerIndex + 1} uses a {assignedDevice?.name ?? "No"}-Device. TotalGamepads: {Gamepad.all.Count} | UsableGamepads: {m_usableGamepads.Count} | ShallSetGamepad: {_setKeyboard}");                
             }
+            else
+            {
+                assignedDevice = Keyboard.current;  //Player1 (WASD) | Player2 (Arrow-Keys) | Player3 (TFGH) | Player4 (IJKL).
+                mouseDevice = Mouse.current;
+                controlScheme = m_keyboardScheme;
+
+                _playerInput.SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice, mouseDevice });
+                Debug.Log($"Player {_playerIndex + 1} uses a {assignedDevice?.name ?? "No"}-Device and a shared Mouse. TotalGamepads: {Gamepad.all.Count} | UsableGamepads: {m_usableGamepads.Count}");
+            }
+
+            //switch (_setKeyboard)
+            //{
+            //    //If no gamepad is available, or playerPrefab shall use keyboard, keyboard gets set as priority.
+            //    case true:
+            //    {
+            //        assignedDevice = Keyboard.current; //Player1 (WASD) | Player2 (Arrow-Keys) | Player3 (TFGH) | Player4 (IJKL).
+            //        controlScheme = m_keyboardScheme;
+
+            //        _playerInput.SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice, mouseDevice });
+            //        Debug.Log($"Player {_playerIndex + 1} uses a {assignedDevice?.name ?? "No"}-Device and a shared Mouse. TotalGamepads: {Gamepad.all.Count} | UsableGamepads: {m_usableGamepads.Count}");
+            //        break;
+            //    }
+            //    case false: //'usableGamepads > 0' and '!m_matchValues.PlayerSOData[_playerIndex].DefaultKeyboard'.
+            //    {
+            //        //If a gamepad is connected, usable and keyboard has no priority gamepad gets set.
+            //        assignedDevice = m_gamepadToRemove;
+            //        controlScheme = m_gamePadScheme;
+
+            //        _playerInput.SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice });
+            //        Debug.Log($"Player {_playerIndex + 1} uses a {assignedDevice?.name ?? "No"}-Device. TotalGamepads: {Gamepad.all.Count} | UsableGamepads: {m_usableGamepads.Count}");
+            //        break;
+            //    }
+            //}
 
             //Force activation of PlayerActions.
             _playerInput.SwitchCurrentActionMap("PlayerActions");
@@ -187,6 +220,20 @@ namespace ThreeDeePongProto.Shared.Managers
             _playerInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
 
             ACheckForPlayerInput?.Invoke(_playerIndex);
+        }
+        #endregion
+
+        #region Delegate_Methods
+        private InputDevice GetConnectedGamepads()
+        {
+            for (int i = 0; i < Gamepad.all.Count; i++)
+            {
+                if (Gamepad.all[i] != null && !m_usableGamepads.Contains(Gamepad.all[i]))
+                {
+                    return Gamepad.all[i];
+                }
+            }
+            return null;
         }
         #endregion
 
