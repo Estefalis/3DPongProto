@@ -10,23 +10,19 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         [SerializeField] private PlayerInput m_playerInput;
         [SerializeField] internal CharacterMainController m_playerController;
 
-        private Vector2 m_rotationVector;   //Save current rotationInput.
+        private Vector2 m_rotationVector;   //Saved current rotationInput.
 
-        internal static event Action<int> m_KickBall;
-        internal static event Action m_menuOpens;   //LocalMatchManager subscribed to react on menu open/close.
-        internal static event Action<Vector2> m_sendMousePosition;
+        internal static event Action<int> AKickBall;
+        internal static event Action AMenuOpens;   //LocalMatchManager subscribed to react on menu open/close.
+        internal static event Action<Vector2> ASendMousePosition;
 
         private const string m_moveString = "Move", m_rotateString = "Rotate", m_pushString = "Push", m_zoomString = "Zoom";
         private const string m_kickBallString = "KickBall", m_toggleGameMenuString = "ToggleGameMenu", m_mousePositionString = "MousePosition";
 
-        private const string m_playerActionsName = "PlayerActions";
-        private const string m_userInterfaceName = "UserInterface";
-
         private void Awake()
         {
             UserInputManager.ACheckForPlayerInput += UserInputManagerSetPlayerInput;
-            RebindManager.m_changeActiveActionMap += OnInputManagerChangedActionMap;
-            //PlayerInputCheck(m_playerInput.playerIndex);  //Without 'UserInputManager.ACheckForPlayerInput'.
+            //PlayerInputCheck(m_playerInput.playerIndex);  //Used before invoking with 'UserInputManager.ACheckForPlayerInput'.
         }
 
         private void OnDisable()
@@ -35,7 +31,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 UnsubscribeToActions(m_playerInput, m_playerInput.playerIndex);
 
             UserInputManager.ACheckForPlayerInput -= UserInputManagerSetPlayerInput;
-            RebindManager.m_changeActiveActionMap -= OnInputManagerChangedActionMap;
         }
 
         private void OnDestroy()
@@ -44,7 +39,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 UnsubscribeToActions(m_playerInput, m_playerInput.playerIndex);
 
             UserInputManager.ACheckForPlayerInput -= UserInputManagerSetPlayerInput;
-            RebindManager.m_changeActiveActionMap -= OnInputManagerChangedActionMap;
         }
 
         private void FixedUpdate()
@@ -115,7 +109,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             mousePositionAction.performed += OnMousePosition;
 
             var toggleGameMenuAction = _playerInput.actions[m_toggleGameMenuString];
-            toggleGameMenuAction.performed += OnToggleMenu;
+            toggleGameMenuAction.performed += OnOpenMenu;
         }
 
         private void UnsubscribeToActions(PlayerInput _playerInput, int _playerID)
@@ -125,9 +119,9 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             {
                 case 0:
                 {
-            var moveAction = _playerInput.actions[m_moveString];
-            moveAction.performed -= OnMove;
-            moveAction.canceled -= OnMoveCanceled;
+                    var moveAction = _playerInput.actions[m_moveString];
+                    moveAction.performed -= OnMove;
+                    moveAction.canceled -= OnMoveCanceled;
                     break;
                 }
                 case 1:
@@ -158,7 +152,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             mousePositionAction.performed -= OnMousePosition;
 
             var toggleGameMenuAction = _playerInput.actions[m_toggleGameMenuString];
-            toggleGameMenuAction.performed -= OnToggleMenu;
+            toggleGameMenuAction.performed -= OnOpenMenu;
         }
 
         private void OnMove(InputAction.CallbackContext _callbackContext)
@@ -214,7 +208,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
             var kickBall = _callbackContext.ReadValueAsButton();
             if (kickBall)
-                m_KickBall?.Invoke(m_playerController.m_playerId);  //Tell the Ball, that it has been kicked! *kick*
+                AKickBall?.Invoke(m_playerController.m_playerId);  //Tell the Ball, that it has been kicked! *kick*
         }
 
         private void OnZoom(InputAction.CallbackContext _callbackContext)
@@ -240,55 +234,16 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             //    return;
 
             Vector2 mouseVector = _callbackContext.ReadValue<Vector2>();
-            m_sendMousePosition?.Invoke(mouseVector);
+            ASendMousePosition?.Invoke(mouseVector);
         }
 
-        private void OnToggleMenu(InputAction.CallbackContext _callbackContext)
+        private void OnOpenMenu(InputAction.CallbackContext _callbackContext)
         {
             //if (m_playerInput.playerIndex != m_playerController.m_playerId)
             //    return;
 
-            RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.UserInterface);
-        }
-
-        private void OnInputManagerChangedActionMap(InputActionMap _inputActionMap)
-        {
-            #region Before PlayerInput-Component
-            //switch (_inputActionMap.name == m_playerActionsName)
-            //{
-            //    case true: m_playerInputActions.PlayerActions.Enable();
-            //        break;
-            //    case false:
-            //        m_playerInputActions.PlayerActions.Disable();
-            //        break;
-            //}
-
-            //if (!m_playerInputActions.PlayerActions.enabled)
-            //    m_menuOpens?.Invoke(); 
-            #endregion
-
-            // Change to current ActionMap by PlayerInput.
-            if (m_playerController.m_matchUIStates.EGameConnectModi == EGameModi.LocalPC && m_playerController.m_playerId == 0)
-            {
-                m_playerInput.SwitchCurrentActionMap(_inputActionMap.name);
-
-                switch (_inputActionMap.name)
-                {
-                    case m_userInterfaceName:
-                    {
-                        m_menuOpens?.Invoke();
-                        Debug.Log("Menu opened!");
-                        break;
-                    }
-                    case m_playerActionsName:
-                    {
-                        Debug.Log("Returned to PlayerActions.");
-                        break;
-                    }
-                    default:
-                        break;
-                }
-            }
+            if (/*m_playerController.m_matchUIStates.EGameConnectModi == EGameConnectionModi.LocalPC && */m_playerController.m_playerId == 0)
+                AMenuOpens?.Invoke();
         }
     }
 }

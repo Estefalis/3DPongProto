@@ -56,7 +56,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             CameraManager.LetsRemoveCamera(m_followCamera, m_playerId);
 
-            CharacterInputHandler.m_sendMousePosition -= NewMousePosition;
+            CharacterInputHandler.ASendMousePosition -= NewMousePosition;
         }
 
         private void Start()
@@ -68,7 +68,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             //Saved vector to keep the playerCamera-startposition.
             CameraPositions(m_cameraManager.AvailableCameras[m_playerId]);
 
-            CharacterInputHandler.m_sendMousePosition += NewMousePosition;
+            CharacterInputHandler.ASendMousePosition += NewMousePosition;
         }
 
         #region Custom-Methods

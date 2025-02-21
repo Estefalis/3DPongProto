@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ThreeDeePongProto.Offline.UI.Menu;
+using ThreeDeePongProto.Shared.PlayerCharacter;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -24,17 +25,13 @@ namespace ThreeDeePongProto.Shared.Managers
         [SerializeField] private bool m_joinByDefault = true;
 
         private MenuManager m_menuManager;
-
         private Transform m_playfieldParent;
 
-        private const string m_gameScene = "GameScene";
         private const string m_keyboardScheme = "KeyboardMouse", m_keyboardDevice = "Keyboard";
         private const string m_gamePadScheme = "Gamepad", m_gamepadDevice = "Gamepad";
         private const string m_uiActionMap = "UserInterface";
 
         private readonly List<InputDevice> m_usableGamepads = new();
-        //private Dictionary<int, InputUser> m_playerUsers = new();
-
         public static event Action<int> ACheckForPlayerInput;
 
         #region Scriptable_Objects
@@ -70,12 +67,18 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void OnEnable()
         {
-            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.sceneLoaded += OnSceneManagerLoaded;
+            MenuManager.AReLoadScene += OnReLoadScene;
+            MenuManager.AResumeTheGame += ResetActionMap;
+            CharacterInputHandler.AMenuOpens += OnMenuOpens;
         }
 
         private void OnDisable()
         {
-            SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.sceneLoaded -= OnSceneManagerLoaded;
+            MenuManager.AReLoadScene -= OnReLoadScene;
+            MenuManager.AResumeTheGame -= ResetActionMap;
+            CharacterInputHandler.AMenuOpens -= OnMenuOpens;
         }
 
         private void SetUpPlayerInputManager(PlayerInputManager _playerInputManager)
@@ -100,22 +103,27 @@ namespace ThreeDeePongProto.Shared.Managers
             }
         }
 
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        #region On_Scene_Reload_Or_Resume
+        /// <summary>
+        /// Method to react after a scene has been fully loaded beforehand.
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <param name="mode"></param>
+        private void OnSceneManagerLoaded(Scene scene, LoadSceneMode mode)
         {
             int sceneIndex = scene.buildIndex;
+            ResetActionMap(sceneIndex);
 
             switch (sceneIndex)
             {
                 case 0:
                 {
-                    //RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.UserInterface);
                     CleanupPlayers();
                     SetMenuPlayerInput();
                     break;
                 }
                 case 1:
                 {
-                    //RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.PlayerActions);
                     m_playfieldParent = FindObjectOfType<LocalMatchManager>().m_PlayfieldParent;   //Public getter => private Transform.
                     InstantiatePlayer();
                     break;
@@ -128,6 +136,69 @@ namespace ThreeDeePongProto.Shared.Managers
                 }
             }
         }
+
+        private void OnMenuOpens()
+        {
+            ResetActionMap((int)ESceneNames.StartMenu); //Abusing the StartMenu enum entry to toggle UserInterface ActionMap! Am lazy. <(o.o)>
+        }
+
+        /// <summary>
+        /// Method to reSet the active ActionMap, depending on resuming to the game from the pauseMenu, or on scene reLoads.
+        /// </summary>
+        /// <param name="_index"></param>
+        private void ResetActionMap(int _index)
+        {
+            //TODO: Move ToggleActionMaps method into UserInputManager!
+            switch (_index)
+            {
+                case 0:
+                    RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.UserInterface);
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                    RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.PlayerActions);
+                    break;
+                default:
+                    Debug.Log("Scene is not implemented, yet!");
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Method to receive the buildIndex of the scene that shall be reloaded.
+        /// </summary>
+        /// <param name="_sceneIndex"></param>
+        private void OnReLoadScene(int _sceneIndex)
+        {
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            switch (_sceneIndex)
+            {
+                case 0:
+                    SceneManager.LoadScene((int)ESceneNames.StartMenu);
+                    break;
+                case 1:
+                    SceneManager.LoadScene((int)ESceneNames.LocalGame);
+                    break;
+                case 2:
+                {
+                    Debug.Log("When the LanGame mode is finished... .");
+                    //SceneManager.LoadScene((int)ESceneNames.LanGame);
+                }
+                break;
+                case 3:
+                {
+                    Debug.Log("When the NetGame mode is finished... .");
+                    //SceneManager.LoadScene((int)ESceneNames.NetGame);
+                }
+                break;
+                default:
+                    Debug.Log("Scene is not implemented, yet!");
+                    break;
+            }
+        }
+        #endregion
 
         #region Instantiate_and_configurate_Player_and_PlayerInput
         private void InstantiatePlayer()

@@ -3,7 +3,7 @@ using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.PlayerCharacter;
 using UnityEngine;
 
-public enum EGameModi
+public enum EGameConnectionModi
 {
     LocalPC,
     LAN,
@@ -105,9 +105,9 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void OnEnable()
         {
-            MenuManager.ResumeTheGame += ResumeGame;
-            MenuManager.EndInfiniteMatch += LetsEndInfiniteMatch;
-            MenuManager.OnLoadMainScene += ResetPauseAndTimescale;
+            MenuManager.AResumeTheGame += ResumeGame;
+            MenuManager.AReLoadScene += ResetPauseAndTimescale;
+            MenuManager.AEndInfiniteMatch += LetsEndInfiniteMatch;
 
             Ball.RoundCountStarts += MatchStartValues;
             Ball.HitGoalOne += UpdateTPTwoPoints;
@@ -115,18 +115,20 @@ namespace ThreeDeePongProto.Shared.Managers
 
             StartNextRound += LetsStartNextRound;
             StartWinProcedure += LetsStartWinProcedure;
+
+            CharacterInputHandler.AMenuOpens += PauseAndTimeScale;
         }
 
         private void OnDisable()
         {
-            MenuManager.ResumeTheGame -= ResumeGame;
-            MenuManager.EndInfiniteMatch -= LetsEndInfiniteMatch;
-            MenuManager.OnLoadMainScene -= ResetPauseAndTimescale;
-
             //Useable for Infinite Matches.
             m_matchValues.TotalPointsTPOne = 0;
             m_matchValues.TotalPointsTPTwo = 0;
             m_matchUIStates.GameRuns = false;
+
+            MenuManager.AResumeTheGame -= ResumeGame;
+            MenuManager.AReLoadScene -= ResetPauseAndTimescale;
+            MenuManager.AEndInfiniteMatch -= LetsEndInfiniteMatch;
 
             Ball.RoundCountStarts -= MatchStartValues;
             Ball.HitGoalOne -= UpdateTPTwoPoints;
@@ -135,12 +137,7 @@ namespace ThreeDeePongProto.Shared.Managers
             StartNextRound -= LetsStartNextRound;
             StartWinProcedure -= LetsStartWinProcedure;
 
-            CharacterInputHandler.m_menuOpens -= PauseAndTimeScale;
-        }
-
-        private void Start()
-        {
-            CharacterInputHandler.m_menuOpens += PauseAndTimeScale;
+            CharacterInputHandler.AMenuOpens -= PauseAndTimeScale;
         }
 
         #region Custom-Methods
@@ -348,7 +345,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
             if (winConditionIsMet)
             {
-                if (m_matchUIStates.EGameConnectModi == EGameModi.LocalPC)
+                if (m_matchUIStates.EGameConnectModi == EGameConnectionModi.LocalPC)
                     SaveMatchDetails(_winningPlayer, _pointCount);
 
                 StartWinProcedure?.Invoke();
@@ -447,7 +444,7 @@ namespace ThreeDeePongProto.Shared.Managers
 #if UNITY_EDITOR
             Debug.Log("Next Round starts!");
 #endif
-            //TODO: May implement a procedure to transition into the next set Round.
+            //TODO: May implement a procedure to transition into the next set Round, if desired.
 
             //Increase the RoundNr by 1.
             m_matchValues.CurrentRoundNr++;
@@ -459,16 +456,18 @@ namespace ThreeDeePongProto.Shared.Managers
 #if UNITY_EDITOR
             Debug.Log("Won!");
 #endif
-            //TODO: Start WinProcedure.
+            //TODO: Start the WinProcedure.
         }
 
-        private void ResetPauseAndTimescale()
+        private void ResetPauseAndTimescale(int _)
         {
+            //May use the integer to treat scene timeScales different in the future.
             SetPauseAndTimeScale(false);
         }
 
-        private void ResumeGame()
+        private void ResumeGame(int _)
         {
+            //May use the integer to treat scene timeScales different in the future.
             SetPauseAndTimeScale(false);
         }
 

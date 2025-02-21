@@ -143,11 +143,11 @@ namespace ThreeDeePongProto.Shared.UI
             m_inputFieldToggles[_playerIndex].isOn = m_playerSOData[_playerIndex].KeepNameOnLoad;
         }
 
-        private void SetupWindow(EGameModi _connectMode, EPlayerAmount _ePlayerAmount)
+        private void SetupWindow(EGameConnectionModi _connectMode, EPlayerAmount _ePlayerAmount)
         {
             switch (_connectMode)
             {
-                case EGameModi.LocalPC:
+                case EGameConnectionModi.LocalPC:
                 {
                     switch (_ePlayerAmount)
                     {
@@ -173,8 +173,8 @@ namespace ThreeDeePongProto.Shared.UI
                     }
                     break;
                 }
-                case EGameModi.LAN:
-                case EGameModi.Internet:
+                case EGameConnectionModi.LAN:
+                case EGameConnectionModi.Internet:
                 {
                     switch (_ePlayerAmount)
                     {

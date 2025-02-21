@@ -47,12 +47,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #region GameScene-Variables
         [Header("GameScene Variables")]
         [SerializeField] private Button m_hiddenFinishButton;
-        //private const string m_startMenuScene = "StartMenu";
 
-        //LocalMatchManager unpauses the Game. - CharacterMainController restarts Coroutines and Inputsystem.PlayerActions.
-        public static event Action ResumeTheGame;
-        public static event Action OnLoadMainScene;
-        public static event Action EndInfiniteMatch;
+        public static event Action<int> AResumeTheGame;     //LocalMatchManager unpauses the Game. - UserInputManager resets active ActionMap.
+        public static event Action<int> AReLoadScene;       //UserInputManager with central SceneManager.LoadScene().
+        public static event Action AEndInfiniteMatch;
 
         private const string m_userInterfaceName = "UserInterface";
         #endregion
@@ -82,13 +80,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_playerInputActions.UserInterface.Enable();
 
             m_playerInputActions.UserInterface.ToggleGameMenu.performed += CloseMenu;
-            RebindManager.m_changeActiveActionMap += OnInputManagerChangedActionMap;
+            RebindManager.m_changeActiveActionMap += OnRebindManagerChangedActionMap;
         }
 
         private void OnDisable()
         {
             m_playerInputActions.UserInterface.ToggleGameMenu.performed -= CloseMenu;
-            RebindManager.m_changeActiveActionMap -= OnInputManagerChangedActionMap;
+            RebindManager.m_changeActiveActionMap -= OnRebindManagerChangedActionMap;
 
             m_playerInputActions.UserInterface.Disable();
         }
@@ -96,7 +94,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void OnDestroy()
         {
             m_playerInputActions.UserInterface.ToggleGameMenu.performed -= CloseMenu;
-            RebindManager.m_changeActiveActionMap -= OnInputManagerChangedActionMap;
+            RebindManager.m_changeActiveActionMap -= OnRebindManagerChangedActionMap;
 
             m_playerInputActions.Dispose();
         }
@@ -240,29 +238,27 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #region MenuButton-Methods
         public void ResumeGame()
         {
-            RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.PlayerActions);
-            ResumeTheGame?.Invoke();
+            var sceneIndex = SceneManager.GetActiveScene().buildIndex;
+            AResumeTheGame?.Invoke(sceneIndex);
             m_firstElement.gameObject.SetActive(false);
         }
 
         public void RestartGameScene()
         {
-            //LocalMatchManager toggles ActionMap in ReSetMatch()-method on Scene-reload.
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            var sceneIndex = SceneManager.GetActiveScene().buildIndex;
+            AReLoadScene?.Invoke(sceneIndex);
         }
 
-        public void ReturnToMainScene()
+        public void ReturnToMainMenu()
         {
-            OnLoadMainScene?.Invoke();
-            //Action to reset timescale inside the Matchmanager. And other possible settings on returning to the main menu scene.
-            SceneManager.LoadScene((int)ESceneNames.StartMenu);
+            AReLoadScene?.Invoke((int)ESceneNames.StartMenu);   //Possible without '?.Invoke'?
         }
 
         public void EndOfInfiniteMatch()
         {
             if (m_matchValues.TotalPointsTPOne > 0 || m_matchValues.TotalPointsTPTwo > 0)
             {
-                EndInfiniteMatch?.Invoke();
+                AEndInfiniteMatch?.Invoke();
                 m_keyTransform[0].gameObject.SetActive(false);
             }
         }
@@ -292,10 +288,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void CloseMenu(InputAction.CallbackContext _callbackContext)
         {
-            RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.PlayerActions);
+            var sceneIndex = SceneManager.GetActiveScene().buildIndex;
+            AResumeTheGame?.Invoke(sceneIndex);
         }
 
-        private void OnInputManagerChangedActionMap(InputActionMap _inputActionMap)
+        private void OnRebindManagerChangedActionMap(InputActionMap _inputActionMap)
         {
             switch (_inputActionMap.name == m_userInterfaceName)
             {

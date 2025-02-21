@@ -16,21 +16,21 @@ namespace ThreeDeePongProto.Shared.UI
         {
             if (_sender == m_modiButtons[0])
             {
-                SetConnectionInfo(EGameModi.LocalPC);
+                SetConnectionInfo(EGameConnectionModi.LocalPC);
             }
 
             if (_sender == m_modiButtons[1])
             {
-                SetConnectionInfo(EGameModi.LAN);
+                SetConnectionInfo(EGameConnectionModi.LAN);
             }
 
             if (_sender == m_modiButtons[2])
             {
-                SetConnectionInfo(EGameModi.Internet);
+                SetConnectionInfo(EGameConnectionModi.Internet);
             }
         }
 
-        private void SetConnectionInfo(EGameModi _eGameModi)
+        private void SetConnectionInfo(EGameConnectionModi _eGameModi)
         {
             m_matchUIStates.EGameConnectModi = _eGameModi;
 #if UNITY_EDITOR
@@ -42,17 +42,17 @@ namespace ThreeDeePongProto.Shared.UI
         {
             switch (m_matchUIStates.EGameConnectModi)
             {
-                case EGameModi.LocalPC:
+                case EGameConnectionModi.LocalPC:
                 {
                     SceneManager.LoadScene((int)ESceneNames.LocalGame);
                     break;
                 }
-                case EGameModi.LAN:
+                case EGameConnectionModi.LAN:
                 {
                     Debug.Log($"Implement the {ESceneNames.LanGame.ToString()}, once the local scene is completed!");
                     break;
                 }
-                case EGameModi.Internet:
+                case EGameConnectionModi.Internet:
                 {
                     Debug.Log($"Implement the {ESceneNames.NetGame.ToString()}, once the local scene is completed!");
                     break;

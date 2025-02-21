@@ -7,8 +7,8 @@ public class MatchUIStates : ScriptableObject
 {
     [Header("Player-States")]
     public EPlayerAmount EPlayerAmount;
-    public EGameModi EGameConnectModi { get => eGameConnectModi; set => eGameConnectModi = value; }
-    [SerializeField] private EGameModi eGameConnectModi;
+    public EGameConnectionModi EGameConnectModi { get => eGameConnectModi; set => eGameConnectModi = value; }
+    [SerializeField] private EGameConnectionModi eGameConnectModi;
     public bool RotationReset;
 
     [Header("Match-Details")]
