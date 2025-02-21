@@ -1,4 +1,3 @@
-//using System;     //Used by Actions.
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -7,18 +6,7 @@ namespace ThreeDeePongProto.Shared.UI
 {
     public class ConnectionManager : MonoBehaviour
     {
-        #region SerializeField-Member-Variables
-        [SerializeField] private string m_localGameScene = "LocalGameScene";
-        [SerializeField] private string m_lanGameScene = "LanGameScene";
-        [SerializeField] private string m_internetGameScene = "InternetGameScene";
         [SerializeField] private Button[] m_modiButtons;
-
-        //[SerializeField] private uint m_maxPlayers = 4;
-        #endregion
-
-        //public static event Action LocalGameAnnounced;
-        //public static event Action LANGameAnnounced;
-        //public static event Action InternetGameAnnounced;
 
         #region Scriptable Objects
         [SerializeField] private MatchUIStates m_matchUIStates;
@@ -28,27 +16,26 @@ namespace ThreeDeePongProto.Shared.UI
         {
             if (_sender == m_modiButtons[0])
             {
-                SetConnectionInfo(EGameModi.LocalPC/*, LocalGameAnnounced*/);
+                SetConnectionInfo(EGameModi.LocalPC);
             }
 
             if (_sender == m_modiButtons[1])
             {
-                SetConnectionInfo(EGameModi.LAN/*, LANGameAnnounced*/);
+                SetConnectionInfo(EGameModi.LAN);
             }
 
             if (_sender == m_modiButtons[2])
             {
-                SetConnectionInfo(EGameModi.Internet/*, InternetGameAnnounced*/);
+                SetConnectionInfo(EGameModi.Internet);
             }
         }
 
-        private void SetConnectionInfo(EGameModi _eGameModi/*, Action _action*/)
+        private void SetConnectionInfo(EGameModi _eGameModi)
         {
             m_matchUIStates.EGameConnectModi = _eGameModi;
 #if UNITY_EDITOR
             Debug.Log($"Spiel-Modus: {_eGameModi}");
 #endif
-            //_action?.Invoke();
         }
 
         public void StartMatch()
@@ -57,19 +44,17 @@ namespace ThreeDeePongProto.Shared.UI
             {
                 case EGameModi.LocalPC:
                 {
-                    SceneManager.LoadScene(m_localGameScene);
+                    SceneManager.LoadScene((int)ESceneNames.LocalGame);
                     break;
                 }
                 case EGameModi.LAN:
                 {
-                    Debug.Log($"Implement the {m_lanGameScene}, once the local scene is completed!");
-                    //SceneManager.LoadScene(m_lanGameScene);
+                    Debug.Log($"Implement the {ESceneNames.LanGame.ToString()}, once the local scene is completed!");
                     break;
                 }
                 case EGameModi.Internet:
                 {
-                    Debug.Log($"Implement the {m_internetGameScene}, once the local scene is completed!");
-                    //SceneManager.LoadScene(m_internetGameScene);
+                    Debug.Log($"Implement the {ESceneNames.NetGame.ToString()}, once the local scene is completed!");
                     break;
                 }
                 default:

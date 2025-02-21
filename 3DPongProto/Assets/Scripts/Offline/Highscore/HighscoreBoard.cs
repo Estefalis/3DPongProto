@@ -366,7 +366,7 @@ namespace ThreeDeePongProto.Shared.Highscores
 
         public void BackToStartMenu()
         {
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene((int)ESceneNames.StartMenu);
         }
         #endregion
 

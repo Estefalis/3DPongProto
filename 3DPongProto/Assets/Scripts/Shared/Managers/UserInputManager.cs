@@ -6,6 +6,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
+public enum ESceneNames
+{
+    StartMenu,
+    LocalGame,
+    LanGame,
+    NetGame
+}
+
 namespace ThreeDeePongProto.Shared.Managers
 {
     public class UserInputManager : MonoBehaviour
@@ -18,7 +26,6 @@ namespace ThreeDeePongProto.Shared.Managers
         private MenuManager m_menuManager;
 
         private Transform m_playfieldParent;
-        private bool isInGameScene;  //True, while being in a GameScene.
 
         private const string m_gameScene = "GameScene";
         private const string m_keyboardScheme = "KeyboardMouse", m_keyboardDevice = "Keyboard";
@@ -95,22 +102,28 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            isInGameScene = scene.name.Contains(m_gameScene) ? isInGameScene = true : isInGameScene = false;
+            int sceneIndex = scene.buildIndex;
 
-            switch (isInGameScene)
+            switch (sceneIndex)
             {
-                case true:
+                case 0:
+                {
+                    //RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.UserInterface);
+                    CleanupPlayers();
+                    SetMenuPlayerInput();
+                    break;
+                }
+                case 1:
                 {
                     //RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.PlayerActions);
                     m_playfieldParent = FindObjectOfType<LocalMatchManager>().m_PlayfieldParent;   //Public getter => private Transform.
                     InstantiatePlayer();
                     break;
                 }
-                case false:
+                case 2:
+                case 3:
                 {
-                    //RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.UserInterface);
-                    CleanupPlayers();
-                    SetMenuPlayerInput();
+                    Debug.Log("Lan- and NetGames still have to get thought about!");
                     break;
                 }
             }

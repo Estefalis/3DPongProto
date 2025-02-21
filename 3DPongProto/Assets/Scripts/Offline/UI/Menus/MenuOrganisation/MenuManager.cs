@@ -47,7 +47,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #region GameScene-Variables
         [Header("GameScene Variables")]
         [SerializeField] private Button m_hiddenFinishButton;
-        private const string m_startMenuScene = "StartMenuScene";
+        //private const string m_startMenuScene = "StartMenu";
 
         //LocalMatchManager unpauses the Game. - CharacterMainController restarts Coroutines and Inputsystem.PlayerActions.
         public static event Action ResumeTheGame;
@@ -255,7 +255,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             OnLoadMainScene?.Invoke();
             //Action to reset timescale inside the Matchmanager. And other possible settings on returning to the main menu scene.
-            SceneManager.LoadScene(m_startMenuScene);
+            SceneManager.LoadScene((int)ESceneNames.StartMenu);
         }
 
         public void EndOfInfiniteMatch()
