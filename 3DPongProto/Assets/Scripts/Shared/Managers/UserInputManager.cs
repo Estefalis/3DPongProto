@@ -4,20 +4,12 @@ using System.Collections.Generic;
 using ThreeDeePongProto.Offline.UI.Menu;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Users;
 using UnityEngine.SceneManagement;
 
 namespace ThreeDeePongProto.Shared.Managers
 {
     public class UserInputManager : MonoBehaviour
     {
-        private enum PlayerInputUsage
-        {
-            KeepOriginal,
-            CreateNew
-        }
-        [SerializeField] private PlayerInputUsage m_playerInputUsage = PlayerInputUsage.CreateNew;
-
         public static UserInputManager Instance { get; private set; }
 
         [SerializeField] private PlayerInputManager m_playerInputManager;
@@ -34,7 +26,7 @@ namespace ThreeDeePongProto.Shared.Managers
         private const string m_uiActionMap = "UserInterface";
 
         private readonly List<InputDevice> m_usableGamepads = new();
-        private Dictionary<int, InputUser> m_playerUsers = new();
+        //private Dictionary<int, InputUser> m_playerUsers = new();
 
         public static event Action<int> ACheckForPlayerInput;
 
@@ -62,7 +54,11 @@ namespace ThreeDeePongProto.Shared.Managers
             SetUpPlayerInputManager(m_playerInputManager);
 
             m_usableGamepads.Clear();
-            m_usableGamepads.Add(GetConnectedGamepads());
+            for (int i = 0; i < Gamepad.all.Count; i++)
+            {
+                if (Gamepad.all[i] != null && !m_usableGamepads.Contains(Gamepad.all[i]))
+                    m_usableGamepads.Add(Gamepad.all[i]);
+            }
         }
 
         private void OnEnable()
@@ -125,93 +121,31 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             uint playerCount = (uint)m_matchUIStates.EPlayerAmount;
 
-            switch (m_playerInputUsage)
+            for (int np = 0; np < playerCount; np++)
             {
-                case PlayerInputUsage.KeepOriginal:
-                {
-                    for (int pk = 0; pk < playerCount; pk++)
-                    {
-                        GameObject playerPrefab = Instantiate(m_matchValues.PlayerSOData[pk].Prefab, m_playfieldParent);
-                        if (!playerPrefab.TryGetComponent<PlayerInput>(out var playerInput))
-                            playerInput = playerPrefab.AddComponent<PlayerInput>();
+                InputDevice[] assignedDevices = GetDevicesForPlayer(np);
+                string setControlScheme = assignedDevices[0] is Gamepad ? m_gamePadScheme : m_keyboardScheme;
 
-                        ConfigureExistingPlayerInput(playerInput, pk);
-                    }
-                    break;
-                }
-                case PlayerInputUsage.CreateNew:
-                {
-                    for (int pn = 0; pn < playerCount; pn++)
-                    {
-                        InputDevice assignedDevice = GetDeviceForPlayer(pn);
-                        string setControlScheme = assignedDevice is Gamepad ? m_gamePadScheme : m_keyboardScheme;
+                PlayerInput newPlayerInput = PlayerInput.Instantiate(m_matchValues.PlayerSOData[np].Prefab, controlScheme: setControlScheme, pairWithDevice: assignedDevices[0]);
 
-                        PlayerInput newPlayerInput = PlayerInput.Instantiate(m_matchValues.PlayerSOData[pn].Prefab, controlScheme: setControlScheme, pairWithDevice: assignedDevice);
+                GameObject newPlayer = newPlayerInput.gameObject;
+                newPlayer.transform.SetParent(m_playfieldParent);
+                //Debug.Log($"Player {np + 1} instantiated with {setControlScheme} ({string.Join(", ", assignedDevices.Select(d => d.name))})");
 
-                        GameObject newPlayer = newPlayerInput.gameObject;
-                        newPlayer.transform.SetParent(m_playfieldParent);
-                        Debug.Log($"✅ Player {pn + 1} instantiated with {setControlScheme} ({assignedDevice?.name ?? "No device!"})");
-
-                        //Waits a frame until old _playerInput component is destroyed.
-                        StartCoroutine(DelayedPlayerInputSetup(newPlayer, pn, assignedDevice));
-                    }
-                    break;
-                }
+                //Waits a frame until old _playerInput component is destroyed.
+                StartCoroutine(DelayedPlayerInputSetup(newPlayer, np, assignedDevices));
             }
-        }
-
-        private void ConfigureExistingPlayerInput(PlayerInput _playerInput, int _playerIndex)
-        {
-            //Load and set the InputActionAsset.
-            if (_playerInput.actions == null)
-                _playerInput.actions = Resources.Load<InputActionAsset>("InputActions/PlayerInputActions");
-
-            InputDevice assignedDevice = Keyboard.current;  //Player1 (WASD) | Player2 (Arrow-Keys) | Player3 (TFGH) | Player4 (IJKL).
-            InputDevice mouseDevice = Mouse.current;
-            string controlScheme = m_keyboardScheme;
-
-            bool keyboardAsDefault = m_matchValues.PlayerSOData[_playerIndex].DefaultKeyboard || m_usableGamepads.Count < 1;
-
-            if (!keyboardAsDefault)             //DefaultKeyboard == false!
-            {
-                if (Gamepad.all.Count > 0)  //If atleast one gamepad is registered...
-                {
-                    assignedDevice = GetAvailableGamepad();    //...get the first available gamepad and remove it from the list.                    
-                    controlScheme = m_gamePadScheme;
-
-                    _playerInput.SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice });
-                    Debug.Log($"Player {_playerIndex + 1} uses a {assignedDevice?.name ?? "No"}-Device and a shared Mouse. TotalGamepads: {Gamepad.all.Count} | UsableGamepads: {m_usableGamepads.Count} | KeyboardAsDefault: {keyboardAsDefault}");
-                }
-                else
-                {
-                    _playerInput.SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice, mouseDevice });
-                    Debug.Log($"Player {_playerIndex + 1} uses a {assignedDevice?.name ?? "No"}-Device and a shared Mouse. TotalGamepads: {Gamepad.all.Count} | UsableGamepads: {m_usableGamepads.Count} | KeyboardAsDefault: {keyboardAsDefault}");
-                }
-            }
-            else
-            {
-                _playerInput.SwitchCurrentControlScheme(controlScheme, new[] { assignedDevice, mouseDevice });
-                Debug.Log($"Player {_playerIndex + 1} uses a {assignedDevice?.name ?? "No"}-Device and a shared Mouse. TotalGamepads: {Gamepad.all.Count} | UsableGamepads: {m_usableGamepads.Count} | KeyboardAsDefault: {keyboardAsDefault}");
-            }
-
-            //Force activation of PlayerActions.
-            _playerInput.SwitchCurrentActionMap("PlayerActions");
-            _playerInput.neverAutoSwitchControlSchemes = false;
-            //Set the notificationBehavior of the PlayerInput component.
-            _playerInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
-
-            ACheckForPlayerInput?.Invoke(_playerIndex);
         }
 
         #region NewPlayerInput-Setup
-        private IEnumerator DelayedPlayerInputSetup(GameObject _playerPrefab, int _playerIndex, InputDevice _assignedDevice)
+        private IEnumerator DelayedPlayerInputSetup(GameObject _playerPrefab, int _playerIndex, InputDevice[] _assignedDevices)
         {
             yield return null;  //Wait until next frame.
 
-            ConfigureNewPlayerInput(_playerPrefab, _playerIndex, _assignedDevice);
+            ConfigureNewPlayerInput(_playerPrefab, _playerIndex, _assignedDevices);
         }
 
-        private void ConfigureNewPlayerInput(GameObject _playerPrefab, int _playerIndex, InputDevice _assignedDevice)
+        private void ConfigureNewPlayerInput(GameObject _playerPrefab, int _playerIndex, InputDevice[] _assignedDevices)
         {
             if (!_playerPrefab.TryGetComponent<PlayerInput>(out var playerInput))
             {
@@ -221,112 +155,46 @@ namespace ThreeDeePongProto.Shared.Managers
 
             //Load and set the InputActionAsset.
             playerInput.actions = Resources.Load<InputActionAsset>("InputActions/PlayerInputActions");
+            //Keep no Input-Device allocation. (Do not force Gamepad allocation!)
+            playerInput.defaultControlScheme = null;
+            playerInput.neverAutoSwitchControlSchemes = false;
             //How the PlayerInput component invokes events.
             playerInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
 
-            //Keep no Input-Device allocation. (Do not force Gamepad allocation!)
-            playerInput.defaultControlScheme = null;
-            playerInput.neverAutoSwitchControlSchemes = true;
+            string controlScheme = _assignedDevices[0] is Gamepad ? m_gamePadScheme : m_keyboardScheme;
 
-            string controlScheme = _assignedDevice is Gamepad ? m_gamePadScheme : m_keyboardScheme;
-            Debug.Log($"🎮 Player {_playerIndex + 1} uses {controlScheme} mit {_assignedDevice?.name ?? "kein Gerät"}");
-
-            //InputDevice[] assignedDevices;
-            //if (Gamepad.all.Count > _playerIndex)
-            //{
-            //    //Allocate gamepad to _playerPrefab, if one is available.
-            //    assignedDevices = new InputDevice[] { Gamepad.all[_playerIndex] };
-            //    controlScheme = m_gamePadScheme;
-            //}
-            //else
-            //{
-            //    //Else allocate keyboard and mouse.
-            //    assignedDevices = new InputDevice[] { Keyboard.current, Mouse.current };
-            //    controlScheme = m_keyboardScheme;
-            //}
-
-            ////Manual Pairing with InputUser.
-            //if (!playerInput.user.valid)
-            //{
-            //    //Pair user with device and save it in a dictionary.
-            //    InputUser newUser = InputUser.PerformPairingWithDevice(assignedDevices[0]);
-
-            //    if (m_playerUsers.ContainsKey(_playerIndex))
-            //        m_playerUsers[_playerIndex] = newUser;      //If the user already exists, overwrite it.
-            //    else
-            //        m_playerUsers.Add(_playerIndex, newUser);   //Else add the entry.
-
-            //    Debug.Log($"✅ Player {_playerIndex + 1} owns UserID {newUser.index} with Device {assignedDevices[0]?.name}.");
-            //}
-
-            //Force activation of PlayerActions.
             playerInput.SwitchCurrentActionMap("PlayerActions");
-            ////Set _controlScheme without "Invalid user"-error.
-            //_playerInput.SwitchCurrentControlScheme(_controlScheme, assignedDevices);
-            StartCoroutine(SwitchControlSchemeNextFrame(playerInput, controlScheme, _assignedDevice));
-
+            StartCoroutine(SwitchControlSchemeNextFrame(playerInput, controlScheme, _assignedDevices));
+            //Debug.Log($"Player {_playerIndex} owns PlayerID {playerInput.playerIndex} & received ID {_playerIndex} with active ActionMap: {playerInput.currentActionMap.name}");
             ACheckForPlayerInput?.Invoke(_playerIndex);
         }
 
-        private IEnumerator SwitchControlSchemeNextFrame(PlayerInput _playerInput, string _controlScheme, InputDevice _assignedDevice)
+        private IEnumerator SwitchControlSchemeNextFrame(PlayerInput _playerInput, string _controlScheme, InputDevice[] _assignedDevices)
         {
             yield return null;   //Wait until next frame to ensure, that PlayerInput is registered right.
 
             if (_playerInput.user.valid)
             {
-                _playerInput.SwitchCurrentControlScheme(_controlScheme, new InputDevice[] { _assignedDevice });
-                Debug.Log($"✅ Player {_playerInput.playerIndex + 1}: Control Scheme = {_controlScheme}, Device = {_assignedDevice?.name}");
+                _playerInput.SwitchCurrentControlScheme(_controlScheme, _assignedDevices);
+                _playerInput.ActivateInput();   //Forces the inputsystem to use the assigned device.
+                //Debug.Log($"Player {_playerInput.playerIndex + 1}: ControlScheme: {_controlScheme} - Device(s): {string.Join(", ", _assignedDevices.Select(d => d.name))}.");
             }
             else
             {
-                Debug.LogError($"❌ No valid user on Player {_playerInput.playerIndex + 1}!");
+                Debug.LogError($"No valid user on Player {_playerInput.playerIndex + 1}!");
             }
         }
         #endregion
         #endregion
 
         #region Delegate_Methods
-        private InputDevice GetDeviceForPlayer(int playerIndex)
+        private InputDevice[] GetDevicesForPlayer(int _playerIndex)
         {
-            if (Gamepad.all.Count > playerIndex)
+            if (Gamepad.all.Count > _playerIndex)
             {
-                return Gamepad.all[playerIndex];    //If enough gamepads are available, return gamepad.
+                return new InputDevice[] { Gamepad.all[_playerIndex] };    //If enough gamepads are available, return gamepad.
             }
-            return Keyboard.current;                //Else return keyboard.
-        }
-
-        private InputDevice GetConnectedGamepads()
-        {
-            for (int i = 0; i < Gamepad.all.Count; i++)
-            {
-                if (Gamepad.all[i] != null && !m_usableGamepads.Contains(Gamepad.all[i]))
-                {
-                    return Gamepad.all[i];
-                }
-            }
-            return null;
-        }
-
-        private InputDevice GetAvailableGamepad()
-        {
-            for (int j = 0; j < Gamepad.all.Count; j++)
-            {
-                if (Gamepad.all[j] != null && m_usableGamepads.Contains(Gamepad.all[j]))
-                {
-                    m_usableGamepads.Remove(Gamepad.all[j]);
-                    return Gamepad.all[j];
-                }
-            }
-            return null;
-        }
-
-        public InputUser? GetUserByPlayerIndex(int playerIndex)
-        {
-            if (m_playerUsers.TryGetValue(playerIndex, out InputUser user))
-            {
-                return user;
-            }
-            return null;  // Falls kein User für den Index existiert
+            return new InputDevice[] { Keyboard.current, Mouse.current };  //Else return keyboard.
         }
         #endregion
 

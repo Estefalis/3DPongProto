@@ -90,10 +90,5 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerControllerVarP1
       objectReference: {fileID: 0}
-    - target: {fileID: 3286021005554631874, guid: ba00057dcc1283d429076dee8979ce96,
-        type: 3}
-      propertyPath: m_playerInput
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba00057dcc1283d429076dee8979ce96, type: 3}

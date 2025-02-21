@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1514124386352258762}
   - component: {fileID: 1514124386352258756}
-  - component: {fileID: -3533810296628387045}
+  - component: {fileID: 8126421233268192439}
   m_Layer: 0
   m_Name: PlayerControllerPrefab
   m_TagString: TpOne
@@ -61,7 +61,7 @@ MonoBehaviour:
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
   m_basicFieldValues: {fileID: 11400000, guid: b7c0516de58b3a240a6970d999010f71, type: 2}
---- !u!114 &-3533810296628387045
+--- !u!114 &8126421233268192439
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -1,6 +1,4 @@
-using System;
-using System.Collections;
-using System.Reflection;
+﻿using System;
 using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -34,7 +32,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private void OnDisable()
         {
             if (m_playerInput != null)
-                UnsubscribeToActions(m_playerInput);
+                UnsubscribeToActions(m_playerInput, m_playerInput.playerIndex);
 
             UserInputManager.ACheckForPlayerInput -= UserInputManagerSetPlayerInput;
             RebindManager.m_changeActiveActionMap -= OnInputManagerChangedActionMap;
@@ -43,7 +41,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private void OnDestroy()
         {
             if (m_playerInput != null)
-                UnsubscribeToActions(m_playerInput);
+                UnsubscribeToActions(m_playerInput, m_playerInput.playerIndex);
 
             UserInputManager.ACheckForPlayerInput -= UserInputManagerSetPlayerInput;
             RebindManager.m_changeActiveActionMap -= OnInputManagerChangedActionMap;
@@ -73,16 +71,31 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (m_playerInput != null)
             {
                 m_playerInput.GetComponent<PlayerInput>();
-                SubscribeToActions(m_playerInput);
+                SubscribeToActions(m_playerInput, m_playerInput.playerIndex);
             }
         }
 
-        private void SubscribeToActions(PlayerInput _playerInput)
+        private void SubscribeToActions(PlayerInput _playerInput, int _playerID)
         {
             //Subscribe on Actions.
-            var moveAction = _playerInput.actions[m_moveString];
-            moveAction.performed += OnMove;
-            moveAction.canceled += OnMoveCanceled;
+            switch (_playerID)
+            {
+                case 0:
+                {
+                    var moveAction = _playerInput.actions[m_moveString];
+                    moveAction.performed += OnMove;
+                    moveAction.canceled += OnMoveCanceled;
+                    break;
+                }
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                default:
+                    break;
+            }
 
             var rotateAction = _playerInput.actions[m_rotateString];
             rotateAction.performed += OnRotate;
@@ -91,12 +104,12 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             var pushAction = _playerInput.actions[m_pushString];
             pushAction.performed += OnPush;
 
+            var kickBallAction = _playerInput.actions[m_kickBallString];
+            kickBallAction.performed += OnKickBall;
+
             var zoomAction = _playerInput.actions[m_zoomString];
             zoomAction.performed += OnZoom;
             zoomAction.canceled += OnZoomCanceled;
-
-            var kickBallAction = _playerInput.actions[m_kickBallString];
-            kickBallAction.performed += OnKickBall;
 
             var mousePositionAction = _playerInput.actions[m_mousePositionString];
             mousePositionAction.performed += OnMousePosition;
@@ -105,42 +118,63 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             toggleGameMenuAction.performed += OnToggleMenu;
         }
 
-        private void UnsubscribeToActions(PlayerInput _playerInput)
+        private void UnsubscribeToActions(PlayerInput _playerInput, int _playerID)
         {
             //Unsubscribe on Actions.
-            var moveAction = m_playerInput.actions[m_moveString];
+            switch (_playerID)
+            {
+                case 0:
+                {
+            var moveAction = _playerInput.actions[m_moveString];
             moveAction.performed -= OnMove;
             moveAction.canceled -= OnMoveCanceled;
+                    break;
+                }
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                default:
+                    break;
+            }
 
-            var rotateAction = m_playerInput.actions[m_rotateString];
+            var rotateAction = _playerInput.actions[m_rotateString];
             rotateAction.performed -= OnRotate;
             rotateAction.canceled -= OnRotateCanceled;
 
-            var pushAction = m_playerInput.actions[m_pushString];
+            var pushAction = _playerInput.actions[m_pushString];
             pushAction.performed -= OnPush;
 
-            var zoomAction = m_playerInput.actions[m_zoomString];
+            var kickBallAction = _playerInput.actions[m_kickBallString];
+            kickBallAction.performed -= OnKickBall;
+
+            var zoomAction = _playerInput.actions[m_zoomString];
             zoomAction.performed -= OnZoom;
             zoomAction.canceled -= OnZoomCanceled;
 
-            var kickBallAction = m_playerInput.actions[m_kickBallString];
-            kickBallAction.performed -= OnKickBall;
-
-            var mousePositionAction = m_playerInput.actions[m_mousePositionString];
+            var mousePositionAction = _playerInput.actions[m_mousePositionString];
             mousePositionAction.performed -= OnMousePosition;
 
-            var toggleGameMenuAction = m_playerInput.actions[m_toggleGameMenuString];
+            var toggleGameMenuAction = _playerInput.actions[m_toggleGameMenuString];
             toggleGameMenuAction.performed -= OnToggleMenu;
         }
 
         private void OnMove(InputAction.CallbackContext _callbackContext)
         {
+            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //    return;
             Vector2 moveVector = _callbackContext.ReadValue<Vector2>();
+            Debug.Log($"Player {m_playerController.m_playerId} Move-Input: {moveVector} von {_callbackContext.control.device.name}");
             m_playerController.m_playerMovement.SetInputVector(moveVector, m_playerController.m_playerId, false);
         }
 
         private void OnMoveCanceled(InputAction.CallbackContext _callbackContext)
         {
+            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //    return;
+
             Vector2 moveVector = Vector2.zero;
             m_playerController.m_playerMovement.SetInputVector(moveVector, m_playerController.m_playerId, false);
         }
@@ -148,24 +182,36 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         //Process 'Rotate'-Action.
         private void OnRotate(InputAction.CallbackContext _callbackContext)
         {
-            m_rotationVector = _callbackContext.ReadValue<Vector2>(); //Tempsave InputVector.
+            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //return;
+
+            m_rotationVector = _callbackContext.ReadValue<Vector2>();
         }
 
         private void OnRotateCanceled(InputAction.CallbackContext _callbackContext)
         {
+            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //    return;
+
             m_rotationVector = Vector2.zero; //Reset InputVector, once button is released/action is canceled.
         }
 
         //Process 'Push'-Action.
         private void OnPush(InputAction.CallbackContext _callbackContext)
         {
+            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //    return;
+
             var initializePush = _callbackContext.ReadValueAsButton();
             if (initializePush)
-                m_playerController.m_playerMovement.InitializePush(true);
+                m_playerController.m_playerMovement.InitializePush(true);    //Or m_playerController.m_playerId?
         }
 
         private void OnKickBall(InputAction.CallbackContext _callbackContext)
         {
+            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //    return;
+
             var kickBall = _callbackContext.ReadValueAsButton();
             if (kickBall)
                 m_KickBall?.Invoke(m_playerController.m_playerId);  //Tell the Ball, that it has been kicked! *kick*
@@ -173,23 +219,35 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnZoom(InputAction.CallbackContext _callbackContext)
         {
+            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //    return;
+
             Vector2 zoomVector = _callbackContext.ReadValue<Vector2>();
             m_playerController.m_playerCameraController.Zooming(zoomVector);
         }
 
         private void OnZoomCanceled(InputAction.CallbackContext _callbackContext)
         {
+            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //    return;
+
             m_playerController.m_playerCameraController.Zooming(Vector2.zero);
         }
 
         private void OnMousePosition(InputAction.CallbackContext _callbackContext)
         {
+            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //    return;
+
             Vector2 mouseVector = _callbackContext.ReadValue<Vector2>();
             m_sendMousePosition?.Invoke(mouseVector);
         }
 
         private void OnToggleMenu(InputAction.CallbackContext _callbackContext)
         {
+            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //    return;
+
             RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.UserInterface);
         }
 
