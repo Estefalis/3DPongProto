@@ -41,6 +41,15 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             UserInputManager.ACheckForPlayerInput -= UserInputManagerSetPlayerInput;
         }
 
+        //private void Update()
+        //{
+        //    //if (Gamepad.current != null)
+        //    //{
+        //    //    Vector2 moveInput = Gamepad.current.dpad.ReadValue();
+        //    //    Debug.Log($"Gamepad Input: {moveInput}");
+        //    //}
+        //}
+
         private void FixedUpdate()
         {
             //Use Rotation constantly.
@@ -76,9 +85,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             {
                 case 0:
                 {
-                    var moveAction = _playerInput.actions[m_moveString];
-                    moveAction.performed += OnMove;
-                    moveAction.canceled += OnMoveCanceled;
                     break;
                 }
                 case 1:
@@ -90,6 +96,10 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 default:
                     break;
             }
+
+            var moveAction = _playerInput.actions[m_moveString];
+            moveAction.performed += OnMove;
+            moveAction.canceled += OnMoveCanceled;
 
             var rotateAction = _playerInput.actions[m_rotateString];
             rotateAction.performed += OnRotate;
@@ -119,9 +129,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             {
                 case 0:
                 {
-                    var moveAction = _playerInput.actions[m_moveString];
-                    moveAction.performed -= OnMove;
-                    moveAction.canceled -= OnMoveCanceled;
                     break;
                 }
                 case 1:
@@ -133,6 +140,10 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 default:
                     break;
             }
+
+            var moveAction = _playerInput.actions[m_moveString];
+            moveAction.performed -= OnMove;
+            moveAction.canceled -= OnMoveCanceled;
 
             var rotateAction = _playerInput.actions[m_rotateString];
             rotateAction.performed -= OnRotate;
@@ -157,10 +168,19 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnMove(InputAction.CallbackContext _callbackContext)
         {
+            //Debug.Log($"Move event triggered for Player {m_playerController.m_playerId}");
+
+            //if (m_playerInput.user.id != m_playerInput.playerIndex)
+            //    Debug.Log($"PlayerInput.User.id: {m_playerInput.user.id} does not match PlayerInput.playerIndex: {m_playerInput.playerIndex}");
+
             //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //{
+            //    Debug.LogWarning($"Input mismatch: PlayerInput Index {m_playerInput.playerIndex}, Controller ID {m_playerController.m_playerId}");
             //    return;
+            //}
+
             Vector2 moveVector = _callbackContext.ReadValue<Vector2>();
-            Debug.Log($"Player {m_playerController.m_playerId} Move-Input: {moveVector} von {_callbackContext.control.device.name}");
+            //Debug.Log($"Player {m_playerController.m_playerId} Move-Input: {moveVector} von {_callbackContext.control.device.name}");
             m_playerController.m_playerMovement.SetInputVector(moveVector, m_playerController.m_playerId, false);
         }
 

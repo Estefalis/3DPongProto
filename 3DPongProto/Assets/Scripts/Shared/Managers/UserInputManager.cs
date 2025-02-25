@@ -81,6 +81,26 @@ namespace ThreeDeePongProto.Shared.Managers
             CharacterInputHandler.AMenuOpens -= OnMenuOpens;
         }
 
+        //public void DebugDevices()
+        //{
+        //    //Debug.Log("Debugging InputSystem...");
+
+        //    foreach (var player in PlayerInput.all)
+        //    {
+        //        Debug.Log($"Player {player.playerIndex} -> Device: {player.devices[0].name}, ControlScheme: {player.currentControlScheme}");
+        //    }
+
+        //    //foreach (var user in InputUser.all)
+        //    //{
+        //    //    Debug.Log($"User {user.index}: Device {user.pairedDevices[0].name} | Control Scheme: {user.controlScheme}");
+        //    //}
+
+        //    //foreach (var device in InputSystem.devices)
+        //    //{
+        //    //    Debug.Log($"Registered Device: {device.name} - {device.deviceId}");
+        //    //}
+        //}
+
         private void SetUpPlayerInputManager(PlayerInputManager _playerInputManager)
         {
             if (_playerInputManager == null)
@@ -119,7 +139,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 case 0:
                 {
                     CleanupPlayers();
-                    SetMenuPlayerInput();
+                    SetMenuInput();
                     break;
                 }
                 case 1:
@@ -171,8 +191,6 @@ namespace ThreeDeePongProto.Shared.Managers
         /// <param name="_sceneIndex"></param>
         private void OnReLoadScene(int _sceneIndex)
         {
-            //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             switch (_sceneIndex)
             {
                 case 0:
@@ -214,7 +232,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
                 GameObject newPlayer = newPlayerInput.gameObject;
                 newPlayer.transform.SetParent(m_playfieldParent);
-                //Debug.Log($"Player {np + 1} instantiated with {setControlScheme} ({string.Join(", ", assignedDevices.Select(d => d.name))})");
+                //Debug.Log($"Player {np} assigned device(s): {string.Join(", ", assignedDevices.Select(d => d.name))}");
 
                 //Waits a frame until old _playerInput component is destroyed.
                 StartCoroutine(DelayedPlayerInputSetup(newPlayer, np, assignedDevices));
@@ -245,11 +263,28 @@ namespace ThreeDeePongProto.Shared.Managers
             //How the PlayerInput component invokes events.
             playerInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
 
-            string controlScheme = _assignedDevices[0] is Gamepad ? m_gamePadScheme : m_keyboardScheme;
-
+            // **FIX**: If no valid device is assigned, check for an available Gamepad.
+            if (_assignedDevices == null || _assignedDevices.Length == 0 || _assignedDevices[0] == null)
+            {
+                Debug.LogWarning($"Player {_playerIndex} has no assigned device! Checking for available Gamepad...");
+                if (Gamepad.all.Count > 0)
+                {
+                    _assignedDevices = new InputDevice[] { Gamepad.all[0] };
+                    Debug.Log($"Player {_playerIndex} assigned to Gamepad: {Gamepad.all[0].name}");
+                }
+                else
+                {
+                    Debug.LogError($"No Gamepad found for Player {_playerIndex}, falling back to Keyboard.");
+                    _assignedDevices = new InputDevice[] { Keyboard.current };
+                }
+            }
+            Debug.Log($"curCtrlScheme: {playerInput.currentControlScheme} | User: {playerInput.user} | pairedDevice: {playerInput.user.pairedDevices.Count}");
+            //string controlScheme = _assignedDevices[0] is Gamepad ? m_gamePadScheme : m_keyboardScheme;
             playerInput.SwitchCurrentActionMap("PlayerActions");
-            StartCoroutine(SwitchControlSchemeNextFrame(playerInput, controlScheme, _assignedDevices));
-            //Debug.Log($"Player {_playerIndex} owns PlayerID {playerInput.playerIndex} & received ID {_playerIndex} with active ActionMap: {playerInput.currentActionMap.name}");
+            playerInput.ActivateInput();
+
+            StartCoroutine(SwitchControlSchemeNextFrame(playerInput, playerInput.currentControlScheme, _assignedDevices));
+            //Debug.Log($"Player {_playerIndex} with Device: {_assignedDevices[0].name}, ControlScheme: {controlScheme} & active ActionMap: {playerInput.currentActionMap.name}");
             ACheckForPlayerInput?.Invoke(_playerIndex);
         }
 
@@ -274,9 +309,16 @@ namespace ThreeDeePongProto.Shared.Managers
         #region Delegate_Methods
         private InputDevice[] GetDevicesForPlayer(int _playerIndex)
         {
-            if (Gamepad.all.Count > _playerIndex)
+            if (!m_matchValues.PlayerSOData[_playerIndex].DefaultKeyboard)
             {
-                return new InputDevice[] { Gamepad.all[_playerIndex] };    //If enough gamepads are available, return gamepad.
+                for (int uGp = 0; uGp < Gamepad.all.Count; uGp++)
+                {
+                    if (m_usableGamepads.Contains(Gamepad.all[uGp]))
+                    {
+                        m_usableGamepads.Remove(Gamepad.all[uGp]);
+                        return new InputDevice[] { Gamepad.all[uGp] };    //If enough gamepads are available, return gamepad.
+                    }
+                }
             }
             return new InputDevice[] { Keyboard.current, Mouse.current };  //Else return keyboard.
         }
@@ -288,7 +330,7 @@ namespace ThreeDeePongProto.Shared.Managers
             m_matchValues.PlayerSOData.Clear();
         }
 
-        private void SetMenuPlayerInput()
+        private void SetMenuInput()
         {
             m_menuManager = FindObjectOfType<MenuManager>();
             m_menuManager.TryGetComponent<PlayerInput>(out var menuInput);
