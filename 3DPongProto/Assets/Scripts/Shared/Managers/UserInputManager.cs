@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.PlayerCharacter;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 using UnityEngine.SceneManagement;
 
 public enum ESceneNames
@@ -81,25 +83,25 @@ namespace ThreeDeePongProto.Shared.Managers
             CharacterInputHandler.AMenuOpens -= OnMenuOpens;
         }
 
-        //public void DebugDevices()
-        //{
-        //    //Debug.Log("Debugging InputSystem...");
+        public void DebugDevices()
+        {
+            //Debug.Log("Debugging InputSystem...");
 
-        //    foreach (var player in PlayerInput.all)
-        //    {
-        //        Debug.Log($"Player {player.playerIndex} -> Device: {player.devices[0].name}, ControlScheme: {player.currentControlScheme}");
-        //    }
+            foreach (var player in PlayerInput.all)
+            {
+                Debug.Log($"PlayerID {player.playerIndex} -> Device: {player.devices[0].name}, ControlScheme: {player.currentControlScheme}");
+            }
 
-        //    //foreach (var user in InputUser.all)
-        //    //{
-        //    //    Debug.Log($"User {user.index}: Device {user.pairedDevices[0].name} | Control Scheme: {user.controlScheme}");
-        //    //}
+            //foreach (var user in InputUser.all)
+            //{
+            //    Debug.Log($"User {user.index}: Device {user.pairedDevices[0].name} | Control Scheme: {user.controlScheme}");
+            //}
 
-        //    //foreach (var device in InputSystem.devices)
-        //    //{
-        //    //    Debug.Log($"Registered Device: {device.name} - {device.deviceId}");
-        //    //}
-        //}
+            //foreach (var device in InputSystem.devices)
+            //{
+            //    Debug.Log($"Registered Device: {device.name} - {device.deviceId}");
+            //}
+        }
 
         private void SetUpPlayerInputManager(PlayerInputManager _playerInputManager)
         {
@@ -232,7 +234,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
                 GameObject newPlayer = newPlayerInput.gameObject;
                 newPlayer.transform.SetParent(m_playfieldParent);
-                //Debug.Log($"Player {np} assigned device(s): {string.Join(", ", assignedDevices.Select(d => d.name))}");
+                //Debug.Log($"PlayerID {np} assigned device(s): {string.Join(", ", assignedDevices.Select(d => d.name))}");
 
                 //Waits a frame until old _playerInput component is destroyed.
                 StartCoroutine(DelayedPlayerInputSetup(newPlayer, np, assignedDevices));
@@ -251,7 +253,7 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             if (!_playerPrefab.TryGetComponent<PlayerInput>(out var playerInput))
             {
-                Debug.LogError($"Player {_playerIndex}: No PlayerInput found!");
+                Debug.LogError($"PlayerID {_playerIndex}: No PlayerInput found!");
                 return;
             }
 
@@ -266,25 +268,24 @@ namespace ThreeDeePongProto.Shared.Managers
             // **FIX**: If no valid device is assigned, check for an available Gamepad.
             if (_assignedDevices == null || _assignedDevices.Length == 0 || _assignedDevices[0] == null)
             {
-                Debug.LogWarning($"Player {_playerIndex} has no assigned device! Checking for available Gamepad...");
+                Debug.LogWarning($"PlayerID {_playerIndex} has no assigned device! Checking for available Gamepad...");
                 if (Gamepad.all.Count > 0)
                 {
                     _assignedDevices = new InputDevice[] { Gamepad.all[0] };
-                    Debug.Log($"Player {_playerIndex} assigned to Gamepad: {Gamepad.all[0].name}");
+                    Debug.Log($"PlayerID {_playerIndex} assigned to Gamepad: {Gamepad.all[0].name}");
                 }
                 else
                 {
-                    Debug.LogError($"No Gamepad found for Player {_playerIndex}, falling back to Keyboard.");
+                    Debug.LogError($"No Gamepad found for PlayerID {_playerIndex}, falling back to Keyboard.");
                     _assignedDevices = new InputDevice[] { Keyboard.current };
                 }
             }
-            Debug.Log($"curCtrlScheme: {playerInput.currentControlScheme} | User: {playerInput.user} | pairedDevice: {playerInput.user.pairedDevices.Count}");
+            //Debug.Log($"curCtrlScheme: {playerInput.currentControlScheme} | User: {playerInput.user} | pairedDevice: {playerInput.user.pairedDevices.Count}");
             //string controlScheme = _assignedDevices[0] is Gamepad ? m_gamePadScheme : m_keyboardScheme;
             playerInput.SwitchCurrentActionMap("PlayerActions");
-            playerInput.ActivateInput();
 
             StartCoroutine(SwitchControlSchemeNextFrame(playerInput, playerInput.currentControlScheme, _assignedDevices));
-            //Debug.Log($"Player {_playerIndex} with Device: {_assignedDevices[0].name}, ControlScheme: {controlScheme} & active ActionMap: {playerInput.currentActionMap.name}");
+            //Debug.Log($"PlayerID {_playerIndex} with Device: {_assignedDevices[0].name}, ControlScheme: {controlScheme} & active ActionMap: {playerInput.currentActionMap.name}");
             ACheckForPlayerInput?.Invoke(_playerIndex);
         }
 
@@ -295,12 +296,13 @@ namespace ThreeDeePongProto.Shared.Managers
             if (_playerInput.user.valid)
             {
                 _playerInput.SwitchCurrentControlScheme(_controlScheme, _assignedDevices);
+                //InputUser.PerformPairingWithDevice(_assignedDevices[0], _playerInput.user);
                 _playerInput.ActivateInput();   //Forces the inputsystem to use the assigned device.
-                //Debug.Log($"Player {_playerInput.playerIndex + 1}: ControlScheme: {_controlScheme} - Device(s): {string.Join(", ", _assignedDevices.Select(d => d.name))}.");
+                //Debug.Log($"PlayerID {_playerInput.playerIndex}: ControlScheme: {_controlScheme} - assigned Device(s): {string.Join(", ", _playerInput.devices.Select(d => d.name))}.");
             }
             else
             {
-                Debug.LogError($"No valid user on Player {_playerInput.playerIndex + 1}!");
+                Debug.LogError($"No valid user on PlayerID {_playerInput.playerIndex}!");
             }
         }
         #endregion
