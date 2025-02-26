@@ -62,6 +62,8 @@ namespace ThreeDeePongProto.Shared.Managers
         private float m_matchStartTime, m_ballYPos;
         private Vector3 m_ballPopPos;
 
+        private const string m_uiActionMap = "UserInterface", m_playerActionMap = "PlayerActions";
+
         #region Properties-Access
         public float DefaultBackLineDistance { get => m_minimalBackLineDistance; }
         public float DefaultFrontLineDistance { get => m_minimalFrontLineDistance; }
@@ -116,7 +118,7 @@ namespace ThreeDeePongProto.Shared.Managers
             StartNextRound += LetsStartNextRound;
             StartWinProcedure += LetsStartWinProcedure;
 
-            CharacterInputHandler.AMenuOpens += PauseAndTimeScale;
+            CharacterInputHandler.AOpenMenu += PauseAndTimeScale;
         }
 
         private void OnDisable()
@@ -137,7 +139,7 @@ namespace ThreeDeePongProto.Shared.Managers
             StartNextRound -= LetsStartNextRound;
             StartWinProcedure -= LetsStartWinProcedure;
 
-            CharacterInputHandler.AMenuOpens -= PauseAndTimeScale;
+            CharacterInputHandler.AOpenMenu -= PauseAndTimeScale;
         }
 
         #region Custom-Methods
@@ -350,7 +352,8 @@ namespace ThreeDeePongProto.Shared.Managers
 
                 StartWinProcedure?.Invoke();
                 return;
-            };
+            }
+            ;
 
             switch (m_nextRoundConditionIsMet)
             {
@@ -465,9 +468,8 @@ namespace ThreeDeePongProto.Shared.Managers
             SetPauseAndTimeScale(false);
         }
 
-        private void ResumeGame(int _)
+        private void ResumeGame()
         {
-            //May use the integer to treat scene timeScales different in the future.
             SetPauseAndTimeScale(false);
         }
 
@@ -492,9 +494,10 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         #region CallbackContexts
-        private void PauseAndTimeScale()
+        private void PauseAndTimeScale(string _actionMap)
         {
-            SetPauseAndTimeScale(true);
+            if (_actionMap == m_uiActionMap)
+                SetPauseAndTimeScale(true);
         }
         #endregion
     }

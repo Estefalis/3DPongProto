@@ -13,16 +13,17 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private Vector2 m_rotationVector;   //Saved current rotationInput.
 
         internal static event Action<int> AKickBall;
-        internal static event Action AMenuOpens;   //LocalMatchManager subscribed to react on menu open/close.
+        internal static event Action<string> AOpenMenu;   //LocalMatchManager subscribed to react on menu open/close.
         internal static event Action<Vector2> ASendMousePosition;
 
         private const string m_moveString = "Move", m_rotateString = "Rotate", m_pushString = "Push", m_zoomString = "Zoom";
         private const string m_kickBallString = "KickBall", m_toggleGameMenuString = "ToggleGameMenu", m_mousePositionString = "MousePosition";
+        private const string m_uiActionMap = "UserInterface", m_playerActionMap = "PlayerActions";
 
         private void Awake()
         {
+            UserInputManager.m_changeActiveActionMap += OnChangeActiveActionMap;
             UserInputManager.ACheckForPlayerInput += UserInputManagerSetPlayerInput;
-            //PlayerInputCheck(m_playerInput.playerIndex);  //Used before invoking with 'UserInputManager.ACheckForPlayerInput'.
         }
 
         private void OnDisable()
@@ -30,6 +31,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (m_playerInput != null)
                 UnsubscribeToActions(m_playerInput, m_playerInput.playerIndex);
 
+            UserInputManager.m_changeActiveActionMap -= OnChangeActiveActionMap;
             UserInputManager.ACheckForPlayerInput -= UserInputManagerSetPlayerInput;
         }
 
@@ -38,23 +40,20 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (m_playerInput != null)
                 UnsubscribeToActions(m_playerInput, m_playerInput.playerIndex);
 
+            UserInputManager.m_changeActiveActionMap -= OnChangeActiveActionMap;
             UserInputManager.ACheckForPlayerInput -= UserInputManagerSetPlayerInput;
         }
-
-        //private void Update()
-        //{
-        //    //if (Gamepad.current != null)
-        //    //{
-        //    //    Vector2 moveInput = Gamepad.current.dpad.ReadValue();
-        //    //    Debug.Log($"Gamepad Input: {moveInput}");
-        //    //}
-        //}
 
         private void FixedUpdate()
         {
             //Use Rotation constantly.
             if (m_rotationVector != Vector2.zero)
                 m_playerController.m_playerMovement.SetInputVector(m_rotationVector, m_playerController.m_playerId, true);
+        }
+
+        private void OnChangeActiveActionMap(string _actionMap)
+        {
+            m_playerInput.SwitchCurrentActionMap(_actionMap);
         }
 
         private void UserInputManagerSetPlayerInput(int _index)
@@ -170,12 +169,12 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             //Debug.Log($"Move event triggered for Player {m_playerController.m_playerId}");
 
-            //if (m_playerInput.user.id != m_playerInput.playerIndex)
-            //    Debug.Log($"PlayerInput.User.id: {m_playerInput.user.id} does not match PlayerInput.playerIndex: {m_playerInput.playerIndex}");
+            //if (m_menuInput.user.id != m_menuInput.playerIndex)
+            //    Debug.Log($"PlayerInput.User.id: {m_menuInput.user.id} does not match PlayerInput.playerIndex: {m_menuInput.playerIndex}");
 
-            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //if (m_menuInput.playerIndex != m_playerController.m_playerId)
             //{
-            //    Debug.LogWarning($"Input mismatch: PlayerInput Index {m_playerInput.playerIndex}, Controller ID {m_playerController.m_playerId}");
+            //    Debug.LogWarning($"Input mismatch: PlayerInput Index {m_menuInput.playerIndex}, Controller ID {m_playerController.m_playerId}");
             //    return;
             //}
 
@@ -186,7 +185,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnMoveCanceled(InputAction.CallbackContext _callbackContext)
         {
-            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //if (m_menuInput.playerIndex != m_playerController.m_playerId)
             //    return;
 
             Vector2 moveVector = Vector2.zero;
@@ -196,7 +195,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         //Process 'Rotate'-Action.
         private void OnRotate(InputAction.CallbackContext _callbackContext)
         {
-            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //if (m_menuInput.playerIndex != m_playerController.m_playerId)
             //return;
 
             m_rotationVector = _callbackContext.ReadValue<Vector2>();
@@ -204,7 +203,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnRotateCanceled(InputAction.CallbackContext _callbackContext)
         {
-            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //if (m_menuInput.playerIndex != m_playerController.m_playerId)
             //    return;
 
             m_rotationVector = Vector2.zero; //Reset InputVector, once button is released/action is canceled.
@@ -213,7 +212,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         //Process 'Push'-Action.
         private void OnPush(InputAction.CallbackContext _callbackContext)
         {
-            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //if (m_menuInput.playerIndex != m_playerController.m_playerId)
             //    return;
 
             var initializePush = _callbackContext.ReadValueAsButton();
@@ -223,7 +222,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnKickBall(InputAction.CallbackContext _callbackContext)
         {
-            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //if (m_menuInput.playerIndex != m_playerController.m_playerId)
             //    return;
 
             var kickBall = _callbackContext.ReadValueAsButton();
@@ -233,7 +232,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnZoom(InputAction.CallbackContext _callbackContext)
         {
-            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //if (m_menuInput.playerIndex != m_playerController.m_playerId)
             //    return;
 
             Vector2 zoomVector = _callbackContext.ReadValue<Vector2>();
@@ -242,7 +241,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnZoomCanceled(InputAction.CallbackContext _callbackContext)
         {
-            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //if (m_menuInput.playerIndex != m_playerController.m_playerId)
             //    return;
 
             m_playerController.m_playerCameraController.Zooming(Vector2.zero);
@@ -250,7 +249,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnMousePosition(InputAction.CallbackContext _callbackContext)
         {
-            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //if (m_menuInput.playerIndex != m_playerController.m_playerId)
             //    return;
 
             Vector2 mouseVector = _callbackContext.ReadValue<Vector2>();
@@ -259,11 +258,13 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnOpenMenu(InputAction.CallbackContext _callbackContext)
         {
-            //if (m_playerInput.playerIndex != m_playerController.m_playerId)
+            //if (m_menuInput.playerIndex != m_playerController.m_playerId)
             //    return;
 
+            UserInputManager.ToggleActionMaps(m_uiActionMap);
+            
             if (/*m_playerController.m_matchUIStates.EGameConnectModi == EGameConnectionModi.LocalPC && */m_playerController.m_playerId == 0)
-                AMenuOpens?.Invoke();
+                AOpenMenu?.Invoke(m_uiActionMap);
         }
     }
 }

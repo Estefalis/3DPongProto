@@ -3,10 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ThreeDeePongProto.Offline.UI.Menu;
-using ThreeDeePongProto.Shared.PlayerCharacter;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Users;
+using UnityEngine.InputSystem.Controls;
 using UnityEngine.SceneManagement;
 
 public enum ESceneNames
@@ -21,20 +20,36 @@ namespace ThreeDeePongProto.Shared.Managers
 {
     public class UserInputManager : MonoBehaviour
     {
+        private enum ActiveInputActionMap
+        {
+            None,
+            PlayerActions,
+            UserInterface
+        }
+
         public static UserInputManager Instance { get; private set; }
 
         [SerializeField] private PlayerInputManager m_playerInputManager;
         [SerializeField] private bool m_joinByDefault = true;
 
-        private MenuManager m_menuManager;
+        //private PlayerInput m_menuInput;
+        //private MenuManager m_menuManager;
         private Transform m_playfieldParent;
 
         private const string m_keyboardScheme = "KeyboardMouse", m_keyboardDevice = "Keyboard";
         private const string m_gamePadScheme = "Gamepad", m_gamepadDevice = "Gamepad";
-        private const string m_uiActionMap = "UserInterface";
+        private const string m_uiActionMap = "UserInterface", m_playerActionMap = "PlayerActions";
+        private string m_currentControlScheme;
+        private static string m_lastActionMap;
+
+        private InputDevice m_lastUsedDevice;
 
         private readonly List<InputDevice> m_usableGamepads = new();
-        public static event Action<int> ACheckForPlayerInput;
+        internal static event Action<int> ACheckForPlayerInput;
+        internal static event Action<string, InputDevice[]> AOnDeviceInput;
+        //internal static event Action<PlayerInputActions.PlayerActionsActions> ASetInitialSceneActionMap;
+        private static ActiveInputActionMap m_newActiveActionMap = ActiveInputActionMap.None;
+        public static event Action<string> m_changeActiveActionMap;
 
         #region Scriptable_Objects
         [SerializeField] private MatchUIStates m_matchUIStates;
@@ -43,7 +58,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void Awake()
         {
-            #region Singleton_pattern
+            #region Singleton_Pattern
             if (Instance == null)
             {
                 Instance = this;
@@ -71,38 +86,33 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             SceneManager.sceneLoaded += OnSceneManagerLoaded;
             MenuManager.AReLoadScene += OnReLoadScene;
-            MenuManager.AResumeTheGame += ResetActionMap;
-            CharacterInputHandler.AMenuOpens += OnMenuOpens;
+            //MenuManager.AResumeTheGame += ResetActionMap;
+            //CharacterInputHandler.AOpenMenu += OnMenuOpens;
         }
 
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneManagerLoaded;
             MenuManager.AReLoadScene -= OnReLoadScene;
-            MenuManager.AResumeTheGame -= ResetActionMap;
-            CharacterInputHandler.AMenuOpens -= OnMenuOpens;
+            //MenuManager.AResumeTheGame -= ResetActionMap;
+            //CharacterInputHandler.AOpenMenu -= OnMenuOpens;
         }
 
-        public void DebugDevices()
+        private void Update()
         {
-            //Debug.Log("Debugging InputSystem...");
-
-            foreach (var player in PlayerInput.all)
+            //KeyboardMouse-Input check.
+            if (Keyboard.current.anyKey.wasPressedThisFrame || Mouse.current.delta.ReadValue() != Vector2.zero)
             {
-                Debug.Log($"PlayerID {player.playerIndex} -> Device: {player.devices[0].name}, ControlScheme: {player.currentControlScheme}");
+                CustomControlSchemeSwitch(m_keyboardScheme, new InputDevice[] { Keyboard.current, Mouse.current });
             }
-
-            //foreach (var user in InputUser.all)
-            //{
-            //    Debug.Log($"User {user.index}: Device {user.pairedDevices[0].name} | Control Scheme: {user.controlScheme}");
-            //}
-
-            //foreach (var device in InputSystem.devices)
-            //{
-            //    Debug.Log($"Registered Device: {device.name} - {device.deviceId}");
-            //}
+            //Gamepad-Input check.
+            else if (Gamepad.current != null && GamepadPressed(out InputDevice gamepadDevice))
+            {
+                CustomControlSchemeSwitch(m_gamePadScheme, new InputDevice[] { gamepadDevice });
+            }
         }
 
+        #region PlayerInputManager-Configuration
         private void SetUpPlayerInputManager(PlayerInputManager _playerInputManager)
         {
             if (_playerInputManager == null)
@@ -124,8 +134,16 @@ namespace ThreeDeePongProto.Shared.Managers
                     break;
             }
         }
+        #endregion
 
-        #region On_Scene_Reload_Or_Resume
+        #region Old_PlayerInput-Configuration_on_Menu
+        private void SetInitialInput()
+        {
+            CustomControlSchemeSwitch(m_keyboardScheme, new InputDevice[] { Keyboard.current, Mouse.current });
+        }
+        #endregion
+
+        #region Non_InputAction_Subscriptions
         /// <summary>
         /// Method to react after a scene has been fully loaded beforehand.
         /// </summary>
@@ -134,14 +152,13 @@ namespace ThreeDeePongProto.Shared.Managers
         private void OnSceneManagerLoaded(Scene scene, LoadSceneMode mode)
         {
             int sceneIndex = scene.buildIndex;
-            ResetActionMap(sceneIndex);
+            //ResetActionMap(sceneIndex); //TODO: Move command to Buttons etc.
 
             switch (sceneIndex)
             {
                 case 0:
                 {
                     CleanupPlayers();
-                    SetMenuInput();
                     break;
                 }
                 case 1:
@@ -157,35 +174,54 @@ namespace ThreeDeePongProto.Shared.Managers
                     break;
                 }
             }
+
+            SetInitialInput();
         }
 
-        private void OnMenuOpens()
+        #region Change_Action_Maps
+        /// <summary>
+        /// Switches ActionMaps, if the active actionMap isn't equal to the submitted one. But does not disable the old actionMaps!
+        /// </summary>
+        /// <param name="_actionMap"></param>
+        internal static void ToggleActionMaps(string _actionMap)
         {
-            ResetActionMap((int)ESceneNames.StartMenu); //Abusing the StartMenu enum entry to toggle UserInterface ActionMap! Am lazy. <(o.o)>
+            if (m_lastActionMap == _actionMap)
+                return;
+
+            m_newActiveActionMap = _actionMap == ActiveInputActionMap.PlayerActions.ToString()
+                ? ActiveInputActionMap.PlayerActions : ActiveInputActionMap.UserInterface;
+
+            m_changeActiveActionMap?.Invoke(_actionMap);
         }
+        #endregion
+
+        //private void OnMenuOpens(string _actionMap)
+        //{
+        //    ResetActionMap((int)ESceneNames.StartMenu); //Abusing the StartMenu enum entry to toggle UserInterface ActionMap! Am lazy. <(o.o)>
+        //}
 
         /// <summary>
         /// Method to reSet the active ActionMap, depending on resuming to the game from the pauseMenu, or on scene reLoads.
         /// </summary>
         /// <param name="_index"></param>
-        private void ResetActionMap(int _index)
-        {
-            //TODO: Move ToggleActionMaps method into UserInputManager!
-            switch (_index)
-            {
-                case 0:
-                    RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.UserInterface);
-                    break;
-                case 1:
-                case 2:
-                case 3:
-                    RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.PlayerActions);
-                    break;
-                default:
-                    Debug.Log("Scene is not implemented, yet!");
-                    break;
-            }
-        }
+        //private void ResetActionMap(int _index)
+        //{
+        //    //TODO: Move ToggleActionMaps method into UserInputManager!
+        //    switch (_index)
+        //    {
+        //        case 0:
+        //            RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.UserInterface);
+        //            break;
+        //        case 1:
+        //        case 2:
+        //        case 3:
+        //            //RebindManager.ToggleActionMaps(RebindManager.m_PlayerInputActions.PlayerActions);
+        //            break;
+        //        default:
+        //            Debug.Log("Scene is not implemented, yet!");
+        //            break;
+        //    }
+        //}
 
         /// <summary>
         /// Method to receive the buildIndex of the scene that shall be reloaded.
@@ -220,7 +256,7 @@ namespace ThreeDeePongProto.Shared.Managers
         }
         #endregion
 
-        #region Instantiate_and_configurate_Player_and_PlayerInput
+        #region Instantiate_and_Configurate_Player_PlayerInput
         private void InstantiatePlayer()
         {
             uint playerCount = (uint)m_matchUIStates.EPlayerAmount;
@@ -241,7 +277,7 @@ namespace ThreeDeePongProto.Shared.Managers
             }
         }
 
-        #region NewPlayerInput-Setup
+        #region Setup-Delay
         private IEnumerator DelayedPlayerInputSetup(GameObject _playerPrefab, int _playerIndex, InputDevice[] _assignedDevices)
         {
             yield return null;  //Wait until next frame.
@@ -282,7 +318,7 @@ namespace ThreeDeePongProto.Shared.Managers
             }
             //Debug.Log($"curCtrlScheme: {playerInput.currentControlScheme} | User: {playerInput.user} | pairedDevice: {playerInput.user.pairedDevices.Count}");
             //string controlScheme = _assignedDevices[0] is Gamepad ? m_gamePadScheme : m_keyboardScheme;
-            playerInput.SwitchCurrentActionMap("PlayerActions");
+            playerInput.SwitchCurrentActionMap(m_playerActionMap);
 
             StartCoroutine(SwitchControlSchemeNextFrame(playerInput, playerInput.currentControlScheme, _assignedDevices));
             //Debug.Log($"PlayerID {_playerIndex} with Device: {_assignedDevices[0].name}, ControlScheme: {controlScheme} & active ActionMap: {playerInput.currentActionMap.name}");
@@ -324,6 +360,23 @@ namespace ThreeDeePongProto.Shared.Managers
             }
             return new InputDevice[] { Keyboard.current, Mouse.current };  //Else return keyboard.
         }
+
+        private bool GamepadPressed(out InputDevice _gamepadDevice)
+        {
+            foreach (var gamepad in Gamepad.all)
+            {
+                foreach (var control in gamepad.allControls)
+                {
+                    if (control is ButtonControl button && button.wasPressedThisFrame)
+                    {
+                        _gamepadDevice = gamepad;
+                        return true;
+                    }
+                }
+            }
+            _gamepadDevice = null;
+            return false;
+        }
         #endregion
 
         private void CleanupPlayers()
@@ -332,23 +385,45 @@ namespace ThreeDeePongProto.Shared.Managers
             m_matchValues.PlayerSOData.Clear();
         }
 
-        private void SetMenuInput()
+        private void CustomControlSchemeSwitch(string _newControlScheme, InputDevice[] _newDevices)
         {
-            m_menuManager = FindObjectOfType<MenuManager>();
-            m_menuManager.TryGetComponent<PlayerInput>(out var menuInput);
-
-            if (menuInput == null)
+            switch (m_currentControlScheme == _newControlScheme)
             {
-                menuInput = m_menuManager.gameObject.AddComponent<PlayerInput>();
-                menuInput.actions = Resources.Load<InputActionAsset>("InputActions/PlayerInputActions");
-                menuInput.defaultActionMap = m_uiActionMap;
-                //Enable active ControlScheme switch.
-                menuInput.neverAutoSwitchControlSchemes = false;
-                //Set the notificationBehavior of the PlayerInput component.
-                menuInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
-            }
+                case true:
+                    return;
+                case false:
+                {
+                    m_currentControlScheme = _newControlScheme;
+                    m_lastUsedDevice = _newDevices[0];
 
-            menuInput.SwitchCurrentActionMap(m_uiActionMap);
+                    AOnDeviceInput(_newControlScheme, _newDevices);
+                    //Debug.Log($"Switched to: {_newControlScheme} | Devices: {string.Join(", ", _newDevices.Select(d => d.name))}");
+
+                    break;
+                }
+            }
         }
+
+        #region Debug-Methods
+        //public void DebugDevices()
+        //{
+        //    //Debug.Log("Debugging InputSystem...");
+
+        //    foreach (var player in PlayerInput.all)
+        //    {
+        //        Debug.Log($"PlayerID {player.playerIndex} -> Device: {player.devices[0].name}, ControlScheme: {player.currentControlScheme}");
+        //    }
+
+        //    //foreach (var user in InputUser.all)
+        //    //{
+        //    //    Debug.Log($"User {user.index}: Device {user.pairedDevices[0].name} | Control Scheme: {user.controlScheme}");
+        //    //}
+
+        //    //foreach (var device in InputSystem.devices)
+        //    //{
+        //    //    Debug.Log($"Registered Device: {device.name} - {device.deviceId}");
+        //    //}
+        //}
+        #endregion
     }
 }
