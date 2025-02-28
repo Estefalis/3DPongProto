@@ -22,7 +22,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void Awake()
         {
-            UserInputManager.m_changeActiveActionMap += OnChangeActiveActionMap;
+            UserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
             UserInputManager.ACheckForPlayerInput += UserInputManagerSetPlayerInput;
         }
 
@@ -31,7 +31,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (m_playerInput != null)
                 UnsubscribeToActions(m_playerInput, m_playerInput.playerIndex);
 
-            UserInputManager.m_changeActiveActionMap -= OnChangeActiveActionMap;
+            UserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
             UserInputManager.ACheckForPlayerInput -= UserInputManagerSetPlayerInput;
         }
 
@@ -40,7 +40,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (m_playerInput != null)
                 UnsubscribeToActions(m_playerInput, m_playerInput.playerIndex);
 
-            UserInputManager.m_changeActiveActionMap -= OnChangeActiveActionMap;
+            UserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
             UserInputManager.ACheckForPlayerInput -= UserInputManagerSetPlayerInput;
         }
 

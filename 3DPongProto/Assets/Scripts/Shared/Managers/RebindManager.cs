@@ -158,7 +158,7 @@ namespace ThreeDeePongProto.Shared.Managers
             //m_PlayerInputActions.Disable();
             //_receivedActionMap.Enable();
 
-            //m_changeActiveActionMap?.Invoke(_receivedActionMap);
+            //AChangeActiveActionMap?.Invoke(_receivedActionMap);
             #endregion
 
             if (_receivedActionMap.enabled)

@@ -95,7 +95,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             CharacterInputHandler.AOpenMenu += OnPlayerOpensMenu;
             AResumeTheGame += OnResumeTheGame;
-            UserInputManager.m_changeActiveActionMap += OnChangeActiveActionMap;
+            UserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
             UserInputManager.AOnDeviceInput += OnUserHandledDevice;
         }
 
@@ -112,7 +112,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             CharacterInputHandler.AOpenMenu -= OnPlayerOpensMenu;
             AResumeTheGame -= OnResumeTheGame;
-            UserInputManager.m_changeActiveActionMap -= OnChangeActiveActionMap;
+            UserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
             UserInputManager.AOnDeviceInput -= OnUserHandledDevice;
 
             InputActionMap uiActionMap = m_menuInput.actions.FindActionMap(m_uiActionMap, true);
@@ -131,7 +131,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             CharacterInputHandler.AOpenMenu -= OnPlayerOpensMenu;
             AResumeTheGame -= OnResumeTheGame;
-            UserInputManager.m_changeActiveActionMap -= OnChangeActiveActionMap;
+            UserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
             UserInputManager.AOnDeviceInput -= OnUserHandledDevice;
 
             InputActionMap uiActionMap = m_menuInput.actions.FindActionMap(m_uiActionMap, true);

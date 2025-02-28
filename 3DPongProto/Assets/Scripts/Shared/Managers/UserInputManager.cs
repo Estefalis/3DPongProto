@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using ThreeDeePongProto.Offline.UI.Menu;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -49,7 +48,7 @@ namespace ThreeDeePongProto.Shared.Managers
         internal static event Action<string, InputDevice[]> AOnDeviceInput;
         //internal static event Action<PlayerInputActions.PlayerActionsActions> ASetInitialSceneActionMap;
         private static ActiveInputActionMap m_newActiveActionMap = ActiveInputActionMap.None;
-        public static event Action<string> m_changeActiveActionMap;
+        public static event Action<string> AChangeActiveActionMap;
 
         #region Scriptable_Objects
         [SerializeField] private MatchUIStates m_matchUIStates;
@@ -152,7 +151,6 @@ namespace ThreeDeePongProto.Shared.Managers
         private void OnSceneManagerLoaded(Scene scene, LoadSceneMode mode)
         {
             int sceneIndex = scene.buildIndex;
-            //ResetActionMap(sceneIndex); //TODO: Move command to Buttons etc.
 
             switch (sceneIndex)
             {
@@ -191,7 +189,7 @@ namespace ThreeDeePongProto.Shared.Managers
             m_newActiveActionMap = _actionMap == ActiveInputActionMap.PlayerActions.ToString()
                 ? ActiveInputActionMap.PlayerActions : ActiveInputActionMap.UserInterface;
 
-            m_changeActiveActionMap?.Invoke(_actionMap);
+            AChangeActiveActionMap?.Invoke(_actionMap);
         }
         #endregion
 
