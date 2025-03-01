@@ -54,7 +54,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         public static event Action<int> AReLoadScene;       //UserInputManager with central SceneManager.LoadScene().
         public static event Action AEndInfiniteMatch;
 
-        private const string m_keyboardScheme = "KeyboardMouse", m_keyboardDevice = "Keyboard";
+        private const string m_keyboardMouse = "KeyboardMouse", m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3", m_keyboardDevice = "Keyboard";
         private const string m_uiActionMap = "UserInterface", m_playerActionMap = "PlayerActions";
         private string m_currentControlScheme;
         #endregion
@@ -205,11 +205,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_menuInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
 
             m_menuInput.SwitchCurrentActionMap(m_uiActionMap);
-            m_menuInput.defaultControlScheme = m_keyboardScheme;
-            m_currentControlScheme = m_keyboardScheme;
+            m_menuInput.defaultControlScheme = m_keyboardMouse;
+            m_currentControlScheme = m_keyboardMouse;
 
             ////Set Keyboard as standard-device.
-            //CustomControlSchemeSwitch(m_keyboardScheme, new InputDevice[] { Keyboard.current, Mouse.current });
+            //CustomControlSchemeSwitch(m_keyboardMouse, new InputDevice[] { Keyboard.current, Mouse.current });
         }
         #endregion
 

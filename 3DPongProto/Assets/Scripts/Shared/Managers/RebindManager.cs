@@ -42,7 +42,7 @@ namespace ThreeDeePongProto.Shared.Managers
         private const string m_cancelWithKeyboardButton = "<Keyboard>/escape";
         private const string m_cancelWithGamepadButton = "<Gamepad>/select";
 
-        private const string m_keyboardMouseScheme = "KeyboardMouse";           //Inputsystem's KeyboardMouse scheme. (groups)
+        private const string m_keyboardMouse = "KeyboardMouse", m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3", m_keyboardDevice = "Keyboard";
         private const string m_gamePadScheme = "Gamepad";                       //Inputsystem's Gamepad scheme. (groups)
 
         private const string m_keyboardPath = "Keyboard";                       //EffectivePath string.
@@ -194,7 +194,11 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             switch (_controlScheme)
             {
-                case m_keyboardMouseScheme:
+                case m_keyboardMouse:
+                case m_keyboardSchemePID0:
+                case m_keyboardSchemePID1:
+                case m_keyboardSchemePID2:
+                case m_keyboardSchemePID3:
                 {
                     break;
                 }
@@ -349,7 +353,11 @@ namespace ThreeDeePongProto.Shared.Managers
                 #region Rebind Save
                 switch (_controlScheme)
                 {
-                    case m_keyboardMouseScheme:
+                    case m_keyboardMouse:
+                    case m_keyboardSchemePID0:
+                    case m_keyboardSchemePID1:
+                    case m_keyboardSchemePID2:
+                    case m_keyboardSchemePID3:
                         SaveKeyboardIndexOverrides(_actionToRebind, _bindingIndex);
                         break;
                     case m_gamePadScheme:
@@ -382,7 +390,11 @@ namespace ThreeDeePongProto.Shared.Managers
 
             switch (_controlScheme)     //ONLY ONE cancelButton gets recognized in code at a time.
             {
-                case m_keyboardMouseScheme:
+                case m_keyboardMouse:
+                case m_keyboardSchemePID0:
+                case m_keyboardSchemePID1:
+                case m_keyboardSchemePID2:
+                case m_keyboardSchemePID3:
                     rebind.WithCancelingThrough(m_cancelWithKeyboardButton);
                     break;
                 case m_gamePadScheme:
@@ -420,7 +432,11 @@ namespace ThreeDeePongProto.Shared.Managers
                 #region Compare ActionBindings in the actionMap.
                 switch (_controlScheme)
                 {
-                    case m_keyboardMouseScheme:
+                    case m_keyboardMouse:
+                    case m_keyboardSchemePID0:
+                    case m_keyboardSchemePID1:
+                    case m_keyboardSchemePID2:
+                    case m_keyboardSchemePID3:
                     {
                         if (!binding.isComposite)                                                   //Excludes Composites.
                         {
@@ -594,7 +610,11 @@ namespace ThreeDeePongProto.Shared.Managers
             //Sending Guid as method arguments got replaced by getting each Guid with '_inputAction.bindings[_bindingIndex].id;'.
             switch (_controlScheme)
             {
-                case m_keyboardMouseScheme:
+                case m_keyboardMouse:
+                case m_keyboardSchemePID0:
+                case m_keyboardSchemePID1:
+                case m_keyboardSchemePID2:
+                case m_keyboardSchemePID3:
                     ResetKeyboardIndexOverrides(inputAction, _bindingIndex);
                     break;
                 case m_gamePadScheme:
@@ -653,6 +673,7 @@ namespace ThreeDeePongProto.Shared.Managers
         /// <param name="_bindingIndex"></param>
         private static void SaveKeyboardIndexOverrides(InputAction _inputAction, int _bindingIndex)
         {
+            //TODO: Add m_keyboardSchemePID1 - 3 for Rebind-Saves.
             Guid keyIndexGuid = _inputAction.bindings[_bindingIndex].id;
             bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{keyIndexGuid}");
 
@@ -664,22 +685,51 @@ namespace ThreeDeePongProto.Shared.Managers
             #endregion
 
             #region Save data with unique Guid as Dict Key
-            if (_inputAction.bindings[_bindingIndex].groups == m_keyboardMouseScheme && !_inputAction.bindings[_bindingIndex].isComposite)
+            switch (_inputAction.bindings[_bindingIndex].groups)
             {
-                switch (dictHasKey)
+                case m_keyboardMouse:
+                case m_keyboardSchemePID0:
+                case m_keyboardSchemePID1:
+                case m_keyboardSchemePID2:
+                case m_keyboardSchemePID3:
                 {
-                    case true:
+                    if (!_inputAction.bindings[_bindingIndex].isComposite)
                     {
-                        m_keyboardRebindDict[$"{keyIndexGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!";
-                        break;
+                        switch (dictHasKey)
+                        {
+                            case true:
+                            {
+                                m_keyboardRebindDict[$"{keyIndexGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!";
+                                break;
+                            }
+                            case false:
+                            {
+                                m_keyboardRebindDict.Add($"{keyIndexGuid}", $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!");
+                                break;
+                            }
+                        }
                     }
-                    case false:
-                    {
-                        m_keyboardRebindDict.Add($"{keyIndexGuid}", $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!");
-                        break;
-                    }
+                    break;
                 }
+                default:
+                    break;
             }
+            //if (_inputAction.bindings[_bindingIndex].groups == m_keyboardSchemePID0 && !_inputAction.bindings[_bindingIndex].isComposite)
+            //{
+            //    switch (dictHasKey)
+            //    {
+            //        case true:
+            //        {
+            //            m_keyboardRebindDict[$"{keyIndexGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!";
+            //            break;
+            //        }
+            //        case false:
+            //        {
+            //            m_keyboardRebindDict.Add($"{keyIndexGuid}", $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!");
+            //            break;
+            //        }
+            //    }
+            //}
             #endregion
 
             m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
@@ -796,6 +846,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         internal static void LoadKeyRebindOverrides(string _actionName, int _bindingIndex)
         {
+            //TODO: Add m_keyboardSchemePID1 - 3 for Rebind-Load.
             if (m_PlayerInputActions == null)
             {
                 m_PlayerInputActions = new PlayerInputActions();
@@ -820,7 +871,11 @@ namespace ThreeDeePongProto.Shared.Managers
             switch (inputAction.bindings[_bindingIndex].groups)
             {
                 #region Using unique Guid to reapply the specific Keyboard Override
-                case m_keyboardMouseScheme:
+                case m_keyboardMouse:
+                case m_keyboardSchemePID0:
+                case m_keyboardSchemePID1:
+                case m_keyboardSchemePID2:
+                case m_keyboardSchemePID3:
                 {
                     foreach (var entry in m_keyboardRebindDict)
                     {
@@ -960,6 +1015,7 @@ namespace ThreeDeePongProto.Shared.Managers
         /// <param name="_inputAction"></param>
         private static void ResetCompositeOverrides(InputAction _inputAction)
         {
+            //TODO: Add m_keyboardSchemePID1 - 3 for Rebind-Resets.
             for (int i = 0; i < _inputAction.bindings.Count; i++)
             {
                 if (!_inputAction.bindings[i].isComposite)              //'!.isComposite' excludes 'WASD' parent.
@@ -970,7 +1026,11 @@ namespace ThreeDeePongProto.Shared.Managers
                     switch (deviceScheme)                               //Check and remove child's Guid "guided" by its deviceScheme.
                     {
                         #region Using unique Guid to remove the specific Keyboard Override in Composites
-                        case m_keyboardMouseScheme:
+                        case m_keyboardMouse:
+                        case m_keyboardSchemePID0:
+                        case m_keyboardSchemePID1:
+                        case m_keyboardSchemePID2:
+                        case m_keyboardSchemePID3:
                         {
                             bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{childIndexGuid}");
 

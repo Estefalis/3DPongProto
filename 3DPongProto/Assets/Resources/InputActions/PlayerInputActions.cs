@@ -57,15 +57,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""KickBall"",
-                    ""type"": ""Button"",
-                    ""id"": ""1637802a-7a64-4501-b2dc-90018ecdf3d7"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Zoom"",
                     ""type"": ""Value"",
                     ""id"": ""4d87abec-b5b1-491c-8e08-6723d51b35fa"",
@@ -75,13 +66,13 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""MousePosition"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""c4240df0-389e-40ee-b595-a3955f3a745d"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""name"": ""KickBall"",
+                    ""type"": ""Button"",
+                    ""id"": ""1637802a-7a64-4501-b2dc-90018ecdf3d7"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""CursorVisibility"",
@@ -91,6 +82,15 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MousePosition"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""c4240df0-389e-40ee-b595-a3955f3a745d"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""ToggleGameMenu"",
@@ -104,7 +104,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             ],
             ""bindings"": [
                 {
-                    ""name"": ""AD"",
+                    ""name"": ""LeftRight"",
                     ""id"": ""346878a8-9076-482d-8629-b68a587b6e01"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
@@ -120,7 +120,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -131,7 +131,73 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""c407677e-f0a4-4316-b44a-f36c318060fc"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID1"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""e5d84660-30e2-41ee-9402-c5817b84fae8"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID1"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""ca57ef6d-5531-40c5-b018-2a72cf28ae25"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID2"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""7f742e3c-5a19-4943-a257-eb6dfad44afc"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID2"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""d6e66ea3-52b6-4308-81b2-3d23b9eb1f09"",
+                    ""path"": ""<Keyboard>/j"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID3"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""4bae4313-3325-4c66-b7e6-88471040c006"",
+                    ""path"": ""<Keyboard>/l"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID3"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -153,7 +219,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/dpad/left"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -164,7 +230,73 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""8dc09f99-2847-4892-967f-68e7cd75a711"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamepadPlayerID1"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""882e8529-1716-4503-ac2d-0317ab2b9395"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamepadPlayerID1"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""1c6f8dad-0a64-43e7-8bc2-496bb39e83b9"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamepadPlayerID2"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""eb24aae3-2a4f-4a94-b7a9-485649bb27cb"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamepadPlayerID2"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""ea24317f-f7a3-4a83-953c-2be87e28010b"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamepadPlayerID3"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""14fe40f4-fb56-40d7-8832-2f5d16cf2994"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamepadPlayerID3"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -193,28 +325,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": """",
-                    ""id"": ""a96e739d-eeac-4337-9c56-392de5c04ef3"",
-                    ""path"": ""<Mouse>/scroll"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
-                    ""action"": ""Zoom"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b5b9eb3f-34b9-4009-89e5-ef5ccc92e964"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": ""StickDeadzone,ScaleVector2(y=50)"",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Zoom"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""7519f93b-d874-42b4-acca-04cbf931f577"",
                     ""path"": ""<Keyboard>/b"",
                     ""interactions"": """",
@@ -230,7 +340,40 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
+                    ""action"": ""KickBall"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bd567021-5536-4b04-a6c4-760135a5f982"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": ""GamepadPlayerID1"",
+                    ""action"": ""KickBall"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""113ad231-c155-458b-a655-86500ea7eb97"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": ""GamepadPlayerID2"",
+                    ""action"": ""KickBall"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a276caf2-0277-4c64-8d3b-4d5e268da5fd"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": ""GamepadPlayerID3"",
                     ""action"": ""KickBall"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -258,7 +401,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""QE"",
+                    ""name"": ""LeftRight"",
                     ""id"": ""f4b917d6-3a0d-461b-ae9d-feb0cc67df3c"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
@@ -274,7 +417,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -285,7 +428,73 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""9f50e097-62a5-431b-8898-a4294569bc5f"",
+                    ""path"": ""<Keyboard>/rightShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID1"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""e8e26b4d-51ce-4667-99f3-b967e8ed17e9"",
+                    ""path"": ""<Keyboard>/numpad1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID1"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""1e286529-36c0-43fc-9ae8-b1f6a665af7d"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID2"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""00f0d4dc-3756-43ca-b34b-7a4c35b64173"",
+                    ""path"": ""<Keyboard>/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID2"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""e2d2000f-6803-4ab8-93cc-6b1b430dcabb"",
+                    ""path"": ""<Keyboard>/u"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID3"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""7a3fe271-408b-4829-9d25-55508841dd46"",
+                    ""path"": ""<Keyboard>/o"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID3"",
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -307,7 +516,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -318,7 +527,73 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""6e1c9185-674b-4951-8c2c-6b98997c4fd1"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamepadPlayerID1"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""b4555a2d-2f4c-463a-951d-b2db33b0a06e"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamepadPlayerID1"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""d408da1f-b07a-47f3-8f47-a69e6331c587"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamepadPlayerID2"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""834586e3-e894-4808-848d-e5f2de9c99f3"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamepadPlayerID2"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""a0ece95e-934f-4320-847f-a4df43819ece"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamepadPlayerID3"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""08d7a146-67eb-4c07-90c2-7948ff512502"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamepadPlayerID3"",
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -329,7 +604,40 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
+                    ""action"": ""Push"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""451d04d4-3088-4db6-9fe7-836e0dd5c67b"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID1"",
+                    ""action"": ""Push"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5820e4fd-c149-4842-88ea-b496b2f935f4"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID2"",
+                    ""action"": ""Push"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9cb28fe0-b6cb-4fce-892b-77a1d9e5eac6"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID3"",
                     ""action"": ""Push"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -340,7 +648,40 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
+                    ""action"": ""Push"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bd35cfd6-9283-4c10-bd85-42c808e2c393"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": ""GamepadPlayerID1"",
+                    ""action"": ""Push"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d3ba5851-069e-45bd-bd31-7bb1da14e24c"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": ""GamepadPlayerID2"",
+                    ""action"": ""Push"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2910f4de-e6f4-4a44-abea-533946db1783"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": ""GamepadPlayerID3"",
                     ""action"": ""Push"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -364,6 +705,61 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""CursorVisibility"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a96e739d-eeac-4337-9c56-392de5c04ef3"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b5b9eb3f-34b9-4009-89e5-ef5ccc92e964"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": ""StickDeadzone,ScaleVector2(y=50)"",
+                    ""groups"": ""GamepadPlayerID0"",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e7740ce4-caa2-45ac-aee0-5c040ff95e0a"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": ""StickDeadzone,ScaleVector2(y=50)"",
+                    ""groups"": ""GamepadPlayerID1"",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0ddbe7a0-62f9-483c-a00c-4365a8b12995"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": ""StickDeadzone,ScaleVector2(y=50)"",
+                    ""groups"": ""GamepadPlayerID2"",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""924d24c8-c6f4-454d-ad9b-e6b522483c15"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": ""StickDeadzone,ScaleVector2(y=50)"",
+                    ""groups"": ""GamepadPlayerID3"",
+                    ""action"": ""Zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -545,7 +941,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""MoveP1ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -556,7 +952,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""MoveP1ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -578,7 +974,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/dpad/left"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""MoveP1ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -589,7 +985,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""MoveP1ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -600,7 +996,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""ToggleGameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -611,7 +1007,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/start"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""ToggleGameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -622,7 +1018,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Mouse>/scroll"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""Zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -633,7 +1029,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": ""StickDeadzone,ScaleVector2(y=50)"",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""Zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -644,7 +1040,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/b"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""PokeTheBall"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -655,7 +1051,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""PokeTheBall"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -666,7 +1062,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""MousePosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -677,7 +1073,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<VirtualMouse>/position"",
                     ""interactions"": """",
                     ""processors"": ""StickDeadzone"",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""MousePosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -699,7 +1095,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""RotateP1ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -710,7 +1106,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""RotateP1ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -732,7 +1128,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""RotateP1ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -743,7 +1139,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""RotateP1ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -754,7 +1150,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""PushP1ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -765,7 +1161,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""PushP1ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -776,7 +1172,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/t"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""PushP3ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -787,7 +1183,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""PushP3ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -809,7 +1205,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/leftArrow"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""MoveP2ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -820,7 +1216,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""MoveP2ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -842,7 +1238,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/dpad/left"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""MoveP2ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -853,7 +1249,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""MoveP2ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -875,7 +1271,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""MoveP3ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -886,7 +1282,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/h"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""MoveP3ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -908,7 +1304,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/dpad/left"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""MoveP3ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -919,7 +1315,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""MoveP3ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -941,7 +1337,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/r"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""RotateP3ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -952,7 +1348,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/y"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""RotateP3ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -974,7 +1370,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""RotateP3ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -985,7 +1381,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""RotateP3ZNeg"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1007,7 +1403,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/rightShift"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""RotateP2ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1018,7 +1414,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/numpad1"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""RotateP2ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1040,7 +1436,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""RotateP2ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1051,7 +1447,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""RotateP2ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1073,7 +1469,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/u"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""RotateP4ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1084,7 +1480,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/o"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""RotateP4ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1106,7 +1502,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""RotateP4ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1117,7 +1513,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""RotateP4ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1128,7 +1524,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/upArrow"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""PushP2ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -1139,7 +1535,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""PushP2ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -1150,7 +1546,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/i"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""PushP4ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -1161,7 +1557,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""PushP4ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -1183,7 +1579,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/j"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""MoveP4ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1194,7 +1590,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/l"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""MoveP4ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1216,7 +1612,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/dpad/left"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""MoveP4ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1227,7 +1623,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""MoveP4ZPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1238,7 +1634,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/c"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""CursorVisibility"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -1249,7 +1645,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/select"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID0"",
                     ""action"": ""CursorVisibility"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -1387,7 +1783,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/dpad/up"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Gamepad"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1398,7 +1794,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/dpad/down"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Gamepad"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1409,7 +1805,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/dpad/left"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Gamepad"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1420,7 +1816,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Gamepad"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1837,6 +2233,134 @@ namespace ThreeDeePongProto.Shared.InputActions
     ],
     ""controlSchemes"": [
         {
+            ""name"": ""KeyboardPlayerID0"",
+            ""bindingGroup"": ""KeyboardPlayerID0"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Keyboard>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<Mouse>"",
+                    ""isOptional"": true,
+                    ""isOR"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""GamepadPlayerID0"",
+            ""bindingGroup"": ""GamepadPlayerID0"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Gamepad>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<VirtualMouse>"",
+                    ""isOptional"": true,
+                    ""isOR"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""KeyboardPlayerID1"",
+            ""bindingGroup"": ""KeyboardPlayerID1"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Keyboard>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<Mouse>"",
+                    ""isOptional"": true,
+                    ""isOR"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""KeyboardPlayerID2"",
+            ""bindingGroup"": ""KeyboardPlayerID2"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Keyboard>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<Mouse>"",
+                    ""isOptional"": true,
+                    ""isOR"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""KeyboardPlayerID3"",
+            ""bindingGroup"": ""KeyboardPlayerID3"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Keyboard>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<Mouse>"",
+                    ""isOptional"": true,
+                    ""isOR"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""GamepadPlayerID1"",
+            ""bindingGroup"": ""GamepadPlayerID1"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Gamepad>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<VirtualMouse>"",
+                    ""isOptional"": true,
+                    ""isOR"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""GamepadPlayerID2"",
+            ""bindingGroup"": ""GamepadPlayerID2"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Gamepad>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<VirtualMouse>"",
+                    ""isOptional"": true,
+                    ""isOR"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""GamepadPlayerID3"",
+            ""bindingGroup"": ""GamepadPlayerID3"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Gamepad>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<VirtualMouse>"",
+                    ""isOptional"": true,
+                    ""isOR"": false
+                }
+            ]
+        },
+        {
             ""name"": ""KeyboardMouse"",
             ""bindingGroup"": ""KeyboardMouse"",
             ""devices"": [
@@ -1875,10 +2399,10 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_PlayerActions_Move = m_PlayerActions.FindAction("Move", throwIfNotFound: true);
             m_PlayerActions_Rotate = m_PlayerActions.FindAction("Rotate", throwIfNotFound: true);
             m_PlayerActions_Push = m_PlayerActions.FindAction("Push", throwIfNotFound: true);
-            m_PlayerActions_KickBall = m_PlayerActions.FindAction("KickBall", throwIfNotFound: true);
             m_PlayerActions_Zoom = m_PlayerActions.FindAction("Zoom", throwIfNotFound: true);
-            m_PlayerActions_MousePosition = m_PlayerActions.FindAction("MousePosition", throwIfNotFound: true);
+            m_PlayerActions_KickBall = m_PlayerActions.FindAction("KickBall", throwIfNotFound: true);
             m_PlayerActions_CursorVisibility = m_PlayerActions.FindAction("CursorVisibility", throwIfNotFound: true);
+            m_PlayerActions_MousePosition = m_PlayerActions.FindAction("MousePosition", throwIfNotFound: true);
             m_PlayerActions_ToggleGameMenu = m_PlayerActions.FindAction("ToggleGameMenu", throwIfNotFound: true);
             // OldPlayerActions
             m_OldPlayerActions = asset.FindActionMap("OldPlayerActions", throwIfNotFound: true);
@@ -1977,10 +2501,10 @@ namespace ThreeDeePongProto.Shared.InputActions
         private readonly InputAction m_PlayerActions_Move;
         private readonly InputAction m_PlayerActions_Rotate;
         private readonly InputAction m_PlayerActions_Push;
-        private readonly InputAction m_PlayerActions_KickBall;
         private readonly InputAction m_PlayerActions_Zoom;
-        private readonly InputAction m_PlayerActions_MousePosition;
+        private readonly InputAction m_PlayerActions_KickBall;
         private readonly InputAction m_PlayerActions_CursorVisibility;
+        private readonly InputAction m_PlayerActions_MousePosition;
         private readonly InputAction m_PlayerActions_ToggleGameMenu;
         public struct PlayerActionsActions
         {
@@ -1989,10 +2513,10 @@ namespace ThreeDeePongProto.Shared.InputActions
             public InputAction @Move => m_Wrapper.m_PlayerActions_Move;
             public InputAction @Rotate => m_Wrapper.m_PlayerActions_Rotate;
             public InputAction @Push => m_Wrapper.m_PlayerActions_Push;
-            public InputAction @KickBall => m_Wrapper.m_PlayerActions_KickBall;
             public InputAction @Zoom => m_Wrapper.m_PlayerActions_Zoom;
-            public InputAction @MousePosition => m_Wrapper.m_PlayerActions_MousePosition;
+            public InputAction @KickBall => m_Wrapper.m_PlayerActions_KickBall;
             public InputAction @CursorVisibility => m_Wrapper.m_PlayerActions_CursorVisibility;
+            public InputAction @MousePosition => m_Wrapper.m_PlayerActions_MousePosition;
             public InputAction @ToggleGameMenu => m_Wrapper.m_PlayerActions_ToggleGameMenu;
             public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
             public void Enable() { Get().Enable(); }
@@ -2012,18 +2536,18 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @Push.started += instance.OnPush;
                 @Push.performed += instance.OnPush;
                 @Push.canceled += instance.OnPush;
-                @KickBall.started += instance.OnKickBall;
-                @KickBall.performed += instance.OnKickBall;
-                @KickBall.canceled += instance.OnKickBall;
                 @Zoom.started += instance.OnZoom;
                 @Zoom.performed += instance.OnZoom;
                 @Zoom.canceled += instance.OnZoom;
-                @MousePosition.started += instance.OnMousePosition;
-                @MousePosition.performed += instance.OnMousePosition;
-                @MousePosition.canceled += instance.OnMousePosition;
+                @KickBall.started += instance.OnKickBall;
+                @KickBall.performed += instance.OnKickBall;
+                @KickBall.canceled += instance.OnKickBall;
                 @CursorVisibility.started += instance.OnCursorVisibility;
                 @CursorVisibility.performed += instance.OnCursorVisibility;
                 @CursorVisibility.canceled += instance.OnCursorVisibility;
+                @MousePosition.started += instance.OnMousePosition;
+                @MousePosition.performed += instance.OnMousePosition;
+                @MousePosition.canceled += instance.OnMousePosition;
                 @ToggleGameMenu.started += instance.OnToggleGameMenu;
                 @ToggleGameMenu.performed += instance.OnToggleGameMenu;
                 @ToggleGameMenu.canceled += instance.OnToggleGameMenu;
@@ -2040,18 +2564,18 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @Push.started -= instance.OnPush;
                 @Push.performed -= instance.OnPush;
                 @Push.canceled -= instance.OnPush;
-                @KickBall.started -= instance.OnKickBall;
-                @KickBall.performed -= instance.OnKickBall;
-                @KickBall.canceled -= instance.OnKickBall;
                 @Zoom.started -= instance.OnZoom;
                 @Zoom.performed -= instance.OnZoom;
                 @Zoom.canceled -= instance.OnZoom;
-                @MousePosition.started -= instance.OnMousePosition;
-                @MousePosition.performed -= instance.OnMousePosition;
-                @MousePosition.canceled -= instance.OnMousePosition;
+                @KickBall.started -= instance.OnKickBall;
+                @KickBall.performed -= instance.OnKickBall;
+                @KickBall.canceled -= instance.OnKickBall;
                 @CursorVisibility.started -= instance.OnCursorVisibility;
                 @CursorVisibility.performed -= instance.OnCursorVisibility;
                 @CursorVisibility.canceled -= instance.OnCursorVisibility;
+                @MousePosition.started -= instance.OnMousePosition;
+                @MousePosition.performed -= instance.OnMousePosition;
+                @MousePosition.canceled -= instance.OnMousePosition;
                 @ToggleGameMenu.started -= instance.OnToggleGameMenu;
                 @ToggleGameMenu.performed -= instance.OnToggleGameMenu;
                 @ToggleGameMenu.canceled -= instance.OnToggleGameMenu;
@@ -2380,6 +2904,78 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
         }
         public UserInterfaceActions @UserInterface => new UserInterfaceActions(this);
+        private int m_KeyboardPlayerID0SchemeIndex = -1;
+        public InputControlScheme KeyboardPlayerID0Scheme
+        {
+            get
+            {
+                if (m_KeyboardPlayerID0SchemeIndex == -1) m_KeyboardPlayerID0SchemeIndex = asset.FindControlSchemeIndex("KeyboardPlayerID0");
+                return asset.controlSchemes[m_KeyboardPlayerID0SchemeIndex];
+            }
+        }
+        private int m_GamepadPlayerID0SchemeIndex = -1;
+        public InputControlScheme GamepadPlayerID0Scheme
+        {
+            get
+            {
+                if (m_GamepadPlayerID0SchemeIndex == -1) m_GamepadPlayerID0SchemeIndex = asset.FindControlSchemeIndex("GamepadPlayerID0");
+                return asset.controlSchemes[m_GamepadPlayerID0SchemeIndex];
+            }
+        }
+        private int m_KeyboardPlayerID1SchemeIndex = -1;
+        public InputControlScheme KeyboardPlayerID1Scheme
+        {
+            get
+            {
+                if (m_KeyboardPlayerID1SchemeIndex == -1) m_KeyboardPlayerID1SchemeIndex = asset.FindControlSchemeIndex("KeyboardPlayerID1");
+                return asset.controlSchemes[m_KeyboardPlayerID1SchemeIndex];
+            }
+        }
+        private int m_KeyboardPlayerID2SchemeIndex = -1;
+        public InputControlScheme KeyboardPlayerID2Scheme
+        {
+            get
+            {
+                if (m_KeyboardPlayerID2SchemeIndex == -1) m_KeyboardPlayerID2SchemeIndex = asset.FindControlSchemeIndex("KeyboardPlayerID2");
+                return asset.controlSchemes[m_KeyboardPlayerID2SchemeIndex];
+            }
+        }
+        private int m_KeyboardPlayerID3SchemeIndex = -1;
+        public InputControlScheme KeyboardPlayerID3Scheme
+        {
+            get
+            {
+                if (m_KeyboardPlayerID3SchemeIndex == -1) m_KeyboardPlayerID3SchemeIndex = asset.FindControlSchemeIndex("KeyboardPlayerID3");
+                return asset.controlSchemes[m_KeyboardPlayerID3SchemeIndex];
+            }
+        }
+        private int m_GamepadPlayerID1SchemeIndex = -1;
+        public InputControlScheme GamepadPlayerID1Scheme
+        {
+            get
+            {
+                if (m_GamepadPlayerID1SchemeIndex == -1) m_GamepadPlayerID1SchemeIndex = asset.FindControlSchemeIndex("GamepadPlayerID1");
+                return asset.controlSchemes[m_GamepadPlayerID1SchemeIndex];
+            }
+        }
+        private int m_GamepadPlayerID2SchemeIndex = -1;
+        public InputControlScheme GamepadPlayerID2Scheme
+        {
+            get
+            {
+                if (m_GamepadPlayerID2SchemeIndex == -1) m_GamepadPlayerID2SchemeIndex = asset.FindControlSchemeIndex("GamepadPlayerID2");
+                return asset.controlSchemes[m_GamepadPlayerID2SchemeIndex];
+            }
+        }
+        private int m_GamepadPlayerID3SchemeIndex = -1;
+        public InputControlScheme GamepadPlayerID3Scheme
+        {
+            get
+            {
+                if (m_GamepadPlayerID3SchemeIndex == -1) m_GamepadPlayerID3SchemeIndex = asset.FindControlSchemeIndex("GamepadPlayerID3");
+                return asset.controlSchemes[m_GamepadPlayerID3SchemeIndex];
+            }
+        }
         private int m_KeyboardMouseSchemeIndex = -1;
         public InputControlScheme KeyboardMouseScheme
         {
@@ -2403,10 +2999,10 @@ namespace ThreeDeePongProto.Shared.InputActions
             void OnMove(InputAction.CallbackContext context);
             void OnRotate(InputAction.CallbackContext context);
             void OnPush(InputAction.CallbackContext context);
-            void OnKickBall(InputAction.CallbackContext context);
             void OnZoom(InputAction.CallbackContext context);
-            void OnMousePosition(InputAction.CallbackContext context);
+            void OnKickBall(InputAction.CallbackContext context);
             void OnCursorVisibility(InputAction.CallbackContext context);
+            void OnMousePosition(InputAction.CallbackContext context);
             void OnToggleGameMenu(InputAction.CallbackContext context);
         }
         public interface IOldPlayerActionsActions

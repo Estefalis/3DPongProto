@@ -117,7 +117,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             if (_receivedID != m_playerController.m_playerId)
                 return;
-
+            
             switch (_isRotation)
             {
                 case true:

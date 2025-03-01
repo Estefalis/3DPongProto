@@ -33,6 +33,9 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private CameraManager m_cameraManager;
 
+        private const string m_keyboardMouse = "KeyboardMouse", m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3", m_keyboardDevice = "Keyboard";
+        private const string m_gamePadScheme = "Gamepad", m_gamePadSchemePID0 = "GamepadPlayerID0", m_gamePadSchemePID1 = "GamepadPlayerID1", m_gamePadSchemePID2 = "GamepadPlayerID2", m_gamePadSchemePID3 = "GamepadPlayerID3", m_gamepadDevice = "Gamepad";
+
         #region Scriptable Variables
         [SerializeField] private GraphicUIStates m_graphicUiStates;
         [SerializeField] private BasicFieldValues m_basicFieldValues;
@@ -217,9 +220,33 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         #endregion
 
         #region CallbackContext-Methods
-        internal void Zooming(Vector2 _scrollVector)
+        internal void Zooming(Vector2 _scrollVector, int _playerIndex, string _controlScheme = "")
         {
-            if (m_playerId == GetWindowId() && MouseIsWithinWindow(m_mousePosition))
+            switch (_controlScheme)
+            {
+                case m_keyboardMouse:
+                {
+                    //Limits the zoom to the window of each player.
+                    if (m_playerId == GetWindowId() && MouseIsWithinWindow(m_mousePosition) && _controlScheme == m_keyboardMouse)
+                    {
+                        ZoomWindow(_scrollVector, _playerIndex);
+                        Debug.Log(_controlScheme);
+                    }
+
+                    break;
+                }
+                case m_gamePadScheme:
+                {
+                    Debug.Log(_controlScheme);
+                    ZoomWindow(_scrollVector, _playerIndex);
+                    break;
+                }
+            }
+        }
+
+        private void ZoomWindow(Vector2 _scrollVector, int _playerIndex)
+        {
+            if (_playerIndex == m_playerController.m_playerId)
             {
                 float zoomValue = -_scrollVector.y * m_zoomSpeed;
 #if UNITY_EDITOR
