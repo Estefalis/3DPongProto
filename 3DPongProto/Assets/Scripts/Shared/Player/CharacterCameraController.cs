@@ -230,14 +230,12 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                     if (m_playerId == GetWindowId() && MouseIsWithinWindow(m_mousePosition) && _controlScheme == m_keyboardMouse)
                     {
                         ZoomWindow(_scrollVector, _playerIndex);
-                        Debug.Log(_controlScheme);
                     }
 
                     break;
                 }
                 case m_gamePadScheme:
                 {
-                    Debug.Log(_controlScheme);
                     ZoomWindow(_scrollVector, _playerIndex);
                     break;
                 }
@@ -246,6 +244,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void ZoomWindow(Vector2 _scrollVector, int _playerIndex)
         {
+            //Debug.Log($"PlayerIndex: {_playerIndex} | PlayerControllerID: {m_playerController.m_playerId}");
             if (_playerIndex == m_playerController.m_playerId)
             {
                 float zoomValue = -_scrollVector.y * m_zoomSpeed;

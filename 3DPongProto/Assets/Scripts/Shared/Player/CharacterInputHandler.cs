@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,6 +11,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
     {
         [SerializeField] private PlayerInput m_playerInput;
         [SerializeField] internal CharacterMainController m_playerController;
+        private UserInputManager m_userInputManager;
 
         private const string m_moveString = "Move", m_rotateString = "Rotate", m_pushString = "Push", m_zoomString = "Zoom";
         private const string m_kickBallString = "KickBall", m_toggleGameMenuString = "ToggleGameMenu", m_mousePositionString = "MousePosition";
@@ -23,6 +25,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         internal static event Action<int> AKickBall;
         internal static event Action<string> AOpenMenu;   //LocalMatchManager subscribed to react on menu open/close.
         internal static event Action<Vector2> ASendMousePosition;
+
+        private Dictionary<int, InputDevice> m_playerDeviceMap = new();
 
         private void Awake()
         {
@@ -40,6 +44,16 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             if (m_playerInput != null)
                 UnsubscribeToInputActions(m_playerInput, m_playerController.m_playerId);
+        }
+
+        private void Start()
+        {
+            m_userInputManager = FindObjectOfType<UserInputManager>();
+            if (m_userInputManager == null)
+            {
+                Debug.LogError("❌ UserInputManager not found!");
+                return;
+            }
         }
 
         private void FixedUpdate()
@@ -70,13 +84,23 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 SubscribeToInputActions(m_playerInput);
 
                 //Listen to controlScheme changes.
-                //m_playerInput.onControlsChanged += OnControlsChanged;
-                InputSystem.onDeviceChange += OnDeviceChange;
+                m_playerInput.onControlsChanged += OnControlsChanged;
             }
         }
 
         private void SubscribeToInputActions(PlayerInput _playerInput)
         {
+            //foreach(InputActionMap inputActionMap in _playerInput.actions.actionMaps)
+            //{
+            //    for (int i = 0; i < inputActionMap.bindings.Count; i++)
+            //    {
+            //        if (inputActionMap.bindings[i].groups == m_keyboardMouse && !inputActionMap.bindings[i].isComposite)
+            //        {
+            //            Debug.Log(inputActionMap.bindings[i].name);
+            //        }
+            //    }
+            //}
+
             var moveAction = _playerInput.actions[m_moveString];
             moveAction.performed += ctx => OnMove(ctx, _playerInput);
             moveAction.canceled += ctx => OnMoveCanceled(ctx, _playerInput);
@@ -107,10 +131,9 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (m_playerController.m_playerId != _playerID)
                 return;
 
-            //m_playerInput.onControlsChanged -= OnControlsChanged;
             UserInputManager.ACheckForPlayerInput -= PlayerInputCheck;
             UserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
-            InputSystem.onDeviceChange -= OnDeviceChange;
+            m_playerInput.onControlsChanged -= OnControlsChanged;
 
             var moveAction = _playerInput.actions[m_moveString];
             moveAction.performed -= ctx => OnMove(ctx, _playerInput);
@@ -137,88 +160,65 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             toggleGameMenuAction.performed -= OnOpenMenu;
         }
 
-        private void OnDeviceChange(InputDevice _inputDevice, InputDeviceChange _deviceChange)
-        {
-            if (UserInputManager.PlayerControllerMap[m_playerInput.user.index] != m_playerController.m_playerId)
-                return;
-
-            //TODO: Get which player had the device on disconnect and reconnect it to the player on re-plug in.
-            switch (_deviceChange)
-            {
-                case InputDeviceChange.Reconnected:
-                {
-                    Debug.Log($"{_inputDevice.displayName} connected.");
-                    break;
-                }
-                case InputDeviceChange.Disconnected:
-                {
-                    Debug.Log($"{_inputDevice.displayName} disconnected.");
-                    break;
-                }
-                default:
-                    break;
-            }
-        }
-
         private void OnControlsChanged(PlayerInput _playerInput)
         {
-            Debug.Log($"Control Scheme changed: {_playerInput.currentControlScheme} for Player {_playerInput.playerIndex}");
+            m_playerDeviceMap = m_userInputManager.GetPlayerDeviceMap();
 
             InputDevice newDevice = _playerInput.devices.Count > 0 ? _playerInput.devices[0] : null;
 
-            if (newDevice != null)
+            if (newDevice == null)
             {
-                InputUser.PerformPairingWithDevice(newDevice, _playerInput.user);
-                Debug.Log($"Player {_playerInput.playerIndex} switched to device: {newDevice.name}");
+                Debug.LogWarning($"No active device found for Player {_playerInput.playerIndex}");
+                return;
+            }
+
+            if (m_playerDeviceMap.TryGetValue(_playerInput.playerIndex, out var currentDevice))
+            {
+                if (newDevice != currentDevice)
+                {
+                    m_playerDeviceMap[_playerInput.playerIndex] = newDevice;
+                    InputUser.PerformPairingWithDevice(newDevice, _playerInput.user);
+                    Debug.Log($"Updated device for Player {_playerInput.playerIndex} to {newDevice.name}");
+                }
+                else
+                {
+                    Debug.Log($"Device for Player {_playerInput.playerIndex} unchanged ({newDevice.name})");
+                }
             }
             else
             {
-                Debug.LogWarning($"No new device detected for Player {_playerInput.playerIndex}");
+                Debug.LogWarning($"Player {_playerInput.playerIndex} not found in device map. Adding now.");
+                m_playerDeviceMap.Add(_playerInput.playerIndex, newDevice);
+                InputUser.PerformPairingWithDevice(newDevice, _playerInput.user);
             }
-
-            SubscribeToInputActions(_playerInput);
         }
 
         private void OnMove(InputAction.CallbackContext _callbackContext, PlayerInput _playerInput)
         {
-            int playerIndex = UserInputManager.PlayerControllerMap[_playerInput.user.index];
-
-            if (playerIndex != m_playerController.m_playerId)
-                return;
-
             Vector2 moveVector = _callbackContext.ReadValue<Vector2>();
-            m_playerController.m_playerMovement.SetInputVector(moveVector, playerIndex, false);
+            m_playerController.m_playerMovement.SetInputVector(moveVector, m_playerController.m_playerId, false);
         }
 
         private void OnMoveCanceled(InputAction.CallbackContext _callbackContext, PlayerInput _playerInput)
         {
-            int playerIndex = UserInputManager.PlayerControllerMap[_playerInput.user.index];
-
-            if (playerIndex != m_playerController.m_playerId)
-                return;
-
             Vector2 moveVector = Vector2.zero;
-            m_playerController.m_playerMovement.SetInputVector(moveVector, playerIndex, false);
+            m_playerController.m_playerMovement.SetInputVector(moveVector, m_playerController.m_playerId, false);
         }
 
         //Process 'Rotate'-Action.
         private void OnRotate(InputAction.CallbackContext _callbackContext, PlayerInput _playerInput)
         {
-            int playerIndex = UserInputManager.PlayerControllerMap[_playerInput.user.index];
             m_rotationVector = _callbackContext.ReadValue<Vector2>();
         }
 
         private void OnRotateCanceled(InputAction.CallbackContext _callbackContext, PlayerInput _playerInput)
         {
-            int playerIndex = UserInputManager.PlayerControllerMap[_playerInput.user.index];
             m_rotationVector = Vector2.zero; //Reset InputVector, once button is released/action is canceled.
         }
 
         //Process 'Push'-Action.
         private void OnPush(InputAction.CallbackContext _callbackContext, PlayerInput _playerInput)
         {
-            int playerIndex = UserInputManager.PlayerControllerMap[_playerInput.user.index];
-
             var initializePush = _callbackContext.ReadValueAsButton();
             if (initializePush)
                 m_playerController.m_playerMovement.InitializePush(true);
@@ -226,8 +226,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnKickBall(InputAction.CallbackContext _callbackContext, PlayerInput _playerInput)
         {
-            int playerIndex = UserInputManager.PlayerControllerMap[_playerInput.user.index];
-
             var kickBall = _callbackContext.ReadValueAsButton();
             if (kickBall)
                 AKickBall?.Invoke(m_playerController.m_playerId);  //Tell the Ball, that it has been kicked! *kick*
@@ -235,17 +233,13 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnZoom(InputAction.CallbackContext _callbackContext, PlayerInput _playerInput)
         {
-            int playerIndex = UserInputManager.PlayerControllerMap[_playerInput.user.index];
-
             Vector2 zoomVector = _callbackContext.ReadValue<Vector2>();
-            m_playerController.m_playerCameraController.Zooming(zoomVector, playerIndex, _playerInput.currentControlScheme);
+            m_playerController.m_playerCameraController.Zooming(zoomVector, m_playerController.m_playerId, _playerInput.currentControlScheme);
         }
 
         private void OnZoomCanceled(InputAction.CallbackContext _callbackContext, PlayerInput _playerInput)
         {
-            int playerIndex = UserInputManager.PlayerControllerMap[_playerInput.user.index];
-
-            m_playerController.m_playerCameraController.Zooming(Vector2.zero, playerIndex, "");
+            m_playerController.m_playerCameraController.Zooming(Vector2.zero, m_playerController.m_playerId, "");
         }
 
         private void OnMousePosition(InputAction.CallbackContext _callbackContext)
