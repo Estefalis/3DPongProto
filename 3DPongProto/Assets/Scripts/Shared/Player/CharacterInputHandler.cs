@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -26,8 +25,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         internal static event Action<string> AOpenMenu;   //LocalMatchManager subscribed to react on menu open/close.
         internal static event Action<Vector2> ASendMousePosition;
 
-        private Dictionary<int, InputDevice> m_playerDeviceMap = new();
-
         private void Awake()
         {
             UserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
@@ -37,13 +34,13 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private void OnDisable()
         {
             if (m_playerInput != null)
-                UnsubscribeToInputActions(m_playerInput, m_playerController.m_playerId);
+                UnsubscribeToInputActions(m_playerInput, m_playerInput.user.id);
         }
 
         private void OnDestroy()
         {
             if (m_playerInput != null)
-                UnsubscribeToInputActions(m_playerInput, m_playerController.m_playerId);
+                UnsubscribeToInputActions(m_playerInput, m_playerInput.user.id);
         }
 
         private void Start()
@@ -51,7 +48,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             m_userInputManager = FindObjectOfType<UserInputManager>();
             if (m_userInputManager == null)
             {
-                Debug.LogError("❌ UserInputManager not found!");
+                Debug.LogError("UserInputManager not found!");
                 return;
             }
         }
@@ -68,14 +65,14 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             m_playerInput.SwitchCurrentActionMap(_actionMap);
         }
 
-        private void PlayerInputCheck(int _playerIndex)
+        private void PlayerInputCheck(uint _playerUserID)
         {
             //NOTE: 'm_playerInput.playerIndex' is here already != 'm_playerController.m_playerId'. Menu in PlayerInputManager took Debug-Index 0!
             //If the component is not set in the 'Player Input' script slot. (With 'UserInputManager.ACheckForPlayerInput'.)
             if (m_playerInput == null)
                 m_playerInput = m_playerController.GetComponent<PlayerInput>();
 
-            if (_playerIndex != m_playerController.m_playerId)
+            if (_playerUserID != m_playerInput.user.id)
                 return;
 
             if (m_playerInput != null)
@@ -126,9 +123,9 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             toggleGameMenuAction.performed += OnOpenMenu;
         }
 
-        private void UnsubscribeToInputActions(PlayerInput _playerInput, int _playerID)
+        private void UnsubscribeToInputActions(PlayerInput _playerInput, uint _playerID)
         {
-            if (m_playerController.m_playerId != _playerID)
+            if (_playerInput.user.id != _playerID)
                 return;
 
             UserInputManager.ACheckForPlayerInput -= PlayerInputCheck;
@@ -162,34 +159,46 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnControlsChanged(PlayerInput _playerInput)
         {
-            m_playerDeviceMap = m_userInputManager.GetPlayerDeviceMap();
+            if (m_userInputManager == null)
+            {
+                Debug.LogError("UserInputManager not found!");
+                return;
+            }
+
+            var deviceMap = m_userInputManager.GetPlayerDeviceMap();
+
+            if (!m_userInputManager.gDevicesInitialized)    //g for getter in the future. (Yes?, No!, Maybe~.)
+            {
+                Debug.LogWarning("Device map not initialized yet!");
+                return;
+            }
 
             InputDevice newDevice = _playerInput.devices.Count > 0 ? _playerInput.devices[0] : null;
 
             if (newDevice == null)
             {
-                Debug.LogWarning($"No active device found for Player {_playerInput.playerIndex}");
+                Debug.LogWarning($"No active device found for PlayerIndex {_playerInput.playerIndex} | PlayerUserID: {_playerInput.user.id}.");
                 return;
             }
 
-            if (m_playerDeviceMap.TryGetValue(_playerInput.playerIndex, out var currentDevice))
+            if (deviceMap.TryGetValue(_playerInput.user.id, out var currentDevice))
             {
                 if (newDevice != currentDevice)
                 {
-                    m_playerDeviceMap[_playerInput.playerIndex] = newDevice;
+                    deviceMap[_playerInput.user.id] = newDevice;
                     InputUser.PerformPairingWithDevice(newDevice, _playerInput.user);
-                    Debug.Log($"Updated device for Player {_playerInput.playerIndex} to {newDevice.name}");
+                    Debug.Log($"Updated device for PlayerIndex {_playerInput.playerIndex} with PlayerUserID {_playerInput.user.id} to {newDevice.name}.");
                 }
                 else
                 {
-                    Debug.Log($"Device for Player {_playerInput.playerIndex} unchanged ({newDevice.name})");
+                    Debug.Log($"Device for PlayerIndex {_playerInput.playerIndex} with PlayerUserID {_playerInput.user.id} unchanged ({newDevice.name}).");
                 }
             }
             else
             {
-                Debug.LogWarning($"Player {_playerInput.playerIndex} not found in device map. Adding now.");
-                m_playerDeviceMap.Add(_playerInput.playerIndex, newDevice);
+                deviceMap.Add(_playerInput.user.id, newDevice);
                 InputUser.PerformPairingWithDevice(newDevice, _playerInput.user);
+                Debug.Log($"Added PlayerIndex {_playerInput.playerIndex} with PlayerUserID {_playerInput.user.id} and device {newDevice.name} to device map.");
             }
         }
 

@@ -71,7 +71,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 m_eventSystem = EventSystem.current;
 
             m_menuInput = GetComponent<PlayerInput>();
-            SetMenuInput(m_menuInput);
+            SetMenuInputDefault(m_menuInput);
 
             m_lastSelectedGameObject = null;
             m_selectedElement.Clear();
@@ -170,6 +170,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             m_menuInput.SwitchCurrentControlScheme(_controlScheme, _devices);
             m_currentControlScheme = _controlScheme;
+            Debug.Log($"MenuInput changed to {_controlScheme}.");   //DER MACHT DAS PRO PLAYER! OH ALTANA!
         }
 
         private void OnPlayerOpensMenu(string _actionMap)
@@ -192,7 +193,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #endregion
 
         #region PlayerInput-Configuration_on_Menu
-        private void SetMenuInput(PlayerInput _menuInput)
+        private void SetMenuInputDefault(PlayerInput _menuInput)
         {
             if (_menuInput == null)
                 m_menuInput = gameObject.AddComponent<PlayerInput>();
@@ -207,9 +208,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_menuInput.SwitchCurrentActionMap(m_uiActionMap);
             m_menuInput.defaultControlScheme = m_keyboardMouse;
             m_currentControlScheme = m_keyboardMouse;
-
-            ////Set Keyboard as standard-device.
-            //CustomControlSchemeSwitch(m_keyboardMouse, new InputDevice[] { Keyboard.current, Mouse.current });
         }
         #endregion
 
