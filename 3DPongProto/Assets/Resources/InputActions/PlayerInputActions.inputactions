@@ -69,7 +69,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "ToggleGameMenu",
+                    "name": "OpenGameMenu",
                     "type": "Button",
                     "id": "10c55572-7a33-47de-aec8-fe3fe0adbad2",
                     "expectedControlType": "Button",
@@ -284,7 +284,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "ToggleGameMenu",
+                    "action": "OpenGameMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -295,7 +295,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "ToggleGameMenu",
+                    "action": "OpenGameMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1714,7 +1714,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ToggleGameMenu",
+                    "name": "CloseGameMenu",
                     "type": "Button",
                     "id": "93bd3d6a-dfbd-481a-9dba-edb23f65a905",
                     "expectedControlType": "Button",
@@ -2123,7 +2123,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "ToggleGameMenu",
+                    "action": "CloseGameMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -2134,7 +2134,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "ToggleGameMenu",
+                    "action": "CloseGameMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

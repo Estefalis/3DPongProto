@@ -93,7 +93,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""ToggleGameMenu"",
+                    ""name"": ""OpenGameMenu"",
                     ""type"": ""Button"",
                     ""id"": ""10c55572-7a33-47de-aec8-fe3fe0adbad2"",
                     ""expectedControlType"": ""Button"",
@@ -308,7 +308,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
-                    ""action"": ""ToggleGameMenu"",
+                    ""action"": ""OpenGameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -319,7 +319,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""ToggleGameMenu"",
+                    ""action"": ""OpenGameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1738,7 +1738,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ToggleGameMenu"",
+                    ""name"": ""CloseGameMenu"",
                     ""type"": ""Button"",
                     ""id"": ""93bd3d6a-dfbd-481a-9dba-edb23f65a905"",
                     ""expectedControlType"": ""Button"",
@@ -2147,7 +2147,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
-                    ""action"": ""ToggleGameMenu"",
+                    ""action"": ""CloseGameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -2158,7 +2158,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""ToggleGameMenu"",
+                    ""action"": ""CloseGameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -2403,7 +2403,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_PlayerActions_KickBall = m_PlayerActions.FindAction("KickBall", throwIfNotFound: true);
             m_PlayerActions_CursorVisibility = m_PlayerActions.FindAction("CursorVisibility", throwIfNotFound: true);
             m_PlayerActions_MousePosition = m_PlayerActions.FindAction("MousePosition", throwIfNotFound: true);
-            m_PlayerActions_ToggleGameMenu = m_PlayerActions.FindAction("ToggleGameMenu", throwIfNotFound: true);
+            m_PlayerActions_OpenGameMenu = m_PlayerActions.FindAction("OpenGameMenu", throwIfNotFound: true);
             // OldPlayerActions
             m_OldPlayerActions = asset.FindActionMap("OldPlayerActions", throwIfNotFound: true);
             m_OldPlayerActions_MoveP1ZNeg = m_OldPlayerActions.FindAction("MoveP1ZNeg", throwIfNotFound: true);
@@ -2434,7 +2434,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_UserInterface_MiddleClick = m_UserInterface.FindAction("MiddleClick", throwIfNotFound: true);
             m_UserInterface_RightClick = m_UserInterface.FindAction("RightClick", throwIfNotFound: true);
             m_UserInterface_CursorVisibility = m_UserInterface.FindAction("CursorVisibility", throwIfNotFound: true);
-            m_UserInterface_ToggleGameMenu = m_UserInterface.FindAction("ToggleGameMenu", throwIfNotFound: true);
+            m_UserInterface_CloseGameMenu = m_UserInterface.FindAction("CloseGameMenu", throwIfNotFound: true);
             m_UserInterface_TrackedDevicePosition = m_UserInterface.FindAction("TrackedDevicePosition", throwIfNotFound: true);
             m_UserInterface_TrackedDeviceOrientation = m_UserInterface.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         }
@@ -2505,7 +2505,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         private readonly InputAction m_PlayerActions_KickBall;
         private readonly InputAction m_PlayerActions_CursorVisibility;
         private readonly InputAction m_PlayerActions_MousePosition;
-        private readonly InputAction m_PlayerActions_ToggleGameMenu;
+        private readonly InputAction m_PlayerActions_OpenGameMenu;
         public struct PlayerActionsActions
         {
             private @PlayerInputActions m_Wrapper;
@@ -2517,7 +2517,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             public InputAction @KickBall => m_Wrapper.m_PlayerActions_KickBall;
             public InputAction @CursorVisibility => m_Wrapper.m_PlayerActions_CursorVisibility;
             public InputAction @MousePosition => m_Wrapper.m_PlayerActions_MousePosition;
-            public InputAction @ToggleGameMenu => m_Wrapper.m_PlayerActions_ToggleGameMenu;
+            public InputAction @OpenGameMenu => m_Wrapper.m_PlayerActions_OpenGameMenu;
             public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -2548,9 +2548,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @MousePosition.started += instance.OnMousePosition;
                 @MousePosition.performed += instance.OnMousePosition;
                 @MousePosition.canceled += instance.OnMousePosition;
-                @ToggleGameMenu.started += instance.OnToggleGameMenu;
-                @ToggleGameMenu.performed += instance.OnToggleGameMenu;
-                @ToggleGameMenu.canceled += instance.OnToggleGameMenu;
+                @OpenGameMenu.started += instance.OnOpenGameMenu;
+                @OpenGameMenu.performed += instance.OnOpenGameMenu;
+                @OpenGameMenu.canceled += instance.OnOpenGameMenu;
             }
 
             private void UnregisterCallbacks(IPlayerActionsActions instance)
@@ -2576,9 +2576,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @MousePosition.started -= instance.OnMousePosition;
                 @MousePosition.performed -= instance.OnMousePosition;
                 @MousePosition.canceled -= instance.OnMousePosition;
-                @ToggleGameMenu.started -= instance.OnToggleGameMenu;
-                @ToggleGameMenu.performed -= instance.OnToggleGameMenu;
-                @ToggleGameMenu.canceled -= instance.OnToggleGameMenu;
+                @OpenGameMenu.started -= instance.OnOpenGameMenu;
+                @OpenGameMenu.performed -= instance.OnOpenGameMenu;
+                @OpenGameMenu.canceled -= instance.OnOpenGameMenu;
             }
 
             public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -2783,7 +2783,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         private readonly InputAction m_UserInterface_MiddleClick;
         private readonly InputAction m_UserInterface_RightClick;
         private readonly InputAction m_UserInterface_CursorVisibility;
-        private readonly InputAction m_UserInterface_ToggleGameMenu;
+        private readonly InputAction m_UserInterface_CloseGameMenu;
         private readonly InputAction m_UserInterface_TrackedDevicePosition;
         private readonly InputAction m_UserInterface_TrackedDeviceOrientation;
         public struct UserInterfaceActions
@@ -2799,7 +2799,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             public InputAction @MiddleClick => m_Wrapper.m_UserInterface_MiddleClick;
             public InputAction @RightClick => m_Wrapper.m_UserInterface_RightClick;
             public InputAction @CursorVisibility => m_Wrapper.m_UserInterface_CursorVisibility;
-            public InputAction @ToggleGameMenu => m_Wrapper.m_UserInterface_ToggleGameMenu;
+            public InputAction @CloseGameMenu => m_Wrapper.m_UserInterface_CloseGameMenu;
             public InputAction @TrackedDevicePosition => m_Wrapper.m_UserInterface_TrackedDevicePosition;
             public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UserInterface_TrackedDeviceOrientation;
             public InputActionMap Get() { return m_Wrapper.m_UserInterface; }
@@ -2838,9 +2838,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @CursorVisibility.started += instance.OnCursorVisibility;
                 @CursorVisibility.performed += instance.OnCursorVisibility;
                 @CursorVisibility.canceled += instance.OnCursorVisibility;
-                @ToggleGameMenu.started += instance.OnToggleGameMenu;
-                @ToggleGameMenu.performed += instance.OnToggleGameMenu;
-                @ToggleGameMenu.canceled += instance.OnToggleGameMenu;
+                @CloseGameMenu.started += instance.OnCloseGameMenu;
+                @CloseGameMenu.performed += instance.OnCloseGameMenu;
+                @CloseGameMenu.canceled += instance.OnCloseGameMenu;
                 @TrackedDevicePosition.started += instance.OnTrackedDevicePosition;
                 @TrackedDevicePosition.performed += instance.OnTrackedDevicePosition;
                 @TrackedDevicePosition.canceled += instance.OnTrackedDevicePosition;
@@ -2878,9 +2878,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @CursorVisibility.started -= instance.OnCursorVisibility;
                 @CursorVisibility.performed -= instance.OnCursorVisibility;
                 @CursorVisibility.canceled -= instance.OnCursorVisibility;
-                @ToggleGameMenu.started -= instance.OnToggleGameMenu;
-                @ToggleGameMenu.performed -= instance.OnToggleGameMenu;
-                @ToggleGameMenu.canceled -= instance.OnToggleGameMenu;
+                @CloseGameMenu.started -= instance.OnCloseGameMenu;
+                @CloseGameMenu.performed -= instance.OnCloseGameMenu;
+                @CloseGameMenu.canceled -= instance.OnCloseGameMenu;
                 @TrackedDevicePosition.started -= instance.OnTrackedDevicePosition;
                 @TrackedDevicePosition.performed -= instance.OnTrackedDevicePosition;
                 @TrackedDevicePosition.canceled -= instance.OnTrackedDevicePosition;
@@ -3003,7 +3003,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             void OnKickBall(InputAction.CallbackContext context);
             void OnCursorVisibility(InputAction.CallbackContext context);
             void OnMousePosition(InputAction.CallbackContext context);
-            void OnToggleGameMenu(InputAction.CallbackContext context);
+            void OnOpenGameMenu(InputAction.CallbackContext context);
         }
         public interface IOldPlayerActionsActions
         {
@@ -3036,7 +3036,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             void OnMiddleClick(InputAction.CallbackContext context);
             void OnRightClick(InputAction.CallbackContext context);
             void OnCursorVisibility(InputAction.CallbackContext context);
-            void OnToggleGameMenu(InputAction.CallbackContext context);
+            void OnCloseGameMenu(InputAction.CallbackContext context);
             void OnTrackedDevicePosition(InputAction.CallbackContext context);
             void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
         }

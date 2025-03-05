@@ -13,7 +13,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private UserInputManager m_userInputManager;
 
         private const string m_moveString = "Move", m_rotateString = "Rotate", m_pushString = "Push", m_zoomString = "Zoom";
-        private const string m_kickBallString = "KickBall", m_toggleGameMenuString = "ToggleGameMenu", m_mousePositionString = "MousePosition";
+        private const string m_kickBallString = "KickBall", m_openGameMenuString = "OpenGameMenu", m_mousePositionString = "MousePosition";
         private const string m_uiActionMap = "UserInterface", m_playerActionMap = "PlayerActions";
 
         private const string m_keyboardMouse = "KeyboardMouse", m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3", m_keyboardDevice = "Keyboard";
@@ -34,13 +34,13 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private void OnDisable()
         {
             if (m_playerInput != null)
-                UnsubscribeToInputActions(m_playerInput, m_playerInput.user.id);
+                UnsubscribeToInputActions(m_playerInput, m_playerInput.playerIndex);
         }
 
         private void OnDestroy()
         {
             if (m_playerInput != null)
-                UnsubscribeToInputActions(m_playerInput, m_playerInput.user.id);
+                UnsubscribeToInputActions(m_playerInput, m_playerInput.playerIndex);
         }
 
         private void Start()
@@ -65,14 +65,14 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             m_playerInput.SwitchCurrentActionMap(_actionMap);
         }
 
-        private void PlayerInputCheck(uint _playerUserID)
+        private void PlayerInputCheck(int _playerIndex)
         {
-            //NOTE: 'm_playerInput.playerIndex' is here already != 'm_playerController.m_playerId'. Menu in PlayerInputManager took Debug-Index 0!
+            //NOTE: 'm_currentPlayerInput.playerIndex' is here already != 'm_playerController.m_playerId'. Menu in PlayerInputManager took Debug-Index 0!
             //If the component is not set in the 'Player Input' script slot. (With 'UserInputManager.ACheckForPlayerInput'.)
             if (m_playerInput == null)
                 m_playerInput = m_playerController.GetComponent<PlayerInput>();
 
-            if (_playerUserID != m_playerInput.user.id)
+            if (_playerIndex != m_playerInput.playerIndex)
                 return;
 
             if (m_playerInput != null)
@@ -119,13 +119,13 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             var mousePositionAction = _playerInput.actions[m_mousePositionString];
             mousePositionAction.performed += OnMousePosition;
 
-            var toggleGameMenuAction = _playerInput.actions[m_toggleGameMenuString];
-            toggleGameMenuAction.performed += OnOpenMenu;
+            var openGameMenuAction = _playerInput.actions[m_openGameMenuString];
+            openGameMenuAction.performed += OnOpenMenu;
         }
 
-        private void UnsubscribeToInputActions(PlayerInput _playerInput, uint _playerID)
+        private void UnsubscribeToInputActions(PlayerInput _playerInput, int _playerIndex)
         {
-            if (_playerInput.user.id != _playerID)
+            if (_playerInput.playerIndex != _playerIndex)
                 return;
 
             UserInputManager.ACheckForPlayerInput -= PlayerInputCheck;
@@ -153,8 +153,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             var mousePositionAction = _playerInput.actions[m_mousePositionString];
             mousePositionAction.performed -= OnMousePosition;
 
-            var toggleGameMenuAction = _playerInput.actions[m_toggleGameMenuString];
-            toggleGameMenuAction.performed -= OnOpenMenu;
+            var openGameMenuAction = _playerInput.actions[m_openGameMenuString];
+            openGameMenuAction.performed -= OnOpenMenu;
         }
 
         private void OnControlsChanged(PlayerInput _playerInput)
@@ -167,7 +167,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
             var deviceMap = m_userInputManager.GetPlayerDeviceMap();
 
-            if (!m_userInputManager.gDevicesInitialized)    //g for getter in the future. (Yes?, No!, Maybe~.)
+            if (!m_userInputManager.GDevicesInitialized)    //g for getter in the future. (Yes?, No!, Maybe~.)
             {
                 Debug.LogWarning("Device map not initialized yet!");
                 return;
@@ -187,18 +187,18 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 {
                     deviceMap[_playerInput.user.id] = newDevice;
                     InputUser.PerformPairingWithDevice(newDevice, _playerInput.user);
-                    Debug.Log($"Updated device for PlayerIndex {_playerInput.playerIndex} with PlayerUserID {_playerInput.user.id} to {newDevice.name}.");
+                    //Debug.Log($"Updated device for PlayerIndex {_playerInput.playerIndex} with PlayerUserID {_playerInput.user.id} to {newDevice.name}.");
                 }
-                else
-                {
-                    Debug.Log($"Device for PlayerIndex {_playerInput.playerIndex} with PlayerUserID {_playerInput.user.id} unchanged ({newDevice.name}).");
-                }
+                //else
+                //{
+                //    Debug.Log($"Device for PlayerIndex {_playerInput.playerIndex} with PlayerUserID {_playerInput.user.id} unchanged ({newDevice.name}).");
+                //}
             }
             else
             {
                 deviceMap.Add(_playerInput.user.id, newDevice);
                 InputUser.PerformPairingWithDevice(newDevice, _playerInput.user);
-                Debug.Log($"Added PlayerIndex {_playerInput.playerIndex} with PlayerUserID {_playerInput.user.id} and device {newDevice.name} to device map.");
+                //Debug.Log($"Added PlayerIndex {_playerInput.playerIndex} with PlayerUserID {_playerInput.user.id} and device {newDevice.name} to device map.");
             }
         }
 

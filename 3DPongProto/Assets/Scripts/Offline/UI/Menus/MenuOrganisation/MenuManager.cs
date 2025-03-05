@@ -55,6 +55,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         public static event Action AEndInfiniteMatch;
 
         private const string m_keyboardMouse = "KeyboardMouse", m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3", m_keyboardDevice = "Keyboard";
+
+        private const string m_closeGameMenuString = "CloseGameMenu";
         private const string m_uiActionMap = "UserInterface", m_playerActionMap = "PlayerActions";
         private string m_currentControlScheme;
         #endregion
@@ -86,10 +88,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (uiActionMap != null)
             {
                 uiActionMap.Enable();
-                InputAction toggleGameMenuAction = uiActionMap.FindAction("ToggleGameMenu", true);
-                if (toggleGameMenuAction != null)
+                InputAction closeGameMenuAction = uiActionMap.FindAction(m_closeGameMenuString, true);
+                if (closeGameMenuAction != null)
                 {
-                    toggleGameMenuAction.performed += CloseMenu;
+                    closeGameMenuAction.performed += CloseMenu;
                 }
             }
 
@@ -118,10 +120,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             InputActionMap uiActionMap = m_menuInput.actions.FindActionMap(m_uiActionMap, true);
             if (uiActionMap != null)
             {
-                InputAction toggleGameMenuAction = uiActionMap.FindAction("ToggleGameMenu", true);
-                if (toggleGameMenuAction != null)
+                InputAction closeGameMenuAction = uiActionMap.FindAction(m_closeGameMenuString, true);
+                if (closeGameMenuAction != null)
                 {
-                    toggleGameMenuAction.performed -= CloseMenu;
+                    closeGameMenuAction.performed -= CloseMenu;
                 }
                 uiActionMap.Disable();
             }
@@ -137,10 +139,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             InputActionMap uiActionMap = m_menuInput.actions.FindActionMap(m_uiActionMap, true);
             if (uiActionMap != null)
             {
-                InputAction toggleGameMenuAction = uiActionMap.FindAction("ToggleGameMenu", true);
-                if (toggleGameMenuAction != null)
+                InputAction closeGameMenuAction = uiActionMap.FindAction(m_closeGameMenuString, true);
+                if (closeGameMenuAction != null)
                 {
-                    toggleGameMenuAction.performed -= CloseMenu;
+                    closeGameMenuAction.performed -= CloseMenu;
                 }
                 uiActionMap.Disable();
             }
@@ -387,7 +389,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void CloseMenu(InputAction.CallbackContext _callbackContext)
         {
-            AResumeTheGame?.Invoke();
+            var sceneIndex = SceneManager.GetActiveScene().buildIndex;
+            if (sceneIndex != (int)ESceneNames.StartMenu)
+                AResumeTheGame?.Invoke();
         }
     }
 }

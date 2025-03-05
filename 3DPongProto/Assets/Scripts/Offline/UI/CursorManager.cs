@@ -140,14 +140,14 @@ namespace ThreeDeePongProto.Shared.UI
         #region Samyam's Version
         //private void OnInputDeviceChanged(PlayerInput _playerInput)
         //{
-        //    if (m_menuInput.m_currentControlScheme == m_keyboardMouseScheme && m_lastControlSchemeChange != m_keyboardMouseScheme)
+        //    if (m_menuInput.m_lastSetControlScheme == m_keyboardMouseScheme && m_lastControlSchemeChange != m_keyboardMouseScheme)
         //    {
         //        m_cursorTransform.gameObject.SetActive(false);
         //        Cursor.visible = true;
         //        m_physicalMouse.WarpCursorPosition(m_virtualMouse.position.ReadValue());
         //        m_lastControlSchemeChange = m_keyboardMouseScheme;
         //    }
-        //    else if (m_menuInput.m_currentControlScheme == m_gamePadScheme && m_lastControlSchemeChange != m_gamePadScheme)
+        //    else if (m_menuInput.m_lastSetControlScheme == m_gamePadScheme && m_lastControlSchemeChange != m_gamePadScheme)
         //    {
         //        m_cursorTransform.gameObject.SetActive(true);
         //        Cursor.visible = false;
@@ -157,7 +157,7 @@ namespace ThreeDeePongProto.Shared.UI
         //    }
         //}
 
-        //May Update() 'if(m_lastControlSchemeChange != m_menuInput.m_currentControlScheme) with an own 'OnControlsChanged()' method. And update 'm_lastControlSchemeChange = m_menuInput.m_currentControlScheme;' to it.
+        //May Update() 'if(m_lastControlSchemeChange != m_menuInput.m_lastSetControlScheme) with an own 'OnControlsChanged()' method. And update 'm_lastControlSchemeChange = m_menuInput.m_lastSetControlScheme;' to it.
         #endregion
 
         private void OnDeviceChange(InputUser _inputUser, InputUserChange _inputUserChange, InputDevice _inputDevice)
