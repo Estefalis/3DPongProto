@@ -20,10 +20,13 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private const string m_gamePadScheme = "Gamepad", m_gamePadSchemePID0 = "GamepadPlayerID0", m_gamePadSchemePID1 = "GamepadPlayerID1", m_gamePadSchemePID2 = "GamepadPlayerID2", m_gamePadSchemePID3 = "GamepadPlayerID3", m_gamepadDevice = "Gamepad";
 
         private Vector2 m_rotationVector;   //Saved current rotationInput.
+        private bool m_onQuitProcess = false;
 
+        #region Actions_and_Functions
         internal static event Action<int> AKickBall;
         internal static event Action<string> AOpenMenu;   //LocalMatchManager subscribed to react on menu open/close.
         internal static event Action<Vector2> ASendMousePosition;
+        #endregion
 
         private void Awake()
         {
@@ -62,7 +65,21 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnChangeActiveActionMap(string _actionMap)
         {
-            m_playerInput.SwitchCurrentActionMap(_actionMap);
+            switch (_actionMap)
+            {
+                case m_uiActionMap:
+                {
+                    m_playerInput.SwitchCurrentActionMap(m_uiActionMap);
+                    break;
+                }
+                case m_playerActionMap:
+                {
+                    m_playerInput.SwitchCurrentActionMap(m_playerActionMap);
+                    break;
+                }
+                default:
+                    break;
+            }
         }
 
         private void PlayerInputCheck(int _playerIndex)
@@ -161,7 +178,12 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             if (m_userInputManager == null)
             {
-                Debug.LogError("UserInputManager not found!");
+                if (!m_onQuitProcess)
+                {
+#if UNITY_EDITOR
+                    Debug.LogWarning("UserInputManager missing during gameplay.");
+#endif
+                }
                 return;
             }
 
@@ -259,10 +281,17 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnOpenMenu(InputAction.CallbackContext _callbackContext)
         {
-            UserInputManager.ToggleActionMaps(m_uiActionMap);
-
             if (m_playerController.m_playerId == 0)
+            {
+                UserInputManager.ToggleActionMaps(m_uiActionMap);
                 AOpenMenu?.Invoke(m_uiActionMap);
+            }
+        }
+
+
+        private void OnApplicationQuit()
+        {
+            m_onQuitProcess = true;
         }
     }
 }

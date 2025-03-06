@@ -28,6 +28,15 @@ internal enum EPlayerMenuControl
     HostPlayer,
 }
 
+public enum EMenuControlResetSource
+{
+    SceneLoad,
+    MenuClose,
+    MatchEnd,
+    ManualReset,
+    Unknown
+}
+
 namespace ThreeDeePongProto.Shared.Managers
 {
     public class UserInputManager : MonoBehaviour
@@ -45,29 +54,38 @@ namespace ThreeDeePongProto.Shared.Managers
         [SerializeField] private bool m_joinByDefault = true;
         [SerializeField] private EPlayerMenuControl m_ePlayerMenuControl = EPlayerMenuControl.FirstActivePlayer;
 
-        private PlayerInput m_menuPlayerInput;
-        private PlayerInput m_firstActivePlayerInput = null;
-        private PlayerInput m_currentPlayerInput;
         private Transform m_playfieldParent;
+        private PlayerInput m_menuPlayerInput;
 
+        private PlayerInput m_firstActivePlayerInput = null;
+        private PlayerInput m_currentPlayerInput;   //TODO: Delete, if not used in comparisons.
         internal bool GDevicesInitialized { get; private set; } = false;
+        private string m_lastSetControlScheme = string.Empty;
 
         private const string m_keyboardMouse = "KeyboardMouse", m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3", m_keyboardDevice = "Keyboard";
         private const string m_gamePadScheme = "Gamepad", m_gamePadSchemePID0 = "GamepadPlayerID0", m_gamePadSchemePID1 = "GamepadPlayerID1", m_gamePadSchemePID2 = "GamepadPlayerID2", m_gamePadSchemePID3 = "GamepadPlayerID3", m_gamepadDevice = "Gamepad";
 
         private const string m_playerActionMap = "PlayerActions";
-        private string m_lastSetControlScheme = string.Empty;
         private static string m_lastActionMap;
 
         private static ActiveInputActionMap m_newActiveActionMap = ActiveInputActionMap.None;
 
+        #region Lists_and_Dictionaries
         private readonly List<InputDevice> m_usableGamepads = new();
         private readonly Dictionary<uint, InputDevice> m_playerDeviceMap = new();
         private readonly Dictionary<uint, (string controlScheme, InputDevice[] devices)> m_playerLastKnownSetup = new();
+        #endregion
 
+        #region Actions_and_Functions
         internal static event Action<int> ACheckForPlayerInput;            //Tells Player's PlayerInput to configurate itself now.
         internal static event Action<string, InputDevice[]> AOnDeviceInput; //Navigation-controlScheme switch between Keyboard and Gamepad.
         internal static event Action<string> AChangeActiveActionMap;        //PlayerInput switch controlScheme between Menu <-> Game.
+        #endregion
+
+        #region Debug.Log_History
+        private readonly List<string> m_resetHistory = new();
+        private const int m_maxResetHistory = 5;
+        #endregion
 
         #region Scriptable_Objects
         [SerializeField] private MatchUIStates m_matchUIStates;
@@ -107,22 +125,21 @@ namespace ThreeDeePongProto.Shared.Managers
             InputSystem.onDeviceChange -= OnDeviceChange;
         }
 
-        private void Update()
-        {
-            ////Keyboard (and Mouse) Input check.
-            //if (Keyboard.current.anyKey.wasPressedThisFrame || Mouse.current.delta.ReadValue() != Vector2.zero)
-            //{
-            //    CustomControlSchemeSwitch(m_keyboardMouse, new InputDevice[] { Keyboard.current, Mouse.current });
-            //}
-            ////Gamepad-Input check.
-            //else if (Gamepad.current != null && GamepadPressed(out InputDevice gamepadDevice))
-            //{
-            //    CustomControlSchemeSwitch(m_gamePadScheme, new InputDevice[] { gamepadDevice });
-            //}
+        #region Optional_Update_DevicePress_Comparison
+        ////Keyboard (and Mouse) Input check.
+        //if (Keyboard.current.anyKey.wasPressedThisFrame || Mouse.current.delta.ReadValue() != Vector2.zero)
+        //{
+        //    CustomControlSchemeSwitch(m_keyboardMouse, new InputDevice[] { Keyboard.current, Mouse.current });
+        //}
+        ////Gamepad-Input check.
+        //else if (Gamepad.current != null && GamepadPressed(out InputDevice gamepadDevice))
+        //{
+        //    CustomControlSchemeSwitch(m_gamePadScheme, new InputDevice[] { gamepadDevice });
+        //}
 
-            //if (m_currentPlayerInput != null)
-            //    SetPlayerDeviceMap(m_currentPlayerInput);
-        }
+        //if (m_currentPlayerInput != null)
+        //    SetPlayerDeviceMap(m_currentPlayerInput);
+        #endregion
 
         #region PlayerInputManager-Configuration
         private void SetUpPlayerInputManager(PlayerInputManager _playerInputManager)
@@ -174,7 +191,7 @@ namespace ThreeDeePongProto.Shared.Managers
         private void OnSceneManagerLoaded(Scene scene, LoadSceneMode mode)
         {
             int sceneIndex = scene.buildIndex;
-            GDevicesInitialized = false;
+            ResetMenuControl(EMenuControlResetSource.SceneLoad);
 
             GetMenuManager();
 
@@ -344,9 +361,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
             if (_playerInput.user.valid)
             {
-                _playerInput.SwitchCurrentControlScheme(_controlScheme, _assignedDevices);
-                //InputUser.PerformPairingWithDevice(_assignedDevices[0], _playerInput.user);
-                _playerInput.ActivateInput();   //Forces the inputsystem to use the assigned device.
+                _playerInput.SwitchCurrentControlScheme(_controlScheme, _assignedDevices);                
                 //Debug.Log($"PlayerID {_playerInput.playerIndex}: ControlScheme: {_controlScheme} - assigned Device(s): {string.Join(", ", _playerInput.devices.Select(d => d.name))}.");
                 SetPlayerDeviceMap(_playerInput);
             }
@@ -511,6 +526,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 //Debug.Log($"Added PlayerIndex {_playerInput.playerIndex} | PlayerUserID {playerUserID} to {newControlScheme} with {newDevice.name}");
             }
 
+            _playerInput.ActivateInput();   //Forces the inputsystem to use the assigned device.
             m_playerLastKnownSetup[playerUserID] = (newControlScheme, newDevices);
             ACheckForPlayerInput?.Invoke(_playerInput.playerIndex);
         }
@@ -636,32 +652,40 @@ namespace ThreeDeePongProto.Shared.Managers
                 {
                     int firstPlayerIndex = m_menuPlayerInput != null ? 1 : 0;
 
-                    switch (allPlayerInputs.Count < 2)  //aka 1.
+                    if (m_firstActivePlayerInput != null && _playerInput != m_firstActivePlayerInput)
                     {
-                        case true:  //Menu exists alone. (PlayerIndex 0 / UserID 1)
+                        Debug.Log($"Player {_playerInput.playerIndex} (UserID {_playerInput.user.id}) is not the FirstActivePlayer. Switch ignored.");
+                        return;
+                    }
+
+                    if (allPlayerInputs.Count < 2)  //aka 1. Menu exists alone. (PlayerIndex 0 / UserID 1)
+                    {
+                        m_lastSetControlScheme = _newControlScheme;
+                        AOnDeviceInput(_newControlScheme, _newDevices);
+                    }
+                    else
+                    {
+                        if (m_firstActivePlayerInput == null && firstPlayerIndex == _playerInput.playerIndex)
                         {
+                            m_firstActivePlayerInput = _playerInput;
                             m_lastSetControlScheme = _newControlScheme;
                             AOnDeviceInput(_newControlScheme, _newDevices);
-                            break;
-                        }
-                        case false:
-                        {
-                            if (m_firstActivePlayerInput == null && firstPlayerIndex == _playerInput.playerIndex)
-                            {
-                                m_firstActivePlayerInput = _playerInput;
-                                m_lastSetControlScheme = _newControlScheme;
-                                AOnDeviceInput(_newControlScheme, _newDevices);
-                                //Debug.Log($"PlayerObject: {_playerInput.gameObject.name}, PlayerIndex: {_playerInput.playerIndex}, PlayerUserID: {_playerInput.user.id}");
-                            }
-                            return;
+                            //Debug.Log($"PlayerObject: {_playerInput.gameObject.name}, PlayerIndex: {_playerInput.playerIndex}, PlayerUserID: {_playerInput.user.id}");
                         }
                     }
-                    break;
+
+                    return;
                 }
+                case EPlayerMenuControl.SpecificPlayer:
+                {
+                    Debug.Log("Manual player-specific control selected. Additional logic required.");
+                    return;
+                }
+                case EPlayerMenuControl.None:
                 default:
-                    break;
+                    Debug.LogWarning($"Menu control mode is '{m_ePlayerMenuControl}'. No switch performed.");
+                    return;
             }
-            //Debug.Log($"Switched to: {_newControlScheme} | Devices: {string.Join(", ", _newDevices.Select(d => d.name))}");
         }
 
         internal Dictionary<uint, InputDevice> GetPlayerDeviceMap()
@@ -669,16 +693,43 @@ namespace ThreeDeePongProto.Shared.Managers
             return m_playerDeviceMap;
         }
 
+        //Scene-Specific Reset.
         private void CleanupPlayers()
         {
             Debug.Log("Cleaning up players and inputs...");
-            m_firstActivePlayerInput = null;
             m_matchValues.PlayerSOData.Clear();
             m_usableGamepads.Clear();
             for (int i = 0; i < Gamepad.all.Count; i++)
             {
                 if (Gamepad.all[i] != null && !m_usableGamepads.Contains(Gamepad.all[i]))
                     m_usableGamepads.Add(Gamepad.all[i]);
+            }
+        }
+
+        //Reset on all SceneChanges.
+        private void ResetMenuControl(EMenuControlResetSource _resetSource = EMenuControlResetSource.Unknown)
+        {
+            string logEntry = $"{Time.time:F2}s - Reset from: {_resetSource}";
+
+            if (m_resetHistory.Count >= m_maxResetHistory)
+                m_resetHistory.RemoveAt(0); //Remove oldest entry.
+
+            m_resetHistory.Add(logEntry);
+
+            Debug.Log($"Resetting menu control. Source: {_resetSource}.");
+
+            m_firstActivePlayerInput = null;
+            GDevicesInitialized = false;
+            m_lastSetControlScheme = string.Empty;
+            m_currentPlayerInput = null;
+        }
+
+        internal void PrintResetHistory()
+        {
+            Debug.Log("Reset History:");
+            foreach (var entry in m_resetHistory)
+            {
+                Debug.Log(entry);
             }
         }
 

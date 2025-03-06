@@ -1,6 +1,5 @@
 using System;
 using ThreeDeePongProto.Offline.UI.Menu;
-using ThreeDeePongProto.Shared.PlayerCharacter;
 using UnityEngine;
 
 public enum EGameConnectionModi
@@ -118,7 +117,7 @@ namespace ThreeDeePongProto.Shared.Managers
             StartNextRound += LetsStartNextRound;
             StartWinProcedure += LetsStartWinProcedure;
 
-            CharacterInputHandler.AOpenMenu += PauseAndTimeScale;
+            UserInputManager.AChangeActiveActionMap += PauseAndTimeScale;
         }
 
         private void OnDisable()
@@ -139,7 +138,7 @@ namespace ThreeDeePongProto.Shared.Managers
             StartNextRound -= LetsStartNextRound;
             StartWinProcedure -= LetsStartWinProcedure;
 
-            CharacterInputHandler.AOpenMenu -= PauseAndTimeScale;
+            UserInputManager.AChangeActiveActionMap -= PauseAndTimeScale;
         }
 
         #region Custom-Methods

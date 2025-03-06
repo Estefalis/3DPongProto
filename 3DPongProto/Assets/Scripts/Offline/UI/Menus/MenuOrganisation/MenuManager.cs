@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ThreeDeePongProto.Shared.Managers;
-using ThreeDeePongProto.Shared.PlayerCharacter;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -13,7 +13,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 {
     public class MenuManager : MonoBehaviour
     {
-        //private PlayerInputActions m_playerInputActions;
         private PlayerInput m_menuInput;
         [SerializeField] internal EventSystem m_eventSystem;
 
@@ -43,7 +42,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #endregion
 
         internal static GameObject LastSelectedGameObject { get => m_lastSelectedGameObject; }
-        private static GameObject /*m_lastMenuSceneObject, m_lastGameSceneObject, */m_lastSelectedGameObject;
+        private static GameObject m_lastSelectedGameObject;
         #endregion
 
         #region GameScene-Variables
@@ -95,7 +94,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 }
             }
 
-            CharacterInputHandler.AOpenMenu += OnPlayerOpensMenu;
             AResumeTheGame += OnResumeTheGame;
             UserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
             UserInputManager.AOnDeviceInput += OnUserHandledDevice;
@@ -112,7 +110,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnDisable()
         {
-            CharacterInputHandler.AOpenMenu -= OnPlayerOpensMenu;
             AResumeTheGame -= OnResumeTheGame;
             UserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
             UserInputManager.AOnDeviceInput -= OnUserHandledDevice;
@@ -131,7 +128,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnDestroy()
         {
-            CharacterInputHandler.AOpenMenu -= OnPlayerOpensMenu;
             AResumeTheGame -= OnResumeTheGame;
             UserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
             UserInputManager.AOnDeviceInput -= OnUserHandledDevice;
@@ -162,35 +158,38 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #region Non_InputAction_Subscriptions
         private void OnChangeActiveActionMap(string _actionMap)
         {
-            //TODO: DON'T switch to playerActionMap in MenuScenes only!
+            //TODO: DON'T switch to playerActionMap in Scenes with Menus only!
             var sceneIndex = SceneManager.GetActiveScene().buildIndex;
-            if (sceneIndex != (int)ESceneNames.StartMenu)
-                m_menuInput.SwitchCurrentActionMap(_actionMap);
-        }
+            if (sceneIndex == (int)ESceneNames.StartMenu)   //Or in other menuOnly Scenes.
+                return;
 
-        private void OnUserHandledDevice(string _controlScheme, InputDevice[] _devices)
-        {
-            m_menuInput.SwitchCurrentControlScheme(_controlScheme, _devices);
-            m_currentControlScheme = _controlScheme;
-            Debug.Log($"MenuInput changed to {_controlScheme}.");   //DER MACHT DAS PRO PLAYER! OH ALTANA!
-        }
-
-        private void OnPlayerOpensMenu(string _actionMap)
-        {
-            switch (_actionMap == m_uiActionMap)
+            switch (_actionMap)
             {
-                case true:
+                case m_uiActionMap:
                 {
                     if (!m_firstElement.gameObject.activeInHierarchy)
                     {
                         m_firstElement.gameObject.SetActive(true);
                         SetNavigationGameObject(m_firstElement);
                     }
+                    Debug.Log($"Assigned Device(s): {string.Join(", ", m_menuInput.devices.Select(d => d.name))} | CurActionMap: {m_menuInput.currentActionMap.name} | CurControlScheme: {m_menuInput.currentControlScheme}.");
+                    m_menuInput.SwitchCurrentActionMap(m_uiActionMap);
+                    break;
                 }
-                break;
-                case false:
+                case m_playerActionMap:
+                {
+                    m_menuInput.SwitchCurrentActionMap(m_playerActionMap);
+                    break;
+                }
+                default:
                     break;
             }
+        }
+
+        private void OnUserHandledDevice(string _controlScheme, InputDevice[] _devices)
+        {
+            m_menuInput.SwitchCurrentControlScheme(_controlScheme, _devices);
+            m_currentControlScheme = _controlScheme;
         }
         #endregion
 
@@ -390,8 +389,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void CloseMenu(InputAction.CallbackContext _callbackContext)
         {
             var sceneIndex = SceneManager.GetActiveScene().buildIndex;
-            if (sceneIndex != (int)ESceneNames.StartMenu)
-                AResumeTheGame?.Invoke();
+            if (sceneIndex == (int)ESceneNames.StartMenu)   //Or in other menuOnly Scenes.
+                return;
+
+            AResumeTheGame?.Invoke();
         }
     }
 }
