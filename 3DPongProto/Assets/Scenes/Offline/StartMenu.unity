@@ -212,7 +212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 1884955036}
     m_SelectOnDown: {fileID: 395195819}
@@ -666,7 +666,7 @@ GameObject:
   m_Component:
   - component: {fileID: 159073940}
   m_Layer: 0
-  m_Name: ManagersEachScene
+  m_Name: SceneManagers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5313,7 +5313,7 @@ GameObject:
   - component: {fileID: 1362999632}
   - component: {fileID: 1362999633}
   m_Layer: 0
-  m_Name: ManagersDDOL
+  m_Name: DDOLManagers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9525,6 +9525,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 293157a3d26188f44981d8eda4fd97d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_uiInputModule: {fileID: 1805932209}
   m_eventSystem: {fileID: 1805932207}
   m_firstElement: {fileID: 433312016}
   m_keyTransform:
@@ -9558,6 +9559,7 @@ MonoBehaviour:
   - {fileID: 1108786669}
   - {fileID: 1480635289435456337}
   m_hiddenFinishButton: {fileID: 0}
+  m_useUIInputModule: 1
   m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
 --- !u!114 &2136304141
@@ -9575,7 +9577,7 @@ MonoBehaviour:
   m_Actions: {fileID: -944628639613478452, guid: 10bcd34be915850428dc91a0ac6c1a9f,
     type: 3}
   m_NotificationBehavior: 3
-  m_UIInputModule: {fileID: 0}
+  m_UIInputModule: {fileID: 1805932209}
   m_DeviceLostEvent:
     m_PersistentCalls:
       m_Calls: []
