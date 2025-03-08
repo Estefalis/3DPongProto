@@ -73,7 +73,7 @@ namespace ThreeDeePongProto.Shared.Managers
         #region Lists_and_Dictionaries
         private readonly List<InputDevice> m_usableGamepads = new();
         private readonly Dictionary<uint, InputDevice> m_playerDeviceMap = new();
-        private readonly Dictionary<uint, (string controlScheme, InputDevice[] devices)> m_lastPlayerSetup = new();
+        private readonly Dictionary<uint, InputDevice[]> m_startPlayerSetup = new();
         #endregion
 
         #region Actions_and_Functions
@@ -116,7 +116,6 @@ namespace ThreeDeePongProto.Shared.Managers
             SceneManager.sceneLoaded += OnSceneManagerLoaded;
             MenuManager.AReLoadScene += OnReLoadScene;
             InputSystem.onDeviceChange += OnDeviceChange;
-            //m_menuPlayerInput.onControlsChanged += OnControlsChanged; moved into 'GetMenuManager()' in 'OnSceneManagerLoaded()'.
         }
 
         private void OnDisable()
@@ -124,7 +123,6 @@ namespace ThreeDeePongProto.Shared.Managers
             SceneManager.sceneLoaded -= OnSceneManagerLoaded;
             MenuManager.AReLoadScene -= OnReLoadScene;
             InputSystem.onDeviceChange -= OnDeviceChange;
-            //m_menuPlayerInput.onControlsChanged -= OnControlsChanged;
         }
 
         #region Optional_Update_DevicePress_Comparison
@@ -171,7 +169,6 @@ namespace ThreeDeePongProto.Shared.Managers
             if (menuManager != null)
             {
                 m_menuPlayerInput = menuManager.GetComponent<PlayerInput>();
-                //m_menuPlayerInput.onControlsChanged += OnControlsChanged;
 
                 if (m_menuPlayerInput == null)
                 {
@@ -282,16 +279,6 @@ namespace ThreeDeePongProto.Shared.Managers
                     break;
             }
         }
-
-        //private void OnControlsChanged(PlayerInput _playerInput)
-        //{
-        //    if (m_menuPlayerInput.devices.Count > 0)
-        //    {
-        //        m_lastActiveDevice = m_menuPlayerInput.devices[0];
-        //        m_lastActiveControlScheme = m_menuPlayerInput.currentControlScheme;
-        //        Debug.Log($"Last active device set: {m_lastActiveDevice.displayName} ({m_lastActiveControlScheme}).");
-        //    }
-        //}
         #endregion
 
         #region Instantiate_and_Configurate_Player_PlayerInput
@@ -532,7 +519,7 @@ namespace ThreeDeePongProto.Shared.Managers
             }
 
             _playerInput.ActivateInput();   //Forces the inputsystem to use the assigned device.
-            m_lastPlayerSetup[playerUserID] = (newControlScheme, newDevices);
+            m_startPlayerSetup[playerUserID] = newDevices;
             ACheckForPlayerInput?.Invoke(_playerInput.playerIndex);
         }
         #endregion
@@ -586,10 +573,9 @@ namespace ThreeDeePongProto.Shared.Managers
             {
                 //var userDevices = playerInput.user.pairedDevices;
 
-                //if (m_playerDeviceMap[playerInput.user.id] == disconnectedGamepad)
-                if (m_playerDeviceMap.TryGetValue(playerInput.user.id, out var lastDevice))
+                if (m_playerDeviceMap.TryGetValue(playerInput.user.id, out var dictDevice))
                 {
-                    if (lastDevice == disconnectedGamepad)
+                    if (dictDevice == disconnectedGamepad)
                     {
                         var newDevices = new InputDevice[] { Keyboard.current, Mouse.current };
                         var deviceMap = GetPlayerDeviceMap();
@@ -605,8 +591,6 @@ namespace ThreeDeePongProto.Shared.Managers
                         Debug.Log($"PlayerIndex {playerInput.playerIndex} | PlayerUserID {playerInput.user.id} switched to Keyboard/Mouse after disconnecting Gamepad.");
                     }
                 }
-                //else
-                //    Debug.Log(playerInput.gameObject.name); //Debug MenuManager.
             }
         }
 
@@ -620,9 +604,15 @@ namespace ThreeDeePongProto.Shared.Managers
 
             foreach (var playerInput in PlayerInput.all)
             {
-                if (m_lastPlayerSetup.TryGetValue(playerInput.user.id, out var setup))
+                if (!m_startPlayerSetup.ContainsKey(playerInput.user.id))
                 {
-                    if (setup.controlScheme == m_gamePadScheme)
+                    m_startPlayerSetup[playerInput.user.id] = new InputDevice[] { reconnectedGamepad };
+                    Debug.Log($"Added missing device entry for Player {playerInput.user.id}: {reconnectedGamepad.displayName}");
+                }
+
+                if (m_startPlayerSetup.TryGetValue(playerInput.user.id, out var startDevice))
+                {
+                    if (startDevice[0] == reconnectedGamepad)
                     {
                         var deviceMap = GetPlayerDeviceMap();
                         deviceMap[playerInput.user.id] = reconnectedGamepad;
@@ -634,10 +624,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
                         CustomControlSchemeSwitch(m_gamePadScheme, newDevices, playerInput);
 
-                        //foreach(var userID in m_lastPlayerSetup)
-                        //    Debug.Log($"Key: {userID.Key} | Value: {userID.Value}");
-
-                        //Debug.Log($"Reconnected {reconnectedGamepad.name} to PlayerIndex {playerInput.playerIndex} | PlayerUserID {playerInput.user.id}.");
+                        Debug.Log($"Reconnected {reconnectedGamepad.name} to PlayerIndex {playerInput.playerIndex} | PlayerUserID {playerInput.user.id}.");
                         break; //Allocate to one specific playerInput and exit.
                     }
                 }
@@ -671,21 +658,30 @@ namespace ThreeDeePongProto.Shared.Managers
                     if (m_firstActivePlayerInput != null && _playerInput != m_firstActivePlayerInput)
                         return;
 
-                    //if (_playerInput == m_menuPlayerInput)
-                    if (allPlayerInputs.Count < 2)  //aka 1. Menu exists alone. (PlayerIndex 0 / UserID 1)
-                    {
-                        deviceMap[_playerInput.user.id] = _newDevices[0];
+                    deviceMap[_playerInput.user.id] = _newDevices[0];
 
+                    //var noMenuInput = allPlayerInputs.Where(p => p != m_menuPlayerInput).Count();
+                    //var allButMenu = allPlayerInputs.Count(p => p != m_menuPlayerInput);
+                    //Debug.Log($"NoMenuInput: {noMenuInput} | AllButMenu: {allButMenu}");
+
+                    if (allPlayerInputs.Count(p => p != m_menuPlayerInput) < 2)  //aka 1. Menu exists alone. (PlayerIndex 0 / UserID 1)
+                    {
+                        m_firstActivePlayerInput = m_menuPlayerInput;
                         m_lastActiveControlScheme = _newControlScheme;
                         AConnectMenuInput(_newControlScheme, _newDevices);
                     }
                     else
                     {
-                        if (m_firstActivePlayerInput == null && firstPlayerIndex == _playerInput.playerIndex)
+                        if (firstPlayerIndex == _playerInput.playerIndex)
                         {
                             m_firstActivePlayerInput = _playerInput;
                             m_lastActiveControlScheme = _newControlScheme;
                             AConnectMenuInput(_newControlScheme, _newDevices);
+                            Debug.Log($"FirstActivePlayer: {_newControlScheme} | Device(s): {string.Join(", ", _newDevices.Select(d => d.name))}");
+                        }
+                        else
+                        {
+                            Debug.Log($"Skipping {_playerInput.playerIndex} as FirstActivePlayer is already set.");
                         }
                     }
 
