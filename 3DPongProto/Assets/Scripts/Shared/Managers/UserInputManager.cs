@@ -606,9 +606,7 @@ namespace ThreeDeePongProto.Shared.Managers
                     }
                 }
                 //else
-                //{
                 //    Debug.Log(playerInput.gameObject.name); //Debug MenuManager.
-                //}
             }
         }
 
@@ -636,7 +634,10 @@ namespace ThreeDeePongProto.Shared.Managers
 
                         CustomControlSchemeSwitch(m_gamePadScheme, newDevices, playerInput);
 
-                        Debug.Log($"Reconnected {reconnectedGamepad.name} to PlayerIndex {playerInput.playerIndex} | PlayerUserID {playerInput.user.id}.");
+                        //foreach(var userID in m_lastPlayerSetup)
+                        //    Debug.Log($"Key: {userID.Key} | Value: {userID.Value}");
+
+                        //Debug.Log($"Reconnected {reconnectedGamepad.name} to PlayerIndex {playerInput.playerIndex} | PlayerUserID {playerInput.user.id}.");
                         break; //Allocate to one specific playerInput and exit.
                     }
                 }
@@ -673,9 +674,8 @@ namespace ThreeDeePongProto.Shared.Managers
                     //if (_playerInput == m_menuPlayerInput)
                     if (allPlayerInputs.Count < 2)  //aka 1. Menu exists alone. (PlayerIndex 0 / UserID 1)
                     {
-                        if (deviceMap.TryGetValue(_playerInput.user.id, out var currentDevice))
-                            deviceMap[_playerInput.user.id] = currentDevice;
-                        Debug.Log(_newControlScheme);
+                        deviceMap[_playerInput.user.id] = _newDevices[0];
+
                         m_lastActiveControlScheme = _newControlScheme;
                         AConnectMenuInput(_newControlScheme, _newDevices);
                     }
