@@ -9,12 +9,13 @@ using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-//'UserInputManager.cs' adds PlayerInput component on runtime!
+//'UserInputManager.cs' adds PlayerInput component on runtime, if it doesn't already exist.
 namespace ThreeDeePongProto.Offline.UI.Menu
 {
     public class MenuManager : MonoBehaviour
     {
-        private PlayerInput m_menuInput;
+        private UserInputManager m_userInputManager;
+        private PlayerInput m_menuPlayerInput;
         [SerializeField] private InputSystemUIInputModule m_uiInputModule;
         [SerializeField] internal EventSystem m_eventSystem;
 
@@ -22,14 +23,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #region Select First Elements by using the EventSystem.
         [Header("Select First Elements")]
         [SerializeField] private Transform m_firstElement;
-        internal Transform FirstElement { get => m_firstElement; }
-        private Stack<Transform> m_activeElement = new();
+        private readonly Stack<Transform> m_activeElement = new();
         [Space]
 
         //Key-/Value-Pair component-arrays to set the selected GameObject for menu navigation with a dictionary.
         [SerializeField] internal Transform[] m_keyTransform;
         [SerializeField] private GameObject[] m_valueGameObject;
-        private Dictionary<Transform, GameObject> m_selectedElement = new Dictionary<Transform, GameObject>();
+        private readonly Dictionary<Transform, GameObject> m_selectedElement = new();
         #endregion
 
         #region Alpha-Buttons and SubPages.
@@ -71,17 +71,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void Awake()
         {
-            if (m_eventSystem == null)
-                m_eventSystem = EventSystem.current;
+            UIInputModuleSetup();
 
-            if (m_uiInputModule == null)
-                m_uiInputModule = FindObjectOfType<InputSystemUIInputModule>();
-
-            if (m_uiInputModule == null)
-                Debug.LogError("No InputSystemUIInputModule found in scene!");
-
-            m_menuInput = GetComponent<PlayerInput>();
-            SetMenuInputDefault(m_menuInput);
+            m_userInputManager = FindObjectOfType<UserInputManager>();
+            m_menuPlayerInput = GetComponent<PlayerInput>();
+            SetMenuInputDefault(m_menuPlayerInput);
 
             m_lastSelectedGameObject = null;
             m_selectedElement.Clear();
@@ -92,7 +86,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnEnable()
         {
-            InputActionMap uiActionMap = m_menuInput.actions.FindActionMap(m_uiActionMap, true);
+            InputActionMap uiActionMap = m_menuPlayerInput.actions.FindActionMap(m_uiActionMap, true);
             if (uiActionMap != null)
             {
                 uiActionMap.Enable();
@@ -105,34 +99,16 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             AResumeTheGame += OnResumeTheGame;
             UserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
-            UserInputManager.AOnDeviceInput += OnUserHandledDevice;
+            UserInputManager.AConnectMenuInput += OnUserHandledDevice;
         }
 
         private void OnDisable()
         {
             AResumeTheGame -= OnResumeTheGame;
             UserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
-            UserInputManager.AOnDeviceInput -= OnUserHandledDevice;
+            UserInputManager.AConnectMenuInput -= OnUserHandledDevice;
 
-            InputActionMap uiActionMap = m_menuInput.actions.FindActionMap(m_uiActionMap, true);
-            if (uiActionMap != null)
-            {
-                InputAction closeGameMenuAction = uiActionMap.FindAction(m_closeGameMenuString, true);
-                if (closeGameMenuAction != null)
-                {
-                    closeGameMenuAction.performed -= CloseMenu;
-                }
-                uiActionMap.Disable();
-            }
-        }
-
-        private void OnDestroy()
-        {
-            AResumeTheGame -= OnResumeTheGame;
-            UserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
-            UserInputManager.AOnDeviceInput -= OnUserHandledDevice;
-
-            InputActionMap uiActionMap = m_menuInput.actions.FindActionMap(m_uiActionMap, true);
+            InputActionMap uiActionMap = m_menuPlayerInput.actions.FindActionMap(m_uiActionMap, true);
             if (uiActionMap != null)
             {
                 InputAction closeGameMenuAction = uiActionMap.FindAction(m_closeGameMenuString, true);
@@ -148,6 +124,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             if (m_hiddenFinishButton != null)
                 InVisibleButton(m_matchUIStates.InfiniteMatch); //m_matchUIStates get load in LoadSettingsValues > Awake().
+
+            //Debug.Log($"UIInputModule ActionsAsset: {m_uiInputModule.actionsAsset.name}, Navigate Action: {m_uiInputModule.move.action?.name}, Submit Action: {m_uiInputModule.submit.action?.name}, Cancel Action: {m_uiInputModule.cancel.action?.name}");
         }
 
         private void Update()
@@ -176,7 +154,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             {
                 case m_uiActionMap:
                 {
-                    OnOpenMenu();                    
+                    OnOpenMenu();
                     break;
                 }
                 case m_playerActionMap:
@@ -198,8 +176,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 m_firstElement.gameObject.SetActive(true);
                 SetNavigationGameObject(m_firstElement);
             }
-            //Debug.Log($"Assigned Device(s): {string.Join(", ", m_menuInput.devices.Select(d => d.name))} | CurActionMap: {m_menuInput.currentActionMap.name} | CurControlScheme: {m_menuInput.currentControlScheme}.");
-            m_menuInput.SwitchCurrentActionMap(m_uiActionMap);
+
+            m_menuPlayerInput.SwitchCurrentActionMap(m_uiActionMap);
+            //Debug.Log($"CurActionMap: {m_menuPlayerInput.currentActionMap.name} | CurControlScheme: {m_menuPlayerInput.currentControlScheme} | UIModuleEnabled: {m_uiInputModule.enabled} | UIModuleNull: {m_uiInputModule == null}.");
         }
 
         private void OnCloseMenu()
@@ -207,13 +186,15 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (m_useUIInputModule && m_uiInputModule != null)
                 m_uiInputModule.enabled = false;
 
-            m_menuInput.SwitchCurrentActionMap(m_playerActionMap);
+            m_menuPlayerInput.SwitchCurrentActionMap(m_playerActionMap);
         }
 
         private void OnUserHandledDevice(string _controlScheme, InputDevice[] _devices)
         {
-            m_menuInput.SwitchCurrentControlScheme(_controlScheme, _devices);
-            m_currentControlScheme = _controlScheme;
+            //m_menuPlayerInput.SwitchCurrentControlScheme(_controlScheme, _devices);
+            //m_currentControlScheme = _controlScheme;
+
+            PreviousDeviceSetup(_controlScheme, _devices);
         }
         #endregion
 
@@ -221,30 +202,65 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void SetMenuInputDefault(PlayerInput _menuInput)
         {
             if (_menuInput == null)
-                m_menuInput = gameObject.AddComponent<PlayerInput>();
+                m_menuPlayerInput = gameObject.AddComponent<PlayerInput>();
 
-            m_menuInput.actions = Resources.Load<InputActionAsset>("InputActions/PlayerInputActions");
-            m_menuInput.defaultActionMap = m_uiActionMap;
+            m_menuPlayerInput.actions = Resources.Load<InputActionAsset>("InputActions/PlayerInputActions");
+            m_menuPlayerInput.defaultActionMap = m_uiActionMap;
             //Enable active ControlScheme switch.
-            m_menuInput.neverAutoSwitchControlSchemes = false;
-            m_menuInput.enabled = true;
+            m_menuPlayerInput.neverAutoSwitchControlSchemes = false;
+            m_menuPlayerInput.enabled = true;
 
             if (m_useUIInputModule && m_uiInputModule != null)
             {
-                m_menuInput.uiInputModule = m_uiInputModule;
-                m_uiInputModule.actionsAsset = m_menuInput.actions; //For security.
+                m_menuPlayerInput.uiInputModule = m_uiInputModule;
+                m_uiInputModule.actionsAsset = m_menuPlayerInput.actions; //For security.
             }
 
             //Set the notificationBehavior of the PlayerInput component.
-            m_menuInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
+            m_menuPlayerInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
 
-            m_menuInput.SwitchCurrentActionMap(m_uiActionMap);
-            //m_menuInput.defaultControlScheme = m_keyboardMouse;
+            m_menuPlayerInput.SwitchCurrentActionMap(m_uiActionMap);
+            //m_menuPlayerInput.defaultControlScheme = m_keyboardMouse;
             //m_currentControlScheme = m_keyboardMouse;
         }
         #endregion
 
         #region Custom-Methods
+        private void UIInputModuleSetup()
+        {
+            if (m_eventSystem == null)
+                m_eventSystem = EventSystem.current;
+
+            if (m_uiInputModule == null)
+                m_uiInputModule = FindObjectOfType<InputSystemUIInputModule>();
+
+            if (m_uiInputModule == null)
+                Debug.LogError("No InputSystemUIInputModule found in scene!");
+        }
+
+        private void PreviousDeviceSetup(string _controlScheme, InputDevice[] _devices)
+        {
+            if (m_menuPlayerInput == null)
+            {
+                Debug.LogError("No PlayerInput found on MenuManager.");
+                return;
+            }
+            //Debug.Log($"Scheme: {_controlScheme} | Devices {string.Join(", ", _devices.Select(d => d.name))}");   //UserID 1 & 3-6.
+            if (_devices == null || _devices.Length == 0)
+            {
+                Debug.LogWarning("No devices provided. Using Keyboard/Mouse as fallback.");
+                _devices = new InputDevice[] { Keyboard.current, Mouse.current };
+                _controlScheme = m_keyboardMouse;
+            }
+
+            m_currentControlScheme = _controlScheme;
+            m_menuPlayerInput.SwitchCurrentControlScheme(_controlScheme, _devices);
+            m_menuPlayerInput.SwitchCurrentActionMap(m_uiActionMap);
+            //InputUser.PerformPairingWithDevice(_devices[0], m_menuPlayerInput.user);
+
+            //Debug.Log($"Menu PlayerInput switched to {_controlScheme} with devices {string.Join(", ", _devices.Select(d => d.name))}");
+        }
+
         private void UpdateLastSelectedObject()
         {
             switch (m_eventSystem.currentSelectedGameObject == null)
@@ -369,7 +385,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         }
         #endregion
 
-        #region MenuButton-Methods
+        #region MenuButton_Methods
         public void ResumeGame()
         {
             AResumeTheGame?.Invoke();

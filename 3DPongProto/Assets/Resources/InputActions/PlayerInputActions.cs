@@ -390,17 +390,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""d830b3e4-5071-4b33-a452-04738e7df886"",
-                    ""path"": ""<VirtualMouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": ""StickDeadzone"",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""MousePosition"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
                     ""name"": ""LeftRight"",
                     ""id"": ""f4b917d6-3a0d-461b-ae9d-feb0cc67df3c"",
                     ""path"": ""2DVector"",
@@ -1745,24 +1734,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""TrackedDevicePosition"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""40b1d236-4280-45ee-bab6-d382a5bc61d0"",
-                    ""expectedControlType"": ""Vector3"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""TrackedDeviceOrientation"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""3a705899-d2a2-4222-a9e0-8ba2f8684c60"",
-                    ""expectedControlType"": ""Quaternion"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1817,61 +1788,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""Joystick"",
-                    ""id"": ""9239a819-efa4-4106-8bba-b545835b9ba2"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": ""StickDeadzone"",
-                    ""groups"": """",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""ac3bdb86-47a1-4c62-bb52-336e935a9099"",
-                    ""path"": ""<Joystick>/stick/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Joystick"",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""6c62de40-fefc-413c-b670-ccbd8f3cec1b"",
-                    ""path"": ""<Joystick>/stick/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Joystick"",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""e74998c6-dd23-43fc-b9d0-7b1c4ebd9d85"",
-                    ""path"": ""<Joystick>/stick/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Joystick"",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""4a97af01-c16a-4977-b115-ccd2406be123"",
-                    ""path"": ""<Joystick>/stick/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Joystick"",
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1933,17 +1849,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": """",
-                    ""id"": ""44fabd14-3b27-478d-ba7b-4f2bbaa6eb45"",
-                    ""path"": ""*/{Submit}"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Submit"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""ea2f1397-5676-4b55-9f38-5206b4dbd736"",
                     ""path"": ""<Keyboard>/enter"",
                     ""interactions"": """",
@@ -1972,17 +1877,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Submit"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f1a593fc-22ae-4638-9a84-dc8a47c03ebf"",
-                    ""path"": ""*/{Cancel}"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -2021,55 +1915,11 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": """",
-                    ""id"": ""ae810de2-bca6-4842-a343-2ee66b37d1a0"",
-                    ""path"": ""<VirtualMouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": ""StickDeadzone"",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Point"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""a0802b94-799c-46fd-83bb-c2c0ddbde5c1"",
-                    ""path"": ""<Pen>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Point"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c750068a-fe6e-472d-930f-7033851dd222"",
-                    ""path"": ""<Touchscreen>/touch*/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Touch"",
-                    ""action"": ""Point"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""7faf2df8-c148-492f-a455-600e113bccaf"",
                     ""path"": ""<Mouse>/scroll"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse;KeyboardMouse"",
-                    ""action"": ""ScrollWheel"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f8ee7f90-abb1-47a5-8ffd-bea5205e368f"",
-                    ""path"": ""<VirtualMouse>/scroll"",
-                    ""interactions"": """",
-                    ""processors"": ""StickDeadzone"",
-                    ""groups"": ""Gamepad"",
                     ""action"": ""ScrollWheel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2093,28 +1943,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse;KeyboardMouse"",
                     ""action"": ""RightClick"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f39d99e7-f8eb-4bc4-8219-2311f865d9ad"",
-                    ""path"": ""<XRController>/devicePosition"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""XR"",
-                    ""action"": ""TrackedDevicePosition"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""566a83b8-6a4f-4baa-9756-52a5e143635f"",
-                    ""path"": ""<XRController>/deviceRotation"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""XR"",
-                    ""action"": ""TrackedDeviceOrientation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -2175,55 +2003,11 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": """",
-                    ""id"": ""2b0f0099-196c-4a53-954e-4e2cf889560b"",
-                    ""path"": ""<VirtualMouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""LeftClick"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""35867239-96a7-47c9-aaac-57c2c04dd5a6"",
                     ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""LeftClick"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b68ed94c-29a1-47e7-9100-3e83f7a7a6e2"",
-                    ""path"": ""<Pen>/tip"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""LeftClick"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""56fd2926-b330-4d37-89bb-6a4ee5ef4138"",
-                    ""path"": ""<Touchscreen>/touch*/press"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""LeftClick"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""54ff1a8f-e7ca-49e9-89c2-f54a6c4cd056"",
-                    ""path"": ""<XRController>/trigger"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": """",
                     ""action"": ""LeftClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2255,11 +2039,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""devicePath"": ""<Gamepad>"",
                     ""isOptional"": false,
-                    ""isOR"": false
-                },
-                {
-                    ""devicePath"": ""<VirtualMouse>"",
-                    ""isOptional"": true,
                     ""isOR"": false
                 }
             ]
@@ -2320,11 +2099,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""devicePath"": ""<Gamepad>"",
                     ""isOptional"": false,
                     ""isOR"": false
-                },
-                {
-                    ""devicePath"": ""<VirtualMouse>"",
-                    ""isOptional"": true,
-                    ""isOR"": false
                 }
             ]
         },
@@ -2336,11 +2110,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""devicePath"": ""<Gamepad>"",
                     ""isOptional"": false,
                     ""isOR"": false
-                },
-                {
-                    ""devicePath"": ""<VirtualMouse>"",
-                    ""isOptional"": true,
-                    ""isOR"": false
                 }
             ]
         },
@@ -2351,11 +2120,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""devicePath"": ""<Gamepad>"",
                     ""isOptional"": false,
-                    ""isOR"": false
-                },
-                {
-                    ""devicePath"": ""<VirtualMouse>"",
-                    ""isOptional"": true,
                     ""isOR"": false
                 }
             ]
@@ -2383,11 +2147,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""devicePath"": ""<Gamepad>"",
                     ""isOptional"": false,
-                    ""isOR"": false
-                },
-                {
-                    ""devicePath"": ""<VirtualMouse>"",
-                    ""isOptional"": true,
                     ""isOR"": false
                 }
             ]
@@ -2435,8 +2194,6 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_UserInterface_RightClick = m_UserInterface.FindAction("RightClick", throwIfNotFound: true);
             m_UserInterface_CursorVisibility = m_UserInterface.FindAction("CursorVisibility", throwIfNotFound: true);
             m_UserInterface_CloseGameMenu = m_UserInterface.FindAction("CloseGameMenu", throwIfNotFound: true);
-            m_UserInterface_TrackedDevicePosition = m_UserInterface.FindAction("TrackedDevicePosition", throwIfNotFound: true);
-            m_UserInterface_TrackedDeviceOrientation = m_UserInterface.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -2784,8 +2541,6 @@ namespace ThreeDeePongProto.Shared.InputActions
         private readonly InputAction m_UserInterface_RightClick;
         private readonly InputAction m_UserInterface_CursorVisibility;
         private readonly InputAction m_UserInterface_CloseGameMenu;
-        private readonly InputAction m_UserInterface_TrackedDevicePosition;
-        private readonly InputAction m_UserInterface_TrackedDeviceOrientation;
         public struct UserInterfaceActions
         {
             private @PlayerInputActions m_Wrapper;
@@ -2800,8 +2555,6 @@ namespace ThreeDeePongProto.Shared.InputActions
             public InputAction @RightClick => m_Wrapper.m_UserInterface_RightClick;
             public InputAction @CursorVisibility => m_Wrapper.m_UserInterface_CursorVisibility;
             public InputAction @CloseGameMenu => m_Wrapper.m_UserInterface_CloseGameMenu;
-            public InputAction @TrackedDevicePosition => m_Wrapper.m_UserInterface_TrackedDevicePosition;
-            public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UserInterface_TrackedDeviceOrientation;
             public InputActionMap Get() { return m_Wrapper.m_UserInterface; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -2841,12 +2594,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @CloseGameMenu.started += instance.OnCloseGameMenu;
                 @CloseGameMenu.performed += instance.OnCloseGameMenu;
                 @CloseGameMenu.canceled += instance.OnCloseGameMenu;
-                @TrackedDevicePosition.started += instance.OnTrackedDevicePosition;
-                @TrackedDevicePosition.performed += instance.OnTrackedDevicePosition;
-                @TrackedDevicePosition.canceled += instance.OnTrackedDevicePosition;
-                @TrackedDeviceOrientation.started += instance.OnTrackedDeviceOrientation;
-                @TrackedDeviceOrientation.performed += instance.OnTrackedDeviceOrientation;
-                @TrackedDeviceOrientation.canceled += instance.OnTrackedDeviceOrientation;
             }
 
             private void UnregisterCallbacks(IUserInterfaceActions instance)
@@ -2881,12 +2628,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @CloseGameMenu.started -= instance.OnCloseGameMenu;
                 @CloseGameMenu.performed -= instance.OnCloseGameMenu;
                 @CloseGameMenu.canceled -= instance.OnCloseGameMenu;
-                @TrackedDevicePosition.started -= instance.OnTrackedDevicePosition;
-                @TrackedDevicePosition.performed -= instance.OnTrackedDevicePosition;
-                @TrackedDevicePosition.canceled -= instance.OnTrackedDevicePosition;
-                @TrackedDeviceOrientation.started -= instance.OnTrackedDeviceOrientation;
-                @TrackedDeviceOrientation.performed -= instance.OnTrackedDeviceOrientation;
-                @TrackedDeviceOrientation.canceled -= instance.OnTrackedDeviceOrientation;
             }
 
             public void RemoveCallbacks(IUserInterfaceActions instance)
@@ -3037,8 +2778,6 @@ namespace ThreeDeePongProto.Shared.InputActions
             void OnRightClick(InputAction.CallbackContext context);
             void OnCursorVisibility(InputAction.CallbackContext context);
             void OnCloseGameMenu(InputAction.CallbackContext context);
-            void OnTrackedDevicePosition(InputAction.CallbackContext context);
-            void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
         }
     }
 }

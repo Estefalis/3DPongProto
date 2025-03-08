@@ -20,16 +20,17 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private const string m_gamePadScheme = "Gamepad", m_gamePadSchemePID0 = "GamepadPlayerID0", m_gamePadSchemePID1 = "GamepadPlayerID1", m_gamePadSchemePID2 = "GamepadPlayerID2", m_gamePadSchemePID3 = "GamepadPlayerID3", m_gamepadDevice = "Gamepad";
 
         private Vector2 m_rotationVector;   //Saved current rotationInput.
+        private int m_playerIndex;
         private bool m_onQuitProcess = false;
 
         #region Actions_and_Functions
         internal static event Action<int> AKickBall;
-        internal static event Action<string> AOpenMenu;   //LocalMatchManager subscribed to react on menu open/close.
         internal static event Action<Vector2> ASendMousePosition;
         #endregion
 
         private void Awake()
         {
+            m_playerIndex = -1;
             UserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
             UserInputManager.ACheckForPlayerInput += PlayerInputCheck;
         }
@@ -37,13 +38,13 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private void OnDisable()
         {
             if (m_playerInput != null)
-                UnsubscribeToInputActions(m_playerInput, m_playerInput.playerIndex);
+                UnsubscribeToInputActions(m_playerInput);
         }
 
         private void OnDestroy()
         {
             if (m_playerInput != null)
-                UnsubscribeToInputActions(m_playerInput, m_playerInput.playerIndex);
+                UnsubscribeToInputActions(m_playerInput);
         }
 
         private void Start()
@@ -91,6 +92,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
             if (_playerIndex != m_playerInput.playerIndex)
                 return;
+
+            m_playerIndex = _playerIndex;
 
             if (m_playerInput != null)
             {
@@ -140,9 +143,9 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             openGameMenuAction.performed += OnOpenMenu;
         }
 
-        private void UnsubscribeToInputActions(PlayerInput _playerInput, int _playerIndex)
+        private void UnsubscribeToInputActions(PlayerInput _playerInput)
         {
-            if (_playerInput.playerIndex != _playerIndex)
+            if (_playerInput.playerIndex != m_playerIndex)
                 return;
 
             UserInputManager.ACheckForPlayerInput -= PlayerInputCheck;
@@ -199,7 +202,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
             if (newDevice == null)
             {
-                Debug.LogWarning($"No active device found for PlayerIndex {_playerInput.playerIndex} | PlayerUserID: {_playerInput.user.id}.");
+                Debug.LogWarning($"No active device found for PlayerIndex {_playerInput.playerIndex} | PlayerUserID: {_playerInput.user.id} | DeviceMapCount: {deviceMap.Count}.");
                 return;
             }
 
@@ -209,21 +212,22 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 {
                     deviceMap[_playerInput.user.id] = newDevice;
                     InputUser.PerformPairingWithDevice(newDevice, _playerInput.user);
-                    //Debug.Log($"Updated device for PlayerIndex {_playerInput.playerIndex} with PlayerUserID {_playerInput.user.id} to {newDevice.name}.");
                 }
+#if UNITY_EDITOR
                 //else
                 //{
                 //    Debug.Log($"Device for PlayerIndex {_playerInput.playerIndex} with PlayerUserID {_playerInput.user.id} unchanged ({newDevice.name}).");
                 //}
+#endif
             }
             else
             {
                 deviceMap.Add(_playerInput.user.id, newDevice);
                 InputUser.PerformPairingWithDevice(newDevice, _playerInput.user);
-                //Debug.Log($"Added PlayerIndex {_playerInput.playerIndex} with PlayerUserID {_playerInput.user.id} and device {newDevice.name} to device map.");
             }
         }
 
+        #region CallbackContext_Methods
         private void OnMove(InputAction.CallbackContext _callbackContext, PlayerInput _playerInput)
         {
             Vector2 moveVector = _callbackContext.ReadValue<Vector2>();
@@ -284,10 +288,9 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (m_playerController.m_playerId == 0)
             {
                 UserInputManager.ToggleActionMaps(m_uiActionMap);
-                AOpenMenu?.Invoke(m_uiActionMap);
             }
         }
-
+        #endregion
 
         private void OnApplicationQuit()
         {
