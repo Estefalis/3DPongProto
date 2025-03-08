@@ -385,6 +385,13 @@ namespace ThreeDeePongProto.Shared.Managers
             var allPlayers = PlayerInput.all;
             var playerInputs = allPlayers.Where(p => p != menuPlayerInput).ToList();
 
+            var allMenuInputs = allPlayers.Where(aM => aM == menuPlayerInput).ToList();
+            var firstSelectedMenuInput = allMenuInputs.FirstOrDefault(aM => aM.GetComponent<MenuManager>() != null);
+
+            //var selectFirstMenuInput = m_menuPlayerInput != null && allPlayers.Where(m => m != )
+
+            if (playerInputs != null && playerInputs.Count > 0)
+                Debug.Log(playerInputs[0]);
             PlayerInput selectedPlayerInput = null;
 
             switch (m_ePlayerMenuControl)
@@ -634,6 +641,17 @@ namespace ThreeDeePongProto.Shared.Managers
         private void CustomControlSchemeSwitch(string _newControlScheme, InputDevice[] _newDevices, PlayerInput _playerInput = null)
         {
             var allPlayerInputs = PlayerInput.all;
+            //var menuPlayerInput = m_menuPlayerInput;
+
+            //var allPlayers = allPlayerInputs.Where(aP => aP != menuPlayerInput).ToList();
+            //var allMenus = allPlayerInputs.Where(aM => aM == menuPlayerInput).ToList();
+
+            //var firstSelectedPlayerInput = allPlayers.FirstOrDefault(fSPI => fSPI.GetComponent<CharacterMainController>() != null);
+            //var firstSelectedMenuPlayerInput = allMenus.FirstOrDefault(fSMPI => fSMPI.GetComponent<MenuManager>() != null);
+
+            //var takenPlayerInput = allPlayers.Count < 1 ? firstSelectedMenuPlayerInput : firstSelectedPlayerInput;
+            //if (takenPlayerInput != null)
+            //    Debug.Log($"Test-Lambda-Expression: {takenPlayerInput.name}!");
             if (_playerInput == null || allPlayerInputs.Count < 1)
                 return;
 
