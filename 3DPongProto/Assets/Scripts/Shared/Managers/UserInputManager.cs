@@ -221,7 +221,6 @@ namespace ThreeDeePongProto.Shared.Managers
             }
 
             SetMenuInputScheme();
-            StartCoroutine(SimulateGamepadReconnect()); //Fake unplug & replug Gamepad.
         }
 
         /// <summary>
@@ -710,39 +709,6 @@ namespace ThreeDeePongProto.Shared.Managers
 
             CustomControlSchemeSwitch(m_gamePadScheme, new InputDevice[] { reconnectedGamepad }, takenPlayerInput);
             Debug.Log($"Reconnected {reconnectedGamepad.name} to Player {takenPlayerInput.user.id}.");
-        }
-
-        private IEnumerator SimulateGamepadReconnect()
-        {
-            if (Gamepad.current == null)
-            {
-                Debug.Log("No Gamepad detected. Skipping forced reconnect.");
-                yield break;
-            }
-
-            var activeGamepad = Gamepad.current;
-            Debug.Log($"Forcing reconnect for {activeGamepad.displayName}...");
-
-            foreach (var playerInput in PlayerInput.all)
-            {
-                if (playerInput.currentControlScheme == m_gamePadScheme)
-                {
-                    playerInput.user.UnpairDevice(activeGamepad);
-                }
-            }
-
-            yield return new WaitForSeconds(0.5f); // Short delay to simulate unplugging
-
-            foreach (var playerInput in PlayerInput.all)
-            {
-                if (playerInput.currentControlScheme == m_gamePadScheme)
-                {
-                    InputUser.PerformPairingWithDevice(activeGamepad, playerInput.user);
-                    playerInput.SwitchCurrentControlScheme(m_gamePadScheme, activeGamepad);
-                }
-            }
-
-            Debug.Log($"Simulated reconnect for {activeGamepad.displayName}.");
         }
         #endregion
 
