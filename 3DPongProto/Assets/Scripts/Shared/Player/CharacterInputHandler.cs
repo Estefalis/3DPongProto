@@ -86,7 +86,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private void PlayerInputCheck(int _playerIndex)
         {
             //NOTE: 'm_currentPlayerInput.playerIndex' is here already != 'm_playerController.m_playerId'. Menu in PlayerInputManager took Debug-Index 0!
-            //If the component is not set in the 'Player Input' script slot. (With 'UserInputManager.ACheckForPlayerInput'.)
+            
             if (m_playerInput == null)
                 m_playerInput = m_playerController.GetComponent<PlayerInput>();
 
@@ -107,17 +107,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void SubscribeToInputActions(PlayerInput _playerInput)
         {
-            //foreach(InputActionMap inputActionMap in _playerInput.actions.actionMaps)
-            //{
-            //    for (int i = 0; i < inputActionMap.bindings.Count; i++)
-            //    {
-            //        if (inputActionMap.bindings[i].groups == m_keyboardMouse && !inputActionMap.bindings[i].isComposite)
-            //        {
-            //            Debug.Log(inputActionMap.bindings[i].name);
-            //        }
-            //    }
-            //}
-
             var moveAction = _playerInput.actions[m_moveString];
             moveAction.performed += ctx => OnMove(ctx, _playerInput);
             moveAction.canceled += ctx => OnMoveCanceled(ctx, _playerInput);
@@ -202,7 +191,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
             if (newDevice == null)
             {
-                Debug.LogWarning($"No active device found for PlayerIndex {_playerInput.playerIndex} | PlayerUserID: {_playerInput.user.id} | DeviceMapCount: {deviceMap.Count}.");
+                Debug.Log($"No active device found for PlayerIndex {_playerInput.playerIndex} | PlayerUserID: {_playerInput.user.id} | DeviceMapCount: {deviceMap.Count}.");
                 return;
             }
 
@@ -213,12 +202,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                     deviceMap[_playerInput.user.id] = newDevice;
                     InputUser.PerformPairingWithDevice(newDevice, _playerInput.user);
                 }
-#if UNITY_EDITOR
-                //else
-                //{
-                //    Debug.Log($"Device for PlayerIndex {_playerInput.playerIndex} with PlayerUserID {_playerInput.user.id} unchanged ({newDevice.name}).");
-                //}
-#endif
             }
             else
             {
