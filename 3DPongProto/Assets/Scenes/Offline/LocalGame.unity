@@ -2898,7 +2898,7 @@ GameObject:
   - component: {fileID: 911050367}
   - component: {fileID: 911050368}
   m_Layer: 0
-  m_Name: MatchManager
+  m_Name: LocalMatchManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2934,7 +2934,7 @@ MonoBehaviour:
   m_NPCName: Some Test-NPC
   m_playGround: {fileID: 5980709644925271523, guid: 81c764eba9528904fa09f522c6f6fba7,
     type: 3}
-  m_ballPrefab: {fileID: 6371200284859616814, guid: 9d7ade183afbd1840b3e2bdce92d679f,
+  m_ballPrefab: {fileID: 3504575717850183147, guid: 9d7ade183afbd1840b3e2bdce92d679f,
     type: 3}
   m_prefabParent: {fileID: 1061313409}
   m_playGroundWidthScale: 0.1

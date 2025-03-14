@@ -42,7 +42,7 @@ namespace ThreeDeePongProto.Shared.Managers
         private const string m_cancelWithKeyboardButton = "<Keyboard>/escape";
         private const string m_cancelWithGamepadButton = "<Gamepad>/select";
 
-        private const string m_keyboardMouse = "KeyboardMouse", m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3", m_keyboardDevice = "Keyboard";
+        private const string m_keyboardMouseScheme = "KeyboardMouse", m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3", m_keyboardDevice = "Keyboard";
         private const string m_gamePadScheme = "Gamepad";                       //Inputsystem's Gamepad scheme. (groups)
 
         private const string m_keyboardPath = "Keyboard";                       //EffectivePath string.
@@ -194,7 +194,7 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             switch (_controlScheme)
             {
-                case m_keyboardMouse:
+                case m_keyboardMouseScheme:
                 case m_keyboardSchemePID0:
                 case m_keyboardSchemePID1:
                 case m_keyboardSchemePID2:
@@ -353,7 +353,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 #region Rebind Save
                 switch (_controlScheme)
                 {
-                    case m_keyboardMouse:
+                    case m_keyboardMouseScheme:
                     case m_keyboardSchemePID0:
                     case m_keyboardSchemePID1:
                     case m_keyboardSchemePID2:
@@ -390,7 +390,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
             switch (_controlScheme)     //ONLY ONE cancelButton gets recognized in code at a time.
             {
-                case m_keyboardMouse:
+                case m_keyboardMouseScheme:
                 case m_keyboardSchemePID0:
                 case m_keyboardSchemePID1:
                 case m_keyboardSchemePID2:
@@ -432,7 +432,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 #region Compare ActionBindings in the actionMap.
                 switch (_controlScheme)
                 {
-                    case m_keyboardMouse:
+                    case m_keyboardMouseScheme:
                     case m_keyboardSchemePID0:
                     case m_keyboardSchemePID1:
                     case m_keyboardSchemePID2:
@@ -610,7 +610,7 @@ namespace ThreeDeePongProto.Shared.Managers
             //Sending Guid as method arguments got replaced by getting each Guid with '_inputAction.bindings[_bindingIndex].id;'.
             switch (_controlScheme)
             {
-                case m_keyboardMouse:
+                case m_keyboardMouseScheme:
                 case m_keyboardSchemePID0:
                 case m_keyboardSchemePID1:
                 case m_keyboardSchemePID2:
@@ -687,7 +687,7 @@ namespace ThreeDeePongProto.Shared.Managers
             #region Save data with unique Guid as Dict Key
             switch (_inputAction.bindings[_bindingIndex].groups)
             {
-                case m_keyboardMouse:
+                case m_keyboardMouseScheme:
                 case m_keyboardSchemePID0:
                 case m_keyboardSchemePID1:
                 case m_keyboardSchemePID2:
@@ -871,7 +871,7 @@ namespace ThreeDeePongProto.Shared.Managers
             switch (inputAction.bindings[_bindingIndex].groups)
             {
                 #region Using unique Guid to reapply the specific Keyboard Override
-                case m_keyboardMouse:
+                case m_keyboardMouseScheme:
                 case m_keyboardSchemePID0:
                 case m_keyboardSchemePID1:
                 case m_keyboardSchemePID2:
@@ -1026,7 +1026,7 @@ namespace ThreeDeePongProto.Shared.Managers
                     switch (deviceScheme)                               //Check and remove child's Guid "guided" by its deviceScheme.
                     {
                         #region Using unique Guid to remove the specific Keyboard Override in Composites
-                        case m_keyboardMouse:
+                        case m_keyboardMouseScheme:
                         case m_keyboardSchemePID0:
                         case m_keyboardSchemePID1:
                         case m_keyboardSchemePID2:

@@ -56,7 +56,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         public static event Action<int> AReLoadScene;       //UserInputManager with central SceneManager.LoadScene().
         public static event Action AEndInfiniteMatch;
 
-        private const string m_keyboardMouse = "KeyboardMouse", m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3", m_keyboardDevice = "Keyboard";
+        private const string m_keyboardMouseScheme = "KeyboardMouse", m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3", m_keyboardDevice = "Keyboard";
+        private const string m_gamePadScheme = "Gamepad", m_gamePadSchemePID0 = "GamepadPlayerID0", m_gamePadSchemePID1 = "GamepadPlayerID1", m_gamePadSchemePID2 = "GamepadPlayerID2", m_gamePadSchemePID3 = "GamepadPlayerID3", m_gamepadDevice = "Gamepad";
 
         private const string m_closeGameMenuString = "CloseGameMenu";
         private const string m_uiActionMap = "UserInterface", m_playerActionMap = "PlayerActions";
@@ -166,6 +167,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     break;
             }
         }
+
         private void OnOpenMenu()
         {
             if (m_useUIInputModule && m_uiInputModule != null)
@@ -199,6 +201,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #endregion
 
         #region PlayerInput-Configuration_on_Menu
+        private void UIInputModuleSetup()
+        {
+            if (m_eventSystem == null)
+                m_eventSystem = EventSystem.current;
+
+            if (m_uiInputModule == null)
+            {
+                m_uiInputModule = FindObjectOfType<InputSystemUIInputModule>();
+                if (m_uiInputModule == null)
+                    Debug.LogError("No InputSystemUIInputModule found in scene!");
+            }
+        }
+
         private void SetMenuInputDefault(PlayerInput _menuInput)
         {
             if (_menuInput == null)
@@ -220,23 +235,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_menuPlayerInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
 
             m_menuPlayerInput.SwitchCurrentActionMap(m_uiActionMap);
-            //m_menuPlayerInput.defaultControlScheme = m_keyboardMouse;
-            //m_currentControlScheme = m_keyboardMouse;
+            //m_menuPlayerInput.defaultControlScheme = m_keyboardMouseScheme;
+            //m_currentControlScheme = m_keyboardMouseScheme;
         }
         #endregion
 
         #region Custom-Methods
-        private void UIInputModuleSetup()
-        {
-            if (m_eventSystem == null)
-                m_eventSystem = EventSystem.current;
-
-            if (m_uiInputModule == null)
-                m_uiInputModule = FindObjectOfType<InputSystemUIInputModule>();
-
-            if (m_uiInputModule == null)
-                Debug.LogError("No InputSystemUIInputModule found in scene!");
-        }
 
         private void PreviousDeviceSetup(string _controlScheme, InputDevice[] _devices)
         {
@@ -245,12 +249,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 Debug.LogError("No PlayerInput found on MenuManager.");
                 return;
             }
+
             //Debug.Log($"Scheme: {_controlScheme} | Devices {string.Join(", ", _devices.Select(d => d.name))}");   //UserID 1 & 3-6.
             if (_devices == null || _devices.Length == 0)
             {
                 Debug.LogWarning("No devices provided. Using Keyboard/Mouse as fallback.");
                 _devices = new InputDevice[] { Keyboard.current, Mouse.current };
-                _controlScheme = m_keyboardMouse;
+                _controlScheme = m_keyboardMouseScheme;
             }
 
             m_currentControlScheme = _controlScheme;
@@ -437,7 +442,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void CloseMenu(InputAction.CallbackContext _callbackContext)
         {
             var sceneIndex = SceneManager.GetActiveScene().buildIndex;
-            if (sceneIndex == (int)ESceneNames.StartMenu)   //Or in other menuOnly Scenes.
+            if (sceneIndex == (int)ESceneNames.StartMenu)   //TODO: Add other 'menoOnly' Scenes.
                 return;
 
             AResumeTheGame?.Invoke();

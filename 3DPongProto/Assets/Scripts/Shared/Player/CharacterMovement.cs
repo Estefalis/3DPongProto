@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using ThreeDeePongProto.Shared.AudioManagement;
 using UnityEngine;
@@ -13,7 +14,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         [Header("Movement")]
         [SerializeField, Range(1.0f, 20.0f)] private float m_moveSpeed = 10.0f;
         private float m_maxSideMovement;
-        private Vector3 m_rbPosition;
         private Vector3 m_moveVector;
 
         [Header("Rotation")]
@@ -28,7 +28,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         [SerializeField, Range(1.0f, 30.0f)] private float m_retreatSpeed = 15.0f;
         [SerializeField, Range(0.5f, 2.0f)] private float m_pushDistance = 1.0f;
 
-        private int m_receivedID;
         private bool m_isPushing;
         private float m_currentPushProgress;
         private float m_paddleWidthAdjustment;
@@ -113,11 +112,11 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         }
 
         #region Movement
-        public void SetInputVector(Vector2 _inputVector, int _receivedID, bool _isRotation)
+        internal void SetInputVector(Vector2 _inputVector, int _receivedID, bool _isRotation)
         {
             if (_receivedID != m_playerController.m_playerId)
                 return;
-            
+
             switch (_isRotation)
             {
                 case true:
@@ -131,16 +130,16 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void HandleMovement()
         {
-            if (m_receivedID != m_playerController.m_playerId)
-                return;
+            var xInvert = GetInversion(m_playerController.m_controlUIStates.InvertXAxis);
 
-            var xInvert = GetInversion(m_playerController.m_controlUIStates.InvertXAxis);   //Value from Scriptable in the Inspector.
+            //Move the player relativ to the local Transform-Direction.
+            Vector3 rightMovement = m_moveVector.x * xInvert * transform.right;
+            Vector3 forwardMovement = transform.forward * m_moveVector.y;
 
-            m_rbPosition = m_rigidbody.transform.localPosition;
-            m_moveVector = m_moveSpeed * Time.fixedDeltaTime * new Vector3(m_moveVector.x * xInvert, 0.0f, m_moveVector.y).normalized;
-            m_rotationVector = new Vector3(0.0f, m_rotationVector.x, 0.0f);
-
-            m_rigidbody.MovePosition(m_rbPosition + m_moveVector);
+            //Combined Movement.
+            Vector3 adjustedMoveVector = (rightMovement + forwardMovement).normalized * (m_moveSpeed * Time.fixedDeltaTime);
+            //m_rotationVector = new Vector3(0.0f, m_rotationVector.x, 0.0f);
+            m_rigidbody.MovePosition(m_rigidbody.position + adjustedMoveVector);
         }
 
         /// <summary>
@@ -176,8 +175,11 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         #region Rotation
         private void HandleRotation()
         {
-            if (m_receivedID != m_playerController.m_playerId)
-                return;
+            //if (m_rotationVector.sqrMagnitude > 0.01f) //Only rotate on Input.
+            //{
+            //    Quaternion targetRotation = Quaternion.LookRotation(new Vector3(m_rotationVector.x, 0.0f, m_rotationVector.y));
+            //    m_rigidbody.MoveRotation(Quaternion.Slerp(m_rigidbody.rotation, targetRotation, m_rotationSpeed * Time.fixedDeltaTime));
+            //}
 
             var yInvert = GetInversion(m_playerController.m_controlUIStates.InvertYAxis);
 
@@ -213,9 +215,9 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             }
         }
 
-        public void InitializePush(bool _initializePush)
+        public void InitializePush(int _receivedID, bool _initializePush)
         {
-            if (m_receivedID != m_playerController.m_playerId)
+            if (_receivedID != m_playerController.m_playerId)
                 return;
 
             if (_initializePush && !m_isPushing)

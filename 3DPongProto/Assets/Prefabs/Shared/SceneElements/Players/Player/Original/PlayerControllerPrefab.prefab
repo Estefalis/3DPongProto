@@ -280,7 +280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1bba66ce0d33fa4fa28a5e84c013998, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_playerInput: {fileID: 0}
+  m_playerInput: {fileID: 8126421233268192439}
   m_playerController: {fileID: 1514124386352258756}
 --- !u!4 &6906505718523990414 stripped
 Transform:

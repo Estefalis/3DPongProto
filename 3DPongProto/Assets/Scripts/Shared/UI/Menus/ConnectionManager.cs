@@ -34,7 +34,7 @@ namespace ThreeDeePongProto.Shared.UI
         {
             m_matchUIStates.EGameConnectModi = _eGameModi;
 #if UNITY_EDITOR
-            Debug.Log($"Spiel-Modus: {_eGameModi}");
+            //Debug.Log($"Spiel-Modus: {_eGameModi}");
 #endif
         }
 

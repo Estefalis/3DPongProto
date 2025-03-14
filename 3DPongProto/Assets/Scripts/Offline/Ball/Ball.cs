@@ -1,9 +1,8 @@
 using System;
 using ThreeDeePongProto.Shared.AudioManagement;
 using ThreeDeePongProto.Shared.Managers;
-using ThreeDeePongProto.Shared.InputActions;
-using UnityEngine;
 using ThreeDeePongProto.Shared.PlayerCharacter;
+using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
@@ -17,7 +16,6 @@ public class Ball : MonoBehaviour
 
     #region Script-References
     private LocalMatchManager m_matchManager;
-    private PlayerInputActions m_inputActions;
     [SerializeField] private AudioSource m_ballAudioSource;
     private int m_trackId = 0;
     #endregion
