@@ -26,7 +26,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         [Header("Push")]
         [SerializeField, Range(1.0f, 20.0f)] private float m_pushSpeed = 10.0f;
         [SerializeField, Range(1.0f, 30.0f)] private float m_retreatSpeed = 15.0f;
-        [SerializeField, Range(0.5f, 2.0f)] private float m_pushDistance = 1.0f;
+        [SerializeField, Range(0.5f, 2.0f)] private float m_pushDuration = 1.0f;
 
         private bool m_isPushing;
         private float m_currentPushProgress;
@@ -77,6 +77,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             {
                 case true:
                     HandlePushMovement();
+                    //StartCoroutine(HandlePush());
                     break;
                 case false:
                 {
@@ -137,8 +138,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             Vector3 forwardMovement = transform.forward * m_moveVector.y;
 
             //Combined Movement.
-            Vector3 adjustedMoveVector = (rightMovement + forwardMovement).normalized * (m_moveSpeed * Time.fixedDeltaTime);
-            //m_rotationVector = new Vector3(0.0f, m_rotationVector.x, 0.0f);
+            Vector3 adjustedMoveVector = (rightMovement + forwardMovement).normalized * (m_moveSpeed * Time.fixedDeltaTime);            
             m_rigidbody.MovePosition(m_rigidbody.position + adjustedMoveVector);
         }
 
@@ -175,16 +175,11 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         #region Rotation
         private void HandleRotation()
         {
-            //if (m_rotationVector.sqrMagnitude > 0.01f) //Only rotate on Input.
-            //{
-            //    Quaternion targetRotation = Quaternion.LookRotation(new Vector3(m_rotationVector.x, 0.0f, m_rotationVector.y));
-            //    m_rigidbody.MoveRotation(Quaternion.Slerp(m_rigidbody.rotation, targetRotation, m_rotationSpeed * Time.fixedDeltaTime));
-            //}
-
             var yInvert = GetInversion(m_playerController.m_controlUIStates.InvertYAxis);
+            Vector3 rotationVector = new(0.0f, m_rotationVector.x, 0.0f); //'Quaternion.Euler' requires a Vector3 for multiplication.
 
             //Calculate rotation based on input.
-            m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (m_rotationVector * yInvert)).normalized;
+            m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (rotationVector * yInvert)).normalized;
 
             //Apply rotation.
             Quaternion newRotation = m_rigidbody.rotation * m_deltaRotation;
@@ -204,7 +199,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             m_currentPushProgress += Time.fixedDeltaTime * m_pushSpeed;
             float clampedProgress = Mathf.Clamp01(m_currentPushProgress);
 
-            Vector3 targetPosition = m_initialPosition + transform.forward * (m_pushDistance * clampedProgress);
+            Vector3 targetPosition = m_initialPosition + transform.forward * (m_pushDuration * clampedProgress);
             transform.localPosition = targetPosition;
 
             if (clampedProgress >= 1.0f)
@@ -228,6 +223,25 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             }
         }
 
+        private IEnumerator HandlePush()
+        {
+            float elapsedTime = 0f;
+            Vector3 pushDirection = transform.forward; // Spieler soll in die aktuelle Blickrichtung pushen
+            Vector3 startPosition = transform.position;
+            Vector3 targetPosition = startPosition + pushDirection * m_pushSpeed;
+
+            while (elapsedTime < m_pushDuration)
+            {
+                float time = elapsedTime / m_pushDuration;
+                m_rigidbody.MovePosition(Vector3.Lerp(startPosition, targetPosition, time));
+
+                elapsedTime += Time.fixedDeltaTime;
+                yield return new WaitForFixedUpdate();
+            }
+
+            StartCoroutine(HandleRetreat());
+        }
+
         private IEnumerator HandleRetreat()
         {
             #region Vector3_MoveTowards
@@ -245,7 +259,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             float progress = 0.0f;
             Vector3 startPosition = transform.localPosition;
 
-            while (progress < 1.0f)
+            while (progress < m_pushDuration)
             {
                 progress += Time.fixedDeltaTime * m_retreatSpeed;
                 transform.localPosition = Vector3.Lerp(startPosition, m_initialPosition, progress);
@@ -253,6 +267,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             }
 
             transform.localPosition = m_initialPosition;
+            m_isPushing = false;
             #endregion
         }
         #endregion

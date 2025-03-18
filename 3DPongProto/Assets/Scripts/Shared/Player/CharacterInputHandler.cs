@@ -62,8 +62,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private void FixedUpdate()
         {
             //Use Rotation constantly.
-            if (m_rotationVector != Vector2.zero)
-                m_playerController.m_playerMovement.SetInputVector(m_rotationVector, m_playerController.m_playerId, true);
+            m_playerController.m_playerMovement.SetInputVector(m_rotationVector, m_playerController.m_playerId, true);
         }
 
         private void OnChangeActiveActionMap(string _actionMap)
