@@ -138,7 +138,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             Vector3 forwardMovement = transform.forward * m_moveVector.y;
 
             //Combined Movement.
-            Vector3 adjustedMoveVector = (rightMovement + forwardMovement).normalized * (m_moveSpeed * Time.fixedDeltaTime);            
+            Vector3 adjustedMoveVector = (rightMovement + forwardMovement).normalized * (m_moveSpeed * Time.fixedDeltaTime);
             m_rigidbody.MovePosition(m_rigidbody.position + adjustedMoveVector);
         }
 
@@ -193,6 +193,19 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         #endregion
 
         #region Push
+        internal void InitializePush(int _receivedID, bool _initializePush)
+        {
+            if (_receivedID != m_playerController.m_playerId)
+                return;
+
+            if (_initializePush && !m_isPushing)
+            {
+                //Start pushing.
+                m_isPushing = true;
+                m_currentPushProgress = 0.0f;
+            }
+        }
+
         private void HandlePushMovement()
         {
             //Calculate the forward push.
@@ -207,19 +220,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 //Push is complete, stop pushing.
                 m_isPushing = false;
                 StartCoroutine(HandleRetreat());
-            }
-        }
-
-        public void InitializePush(int _receivedID, bool _initializePush)
-        {
-            if (_receivedID != m_playerController.m_playerId)
-                return;
-
-            if (_initializePush && !m_isPushing)
-            {
-                //Start pushing.
-                m_isPushing = true;
-                m_currentPushProgress = 0.0f;
             }
         }
 
