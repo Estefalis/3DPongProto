@@ -27,11 +27,13 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         [SerializeField, Range(1.0f, 20.0f)] private float m_pushSpeed = 10.0f;
         [SerializeField, Range(1.0f, 30.0f)] private float m_retreatSpeed = 15.0f;
         [SerializeField, Range(0.5f, 2.0f)] private float m_pushDuration = 1.0f;
+        [SerializeField] private float m_pushDistance = 2.5f;
 
         private bool m_isPushing;
         private float m_currentPushProgress;
         private float m_paddleWidthAdjustment;
 
+        private float m_playerRotationY;    //If the Rigidbody.localRotation is 180 instead of 0 then forwardDirection is inverted.
         private Vector3 m_initialPosition;
 
         private void Awake()
@@ -56,9 +58,10 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private void Start()
         {
             m_initialPosition = transform.localPosition;
+            m_playerRotationY = m_rigidbody.transform.localRotation.y;
             m_initialRotation = m_rigidbody.transform.rotation;
             m_rigidbody.transform.localRotation = m_initialRotation;
-
+            
             if (m_audioSource != null)
                 AudioManager.LetsRegisterAudioSources(m_audioSource);
 
@@ -76,8 +79,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             switch (m_isPushing)
             {
                 case true:
-                    HandlePushMovement();
-                    //StartCoroutine(HandlePush());
+                    //HandlePushMovement();
+                    StartCoroutine(HandlePush());
                     break;
                 case false:
                 {
@@ -172,7 +175,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         }
         #endregion
 
-        #region Rotation
+        #region Rotation        
         private void HandleRotation()
         {
             var yInvert = GetInversion(m_playerController.m_controlUIStates.InvertYAxis);
@@ -225,18 +228,17 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private IEnumerator HandlePush()
         {
-            float elapsedTime = 0f;
-            Vector3 pushDirection = transform.forward; // Spieler soll in die aktuelle Blickrichtung pushen
             Vector3 startPosition = transform.position;
-            Vector3 targetPosition = startPosition + pushDirection * m_pushSpeed;
+            Vector3 newRigidbodyForward = m_rigidbody.transform.localRotation.y != 0 ? -m_rigidbody.transform.forward : m_rigidbody.transform.forward;
+            Vector3 targetPosition = startPosition + newRigidbodyForward * m_pushDistance;
 
-            while (elapsedTime < m_pushDuration)
+            float progress = 0f;
+            while (progress < m_pushDuration)
             {
-                float time = elapsedTime / m_pushDuration;
-                m_rigidbody.MovePosition(Vector3.Lerp(startPosition, targetPosition, time));
-
-                elapsedTime += Time.fixedDeltaTime;
-                yield return new WaitForFixedUpdate();
+                progress += Time.deltaTime * m_pushSpeed;
+                transform.position = Vector3.Lerp(startPosition, targetPosition, progress);
+                //Debug.Log($"StartPos: {startPosition} - TargetPos: {targetPosition} - Progress: {progress}");
+                yield return null;
             }
 
             StartCoroutine(HandleRetreat());
