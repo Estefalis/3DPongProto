@@ -210,39 +210,23 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private IEnumerator HandlePush()
         {
             float startZ = m_localRbTransformPos.z;
-            var targetZ = /*m_rigidbody.transform.localRotation.y != 0 ? startZ - m_pushDistance :*/ startZ + m_pushDistance;
+            var targetZ = /*m_rigidbody.transform.localRotation.y != 0 ? startZ - m_pushDistance :*/ startZ + m_playerController.m_maxPushDistance;
             //float targetZ = startZ + (m_rigidbody.transform.localRotation.y != 0 ? -m_pushDistance : m_pushDistance);   //Push-Direction
             float progress = 0f;
             while (progress < m_pushDuration)
             {
                 progress += Time.deltaTime * m_pushSpeed;
-
+                
                 float currentX = m_rigidbody.transform.localPosition.x;
                 float newZPos = Mathf.Lerp(startZ, targetZ, progress);
 
-                m_rigidbody.transform.position = new Vector3(currentX, m_rigidbody.transform.localPosition.y, newZPos);
+                m_rigidbody.transform.localPosition = new Vector3(currentX, m_rigidbody.transform.localPosition.y, newZPos);
+                Debug.Log($"CurX: {currentX} | RbLocalYPos: {m_rigidbody.transform.localPosition.y} | NewZPos: {newZPos}");
                 //m_rigidbody.MovePosition(new Vector3(currentX, m_rigidbody.transform.localPosition.y, newZPos));
                 yield return null;
             }
 
             StartCoroutine(HandleRetreat());
-
-            #region Vector3.Lerp
-            //Vector3 startPosition = m_rigidbody.transform.localPosition;
-            //Vector3 newRigidbodyForward = m_rigidbody.transform.localRotation.y != 0 ? -m_rigidbody.transform.forward : m_rigidbody.transform.forward;
-            //Vector3 targetPosition = startPosition + newRigidbodyForward * m_pushDistance;
-
-            //float progress = 0f;
-            //while (progress < m_pushDuration)
-            //{
-            //    progress += Time.deltaTime * m_pushSpeed;
-            //    m_rigidbody.transform.position = Vector3.Lerp(startPosition, targetPosition, progress);
-            //    //Debug.Log($"StartPos: {startPosition} - TargetPos: {targetPosition} - Progress: {progress}");
-            //    yield return null;
-            //}
-
-            //StartCoroutine(HandleRetreat());
-            #endregion
         }
 
         private IEnumerator HandleRetreat()
@@ -258,27 +242,12 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 float currentX = m_rigidbody.transform.localPosition.x;
                 float newZPos = Mathf.Lerp(startZ, m_localRbTransformPos.z, progress);
 
-                m_rigidbody.transform.position = new Vector3(currentX, m_rigidbody.transform.localPosition.y, newZPos);
+                m_rigidbody.transform.localPosition = new Vector3(currentX, m_rigidbody.transform.localPosition.y, newZPos);
                 //m_rigidbody.MovePosition(new Vector3(currentX, m_rigidbody.transform.localPosition.y, newZPos));
                 yield return null;
             }
 
             m_isPushing = false;
-
-            #region Vector3.Lerp
-            //float progress = 0.0f;
-            //Vector3 startPosition = m_rigidbody.transform.localPosition;
-
-            //while (progress < m_pushDuration)
-            //{
-            //    progress += Time.fixedDeltaTime * m_retreatSpeed;
-            //    m_rigidbody.transform.localPosition = Vector3.Lerp(startPosition, m_localRbTransformPos, progress);
-            //    yield return null;
-            //}
-
-            //m_rigidbody.transform.localPosition = m_localRbTransformPos;
-            //m_isPushing = false;
-            #endregion
         }
         #endregion
 
