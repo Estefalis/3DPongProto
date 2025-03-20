@@ -333,7 +333,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 InputDevice[] assignedDevices = GetDevicesForPlayer(playerIndex);
                 string setControlScheme = GetControlSchemeForPlayer(playerIndex, assignedDevices);
                 PlayerInput newPlayerInput = PlayerInput.Instantiate(m_matchValues.PlayerSOData[playerIndex].Prefab, controlScheme: setControlScheme, pairWithDevice: assignedDevices.Length > 0 ? assignedDevices[0] : null);
-                Debug.Log($"InstantiatePlayer-Device(s): {string.Join(", ", assignedDevices.Select(d => d.name))}.");
+                //Debug.Log($"InstantiatePlayer-Device(s): {string.Join(", ", assignedDevices.Select(d => d.name))}.");
                 GameObject newPlayer = newPlayerInput.gameObject;
                 newPlayer.transform.SetParent(m_playfieldParent);
                 //Waits a frame until old _playerInput component is destroyed.

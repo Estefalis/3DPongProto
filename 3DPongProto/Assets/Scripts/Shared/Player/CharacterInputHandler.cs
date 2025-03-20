@@ -10,7 +10,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 {
     internal class CharacterInputHandler : MonoBehaviour
     {
-        [SerializeField] private PlayerInput m_playerInput;
+        [SerializeField] internal PlayerInput m_playerInput;
         [SerializeField] internal CharacterMainController m_playerController;
         private UserInputManager m_userInputManager;
 

@@ -329,7 +329,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/b"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0"",
                     ""action"": ""KickBall"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
