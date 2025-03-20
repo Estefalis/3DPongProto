@@ -46,6 +46,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_playerController: {fileID: 0}
+  m_lowestHeight: 0
+  m_maximalHeight: 0
+  m_RbPlayer: {fileID: 0}
+  m_followCamera: {fileID: 0}
+  m_enableSmoothFollow: 1
+  m_desiredOffset: {x: 0, y: 0, z: 0}
+  m_smoothfactor: 0
+  m_minAbsLimit: 0.05
+  m_zoomSpeed: 0
+  m_zoomStep: 0
+  m_zoomDampening: 0
+  m_graphicUiStates: {fileID: 0}
+  m_basicFieldValues: {fileID: 0}
 --- !u!1 &3360163881431190915
 GameObject:
   m_ObjectHideFlags: 0
@@ -238,7 +251,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 7240140580858734191}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fae07b92c812e7d40855bb1147509b76, type: 3}
+  m_Script: {fileID: 11500000, guid: b1bba66ce0d33fa4fa28a5e84c013998, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_playerInput: {fileID: 0}
   m_playerController: {fileID: 0}

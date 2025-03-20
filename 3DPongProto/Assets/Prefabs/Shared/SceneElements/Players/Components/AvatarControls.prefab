@@ -360,7 +360,7 @@ MonoBehaviour:
   m_pushSpeed: 10
   m_retreatSpeed: 15
   m_pushDuration: 1
-  m_pushDistance: 2.5
+  m_pushDistance: 1.5
 --- !u!114 &3019389867575858775
 MonoBehaviour:
   m_ObjectHideFlags: 0
