@@ -38,7 +38,7 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         #region Paddle-Variables
-        [SerializeField] private float m_maxPushDistance = 1.5f;
+        [SerializeField] internal float m_maxPushDistance = 2.0f;
         [SerializeField] private float m_paddleWidthAdjustStep = 0.25f;
         [SerializeField] private Vector3 m_defaultPaddleScale;
         #endregion

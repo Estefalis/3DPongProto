@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace ThreeDeePongProto.Shared.HelperClasses
@@ -14,10 +11,6 @@ namespace ThreeDeePongProto.Shared.HelperClasses
         {
             if (_assignedDevice is Gamepad gamepad)
             {
-                //int gamepadIndex = _playerIndex;
-                //int gamepadIndex = Gamepad.all.IndexOf(gp => gp == gamepad);
-                //int gamepadIndex = new List<Gamepad>(Gamepad.all).FindIndex(gp => gp == gamepad);
-
                 controlScheme = _playerIndex switch
                 {
                     0 => m_gamePadSchemePID0,
@@ -28,7 +21,6 @@ namespace ThreeDeePongProto.Shared.HelperClasses
                 };
 
                 devices = new InputDevice[] { gamepad };
-                //Debug.Log($"HelperClass: GAMEPAD Player {_playerIndex} | Gamepad Index {gamepadIndex} | Scheme: {controlScheme}.");
             }
             else
             {
@@ -42,7 +34,6 @@ namespace ThreeDeePongProto.Shared.HelperClasses
                 };
 
                 devices = new InputDevice[] { Keyboard.current, Mouse.current };
-                //Debug.Log($"HelperClass: KEYBOARD Player {_playerIndex} | Using Keyboard/Mouse | Scheme: {controlScheme}.");
             }
         }
     }
