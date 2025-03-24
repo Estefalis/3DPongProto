@@ -2947,7 +2947,7 @@ MonoBehaviour:
   m_setMaxPoints: 25
   m_startRound: 1
   m_winPointDifference: 2
-  m_maxPushDistance: 2.5
+  m_maxPushDistance: 2
   m_paddleWidthAdjustStep: 0.25
   m_defaultPaddleScale: {x: 3.5, y: 1, z: 0.5}
   m_gameIsPaused: 0

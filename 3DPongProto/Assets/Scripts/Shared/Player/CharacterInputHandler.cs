@@ -263,7 +263,10 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             {
                 var initializePush = _callbackContext.ReadValueAsButton();
                 if (initializePush)
+                {
+                    m_playerController.m_playerMovement.m_receivedUserID = _playerInput.user.id;
                     m_playerController.m_playerMovement.InitializePush(m_playerController.m_playerId, true);
+                }
             }
         }
 
