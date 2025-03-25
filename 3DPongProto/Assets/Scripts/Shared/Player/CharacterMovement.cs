@@ -42,6 +42,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private bool m_isPushing, m_valueTaken = false;
         private float m_paddleWidthAdjustment;
         private float m_maxPushDistance;
+        private float m_xDifference;
 
         private Vector3 m_initialRbPos, m_rbPushStartPos;
 
@@ -231,15 +232,17 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             if (m_receivedUserID == m_playerController.m_playerInputHandler.m_playerInput.user.id && !m_valueTaken)
             {
-                //Vector3 adjustedForwardVector = m_initialRbPos.y != 0 ? -m_rigidbody.transform.forward : m_rigidbody.transform.forward;
-                Vector3 rbStartPosition = m_rigidbody.transform.position; //+ m_rigidbody.transform.forward w/o pushTarget.
+                Vector3 rbStartPosition = m_rigidbody.transform.position;
                 m_rbPushStartPos = rbStartPosition;
+                //Vector3 adjustedForwardVector = m_initialRbPos.y != 0 ? -m_rigidbody.transform.forward : m_rigidbody.transform.forward;
+                //Vector3 adjustedForward = m_rigidbody.transform.forward * (m_initialRbRotation.y != 0 ? -1 : 1);
                 Vector3 pushTargetPosition = m_pushTarget.transform.position;
-                //Debug.Log($"From: {rbStartPosition} | To: {pushTargetPosition}");
-                m_valueTaken = true;
+                m_xDifference = pushTargetPosition.x - rbStartPosition.x;
 
+                m_valueTaken = true;
+                Debug.Log($"Player{m_playerController.m_playerId + 1}, TargetPos: {pushTargetPosition}. Diff: {m_xDifference}.");
                 float progress = 0.0f;
-                Vector3 rigidbodyPosition = rbStartPosition;
+
                 while (progress < m_maxPushDistance)
                 {
                     progress += Time.fixedDeltaTime * m_pushSpeed / m_pushDuration;
@@ -248,24 +251,25 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                     {
                         case ELerpCategory.FloatZ:
                         {
-                            //rbStartPosition = m_rigidbody.transform.position + m_rigidbody.transform.forward;
-                            float targetX = m_rigidbody.transform.position.x;
-                            float newX = Mathf.Lerp(rbStartPosition.x, targetX, progress);
+                            //float adjustedX = Mathf.Lerp(rbStartPosition.x, rbStartPosition.x + xDifference, progress);
+                            float newX = Mathf.Lerp(rbStartPosition.x, Mathf.Lerp(rbStartPosition.x, rbStartPosition.x + m_xDifference, progress), progress);
                             float newZ = Mathf.Lerp(rbStartPosition.z, pushTargetPosition.z, progress);
-                            rigidbodyPosition = new Vector3(newX, m_rigidbody.transform.position.y, newZ);
+
+                            m_rigidbody.transform.position = new Vector3(newX, rbStartPosition.y, newZ);
                             break;
                         }
                         case ELerpCategory.FloatXAndZ:
+                        case ELerpCategory.Vector3: //until further changes.
                         {
                             Vector3 pushVector = Vector3.Lerp(rbStartPosition, pushTargetPosition, progress);
-                            rigidbodyPosition = new Vector3(pushVector.x, m_rigidbody.transform.position.y, pushVector.z);
+                            m_rigidbody.transform.position = pushVector;
                             break;
                         }
+                        case ELerpCategory.None:
                         default:
                             break;
                     }
 
-                    m_rigidbody.transform.position = rigidbodyPosition;
                     yield return null;
                 }
 
@@ -278,7 +282,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             Vector3 rbStartPosition = m_rigidbody.transform.position;
 
             float progress = 0.0f;
-            Vector3 rigidbodyPosition = rbStartPosition;
             while (progress < m_maxPushDistance)
             {
                 progress += Time.fixedDeltaTime * m_retreatSpeed / m_pushDuration;
@@ -287,24 +290,27 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 {
                     case ELerpCategory.FloatZ:
                     {
-                        //rbStartPosition = m_rigidbody.transform.position + -m_rigidbody.transform.forward;
-                        float targetX = m_rigidbody.transform.position.x;
-                        float newX = Mathf.Lerp(rbStartPosition.x, targetX, progress);
+                        float newX = Mathf.Lerp(rbStartPosition.x, Mathf.Lerp(rbStartPosition.x, rbStartPosition.x - m_xDifference, progress), progress);
+
+                        //float currentX = m_rigidbody.transform.position.x;
+                        //float newX = Mathf.Lerp(rbStartPosition.x, currentX, progress);
                         float newZ = Mathf.Lerp(rbStartPosition.z, m_rbPushStartPos.z, progress);
-                        rigidbodyPosition = new Vector3(newX, m_rigidbody.transform.position.y, newZ);
+
+                        m_rigidbody.transform.position = new Vector3(newX, rbStartPosition.y, newZ);
                         break;
                     }
                     case ELerpCategory.FloatXAndZ:
+                    case ELerpCategory.Vector3: //until further changes.
                     {
-                        Vector3 pushVector = Vector3.Lerp(rbStartPosition, m_rbPushStartPos, progress);
-                        rigidbodyPosition = new Vector3(pushVector.x, m_rigidbody.transform.position.y, pushVector.z);
+                        Vector3 retreatVector = Vector3.Lerp(rbStartPosition, m_rbPushStartPos, progress);
+                        m_rigidbody.transform.position = retreatVector;
                         break;
                     }
+                    case ELerpCategory.None:
                     default:
                         break;
                 }
 
-                m_rigidbody.transform.position = rigidbodyPosition;
                 yield return null;
             }
 
