@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3019389866308759849
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3019389866308759850}
-  m_Layer: 3
-  m_Name: PushTarget
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3019389866308759850
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3019389866308759849}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3019389867698094323}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3019389866326151153
 GameObject:
   m_ObjectHideFlags: 0
@@ -354,14 +323,14 @@ MonoBehaviour:
   m_playerController: {fileID: 0}
   m_rigidbody: {fileID: 7150750110298139779}
   m_audioSource: {fileID: 6174668752426262614}
-  m_pushTarget: {fileID: 3019389866308759850}
-  m_elerpCategory: 1
+  m_pushTarget: {fileID: 165119780071729985}
+  m_elerpCategory: 2
   m_moveSpeed: 12.5
   m_rotationSpeed: 4
   m_maxRotationAngle: 45
-  m_pushSpeed: 6
-  m_retreatSpeed: 6
-  m_pushDuration: 1.4
+  m_pushSpeed: 7
+  m_retreatSpeed: 7
+  m_pushDuration: 1.25
 --- !u!114 &3019389867575858775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -483,7 +452,7 @@ Transform:
   - {fileID: 3019389867682435543}
   - {fileID: 3019389867094647970}
   - {fileID: 3019389867589327765}
-  - {fileID: 3019389866308759850}
+  - {fileID: 165119780071729985}
   - {fileID: 3019389866326151154}
   m_Father: {fileID: 3019389868120639063}
   m_RootOrder: 0
@@ -775,3 +744,34 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &9088760454406341555
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 165119780071729985}
+  m_Layer: 0
+  m_Name: PushTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &165119780071729985
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9088760454406341555}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 23.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3019389867698094323}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
