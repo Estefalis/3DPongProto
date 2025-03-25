@@ -359,9 +359,9 @@ MonoBehaviour:
   m_moveSpeed: 12.5
   m_rotationSpeed: 4
   m_maxRotationAngle: 45
-  m_pushSpeed: 5
-  m_retreatSpeed: 5
-  m_pushDuration: 1
+  m_pushSpeed: 6
+  m_retreatSpeed: 6
+  m_pushDuration: 1.4
 --- !u!114 &3019389867575858775
 MonoBehaviour:
   m_ObjectHideFlags: 0
