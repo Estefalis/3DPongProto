@@ -240,6 +240,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                     {
                         case ELerpCategory.FloatZ:
                         {
+                            //rbStartPosition = m_rigidbody.transform.position + m_rigidbody.transform.forward;
                             float targetX = m_rigidbody.transform.position.x;
                             float newX = Mathf.Lerp(rbStartPosition.x, targetX, progress);
                             float newZ = Mathf.Lerp(rbStartPosition.z, pushTargetPosition.z, progress);
@@ -278,6 +279,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 {
                     case ELerpCategory.FloatZ:
                     {
+                        //rbStartPosition = m_rigidbody.transform.position + -m_rigidbody.transform.forward;
                         float targetX = m_rigidbody.transform.position.x;
                         float newX = Mathf.Lerp(rbStartPosition.x, targetX, progress);
                         float newZ = Mathf.Lerp(rbStartPosition.z, m_rbPushStartPos.z, progress);
