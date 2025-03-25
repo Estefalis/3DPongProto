@@ -219,6 +219,14 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             }
         }
 
+        internal void ResetPlayerRotation(int _receivedID)
+        {
+            if (_receivedID != m_playerController.m_playerId)
+                return;
+
+            m_rigidbody.transform.localRotation = m_initialRbRotation;
+        }
+
         private IEnumerator HandlePush()
         {
             if (m_receivedUserID == m_playerController.m_playerInputHandler.m_playerInput.user.id && !m_valueTaken)

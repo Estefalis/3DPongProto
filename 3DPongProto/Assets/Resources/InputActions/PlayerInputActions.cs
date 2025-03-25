@@ -57,6 +57,15 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""ResetRotation"",
+                    ""type"": ""Button"",
+                    ""id"": ""d6047c15-70a3-44a8-9758-54d30c64e78b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Zoom"",
                     ""type"": ""Value"",
                     ""id"": ""4d87abec-b5b1-491c-8e08-6723d51b35fa"",
@@ -749,6 +758,94 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""processors"": ""StickDeadzone,ScaleVector2(y=50)"",
                     ""groups"": ""GamepadPlayerID3"",
                     ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a192d377-e35a-4b3f-b123-a8cbf582569b"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID0"",
+                    ""action"": ""ResetRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d971cc2d-bd03-4ca4-8876-7a621ba3410f"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID1"",
+                    ""action"": ""ResetRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e72857fb-5963-4e14-bbdb-9d96c1b1e86b"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID2"",
+                    ""action"": ""ResetRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8abaef78-9d82-4359-849d-e5a6172835d3"",
+                    ""path"": ""<Keyboard>/k"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID3"",
+                    ""action"": ""ResetRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3e7f76ce-9857-45c7-b0e1-5036f700e173"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamepadPlayerID0"",
+                    ""action"": ""ResetRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e443d73d-7ecd-4d05-9093-6c2da237016b"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamepadPlayerID1"",
+                    ""action"": ""ResetRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b237d4a6-9d78-46c1-9b1a-5afeaa369da0"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamepadPlayerID2"",
+                    ""action"": ""ResetRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""18fa0945-544d-42a3-a6aa-ca1b05fa80b8"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamepadPlayerID3"",
+                    ""action"": ""ResetRotation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -2158,6 +2255,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_PlayerActions_Move = m_PlayerActions.FindAction("Move", throwIfNotFound: true);
             m_PlayerActions_Rotate = m_PlayerActions.FindAction("Rotate", throwIfNotFound: true);
             m_PlayerActions_Push = m_PlayerActions.FindAction("Push", throwIfNotFound: true);
+            m_PlayerActions_ResetRotation = m_PlayerActions.FindAction("ResetRotation", throwIfNotFound: true);
             m_PlayerActions_Zoom = m_PlayerActions.FindAction("Zoom", throwIfNotFound: true);
             m_PlayerActions_KickBall = m_PlayerActions.FindAction("KickBall", throwIfNotFound: true);
             m_PlayerActions_CursorVisibility = m_PlayerActions.FindAction("CursorVisibility", throwIfNotFound: true);
@@ -2258,6 +2356,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         private readonly InputAction m_PlayerActions_Move;
         private readonly InputAction m_PlayerActions_Rotate;
         private readonly InputAction m_PlayerActions_Push;
+        private readonly InputAction m_PlayerActions_ResetRotation;
         private readonly InputAction m_PlayerActions_Zoom;
         private readonly InputAction m_PlayerActions_KickBall;
         private readonly InputAction m_PlayerActions_CursorVisibility;
@@ -2270,6 +2369,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             public InputAction @Move => m_Wrapper.m_PlayerActions_Move;
             public InputAction @Rotate => m_Wrapper.m_PlayerActions_Rotate;
             public InputAction @Push => m_Wrapper.m_PlayerActions_Push;
+            public InputAction @ResetRotation => m_Wrapper.m_PlayerActions_ResetRotation;
             public InputAction @Zoom => m_Wrapper.m_PlayerActions_Zoom;
             public InputAction @KickBall => m_Wrapper.m_PlayerActions_KickBall;
             public InputAction @CursorVisibility => m_Wrapper.m_PlayerActions_CursorVisibility;
@@ -2293,6 +2393,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @Push.started += instance.OnPush;
                 @Push.performed += instance.OnPush;
                 @Push.canceled += instance.OnPush;
+                @ResetRotation.started += instance.OnResetRotation;
+                @ResetRotation.performed += instance.OnResetRotation;
+                @ResetRotation.canceled += instance.OnResetRotation;
                 @Zoom.started += instance.OnZoom;
                 @Zoom.performed += instance.OnZoom;
                 @Zoom.canceled += instance.OnZoom;
@@ -2321,6 +2424,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @Push.started -= instance.OnPush;
                 @Push.performed -= instance.OnPush;
                 @Push.canceled -= instance.OnPush;
+                @ResetRotation.started -= instance.OnResetRotation;
+                @ResetRotation.performed -= instance.OnResetRotation;
+                @ResetRotation.canceled -= instance.OnResetRotation;
                 @Zoom.started -= instance.OnZoom;
                 @Zoom.performed -= instance.OnZoom;
                 @Zoom.canceled -= instance.OnZoom;
@@ -2740,6 +2846,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             void OnMove(InputAction.CallbackContext context);
             void OnRotate(InputAction.CallbackContext context);
             void OnPush(InputAction.CallbackContext context);
+            void OnResetRotation(InputAction.CallbackContext context);
             void OnZoom(InputAction.CallbackContext context);
             void OnKickBall(InputAction.CallbackContext context);
             void OnCursorVisibility(InputAction.CallbackContext context);

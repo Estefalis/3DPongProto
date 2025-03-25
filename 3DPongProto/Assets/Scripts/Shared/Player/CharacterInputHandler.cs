@@ -14,7 +14,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         [SerializeField] internal CharacterMainController m_playerController;
         private UserInputManager m_userInputManager;
 
-        private const string m_moveString = "Move", m_rotateString = "Rotate", m_pushString = "Push", m_zoomString = "Zoom";
+        private const string m_moveString = "Move", m_rotateString = "Rotate", m_pushString = "Push", m_resetString = "ResetRotation", m_zoomString = "Zoom";
         private const string m_kickBallString = "KickBall", m_openGameMenuString = "OpenGameMenu", m_mousePositionString = "MousePosition";
         private const string m_uiActionMap = "UserInterface", m_playerActionMap = "PlayerActions";
 
@@ -119,6 +119,9 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             var pushAction = _playerInput.actions[m_pushString];
             pushAction.performed += ctx => OnPush(ctx, _playerInput);
 
+            var resetAction = _playerInput.actions[m_resetString];
+            resetAction.performed += ctx => OnRotationReset(ctx, _playerInput);
+
             var kickBallAction = _playerInput.actions[m_kickBallString];
             kickBallAction.performed += ctx => OnKickBall(ctx, _playerInput);
 
@@ -152,6 +155,9 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
             var pushAction = _playerInput.actions[m_pushString];
             pushAction.performed -= ctx => OnPush(ctx, _playerInput);
+
+            var resetAction = _playerInput.actions[m_resetString];
+            resetAction.performed -= ctx => OnRotationReset(ctx, _playerInput);
 
             var kickBallAction = _playerInput.actions[m_kickBallString];
             kickBallAction.performed -= ctx => OnKickBall(ctx, _playerInput);
@@ -266,6 +272,20 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 {
                     m_playerController.m_playerMovement.m_receivedUserID = _playerInput.user.id;
                     m_playerController.m_playerMovement.InitializePush(m_playerController.m_playerId, true);
+                }
+            }
+        }
+
+        private void OnRotationReset(InputAction.CallbackContext _callbackContext, PlayerInput _playerInput)
+        {
+            string bindingControlScheme = _callbackContext.action.bindings[_callbackContext.action.GetBindingIndexForControl(_callbackContext.control)].groups;
+
+            if (bindingControlScheme == _playerInput.currentControlScheme)
+            {
+                var resetRotation = _callbackContext.ReadValueAsButton();
+                if (resetRotation)
+                {
+                    m_playerController.m_playerMovement.ResetPlayerRotation(m_playerController.m_playerId);
                 }
             }
         }
