@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3019389866308759850}
   m_Layer: 3
-  m_Name: LookAtTarget
+  m_Name: PushTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23,13 +23,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3019389866308759849}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3019389868120639063}
-  m_RootOrder: 2
+  m_Father: {fileID: 3019389867698094323}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3019389866326151153
 GameObject:
@@ -54,13 +54,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3019389866326151153}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3019389868120639063}
-  m_RootOrder: 1
+  m_Father: {fileID: 3019389867698094323}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3019389866589963512
 GameObject:
@@ -330,7 +330,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3019389867575858772}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -352,14 +352,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_playerController: {fileID: 0}
-  m_rigidbody: {fileID: 0}
-  m_pushTarget: {fileID: 0}
-  m_audioSource: {fileID: 0}
-  m_moveSpeed: 10
-  m_rotationSpeed: 2.5
+  m_rigidbody: {fileID: 7150750110298139779}
+  m_audioSource: {fileID: 6174668752426262614}
+  m_pushTarget: {fileID: 3019389866308759850}
+  m_elerpCategory: 1
+  m_moveSpeed: 12.5
+  m_rotationSpeed: 4
   m_maxRotationAngle: 45
-  m_pushSpeed: 10
-  m_retreatSpeed: 15
+  m_pushSpeed: 5
+  m_retreatSpeed: 5
   m_pushDuration: 1
 --- !u!114 &3019389867575858775
 MonoBehaviour:
@@ -482,6 +483,8 @@ Transform:
   - {fileID: 3019389867682435543}
   - {fileID: 3019389867094647970}
   - {fileID: 3019389867589327765}
+  - {fileID: 3019389866308759850}
+  - {fileID: 3019389866326151154}
   m_Father: {fileID: 3019389868120639063}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -558,7 +561,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3019389868120639063}
   m_Layer: 3
-  m_Name: AvatarVisuals
+  m_Name: VisualsAndTransforms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -577,8 +580,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3019389867698094323}
-  - {fileID: 3019389866326151154}
-  - {fileID: 3019389866308759850}
   m_Father: {fileID: 3019389867485508527}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
