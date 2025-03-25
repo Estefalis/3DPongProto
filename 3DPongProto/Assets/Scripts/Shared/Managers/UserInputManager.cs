@@ -435,18 +435,18 @@ namespace ThreeDeePongProto.Shared.Managers
             string controlScheme;
             InputDevice[] devices;
 
-            if (selectedPlayerInput == null || selectedPlayerInput == m_menuPlayerInput)
-            {
+            //if (selectedPlayerInput == null || selectedPlayerInput == m_menuPlayerInput)
+            //{
                 controlScheme = Gamepad.all.Count > 0 ? m_gamePadScheme : m_keyboardMouseScheme;
                 devices = Gamepad.all.Count > 0 ? new InputDevice[] { Gamepad.current ?? Gamepad.all[0] } : new InputDevice[] { Keyboard.current, Mouse.current };
 
                 selectedPlayerInput = menuPlayerInput; //Menu controls itself.
-            }
-            else
-            {
-                controlScheme = selectedPlayerInput.currentControlScheme;
-                devices = selectedPlayerInput.devices.ToArray();
-            }
+            //}
+            //else
+            //{
+            //    controlScheme = selectedPlayerInput.currentControlScheme;
+            //    devices = selectedPlayerInput.devices.ToArray();
+            //}
 
             CustomControlSchemeSwitch(controlScheme, devices, selectedPlayerInput);         
             Debug.Log($"SetMenuInputScheme: Menu now gets controlled with {string.Join(", ", devices.Select(d => d.name))}.");
