@@ -58,7 +58,7 @@ namespace ThreeDeePongProto.Shared.Managers
         private Transform m_playfieldParent;
         private PlayerInput m_menuPlayerInput;
         private PlayerInput m_firstActivePlayerInput = null;
-        
+
         private MenuManager m_menuManager;
 
         private string m_lastActiveControlScheme = string.Empty;
@@ -223,46 +223,6 @@ namespace ThreeDeePongProto.Shared.Managers
 
             SetMenuInputScheme();
         }
-
-        //        private IEnumerator SimulateGamepadReconnect()
-        //        {
-        //            if (Gamepad.current == null)
-        //            {
-        //                Debug.Log("No Gamepad detected. Skipping forced reconnect.");
-        //                yield break;
-        //            }
-
-        //            var activeGamepad = Gamepad.current;
-        //#if UNITY_EDITOR
-        //            //Debug.Log($"Forcing reconnect for {activeGamepad.displayName}...");
-        //#endif
-
-        //            //1. Temporarily disable InputSystem
-        //            InputSystem.DisableDevice(activeGamepad);
-        //            yield return new WaitForSeconds(0.2f);
-
-        //            //2. Unpair device manually
-        //            foreach (var playerInput in PlayerInput.all)
-        //            {
-        //                InputUser.PerformPairingWithDevice(activeGamepad, playerInput.user, InputUserPairingOptions.UnpairCurrentDevicesFromUser);
-        //            }
-
-        //            //3. Wait before re-enabling
-        //            yield return new WaitForSeconds(0.5f);
-
-        //            //4. Enable InputSystem again
-        //            InputSystem.EnableDevice(activeGamepad);
-
-        //            //5. Re-pair the Gamepad to the correct user
-        //            foreach (var playerInput in PlayerInput.all)
-        //            {
-        //                InputUser.PerformPairingWithDevice(activeGamepad, playerInput.user);
-        //                playerInput.SwitchCurrentControlScheme(m_gamePadScheme, activeGamepad);
-        //            }
-        //#if UNITY_EDITOR
-        //            //Debug.Log($"Simulated reconnect for {activeGamepad.displayName}.");
-        //#endif
-        //        }
 
         /// <summary>
         /// Method to receive the buildIndex of the scene that shall be reloaded.
@@ -435,23 +395,22 @@ namespace ThreeDeePongProto.Shared.Managers
             string controlScheme;
             InputDevice[] devices;
 
-            //if (selectedPlayerInput == null || selectedPlayerInput == m_menuPlayerInput)
-            //{
+            if (selectedPlayerInput == null || selectedPlayerInput == m_menuPlayerInput)
+            {
                 controlScheme = Gamepad.all.Count > 0 ? m_gamePadScheme : m_keyboardMouseScheme;
                 devices = Gamepad.all.Count > 0 ? new InputDevice[] { Gamepad.current ?? Gamepad.all[0] } : new InputDevice[] { Keyboard.current, Mouse.current };
 
                 selectedPlayerInput = menuPlayerInput; //Menu controls itself.
-            //}
-            //else
-            //{
-            //    controlScheme = selectedPlayerInput.currentControlScheme;
-            //    devices = selectedPlayerInput.devices.ToArray();
-            //}
+            }
+            else
+            {
+                controlScheme = selectedPlayerInput.currentControlScheme;
+                devices = selectedPlayerInput.devices.ToArray();
+            }
 
-            CustomControlSchemeSwitch(controlScheme, devices, selectedPlayerInput);         
-            Debug.Log($"SetMenuInputScheme: Menu now gets controlled with {string.Join(", ", devices.Select(d => d.name))}.");
+            CustomControlSchemeSwitch(controlScheme, devices, selectedPlayerInput);
 #if UNITY_EDITOR
-            //Debug.Log($"{selectedPlayerInput.gameObject.name} uses {controlScheme}.");
+            //Debug.Log($"SetMenuInputScheme: Menu now gets controlled with {string.Join(", ", devices.Select(d => d.name))}.");
 #endif
         }
         #endregion
@@ -530,7 +489,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
                 CustomControlSchemeSwitch(newControlScheme, newDevices, _playerInput);
             }
-
+            //Debug.Log($"PlayerUserID: {_playerInput.user.id} | PlayerIndex: {_playerInput.playerIndex} | NewScheme: {newControlScheme} | PlayerUserScheme: {_playerInput.user.controlScheme} | PlayerScheme: {_playerInput.currentControlScheme} | PlayerDevices: {string.Join(", ", _playerInput.devices.Select(d => d.name))} | PairedDevices: {string.Join(", ", _playerInput.user.pairedDevices.Select(d => d.name))}");
             _playerInput.ActivateInput();   //Forces the inputsystem to use the assigned device.
             m_startPlayerSetup[playerUserID] = newDevices;
             ACheckForPlayerInput?.Invoke(_playerInput.playerIndex);
@@ -654,11 +613,20 @@ namespace ThreeDeePongProto.Shared.Managers
             var deviceMap = GetPlayerDeviceMap();
             deviceMap[takenPlayerInput.user.id] = reconnectedGamepad;
 
-            InputUser.PerformPairingWithDevice(reconnectedGamepad, takenPlayerInput.user);
-            takenPlayerInput.SwitchCurrentControlScheme(m_gamePadScheme, new InputDevice[] { reconnectedGamepad });
+            int deviceIndex = -1;
+            foreach (var arraySlot in deviceMap)
+            {
+                deviceIndex += 1;
+                if (arraySlot.Value == reconnectedGamepad)
+                    break;
+            }
 
-            CustomControlSchemeSwitch(m_gamePadScheme, new InputDevice[] { reconnectedGamepad }, takenPlayerInput);
-            Debug.Log($"Reconnected {reconnectedGamepad.name} to Player {takenPlayerInput.user.id}.");
+            InputDevice[] newDevices = new InputDevice[] { reconnectedGamepad };
+            InputUser.PerformPairingWithDevice(reconnectedGamepad, takenPlayerInput.user);
+            takenPlayerInput.SwitchCurrentControlScheme(GetControlSchemeForPlayer(deviceIndex, newDevices), newDevices);
+
+            CustomControlSchemeSwitch(m_gamePadScheme, newDevices, takenPlayerInput);   //MenuManager notification.
+            Debug.Log($"Reconnected {reconnectedGamepad.name} to PlayerUserID {takenPlayerInput.user.id}.");
         }
         #endregion
 

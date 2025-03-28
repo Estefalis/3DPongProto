@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ThreeDeePongProto.Shared.HelperClasses;
+using ThreeDeePongProto.Shared.InputActions;
 using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -24,6 +26,9 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private Vector2 m_rotationVector;   //Saved current rotationInput.
         private int m_playerIndex;
         private bool m_onQuitProcess = false;
+
+        private Dictionary<InputDevice, List<InputBinding>> m_inputBindings;
+        private Dictionary<InputDevice, Dictionary<int, List<InputBinding>>> m_combinedRouteDict = new();
 
         #region Actions_and_Functions
         internal static event Action<int> AKickBall;
@@ -86,7 +91,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void PlayerInputCheck(int _playerIndex)
         {
-            //NOTE: 'm_currentPlayerInput.playerIndex' is here already != 'm_playerController.m_playerId'. Menu in PlayerInputManager took Debug-Index 0!
+            //NOTE: 'm_currentPlayerInput._playerIndex' is here already != 'm_playerController.m_playerId'. Menu in PlayerInputManager took Debug-Index 0!
 
             if (m_playerInput == null)
                 m_playerInput = m_playerController.GetComponent<PlayerInput>();
@@ -100,12 +105,13 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             {
                 m_playerInput.GetComponent<PlayerInput>();
                 SubscribeToInputActions(m_playerInput);
-
+                OrganizeInputBindings(m_playerInput.actions);   //TODO: Complete OrganizeInputBindings and Contextual PlayerMovement.
                 //Listen to controlScheme changes.
                 m_playerInput.onControlsChanged += OnControlsChanged;
             }
         }
 
+        #region Un-Subscribe_Methods
         private void SubscribeToInputActions(PlayerInput _playerInput)
         {
             var moveAction = _playerInput.actions[m_moveString];
@@ -172,6 +178,77 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             var openGameMenuAction = _playerInput.actions[m_openGameMenuString];
             openGameMenuAction.performed -= OnOpenMenu;
         }
+        #endregion
+
+        private void OrganizeInputBindings(InputActionAsset _inputActionAsset)
+        {
+            m_combinedRouteDict.Clear();
+
+            foreach (var actionMap in _inputActionAsset.actionMaps)
+            {
+                if (actionMap.name != m_playerActionMap)
+                    continue;
+
+                foreach (var playerAction in actionMap.actions)
+                {
+                    bool isComposite = false;
+                    //Debug.Log($"ActionMap: {actionMap.name}, Action: {playerAction.name}, Bindings: {playerAction.bindings.Count}");
+
+                    for (int i = 0; i < playerAction.bindings.Count; i++)
+                    {
+                        if (playerAction.bindings[i].isComposite)
+                        {
+                            //Debug.Log($"Composite: {playerAction.bindings[i].name}");
+                            isComposite = true;
+                            continue;
+                        }
+
+                        int playerIndex = i / 2;
+
+                        if (isComposite)
+                        {
+                            if (playerAction.bindings[i].isPartOfComposite && i >= playerIndex * 2 && i < playerIndex * 2 + 2)
+                            {
+                                //Debug.Log($"Action: {playerAction.name}, Composite: {playerAction.bindings[i].name}, {playerAction.bindings[i].groups}");
+                                CollectBindingForPlayer(playerIndex, playerAction.bindings[i]);
+                            }
+                        }
+                        else
+                        {
+                            //Debug.Log($"Action: {playerAction.name}, Composite: {playerAction.bindings[i].name}, {playerAction.bindings[i].groups}");
+                            CollectBindingForPlayer(playerIndex, playerAction.bindings[i]);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void CollectBindingForPlayer(int _playerIndex, InputBinding _inputBinding)
+        {
+            //InputDevice inputDevice = _inputBinding.effectivePath != null ? InputSystem.GetDevice(_inputBinding.effectivePath) : null;
+            string deviceType = StringManipulation.GetCharacterBetweenArgs($"{_inputBinding.effectivePath}", "<", ">");
+            //Debug.Log($"Device: {deviceType}");
+            InputDevice inputDevice = InputSystem.devices.FirstOrDefault(d => d.description.ToString().Contains(deviceType));
+
+            if (inputDevice == null)
+            {
+                //Debug.Log($"Binding: {_inputBinding.effectivePath}");
+                return;
+            }
+
+            if (!m_combinedRouteDict.ContainsKey(inputDevice))
+            {
+                m_combinedRouteDict[inputDevice] = new Dictionary<int, List<InputBinding>>();
+            }
+
+            if (!m_combinedRouteDict[inputDevice].ContainsKey(_playerIndex))
+            {
+                m_combinedRouteDict[inputDevice][_playerIndex] = new List<InputBinding>();
+            }
+
+            m_combinedRouteDict[inputDevice][_playerIndex].Add(_inputBinding);
+            //Debug.Log($"Binding of Device: {inputDevice.name}, PlayerIndex: {_playerIndex}, Path: {_inputBinding.path}");
+        }
 
         private void OnControlsChanged(PlayerInput _playerInput)
         {
@@ -194,14 +271,14 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             var playerId = _playerInput.user.id;
             var deviceMap = m_userInputManager.GetPlayerDeviceMap();
 
-            //If the same device is already assigned, ignore.
+            //If the same inputDevice is already assigned, ignore.
             if (deviceMap.TryGetValue(playerId, out var currentDevice) && newDevice == currentDevice)
             {
-                //Debug.Log($"OnControlsChanged: Device for PlayerIndex {_playerInput.playerIndex} | PlayerUserID {playerId} unchanged ({newDevice.name}).");
+                //Debug.Log($"OnControlsChanged: Device for PlayerIndex {_playerInput._playerIndex} | PlayerUserID {playerId} unchanged ({newDevice.name}).");
                 return;
             }
 
-            //Update device map & pair new device.
+            //Update inputDevice map & pair new inputDevice.
             deviceMap[playerId] = newDevice;
             _playerInput.user.UnpairDevices();
             InputUser.PerformPairingWithDevice(newDevice, _playerInput.user);
@@ -225,21 +302,25 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             string bindingControlScheme = _callbackContext.action.bindings[_callbackContext.action.GetBindingIndexForControl(_callbackContext.control)].groups;
 
-            if (bindingControlScheme == _playerInput.currentControlScheme)
-            {
-                Vector2 moveVector = _callbackContext.ReadValue<Vector2>();
-                m_playerController.m_playerMovement.SetInputVector(moveVector, m_playerController.m_playerId, false);
-            }
+            if (bindingControlScheme != _playerInput.currentControlScheme)
+                return;
+
+            //TODO: Fuer Gamepad ueberlegen, wie Dpad left/right indices zwischen GamepadID 0 - 3 unterscheiden können.
+            Vector2 moveVector = _callbackContext.ReadValue<Vector2>();
+            m_playerController.m_playerMovement.SetInputVector(moveVector, m_playerController.m_playerId, false);
         }
 
         private void OnMoveCanceled(InputAction.CallbackContext _callbackContext, PlayerInput _playerInput)
         {
-            string bindingControlScheme = _callbackContext.action.bindings[_callbackContext.action.GetBindingIndexForControl(_callbackContext.control)].groups;
-
-            if (bindingControlScheme == _playerInput.currentControlScheme)
+            if (_playerInput.devices.Contains(_callbackContext.control.device))
             {
-                Vector2 moveVector = Vector2.zero;
-                m_playerController.m_playerMovement.SetInputVector(moveVector, m_playerController.m_playerId, false);
+                string bindingControlScheme = _callbackContext.action.bindings[_callbackContext.action.GetBindingIndexForControl(_callbackContext.control)].groups;
+
+                if (bindingControlScheme == _playerInput.currentControlScheme)
+                {
+                    Vector2 moveVector = Vector2.zero;
+                    m_playerController.m_playerMovement.SetInputVector(moveVector, m_playerController.m_playerId, false);
+                }
             }
         }
 
@@ -257,7 +338,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             string bindingControlScheme = _callbackContext.action.bindings[_callbackContext.action.GetBindingIndexForControl(_callbackContext.control)].groups;
 
             if (bindingControlScheme == _playerInput.currentControlScheme)
-                m_rotationVector = Vector2.zero; //Reset InputVector, once button is released/action is canceled.
+                m_rotationVector = Vector2.zero; //Reset InputVector, once button is released/playerAction is canceled.
         }
 
         //Process 'Push'-Action.
@@ -332,7 +413,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (m_playerController.m_playerId == 0)
                 UserInputManager.ToggleActionMaps(m_uiActionMap);
 
-            //var currentDevice = _callbackContext.control.device;                //Get the current device.
+            //var currentDevice = _callbackContext.control.inputDevice;                //Get the current inputDevice.
             //switch (currentDevice)
         }
         #endregion

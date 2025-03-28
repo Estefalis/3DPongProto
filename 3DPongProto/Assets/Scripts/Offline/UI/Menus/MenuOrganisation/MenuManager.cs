@@ -195,7 +195,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             //m_menuPlayerInput.SwitchCurrentControlScheme(_controlScheme, _devices);
             //m_currentControlScheme = _controlScheme;
-
+            _controlScheme = Gamepad.all.Count > 0 ? m_gamePadScheme : m_keyboardMouseScheme;
             PreviousDeviceSetup(_controlScheme, _devices);
         }
         #endregion

@@ -262,6 +262,16 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3019389867575858760, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
         type: 3}
+      propertyPath: m_pushSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3019389867575858760, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
+        type: 3}
+      propertyPath: m_retreatSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3019389867575858760, guid: 0531c082aa1ae3840b5ba3ee5f8a4d9e,
+        type: 3}
       propertyPath: m_playerController
       value: 
       objectReference: {fileID: 1514124386352258756}

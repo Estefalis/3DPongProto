@@ -1,6 +1,6 @@
+using System;
 using System.IO;
 using System.Linq;
-using System;
 
 namespace ThreeDeePongProto.Shared.HelperClasses
 {
@@ -15,14 +15,14 @@ namespace ThreeDeePongProto.Shared.HelperClasses
         /// <returns></returns>
         internal static string GetCharacterBetweenArgs(string _source, string _firstArg, string _secondArg)
         {
-            if (_source.Contains(_firstArg) && _source.Contains(_secondArg))
+            if (string.IsNullOrEmpty(_source) || !_source.Contains(_firstArg) || !_source.Contains(_secondArg))
             {
-                int start = _source.IndexOf(_firstArg, 0) + _firstArg.Length;
-                int end = _source.IndexOf(_secondArg, start);
-                return _source.Substring(start, end - start);
+                return string.Empty;
             }
 
-            return "";
+            int start = _source.IndexOf(_firstArg, StringComparison.Ordinal) + _firstArg.Length;
+            int end = _source.IndexOf(_secondArg, start, StringComparison.Ordinal);
+            return (end > start) ? _source[start..end].Trim() : string.Empty;
         }
 
         /// <summary>
