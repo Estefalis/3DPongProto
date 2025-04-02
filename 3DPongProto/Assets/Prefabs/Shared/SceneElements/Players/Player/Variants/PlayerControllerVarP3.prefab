@@ -39,6 +39,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2647086753925811388, guid: efd7ee56e3f432a438cf295583530547,
         type: 3}
+      propertyPath: m_playerID
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2647086753925811388, guid: efd7ee56e3f432a438cf295583530547,
+        type: 3}
       propertyPath: m_playerId
       value: 2
       objectReference: {fileID: 0}

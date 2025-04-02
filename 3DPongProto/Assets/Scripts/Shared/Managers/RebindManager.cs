@@ -138,7 +138,7 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             m_playerIndex = _playerIndex;
 #if UNITY_EDITOR
-            //            Debug.Log($"PlayerIndex {m_playerIndex}");
+            //            Debug.Log($"PlayerIndex {m_playerInputIndex}");
 #endif
         }
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ThreeDeePongProto.Shared.PlayerCharacter
 {
-    internal class CharacterCameraController : MonoBehaviour
+    internal class CharacterCameraController : MonoBehaviour, IProvidePlayerID
     {
         [SerializeField] internal CharacterMainController m_playerController;
 
@@ -41,8 +41,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         [SerializeField] private BasicFieldValues m_basicFieldValues;
         #endregion
 
-        internal int m_playerId;
-        private int m_playerWindowId;
+        private int m_playerID;
+        private int m_playerWindowID;
 
         private void Awake()
         {
@@ -50,14 +50,13 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
             if (m_RbPlayer == null)
                 m_RbPlayer = GetComponentInParent<Rigidbody>();
-
-            m_playerId = m_playerController.m_playerId;
+                        
             m_setGroundWidth = m_basicFieldValues.SetGroundWidth;
         }
 
         private void OnDisable()
         {
-            CameraManager.LetsRemoveCamera(m_followCamera, m_playerId);
+            CameraManager.LetsRemoveCamera(m_followCamera, m_playerID);
 
             CharacterInputHandler.ASendMousePosition -= NewMousePosition;
         }
@@ -65,11 +64,11 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private void Start()
         {
             //3. After Players are instantiated and the LocalMatchManager invokes the Event, the Camera can add itself to the availableCamera-List in the CameraManager.
-            CameraManager.LetsRegisterCamera(m_followCamera, m_playerId);
+            CameraManager.LetsRegisterCamera(m_followCamera, m_playerID);
 
             MaxSideMovement();
             //Saved vector to keep the playerCamera-startposition.
-            CameraPositions(m_cameraManager.AvailableCameras[m_playerId]);
+            CameraPositions(m_cameraManager.AvailableCameras[m_playerID]);
 
             CharacterInputHandler.ASendMousePosition += NewMousePosition;
         }
@@ -116,14 +115,14 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                     //SingleCamera
                     case ECameraModi.SingleCam:
                     {
-                        m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
+                        m_playerWindowID = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
                         break;
                     }
                     //TwoVertical
                     case ECameraModi.TwoVertical:
                     {
-                        //if _mousePosition.x > Cam1.xMin m_playerWindowId = IndexOf Cam1, else IndexOf Cam0.
-                        m_playerWindowId = _mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin
+                        //if _mousePosition.x > Cam1.xMin m_playerWindowID = IndexOf Cam1, else IndexOf Cam0.
+                        m_playerWindowID = _mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin
                             ? m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1])
                             : m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
                         break;
@@ -131,8 +130,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                     //TwoHorizontal
                     case ECameraModi.TwoHorizontal:
                     {
-                        //if _mousePosition.y > Cam1.yMin m_playerWindowId = IndexOf Cam1, else IndexOf Cam0.
-                        m_playerWindowId = _mousePosition.y >= m_cameraManager.AvailableCameras[1].pixelRect.yMin
+                        //if _mousePosition.y > Cam1.yMin m_playerWindowID = IndexOf Cam1, else IndexOf Cam0.
+                        m_playerWindowID = _mousePosition.y >= m_cameraManager.AvailableCameras[1].pixelRect.yMin
                             ? m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1])
                             : m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
                         break;
@@ -142,28 +141,28 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                     {
                         if (m_mousePosition.x < m_cameraManager.AvailableCameras[0].pixelRect.xMax && m_mousePosition.y < m_cameraManager.AvailableCameras[0].pixelRect.yMax)
                         {
-                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
+                            m_playerWindowID = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
                         }
 
                         if (_mousePosition.x > m_cameraManager.AvailableCameras[1].pixelRect.xMin && _mousePosition.y < m_cameraManager.AvailableCameras[1].pixelRect.yMax)
                         {
-                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1]);
+                            m_playerWindowID = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1]);
                         }
 
                         if (_mousePosition.x < m_cameraManager.AvailableCameras[2].pixelRect.xMax && _mousePosition.y > m_cameraManager.AvailableCameras[2].pixelRect.yMin)
                         {
-                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[2]);
+                            m_playerWindowID = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[2]);
                         }
 
                         if (_mousePosition.x > m_cameraManager.AvailableCameras[3].pixelRect.xMin && _mousePosition.y > m_cameraManager.AvailableCameras[3].pixelRect.yMin)
                         {
-                            m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[3]);
+                            m_playerWindowID = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[3]);
                         }
                         break;
                     }
                     default:
                     {
-                        m_playerWindowId = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
+                        m_playerWindowID = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
                         break;
                     }
                 }
@@ -205,7 +204,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         /// <returns></returns>
         private int GetWindowId()
         {
-            return m_playerWindowId;
+            return m_playerWindowID;
         }
 
         private bool MouseIsWithinWindow(Vector2 _mousePosition)
@@ -227,7 +226,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 case m_keyboardMouseScheme:
                 {
                     //Limits the zoom to the window of each player.
-                    if (m_playerId == GetWindowId() && MouseIsWithinWindow(m_mousePosition) && _controlScheme == m_keyboardMouseScheme)
+                    if (m_playerID == GetWindowId() && MouseIsWithinWindow(m_mousePosition) && _controlScheme == m_keyboardMouseScheme)
                     {
                         ZoomWindow(_scrollVector, _playerIndex);
                     }
@@ -244,17 +243,17 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void ZoomWindow(Vector2 _scrollVector, int _playerIndex)
         {
-            //Debug.Log($"PlayerIndex: {_playerIndex} | PlayerControllerID: {m_playerController.m_playerId}");
-            if (_playerIndex == m_playerController.m_playerId)
+            //Debug.Log($"PlayerIndex: {_playerIndex} | PlayerControllerID: {m_playerController.m_playerID}");
+            if (_playerIndex == m_playerID)
             {
                 float zoomValue = -_scrollVector.y * m_zoomSpeed;
 #if UNITY_EDITOR
-                //Debug.Log($"ZoomValue: {zoomValue} PlayerWindowId: {m_playerWindowId} PlayerId: {m_playerId}");
+                //Debug.Log($"ZoomValue: {zoomValue} PlayerWindowId: {m_playerWindowID} PlayerId: {m_playerID}");
 #endif
                 if (Mathf.Abs(zoomValue) > m_minAbsLimit)
                 {
                     //Limits the zoom to the window of each player.
-                    if (m_playerWindowId == m_playerId)
+                    if (m_playerWindowID == m_playerID)
                         m_currentHeight = m_followCamera.transform.localPosition.y + zoomValue * m_zoomStep;
 
                     if (m_currentHeight < m_lowestHeight)
@@ -263,6 +262,11 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                         m_currentHeight = m_maximalHeight;
                 }
             }
+        }
+
+        public void SetPlayerID(int _playerID)
+        {
+            m_playerID = _playerID;
         }
         #endregion
     }

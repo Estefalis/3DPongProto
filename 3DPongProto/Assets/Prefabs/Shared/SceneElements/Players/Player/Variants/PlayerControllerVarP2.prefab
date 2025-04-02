@@ -39,6 +39,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8558195983882434024, guid: dbad03ba2983db345901c2d0b89a6a6e,
         type: 3}
+      propertyPath: m_playerID
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8558195983882434024, guid: dbad03ba2983db345901c2d0b89a6a6e,
+        type: 3}
       propertyPath: m_playerId
       value: 1
       objectReference: {fileID: 0}

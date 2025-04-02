@@ -316,7 +316,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
                     ""action"": ""OpenGameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -327,7 +327,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/start"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID3;GamepadPlayerID2;GamepadPlayerID1;GamepadPlayerID0"",
                     ""action"": ""OpenGameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -338,7 +338,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/b"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
+                    ""groups"": ""KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
                     ""action"": ""KickBall"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -393,7 +393,18 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse;Gamepad"",
+                    ""groups"": ""KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
+                    ""action"": ""MousePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a6d93254-e9f9-4c24-a0c3-2b01f7c5c2f6"",
+                    ""path"": ""<VirtualMouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamepadPlayerID0;GamepadPlayerID1;GamepadPlayerID2;GamepadPlayerID3"",
                     ""action"": ""MousePosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -690,7 +701,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/c"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
                     ""action"": ""CursorVisibility"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -701,7 +712,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/select"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""GamepadPlayerID3;GamepadPlayerID2;GamepadPlayerID1;GamepadPlayerID0"",
                     ""action"": ""CursorVisibility"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -712,7 +723,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Mouse>/scroll"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
+                    ""groups"": ""KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
                     ""action"": ""Zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2137,6 +2148,11 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""devicePath"": ""<Gamepad>"",
                     ""isOptional"": false,
                     ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<VirtualMouse>"",
+                    ""isOptional"": true,
+                    ""isOR"": false
                 }
             ]
         },
@@ -2196,6 +2212,11 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""devicePath"": ""<Gamepad>"",
                     ""isOptional"": false,
                     ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<VirtualMouse>"",
+                    ""isOptional"": true,
+                    ""isOR"": false
                 }
             ]
         },
@@ -2207,6 +2228,11 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""devicePath"": ""<Gamepad>"",
                     ""isOptional"": false,
                     ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<VirtualMouse>"",
+                    ""isOptional"": true,
+                    ""isOR"": false
                 }
             ]
         },
@@ -2217,6 +2243,11 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""devicePath"": ""<Gamepad>"",
                     ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<VirtualMouse>"",
+                    ""isOptional"": true,
                     ""isOR"": false
                 }
             ]
@@ -2244,6 +2275,11 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""devicePath"": ""<Gamepad>"",
                     ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<VirtualMouse>"",
+                    ""isOptional"": true,
                     ""isOR"": false
                 }
             ]

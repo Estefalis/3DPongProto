@@ -9,6 +9,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4346485511625068465, guid: c0c19374c0ff8984ca12239d839971bb,
         type: 3}
+      propertyPath: m_playerID
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4346485511625068465, guid: c0c19374c0ff8984ca12239d839971bb,
+        type: 3}
       propertyPath: m_playerId
       value: 3
       objectReference: {fileID: 0}

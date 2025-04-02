@@ -49,6 +49,19 @@ namespace ThreeDeePongProto.Shared.HelperClasses
             return int.MinValue;
         }
 
+        internal static bool ContainsPlayerID(string _source, int _playerID, int _digitCount, SearchDirection _direction)
+        {
+            string idString = _playerID.ToString().PadLeft(_digitCount, '0');
+
+            return _direction switch
+            {
+                SearchDirection.Forwards => _source.StartsWith(idString),
+                SearchDirection.Backwards => _source.EndsWith(idString),
+                SearchDirection.FullScan => _source.Contains(idString),
+                _ => false,
+            };
+        }
+
         /// <summary>
         /// Returns a new string with a big character at the submitted index. An index of 0, or none submitted, equals first letter.
         /// </summary>

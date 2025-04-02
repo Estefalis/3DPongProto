@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ThreeDeePongProto.Shared.PlayerCharacter
 {
-    internal class CharacterMovement : MonoBehaviour
+    internal class CharacterMovement : MonoBehaviour, IProvidePlayerID
     {
         private enum ELerpCategory
         {
@@ -43,6 +43,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private float m_paddleWidthAdjustment;
         private float m_maxPushDistance;
         private float m_xDifference;
+        private int m_playerID;
 
         private Vector3 m_rbPushStartPos;
 
@@ -50,8 +51,11 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             if (m_rigidbody == null)
                 m_rigidbody = GetComponent<Rigidbody>();
+        }
 
-            SetPlayerRotation(m_playerController.m_playerId);
+        private void OnEnable()
+        {
+            SetPlayerRotation(m_playerID);
 
             m_isPushing = false;
         }
@@ -129,7 +133,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         #region Movement
         internal void SetInputVector(Vector2 _inputVector, int _receivedID, bool _isRotation)
         {
-            if (_receivedID != m_playerController.m_playerId)
+            if (_receivedID != m_playerID)
                 return;
 
             switch (_isRotation)
@@ -209,7 +213,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         #region Push
         internal void InitializePush(int _receivedID, bool _initializePush)
         {
-            if (_receivedID != m_playerController.m_playerId)
+            if (_receivedID != m_playerID)
                 return;
 
             if (_initializePush && !m_isPushing)
@@ -221,7 +225,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         internal void ResetPlayerRotation(int _receivedID)
         {
-            if (_receivedID != m_playerController.m_playerId)
+            if (_receivedID != m_playerID)
                 return;
 
             m_rigidbody.transform.localRotation = m_initialRbRotation;
@@ -335,6 +339,11 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private float GetInversion(bool _invertAxis)
         {
             return _invertAxis ? -1.0f : 1.0f;
+        }
+
+        public void SetPlayerID(int _playerID)
+        {
+            m_playerID = _playerID;
         }
         #endregion
     }

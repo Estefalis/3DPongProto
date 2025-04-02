@@ -1,5 +1,8 @@
+using System.Collections;
+using System.Collections.Generic;
 using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace ThreeDeePongProto.Shared.PlayerCharacter
 {
@@ -13,9 +16,9 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         [SerializeField] internal CharacterInteractions m_playerInteractions;
         [SerializeField] internal CharacterHealth m_playerHealth;
         [SerializeField] internal CharacterCameraController m_playerCameraController;
-        
+
         [Header("Player Details")]
-        [SerializeField] internal int m_playerId;
+        [SerializeField] private int m_playerID;
         [SerializeField] protected bool m_defaultFrontLineUp;
 
         #region Scriptable References
@@ -33,14 +36,36 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         internal float m_maxPushDistance;
         internal Vector3 m_localPaddleScale;
 
+        private bool m_inputDisabled = false;
+
+        internal List<InputBinding> m_playerBindings = new();
+        //internal List<InputBinding> m_gamepadBindings = new();
+
         private void Awake()
         {
             m_matchManager = FindObjectOfType<LocalMatchManager>();
 
-            m_playerSOData.PlayerId = m_playerId;
+            //Find all Components, that require the ID through Interface.
+            IProvidePlayerID[] idReceivers = GetComponentsInChildren<IProvidePlayerID>();
+
+            //Submit the playerID to each Script.
+            foreach (var receiver in idReceivers)
+                receiver.SetPlayerID(m_playerID);
+
+            m_playerSOData.PlayerId = m_playerID;
 
             GetFieldDetails();
             GetPlayerDetails();
+        }
+
+        private void Update()
+        {
+            if (m_playerInputHandler == null && !m_inputDisabled)
+            {
+                m_inputDisabled = true;
+                StartCoroutine(GetNewInputHandler());
+                //InvokeRepeating(nameof(GetNewInputHandler), 1.0f, 2.0f);
+            }
         }
 
         private void GetFieldDetails()
@@ -89,6 +114,17 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 m_maxPushDistance = m_matchValues.MaxPushDistance;
                 m_localPaddleScale = new Vector3(m_matchValues.XPaddleScale, m_matchValues.YPaddleScale, m_matchValues.ZPaddleScale);
             }
+        }
+
+        private IEnumerator GetNewInputHandler()
+        {
+            while (m_playerInputHandler == null)
+            {
+                m_playerInputHandler = GetComponentInChildren<CharacterInputHandler>();
+                yield return new WaitForSeconds(1.0f); 
+            }
+            //If a new 'CharacterInputHandler'-Script is found.
+            m_inputDisabled = false;
         }
     }
 }
