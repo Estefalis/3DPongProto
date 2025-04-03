@@ -31,6 +31,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private Vector2 m_rotationVector;   //Saved current rotationInput.
         private int /*m_playerInputIndex, */m_playerID;
+        private uint m_playerUserID;
         private bool m_onQuitProcess = false;
 
         #region Actions_and_Functions
@@ -47,14 +48,14 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnEnable()
         {
-            if (m_playerInput != null)
+            if (m_playerController == null)
+                m_playerController.GetComponentInParent<CharacterMainController>();
+
+            if (m_playerInput != null && m_playerUserID != m_playerInput.user.id)
             {
                 SortInputBindings(m_playerInput, m_playerID);
                 SubscribeToInputActions(m_playerInput);
             }
-
-            if (m_playerController == null)
-                m_playerController.GetComponentInParent<CharacterMainController>();
         }
 
         private void OnDisable()
@@ -106,17 +107,17 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             }
         }
 
-        private void PlayerInputCheck(int _playerInputIndex)
+        private void PlayerInputCheck(uint _playerUserID)
         {
             //NOTE: 'm_currentPlayerInput._playerInputIndex' is here already != 'm_playerController.m_playerID'. Menu in PlayerInputManager took Debug-Index 0!
 
             if (m_playerInput == null)
                 m_playerInput = m_playerController.GetComponent<PlayerInput>();
 
-            if (_playerInputIndex != m_playerInput.playerIndex)
+            if (_playerUserID != m_playerInput.user.id)
                 return;
 
-            //m_playerInputIndex = _playerInputIndex;
+            m_playerUserID = m_playerInput.user.id;
 
             if (m_playerInput != null)
             {
@@ -138,43 +139,43 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             m_playerInput.onControlsChanged += OnControlsChanged;
             InputSystem.onDeviceChange += OnDeviceChange;
 
-            foreach (var action in _playerInput.actions)
-            {
-                action.performed += ctx => ProcessInput(ctx, _playerInput, action.name);
-                action.canceled += ctx => ProcessInput(ctx, _playerInput, action.name);
-            }
+            //foreach (var action in _playerInput.actions)
+            //{
+            //    action.performed += ctx => ProcessInput(ctx, _playerInput, action.name);
+            //    action.canceled += ctx => ProcessInput(ctx, _playerInput, action.name);
+            //}
 
-            //var moveAction = _playerInput.actions[m_moveString];
-            //moveAction.performed += _callbackContext => OnMove(_callbackContext, _playerInput);
-            //moveAction.canceled += _callbackContext => OnMoveCanceled(_callbackContext, _playerInput);
+            var moveAction = _playerInput.actions[m_moveString];
+            moveAction.performed += _callbackContext => OnMove(_callbackContext, _playerInput);
+            moveAction.canceled += _callbackContext => OnMoveCanceled(_callbackContext, _playerInput);
 
-            //var rotateAction = _playerInput.actions[m_rotateString];
-            //rotateAction.performed += _callbackContext => OnRotate(_callbackContext, _playerInput);
-            //rotateAction.canceled += _callbackContext => OnRotateCanceled(_callbackContext, _playerInput);
+            var rotateAction = _playerInput.actions[m_rotateString];
+            rotateAction.performed += _callbackContext => OnRotate(_callbackContext, _playerInput);
+            rotateAction.canceled += _callbackContext => OnRotateCanceled(_callbackContext, _playerInput);
 
-            //var pushAction = _playerInput.actions[m_pushString];
-            //pushAction.performed += _callbackContext => OnPush(_callbackContext, _playerInput);
+            var pushAction = _playerInput.actions[m_pushString];
+            pushAction.performed += _callbackContext => OnPush(_callbackContext, _playerInput);
 
-            //var resetAction = _playerInput.actions[m_resetString];
-            //resetAction.performed += _callbackContext => OnRotationReset(_callbackContext, _playerInput);
+            var resetAction = _playerInput.actions[m_resetString];
+            resetAction.performed += _callbackContext => OnRotationReset(_callbackContext, _playerInput);
 
-            //var kickBallAction = _playerInput.actions[m_kickBallString];
-            //kickBallAction.performed += _callbackContext => OnKickBall(_callbackContext, _playerInput);
+            var kickBallAction = _playerInput.actions[m_kickBallString];
+            kickBallAction.performed += _callbackContext => OnKickBall(_callbackContext, _playerInput);
 
-            //var zoomAction = _playerInput.actions[m_zoomString];
-            //zoomAction.performed += _callbackContext => OnZoom(_callbackContext, _playerInput);
-            //zoomAction.canceled += _callbackContext => OnZoomCanceled(_callbackContext, _playerInput);
+            var zoomAction = _playerInput.actions[m_zoomString];
+            zoomAction.performed += _callbackContext => OnZoom(_callbackContext, _playerInput);
+            zoomAction.canceled += _callbackContext => OnZoomCanceled(_callbackContext, _playerInput);
 
-            //var mousePositionAction = _playerInput.actions[m_mousePositionString];
-            //mousePositionAction.performed += OnMousePosition;
+            var mousePositionAction = _playerInput.actions[m_mousePositionString];
+            mousePositionAction.performed += OnMousePosition;
 
-            //var openGameMenuAction = _playerInput.actions[m_openGameMenuString];
-            //openGameMenuAction.performed += OnOpenMenu;
+            var openGameMenuAction = _playerInput.actions[m_openGameMenuString];
+            openGameMenuAction.performed += OnOpenMenu;
         }
 
         private void UnsubscribeToInputActions(PlayerInput _playerInput)
         {
-            if (_playerInput != m_playerInput)
+            if (_playerInput.user.id != m_playerInput.user.id)
                 return;
 
             UserInputManager.ACheckForPlayerInput -= PlayerInputCheck;
@@ -182,38 +183,38 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             m_playerInput.onControlsChanged -= OnControlsChanged;
             InputSystem.onDeviceChange += OnDeviceChange;
 
-            foreach (var action in _playerInput.actions)
-            {
-                action.performed -= ctx => ProcessInput(ctx, _playerInput, action.name);
-                action.canceled -= ctx => ProcessInput(ctx, _playerInput, action.name);
-            }
+            //foreach (var action in _playerInput.actions)
+            //{
+            //    action.performed -= ctx => ProcessInput(ctx, _playerInput, action.name);
+            //    action.canceled -= ctx => ProcessInput(ctx, _playerInput, action.name);
+            //}
 
-            //var moveAction = _playerInput.actions[m_moveString];
-            //moveAction.performed -= _callbackContext => OnMove(_callbackContext, _playerInput);
-            //moveAction.canceled -= _callbackContext => OnMoveCanceled(_callbackContext, _playerInput);
+            var moveAction = _playerInput.actions[m_moveString];
+            moveAction.performed -= _callbackContext => OnMove(_callbackContext, _playerInput);
+            moveAction.canceled -= _callbackContext => OnMoveCanceled(_callbackContext, _playerInput);
 
-            //var rotateAction = _playerInput.actions[m_rotateString];
-            //rotateAction.performed -= _callbackContext => OnRotate(_callbackContext, _playerInput);
-            //rotateAction.canceled -= _callbackContext => OnRotateCanceled(_callbackContext, _playerInput);
+            var rotateAction = _playerInput.actions[m_rotateString];
+            rotateAction.performed -= _callbackContext => OnRotate(_callbackContext, _playerInput);
+            rotateAction.canceled -= _callbackContext => OnRotateCanceled(_callbackContext, _playerInput);
 
-            //var pushAction = _playerInput.actions[m_pushString];
-            //pushAction.performed -= _callbackContext => OnPush(_callbackContext, _playerInput);
+            var pushAction = _playerInput.actions[m_pushString];
+            pushAction.performed -= _callbackContext => OnPush(_callbackContext, _playerInput);
 
-            //var resetAction = _playerInput.actions[m_resetString];
-            //resetAction.performed -= _callbackContext => OnRotationReset(_callbackContext, _playerInput);
+            var resetAction = _playerInput.actions[m_resetString];
+            resetAction.performed -= _callbackContext => OnRotationReset(_callbackContext, _playerInput);
 
-            //var kickBallAction = _playerInput.actions[m_kickBallString];
-            //kickBallAction.performed -= _callbackContext => OnKickBall(_callbackContext, _playerInput);
+            var kickBallAction = _playerInput.actions[m_kickBallString];
+            kickBallAction.performed -= _callbackContext => OnKickBall(_callbackContext, _playerInput);
 
-            //var zoomAction = _playerInput.actions[m_zoomString];
-            //zoomAction.performed -= _callbackContext => OnZoom(_callbackContext, _playerInput);
-            //zoomAction.canceled -= _callbackContext => OnZoomCanceled(_callbackContext, _playerInput);
+            var zoomAction = _playerInput.actions[m_zoomString];
+            zoomAction.performed -= _callbackContext => OnZoom(_callbackContext, _playerInput);
+            zoomAction.canceled -= _callbackContext => OnZoomCanceled(_callbackContext, _playerInput);
 
-            //var mousePositionAction = _playerInput.actions[m_mousePositionString];
-            //mousePositionAction.performed -= OnMousePosition;
+            var mousePositionAction = _playerInput.actions[m_mousePositionString];
+            mousePositionAction.performed -= OnMousePosition;
 
-            //var openGameMenuAction = _playerInput.actions[m_openGameMenuString];
-            //openGameMenuAction.performed -= OnOpenMenu;
+            var openGameMenuAction = _playerInput.actions[m_openGameMenuString];
+            openGameMenuAction.performed -= OnOpenMenu;
         }
         #endregion
 
@@ -263,45 +264,45 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 return;
             }
 
-            InputDevice newDevice = _playerInput.devices.Count > 0 ? _playerInput.devices[0] : null;
-            if (newDevice == null)
-                return;
+            //            InputDevice newDevice = _playerInput.devices.Count > 0 ? _playerInput.devices[0] : null;
+            //            if (newDevice == null)
+            //                return;
 
-            var playerId = _playerInput.user.id;
-            var deviceMap = m_userInputManager.GetPlayerDeviceMap();
+            //            var playerId = _playerInput.user.id;
+            //            var deviceMap = m_userInputManager.GetPlayerDeviceMap();
 
-            //If the same inputDevice is already assigned, ignore.
-            if (deviceMap.TryGetValue(playerId, out var currentDevice) && newDevice == currentDevice)
-            {
-#if UNITY_EDITOR
-                //Debug.Log($"OnControlsChanged: Device for PlayerIndex {_playerInput._playerInputIndex} | PlayerUserID {playerId} unchanged ({newDevice.name}).");  
-#endif
-                return;
-            }
+            //            //If the same inputDevice is already assigned, ignore.
+            //            if (deviceMap.TryGetValue(playerId, out var currentDevice) && newDevice == currentDevice)
+            //            {
+            //#if UNITY_EDITOR
+            //                //Debug.Log($"OnControlsChanged: Device for PlayerIndex {_playerInput._playerInputIndex} | PlayerUserID {playerId} unchanged ({newDevice.name}).");  
+            //#endif
+            //                return;
+            //            }
 
-            //Update inputDevice action & pair new inputDevice.
-            deviceMap[playerId] = newDevice;
-            _playerInput.user.UnpairDevices();
-            InputUser.PerformPairingWithDevice(newDevice, _playerInput.user);
+            //            //Update inputDevice action & pair new inputDevice.
+            //            deviceMap[playerId] = newDevice;
+            //            _playerInput.user.UnpairDevices();
+            //            InputUser.PerformPairingWithDevice(newDevice, _playerInput.user);
 
-            //Get correct control scheme.
-            GetDeviceHelper.GetPlayerControlScheme(_playerInput.playerIndex, newDevice, out string newScheme, out _);
-#if UNITY_EDITOR
-            Debug.Log($"OnControlsChanged-Device(s): {string.Join(", ", _playerInput.devices.Select(d => d.name))} | Index: {m_playerInput.playerIndex} | UserID: {_playerInput.user.id}.");
-#endif
+            //            //Get correct control scheme.
+            //            GetDeviceHelper.GetPlayerControlScheme(_playerInput.playerIndex, newDevice, out string newScheme, out _);
+            //#if UNITY_EDITOR
+            //            Debug.Log($"OnControlsChanged-Device(s): {string.Join(", ", _playerInput.devices.Select(d => d.name))} | Index: {m_playerInput.playerIndex} | UserID: {_playerInput.user.id}.");
+            //#endif
 
-            if (_playerInput.currentControlScheme == newScheme)
-            {
-#if UNITY_EDITOR
-                Debug.Log($"Player {_playerInput.playerIndex} already using correct scheme: {newScheme}");
-#endif
-                return;
-            }
+            //            if (_playerInput.currentControlScheme == newScheme)
+            //            {
+            //#if UNITY_EDITOR
+            //                Debug.Log($"Player {_playerInput.playerIndex} already using correct scheme: {newScheme}");
+            //#endif
+            //                return;
+            //            }
 
-            _playerInput.SwitchCurrentControlScheme(newScheme, newDevice);
-#if UNITY_EDITOR
-            Debug.Log($"Player {_playerInput.playerIndex} now using {newDevice.name} with scheme {newScheme}.");
-#endif
+            //            _playerInput.SwitchCurrentControlScheme(newScheme, newDevice);
+            //#if UNITY_EDITOR
+            //            Debug.Log($"Player {_playerInput.playerIndex} now using {newDevice.name} with scheme {newScheme}.");
+            //#endif
         }
 
         private void OnDeviceChange(InputDevice _inputDevice, InputDeviceChange _deviceChange)
@@ -312,7 +313,9 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 case InputDeviceChange.Removed:
                 case InputDeviceChange.ConfigurationChanged:
                 {
+#if UNITY_EDITOR
                     Debug.Log($"Device switched: {_inputDevice.displayName}");
+#endif
                     SortInputBindings(m_playerInput, m_playerID);
                 }
                 break;
@@ -320,57 +323,57 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         }
 
         #region CallbackContext_Methods
-        private void ProcessInput(InputAction.CallbackContext _callbackContext, PlayerInput _playerInput, string actionName)
-        {
-            int bindingIndex = _callbackContext.action.bindings.ToList().FindIndex(b => _callbackContext.control.path.Contains(b.path));
+        //private void ProcessInput(InputAction.CallbackContext _callbackContext, PlayerInput _playerInput, string _actionName)
+        //{
+        //    /*int bindingIndex = _callbackContext.action.bindings.ToList().FindIndex(b => _callbackContext.control.path.Contains(b.path));*/
 
-            if (bindingIndex < 0)
-                return;
+        //    //if (bindingIndex < 0)
+        //    //    return;
 
-            switch (actionName)
-            {
-                case m_moveString:
-                    if (_callbackContext.phase == InputActionPhase.Performed)
-                        OnMove(_callbackContext, _playerInput);
-                    else if (_callbackContext.phase == InputActionPhase.Canceled)
-                        OnMoveCanceled(_callbackContext, _playerInput);
-                    break;
-                case m_rotateString:
-                    if (_callbackContext.phase == InputActionPhase.Performed)
-                        OnRotate(_callbackContext, _playerInput);
-                    else if (_callbackContext.phase == InputActionPhase.Canceled)
-                        OnRotateCanceled(_callbackContext, _playerInput);
-                    break;
-                case m_pushString:
-                    if (_callbackContext.phase == InputActionPhase.Performed)
-                        OnPush(_callbackContext, _playerInput);
-                    break;
-                case m_resetString:
-                    if (_callbackContext.phase == InputActionPhase.Performed)
-                        OnRotationReset(_callbackContext, _playerInput);
-                    break;
-                case m_kickBallString:
-                    if (_callbackContext.phase == InputActionPhase.Performed)
-                        OnKickBall(_callbackContext, _playerInput);
-                    break;
-                case m_zoomString:
-                    if (bindingIndex == 1 && _callbackContext.phase == InputActionPhase.Performed)
-                        OnZoom(_callbackContext, _playerInput);
-                    else if (_callbackContext.phase == InputActionPhase.Canceled)
-                        OnZoomCanceled(_callbackContext, _playerInput);
-                    break;
-                case m_mousePositionString:
-                    if (_callbackContext.phase == InputActionPhase.Performed)
-                        OnMousePosition(_callbackContext);
-                    break;
-                case m_openGameMenuString:
-                    if (bindingIndex == 0 && _callbackContext.phase == InputActionPhase.Performed)
-                        OnOpenMenu(_callbackContext);
-                    break;
-                default:
-                    break;
-            }
-        }
+        //    switch (_actionName)
+        //    {
+        //        case m_moveString:
+        //            if (_callbackContext.phase == InputActionPhase.Performed)
+        //                OnMove(_callbackContext, _playerInput);
+        //            else if (_callbackContext.phase == InputActionPhase.Canceled)
+        //                OnMoveCanceled(_callbackContext, _playerInput);
+        //            break;
+        //        case m_rotateString:
+        //            if (_callbackContext.phase == InputActionPhase.Performed)
+        //                OnRotate(_callbackContext, _playerInput);
+        //            else if (_callbackContext.phase == InputActionPhase.Canceled)
+        //                OnRotateCanceled(_callbackContext, _playerInput);
+        //            break;
+        //        case m_pushString:
+        //            if (_callbackContext.phase == InputActionPhase.Performed)
+        //                OnPush(_callbackContext, _playerInput);
+        //            break;
+        //        case m_resetString:
+        //            if (_callbackContext.phase == InputActionPhase.Performed)
+        //                OnRotationReset(_callbackContext, _playerInput);
+        //            break;
+        //        case m_kickBallString:
+        //            if (_callbackContext.phase == InputActionPhase.Performed)
+        //                OnKickBall(_callbackContext, _playerInput);
+        //            break;
+        //        case m_zoomString:
+        //            if (_callbackContext.phase == InputActionPhase.Performed)
+        //                OnZoom(_callbackContext, _playerInput);
+        //            else if (_callbackContext.phase == InputActionPhase.Canceled)
+        //                OnZoomCanceled(_callbackContext, _playerInput);
+        //            break;
+        //        case m_mousePositionString:
+        //            if (_callbackContext.phase == InputActionPhase.Performed)
+        //                OnMousePosition(_callbackContext);
+        //            break;
+        //        case m_openGameMenuString:
+        //            if (_callbackContext.phase == InputActionPhase.Performed)
+        //                OnOpenMenu(_callbackContext);
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //}
 
         private void OnMove(InputAction.CallbackContext _callbackContext, PlayerInput _playerInput)
         {
@@ -378,7 +381,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 return;
 
             string bindingControlScheme = _callbackContext.action.bindings[_callbackContext.action.GetBindingIndexForControl(_callbackContext.control)].groups;
-
+            //if (_callbackContext.control.device is Gamepad)
+            //    Debug.Log($"BindingScheme: {bindingControlScheme} | PIControlScheme: {_playerInput.currentControlScheme}");
             if (bindingControlScheme != _playerInput.currentControlScheme)
                 return;
 

@@ -80,7 +80,7 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         #region Actions_and_Functions
-        internal static event Action<int> ACheckForPlayerInput;                 //Tells Player's PlayerInput to configurate itself now.
+        internal static event Action<uint> ACheckForPlayerInput;                 //Tells Player's PlayerInput to configurate itself now.
         internal static event Action<string, InputDevice[]> AConnectMenuInput;  //Navigation-controlScheme switch Keyboard <-> Gamepad.
         internal static event Action<string> AChangeActiveActionMap;            //PlayerInput switch controlScheme between Menu <-> Game.
         #endregion
@@ -356,6 +356,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void ConfigureNewPlayerInput(GameObject _playerPrefab, int _playerIndex, InputDevice[] _assignedDevices)
         {
+            
             if (!_playerPrefab.TryGetComponent<PlayerInput>(out var playerInput))
             {
                 Debug.LogError($"PlayerIndex {_playerIndex} | PlayerUserID {playerInput.user.id}: No PlayerInput found!");
@@ -375,7 +376,7 @@ namespace ThreeDeePongProto.Shared.Managers
             playerInput.neverAutoSwitchControlSchemes = false;
             //How the PlayerInput component invokes events.
             playerInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
-
+            
             //If no valid device is assigned, check for an available Gamepad.
             if (_assignedDevices == null || _assignedDevices.Length == 0 || _assignedDevices[0] == null)
             {
@@ -387,11 +388,11 @@ namespace ThreeDeePongProto.Shared.Managers
                 }
                 else
                 {
-                    Debug.LogError($"No Gamepad found for PlayerIndex {_playerIndex} | PlayerUserID {playerInput.user.id}, falling back to Keyboard.");
-                    _assignedDevices = new InputDevice[] { Keyboard.current };
+                    Debug.LogError($"No Gamepad found for PlayerIndex {_playerIndex} | PlayerUserID {playerInput.user.id}, falling back to Keyboard and Mouse.");
+                    _assignedDevices = new InputDevice[] { Keyboard.current, Mouse.current };
                 }
             }
-
+            
             playerInput.SwitchCurrentActionMap(m_playerActionMap);
 
             StartCoroutine(SwitchControlSchemeNextFrame(playerInput, _playerIndex, playerInput.currentControlScheme, _assignedDevices));
@@ -400,12 +401,12 @@ namespace ThreeDeePongProto.Shared.Managers
         private IEnumerator SwitchControlSchemeNextFrame(PlayerInput _playerInput, int _playerIndex, string _controlScheme, InputDevice[] _assignedDevices)
         {
             yield return null;   //Wait until next frame to ensure, that PlayerInput is registered right.
-
+            
             if (_playerInput.user.valid)
             {
                 _playerInput.SwitchCurrentControlScheme(_controlScheme, _assignedDevices);
 #if UNITY_EDITOR
-                //Debug.Log($"PlayerID {_playerInput._playerIndex}: ControlScheme: {_controlScheme} - assigned Device(s): {string.Join(", ", _playerInput.devices.Select(d => d.name))}.");
+                //Debug.Log($"PlayerID {_playerIndex}: ControlScheme: {_controlScheme} - ArgDevices: {string.Join(", ", _assignedDevices.Select(d => d.name))} - assigned Device(s): {string.Join(", ", _playerInput.devices.Select(d => d.name))}.");
 #endif
                 SetPlayerDeviceMap(_playerInput, _playerIndex);
             }
@@ -437,7 +438,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 newDevices = new InputDevice[] { newDevice };
                 newControlScheme = GetControlSchemeForPlayer(_playerIndex, newDevices);
             }
-            else if (newDevice == Keyboard.current || newDevice == Mouse.current)
+            else if (newDevice is Keyboard/*.current || newDevice == Mouse.current*/)
             {
                 newDevices = new InputDevice[] { Keyboard.current, Mouse.current };
                 newControlScheme = GetControlSchemeForPlayer(_playerIndex, newDevices);
@@ -499,7 +500,7 @@ namespace ThreeDeePongProto.Shared.Managers
 #endif
             _playerInput.ActivateInput();   //Forces the inputsystem to use the assigned device.
             m_startPlayerSetup[playerUserID] = newDevices;
-            ACheckForPlayerInput?.Invoke(_playerInput.playerIndex);
+            ACheckForPlayerInput?.Invoke(_playerInput.user.id);
         }
         #endregion
 
