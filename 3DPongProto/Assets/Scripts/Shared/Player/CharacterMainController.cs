@@ -1,21 +1,19 @@
 using System.Collections;
-using System.Collections.Generic;
 using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace ThreeDeePongProto.Shared.PlayerCharacter
 {
     public class CharacterMainController : MonoBehaviour
     {
-        internal LocalMatchManager m_matchManager;
-
         [SerializeField] internal Transform m_inputAndCamComponent;
         [SerializeField] internal CharacterInputHandler m_playerInputHandler;
         [SerializeField] internal CharacterMovement m_playerMovement;
         [SerializeField] internal CharacterInteractions m_playerInteractions;
         [SerializeField] internal CharacterHealth m_playerHealth;
         [SerializeField] internal CharacterCameraController m_playerCameraController;
+
+        internal LocalMatchManager m_matchManager;
 
         [Header("Player Details")]
         [SerializeField] private int m_playerID;
@@ -37,9 +35,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         internal Vector3 m_localPaddleScale;
 
         private bool m_inputDisabled = false;
-
-        internal List<InputBinding> m_playerBindings = new();
-        //internal List<InputBinding> m_gamepadBindings = new();
 
         private void Awake()
         {

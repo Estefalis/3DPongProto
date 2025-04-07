@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ThreeDeePongProto.Shared.HelperClasses;
 using ThreeDeePongProto.Shared.Managers;
@@ -19,18 +20,19 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         [SerializeField] internal PlayerInput m_playerInput;
         [SerializeField] internal CharacterMainController m_playerController;
         private UserInputManager m_userInputManager;
+        private InputActionMap m_uiMap, m_playerMap;
 
         private const string m_moveString = "Move", m_rotateString = "Rotate", m_pushString = "Push", m_resetString = "ResetRotation", m_zoomString = "Zoom";
         private const string m_kickBallString = "KickBall", m_openGameMenuString = "OpenGameMenu", m_mousePositionString = "MousePosition";
-        private const string m_uiActionMap = "UserInterface", m_playerActionMap = "PlayerActions";
 
-        private const string m_keyboardMouseScheme = "KeyboardMouse", /*m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3", */m_keyboardDevice = "Keyboard";
-        private const string m_gamePadScheme = "Gamepad", /*m_gamePadSchemePID0 = "GamepadPlayerID0", m_gamePadSchemePID1 = "GamepadPlayerID1", m_gamePadSchemePID2 = "GamepadPlayerID2", m_gamePadSchemePID3 = "GamepadPlayerID3", */m_gamepadDevice = "Gamepad";
+        private const string m_keyboardMouseScheme = "KeyboardMouse", m_keyboardDevice = "Keyboard";
+        private const string m_gamePadScheme = "Gamepad", m_gamepadDevice = "Gamepad";
 
-        private Vector2 m_rotationVector;   //Saved current rotationInput.
+        internal List<InputBinding> m_playerBindings = new();
+        //private bool m_onQuitProcess = false;
         private int m_playerID;
         private uint m_playerUserID;
-        //private bool m_onQuitProcess = false;
+        private Vector2 m_rotationVector;   //Saved current rotationInput.
 
         #region Actions_and_Functions
         internal static event Action<int> AKickBall;
@@ -81,20 +83,15 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnChangeActiveActionMap(string _actionMap)
         {
-            switch (_actionMap)
+            if (_actionMap == EInputActionMaps.UserInterface.ToString())
             {
-                case m_uiActionMap:
-                {
-                    m_playerInput.SwitchCurrentActionMap(m_uiActionMap);
-                    break;
-                }
-                case m_playerActionMap:
-                {
-                    m_playerInput.SwitchCurrentActionMap(m_playerActionMap);
-                    break;
-                }
-                default:
-                    break;
+                m_playerMap.Disable();
+                //m_playerInput.SwitchCurrentActionMap(EInputActionMaps.UserInterface.ToString());
+            }
+            else if (_actionMap == EInputActionMaps.PlayerActions.ToString())
+            {
+                m_playerMap.Enable();
+                //m_playerInput.SwitchCurrentActionMap(EInputActionMaps.PlayerActions.ToString());
             }
         }
 
@@ -113,6 +110,15 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (m_playerInput != null)
             {
                 m_playerInput.GetComponent<PlayerInput>();
+                m_playerMap = m_playerInput.actions.FindActionMap(EInputActionMaps.PlayerActions.ToString());
+                m_uiMap = m_playerInput.actions.FindActionMap(EInputActionMaps.UserInterface.ToString());
+                foreach (var actionMap in m_playerInput.actions.actionMaps)
+                {
+                    if (actionMap == m_playerMap)
+                        actionMap.Enable();
+                    else
+                        actionMap.Disable();
+                }
                 FilterInputBindings(m_playerInput, m_playerID);  //Else m_playerInput.actions.
                 SubscribeToInputActions(m_playerInput);
             }
@@ -123,8 +129,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             UnsubscribeToInputActions(m_playerInput);
 
-            UserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
             UserInputManager.ACheckForPlayerInput += PlayerInputCheck;
+            UserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
             //m_playerInput.onControlsChanged += OnControlsChanged;
             InputSystem.onDeviceChange += OnDeviceChange;
 
@@ -197,11 +203,11 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void FilterInputBindings(PlayerInput _playerInput, int _playerID)
         {
-            m_playerController.m_playerBindings.Clear();
+            m_playerBindings.Clear();
 
             foreach (var action in _playerInput.actions)
             {
-                if (action.actionMap.name != m_playerActionMap)
+                if (action.actionMap.name != EInputActionMaps.PlayerActions.ToString())
                     continue;   //Skip all, except PlayerActions ActionMap.
 
                 for (int i = 0; i < action.bindings.Count; i++)
@@ -212,7 +218,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                     string controlScheme = action.bindings[i].groups;
 
                     if (StringManipulation.ContainsPlayerID(controlScheme, _playerID, 1, SearchDirection.FullScan))
-                        m_playerController.m_playerBindings.Add(action.bindings[i]);
+                        m_playerBindings.Add(action.bindings[i]);
                 }
             }
 
@@ -225,22 +231,22 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 #endif
         }
 
-//        private void OnControlsChanged(PlayerInput _playerInput)
-//        {
-//            if (m_userInputManager == null)
-//            {
-//                if (!m_onQuitProcess)
-//                    return;
-//            }
+        //        private void OnControlsChanged(PlayerInput _playerInput)
+        //        {
+        //            if (m_userInputManager == null)
+        //            {
+        //                if (!m_onQuitProcess)
+        //                    return;
+        //            }
 
-//            if (!m_userInputManager.GDevicesInitialized)    //g for getter in the future. (Yes?, No!, Maybe~.)
-//            {
-//#if UNITY_EDITOR
-//                Debug.LogWarning("Device map not initialized yet!");
-//#endif
-//                return;
-//            }
-//        }
+        //            if (!m_userInputManager.GDevicesInitialized)    //g for getter in the future. (Yes?, No!, Maybe~.)
+        //            {
+        //#if UNITY_EDITOR
+        //                Debug.LogWarning("Device map not initialized yet!");
+        //#endif
+        //                return;
+        //            }
+        //        }
 
         private void OnDeviceChange(InputDevice _inputDevice, InputDeviceChange _deviceChange)
         {
@@ -266,7 +272,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 return;
 
             string bindingControlScheme = _callbackContext.action.bindings[_callbackContext.action.GetBindingIndexForControl(_callbackContext.control)].groups;
-            
+
             if (bindingControlScheme != _playerInput.currentControlScheme)
                 return;
 
@@ -405,8 +411,10 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (!IsLocalPlayer())
                 return;
 
-            if (m_playerID == 0)
-                UserInputManager.ToggleActionMaps(m_uiActionMap);
+            if (m_playerID == 0 && UserInputManager.SetActionMap == EInputActionMaps.PlayerActions.ToString())
+            {                
+                UserInputManager.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
+            }
         }
         #endregion
 
