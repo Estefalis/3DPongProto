@@ -314,6 +314,10 @@ namespace ThreeDeePongProto.Shared.Managers
             m_playGround.transform.localScale = new Vector3(m_basicFieldValues.SetGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_basicFieldValues.SetGroundLength * m_playGroundLengthScale);
 
             Instantiate(m_playGround, Vector3.zero, Quaternion.Euler(0, 0, 0), m_prefabParent);
+            uint playerCount = (uint)m_matchUIStates.EPlayerAmount;
+
+            //for (int playerIndex = 0; playerIndex < playerCount; playerIndex++)
+            //    Instantiate(m_matchValues.PlayerSOData[playerIndex].Prefab, m_prefabParent);
             AGroundInstantiated?.Invoke(m_prefabParent);
             Instantiate(m_ballPrefab, m_ballPopPos, Quaternion.Euler(0, 0, 0), m_prefabParent);
         }

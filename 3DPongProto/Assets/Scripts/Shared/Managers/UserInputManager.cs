@@ -18,15 +18,15 @@ internal enum ESceneNames
     NetGame = 3
 }
 
-internal enum EPlayerMenuControl
-{
-    None,
-    SpecificPlayer,
-    FirstPlayer,
-    LastPlayer,
-    EachPlayer,
-    HostPlayer,
-}
+//internal enum EPlayerMenuControl
+//{
+//    None,
+//    SpecificPlayer,
+//    FirstPlayer,
+//    LastPlayer,
+//    EachPlayer,
+//    HostPlayer,
+//}
 
 internal enum EInputActionMaps
 {

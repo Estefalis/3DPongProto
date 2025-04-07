@@ -139,7 +139,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             if (m_firstElement.gameObject.activeInHierarchy)
             {
-                Debug.Log($"MenuManager: ToggleActionMaps sets {EInputActionMaps.PlayerActions}.");
                 UserInputManager.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
                 m_firstElement.gameObject.SetActive(false);
             }

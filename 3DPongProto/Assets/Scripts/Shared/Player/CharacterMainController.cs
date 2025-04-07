@@ -13,6 +13,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         [SerializeField] internal CharacterHealth m_playerHealth;
         [SerializeField] internal CharacterCameraController m_playerCameraController;
 
+        private UserInputManager m_userInputManager;
         internal LocalMatchManager m_matchManager;
 
         [Header("Player Details")]
@@ -38,6 +39,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void Awake()
         {
+            m_userInputManager = FindObjectOfType<UserInputManager>();
             m_matchManager = FindObjectOfType<LocalMatchManager>();
 
             //Find all Components, that require the ID through Interface.
@@ -109,6 +111,20 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 m_maxPushDistance = m_matchValues.MaxPushDistance;
                 m_localPaddleScale = new Vector3(m_matchValues.XPaddleScale, m_matchValues.YPaddleScale, m_matchValues.ZPaddleScale);
             }
+        }
+
+        public void ReceivePlayerID(int _playerID)
+        {
+            m_playerID = _playerID;
+
+            //Find all Components, that require the ID through Interface.
+            IProvidePlayerID[] idReceivers = GetComponentsInChildren<IProvidePlayerID>();
+
+            //Submit the playerID to each Script.
+            foreach (var receiver in idReceivers)
+                receiver.SetPlayerID(m_playerID);
+
+            Debug.Log($"Player is now set to ID Nr. {_playerID}.");
         }
 
         private IEnumerator GetNewInputHandler()
