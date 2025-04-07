@@ -129,7 +129,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -140,73 +140,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""c407677e-f0a4-4316-b44a-f36c318060fc"",
-                    ""path"": ""<Keyboard>/leftArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID1"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""e5d84660-30e2-41ee-9402-c5817b84fae8"",
-                    ""path"": ""<Keyboard>/rightArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID1"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""ca57ef6d-5531-40c5-b018-2a72cf28ae25"",
-                    ""path"": ""<Keyboard>/f"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID2"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""7f742e3c-5a19-4943-a257-eb6dfad44afc"",
-                    ""path"": ""<Keyboard>/h"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID2"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""d6e66ea3-52b6-4308-81b2-3d23b9eb1f09"",
-                    ""path"": ""<Keyboard>/j"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID3"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""4bae4313-3325-4c66-b7e6-88471040c006"",
-                    ""path"": ""<Keyboard>/l"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID3"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -228,7 +162,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/dpad/left"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -239,73 +173,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""8dc09f99-2847-4892-967f-68e7cd75a711"",
-                    ""path"": ""<Gamepad>/dpad/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID1"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""882e8529-1716-4503-ac2d-0317ab2b9395"",
-                    ""path"": ""<Gamepad>/dpad/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID1"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""1c6f8dad-0a64-43e7-8bc2-496bb39e83b9"",
-                    ""path"": ""<Gamepad>/dpad/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID2"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""eb24aae3-2a4f-4a94-b7a9-485649bb27cb"",
-                    ""path"": ""<Gamepad>/dpad/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID2"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""ea24317f-f7a3-4a83-953c-2be87e28010b"",
-                    ""path"": ""<Gamepad>/dpad/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID3"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""14fe40f4-fb56-40d7-8832-2f5d16cf2994"",
-                    ""path"": ""<Gamepad>/dpad/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID3"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -316,7 +184,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""OpenGameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -327,7 +195,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/start"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""GamepadPlayerID3;GamepadPlayerID2;GamepadPlayerID1;GamepadPlayerID0"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""OpenGameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -338,7 +206,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/b"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""KickBall"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -349,40 +217,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""KickBall"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""bd567021-5536-4b04-a6c4-760135a5f982"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""GamepadPlayerID1"",
-                    ""action"": ""KickBall"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""113ad231-c155-458b-a655-86500ea7eb97"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""GamepadPlayerID2"",
-                    ""action"": ""KickBall"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""a276caf2-0277-4c64-8d3b-4d5e268da5fd"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""GamepadPlayerID3"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""KickBall"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -393,7 +228,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""MousePosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -404,7 +239,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<VirtualMouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0;GamepadPlayerID1;GamepadPlayerID2;GamepadPlayerID3"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""MousePosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -426,7 +261,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -437,73 +272,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""Rotate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""9f50e097-62a5-431b-8898-a4294569bc5f"",
-                    ""path"": ""<Keyboard>/rightShift"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID1"",
-                    ""action"": ""Rotate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""e8e26b4d-51ce-4667-99f3-b967e8ed17e9"",
-                    ""path"": ""<Keyboard>/numpad1"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID1"",
-                    ""action"": ""Rotate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""1e286529-36c0-43fc-9ae8-b1f6a665af7d"",
-                    ""path"": ""<Keyboard>/r"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID2"",
-                    ""action"": ""Rotate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""00f0d4dc-3756-43ca-b34b-7a4c35b64173"",
-                    ""path"": ""<Keyboard>/y"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID2"",
-                    ""action"": ""Rotate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""e2d2000f-6803-4ab8-93cc-6b1b430dcabb"",
-                    ""path"": ""<Keyboard>/u"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID3"",
-                    ""action"": ""Rotate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""7a3fe271-408b-4829-9d25-55508841dd46"",
-                    ""path"": ""<Keyboard>/o"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID3"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -525,7 +294,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -536,73 +305,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""Rotate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""6e1c9185-674b-4951-8c2c-6b98997c4fd1"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID1"",
-                    ""action"": ""Rotate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""b4555a2d-2f4c-463a-951d-b2db33b0a06e"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID1"",
-                    ""action"": ""Rotate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""d408da1f-b07a-47f3-8f47-a69e6331c587"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID2"",
-                    ""action"": ""Rotate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""834586e3-e894-4808-848d-e5f2de9c99f3"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID2"",
-                    ""action"": ""Rotate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""a0ece95e-934f-4320-847f-a4df43819ece"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID3"",
-                    ""action"": ""Rotate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""08d7a146-67eb-4c07-90c2-7948ff512502"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID3"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -613,7 +316,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""Push"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -624,7 +327,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/upArrow"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID1"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""Push"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -635,7 +338,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/t"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID2"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""Push"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -646,7 +349,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/i"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID3"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""Push"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -657,40 +360,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""Push"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""bd35cfd6-9283-4c10-bd85-42c808e2c393"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""GamepadPlayerID1"",
-                    ""action"": ""Push"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""d3ba5851-069e-45bd-bd31-7bb1da14e24c"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""GamepadPlayerID2"",
-                    ""action"": ""Push"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""2910f4de-e6f4-4a44-abea-533946db1783"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""GamepadPlayerID3"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Push"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -701,7 +371,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/c"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""CursorVisibility"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -712,7 +382,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/select"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""GamepadPlayerID3;GamepadPlayerID2;GamepadPlayerID1;GamepadPlayerID0"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""CursorVisibility"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -723,7 +393,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Mouse>/scroll"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""Zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -734,40 +404,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": ""StickDeadzone,ScaleVector2(y=50)"",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""Zoom"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e7740ce4-caa2-45ac-aee0-5c040ff95e0a"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": ""StickDeadzone,ScaleVector2(y=50)"",
-                    ""groups"": ""GamepadPlayerID1"",
-                    ""action"": ""Zoom"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""0ddbe7a0-62f9-483c-a00c-4365a8b12995"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": ""StickDeadzone,ScaleVector2(y=50)"",
-                    ""groups"": ""GamepadPlayerID2"",
-                    ""action"": ""Zoom"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""924d24c8-c6f4-454d-ad9b-e6b522483c15"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": ""StickDeadzone,ScaleVector2(y=50)"",
-                    ""groups"": ""GamepadPlayerID3"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -778,7 +415,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""ResetRotation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -789,7 +426,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/downArrow"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID1"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""ResetRotation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -800,7 +437,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/g"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID2"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""ResetRotation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -811,7 +448,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/k"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID3"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""ResetRotation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -822,928 +459,8 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Gamepad>/dpad/down"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""ResetRotation"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e443d73d-7ecd-4d05-9093-6c2da237016b"",
-                    ""path"": ""<Gamepad>/dpad/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID1"",
-                    ""action"": ""ResetRotation"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b237d4a6-9d78-46c1-9b1a-5afeaa369da0"",
-                    ""path"": ""<Gamepad>/dpad/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID2"",
-                    ""action"": ""ResetRotation"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""18fa0945-544d-42a3-a6aa-ca1b05fa80b8"",
-                    ""path"": ""<Gamepad>/dpad/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID3"",
-                    ""action"": ""ResetRotation"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""OldPlayerActions"",
-            ""id"": ""d922c16c-297c-4747-bcae-1d721978beac"",
-            ""actions"": [
-                {
-                    ""name"": ""MoveP1ZNeg"",
-                    ""type"": ""Value"",
-                    ""id"": ""e1cbac8e-8adc-41a9-b9cd-ae192901a21f"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""MoveP2ZPos"",
-                    ""type"": ""Value"",
-                    ""id"": ""de593f32-66ea-4843-8d7d-dad678b9c71b"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""MoveP3ZNeg"",
-                    ""type"": ""Value"",
-                    ""id"": ""a14f4b64-0a9d-4483-ad66-28c7e260bddd"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""MoveP4ZPos"",
-                    ""type"": ""Value"",
-                    ""id"": ""bb3d25ee-b284-4564-b616-5770c9df194a"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""RotateP1ZNeg"",
-                    ""type"": ""Value"",
-                    ""id"": ""b3ee0a0d-c7d4-468d-a60e-ec49ee212e37"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""RotateP2ZPos"",
-                    ""type"": ""Value"",
-                    ""id"": ""ce09a839-51d3-4dfc-913e-24df083a5ef8"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""RotateP3ZNeg"",
-                    ""type"": ""Value"",
-                    ""id"": ""bac3250c-3b24-4e0a-b18a-280cb3147bd1"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""RotateP4ZPos"",
-                    ""type"": ""Value"",
-                    ""id"": ""a3a153b9-4038-40df-aa1c-fa97f9ea288b"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""PushP1ZNeg"",
-                    ""type"": ""Button"",
-                    ""id"": ""6d626a78-41e2-4335-a2eb-cfa7c68c93c0"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""PushP2ZPos"",
-                    ""type"": ""Button"",
-                    ""id"": ""795d1dc4-dc16-450b-97b0-86abd1b81c35"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""PushP3ZNeg"",
-                    ""type"": ""Button"",
-                    ""id"": ""0a138a6c-3720-4e53-bd30-f9e74b477d06"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""PushP4ZPos"",
-                    ""type"": ""Button"",
-                    ""id"": ""ed3c0c72-c46b-4966-8d65-6ab2899cc839"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""PokeTheBall"",
-                    ""type"": ""Button"",
-                    ""id"": ""6898c02f-a7ca-4205-a8ec-7ad5b4001ad6"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Zoom"",
-                    ""type"": ""Value"",
-                    ""id"": ""8cd19acb-16b2-4855-978b-64e7bb7a2a9c"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""MousePosition"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""0b5b5cfa-f116-48ac-a358-88e017b818f8"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""CursorVisibility"",
-                    ""type"": ""Button"",
-                    ""id"": ""14b9a3d0-a4b7-4151-81cb-d1d69570a7df"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""ToggleGameMenu"",
-                    ""type"": ""Button"",
-                    ""id"": ""39e3f2fd-1378-4483-b36f-367bbed3e353"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": ""AD"",
-                    ""id"": ""96ecaf67-ede2-4a40-a6ed-83d54f08dc17"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MoveP1ZNeg"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""5b6578ac-13af-4196-a803-06a47572cf0e"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""MoveP1ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""c00e78ab-9f05-4418-95c7-2d21441da866"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""MoveP1ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""DPadLR"",
-                    ""id"": ""4f5ad1a4-e9eb-4749-b5b3-aa1e705cd7fa"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MoveP1ZNeg"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""f89c43fa-4899-41cf-bc10-03f02c58a45b"",
-                    ""path"": ""<Gamepad>/dpad/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""MoveP1ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""e6c757e6-4502-47ca-9b79-466a933c751f"",
-                    ""path"": ""<Gamepad>/dpad/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""MoveP1ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""72a552e6-c232-4cf2-be4c-c1e27585b04c"",
-                    ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""ToggleGameMenu"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""dc8fcbda-b723-4131-a265-9af7c7645faa"",
-                    ""path"": ""<Gamepad>/start"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""ToggleGameMenu"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7cae4d10-3cb3-49d3-9d36-288316954730"",
-                    ""path"": ""<Mouse>/scroll"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""Zoom"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""24c322a1-5dca-47b9-aa6a-c3c61b371128"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": ""StickDeadzone,ScaleVector2(y=50)"",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""Zoom"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""0348c670-e87e-428c-9b73-777748575b19"",
-                    ""path"": ""<Keyboard>/b"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""PokeTheBall"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""30f566bc-f5f0-47d4-b304-827929ba1fef"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""PokeTheBall"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""1b3fa9d0-8e8c-4990-ab14-3073b50a740f"",
-                    ""path"": ""<Mouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""MousePosition"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""202efc5b-0c56-4873-8038-cb44d817d37c"",
-                    ""path"": ""<VirtualMouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": ""StickDeadzone"",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""MousePosition"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""QE"",
-                    ""id"": ""153259b5-d67c-481d-8713-215ed9a0a53d"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RotateP1ZNeg"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""379b0ab7-bda8-4053-8cb9-5a896330f927"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""RotateP1ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""d9fc3964-047a-4ed2-9190-5ab87ea9cfb8"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""RotateP1ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""ShoulderLR"",
-                    ""id"": ""d2d821bd-7032-4fc6-b06c-1caba4ae32de"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RotateP1ZNeg"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""209ee99b-bd0c-46af-94f5-424fa8b7b5e4"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""RotateP1ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""163ee4c0-09a7-4291-98bf-ed7be4cd5543"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""RotateP1ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""66ca769a-af28-421f-a8f4-1d0d9547c9ac"",
-                    ""path"": ""<Keyboard>/w"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""PushP1ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""d956077a-f941-453e-86cb-a334c34d7063"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""PushP1ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""17a89d3b-f3a8-4e92-ad7c-d69f61663fb9"",
-                    ""path"": ""<Keyboard>/t"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""PushP3ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""803e70ec-9ce9-4537-85e3-9f1252d2b41b"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""PushP3ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""ArrowKeys"",
-                    ""id"": ""a1121d62-48aa-475d-8b57-780aeabbd5da"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MoveP2ZPos"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""f7a27203-3cc2-4165-8ee7-9f8cf17985b4"",
-                    ""path"": ""<Keyboard>/leftArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""MoveP2ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""42ad4b4f-9c1d-4918-82fa-836feb0c6e65"",
-                    ""path"": ""<Keyboard>/rightArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""MoveP2ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""DPadLR"",
-                    ""id"": ""3d2bfeda-0fae-43aa-a640-ff3edbc4b1c8"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MoveP2ZPos"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""e44756bc-36bd-4092-9c95-ab5a7c059a29"",
-                    ""path"": ""<Gamepad>/dpad/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""MoveP2ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""c4692940-6b08-418c-b218-5c229114f4da"",
-                    ""path"": ""<Gamepad>/dpad/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""MoveP2ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""FH"",
-                    ""id"": ""5c572e45-2e79-4c17-a9e4-7481e70d2a52"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MoveP3ZNeg"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""c2018d3d-d169-42de-9c47-f0a037c41202"",
-                    ""path"": ""<Keyboard>/f"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""MoveP3ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""c0547152-5839-40d9-a012-c5e956db6f88"",
-                    ""path"": ""<Keyboard>/h"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""MoveP3ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""DPadLR"",
-                    ""id"": ""f7c29ff0-bf85-4433-916a-a4ad921a0a94"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MoveP3ZNeg"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""106c9d3b-1e29-4dbe-99cb-dd18ef25df78"",
-                    ""path"": ""<Gamepad>/dpad/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""MoveP3ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""c65167df-57e8-48cb-90c4-42188e315805"",
-                    ""path"": ""<Gamepad>/dpad/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""MoveP3ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""RZ"",
-                    ""id"": ""1cec3b49-3e1b-4c25-b727-1658d7ae74b9"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RotateP3ZNeg"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""a30510f6-9eab-4156-8969-c6e5936bfbb4"",
-                    ""path"": ""<Keyboard>/r"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""RotateP3ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""0ef16b52-998e-4cbd-9cb1-d926e7845838"",
-                    ""path"": ""<Keyboard>/y"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""RotateP3ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""ShoulderLR"",
-                    ""id"": ""c4ef77e9-53b3-4816-afb3-80aeded33499"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RotateP3ZNeg"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""9a4e8049-847e-429b-87ed-8aa54b785638"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""RotateP3ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""07cb0c00-9598-4660-b8b1-bfa4121f2efa"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""RotateP3ZNeg"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""RightShiftNumPad"",
-                    ""id"": ""13b76298-6295-461e-9178-89af6b921669"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RotateP2ZPos"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""28783d51-6859-4f6b-8b97-f2e72fe6af87"",
-                    ""path"": ""<Keyboard>/rightShift"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""RotateP2ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""c0f0d226-7f33-4e9e-b331-6da2020b8946"",
-                    ""path"": ""<Keyboard>/numpad1"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""RotateP2ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""ShoulderLR"",
-                    ""id"": ""944d72e5-3caf-4f52-926a-2aa8e2079951"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RotateP2ZPos"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""cc795b63-4ada-479c-96a7-a05611ac7156"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""RotateP2ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""27b3fa0b-8dc1-4461-9db2-dae1473917b6"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""RotateP2ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""UO"",
-                    ""id"": ""1716f148-99d2-46cd-b272-d769e98150a4"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RotateP4ZPos"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""a66ef3f6-a994-491d-965b-266369ad81df"",
-                    ""path"": ""<Keyboard>/u"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""RotateP4ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""3e9d7ec4-99d9-4263-acf2-a9c9b7bf5ce1"",
-                    ""path"": ""<Keyboard>/o"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""RotateP4ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""ShoulderLR"",
-                    ""id"": ""bb087b0d-7b85-4d3e-a913-cdfe288e9a53"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RotateP4ZPos"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""757f7f35-1973-4d79-bd0b-0aecb262fd54"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""RotateP4ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""7963444b-05c3-4a74-b75c-2b7c06bc5858"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""RotateP4ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""26fa52cf-5953-4c3d-a9b5-3521e9680ccd"",
-                    ""path"": ""<Keyboard>/upArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""PushP2ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c0b2c5ad-589e-4d42-9fad-2d905b8d407f"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""PushP2ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""cb16ddeb-a616-4129-88e9-ca95ec8f312f"",
-                    ""path"": ""<Keyboard>/i"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""PushP4ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4d003256-a6eb-4cf9-8d7f-104ac6001506"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""PushP4ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""JL"",
-                    ""id"": ""81ce4f43-ea6a-495c-8978-ac6fc95cc296"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MoveP4ZPos"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""84977fa8-80d7-4645-bbce-40e76575e138"",
-                    ""path"": ""<Keyboard>/j"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""MoveP4ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""2e88cf22-7a84-4b5f-a689-087afa21688e"",
-                    ""path"": ""<Keyboard>/l"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""MoveP4ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""DPadLR"",
-                    ""id"": ""a7947400-e7ed-48ba-9317-8e8c8b40891c"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MoveP4ZPos"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""b10aa369-bfb2-4d2f-ab7e-40a3f38e3d33"",
-                    ""path"": ""<Gamepad>/dpad/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""MoveP4ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""0aa3f579-c4e8-48c5-bc41-20a1ffb31ee6"",
-                    ""path"": ""<Gamepad>/dpad/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""MoveP4ZPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""5084579b-1f2b-4659-a0b7-a647c6fe1e4b"",
-                    ""path"": ""<Keyboard>/c"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""CursorVisibility"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""18ef6100-a0cd-4080-9bea-feee78119185"",
-                    ""path"": ""<Gamepad>/select"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamepadPlayerID0"",
-                    ""action"": ""CursorVisibility"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -2023,6 +740,17 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": """",
+                    ""id"": ""ef7e9e7a-4407-474b-afc5-bbef55d712bc"",
+                    ""path"": ""<VirtualMouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Point"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""7faf2df8-c148-492f-a455-600e113bccaf"",
                     ""path"": ""<Mouse>/scroll"",
                     ""interactions"": """",
@@ -2125,134 +853,6 @@ namespace ThreeDeePongProto.Shared.InputActions
     ],
     ""controlSchemes"": [
         {
-            ""name"": ""KeyboardPlayerID0"",
-            ""bindingGroup"": ""KeyboardPlayerID0"",
-            ""devices"": [
-                {
-                    ""devicePath"": ""<Keyboard>"",
-                    ""isOptional"": false,
-                    ""isOR"": false
-                },
-                {
-                    ""devicePath"": ""<Mouse>"",
-                    ""isOptional"": true,
-                    ""isOR"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""GamepadPlayerID0"",
-            ""bindingGroup"": ""GamepadPlayerID0"",
-            ""devices"": [
-                {
-                    ""devicePath"": ""<Gamepad>"",
-                    ""isOptional"": false,
-                    ""isOR"": false
-                },
-                {
-                    ""devicePath"": ""<VirtualMouse>"",
-                    ""isOptional"": true,
-                    ""isOR"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""KeyboardPlayerID1"",
-            ""bindingGroup"": ""KeyboardPlayerID1"",
-            ""devices"": [
-                {
-                    ""devicePath"": ""<Keyboard>"",
-                    ""isOptional"": false,
-                    ""isOR"": false
-                },
-                {
-                    ""devicePath"": ""<Mouse>"",
-                    ""isOptional"": true,
-                    ""isOR"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""KeyboardPlayerID2"",
-            ""bindingGroup"": ""KeyboardPlayerID2"",
-            ""devices"": [
-                {
-                    ""devicePath"": ""<Keyboard>"",
-                    ""isOptional"": false,
-                    ""isOR"": false
-                },
-                {
-                    ""devicePath"": ""<Mouse>"",
-                    ""isOptional"": true,
-                    ""isOR"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""KeyboardPlayerID3"",
-            ""bindingGroup"": ""KeyboardPlayerID3"",
-            ""devices"": [
-                {
-                    ""devicePath"": ""<Keyboard>"",
-                    ""isOptional"": false,
-                    ""isOR"": false
-                },
-                {
-                    ""devicePath"": ""<Mouse>"",
-                    ""isOptional"": true,
-                    ""isOR"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""GamepadPlayerID1"",
-            ""bindingGroup"": ""GamepadPlayerID1"",
-            ""devices"": [
-                {
-                    ""devicePath"": ""<Gamepad>"",
-                    ""isOptional"": false,
-                    ""isOR"": false
-                },
-                {
-                    ""devicePath"": ""<VirtualMouse>"",
-                    ""isOptional"": true,
-                    ""isOR"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""GamepadPlayerID2"",
-            ""bindingGroup"": ""GamepadPlayerID2"",
-            ""devices"": [
-                {
-                    ""devicePath"": ""<Gamepad>"",
-                    ""isOptional"": false,
-                    ""isOR"": false
-                },
-                {
-                    ""devicePath"": ""<VirtualMouse>"",
-                    ""isOptional"": true,
-                    ""isOR"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""GamepadPlayerID3"",
-            ""bindingGroup"": ""GamepadPlayerID3"",
-            ""devices"": [
-                {
-                    ""devicePath"": ""<Gamepad>"",
-                    ""isOptional"": false,
-                    ""isOR"": false
-                },
-                {
-                    ""devicePath"": ""<VirtualMouse>"",
-                    ""isOptional"": true,
-                    ""isOR"": false
-                }
-            ]
-        },
-        {
             ""name"": ""KeyboardMouse"",
             ""bindingGroup"": ""KeyboardMouse"",
             ""devices"": [
@@ -2297,25 +897,6 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_PlayerActions_CursorVisibility = m_PlayerActions.FindAction("CursorVisibility", throwIfNotFound: true);
             m_PlayerActions_MousePosition = m_PlayerActions.FindAction("MousePosition", throwIfNotFound: true);
             m_PlayerActions_OpenGameMenu = m_PlayerActions.FindAction("OpenGameMenu", throwIfNotFound: true);
-            // OldPlayerActions
-            m_OldPlayerActions = asset.FindActionMap("OldPlayerActions", throwIfNotFound: true);
-            m_OldPlayerActions_MoveP1ZNeg = m_OldPlayerActions.FindAction("MoveP1ZNeg", throwIfNotFound: true);
-            m_OldPlayerActions_MoveP2ZPos = m_OldPlayerActions.FindAction("MoveP2ZPos", throwIfNotFound: true);
-            m_OldPlayerActions_MoveP3ZNeg = m_OldPlayerActions.FindAction("MoveP3ZNeg", throwIfNotFound: true);
-            m_OldPlayerActions_MoveP4ZPos = m_OldPlayerActions.FindAction("MoveP4ZPos", throwIfNotFound: true);
-            m_OldPlayerActions_RotateP1ZNeg = m_OldPlayerActions.FindAction("RotateP1ZNeg", throwIfNotFound: true);
-            m_OldPlayerActions_RotateP2ZPos = m_OldPlayerActions.FindAction("RotateP2ZPos", throwIfNotFound: true);
-            m_OldPlayerActions_RotateP3ZNeg = m_OldPlayerActions.FindAction("RotateP3ZNeg", throwIfNotFound: true);
-            m_OldPlayerActions_RotateP4ZPos = m_OldPlayerActions.FindAction("RotateP4ZPos", throwIfNotFound: true);
-            m_OldPlayerActions_PushP1ZNeg = m_OldPlayerActions.FindAction("PushP1ZNeg", throwIfNotFound: true);
-            m_OldPlayerActions_PushP2ZPos = m_OldPlayerActions.FindAction("PushP2ZPos", throwIfNotFound: true);
-            m_OldPlayerActions_PushP3ZNeg = m_OldPlayerActions.FindAction("PushP3ZNeg", throwIfNotFound: true);
-            m_OldPlayerActions_PushP4ZPos = m_OldPlayerActions.FindAction("PushP4ZPos", throwIfNotFound: true);
-            m_OldPlayerActions_PokeTheBall = m_OldPlayerActions.FindAction("PokeTheBall", throwIfNotFound: true);
-            m_OldPlayerActions_Zoom = m_OldPlayerActions.FindAction("Zoom", throwIfNotFound: true);
-            m_OldPlayerActions_MousePosition = m_OldPlayerActions.FindAction("MousePosition", throwIfNotFound: true);
-            m_OldPlayerActions_CursorVisibility = m_OldPlayerActions.FindAction("CursorVisibility", throwIfNotFound: true);
-            m_OldPlayerActions_ToggleGameMenu = m_OldPlayerActions.FindAction("ToggleGameMenu", throwIfNotFound: true);
             // UserInterface
             m_UserInterface = asset.FindActionMap("UserInterface", throwIfNotFound: true);
             m_UserInterface_Navigate = m_UserInterface.FindAction("Navigate", throwIfNotFound: true);
@@ -2496,180 +1077,6 @@ namespace ThreeDeePongProto.Shared.InputActions
         }
         public PlayerActionsActions @PlayerActions => new PlayerActionsActions(this);
 
-        // OldPlayerActions
-        private readonly InputActionMap m_OldPlayerActions;
-        private List<IOldPlayerActionsActions> m_OldPlayerActionsActionsCallbackInterfaces = new List<IOldPlayerActionsActions>();
-        private readonly InputAction m_OldPlayerActions_MoveP1ZNeg;
-        private readonly InputAction m_OldPlayerActions_MoveP2ZPos;
-        private readonly InputAction m_OldPlayerActions_MoveP3ZNeg;
-        private readonly InputAction m_OldPlayerActions_MoveP4ZPos;
-        private readonly InputAction m_OldPlayerActions_RotateP1ZNeg;
-        private readonly InputAction m_OldPlayerActions_RotateP2ZPos;
-        private readonly InputAction m_OldPlayerActions_RotateP3ZNeg;
-        private readonly InputAction m_OldPlayerActions_RotateP4ZPos;
-        private readonly InputAction m_OldPlayerActions_PushP1ZNeg;
-        private readonly InputAction m_OldPlayerActions_PushP2ZPos;
-        private readonly InputAction m_OldPlayerActions_PushP3ZNeg;
-        private readonly InputAction m_OldPlayerActions_PushP4ZPos;
-        private readonly InputAction m_OldPlayerActions_PokeTheBall;
-        private readonly InputAction m_OldPlayerActions_Zoom;
-        private readonly InputAction m_OldPlayerActions_MousePosition;
-        private readonly InputAction m_OldPlayerActions_CursorVisibility;
-        private readonly InputAction m_OldPlayerActions_ToggleGameMenu;
-        public struct OldPlayerActionsActions
-        {
-            private @PlayerInputActions m_Wrapper;
-            public OldPlayerActionsActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-            public InputAction @MoveP1ZNeg => m_Wrapper.m_OldPlayerActions_MoveP1ZNeg;
-            public InputAction @MoveP2ZPos => m_Wrapper.m_OldPlayerActions_MoveP2ZPos;
-            public InputAction @MoveP3ZNeg => m_Wrapper.m_OldPlayerActions_MoveP3ZNeg;
-            public InputAction @MoveP4ZPos => m_Wrapper.m_OldPlayerActions_MoveP4ZPos;
-            public InputAction @RotateP1ZNeg => m_Wrapper.m_OldPlayerActions_RotateP1ZNeg;
-            public InputAction @RotateP2ZPos => m_Wrapper.m_OldPlayerActions_RotateP2ZPos;
-            public InputAction @RotateP3ZNeg => m_Wrapper.m_OldPlayerActions_RotateP3ZNeg;
-            public InputAction @RotateP4ZPos => m_Wrapper.m_OldPlayerActions_RotateP4ZPos;
-            public InputAction @PushP1ZNeg => m_Wrapper.m_OldPlayerActions_PushP1ZNeg;
-            public InputAction @PushP2ZPos => m_Wrapper.m_OldPlayerActions_PushP2ZPos;
-            public InputAction @PushP3ZNeg => m_Wrapper.m_OldPlayerActions_PushP3ZNeg;
-            public InputAction @PushP4ZPos => m_Wrapper.m_OldPlayerActions_PushP4ZPos;
-            public InputAction @PokeTheBall => m_Wrapper.m_OldPlayerActions_PokeTheBall;
-            public InputAction @Zoom => m_Wrapper.m_OldPlayerActions_Zoom;
-            public InputAction @MousePosition => m_Wrapper.m_OldPlayerActions_MousePosition;
-            public InputAction @CursorVisibility => m_Wrapper.m_OldPlayerActions_CursorVisibility;
-            public InputAction @ToggleGameMenu => m_Wrapper.m_OldPlayerActions_ToggleGameMenu;
-            public InputActionMap Get() { return m_Wrapper.m_OldPlayerActions; }
-            public void Enable() { Get().Enable(); }
-            public void Disable() { Get().Disable(); }
-            public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(OldPlayerActionsActions set) { return set.Get(); }
-            public void AddCallbacks(IOldPlayerActionsActions instance)
-            {
-                if (instance == null || m_Wrapper.m_OldPlayerActionsActionsCallbackInterfaces.Contains(instance)) return;
-                m_Wrapper.m_OldPlayerActionsActionsCallbackInterfaces.Add(instance);
-                @MoveP1ZNeg.started += instance.OnMoveP1ZNeg;
-                @MoveP1ZNeg.performed += instance.OnMoveP1ZNeg;
-                @MoveP1ZNeg.canceled += instance.OnMoveP1ZNeg;
-                @MoveP2ZPos.started += instance.OnMoveP2ZPos;
-                @MoveP2ZPos.performed += instance.OnMoveP2ZPos;
-                @MoveP2ZPos.canceled += instance.OnMoveP2ZPos;
-                @MoveP3ZNeg.started += instance.OnMoveP3ZNeg;
-                @MoveP3ZNeg.performed += instance.OnMoveP3ZNeg;
-                @MoveP3ZNeg.canceled += instance.OnMoveP3ZNeg;
-                @MoveP4ZPos.started += instance.OnMoveP4ZPos;
-                @MoveP4ZPos.performed += instance.OnMoveP4ZPos;
-                @MoveP4ZPos.canceled += instance.OnMoveP4ZPos;
-                @RotateP1ZNeg.started += instance.OnRotateP1ZNeg;
-                @RotateP1ZNeg.performed += instance.OnRotateP1ZNeg;
-                @RotateP1ZNeg.canceled += instance.OnRotateP1ZNeg;
-                @RotateP2ZPos.started += instance.OnRotateP2ZPos;
-                @RotateP2ZPos.performed += instance.OnRotateP2ZPos;
-                @RotateP2ZPos.canceled += instance.OnRotateP2ZPos;
-                @RotateP3ZNeg.started += instance.OnRotateP3ZNeg;
-                @RotateP3ZNeg.performed += instance.OnRotateP3ZNeg;
-                @RotateP3ZNeg.canceled += instance.OnRotateP3ZNeg;
-                @RotateP4ZPos.started += instance.OnRotateP4ZPos;
-                @RotateP4ZPos.performed += instance.OnRotateP4ZPos;
-                @RotateP4ZPos.canceled += instance.OnRotateP4ZPos;
-                @PushP1ZNeg.started += instance.OnPushP1ZNeg;
-                @PushP1ZNeg.performed += instance.OnPushP1ZNeg;
-                @PushP1ZNeg.canceled += instance.OnPushP1ZNeg;
-                @PushP2ZPos.started += instance.OnPushP2ZPos;
-                @PushP2ZPos.performed += instance.OnPushP2ZPos;
-                @PushP2ZPos.canceled += instance.OnPushP2ZPos;
-                @PushP3ZNeg.started += instance.OnPushP3ZNeg;
-                @PushP3ZNeg.performed += instance.OnPushP3ZNeg;
-                @PushP3ZNeg.canceled += instance.OnPushP3ZNeg;
-                @PushP4ZPos.started += instance.OnPushP4ZPos;
-                @PushP4ZPos.performed += instance.OnPushP4ZPos;
-                @PushP4ZPos.canceled += instance.OnPushP4ZPos;
-                @PokeTheBall.started += instance.OnPokeTheBall;
-                @PokeTheBall.performed += instance.OnPokeTheBall;
-                @PokeTheBall.canceled += instance.OnPokeTheBall;
-                @Zoom.started += instance.OnZoom;
-                @Zoom.performed += instance.OnZoom;
-                @Zoom.canceled += instance.OnZoom;
-                @MousePosition.started += instance.OnMousePosition;
-                @MousePosition.performed += instance.OnMousePosition;
-                @MousePosition.canceled += instance.OnMousePosition;
-                @CursorVisibility.started += instance.OnCursorVisibility;
-                @CursorVisibility.performed += instance.OnCursorVisibility;
-                @CursorVisibility.canceled += instance.OnCursorVisibility;
-                @ToggleGameMenu.started += instance.OnToggleGameMenu;
-                @ToggleGameMenu.performed += instance.OnToggleGameMenu;
-                @ToggleGameMenu.canceled += instance.OnToggleGameMenu;
-            }
-
-            private void UnregisterCallbacks(IOldPlayerActionsActions instance)
-            {
-                @MoveP1ZNeg.started -= instance.OnMoveP1ZNeg;
-                @MoveP1ZNeg.performed -= instance.OnMoveP1ZNeg;
-                @MoveP1ZNeg.canceled -= instance.OnMoveP1ZNeg;
-                @MoveP2ZPos.started -= instance.OnMoveP2ZPos;
-                @MoveP2ZPos.performed -= instance.OnMoveP2ZPos;
-                @MoveP2ZPos.canceled -= instance.OnMoveP2ZPos;
-                @MoveP3ZNeg.started -= instance.OnMoveP3ZNeg;
-                @MoveP3ZNeg.performed -= instance.OnMoveP3ZNeg;
-                @MoveP3ZNeg.canceled -= instance.OnMoveP3ZNeg;
-                @MoveP4ZPos.started -= instance.OnMoveP4ZPos;
-                @MoveP4ZPos.performed -= instance.OnMoveP4ZPos;
-                @MoveP4ZPos.canceled -= instance.OnMoveP4ZPos;
-                @RotateP1ZNeg.started -= instance.OnRotateP1ZNeg;
-                @RotateP1ZNeg.performed -= instance.OnRotateP1ZNeg;
-                @RotateP1ZNeg.canceled -= instance.OnRotateP1ZNeg;
-                @RotateP2ZPos.started -= instance.OnRotateP2ZPos;
-                @RotateP2ZPos.performed -= instance.OnRotateP2ZPos;
-                @RotateP2ZPos.canceled -= instance.OnRotateP2ZPos;
-                @RotateP3ZNeg.started -= instance.OnRotateP3ZNeg;
-                @RotateP3ZNeg.performed -= instance.OnRotateP3ZNeg;
-                @RotateP3ZNeg.canceled -= instance.OnRotateP3ZNeg;
-                @RotateP4ZPos.started -= instance.OnRotateP4ZPos;
-                @RotateP4ZPos.performed -= instance.OnRotateP4ZPos;
-                @RotateP4ZPos.canceled -= instance.OnRotateP4ZPos;
-                @PushP1ZNeg.started -= instance.OnPushP1ZNeg;
-                @PushP1ZNeg.performed -= instance.OnPushP1ZNeg;
-                @PushP1ZNeg.canceled -= instance.OnPushP1ZNeg;
-                @PushP2ZPos.started -= instance.OnPushP2ZPos;
-                @PushP2ZPos.performed -= instance.OnPushP2ZPos;
-                @PushP2ZPos.canceled -= instance.OnPushP2ZPos;
-                @PushP3ZNeg.started -= instance.OnPushP3ZNeg;
-                @PushP3ZNeg.performed -= instance.OnPushP3ZNeg;
-                @PushP3ZNeg.canceled -= instance.OnPushP3ZNeg;
-                @PushP4ZPos.started -= instance.OnPushP4ZPos;
-                @PushP4ZPos.performed -= instance.OnPushP4ZPos;
-                @PushP4ZPos.canceled -= instance.OnPushP4ZPos;
-                @PokeTheBall.started -= instance.OnPokeTheBall;
-                @PokeTheBall.performed -= instance.OnPokeTheBall;
-                @PokeTheBall.canceled -= instance.OnPokeTheBall;
-                @Zoom.started -= instance.OnZoom;
-                @Zoom.performed -= instance.OnZoom;
-                @Zoom.canceled -= instance.OnZoom;
-                @MousePosition.started -= instance.OnMousePosition;
-                @MousePosition.performed -= instance.OnMousePosition;
-                @MousePosition.canceled -= instance.OnMousePosition;
-                @CursorVisibility.started -= instance.OnCursorVisibility;
-                @CursorVisibility.performed -= instance.OnCursorVisibility;
-                @CursorVisibility.canceled -= instance.OnCursorVisibility;
-                @ToggleGameMenu.started -= instance.OnToggleGameMenu;
-                @ToggleGameMenu.performed -= instance.OnToggleGameMenu;
-                @ToggleGameMenu.canceled -= instance.OnToggleGameMenu;
-            }
-
-            public void RemoveCallbacks(IOldPlayerActionsActions instance)
-            {
-                if (m_Wrapper.m_OldPlayerActionsActionsCallbackInterfaces.Remove(instance))
-                    UnregisterCallbacks(instance);
-            }
-
-            public void SetCallbacks(IOldPlayerActionsActions instance)
-            {
-                foreach (var item in m_Wrapper.m_OldPlayerActionsActionsCallbackInterfaces)
-                    UnregisterCallbacks(item);
-                m_Wrapper.m_OldPlayerActionsActionsCallbackInterfaces.Clear();
-                AddCallbacks(instance);
-            }
-        }
-        public OldPlayerActionsActions @OldPlayerActions => new OldPlayerActionsActions(this);
-
         // UserInterface
         private readonly InputActionMap m_UserInterface;
         private List<IUserInterfaceActions> m_UserInterfaceActionsCallbackInterfaces = new List<IUserInterfaceActions>();
@@ -2787,78 +1194,6 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
         }
         public UserInterfaceActions @UserInterface => new UserInterfaceActions(this);
-        private int m_KeyboardPlayerID0SchemeIndex = -1;
-        public InputControlScheme KeyboardPlayerID0Scheme
-        {
-            get
-            {
-                if (m_KeyboardPlayerID0SchemeIndex == -1) m_KeyboardPlayerID0SchemeIndex = asset.FindControlSchemeIndex("KeyboardPlayerID0");
-                return asset.controlSchemes[m_KeyboardPlayerID0SchemeIndex];
-            }
-        }
-        private int m_GamepadPlayerID0SchemeIndex = -1;
-        public InputControlScheme GamepadPlayerID0Scheme
-        {
-            get
-            {
-                if (m_GamepadPlayerID0SchemeIndex == -1) m_GamepadPlayerID0SchemeIndex = asset.FindControlSchemeIndex("GamepadPlayerID0");
-                return asset.controlSchemes[m_GamepadPlayerID0SchemeIndex];
-            }
-        }
-        private int m_KeyboardPlayerID1SchemeIndex = -1;
-        public InputControlScheme KeyboardPlayerID1Scheme
-        {
-            get
-            {
-                if (m_KeyboardPlayerID1SchemeIndex == -1) m_KeyboardPlayerID1SchemeIndex = asset.FindControlSchemeIndex("KeyboardPlayerID1");
-                return asset.controlSchemes[m_KeyboardPlayerID1SchemeIndex];
-            }
-        }
-        private int m_KeyboardPlayerID2SchemeIndex = -1;
-        public InputControlScheme KeyboardPlayerID2Scheme
-        {
-            get
-            {
-                if (m_KeyboardPlayerID2SchemeIndex == -1) m_KeyboardPlayerID2SchemeIndex = asset.FindControlSchemeIndex("KeyboardPlayerID2");
-                return asset.controlSchemes[m_KeyboardPlayerID2SchemeIndex];
-            }
-        }
-        private int m_KeyboardPlayerID3SchemeIndex = -1;
-        public InputControlScheme KeyboardPlayerID3Scheme
-        {
-            get
-            {
-                if (m_KeyboardPlayerID3SchemeIndex == -1) m_KeyboardPlayerID3SchemeIndex = asset.FindControlSchemeIndex("KeyboardPlayerID3");
-                return asset.controlSchemes[m_KeyboardPlayerID3SchemeIndex];
-            }
-        }
-        private int m_GamepadPlayerID1SchemeIndex = -1;
-        public InputControlScheme GamepadPlayerID1Scheme
-        {
-            get
-            {
-                if (m_GamepadPlayerID1SchemeIndex == -1) m_GamepadPlayerID1SchemeIndex = asset.FindControlSchemeIndex("GamepadPlayerID1");
-                return asset.controlSchemes[m_GamepadPlayerID1SchemeIndex];
-            }
-        }
-        private int m_GamepadPlayerID2SchemeIndex = -1;
-        public InputControlScheme GamepadPlayerID2Scheme
-        {
-            get
-            {
-                if (m_GamepadPlayerID2SchemeIndex == -1) m_GamepadPlayerID2SchemeIndex = asset.FindControlSchemeIndex("GamepadPlayerID2");
-                return asset.controlSchemes[m_GamepadPlayerID2SchemeIndex];
-            }
-        }
-        private int m_GamepadPlayerID3SchemeIndex = -1;
-        public InputControlScheme GamepadPlayerID3Scheme
-        {
-            get
-            {
-                if (m_GamepadPlayerID3SchemeIndex == -1) m_GamepadPlayerID3SchemeIndex = asset.FindControlSchemeIndex("GamepadPlayerID3");
-                return asset.controlSchemes[m_GamepadPlayerID3SchemeIndex];
-            }
-        }
         private int m_KeyboardMouseSchemeIndex = -1;
         public InputControlScheme KeyboardMouseScheme
         {
@@ -2888,26 +1223,6 @@ namespace ThreeDeePongProto.Shared.InputActions
             void OnCursorVisibility(InputAction.CallbackContext context);
             void OnMousePosition(InputAction.CallbackContext context);
             void OnOpenGameMenu(InputAction.CallbackContext context);
-        }
-        public interface IOldPlayerActionsActions
-        {
-            void OnMoveP1ZNeg(InputAction.CallbackContext context);
-            void OnMoveP2ZPos(InputAction.CallbackContext context);
-            void OnMoveP3ZNeg(InputAction.CallbackContext context);
-            void OnMoveP4ZPos(InputAction.CallbackContext context);
-            void OnRotateP1ZNeg(InputAction.CallbackContext context);
-            void OnRotateP2ZPos(InputAction.CallbackContext context);
-            void OnRotateP3ZNeg(InputAction.CallbackContext context);
-            void OnRotateP4ZPos(InputAction.CallbackContext context);
-            void OnPushP1ZNeg(InputAction.CallbackContext context);
-            void OnPushP2ZPos(InputAction.CallbackContext context);
-            void OnPushP3ZNeg(InputAction.CallbackContext context);
-            void OnPushP4ZPos(InputAction.CallbackContext context);
-            void OnPokeTheBall(InputAction.CallbackContext context);
-            void OnZoom(InputAction.CallbackContext context);
-            void OnMousePosition(InputAction.CallbackContext context);
-            void OnCursorVisibility(InputAction.CallbackContext context);
-            void OnToggleGameMenu(InputAction.CallbackContext context);
         }
         public interface IUserInterfaceActions
         {

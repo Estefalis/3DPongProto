@@ -4,8 +4,6 @@ using ThreeDeePongProto.Shared.HelperClasses;
 using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Users;
-//using UnityEngine.InputSystem.Utilities;
 
 public enum SearchDirection
 {
@@ -26,25 +24,18 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private const string m_kickBallString = "KickBall", m_openGameMenuString = "OpenGameMenu", m_mousePositionString = "MousePosition";
         private const string m_uiActionMap = "UserInterface", m_playerActionMap = "PlayerActions";
 
-        private const string m_keyboardMouseScheme = "KeyboardMouse", m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3", m_keyboardDevice = "Keyboard";
-        private const string m_gamePadScheme = "Gamepad", m_gamePadSchemePID0 = "GamepadPlayerID0", m_gamePadSchemePID1 = "GamepadPlayerID1", m_gamePadSchemePID2 = "GamepadPlayerID2", m_gamePadSchemePID3 = "GamepadPlayerID3", m_gamepadDevice = "Gamepad";
+        private const string m_keyboardMouseScheme = "KeyboardMouse", /*m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3", */m_keyboardDevice = "Keyboard";
+        private const string m_gamePadScheme = "Gamepad", /*m_gamePadSchemePID0 = "GamepadPlayerID0", m_gamePadSchemePID1 = "GamepadPlayerID1", m_gamePadSchemePID2 = "GamepadPlayerID2", m_gamePadSchemePID3 = "GamepadPlayerID3", */m_gamepadDevice = "Gamepad";
 
         private Vector2 m_rotationVector;   //Saved current rotationInput.
-        private int /*m_playerInputIndex, */m_playerID;
+        private int m_playerID;
         private uint m_playerUserID;
-        private bool m_onQuitProcess = false;
+        //private bool m_onQuitProcess = false;
 
         #region Actions_and_Functions
         internal static event Action<int> AKickBall;
         internal static event Action<Vector2> ASendMousePosition;
         #endregion
-
-        //private void Awake()
-        //{
-        //    //m_playerInputIndex = -1;
-        //    //UserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
-        //    //UserInputManager.ACheckForPlayerInput += PlayerInputCheck;
-        //}
 
         private void OnEnable()
         {
@@ -53,7 +44,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
             if (m_playerInput != null && m_playerUserID != m_playerInput.user.id)
             {
-                SortInputBindings(m_playerInput, m_playerID);
+                FilterInputBindings(m_playerInput, m_playerID);
                 SubscribeToInputActions(m_playerInput);
             }
         }
@@ -122,10 +113,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (m_playerInput != null)
             {
                 m_playerInput.GetComponent<PlayerInput>();
-                SortInputBindings(m_playerInput, m_playerID);  //Else m_playerInput.actions.
+                FilterInputBindings(m_playerInput, m_playerID);  //Else m_playerInput.actions.
                 SubscribeToInputActions(m_playerInput);
-                //Listen to controlScheme changes.
-                //m_playerInput.onControlsChanged += OnControlsChanged;
             }
         }
 
@@ -136,14 +125,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
             UserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
             UserInputManager.ACheckForPlayerInput += PlayerInputCheck;
-            m_playerInput.onControlsChanged += OnControlsChanged;
+            //m_playerInput.onControlsChanged += OnControlsChanged;
             InputSystem.onDeviceChange += OnDeviceChange;
-
-            //foreach (var action in _playerInput.actions)
-            //{
-            //    action.performed += ctx => ProcessInput(ctx, _playerInput, action.name);
-            //    action.canceled += ctx => ProcessInput(ctx, _playerInput, action.name);
-            //}
 
             var moveAction = _playerInput.actions[m_moveString];
             moveAction.performed += _callbackContext => OnMove(_callbackContext, _playerInput);
@@ -180,14 +163,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
             UserInputManager.ACheckForPlayerInput -= PlayerInputCheck;
             UserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
-            m_playerInput.onControlsChanged -= OnControlsChanged;
+            //m_playerInput.onControlsChanged -= OnControlsChanged;
             InputSystem.onDeviceChange += OnDeviceChange;
-
-            //foreach (var action in _playerInput.actions)
-            //{
-            //    action.performed -= ctx => ProcessInput(ctx, _playerInput, action.name);
-            //    action.canceled -= ctx => ProcessInput(ctx, _playerInput, action.name);
-            //}
 
             var moveAction = _playerInput.actions[m_moveString];
             moveAction.performed -= _callbackContext => OnMove(_callbackContext, _playerInput);
@@ -218,7 +195,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         }
         #endregion
 
-        private void SortInputBindings(PlayerInput _playerInput, int _playerID)
+        private void FilterInputBindings(PlayerInput _playerInput, int _playerID)
         {
             m_playerController.m_playerBindings.Clear();
 
@@ -239,7 +216,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 }
             }
 
-            m_playerController.m_playerBindings.Sort((a, b) => a.id.CompareTo(b.id));
+            //m_playerController.m_playerBindings.Sort((a, b) => a.id.CompareTo(b.id));
 #if UNITY_EDITOR
             //Debug.Log($"PlayerIndex {_playerInput.playerIndex} Bindings updated: {m_playerController.m_playerBindings.Count}");
             //if (m_playerID == 0)
@@ -248,62 +225,22 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 #endif
         }
 
-        private void OnControlsChanged(PlayerInput _playerInput)
-        {
-            if (m_userInputManager == null)
-            {
-                if (!m_onQuitProcess)
-                    return;
-            }
+//        private void OnControlsChanged(PlayerInput _playerInput)
+//        {
+//            if (m_userInputManager == null)
+//            {
+//                if (!m_onQuitProcess)
+//                    return;
+//            }
 
-            if (!m_userInputManager.GDevicesInitialized)    //g for getter in the future. (Yes?, No!, Maybe~.)
-            {
-#if UNITY_EDITOR
-                Debug.LogWarning("Device map not initialized yet!");
-#endif
-                return;
-            }
-
-            //            InputDevice newDevice = _playerInput.devices.Count > 0 ? _playerInput.devices[0] : null;
-            //            if (newDevice == null)
-            //                return;
-
-            //            var playerId = _playerInput.user.id;
-            //            var deviceMap = m_userInputManager.GetPlayerDeviceMap();
-
-            //            //If the same inputDevice is already assigned, ignore.
-            //            if (deviceMap.TryGetValue(playerId, out var currentDevice) && newDevice == currentDevice)
-            //            {
-            //#if UNITY_EDITOR
-            //                //Debug.Log($"OnControlsChanged: Device for PlayerIndex {_playerInput._playerInputIndex} | PlayerUserID {playerId} unchanged ({newDevice.name}).");  
-            //#endif
-            //                return;
-            //            }
-
-            //            //Update inputDevice action & pair new inputDevice.
-            //            deviceMap[playerId] = newDevice;
-            //            _playerInput.user.UnpairDevices();
-            //            InputUser.PerformPairingWithDevice(newDevice, _playerInput.user);
-
-            //            //Get correct control scheme.
-            //            GetDeviceHelper.GetPlayerControlScheme(_playerInput.playerIndex, newDevice, out string newScheme, out _);
-            //#if UNITY_EDITOR
-            //            Debug.Log($"OnControlsChanged-Device(s): {string.Join(", ", _playerInput.devices.Select(d => d.name))} | Index: {m_playerInput.playerIndex} | UserID: {_playerInput.user.id}.");
-            //#endif
-
-            //            if (_playerInput.currentControlScheme == newScheme)
-            //            {
-            //#if UNITY_EDITOR
-            //                Debug.Log($"Player {_playerInput.playerIndex} already using correct scheme: {newScheme}");
-            //#endif
-            //                return;
-            //            }
-
-            //            _playerInput.SwitchCurrentControlScheme(newScheme, newDevice);
-            //#if UNITY_EDITOR
-            //            Debug.Log($"Player {_playerInput.playerIndex} now using {newDevice.name} with scheme {newScheme}.");
-            //#endif
-        }
+//            if (!m_userInputManager.GDevicesInitialized)    //g for getter in the future. (Yes?, No!, Maybe~.)
+//            {
+//#if UNITY_EDITOR
+//                Debug.LogWarning("Device map not initialized yet!");
+//#endif
+//                return;
+//            }
+//        }
 
         private void OnDeviceChange(InputDevice _inputDevice, InputDeviceChange _deviceChange)
         {
@@ -316,73 +253,20 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 #if UNITY_EDITOR
                     Debug.Log($"Device switched: {_inputDevice.displayName}");
 #endif
-                    SortInputBindings(m_playerInput, m_playerID);
+                    FilterInputBindings(m_playerInput, m_playerID);
                 }
                 break;
             }
         }
 
         #region CallbackContext_Methods
-        //private void ProcessInput(InputAction.CallbackContext _callbackContext, PlayerInput _playerInput, string _actionName)
-        //{
-        //    /*int bindingIndex = _callbackContext.action.bindings.ToList().FindIndex(b => _callbackContext.control.path.Contains(b.path));*/
-
-        //    //if (bindingIndex < 0)
-        //    //    return;
-
-        //    switch (_actionName)
-        //    {
-        //        case m_moveString:
-        //            if (_callbackContext.phase == InputActionPhase.Performed)
-        //                OnMove(_callbackContext, _playerInput);
-        //            else if (_callbackContext.phase == InputActionPhase.Canceled)
-        //                OnMoveCanceled(_callbackContext, _playerInput);
-        //            break;
-        //        case m_rotateString:
-        //            if (_callbackContext.phase == InputActionPhase.Performed)
-        //                OnRotate(_callbackContext, _playerInput);
-        //            else if (_callbackContext.phase == InputActionPhase.Canceled)
-        //                OnRotateCanceled(_callbackContext, _playerInput);
-        //            break;
-        //        case m_pushString:
-        //            if (_callbackContext.phase == InputActionPhase.Performed)
-        //                OnPush(_callbackContext, _playerInput);
-        //            break;
-        //        case m_resetString:
-        //            if (_callbackContext.phase == InputActionPhase.Performed)
-        //                OnRotationReset(_callbackContext, _playerInput);
-        //            break;
-        //        case m_kickBallString:
-        //            if (_callbackContext.phase == InputActionPhase.Performed)
-        //                OnKickBall(_callbackContext, _playerInput);
-        //            break;
-        //        case m_zoomString:
-        //            if (_callbackContext.phase == InputActionPhase.Performed)
-        //                OnZoom(_callbackContext, _playerInput);
-        //            else if (_callbackContext.phase == InputActionPhase.Canceled)
-        //                OnZoomCanceled(_callbackContext, _playerInput);
-        //            break;
-        //        case m_mousePositionString:
-        //            if (_callbackContext.phase == InputActionPhase.Performed)
-        //                OnMousePosition(_callbackContext);
-        //            break;
-        //        case m_openGameMenuString:
-        //            if (_callbackContext.phase == InputActionPhase.Performed)
-        //                OnOpenMenu(_callbackContext);
-        //            break;
-        //        default:
-        //            break;
-        //    }
-        //}
-
         private void OnMove(InputAction.CallbackContext _callbackContext, PlayerInput _playerInput)
         {
             if (!IsLocalPlayer())
                 return;
 
             string bindingControlScheme = _callbackContext.action.bindings[_callbackContext.action.GetBindingIndexForControl(_callbackContext.control)].groups;
-            //if (_callbackContext.control.device is Gamepad)
-            //    Debug.Log($"BindingScheme: {bindingControlScheme} | PIControlScheme: {_playerInput.currentControlScheme}");
+            
             if (bindingControlScheme != _playerInput.currentControlScheme)
                 return;
 
@@ -537,10 +421,10 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 #endif
         }
 
-        private void OnApplicationQuit()
-        {
-            m_onQuitProcess = true;
-        }
+        //private void OnApplicationQuit()
+        //{
+        //    //m_onQuitProcess = true;
+        //}
 
         public void SetPlayerID(int _playerID)
         {
