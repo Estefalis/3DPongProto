@@ -69,8 +69,8 @@ namespace ThreeDeePongProto.Shared.Highscores
 
         private void OnEnable()
         {
-            LocalMatchManager.StartWinProcedure += DisplayHighscoreBoard;
-            LocalMatchManager.LoadUpHighscores += LoadHighscoresOnGameEnd;
+            LocalMatchManager.AStartWinProcedure += DisplayHighscoreBoard;
+            LocalMatchManager.ALoadUpHighscores += LoadHighscoresOnGameEnd;
 
             m_roundsDropdown.onValueChanged.AddListener(OnRoundDropdownChanges);
             m_maxPointsDropdown.onValueChanged.AddListener(OnMaxPointDropdownChanges);
@@ -80,8 +80,8 @@ namespace ThreeDeePongProto.Shared.Highscores
         {
             gameObject.SetActive(false);
 
-            LocalMatchManager.StartWinProcedure -= DisplayHighscoreBoard;
-            LocalMatchManager.LoadUpHighscores -= LoadHighscoresOnGameEnd;
+            LocalMatchManager.AStartWinProcedure -= DisplayHighscoreBoard;
+            LocalMatchManager.ALoadUpHighscores -= LoadHighscoresOnGameEnd;
         }
 
         private void SetupDropdowns()

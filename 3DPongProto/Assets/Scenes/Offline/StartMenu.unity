@@ -1442,10 +1442,10 @@ MonoBehaviour:
   m_JoinAction:
     m_UseReference: 0
     m_Action:
-      m_Name: 
+      m_Name: Join
       m_Type: 0
       m_ExpectedControlType: 
-      m_Id: 
+      m_Id: 189c8586-cddc-4683-afb5-add69a33c2ae
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
@@ -9629,7 +9629,7 @@ PrefabInstance:
     - target: {fileID: 706858084997270176, guid: 31c7a707940f85244a29e4c5915787e1,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 706858084997270178, guid: 31c7a707940f85244a29e4c5915787e1,
         type: 3}

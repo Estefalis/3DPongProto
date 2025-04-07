@@ -18,7 +18,6 @@ namespace ThreeDeePongProto.Shared.Managers
         [SerializeField] private GameObject m_playGround;
         [SerializeField] private GameObject m_ballPrefab;
         [SerializeField] private Transform m_prefabParent;
-        public Transform m_PlayfieldParent { get => m_prefabParent; }
 
         [Header("Defaults")]
         #region Playground-Variables
@@ -61,8 +60,6 @@ namespace ThreeDeePongProto.Shared.Managers
         private float m_matchStartTime, m_ballYPos;
         private Vector3 m_ballPopPos;
 
-        private const string m_uiActionMap = "UserInterface", m_playerActionMap = "PlayerActions";
-
         #region Properties-Access
         public float DefaultBackLineDistance { get => m_minimalBackLineDistance; }
         public float DefaultFrontLineDistance { get => m_minimalFrontLineDistance; }
@@ -77,9 +74,10 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         #region Actions
-        internal static event Action StartNextRound;
-        internal static event Action StartWinProcedure;
-        internal static event Action LoadUpHighscores;
+        internal static event Action<Transform> AGroundInstantiated;
+        internal static event Action AStartNextRound;
+        internal static event Action AStartWinProcedure;
+        internal static event Action ALoadUpHighscores;
         #endregion
         #endregion
 
@@ -114,8 +112,8 @@ namespace ThreeDeePongProto.Shared.Managers
             Ball.HitGoalOne += UpdateTPTwoPoints;
             Ball.HitGoalTwo += UpdateTPOnePoints;
 
-            StartNextRound += LetsStartNextRound;
-            StartWinProcedure += LetsStartWinProcedure;
+            AStartNextRound += LetsStartNextRound;
+            AStartWinProcedure += LetsStartWinProcedure;
 
             UserInputManager.AChangeActiveActionMap += PauseAndTimeScale;
         }
@@ -135,8 +133,8 @@ namespace ThreeDeePongProto.Shared.Managers
             Ball.HitGoalOne -= UpdateTPTwoPoints;
             Ball.HitGoalTwo -= UpdateTPOnePoints;
 
-            StartNextRound -= LetsStartNextRound;
-            StartWinProcedure -= LetsStartWinProcedure;
+            AStartNextRound -= LetsStartNextRound;
+            AStartWinProcedure -= LetsStartWinProcedure;
 
             UserInputManager.AChangeActiveActionMap -= PauseAndTimeScale;
         }
@@ -316,6 +314,7 @@ namespace ThreeDeePongProto.Shared.Managers
             m_playGround.transform.localScale = new Vector3(m_basicFieldValues.SetGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_basicFieldValues.SetGroundLength * m_playGroundLengthScale);
 
             Instantiate(m_playGround, Vector3.zero, Quaternion.Euler(0, 0, 0), m_prefabParent);
+            AGroundInstantiated?.Invoke(m_prefabParent);
             Instantiate(m_ballPrefab, m_ballPopPos, Quaternion.Euler(0, 0, 0), m_prefabParent);
         }
         #endregion
@@ -349,7 +348,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 if (m_matchUIStates.EGameConnectModi == EGameConnectionModi.LocalPC)
                     SaveMatchDetails(_winningPlayer, _pointCount);
 
-                StartWinProcedure?.Invoke();
+                AStartWinProcedure?.Invoke();
                 return;
             }
             ;
@@ -358,7 +357,7 @@ namespace ThreeDeePongProto.Shared.Managers
             {
                 case true:
                 {
-                    StartNextRound?.Invoke();
+                    AStartNextRound?.Invoke();
                     break;
                 }
                 case false:
@@ -379,7 +378,7 @@ namespace ThreeDeePongProto.Shared.Managers
             TimeSpan timespan = TimeSpan.FromSeconds(Time.time - m_matchValues.StartTime);
             m_matchValues.TotalPlaytime = (float)timespan.TotalSeconds;
 
-            LoadUpHighscores?.Invoke();
+            ALoadUpHighscores?.Invoke();
         }
 
         /// <summary>
@@ -402,7 +401,7 @@ namespace ThreeDeePongProto.Shared.Managers
             TimeSpan timespan = TimeSpan.FromSeconds(Time.time - m_matchValues.StartTime);
             m_matchValues.TotalPlaytime = (float)timespan.TotalSeconds;
 
-            LoadUpHighscores?.Invoke();
+            ALoadUpHighscores?.Invoke();
         }
 
         /// <summary>
@@ -495,7 +494,7 @@ namespace ThreeDeePongProto.Shared.Managers
         #region CallbackContexts
         private void PauseAndTimeScale(string _actionMap)
         {
-            if (_actionMap == m_uiActionMap)
+            if (_actionMap == EInputActionMaps.UserInterface.ToString())
                 SetPauseAndTimeScale(true);
         }
         #endregion

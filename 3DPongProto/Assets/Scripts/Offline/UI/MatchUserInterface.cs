@@ -53,14 +53,14 @@ namespace ThreeDeePongProto.Offline.UI
 
             Ball.HitGoalOne += UpdateUserInterface;
             Ball.HitGoalTwo += UpdateUserInterface;
-            LocalMatchManager.StartNextRound += UpdateUserInterface;
+            LocalMatchManager.AStartNextRound += UpdateUserInterface;
         }
 
         private void OnDisable()
         {
             Ball.HitGoalOne -= UpdateUserInterface;
             Ball.HitGoalTwo -= UpdateUserInterface;
-            LocalMatchManager.StartNextRound -= UpdateUserInterface;
+            LocalMatchManager.AStartNextRound -= UpdateUserInterface;
         }
 
         private IEnumerator Start()
