@@ -33,8 +33,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private CameraManager m_cameraManager;
 
-        private const string m_keyboardMouseScheme = "KeyboardMouse", m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3", m_keyboardDevice = "Keyboard";
-        private const string m_gamePadScheme = "Gamepad", m_gamePadSchemePID0 = "GamepadPlayerID0", m_gamePadSchemePID1 = "GamepadPlayerID1", m_gamePadSchemePID2 = "GamepadPlayerID2", m_gamePadSchemePID3 = "GamepadPlayerID3", m_gamepadDevice = "Gamepad";
+        private const string m_keyboardMouseScheme = "KeyboardMouse"/*, m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3"*/, m_keyboardDevice = "Keyboard";
+        private const string m_gamePadScheme = "Gamepad"/*, m_gamePadSchemePID0 = "GamepadPlayerID0", m_gamePadSchemePID1 = "GamepadPlayerID1", m_gamePadSchemePID2 = "GamepadPlayerID2", m_gamePadSchemePID3 = "GamepadPlayerID3"*/, m_gamepadDevice = "Gamepad";
 
         #region Scriptable Variables
         [SerializeField] private GraphicUIStates m_graphicUiStates;
@@ -73,7 +73,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             CharacterInputHandler.ASendMousePosition += NewMousePosition;
         }
 
-        #region Custom-Methods
         private void Update()
         {
             SelectCameraToZoom(m_mousePosition);
@@ -88,6 +87,12 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 FollowSmoothly();
 
             UpdateZoomPosition();
+        }
+
+        #region Custom-Methods
+        public void SetPlayerID(int _playerID)
+        {
+            m_playerID = _playerID;
         }
 
         private void MaxSideMovement()
@@ -262,11 +267,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                         m_currentHeight = m_maximalHeight;
                 }
             }
-        }
-
-        public void SetPlayerID(int _playerID)
-        {
-            m_playerID = _playerID;
         }
         #endregion
     }

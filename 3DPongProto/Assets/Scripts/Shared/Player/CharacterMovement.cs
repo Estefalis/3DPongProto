@@ -22,12 +22,12 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         [SerializeField] private ELerpCategory m_elerpCategory = ELerpCategory.FloatZ;
 
         [Header("Movement")]
-        [SerializeField, Range(1.0f, 20.0f)] private float m_moveSpeed = 10.0f;
+        //[SerializeField, Range(1.0f, 20.0f)] private float m_moveSpeed = 10.0f;
         private float m_maxSideMovement;
         private Vector3 m_moveVector;
 
         [Header("Rotation")]
-        [SerializeField, Range(1.0f, 5.0f)] protected float m_rotationSpeed = 2.5f;
+        //[SerializeField, Range(1.0f, 5.0f)] protected float m_rotationSpeed = 2.5f;
         [SerializeField] private float m_maxRotationAngle = 45.0f; //Maximum angle (±45 degrees).
         private readonly float m_baseRotationSpeed = 100.0f;
         internal Vector2 m_rotationVector;
@@ -46,6 +46,9 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private int m_playerID;
 
         private Vector3 m_rbPushStartPos;
+        private PlayerSOData m_ownPlayerSOData;
+        private ControlUIStates m_ownControlUIStates;
+        private ControlUIValues m_ownControlUIValues;
 
         private void Awake()
         {
@@ -55,9 +58,11 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void OnEnable()
         {
-            SetPlayerRotation(m_playerID);
-
+            //SetPlayerRotation(m_playerID);
             m_isPushing = false;
+
+            Ball.HitGoalOne += ResetPlayerRotationOnGoal;
+            Ball.HitGoalTwo += ResetPlayerRotationOnGoal;
         }
 
         private void OnDisable()
@@ -65,22 +70,19 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (m_audioSource != null)
                 AudioManager.LetsRemoveAudioSources(m_audioSource);
 
-            Ball.HitGoalOne -= ResetPlayerRotation;
-            Ball.HitGoalTwo -= ResetPlayerRotation;
+            Ball.HitGoalOne -= ResetPlayerRotationOnGoal;
+            Ball.HitGoalTwo -= ResetPlayerRotationOnGoal;
         }
 
         private void Start()
         {
-            m_maxPushDistance = m_playerController.m_matchManager.m_maxPushDistance;
+            m_maxPushDistance = m_playerController.m_localMatchManager.m_maxPushDistance;
             var adjustedPushTarget = m_initialRbRotation.y != 0 ? m_rigidbody.transform.position.z - m_maxPushDistance : m_rigidbody.transform.position.z + m_maxPushDistance;
             //Sets PushTarget Position with 'm_maxPushDistance'.
             m_pushTarget.transform.position = new Vector3(0.0f, m_pushTarget.transform.position.y, adjustedPushTarget);
 
             if (m_audioSource != null)
                 AudioManager.LetsRegisterAudioSources(m_audioSource);
-
-            Ball.HitGoalOne += ResetPlayerRotation;
-            Ball.HitGoalTwo += ResetPlayerRotation;
         }
 
         private void LateUpdate()   //Either in Update() or LateUpdate()!
@@ -105,31 +107,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             HandleRotation();
         }
 
-        /// <summary>
-        /// Rotations of top parent Transform and Rigidbody need to be adjusted to move correct, depending on positive or negative Z-values.
-        /// </summary>
-        /// <param name="_playerId"></param>
-        private void SetPlayerRotation(int _playerId)
-        {
-            Quaternion playerRotation = (_playerId % 2 == 0) ? Quaternion.Euler(0, 0, 0) : Quaternion.Euler(0, 180, 0);
-            m_playerController.transform.rotation = playerRotation;
-            m_rigidbody.transform.rotation = playerRotation;
-            m_rigidbody.transform.localRotation = playerRotation;    //Sets y-rotation of all players to 0.
-            m_initialRbRotation = playerRotation;
-        }
-
-        private void ResetPlayerRotation()
-        {
-            switch (m_playerController.m_matchUIStates.RotationReset)
-            {
-                case true:
-                    m_rigidbody.transform.localRotation = m_initialRbRotation;
-                    break;
-                case false:
-                    break;
-            }
-        }
-
         #region Movement
         internal void SetInputVector(Vector2 _inputVector, int _receivedID, bool _isRotation)
         {
@@ -149,14 +126,14 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void HandleMovement()
         {
-            var xInvert = GetInversion(m_playerController.m_controlUIStates.InvertXAxis);
+            var xInvert = GetInversion(m_ownControlUIStates.InvertXAxis);
 
             //Move the player relativ to the local Transform-Direction.
             Vector3 rightMovement = m_moveVector.x * xInvert * transform.right;
             Vector3 forwardMovement = m_moveVector.y * m_rigidbody.transform.forward;
 
             //Combined Movement.
-            Vector3 adjustedMoveVector = (rightMovement + forwardMovement).normalized * (m_moveSpeed * Time.fixedDeltaTime);
+            Vector3 adjustedMoveVector = (rightMovement + forwardMovement).normalized * (m_ownControlUIValues.LastXMoveSpeed * Time.fixedDeltaTime);
             m_rigidbody.MovePosition(m_rigidbody.transform.position + adjustedMoveVector);
         }
 
@@ -193,11 +170,11 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         #region Rotation        
         private void HandleRotation()
         {
-            var yInvert = GetInversion(m_playerController.m_controlUIStates.InvertYAxis);
+            var yInvert = GetInversion(m_ownControlUIStates.InvertYAxis);
             Vector3 rotationVector = new(0.0f, m_rotationVector.x, 0.0f); //'Quaternion.Euler' requires a Vector3 for multiplication.
 
             //Calculate rotation based on input.
-            m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeed * Time.fixedDeltaTime * (rotationVector * yInvert)).normalized;
+            m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_ownControlUIValues.LastYRotSpeed * Time.fixedDeltaTime * (rotationVector * yInvert)).normalized;
 
             //Apply rotation.
             Quaternion newRotation = m_rigidbody.rotation * m_deltaRotation;
@@ -221,14 +198,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 //Start pushing.
                 m_isPushing = true;
             }
-        }
-
-        internal void ResetPlayerRotation(int _receivedID)
-        {
-            if (_receivedID != m_playerID)
-                return;
-
-            m_rigidbody.transform.localRotation = m_initialRbRotation;
         }
 
         private IEnumerator HandlePush()
@@ -330,7 +299,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         }
         #endregion
 
-        #region Helper-Methods
+        #region Delegate-Methods
         private float GetPaddleWidthAdjustment()
         {
             return m_playerController.m_matchValues != null ? m_playerController.m_matchValues.PaddleWidthAdjustment : 0.0f;
@@ -340,11 +309,53 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             return _invertAxis ? -1.0f : 1.0f;
         }
+        #endregion
 
         public void SetPlayerID(int _playerID)
         {
             m_playerID = _playerID;
+            SetPlayerRotation(m_playerID);
+
+            if (m_playerController.m_controlUIStates[m_playerID] != null && m_playerController.m_controlUIValues[m_playerID] != null)
+            {
+                m_ownControlUIStates = m_playerController.m_controlUIStates[m_playerID];
+                m_ownControlUIValues = m_playerController.m_controlUIValues[m_playerID];
+            }
+            else
+                Debug.LogError("ERROR! Could not load from Scriptable Objects!");
         }
-        #endregion
+
+        /// <summary>
+        /// Rotations of top parent Transform and Rigidbody need to be adjusted to move correct, depending on positive or negative Z-values.
+        /// </summary>
+        /// <param name="_playerId"></param>
+        private void SetPlayerRotation(int _playerId)
+        {
+            Quaternion playerRotation = (_playerId % 2 == 0) ? Quaternion.Euler(0, 0, 0) : Quaternion.Euler(0, 180, 0);
+            m_playerController.transform.rotation = playerRotation;
+            m_rigidbody.transform.rotation = playerRotation;
+            m_rigidbody.transform.localRotation = playerRotation;    //Sets y-rotation of all players to 0.
+            m_initialRbRotation = playerRotation;
+        }
+
+        internal void ResetPlayerRotation(int _receivedID)
+        {
+            if (_receivedID != m_playerID)
+                return;
+
+            m_rigidbody.transform.localRotation = m_initialRbRotation;
+        }
+
+        private void ResetPlayerRotationOnGoal()
+        {
+            switch (m_playerController.m_matchUIStates.RotationReset)
+            {
+                case true:
+                    m_rigidbody.transform.localRotation = m_initialRbRotation;
+                    break;
+                case false:
+                    break;
+            }
+        }
     }
 }

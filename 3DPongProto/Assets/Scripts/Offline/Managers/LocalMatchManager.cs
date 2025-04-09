@@ -61,6 +61,7 @@ namespace ThreeDeePongProto.Shared.Managers
         private Vector3 m_ballPopPos;
 
         #region Properties-Access
+        internal Transform PrefabParent { get => m_prefabParent; }
         public float DefaultBackLineDistance { get => m_minimalBackLineDistance; }
         public float DefaultFrontLineDistance { get => m_minimalFrontLineDistance; }
         public float DefaultFieldWidth { get => m_playGroundWidth; }
@@ -74,7 +75,7 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         #region Actions
-        internal static event Action<Transform> AGroundInstantiated;
+        //internal static event Action<Transform> AGroundInstantiated;
         internal static event Action AStartNextRound;
         internal static event Action AStartWinProcedure;
         internal static event Action ALoadUpHighscores;
@@ -316,9 +317,10 @@ namespace ThreeDeePongProto.Shared.Managers
             Instantiate(m_playGround, Vector3.zero, Quaternion.Euler(0, 0, 0), m_prefabParent);
             uint playerCount = (uint)m_matchUIStates.EPlayerAmount;
 
+            //TODO: 'CharacterMovement.SetPlayerRotation' instantiates the playerPrefab. 'playerIndex' needed to spawn from SO.
             //for (int playerIndex = 0; playerIndex < playerCount; playerIndex++)
             //    Instantiate(m_matchValues.PlayerSOData[playerIndex].Prefab, m_prefabParent);
-            AGroundInstantiated?.Invoke(m_prefabParent);
+            //AGroundInstantiated?.Invoke(m_prefabParent);
             Instantiate(m_ballPrefab, m_ballPopPos, Quaternion.Euler(0, 0, 0), m_prefabParent);
         }
         #endregion
@@ -493,9 +495,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 }
             }
         }
-        #endregion
 
-        #region CallbackContexts
         private void PauseAndTimeScale(string _actionMap)
         {
             if (_actionMap == EInputActionMaps.UserInterface.ToString())

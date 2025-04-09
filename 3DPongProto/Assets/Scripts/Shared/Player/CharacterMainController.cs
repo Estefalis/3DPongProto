@@ -13,23 +13,24 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         [SerializeField] internal CharacterHealth m_playerHealth;
         [SerializeField] internal CharacterCameraController m_playerCameraController;
 
-        private UserInputManager m_userInputManager;
-        internal LocalMatchManager m_matchManager;
+        //private UserInputManager m_userInputManager;
+        internal LocalMatchManager m_localMatchManager;
 
-        [Header("Player Details")]
-        [SerializeField] private int m_playerID;
+        //[Header("Player Details")]
+        //[SerializeField] private int m_playerID;
         [SerializeField] protected bool m_defaultFrontLineUp;
 
         #region Scriptable References
         [Header("Scriptable References")]
-        [SerializeField] internal PlayerSOData m_playerSOData;
-        [SerializeField] internal ControlUIStates m_controlUIStates;
-        [SerializeField] internal ControlUIValues m_controlUIValues;
+        [SerializeField] internal PlayerSOData[] m_playerSODatas;
+        [SerializeField] internal ControlUIStates[] m_controlUIStates;
+        [SerializeField] internal ControlUIValues[] m_controlUIValues;
         [SerializeField] internal MatchUIStates m_matchUIStates;
         [SerializeField] internal MatchValues m_matchValues;
         [SerializeField] internal BasicFieldValues m_basicFieldValues;
         #endregion
 
+        private int m_setPlayerID = -1;
         internal float m_groundWidth, m_groundLength;
         internal float m_goalDistance;
         internal float m_maxPushDistance;
@@ -39,20 +40,12 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void Awake()
         {
-            m_userInputManager = FindObjectOfType<UserInputManager>();
-            m_matchManager = FindObjectOfType<LocalMatchManager>();
-
-            //Find all Components, that require the ID through Interface.
-            IProvidePlayerID[] idReceivers = GetComponentsInChildren<IProvidePlayerID>();
-
-            //Submit the playerID to each Script.
-            foreach (var receiver in idReceivers)
-                receiver.SetPlayerID(m_playerID);
-
-            m_playerSOData.PlayerId = m_playerID;
+            //m_userInputManager = FindObjectOfType<UserInputManager>();
+            m_localMatchManager = FindObjectOfType<LocalMatchManager>();
+            transform.SetParent(m_localMatchManager.PrefabParent);
 
             GetFieldDetails();
-            GetPlayerDetails();
+            //GetPlayerDetails();
         }
 
         private void Update()
@@ -61,7 +54,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             {
                 m_inputDisabled = true;
                 StartCoroutine(GetNewInputHandler());
-                //InvokeRepeating(nameof(GetNewInputHandler), 1.0f, 2.0f);
             }
         }
 
@@ -69,8 +61,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             if (m_matchValues == null)
             {
-                m_groundWidth = m_matchManager.DefaultFieldWidth;
-                m_groundLength = m_matchManager.DefaultFieldLength;
+                m_groundWidth = m_localMatchManager.DefaultFieldWidth;
+                m_groundLength = m_localMatchManager.DefaultFieldLength;
             }
             else
             {
@@ -79,26 +71,26 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             }
         }
 
-        private void GetPlayerDetails()
+        internal void GetPlayerDetails()
         {
-            if (m_playerSOData == null ^ m_matchValues == null)
+            if (m_playerSODatas[m_setPlayerID] == null ^ m_matchValues == null)
             {
                 switch (m_defaultFrontLineUp)
                 {
                     case true:
-                        m_goalDistance = m_matchManager.DefaultFrontLineDistance;
+                        m_goalDistance = m_localMatchManager.DefaultFrontLineDistance;
                         break;
                     case false:
-                        m_goalDistance = m_matchManager.DefaultBackLineDistance;
+                        m_goalDistance = m_localMatchManager.DefaultBackLineDistance;
                         break;
                 }
 
-                m_maxPushDistance = m_matchManager.MaxPushDistance;
-                m_localPaddleScale = m_matchManager.DefaultPaddleScale;
+                m_maxPushDistance = m_localMatchManager.MaxPushDistance;
+                m_localPaddleScale = m_localMatchManager.DefaultPaddleScale;
             }
             else
             {
-                switch (m_playerSOData.PlayerOnFrontline)
+                switch (m_playerSODatas[m_setPlayerID].PlayerOnFrontline)
                 {
                     case true:
                         m_goalDistance = m_basicFieldValues.MinFrontLineDistance + m_basicFieldValues.FrontlineAdjustment + m_basicFieldValues.BacklineAdjustment;
@@ -113,26 +105,35 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             }
         }
 
-        public void ReceivePlayerID(int _playerID)
+        internal void ReceivePlayerID(int _playerID)
         {
-            m_playerID = _playerID;
+            m_setPlayerID = _playerID;
 
             //Find all Components, that require the ID through Interface.
             IProvidePlayerID[] idReceivers = GetComponentsInChildren<IProvidePlayerID>();
 
             //Submit the playerID to each Script.
             foreach (var receiver in idReceivers)
-                receiver.SetPlayerID(m_playerID);
+            {
+                receiver.SetPlayerID(m_setPlayerID);
+            }
 
+            GetPlayerDetails();
+#if UNITY_EDITOR
             Debug.Log($"Player is now set to ID Nr. {_playerID}.");
+#endif
         }
 
+        /// <summary>
+        /// Get a new CharacterInputHandler script, if the old version has to be replaced.
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator GetNewInputHandler()
         {
             while (m_playerInputHandler == null)
             {
                 m_playerInputHandler = GetComponentInChildren<CharacterInputHandler>();
-                yield return new WaitForSeconds(1.0f); 
+                yield return new WaitForSeconds(1.0f);
             }
             //If a new 'CharacterInputHandler'-Script is found.
             m_inputDisabled = false;

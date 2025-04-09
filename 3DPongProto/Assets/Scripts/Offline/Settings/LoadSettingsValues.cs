@@ -13,8 +13,8 @@ namespace ThreeDeePongProto.Shared.Settings
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
         [Space]
-        [SerializeField] private ControlUIStates[] m_controlUIStatesEP;
-        [SerializeField] private ControlUIValues[] m_controlUIValuesEP;
+        [SerializeField] private ControlUIStates[] m_controlUIStates;
+        [SerializeField] private ControlUIValues[] m_controlUIValues;
         #endregion
 
         #region Serialization
@@ -94,27 +94,27 @@ namespace ThreeDeePongProto.Shared.Settings
 
         private void LoadControlSettings()
         {
-            for (int i = 0; i < m_controlUIStatesEP.Length; i++)
+            for (int i = 0; i < m_controlUIStates.Length; i++)
             {
-                if (m_controlUIStatesEP[i] != null)
+                if (m_controlUIStates[i] != null)
                 {
                     ControlUISettingsStates controlUISettingsStates = m_persistentData.LoadData<ControlUISettingsStates>(m_settingStatesFolderPath, m_controlFileName + $"{i}", m_fileFormat, m_encryptionEnabled);
 
-                    m_controlUIStatesEP[i].InvertXAxis = controlUISettingsStates.InvertXAxis;
-                    m_controlUIStatesEP[i].InvertYAxis = controlUISettingsStates.InvertYAxis;
-                    m_controlUIStatesEP[i].CustomXSensitivity = controlUISettingsStates.CustomXSensitivity;
-                    m_controlUIStatesEP[i].CustomYSensitivity = controlUISettingsStates.CustomYSensitivity;
+                    m_controlUIStates[i].InvertXAxis = controlUISettingsStates.InvertXAxis;
+                    m_controlUIStates[i].InvertYAxis = controlUISettingsStates.InvertYAxis;
+                    m_controlUIStates[i].CustomXSensitivity = controlUISettingsStates.CustomXSensitivity;
+                    m_controlUIStates[i].CustomYSensitivity = controlUISettingsStates.CustomYSensitivity;
                 }
             }
 
-            for (int i = 0; i < m_controlUIValuesEP.Length; i++)
+            for (int i = 0; i < m_controlUIValues.Length; i++)
             {
-                if (m_controlUIValuesEP[i] != null)
+                if (m_controlUIValues[i] != null)
                 {
                     ControlUISettingsValues controlUISettingsValues = m_persistentData.LoadData<ControlUISettingsValues>(m_settingsValuesFolderPath, m_controlFileName + $"{i}", m_fileFormat, m_encryptionEnabled);
 
-                    m_controlUIValuesEP[i].LastXMoveSpeed = controlUISettingsValues.LastXMoveSpeed;
-                    m_controlUIValuesEP[i].LastYRotSpeed = controlUISettingsValues.LastYRotSpeed;
+                    m_controlUIValues[i].LastXMoveSpeed = controlUISettingsValues.LastXMoveSpeed;
+                    m_controlUIValues[i].LastYRotSpeed = controlUISettingsValues.LastYRotSpeed;
                 }
             }
         }

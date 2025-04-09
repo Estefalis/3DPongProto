@@ -9,14 +9,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
 using UnityEngine.SceneManagement;
-
-internal enum ESceneNames
-{
-    StartMenu = 0,
-    LocalGame = 1,
-    LanGame = 2,
-    NetGame = 3
-}
+//Moved to NewUserInputManager!
+//internal enum ESceneNames
+//{
+//    StartMenu = 0,
+//    LocalGame = 1,
+//    LanGame = 2,
+//    NetGame = 3
+//}
 
 //internal enum EPlayerMenuControl
 //{
@@ -28,12 +28,12 @@ internal enum ESceneNames
 //    HostPlayer,
 //}
 
-internal enum EInputActionMaps
-{
-    None,
-    PlayerActions,
-    UserInterface
-}
+//internal enum EInputActionMaps
+//{
+//    None,
+//    PlayerActions,
+//    UserInterface
+//}
 
 namespace ThreeDeePongProto.Shared.Managers
 {
@@ -97,7 +97,7 @@ namespace ThreeDeePongProto.Shared.Managers
         private void OnEnable()
         {
             InputSystem.onDeviceChange += OnDeviceChange;
-            LocalMatchManager.AGroundInstantiated += SpawnLocalPlayers;
+            //LocalMatchManager.AGroundInstantiated += SpawnLocalPlayers;
             SceneManager.sceneLoaded += OnSceneManagerLoaded;
             MenuManager.AReLoadScene += OnReLoadScene;
         }
@@ -105,7 +105,7 @@ namespace ThreeDeePongProto.Shared.Managers
         private void OnDisable()
         {
             InputSystem.onDeviceChange -= OnDeviceChange;
-            LocalMatchManager.AGroundInstantiated -= SpawnLocalPlayers;
+            //LocalMatchManager.AGroundInstantiated -= SpawnLocalPlayers;
             SceneManager.sceneLoaded -= OnSceneManagerLoaded;
             MenuManager.AReLoadScene -= OnReLoadScene;
         }
