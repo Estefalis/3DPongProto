@@ -3712,15 +3712,7 @@ MonoBehaviour:
       m_Id: 189c8586-cddc-4683-afb5-add69a33c2ae
       m_Processors: 
       m_Interactions: 
-      m_SingletonActionBindings:
-      - m_Name: 
-        m_Id: 11af2f71-6221-458f-96a2-6526ac0679a9
-        m_Path: 
-        m_Interactions: 
-        m_Processors: 
-        m_Groups: 
-        m_Action: Join
-        m_Flags: 0
+      m_SingletonActionBindings: []
       m_Flags: 0
     m_Reference: {fileID: 0}
   m_PlayerPrefab: {fileID: 1514124386352258763, guid: ba00057dcc1283d429076dee8979ce96,
