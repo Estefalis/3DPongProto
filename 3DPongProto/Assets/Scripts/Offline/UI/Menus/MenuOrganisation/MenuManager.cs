@@ -92,7 +92,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             m_inputActions.UserInterface.CloseGameMenu.performed += CloseMenu;
             AResumeTheGame += OnResumeTheGame;
-            UserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
+            NewUserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
         }
 
         private void OnDisable()
@@ -100,7 +100,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_uiActionMap.Disable();
             m_inputActions.UserInterface.CloseGameMenu.performed -= CloseMenu;
             AResumeTheGame -= OnResumeTheGame;
-            UserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
+            NewUserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
         }
 
         private void OnDestroy()
@@ -108,7 +108,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_inputActions.Disable();
             m_inputActions.UserInterface.CloseGameMenu.performed -= CloseMenu;
             AResumeTheGame -= OnResumeTheGame;
-            UserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
+            NewUserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
         }
 
         private void Start()
@@ -130,7 +130,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             if (m_firstElement.gameObject.activeInHierarchy)
             {
-                UserInputManager.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
+                NewUserInputManager.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
                 m_firstElement.gameObject.SetActive(false);
             }
         }
@@ -359,7 +359,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (sceneIndex == (int)ESceneNames.StartMenu)   //TODO: Add other 'menoOnly' Scenes.
                 return;
 
-            if (m_firstElement.gameObject.activeInHierarchy && UserInputManager.SetActionMap == EInputActionMaps.UserInterface.ToString())
+            if (m_firstElement.gameObject.activeInHierarchy && NewUserInputManager.SetActionMap == EInputActionMaps.UserInterface.ToString())
                 AResumeTheGame?.Invoke();
         }
     }

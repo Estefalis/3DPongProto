@@ -51,6 +51,10 @@ namespace ThreeDeePongProto.Shared.Managers
         [SerializeField] private MatchValues m_matchValues;
         #endregion
 
+        private static EInputActionMaps m_newActiveActionMap = EInputActionMaps.None;
+        internal static string SetActionMap { get => m_lastActionMap; }
+        private static string m_lastActionMap;
+
         #region Lists_and_Dictionaries
         List<InputDevice> m_availableGamepads;
         #endregion
@@ -59,8 +63,6 @@ namespace ThreeDeePongProto.Shared.Managers
         internal static event Action<string> AChangeActiveActionMap;    //Announce cheme switch, so PlayerInput components can react.
         #endregion
 
-        private static EInputActionMaps m_newActiveActionMap = EInputActionMaps.None;
-        private static string m_lastActionMap;
         private const string m_keyboardMouseScheme = "KeyboardMouse";
         private const string m_gamePadScheme = "Gamepad";
 
@@ -220,16 +222,18 @@ namespace ThreeDeePongProto.Shared.Managers
                             m_availableGamepads.Add(devicesToPair[0]);
                         continue;
                     }
-
-                    Debug.Log($"Player {playerIndex} joins with '{controlScheme}' and device(s): {string.Join(", ", devicesToPair.Select(d => d.displayName))} via .JoinPlayer.");
+#if UNITY_EDITOR
+                    //Debug.Log($"Player {playerIndex} joins with '{controlScheme}' and device(s): {string.Join(", ", devicesToPair.Select(d => d.displayName))} via .JoinPlayer.");
+#endif
                     PlayerInput joinedPlayerInput = m_playerInputManager.JoinPlayer(playerIndex, -1, controlScheme, devicesToPair);
                     //Transform prefabParent = GetComponent<LocalMatchManager>().PrefabParent;
                     //joinedPlayerInput.gameObject.transform.SetParent(prefabParent);
 
                     if (joinedPlayerInput != null)
                     {
-                        Debug.Log($"Player {playerIndex} joined succesfully. GameObject: {joinedPlayerInput.gameObject.name}, PlayerInput Index: {joinedPlayerInput.playerIndex}, PlayerInput UserID: {joinedPlayerInput.user.id}");
-
+#if UNITY_EDITOR
+                        //Debug.Log($"Player {playerIndex} joined succesfully. GameObject: {joinedPlayerInput.gameObject.name}, PlayerInput Index: {joinedPlayerInput.playerIndex}, PlayerInput UserID: {joinedPlayerInput.user.id}");
+#endif
                         //Pass PlayerID to CharacterMainController script.
                         if (joinedPlayerInput.TryGetComponent<CharacterMainController>(out var playerController))
                         {

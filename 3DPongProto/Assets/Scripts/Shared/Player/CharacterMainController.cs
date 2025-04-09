@@ -120,7 +120,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
             GetPlayerDetails();
 #if UNITY_EDITOR
-            Debug.Log($"Player is now set to ID Nr. {_playerID}.");
+            //Debug.Log($"Player is now set to ID Nr. {_playerID}.");
 #endif
         }
 

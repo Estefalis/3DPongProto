@@ -41,7 +41,7 @@ namespace ThreeDeePongProto.Shared.UI
 
         public void StartMatch()
         {
-            UserInputManager.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
+            NewUserInputManager.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
 
             switch (m_matchUIStates.EGameConnectModi)
             {

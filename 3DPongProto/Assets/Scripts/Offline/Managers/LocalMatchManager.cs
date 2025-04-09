@@ -116,7 +116,7 @@ namespace ThreeDeePongProto.Shared.Managers
             AStartNextRound += LetsStartNextRound;
             AStartWinProcedure += LetsStartWinProcedure;
 
-            UserInputManager.AChangeActiveActionMap += PauseAndTimeScale;
+            NewUserInputManager.AChangeActiveActionMap += PauseAndTimeScale;
         }
 
         private void OnDisable()
@@ -137,7 +137,7 @@ namespace ThreeDeePongProto.Shared.Managers
             AStartNextRound -= LetsStartNextRound;
             AStartWinProcedure -= LetsStartWinProcedure;
 
-            UserInputManager.AChangeActiveActionMap -= PauseAndTimeScale;
+            NewUserInputManager.AChangeActiveActionMap -= PauseAndTimeScale;
         }
 
         #region Custom-Methods
