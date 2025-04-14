@@ -38,7 +38,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void OnDestroy()
         {
             m_inputActions.UserInterface.CloseGameMenu.performed -= OnCloseGameMenu;
+#if UNITY_EDITOR
             Debug.Log("Disabling Maps and InputActions onDestroy.");
+#endif
             m_inputActions?.Disable();
         }
 
@@ -114,7 +116,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             GameObject selectedObject = m_eventSystem.currentSelectedGameObject;
 #if UNITY_EDITOR
-            Debug.Log($"Executing manual Submit to: {selectedObject.name}.");
+            //Debug.Log($"Executing manual Submit to: {selectedObject.name}.");
 #endif
             ExecuteEvents.Execute(selectedObject, new BaseEventData(m_eventSystem), ExecuteEvents.submitHandler);
             m_nextMoveTime = Time.unscaledTime + m_navigationInitialDelay;  //navigationDelay.
@@ -138,7 +140,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             else if (m_menuManager != null) //Fallback to previous element.
             {
 #if UNITY_EDITOR
-                Debug.Log("Going back to previous Element, because no Cancel-Handler is found.");
+                //Debug.Log("Going back to previous Element, because no Cancel-Handler is found.");
 #endif
                 m_menuManager.CloseToPreviousElement();
             }
@@ -192,9 +194,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 }
             }
             //Try to get the default element from MenuManager, if nothing is selected.
-            else if (Mathf.Abs(_navInput.x) < 0.1f && Mathf.Abs(_navInput.y) < 0.1f && m_menuManager.m_firstElement != null)
+            else if (Mathf.Abs(_navInput.x) < 0.1f && Mathf.Abs(_navInput.y) < 0.1f)
             {
-                m_menuManager.SetNavigationGameObject(m_menuManager.m_firstElement);
                 m_isHoldingNavigation = false;
             }
             else
@@ -208,17 +209,22 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (m_inputActions == null)
                 return;
 
-            m_navigateAction?.Enable();
-            m_submitAction?.Enable();
-            m_cancelAction?.Enable();
+            //Activate global UI-Map (for manual Logic and UI-Module)
+            m_inputActions.UserInterface.Enable();
 
-            //Menu active == Player inactive and vice versa.
-            m_inputActions.PlayerActions.Disable();
-
-            // if (defaultSelectedElement != null && eventSystem.currentSelectedGameObject == null)
-            // {
-            //     eventSystem.SetSelectedGameObject(defaultSelectedElement);
-            // }
+            foreach (PlayerInput pi in PlayerInput.all) //Get all active PlayerInput Instances.
+            {
+                var playerActionsMap = pi.actions.FindActionMap("PlayerActions");   //Find PlayerActions-Map of this Instance.
+                var uiActionsMap = pi.actions.FindActionMap("UserInterface");
+                if (playerActionsMap != null && playerActionsMap.enabled)
+                {
+                    uiActionsMap.Enable();
+                    playerActionsMap.Disable();
+#if UNITY_EDITOR
+                    Debug.Log($"PlayerActions Map deaktiviert für Spieler-Objekt: {pi.gameObject.name}");
+#endif
+                }
+            }
 
             //Reset Navigation Delay Timer.
             m_nextMoveTime = Time.unscaledTime + m_navigationInitialDelay;
@@ -230,11 +236,22 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (m_inputActions == null)
                 return;
 
-            m_navigateAction?.Disable();
-            m_submitAction?.Disable();
-            m_cancelAction?.Disable();
+            m_inputActions.UserInterface.Disable();
 
-            //m_inputActions.PlayerActions.Enable();    //DON'T!
+            //Activate PlayerActions-Map on all Player Instances.
+            foreach (PlayerInput pi in PlayerInput.all)
+            {
+                var playerActionsMap = pi.actions.FindActionMap("PlayerActions");    //Find PlayerActions-Map of this Instance.
+                var uiActionsMap = pi.actions.FindActionMap("UserInterface");
+                if (playerActionsMap != null)
+                {
+                    uiActionsMap.Disable();
+                    pi.SwitchCurrentActionMap("PlayerActions");
+#if UNITY_EDITOR
+                    Debug.Log($"PlayerActions Map wieder aktiviert für Spieler-Objekt: {pi.gameObject.name}");
+#endif
+                }
+            }
         }
 
         private void OnCloseGameMenu(InputAction.CallbackContext _callbackContext)
