@@ -115,12 +115,12 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (_actionMap == EInputActionMaps.UserInterface.ToString())
             {
                 m_playerMap.Disable();
-                m_playerInput.SwitchCurrentActionMap(EInputActionMaps.UserInterface.ToString());
+                //m_playerInput.SwitchCurrentActionMap(EInputActionMaps.UserInterface.ToString());
             }
             else if (_actionMap == EInputActionMaps.PlayerActions.ToString())
             {
                 m_playerMap.Enable();
-                m_playerInput.SwitchCurrentActionMap(EInputActionMaps.PlayerActions.ToString());
+                //m_playerInput.SwitchCurrentActionMap(EInputActionMaps.PlayerActions.ToString());
             }
         }
 

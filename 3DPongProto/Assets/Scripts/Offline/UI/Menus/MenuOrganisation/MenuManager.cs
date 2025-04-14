@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using ThreeDeePongProto.Shared.InputActions;
 using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -12,19 +10,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 {
     public class MenuManager : MonoBehaviour
     {
-        [Header("InputActions")]
-        private PlayerInputActions m_inputActions;
+        private MenuInputHandler m_menuInputHandler;
 
-        private InputActionMap m_uiActionMap;
-        private InputActionMap m_playerActionMap;
-
-        //private UserInputManager m_userInputManager;
         [SerializeField] internal EventSystem m_eventSystem;
 
         #region MenuNavigation
         #region Select First Elements by using the EventSystem.
         [Header("Select First Elements")]
-        [SerializeField] private Transform m_firstElement;
+        [SerializeField] internal Transform m_firstElement;
         private readonly Stack<Transform> m_activeElement = new();
         [Space]
 
@@ -54,7 +47,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] private Button m_hiddenFinishButton;
 
         internal static event Action AResumeTheGame;          //LocalMatchManager unpauses the Game.
-        internal static event Action<int> AReLoadScene;       //UserInputManager with central SceneManager.LoadScene().
+        internal static event Action<int> AReLoadScene;       //(New)UserInputManager with central SceneManager.LoadScene().
         internal static event Action AEndInfiniteMatch;
         #endregion
 
@@ -66,21 +59,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void Awake()
         {
-            //m_userInputManager = FindObjectOfType<UserInputManager>();
-            m_inputActions = new PlayerInputActions();
-
-            if (m_inputActions == null)
-            {
-                Debug.LogError("Unable to instantiate PlayerInputActions!", this);
-                enabled = false;
-                return;
-            }
-
-            m_uiActionMap = m_inputActions.UserInterface;
-            m_playerActionMap = m_inputActions.PlayerActions;
-            m_uiActionMap.Disable();
-            m_playerActionMap.Disable();
-
+            m_menuInputHandler = FindObjectOfType<MenuInputHandler>();
+            
             m_lastSelectedGameObject = null;
             m_selectedElement.Clear();
 
@@ -90,23 +70,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnEnable()
         {
-            m_inputActions.UserInterface.CloseGameMenu.performed += CloseMenu;
+            //m_inputActions.UserInterface.OnCloseGameMenu.performed += CloseMenu;
             AResumeTheGame += OnResumeTheGame;
             NewUserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
         }
 
         private void OnDisable()
         {
-            m_uiActionMap.Disable();
-            m_inputActions.UserInterface.CloseGameMenu.performed -= CloseMenu;
             AResumeTheGame -= OnResumeTheGame;
             NewUserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
         }
 
         private void OnDestroy()
         {
-            m_inputActions.Disable();
-            m_inputActions.UserInterface.CloseGameMenu.performed -= CloseMenu;
             AResumeTheGame -= OnResumeTheGame;
             NewUserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
         }
@@ -163,20 +139,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 SetNavigationGameObject(m_firstElement);
             }
 
-            if (m_inputActions == null)
-                return;
-
-            m_uiActionMap.Enable();
-            m_playerActionMap.Disable();
+            m_menuInputHandler.ActivateMenuInput();
         }
 
         private void OnCloseMenu()
         {
-            if (m_inputActions == null)
-                return;
-
-            m_uiActionMap.Disable();
-            m_playerActionMap.Enable();
+            AResumeTheGame?.Invoke();
+            m_menuInputHandler.DeactivateMenuInput();
         }
         #endregion
 
@@ -230,7 +199,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         /// 'm_activeElement' Stack requires a set element to start with, to prevent a null error.
         /// </summary>
         /// <param name="_firstElement"></param>
-        protected void SetFirstStackElement(Transform _firstElement)
+        private void SetFirstStackElement(Transform _firstElement)
         {
             m_activeElement.Push(_firstElement);
         }
@@ -251,9 +220,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             Transform currentElement = m_activeElement.Pop();
             currentElement.gameObject.SetActive(false);
 
+            if (m_activeElement.Count == 0)
+                SetFirstStackElement(m_firstElement);
+
             Transform previousElement = m_activeElement.Peek();
             previousElement.gameObject.SetActive(true);
-
             SetNavigationGameObject(previousElement);
         }
 
@@ -268,7 +239,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 case false:
                 {
                     GameObject selectElement = m_selectedElement[_activeTransform];
-                    m_lastSelectedGameObject = selectElement;   //Set this before the eventSystem. Else inactive Transforms lastGO stays selected.
+                    m_lastSelectedGameObject = selectElement;   //BEFORE active Transform switch, new selectElement replaces the old!
                     m_eventSystem.SetSelectedGameObject(selectElement);
                     break;
                 }
@@ -353,14 +324,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         }
         #endregion
 
-        private void CloseMenu(InputAction.CallbackContext _callbackContext)
-        {
-            var sceneIndex = SceneManager.GetActiveScene().buildIndex;
-            if (sceneIndex == (int)ESceneNames.StartMenu)   //TODO: Add other 'menoOnly' Scenes.
-                return;
+        //private void CloseMenu(InputAction.CallbackContext _callbackContext)
+        //{
+        //    var sceneIndex = SceneManager.GetActiveScene().buildIndex;
+        //    if (sceneIndex == (int)ESceneNames.StartMenu)   //TODO: Add other 'menoOnly' Scenes.
+        //        return;
 
-            if (m_firstElement.gameObject.activeInHierarchy && NewUserInputManager.SetActionMap == EInputActionMaps.UserInterface.ToString())
-                AResumeTheGame?.Invoke();
-        }
+        //    if (m_firstElement.gameObject.activeInHierarchy && NewUserInputManager.SetActionMap == EInputActionMaps.UserInterface.ToString())
+        //        AResumeTheGame?.Invoke();
+        //}
     }
 }

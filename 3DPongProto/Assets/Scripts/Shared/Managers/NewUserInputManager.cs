@@ -98,11 +98,6 @@ namespace ThreeDeePongProto.Shared.Managers
             MenuManager.AReLoadScene -= OnReLoadScene;
         }
 
-        //private void Start()
-        //{
-        //    SpawnPlayers();
-        //}
-
         #region PlayerInputManager-Configuration
         private void SetUpPlayerInputManager(PlayerInputManager _playerInputManager)
         {
@@ -196,8 +191,9 @@ namespace ThreeDeePongProto.Shared.Managers
 
             int numberOfPlayers = (m_matchValues.PlayerSOData != null && m_matchValues.PlayerSOData.Count > 0)
                                 ? m_matchValues.PlayerSOData.Count : m_defaultPlayerNumber;
-
-            Debug.Log($"Spawning {numberOfPlayers} Players...");
+#if UNITY_EDITOR
+            //Debug.Log($"Spawning {numberOfPlayers} Players...");
+#endif
 
             //Liste of available Gamepads.
             m_availableGamepads = new(Gamepad.all);
@@ -226,8 +222,6 @@ namespace ThreeDeePongProto.Shared.Managers
                     //Debug.Log($"Player {playerIndex} joins with '{controlScheme}' and device(s): {string.Join(", ", devicesToPair.Select(d => d.displayName))} via .JoinPlayer.");
 #endif
                     PlayerInput joinedPlayerInput = m_playerInputManager.JoinPlayer(playerIndex, -1, controlScheme, devicesToPair);
-                    //Transform prefabParent = GetComponent<LocalMatchManager>().PrefabParent;
-                    //joinedPlayerInput.gameObject.transform.SetParent(prefabParent);
 
                     if (joinedPlayerInput != null)
                     {
