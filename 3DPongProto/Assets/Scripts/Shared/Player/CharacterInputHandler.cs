@@ -67,7 +67,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (_playerInput.user.id != m_playerInput.user.id)
                 return;
 
-            NewUserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
+            UserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
             m_playerInput.onActionTriggered += HandleActionTriggered;
         }
 
@@ -76,7 +76,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (_playerInput.user.id != m_playerInput.user.id)
                 return;
 
-            NewUserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
+            UserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
             m_playerInput.onActionTriggered -= HandleActionTriggered;
         }
         #endregion
@@ -407,8 +407,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (!IsLocalPlayer())
                 return;
 
-            if (/*m_playerID == 0 && */NewUserInputManager.SetActionMap == EInputActionMaps.PlayerActions.ToString())
-                NewUserInputManager.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
+            if (/*m_playerID == 0 && */UserInputManager.SetActionMap == EInputActionMaps.PlayerActions.ToString())
+                UserInputManager.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
         }
         #endregion
     }

@@ -65,8 +65,16 @@ namespace ThreeDeePongProto.Shared.UI
 
         private void Awake()
         {
-            for (int i = 0; i < m_playerSOData.Length; i++)
-                ReSetPreparationUI(i);
+            if (m_playerSOData.Length > 0)
+            {
+                for (int i = 0; i < m_playerSOData.Length; i++)
+                {
+                    if (m_playerSOData[i] != null)
+                    {
+                        ReSetPreparationUI(i);
+                    }
+                }
+            }
         }
 
         private void OnEnable()
@@ -95,8 +103,9 @@ namespace ThreeDeePongProto.Shared.UI
         private void AddGroupListener()
         {
             //PlayerAmount
-            m_playerAmountDd.onValueChanged.AddListener(delegate
-            { OnPlayerAmountChanged(m_playerAmountDd); });
+            if (m_playerSOData.Length > 0)
+                m_playerAmountDd.onValueChanged.AddListener(delegate
+                { OnPlayerAmountChanged(m_playerAmountDd); });
             m_inputFieldToggles[0].onValueChanged.AddListener(HandleToggleOneChanges);
             m_inputFieldToggles[1].onValueChanged.AddListener(HandleToggleTwoChanges);
             m_inputFieldToggles[2].onValueChanged.AddListener(HandleToggleThreeChanges);
@@ -106,7 +115,8 @@ namespace ThreeDeePongProto.Shared.UI
         private void RemoveGroupListener()
         {
             //PlayerAmount
-            m_playerAmountDd.onValueChanged.RemoveListener(delegate
+            if (m_playerSOData.Length > 0)
+                m_playerAmountDd.onValueChanged.RemoveListener(delegate
             { OnPlayerAmountChanged(m_playerAmountDd); });
             m_inputFieldToggles[0].onValueChanged.RemoveListener(HandleToggleOneChanges);
             m_inputFieldToggles[1].onValueChanged.RemoveListener(HandleToggleTwoChanges);
@@ -284,28 +294,36 @@ namespace ThreeDeePongProto.Shared.UI
         private void HandleToggleOneChanges(bool _toggle)
         {
             int inputFieldIndex = Array.IndexOf(m_inputFieldToggles, m_inputFieldToggles[0]);
-            m_playerSOData[inputFieldIndex].KeepNameOnLoad = _toggle;
+            if (m_playerSOData[inputFieldIndex] != null)
+                m_playerSOData[inputFieldIndex].KeepNameOnLoad = _toggle;
+
             SavePlayerData(inputFieldIndex);
         }
 
         private void HandleToggleTwoChanges(bool _toggle)
         {
             int inputFieldIndex = Array.IndexOf(m_inputFieldToggles, m_inputFieldToggles[1]);
-            m_playerSOData[inputFieldIndex].KeepNameOnLoad = _toggle;
+            if (m_playerSOData[inputFieldIndex] != null)
+                m_playerSOData[inputFieldIndex].KeepNameOnLoad = _toggle;
+
             SavePlayerData(inputFieldIndex);
         }
 
         private void HandleToggleThreeChanges(bool _toggle)
         {
             int inputFieldIndex = Array.IndexOf(m_inputFieldToggles, m_inputFieldToggles[2]);
-            m_playerSOData[inputFieldIndex].KeepNameOnLoad = _toggle;
+            if (m_playerSOData[inputFieldIndex] != null)
+                m_playerSOData[inputFieldIndex].KeepNameOnLoad = _toggle;
+
             SavePlayerData(inputFieldIndex);
         }
 
         private void HandleToggleFourChanges(bool _toggle)
         {
             int inputFieldIndex = Array.IndexOf(m_inputFieldToggles, m_inputFieldToggles[3]);
-            m_playerSOData[inputFieldIndex].KeepNameOnLoad = _toggle;
+            if (m_playerSOData[inputFieldIndex] != null)
+                m_playerSOData[inputFieldIndex].KeepNameOnLoad = _toggle;
+
             SavePlayerData(inputFieldIndex);
         }
         #endregion
@@ -318,8 +336,11 @@ namespace ThreeDeePongProto.Shared.UI
             int playerAmount = (int)_ePlayerAmount;    //EPlayerAmount.Four => int 4 || EPlayerAmount.Two => int 2
             for (int i = 0; i < playerAmount; i++)
             {
-                m_matchValues.PlayerSOData.Add(m_playerSOData[i]);
-                m_nameInputFields[i].text = m_playerSOData[i].PlayerName;
+                if (m_playerSOData.Length > 0 && m_playerSOData[i] != null)
+                {
+                    m_matchValues.PlayerSOData.Add(m_playerSOData[i]);
+                    m_nameInputFields[i].text = m_playerSOData[i].PlayerName;
+                }
             }
         }
 
@@ -384,7 +405,8 @@ namespace ThreeDeePongProto.Shared.UI
                         //TODO: Set a PopUp here.                    
                         m_startButton.interactable = false; //StartButton
                         m_joinButton.interactable = false;  //JoinButton
-                        m_matchValues.PlayerSOData[i].PlayerName = "";
+                        if (m_matchValues.PlayerSOData.Count > 0)
+                            m_matchValues.PlayerSOData[i].PlayerName = "";
                         //'return' replaces break, so other filled textFields won't enable these buttons again.
                         return;
                     }
@@ -402,6 +424,9 @@ namespace ThreeDeePongProto.Shared.UI
         //GameObjects like Prefab or Sprite can't be null, to prevent NullReferenceExceptions.
         private void SavePlayerData(int _index)
         {
+            if (m_playerSOData[_index] == null)
+                return;
+
             var playerSO = m_playerSOData[_index];
             var prefabName = playerSO.Prefab.name;
             var avatarName = playerSO.Avatar.name;

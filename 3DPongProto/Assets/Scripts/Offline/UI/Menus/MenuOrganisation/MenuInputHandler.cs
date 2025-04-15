@@ -330,8 +330,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnCloseGameMenu(InputAction.CallbackContext _callbackContext)
         {
-            if (NewUserInputManager.SetActionMap == EInputActionMaps.UserInterface.ToString())
-                NewUserInputManager.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
+            if (UserInputManager.SetActionMap == EInputActionMaps.UserInterface.ToString())
+                UserInputManager.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
         }
     }
 }
