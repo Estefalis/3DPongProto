@@ -25,7 +25,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private bool m_isHoldingNavigation = false;
 
         private void Awake()
-        {            
+        {
             InitialConfiguration();
             m_inputActions.UserInterface.CloseGameMenu.performed += OnCloseGameMenu;
         }
@@ -33,6 +33,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void OnDisable()
         {
             m_inputActions.UserInterface.CloseGameMenu.performed -= OnCloseGameMenu;
+            m_inputActions?.Disable();
         }
 
         private void OnDestroy()
@@ -53,7 +54,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             Vector2 navInput = m_navigateAction.ReadValue<Vector2>();
             bool submit = m_submitAction.WasPressedThisFrame();
             bool cancel = m_cancelAction.WasPressedThisFrame();
-
+            if (navInput.magnitude > 0)
+                Debug.Log($"X: {navInput.x}, Y: {navInput.y}");
             //Execute manual Submit-Handler.
             if (submit && m_eventSystem.currentSelectedGameObject != null)
                 ExecuteManualSubmit();
@@ -153,27 +155,99 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
 #if UNITY_EDITOR
             //Debug.Log($"Navigating NOW - Time: {Time.unscaledTime}, NextMoveTime was: {m_nextMoveTime}, Input: {_navInput}");
-#endif
-
+#endif            
             GameObject currentSelected = m_eventSystem.currentSelectedGameObject;
             if (currentSelected != null)
             {
                 if (currentSelected.TryGetComponent<Selectable>(out var currentSelectable))
                 {
                     Selectable nextSelectable = null;
-                    //Horizontal Navigation prioritized.
-                    if (Mathf.Abs(_navInput.x) >= Mathf.Abs(_navInput.y))
-                    {
-                        nextSelectable = (_navInput.x > 0.5f) ? currentSelectable.FindSelectableOnRight() : ((_navInput.x < -0.5f) ? currentSelectable.FindSelectableOnLeft() : null);
-                    }
+                    bool navigated = false;
+                    bool significantGamepadInput = Gamepad.current != null && _navInput.magnitude > 0.1f && m_navigateAction.activeControl?.device is Gamepad;
 
-                    //Vertical Navigation.
-                    if (nextSelectable == null && Mathf.Abs(_navInput.y) > 0.5f)
+                    ////Horizontal Navigation prioritized.
+                    //if (Mathf.Abs(_navInput.x) >= Mathf.Abs(_navInput.y))
+                    //{
+                    //    nextSelectable = (_navInput.x > 0.5f) ? currentSelectable.FindSelectableOnRight() : ((_navInput.x < -0.5f) ? currentSelectable.FindSelectableOnLeft() : null);
+                    //}
+
+                    ////Vertical Navigation.
+                    //if (nextSelectable == null && Mathf.Abs(_navInput.y) > 0.5f)
+                    //{
+                    //    nextSelectable = (_navInput.y > 0.5f) ? currentSelectable.FindSelectableOnUp() : currentSelectable.FindSelectableOnDown();
+                    //}
+
+                    if (!significantGamepadInput && Keyboard.current != null) // Nur Keyboard prüfen, wenn kein Gamepad aktiv navigiert
                     {
-                        nextSelectable = (_navInput.y > 0.5f) ? currentSelectable.FindSelectableOnUp() : currentSelectable.FindSelectableOnDown();
+                        // Prüfe Tasten einzeln mit WasPressedThisFrame FÜR ERSTEN DRUCK
+                        // Für Halten bräuchte man .isPressed und die Repeat-Logik hier drin
+                        // Fokussiere auf Einzelschritte fürs Debugging des Skippings
+                        bool initialPress = !m_isHoldingNavigation; // War die Taste vorher NICHT gedrückt?
+
+                        // Prüfe nur, wenn der Delay abgelaufen ist
+                        if (Time.unscaledTime >= m_nextMoveTime)
+                        {
+                            if (Keyboard.current.dKey.wasPressedThisFrame || Keyboard.current.rightArrowKey.wasPressedThisFrame)
+                            {
+                                nextSelectable = currentSelectable.FindSelectableOnRight();
+                                navigated = true;
+                            }
+                            else if (Keyboard.current.aKey.wasPressedThisFrame || Keyboard.current.leftArrowKey.wasPressedThisFrame)
+                            {
+                                nextSelectable = currentSelectable.FindSelectableOnLeft();
+                                navigated = true;
+                            }
+                            else if (Keyboard.current.wKey.wasPressedThisFrame || Keyboard.current.upArrowKey.wasPressedThisFrame)
+                            {
+                                nextSelectable = currentSelectable.FindSelectableOnUp();
+                                navigated = true;
+                            }
+                            else if (Keyboard.current.sKey.wasPressedThisFrame || Keyboard.current.downArrowKey.wasPressedThisFrame)
+                            {
+                                nextSelectable = currentSelectable.FindSelectableOnDown();
+                                navigated = true;
+                            }
+                            // Wenn eine Taste gedrückt wurde, setze den Initial-Delay
+                            if (navigated)
+                            {
+                                m_nextMoveTime = Time.unscaledTime + m_navigationInitialDelay;
+                            }
+                        }
+                        // Update isHoldingNavigation basierend auf aktuellem Tastendruck (vereinfacht)
+                        m_isHoldingNavigation = navigated || Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed/* ||  ... alle anderen Nav-Tasten ... */;
+
                     }
-                    
-                    if (nextSelectable != null && nextSelectable.gameObject.activeInHierarchy)  //There's a hidden button! O-HA!
+                    // --- Ende Direkte Keyboard-Abfrage ---
+
+                    // --- Gamepad Navigation (wie bisher, falls Keyboard nichts getan hat) ---
+                    if (!navigated && significantGamepadInput && Time.unscaledTime >= m_nextMoveTime)
+                    {
+                        // Deine bisherige Logik mit _navInput für Gamepad
+                        if (Mathf.Abs(_navInput.x) >= Mathf.Abs(_navInput.y))
+                        {
+                            nextSelectable = (_navInput.x > 0.5f) ? currentSelectable.FindSelectableOnRight() : ((_navInput.x < -0.5f) ? currentSelectable.FindSelectableOnLeft() : null);
+                        }
+                        if (nextSelectable == null && Mathf.Abs(_navInput.y) > 0.5f)
+                        {
+                            nextSelectable = (_navInput.y > 0.5f) ? currentSelectable.FindSelectableOnUp() : currentSelectable.FindSelectableOnDown();
+                        }
+                        if (nextSelectable != null)
+                            navigated = true;
+
+                        // Setze Delay für Gamepad
+                        if (navigated)
+                        {
+                            m_nextMoveTime = Time.unscaledTime + (m_isHoldingNavigation ? m_navigationRepeatDelay : m_navigationInitialDelay);
+                            m_isHoldingNavigation = true;
+                        }
+                        else
+                        {
+                            m_isHoldingNavigation = false;
+                        }
+                    }
+                    // --- Ende Gamepad Navigation ---
+
+                    if (navigated && nextSelectable.gameObject.activeInHierarchy)  //There's a hidden button! O-HA!
                     {
 #if UNITY_EDITOR
                         //Debug.Log($"Manual Navigation to: {nextSelectable.gameObject.name}.");
@@ -183,7 +257,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         m_nextMoveTime = Time.unscaledTime + (m_isHoldingNavigation ? m_navigationRepeatDelay : m_navigationInitialDelay);
                         m_isHoldingNavigation = true; //Save button press.
                     }
-                    else
+                    else if (!navigated)
                     {
                         m_isHoldingNavigation = false; //Button press released.
                     }
