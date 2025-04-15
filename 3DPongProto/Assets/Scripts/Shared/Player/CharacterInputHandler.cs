@@ -17,7 +17,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
     {
         [SerializeField] internal PlayerInput m_playerInput;
         [SerializeField] internal CharacterMainController m_playerController;
-        //private UserInputManager m_userInputManager;
+        
         private InputActionMap m_uiMap, m_playerMap;
 
         private const string m_moveString = "Move", m_rotateString = "Rotate", m_pushString = "Push", m_resetString = "ResetRotation", m_zoomString = "Zoom";
@@ -38,25 +38,19 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 m_playerController.GetComponentInParent<CharacterMainController>();
 
             if (m_playerInput != null)
-            {
                 SubscribeToInputActions(m_playerInput);
-            }
         }
 
         private void OnDisable()
         {
             if (m_playerInput != null)
-            {
                 UnsubscribeToInputActions(m_playerInput);
-            }
         }
 
         private void OnDestroy()
         {
             if (m_playerInput != null)
-            {
                 UnsubscribeToInputActions(m_playerInput);
-            }
         }
 
         private void FixedUpdate()
@@ -70,6 +64,9 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         #region Un-Subscribe_Methods
         private void SubscribeToInputActions(PlayerInput _playerInput)
         {
+            if (_playerInput.user.id != m_playerInput.user.id)
+                return;
+
             NewUserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
             m_playerInput.onActionTriggered += HandleActionTriggered;
         }
@@ -114,23 +111,19 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             if (_actionMap == EInputActionMaps.UserInterface.ToString())
             {
-                m_playerMap.Disable();
-                //m_playerInput.SwitchCurrentActionMap(EInputActionMaps.UserInterface.ToString());
+                //m_playerMap.Disable();
+                m_playerInput.SwitchCurrentActionMap(EInputActionMaps.UserInterface.ToString());
             }
             else if (_actionMap == EInputActionMaps.PlayerActions.ToString())
             {
-                m_playerMap.Enable();
-                //m_playerInput.SwitchCurrentActionMap(EInputActionMaps.PlayerActions.ToString());
+                //m_playerMap.Enable();
+                m_playerInput.SwitchCurrentActionMap(EInputActionMaps.PlayerActions.ToString());
             }
         }
 
         #region CallbackContext_Methods
         private void HandleActionTriggered(InputAction.CallbackContext _callbackContext)
         {
-            // Nur verarbeiten, wenn der Spieler eine gültige ID hat
-            if (m_playerID < 0)
-                return;
-
             switch (_callbackContext.action.name)
             {
                 case m_moveString:

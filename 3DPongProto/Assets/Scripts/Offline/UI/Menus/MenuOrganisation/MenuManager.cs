@@ -12,11 +12,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 {
     public class MenuManager : MonoBehaviour
     {
-        //private PlayerInputActions m_inputActions;
-        //private InputActionMap m_uiActionMap;
-        //private InputActionMap m_playerActionMap;
+        private PlayerInputActions m_inputActions;
+        private InputActionMap m_uiActionMap;
 
-        private MenuInputHandler m_menuInputHandler;
+        private PlayerInput m_playerInput;
+        //private MenuInputHandler m_menuInputHandler;
 
         [SerializeField] internal EventSystem m_eventSystem;
 
@@ -65,23 +65,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void Awake()
         {
-            #region InputSystem before implementing MenuHandler
-            //m_inputActions = new PlayerInputActions();
+            m_inputActions = new PlayerInputActions();
+            m_inputActions.Enable();
+            m_uiActionMap = m_inputActions.UserInterface;
 
-            //if (m_inputActions == null)
-            //{
-            //    Debug.LogError("Unable to instantiate PlayerInputActions!", this);
-            //    enabled = false;
-            //    return;
-            //}
+            foreach (InputActionMap actionMap in m_inputActions.asset.actionMaps)
+                actionMap.Disable();
 
-            //m_uiActionMap = m_inputActions.UserInterface;
-            //m_playerActionMap = m_inputActions.PlayerActions;
-            //m_uiActionMap.Disable();
-            //m_playerActionMap.Disable();
-            #endregion
-
-            m_menuInputHandler = FindObjectOfType<MenuInputHandler>();
+            //m_menuInputHandler = FindObjectOfType<MenuInputHandler>();
 
             m_lastSelectedGameObject = null;
             m_selectedElement.Clear();
@@ -92,31 +83,22 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnEnable()
         {
-            #region InputSystem before implementing MenuHandler
-            //m_inputActions.UserInterface.OnCloseGameMenu.performed += CloseMenu;
-            #endregion
+            m_inputActions.UserInterface.CloseGameMenu.performed += CloseMenu;
+            m_inputActions.UserInterface.Navigate.performed += OnNavigationInput;
+            m_inputActions.UserInterface.Submit.performed += OnSubmitInput;
+            m_inputActions.UserInterface.Cancel.performed += OnCancelInput;
 
             AResumeTheGame += OnResumeTheGame;
             NewUserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
         }
 
-        private void OnDisable()
+        private void OnDisable()    //Copy content into 'OnDestroy()', if needed.
         {
-            #region InputSystem before implementing MenuHandler
-            //m_uiActionMap.Disable();
-            //m_inputActions.UserInterface.CloseGameMenu.performed -= CloseMenu;
-            #endregion
-
-            AResumeTheGame -= OnResumeTheGame;
-            NewUserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
-        }
-
-        private void OnDestroy()
-        {
-            #region InputSystem before implementing MenuHandler
-            //m_uiActionMap.Disable();
-            //m_inputActions.UserInterface.CloseGameMenu.performed -= CloseMenu;
-            #endregion
+            m_inputActions.Disable();
+            m_inputActions.UserInterface.CloseGameMenu.performed -= CloseMenu;
+            m_inputActions.UserInterface.Navigate.performed -= OnNavigationInput;
+            m_inputActions.UserInterface.Submit.performed -= OnSubmitInput;
+            m_inputActions.UserInterface.Cancel.performed -= OnCancelInput;
 
             AResumeTheGame -= OnResumeTheGame;
             NewUserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
@@ -124,6 +106,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void Start()
         {
+            m_playerInput = FindObjectOfType<PlayerInput>();
+
             if (m_hiddenFinishButton != null)
                 InVisibleButton(m_matchUIStates.InfiniteMatch);     //m_matchUIStates get load in LoadSettingsValues > Awake().
         }
@@ -174,31 +158,29 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 SetNavigationGameObject(m_firstElement);
             }
 
-            #region InputSystem before implementing MenuHandler
-            //if (m_inputActions == null)
-            //    return;
+            if (m_inputActions == null)
+                return;
 
-            //m_uiActionMap.Enable();
-            //m_playerActionMap.Disable();
-            #endregion
-
-            m_menuInputHandler.ActivateMenuInput();
+            if (!m_uiActionMap.enabled)
+                m_uiActionMap.Enable();
+            
+            //m_menuInputHandler.ActivateMenuInput();
         }
 
         private void OnCloseMenu()
         {
             SetNavigationGameObject(m_firstElement);
 
-            #region InputSystem before implementing MenuHandler
-            //if (m_inputActions == null)
-            //    return;
+            if (m_inputActions == null)
+                return;
 
-            //m_uiActionMap.Disable();
-            //m_playerActionMap.Enable();
+            if (m_uiActionMap.enabled)
+                m_uiActionMap.Disable();
+            
+            #region With MenuInputHandler
+            //AResumeTheGame?.Invoke();
+            //m_menuInputHandler.DeactivateMenuInput();
             #endregion
-
-            AResumeTheGame?.Invoke();
-            m_menuInputHandler.DeactivateMenuInput();
         }
         #endregion
 
@@ -382,16 +364,77 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         }
         #endregion
 
-        #region InputSystem before implementing MenuHandler
-        //private void CloseMenu(InputAction.CallbackContext _callbackContext)
-        //{
-        //    var sceneIndex = SceneManager.GetActiveScene().buildIndex;
-        //    if (sceneIndex == (int)ESceneNames.StartMenu)   //TODO: Add other 'menoOnly' Scenes.
-        //        return;
+        #region CallbackContext_Methods
+        private void CloseMenu(InputAction.CallbackContext _callbackContext)
+        {
+            var sceneIndex = SceneManager.GetActiveScene().buildIndex;
+            if (sceneIndex == (int)ESceneNames.StartMenu)   //TODO: Add other 'menoOnly' Scenes.
+                return;
 
-        //    if (m_firstElement.gameObject.activeInHierarchy && NewUserInputManager.SetActionMap == EInputActionMaps.UserInterface.ToString())
-        //        AResumeTheGame?.Invoke();
-        //}
+            if (m_firstElement.gameObject.activeInHierarchy && NewUserInputManager.SetActionMap == EInputActionMaps.UserInterface.ToString())
+                AResumeTheGame?.Invoke();
+        }
+
+        private void OnNavigationInput(InputAction.CallbackContext _callbackContext)
+        {
+            if (m_playerInput == null && !m_uiActionMap.enabled)    //Only pass while being in GameScene with opened PauseMenu.
+                return;
+
+            if (_callbackContext.control.device is Keyboard)        //Because Keyboard works (currently).
+                return;
+
+            var navDirection = _callbackContext.ReadValue<Vector2>();
+
+            if (navDirection.y != 0)
+            {
+                switch (navDirection.y < 0)
+                {
+                    case true:
+                        Debug.Log($"Vertical Navigation: {navDirection.y}");
+                        break;
+                    case false:
+                        Debug.Log($"Vertical Navigation: {navDirection.y}");
+                        break;
+                }
+            }
+
+            if (navDirection.x != 0)
+            {
+                switch (navDirection.x < 0)
+                {
+                    case true:
+                        Debug.Log($"Horizontal Navigation: {navDirection.x}");
+                        break;
+                    case false:
+                        Debug.Log($"Horizontal Navigation: {navDirection.x}");
+                        break;
+                }
+            }
+        }
+
+        private void OnSubmitInput(InputAction.CallbackContext _callbackContext)
+        {
+            if (m_playerInput == null && !m_uiActionMap.enabled)    //Only pass while being in GameScene with opened PauseMenu.
+                return;
+
+            if (_callbackContext.control.device is Keyboard)        //Because Keyboard works (currently).
+                return;
+
+            var submitAction = _callbackContext.ReadValueAsButton();
+            Debug.Log($"Gamepad Submit-Action performed: {submitAction}!");
+        }
+
+        private void OnCancelInput(InputAction.CallbackContext _callbackContext)
+        {
+            if (m_playerInput == null && !m_uiActionMap.enabled)    //Only pass while being in GameScene with opened PauseMenu.
+                return;
+
+            if (_callbackContext.control.device is Keyboard)        //Because Keyboard works (currently).
+                return;
+
+            var cancelAction = _callbackContext.ReadValueAsButton();
+            Debug.Log($"Gamepad Cancel-Action performed: {cancelAction}!");
+        }
         #endregion
     }
 }
