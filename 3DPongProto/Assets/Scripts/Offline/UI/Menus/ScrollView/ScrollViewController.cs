@@ -3,7 +3,7 @@ using ThreeDeePongProto.Shared.HelperClasses;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+//NOTE: Keep ScrollRect's tranform.RectTransform centered/middled & Viewport shift+alt-stretched with 0,0,0,0. Else the vertical scrollBar could shaking on calculations! URL: https://www.youtube.com/watch?v=l2_rHUffkJw
 namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 {
     internal enum ScrollType

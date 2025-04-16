@@ -10,7 +10,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 {
     internal class AutoScroll : MonoBehaviour
     {
-        private PlayerInputActions m_characterInputActions;
+        private PlayerInputActions m_inputActions;
         [SerializeField] internal ScrollViewController m_scrollViewController;
 
         #region AutoScroll Transition
@@ -33,13 +33,13 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         private void OnDisable()
         {
-            m_characterInputActions.Disable();
+            m_inputActions.Disable();
         }
 
         private void Start()
         {
-            m_characterInputActions = RebindManager.m_PlayerInputActions;
-            m_characterInputActions.Enable();
+            m_inputActions = RebindManager.m_PlayerInputActions;
+            m_inputActions.Enable();
 
             ResetVariables();
 
@@ -63,9 +63,9 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         #region GetMouseValues
         private void GetMouseValues()
         {
-            m_mouseScrollValue = m_characterInputActions.UserInterface.ScrollWheel.ReadValue<Vector2>();
+            m_mouseScrollValue = m_inputActions.UserInterface.ScrollWheel.ReadValue<Vector2>();
             m_mouseScrollValue.Normalize();
-            m_mousePosition = m_characterInputActions.UserInterface.Point.ReadValue<Vector2>();
+            m_mousePosition = m_inputActions.UserInterface.Point.ReadValue<Vector2>();
 
             switch (MouseIsInScrollView(m_mousePosition))
             {
@@ -172,7 +172,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
             //bottomDifference
             float bottomDifference = gameObjectBottomOffset - viewRectLocalBottomBorder;
-
+            
             if (bottomDifference < 0)
                 ScrollVerticalByAmount(bottomDifference - m_scrollViewController.m_bottomPadding);
         }

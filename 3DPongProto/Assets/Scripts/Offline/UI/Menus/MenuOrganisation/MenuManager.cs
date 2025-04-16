@@ -473,7 +473,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnCancelInput(InputAction.CallbackContext _callbackContext)
         {
-            if (/*m_playerInput == null && */!m_uiActionMap.enabled)    //Only pass in GameScenes if PauseMenu is opened.
+            if (/*m_playerInput == null && */!m_uiActionMap.enabled)    //Only pass if PauseMenu is opened.
                 return;
 
             //if (_callbackContext.control.device is Keyboard)        //Because Keyboard works (currently).
@@ -487,7 +487,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     if (transform.gameObject.activeInHierarchy)
                     {
                         backButton = m_selectableBackButton[transform];
-                        if (!backButton.gameObject.activeInHierarchy)       //Quick Fallback.
+                        if (!backButton.gameObject.activeInHierarchy)       //Other active button as Fallback.
                         {
                             for (int i = 0; i < m_settingsBackButtons.Length; i++)
                             {
