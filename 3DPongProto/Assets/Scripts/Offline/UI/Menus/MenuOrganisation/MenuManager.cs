@@ -16,7 +16,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private InputActionMap m_uiActionMap;
 
         private PlayerInput m_playerInput;
-        //private MenuInputHandler m_menuInputHandler;
 
         [SerializeField] internal EventSystem m_eventSystem;
 
@@ -30,10 +29,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         //Key-/Value-Pair component-arrays to set the selected GameObject for menu navigation with a dictionary.
         [SerializeField] internal Transform[] m_navigationKey;
         [SerializeField] private GameObject[] m_navigationValue;
-        [SerializeField] private Button[] m_navigationBackButtons;
-        [SerializeField] private Button[] m_settingsBackButtons;
         private readonly Dictionary<Transform, GameObject> m_targetNavigationElement = new();
-        private readonly Dictionary<Transform, Button> m_selectableBackButton = new();
         #endregion
 
         #region Alpha-Buttons and SubPages.
@@ -86,11 +82,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     actionMap.Disable();                            //Transform inactive at Start of GameScene.
             }
 
-            //m_menuInputHandler = FindObjectOfType<MenuInputHandler>();
-
             m_lastSelectedGameObject = null;
             m_targetNavigationElement.Clear();
-            m_selectableBackButton.Clear();
 
             SetFirstStackElement(m_firstElement);
             SetUIElements();    //Also sets the lastSelectedElement.
@@ -107,8 +100,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 m_inputActions.UserInterface.Submit.performed += OnSubmitInput;
             }
 
-            m_inputActions.UserInterface.Cancel.performed += OnCancelInput;
-
             AResumeTheGame += OnResumeTheGame;
             UserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
         }
@@ -121,8 +112,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             //TODO: Make clear, if unsubscriptions also need a if-condition like subscription above.
             m_inputActions.UserInterface.Navigate.performed -= OnNavigationInput;
             m_inputActions.UserInterface.Submit.performed -= OnSubmitInput;
-
-            m_inputActions.UserInterface.Cancel.performed -= OnCancelInput;
 
             AResumeTheGame -= OnResumeTheGame;
             UserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
@@ -142,6 +131,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             //Debug.Log($"UIMap enabled: {m_uiActionMap.enabled} | PlayerMap enabled: {m_playerActionMap.enabled}."); 
 #endif
             UpdateLastSelectedObject();
+
+            if (m_inputActions.UserInterface.Cancel.WasPressedThisFrame())
+                CloseToPreviousElement();
         }
 
         #region Non_InputAction_Subscriptions
@@ -249,9 +241,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             for (int navMenu = 0; navMenu < m_navigationKey.Length; navMenu++)
                 m_targetNavigationElement.Add(m_navigationKey[navMenu], m_navigationValue[navMenu]);
-
-            for (int backMenu = 0; backMenu < m_navigationKey.Length; backMenu++)
-                m_selectableBackButton.Add(m_navigationKey[backMenu], m_navigationBackButtons[backMenu]);
 
             SetNavigationGameObject(m_firstElement);
         }
@@ -469,42 +458,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             if (_callbackContext.ReadValueAsButton())
                 ExecuteEvents.Execute(m_lastSelectedGameObject, new BaseEventData(m_eventSystem), ExecuteEvents.submitHandler);
-        }
-
-        private void OnCancelInput(InputAction.CallbackContext _callbackContext)
-        {
-            if (/*m_playerInput == null && */!m_uiActionMap.enabled)    //Only pass if PauseMenu is opened.
-                return;
-
-            //if (_callbackContext.control.device is Keyboard)        //Because Keyboard works (currently).
-            //    return;
-
-            if (_callbackContext.ReadValueAsButton())
-            {
-                Button backButton = null;
-                foreach (Transform transform in m_navigationKey)
-                {
-                    if (transform.gameObject.activeInHierarchy)
-                    {
-                        backButton = m_selectableBackButton[transform];
-                        if (!backButton.gameObject.activeInHierarchy)       //Other active button as Fallback.
-                        {
-                            for (int i = 0; i < m_settingsBackButtons.Length; i++)
-                            {
-                                if (m_settingsBackButtons[i].gameObject.activeInHierarchy)
-                                {
-                                    backButton = m_settingsBackButtons[i];
-                                    break;
-                                }
-                            }
-                        }
-                        break;
-                    }
-                }
-
-                if (!m_navigationValue[0].activeInHierarchy)
-                    ExecuteEvents.Execute(backButton.gameObject, new BaseEventData(m_eventSystem), ExecuteEvents.submitHandler);
-            }
         }
         #endregion
     }
