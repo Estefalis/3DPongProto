@@ -17,7 +17,7 @@ public class Ball : MonoBehaviour
     #region Script-References
     private LocalMatchManager m_matchManager;
     [SerializeField] private AudioSource m_ballAudioSource;
-    private int m_trackId = 0;
+    private int m_trackId = 0, m_firstPlayerID = -1;
     #endregion
 
     #region #region Non-SerializeField-Member-Variables
@@ -76,14 +76,17 @@ public class Ball : MonoBehaviour
         m_rigidbody.velocity = Vector3.zero;
         m_rigidbody.position = m_ballPopPosition;
         m_rigidbody.rotation = m_ballPopRotation;
+        m_firstPlayerID = -1;
     }
 
     private void BallStart(int _masterID)
     {
-        if (!m_matchManager.GameIsPaused && _masterID == 0) //Host on Online-Gaming?
+        int firstPlayerID = -1;                 //Limits the Force on Ball to be applied only once. Or to first Player, on '_masterID == 0'.
+        if (!m_matchManager.GameIsPaused && m_firstPlayerID == firstPlayerID/*&& _masterID == 0*/)
         {
+            m_firstPlayerID = _masterID;
             if (!m_matchManager.MatchStarted)
-                RoundCountStarts?.Invoke(); //Has to stay below 'ApplyForceOnBall();', if the ApplyForce button is the same as Submit/Click as now.
+                RoundCountStarts?.Invoke();
 
             ApplyForceOnBall();
         }
