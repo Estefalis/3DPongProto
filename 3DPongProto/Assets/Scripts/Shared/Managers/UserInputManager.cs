@@ -39,6 +39,8 @@ namespace ThreeDeePongProto.Shared.Managers
     public class UserInputManager : MonoBehaviour
     {
         //public static UserInputManager Instance { get; private set; }
+        private PlayerInputActions m_inputActions;
+        private readonly InputAction[] m_selectPlayers = new InputAction[4];
 
         [Header("References")]
         [SerializeField] private PlayerInputManager m_playerInputManager;
@@ -85,6 +87,12 @@ namespace ThreeDeePongProto.Shared.Managers
 
             m_lastActionMap = "";
 
+            m_inputActions = new();
+            m_selectPlayers[0] = m_inputActions.PlayerActions.SelectPlayer1;
+            m_selectPlayers[1] = m_inputActions.PlayerActions.SelectPlayer2;
+            m_selectPlayers[2] = m_inputActions.PlayerActions.SelectPlayer3;
+            m_selectPlayers[3] = m_inputActions.PlayerActions.SelectPlayer4;
+
             m_playerInputManager = GetComponent<PlayerInputManager>();
             SetUpPlayerInputManager(m_playerInputManager);
         }
@@ -93,12 +101,30 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             SceneManager.sceneLoaded += OnSceneManagerLoaded;
             MenuManager.AReLoadScene += OnReLoadScene;
+
+            EnablePlayerSelections(true);
         }
 
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneManagerLoaded;
             MenuManager.AReLoadScene -= OnReLoadScene;
+
+            EnablePlayerSelections(false);
+        }
+
+        private void Update()
+        {
+            if (m_inputActions == null)
+                return;
+
+            for (int actionIndex = 0; actionIndex < m_selectPlayers.Length; actionIndex++)
+            {
+                if (m_selectPlayers[actionIndex] != null && m_selectPlayers[actionIndex].WasPressedThisFrame())
+                {
+                    SetFocusedKeyboardPlayer(actionIndex);
+                }
+            }
         }
 
         #region PlayerInputManager-Configuration
@@ -125,59 +151,7 @@ namespace ThreeDeePongProto.Shared.Managers
         }
         #endregion
 
-        /// <summary>
-        /// Method to react after a scene has been fully loaded beforehand.
-        /// </summary>
-        /// <param name="scene"></param>
-        /// <param name="mode"></param>
-        private void OnSceneManagerLoaded(Scene scene, LoadSceneMode mode)
-        {
-            int sceneIndex = scene.buildIndex;
-
-            switch (sceneIndex)
-            {
-                case 1:
-                {
-                    SpawnPlayers();
-                    break;
-                }
-                default:
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Method to receive the buildIndex of the scene that shall be reloaded.
-        /// </summary>
-        /// <param name="_sceneIndex"></param>
-        private void OnReLoadScene(int _sceneIndex)
-        {
-            switch (_sceneIndex)
-            {
-                case 0:
-                    SceneManager.LoadScene((int)ESceneNames.StartMenu);
-                    break;
-                case 1:
-                    SceneManager.LoadScene((int)ESceneNames.LocalGame);
-                    break;
-                case 2:
-                {
-                    Debug.Log("When the LanGame mode is finished... .");
-                    //SceneManager.LoadScene((int)ESceneNames.LanGame);
-                }
-                break;
-                case 3:
-                {
-                    Debug.Log("When the NetGame mode is finished... .");
-                    //SceneManager.LoadScene((int)ESceneNames.NetGame);
-                }
-                break;
-                default:
-                    Debug.Log("Scene is not implemented, yet!");
-                    break;
-            }
-        }
-
+        #region Custom_Methods
         private void SpawnPlayers()
         {
             if (m_playerInputManager == null)
@@ -257,6 +231,92 @@ namespace ThreeDeePongProto.Shared.Managers
             }
         }
 
+        private void SetFocusedKeyboardPlayer(int _newPlayerFocus)
+        {
+            if (FocusedKeyboardPlayerID != _newPlayerFocus)
+                FocusedKeyboardPlayerID = _newPlayerFocus;
+        }
+        #endregion
+
+        #region None-CallbackContext_Subscription_Methods
+        private void EnablePlayerSelections(bool _enable)
+        {
+            if (m_inputActions == null)
+                return;
+
+            for (int action = 0; action < m_selectPlayers.Length; action++)
+            {
+                switch (_enable)
+                {
+                    case true:
+                    {
+                        m_selectPlayers[action].Enable();
+                        break;
+                    }
+                    case false:
+                    {
+                        m_selectPlayers[action].Disable();
+                        break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Method to react after a scene has been fully loaded beforehand.
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <param name="mode"></param>
+        private void OnSceneManagerLoaded(Scene scene, LoadSceneMode mode)
+        {
+            int sceneIndex = scene.buildIndex;
+
+            switch (sceneIndex)
+            {
+                case 1:
+                {
+                    SpawnPlayers();
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Method to receive the buildIndex of the scene that shall be reloaded.
+        /// </summary>
+        /// <param name="_sceneIndex"></param>
+        private void OnReLoadScene(int _sceneIndex)
+        {
+            switch (_sceneIndex)
+            {
+                case 0:
+                    SceneManager.LoadScene((int)ESceneNames.StartMenu);
+                    break;
+                case 1:
+                    SceneManager.LoadScene((int)ESceneNames.LocalGame);
+                    break;
+                case 2:
+                {
+                    Debug.Log("When the LanGame mode is finished... .");
+                    //SceneManager.LoadScene((int)ESceneNames.LanGame);
+                }
+                break;
+                case 3:
+                {
+                    Debug.Log("When the NetGame mode is finished... .");
+                    //SceneManager.LoadScene((int)ESceneNames.NetGame);
+                }
+                break;
+                default:
+                    Debug.Log("Scene is not implemented, yet!");
+                    break;
+            }
+        }
+        #endregion
+
+        #region Delegate-Methods
         private InputDevice[] GetDevicesForPlayer(int _playerIndex)
         {
             if (!m_matchValues.PlayerSOData[_playerIndex].DefaultKeyboard)
@@ -284,6 +344,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
             return m_keyboardMouseScheme;
         }
+        #endregion
 
         #region Change_Action_Maps
         /// <summary>

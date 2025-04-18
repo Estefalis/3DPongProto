@@ -87,9 +87,36 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "SelectPlayerWindow",
+                    "name": "SelectPlayer1",
                     "type": "Button",
                     "id": "09a9f2a4-cbcf-43f8-a8b9-b010988ee38e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SelectPlayer2",
+                    "type": "Button",
+                    "id": "586503ec-2602-4bee-a47b-78ad63082934",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SelectPlayer3",
+                    "type": "Button",
+                    "id": "285f5b31-9f20-4f73-aee4-9a02a280c7c4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SelectPlayer4",
+                    "type": "Button",
+                    "id": "69dda9e2-f77d-453e-9295-0a4cdb97daa4",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -587,41 +614,41 @@
                     "path": "<Keyboard>/1",
                     "interactions": "",
                     "processors": "",
-                    "groups": "KeyboardPlayerID0",
-                    "action": "SelectPlayerWindow",
+                    "groups": "KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3",
+                    "action": "SelectPlayer1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "e68556fa-6670-433d-9296-25a45b71aa79",
+                    "id": "236b1704-feae-4a7b-94c5-00854b8ce09a",
                     "path": "<Keyboard>/2",
                     "interactions": "",
                     "processors": "",
-                    "groups": "KeyboardPlayerID1",
-                    "action": "SelectPlayerWindow",
+                    "groups": "KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3",
+                    "action": "SelectPlayer2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "eb10ebda-3033-4912-b983-7470a8932099",
+                    "id": "c802af66-ab65-435d-97d3-841e4de8b45c",
                     "path": "<Keyboard>/3",
                     "interactions": "",
                     "processors": "",
-                    "groups": "KeyboardPlayerID2",
-                    "action": "SelectPlayerWindow",
+                    "groups": "KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3",
+                    "action": "SelectPlayer3",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "f249093d-8797-479f-af40-e3c0ad1ef0b6",
+                    "id": "a885250d-d902-48ac-895d-b03592110e3e",
                     "path": "<Keyboard>/4",
                     "interactions": "",
                     "processors": "",
-                    "groups": "KeyboardPlayerID3",
-                    "action": "SelectPlayerWindow",
+                    "groups": "KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3",
+                    "action": "SelectPlayer4",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

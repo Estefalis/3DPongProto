@@ -43,6 +43,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] private Transform[] m_subPageTransforms;
         #endregion
 
+        [Header("Mouse Cursor")]
+        [SerializeField] private CursorLockMode m_cursorLockMode = CursorLockMode.Confined;
+        [SerializeField] private bool m_showCursor = true;
+
         internal static GameObject LastSelectedGameObject { get => m_lastSelectedGameObject; }
         private static GameObject m_lastSelectedGameObject;
         #endregion
@@ -64,6 +68,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void Awake()
         {
+            Cursor.visible = m_showCursor;
+
             m_inputActions = new PlayerInputActions();
             m_inputActions.Enable();
             m_uiActionMap = m_inputActions.UserInterface;
@@ -127,6 +133,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void Update()
         {
+            if (!Application.isFocused)  //TODO: Test, if Navigation still works, if game is not focussed.
+                return;
+
 #if UNITY_EDITOR
             //Debug.Log($"UIMap enabled: {m_uiActionMap.enabled} | PlayerMap enabled: {m_playerActionMap.enabled}."); 
 #endif
@@ -152,6 +161,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         /// <param name="_actionMap"></param>
         private void OnChangeActiveActionMap(string _actionMap)
         {
+            if (!Application.isFocused)
+                return;
+
             var sceneIndex = SceneManager.GetActiveScene().buildIndex;
             if (sceneIndex == (int)ESceneNames.StartMenu)   //Or in other menuOnly Scenes.
                 return;
@@ -250,6 +262,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         public void NextElement(Transform _next)
         {
+            if (!Application.isFocused)
+                return;
+
             Transform currentElement = m_activeElement.Peek();
             currentElement.gameObject.SetActive(false);
 
@@ -261,6 +276,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         public void CloseToPreviousElement()
         {
+            if (!Application.isFocused)
+                return;
+
             Transform currentElement = m_activeElement.Pop();
             currentElement.gameObject.SetActive(false);
 
@@ -417,6 +435,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #region CallbackContext_Methods
         private void CloseMenu(InputAction.CallbackContext _callbackContext)
         {
+            if (!Application.isFocused)
+                return;
+
             var sceneIndex = SceneManager.GetActiveScene().buildIndex;
             if (sceneIndex == (int)ESceneNames.StartMenu)   //TODO: Add other 'menoOnly' Scenes.
                 return;
@@ -427,6 +448,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnNavigationInput(InputAction.CallbackContext _callbackContext)
         {
+            if (!Application.isFocused)
+                return;
+
             if (m_playerInput == null && !m_uiActionMap.enabled)    //Only pass in GameScenes if PauseMenu is opened and PlayerInputs exist.
                 return;
 
@@ -438,6 +462,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnSubmitInput(InputAction.CallbackContext _callbackContext)
         {
+            if (!Application.isFocused)
+                return;
+
             if (m_playerInput == null && !m_uiActionMap.enabled)    //Only pass in GameScenes if PauseMenu is opened and PlayerInputs exist.
                 return;
 

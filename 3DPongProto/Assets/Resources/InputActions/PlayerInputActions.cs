@@ -111,9 +111,36 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SelectPlayerWindow"",
+                    ""name"": ""SelectPlayer1"",
                     ""type"": ""Button"",
                     ""id"": ""09a9f2a4-cbcf-43f8-a8b9-b010988ee38e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SelectPlayer2"",
+                    ""type"": ""Button"",
+                    ""id"": ""586503ec-2602-4bee-a47b-78ad63082934"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SelectPlayer3"",
+                    ""type"": ""Button"",
+                    ""id"": ""285f5b31-9f20-4f73-aee4-9a02a280c7c4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SelectPlayer4"",
+                    ""type"": ""Button"",
+                    ""id"": ""69dda9e2-f77d-453e-9295-0a4cdb97daa4"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -611,41 +638,41 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/1"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID0"",
-                    ""action"": ""SelectPlayerWindow"",
+                    ""groups"": ""KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
+                    ""action"": ""SelectPlayer1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""e68556fa-6670-433d-9296-25a45b71aa79"",
+                    ""id"": ""236b1704-feae-4a7b-94c5-00854b8ce09a"",
                     ""path"": ""<Keyboard>/2"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID1"",
-                    ""action"": ""SelectPlayerWindow"",
+                    ""groups"": ""KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
+                    ""action"": ""SelectPlayer2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""eb10ebda-3033-4912-b983-7470a8932099"",
+                    ""id"": ""c802af66-ab65-435d-97d3-841e4de8b45c"",
                     ""path"": ""<Keyboard>/3"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID2"",
-                    ""action"": ""SelectPlayerWindow"",
+                    ""groups"": ""KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
+                    ""action"": ""SelectPlayer3"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""f249093d-8797-479f-af40-e3c0ad1ef0b6"",
+                    ""id"": ""a885250d-d902-48ac-895d-b03592110e3e"",
                     ""path"": ""<Keyboard>/4"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardPlayerID3"",
-                    ""action"": ""SelectPlayerWindow"",
+                    ""groups"": ""KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
+                    ""action"": ""SelectPlayer4"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1146,7 +1173,10 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_PlayerActions_MousePosition = m_PlayerActions.FindAction("MousePosition", throwIfNotFound: true);
             m_PlayerActions_OpenGameMenu = m_PlayerActions.FindAction("OpenGameMenu", throwIfNotFound: true);
             m_PlayerActions_CursorVisibility = m_PlayerActions.FindAction("CursorVisibility", throwIfNotFound: true);
-            m_PlayerActions_SelectPlayerWindow = m_PlayerActions.FindAction("SelectPlayerWindow", throwIfNotFound: true);
+            m_PlayerActions_SelectPlayer1 = m_PlayerActions.FindAction("SelectPlayer1", throwIfNotFound: true);
+            m_PlayerActions_SelectPlayer2 = m_PlayerActions.FindAction("SelectPlayer2", throwIfNotFound: true);
+            m_PlayerActions_SelectPlayer3 = m_PlayerActions.FindAction("SelectPlayer3", throwIfNotFound: true);
+            m_PlayerActions_SelectPlayer4 = m_PlayerActions.FindAction("SelectPlayer4", throwIfNotFound: true);
             // UserInterface
             m_UserInterface = asset.FindActionMap("UserInterface", throwIfNotFound: true);
             m_UserInterface_Navigate = m_UserInterface.FindAction("Navigate", throwIfNotFound: true);
@@ -1229,7 +1259,10 @@ namespace ThreeDeePongProto.Shared.InputActions
         private readonly InputAction m_PlayerActions_MousePosition;
         private readonly InputAction m_PlayerActions_OpenGameMenu;
         private readonly InputAction m_PlayerActions_CursorVisibility;
-        private readonly InputAction m_PlayerActions_SelectPlayerWindow;
+        private readonly InputAction m_PlayerActions_SelectPlayer1;
+        private readonly InputAction m_PlayerActions_SelectPlayer2;
+        private readonly InputAction m_PlayerActions_SelectPlayer3;
+        private readonly InputAction m_PlayerActions_SelectPlayer4;
         public struct PlayerActionsActions
         {
             private @PlayerInputActions m_Wrapper;
@@ -1243,7 +1276,10 @@ namespace ThreeDeePongProto.Shared.InputActions
             public InputAction @MousePosition => m_Wrapper.m_PlayerActions_MousePosition;
             public InputAction @OpenGameMenu => m_Wrapper.m_PlayerActions_OpenGameMenu;
             public InputAction @CursorVisibility => m_Wrapper.m_PlayerActions_CursorVisibility;
-            public InputAction @SelectPlayerWindow => m_Wrapper.m_PlayerActions_SelectPlayerWindow;
+            public InputAction @SelectPlayer1 => m_Wrapper.m_PlayerActions_SelectPlayer1;
+            public InputAction @SelectPlayer2 => m_Wrapper.m_PlayerActions_SelectPlayer2;
+            public InputAction @SelectPlayer3 => m_Wrapper.m_PlayerActions_SelectPlayer3;
+            public InputAction @SelectPlayer4 => m_Wrapper.m_PlayerActions_SelectPlayer4;
             public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1280,9 +1316,18 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @CursorVisibility.started += instance.OnCursorVisibility;
                 @CursorVisibility.performed += instance.OnCursorVisibility;
                 @CursorVisibility.canceled += instance.OnCursorVisibility;
-                @SelectPlayerWindow.started += instance.OnSelectPlayerWindow;
-                @SelectPlayerWindow.performed += instance.OnSelectPlayerWindow;
-                @SelectPlayerWindow.canceled += instance.OnSelectPlayerWindow;
+                @SelectPlayer1.started += instance.OnSelectPlayer1;
+                @SelectPlayer1.performed += instance.OnSelectPlayer1;
+                @SelectPlayer1.canceled += instance.OnSelectPlayer1;
+                @SelectPlayer2.started += instance.OnSelectPlayer2;
+                @SelectPlayer2.performed += instance.OnSelectPlayer2;
+                @SelectPlayer2.canceled += instance.OnSelectPlayer2;
+                @SelectPlayer3.started += instance.OnSelectPlayer3;
+                @SelectPlayer3.performed += instance.OnSelectPlayer3;
+                @SelectPlayer3.canceled += instance.OnSelectPlayer3;
+                @SelectPlayer4.started += instance.OnSelectPlayer4;
+                @SelectPlayer4.performed += instance.OnSelectPlayer4;
+                @SelectPlayer4.canceled += instance.OnSelectPlayer4;
             }
 
             private void UnregisterCallbacks(IPlayerActionsActions instance)
@@ -1314,9 +1359,18 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @CursorVisibility.started -= instance.OnCursorVisibility;
                 @CursorVisibility.performed -= instance.OnCursorVisibility;
                 @CursorVisibility.canceled -= instance.OnCursorVisibility;
-                @SelectPlayerWindow.started -= instance.OnSelectPlayerWindow;
-                @SelectPlayerWindow.performed -= instance.OnSelectPlayerWindow;
-                @SelectPlayerWindow.canceled -= instance.OnSelectPlayerWindow;
+                @SelectPlayer1.started -= instance.OnSelectPlayer1;
+                @SelectPlayer1.performed -= instance.OnSelectPlayer1;
+                @SelectPlayer1.canceled -= instance.OnSelectPlayer1;
+                @SelectPlayer2.started -= instance.OnSelectPlayer2;
+                @SelectPlayer2.performed -= instance.OnSelectPlayer2;
+                @SelectPlayer2.canceled -= instance.OnSelectPlayer2;
+                @SelectPlayer3.started -= instance.OnSelectPlayer3;
+                @SelectPlayer3.performed -= instance.OnSelectPlayer3;
+                @SelectPlayer3.canceled -= instance.OnSelectPlayer3;
+                @SelectPlayer4.started -= instance.OnSelectPlayer4;
+                @SelectPlayer4.performed -= instance.OnSelectPlayer4;
+                @SelectPlayer4.canceled -= instance.OnSelectPlayer4;
             }
 
             public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -1517,7 +1571,10 @@ namespace ThreeDeePongProto.Shared.InputActions
             void OnMousePosition(InputAction.CallbackContext context);
             void OnOpenGameMenu(InputAction.CallbackContext context);
             void OnCursorVisibility(InputAction.CallbackContext context);
-            void OnSelectPlayerWindow(InputAction.CallbackContext context);
+            void OnSelectPlayer1(InputAction.CallbackContext context);
+            void OnSelectPlayer2(InputAction.CallbackContext context);
+            void OnSelectPlayer3(InputAction.CallbackContext context);
+            void OnSelectPlayer4(InputAction.CallbackContext context);
         }
         public interface IUserInterfaceActions
         {

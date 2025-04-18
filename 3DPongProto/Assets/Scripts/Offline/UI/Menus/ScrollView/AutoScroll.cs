@@ -122,7 +122,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         /// <param name="_taskDelay"></param>
         private void AutoScrollToNextGameObject(GameObject _selectedObject)
         {
-            if (!m_autoScrollingEnabled || !m_selectedObjectInScrollView/* || Cursor.lockState == CursorLockMode.None*/)
+            if (!m_autoScrollingEnabled || !m_selectedObjectInScrollView)
             {
                 return;
             }
