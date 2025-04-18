@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ThreeDeePongProto.Shared.HelperClasses;
 using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,11 +18,11 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
     {
         [SerializeField] internal PlayerInput m_playerInput;
         [SerializeField] internal CharacterMainController m_playerController;
-        
+
         private InputActionMap m_uiMap, m_playerMap;
 
         private const string m_moveString = "Move", m_rotateString = "Rotate", m_pushString = "Push", m_resetString = "ResetRotation", m_zoomString = "Zoom";
-        private const string m_kickBallString = "KickBall", m_cursorString = "CursorVisibility", m_openGameMenuString = "OpenGameMenu", m_mousePositionString = "MousePosition";
+        private const string m_kickBallString = "KickBall", m_cursorString = "CursorVisibility", m_openGameMenuString = "OpenGameMenu", m_mousePositionString = "MousePosition", m_selectWindowString = "SelectPlayerWindow";
 
         internal List<InputBinding> m_playerBindings = new();
         private int m_playerID;
@@ -57,6 +58,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             if (!IsLocalPlayer())
                 return;
+
             //Use Rotation constantly.
             m_playerController.m_playerMovement.SetInputVector(m_rotationVector, m_playerID, true);
         }
@@ -87,6 +89,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
             m_playerMap = m_playerInput.actions.FindActionMap(EInputActionMaps.PlayerActions.ToString());
             m_uiMap = m_playerInput.actions.FindActionMap(EInputActionMaps.UserInterface.ToString());
+
             foreach (var actionMap in m_playerInput.actions.actionMaps)
             {
                 if (actionMap == m_playerMap)
@@ -265,6 +268,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                     }
                     break;
                 }
+                default:
+                    break;
             }
         }
 
@@ -378,7 +383,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             //if (bindingControlScheme == _playerInput.currentControlScheme)
             //{
             Vector2 zoomVector = _callbackContext.ReadValue<Vector2>();
-            m_playerController.m_playerCameraController.Zooming(zoomVector, m_playerID, m_playerInput.currentControlScheme);
+            m_playerController.m_playerCameraController.Zoom(zoomVector, _callbackContext.control.device, m_playerID);
             //}
         }
 
@@ -390,7 +395,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             //string bindingControlScheme = _callbackContext.action.bindings[_callbackContext.action.GetBindingIndexForControl(_callbackContext.control)].groups;
 
             //if (bindingControlScheme == _playerInput.currentControlScheme)
-            m_playerController.m_playerCameraController.Zooming(Vector2.zero, m_playerID, "");
+            m_playerController.m_playerCameraController.Zoom(Vector2.zero, _callbackContext.control.device, m_playerID);
         }
 
         private void OnMousePosition(InputAction.CallbackContext _callbackContext)

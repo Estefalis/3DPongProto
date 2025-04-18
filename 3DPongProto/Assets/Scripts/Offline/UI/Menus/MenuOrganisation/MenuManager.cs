@@ -132,7 +132,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 #endif
             UpdateLastSelectedObject();
 
-            if (m_inputActions.UserInterface.Cancel.WasPressedThisFrame())
+            if (m_inputActions.UserInterface.Cancel.WasPressedThisFrame() && !m_firstElement.gameObject.activeInHierarchy)
                 CloseToPreviousElement();
         }
 
@@ -179,8 +179,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             if (!m_uiActionMap.enabled)
                 m_uiActionMap.Enable();
-
-            //m_menuInputHandler.ActivateMenuInput();
         }
 
         private void OnCloseMenu()
@@ -192,11 +190,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             if (m_uiActionMap.enabled)
                 m_uiActionMap.Disable();
-
-            #region With MenuInputHandler
-            //AResumeTheGame?.Invoke();
-            //m_menuInputHandler.DeactivateMenuInput();
-            #endregion
         }
         #endregion
 
@@ -272,12 +265,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             currentElement.gameObject.SetActive(false);
 
             if (m_activeElement.Count == 0)
-            {
                 SetFirstStackElement(m_firstElement);
-
-                if (UserInputManager.SetActionMap == EInputActionMaps.UserInterface.ToString())
-                    UserInputManager.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
-            }
 
             Transform previousElement = m_activeElement.Peek();
             previousElement.gameObject.SetActive(true);
@@ -433,7 +421,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (sceneIndex == (int)ESceneNames.StartMenu)   //TODO: Add other 'menoOnly' Scenes.
                 return;
 
-            if (m_firstElement.gameObject.activeInHierarchy && UserInputManager.SetActionMap == EInputActionMaps.UserInterface.ToString())
+            if (m_firstElement.gameObject.activeInHierarchy)
                 AResumeTheGame?.Invoke();
         }
 

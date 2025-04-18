@@ -109,6 +109,15 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SelectPlayerWindow"",
+                    ""type"": ""Button"",
+                    ""id"": ""09a9f2a4-cbcf-43f8-a8b9-b010988ee38e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -595,6 +604,50 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""action"": ""OpenGameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""37534b42-21f6-42db-b659-ec2aa6184334"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID0"",
+                    ""action"": ""SelectPlayerWindow"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e68556fa-6670-433d-9296-25a45b71aa79"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID1"",
+                    ""action"": ""SelectPlayerWindow"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eb10ebda-3033-4912-b983-7470a8932099"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID2"",
+                    ""action"": ""SelectPlayerWindow"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f249093d-8797-479f-af40-e3c0ad1ef0b6"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardPlayerID3"",
+                    ""action"": ""SelectPlayerWindow"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -840,7 +893,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""name"": """",
                     ""id"": ""706797dc-bfc4-4e1d-8b5e-b2848abb306c"",
-                    ""path"": ""<Keyboard>/escape"",
+                    ""path"": ""<Keyboard>/backspace"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse;KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
@@ -942,7 +995,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""KeyboardMouse;KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
+                    ""groups"": ""KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
                     ""action"": ""CloseGameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -1093,6 +1146,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_PlayerActions_MousePosition = m_PlayerActions.FindAction("MousePosition", throwIfNotFound: true);
             m_PlayerActions_OpenGameMenu = m_PlayerActions.FindAction("OpenGameMenu", throwIfNotFound: true);
             m_PlayerActions_CursorVisibility = m_PlayerActions.FindAction("CursorVisibility", throwIfNotFound: true);
+            m_PlayerActions_SelectPlayerWindow = m_PlayerActions.FindAction("SelectPlayerWindow", throwIfNotFound: true);
             // UserInterface
             m_UserInterface = asset.FindActionMap("UserInterface", throwIfNotFound: true);
             m_UserInterface_Navigate = m_UserInterface.FindAction("Navigate", throwIfNotFound: true);
@@ -1175,6 +1229,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         private readonly InputAction m_PlayerActions_MousePosition;
         private readonly InputAction m_PlayerActions_OpenGameMenu;
         private readonly InputAction m_PlayerActions_CursorVisibility;
+        private readonly InputAction m_PlayerActions_SelectPlayerWindow;
         public struct PlayerActionsActions
         {
             private @PlayerInputActions m_Wrapper;
@@ -1188,6 +1243,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             public InputAction @MousePosition => m_Wrapper.m_PlayerActions_MousePosition;
             public InputAction @OpenGameMenu => m_Wrapper.m_PlayerActions_OpenGameMenu;
             public InputAction @CursorVisibility => m_Wrapper.m_PlayerActions_CursorVisibility;
+            public InputAction @SelectPlayerWindow => m_Wrapper.m_PlayerActions_SelectPlayerWindow;
             public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1224,6 +1280,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @CursorVisibility.started += instance.OnCursorVisibility;
                 @CursorVisibility.performed += instance.OnCursorVisibility;
                 @CursorVisibility.canceled += instance.OnCursorVisibility;
+                @SelectPlayerWindow.started += instance.OnSelectPlayerWindow;
+                @SelectPlayerWindow.performed += instance.OnSelectPlayerWindow;
+                @SelectPlayerWindow.canceled += instance.OnSelectPlayerWindow;
             }
 
             private void UnregisterCallbacks(IPlayerActionsActions instance)
@@ -1255,6 +1314,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @CursorVisibility.started -= instance.OnCursorVisibility;
                 @CursorVisibility.performed -= instance.OnCursorVisibility;
                 @CursorVisibility.canceled -= instance.OnCursorVisibility;
+                @SelectPlayerWindow.started -= instance.OnSelectPlayerWindow;
+                @SelectPlayerWindow.performed -= instance.OnSelectPlayerWindow;
+                @SelectPlayerWindow.canceled -= instance.OnSelectPlayerWindow;
             }
 
             public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -1455,6 +1517,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             void OnMousePosition(InputAction.CallbackContext context);
             void OnOpenGameMenu(InputAction.CallbackContext context);
             void OnCursorVisibility(InputAction.CallbackContext context);
+            void OnSelectPlayerWindow(InputAction.CallbackContext context);
         }
         public interface IUserInterfaceActions
         {

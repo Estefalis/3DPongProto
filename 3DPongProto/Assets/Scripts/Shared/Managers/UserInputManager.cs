@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.HelperClasses;
+using ThreeDeePongProto.Shared.InputActions;
 using ThreeDeePongProto.Shared.PlayerCharacter;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -54,9 +55,10 @@ namespace ThreeDeePongProto.Shared.Managers
         private static EInputActionMaps m_newActiveActionMap = EInputActionMaps.None;
         internal static string SetActionMap { get => m_lastActionMap; }
         private static string m_lastActionMap;
+        internal static int FocusedKeyboardPlayerID { get; private set; } = 0; //Keeps track of focused player. Standard PlayerID 0.
 
         #region Lists_and_Dictionaries
-        List<InputDevice> m_availableGamepads;
+        private List<InputDevice> m_availableGamepads;
         #endregion
 
         #region Actions_and_Functions
@@ -82,6 +84,7 @@ namespace ThreeDeePongProto.Shared.Managers
             #endregion
 
             m_lastActionMap = "";
+
             m_playerInputManager = GetComponent<PlayerInputManager>();
             SetUpPlayerInputManager(m_playerInputManager);
         }

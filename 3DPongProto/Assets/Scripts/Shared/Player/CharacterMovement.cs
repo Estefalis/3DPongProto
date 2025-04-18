@@ -46,7 +46,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private int m_playerID;
 
         private Vector3 m_rbPushStartPos;
-        private PlayerSOData m_ownPlayerSOData;
         private ControlUIStates m_ownControlUIStates;
         private ControlUIValues m_ownControlUIValues;
 
