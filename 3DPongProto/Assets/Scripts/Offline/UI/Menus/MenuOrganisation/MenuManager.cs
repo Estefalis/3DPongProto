@@ -47,6 +47,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] private CursorLockMode m_cursorLockMode = CursorLockMode.Confined;
         [SerializeField] private bool m_showCursor = true;
 
+        [SerializeField] private float m_stickDeadZoneMin = 0.1f;
+        [SerializeField] private float m_stickDeadZoneMax = 0.5f;
         internal static GameObject LastSelectedGameObject { get => m_lastSelectedGameObject; }
         private static GameObject m_lastSelectedGameObject;
         #endregion
@@ -68,6 +70,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void Awake()
         {
+            Cursor.lockState = m_cursorLockMode;
             Cursor.visible = m_showCursor;
 
             m_inputActions = new PlayerInputActions();
