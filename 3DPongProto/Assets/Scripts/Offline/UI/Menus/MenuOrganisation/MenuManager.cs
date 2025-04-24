@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using ThreeDeePongProto.Shared.InputActions;
 using ThreeDeePongProto.Shared.Managers;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -47,16 +48,18 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] private CursorLockMode m_cursorLockMode = CursorLockMode.Confined;
         [SerializeField] private bool m_showCursor = true;
 
-        [SerializeField] private float m_stickDeadZoneMin = 0.1f;
-        [SerializeField] private float m_stickDeadZoneMax = 0.5f;
+        //[SerializeField] private float m_stickDeadZoneMin = 0.1f;
+        //[SerializeField] private float m_stickDeadZoneMax = 0.5f;
         internal static GameObject LastSelectedGameObject { get => m_lastSelectedGameObject; }
         private static GameObject m_lastSelectedGameObject;
         #endregion
 
-        #region GameScene-Variables
-        [Header("GameScene Variables")]
         [SerializeField] private Button m_hiddenFinishButton;
 
+        private TMP_InputField m_lastSelectedInputField = null;
+        private bool m_fieldIsInEditMode = false;
+
+        #region Actions_and_Functions
         internal static event Action AResumeTheGame;          //LocalMatchManager unpauses the Game.
         internal static event Action<int> AReLoadScene;       //(New)UserInputManager with central SceneManager.LoadScene().
         internal static event Action AEndInfiniteMatch;
@@ -139,13 +142,84 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (!Application.isFocused)  //TODO: Test, if Navigation still works, if game is not focussed.
                 return;
 
-#if UNITY_EDITOR
-            //Debug.Log($"UIMap enabled: {m_uiActionMap.enabled} | PlayerMap enabled: {m_playerActionMap.enabled}."); 
-#endif
+            #region Runtime-ButtonPress
             UpdateLastSelectedObject();
 
-            if (m_inputActions.UserInterface.Cancel.WasPressedThisFrame() && !m_firstElement.gameObject.activeInHierarchy)
+            if (m_inputActions.UserInterface.Submit.WasPressedThisFrame())  //Limit check to once per frame!
+            {
+                switch (m_fieldIsInEditMode)
+                {
+                    case false: //InputField is currently not in Edit-Mode. Switch into Edit-Mode!
+                    {
+                        m_fieldIsInEditMode = true;
+                        break;
+                    }
+                    case true:  //InputField is currently in Edit-Mode. Switch out of Edit-Mode!
+                    {
+                        m_fieldIsInEditMode = false;
+                        break;
+                    }
+                }
+            }
+
+            if (m_inputActions.UserInterface.Cancel.WasPressedThisFrame() && !m_firstElement.gameObject.activeInHierarchy && !m_fieldIsInEditMode)
                 CloseToPreviousElement();
+            #endregion
+        }
+
+        private void InputFieldCheck(GameObject _incomingGameObject)
+        {
+            //If '_incomingGameObject' is a TMP_InputField.
+            if (_incomingGameObject.TryGetComponent<TMP_InputField>(out var inputField))
+            {
+                //true == newest G0 from InputFieldCheck() || false == previous saved GO from UpdateLastSelectedObject().
+                switch (inputField.gameObject == m_eventSystem.currentSelectedGameObject)
+                {
+                    case true:  //GO is the newest, current selected Object AND a TMP_InputField.
+                    {
+                        if (m_lastSelectedInputField == null)
+                        {
+                            m_lastSelectedInputField = inputField;  //Save the latest selected TMP_InputField for later changes.
+#if UNITY_EDITOR
+                            Debug.Log($"switch current IF: {m_lastSelectedInputField.name}.");
+#endif
+                            m_lastSelectedInputField.image.color = m_lastSelectedInputField.colors.selectedColor;
+                        }
+
+                        switch (m_fieldIsInEditMode)
+                        {
+                            case false:
+                            {
+                                m_lastSelectedInputField.interactable = false;
+                                break;
+                            }
+                            case true:
+                            {
+                                m_lastSelectedInputField.interactable = true;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                    case false: //GO is the TMP_InputField we just left.
+                    {
+                        if (m_lastSelectedInputField != null)
+                        {
+#if UNITY_EDITOR
+                            Debug.Log($"Left last {inputField.name} IF.");
+#endif
+                            m_fieldIsInEditMode = false;
+                            inputField.image.color = inputField.colors.normalColor;
+                            if (inputField.interactable)
+                                inputField.interactable = false;
+                            if (!inputField.enabled)
+                                inputField.enabled = true;
+                            m_lastSelectedInputField = null;
+                        }
+                        break;
+                    }
+                }
+            }
         }
 
         #region Non_InputAction_Subscriptions
@@ -215,13 +289,21 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             {
                 case false:
                 {
+                    //Moment, when the previous saved GO still differs from the 'up to date' selected Object from the eventSystem.
                     switch (m_lastSelectedGameObject != m_eventSystem.currentSelectedGameObject)
                     {
-                        case false:
-                            break;
                         case true:
                         {
+                            //1st check for TMP_Inputfield before replacing the latest selected FallBack-GameObject.
+                            InputFieldCheck(m_lastSelectedGameObject);
+                            //Moment, when the previous saved GO is made equal to the selected Object from the eventSystem.
                             m_lastSelectedGameObject = m_eventSystem.currentSelectedGameObject;
+                            break;
+                        }
+                        case false:
+                        {
+                            //2nd check for TMP_Inputfield after replacing the latest selected FallBack-GameObject.
+                            InputFieldCheck(m_lastSelectedGameObject);
                             break;
                         }
                     }
@@ -231,10 +313,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 {
                     switch (m_lastSelectedGameObject == null)
                     {
+                        case true:
+                            break;
                         case false:
                             m_eventSystem.SetSelectedGameObject(m_lastSelectedGameObject);
-                            break;
-                        case true:
                             break;
                     }
                     break;

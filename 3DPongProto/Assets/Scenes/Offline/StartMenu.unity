@@ -8281,18 +8281,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1853817896}
   m_CullTransparentMesh: 1
---- !u!114 &1868985407 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2799585194595825427, guid: e12d58a5cd728d14b940072f671355ec,
-    type: 3}
-  m_PrefabInstance: {fileID: 977007613277384197}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1884955034
 GameObject:
   m_ObjectHideFlags: 0
@@ -9127,18 +9115,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 3465818608913477240}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2051238374 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6398030083872708698, guid: e12d58a5cd728d14b940072f671355ec,
-    type: 3}
-  m_PrefabInstance: {fileID: 977007613277384197}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &2088722245 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6398030085263205450, guid: e12d58a5cd728d14b940072f671355ec,
@@ -9617,11 +9593,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 975557202}
     m_Modifications:
-    - target: {fileID: 6398030083901581604, guid: e12d58a5cd728d14b940072f671355ec,
-        type: 3}
-      propertyPath: m_Name
-      value: SettingsButtonLocal
-      objectReference: {fileID: 0}
     - target: {fileID: 6398030083901581606, guid: e12d58a5cd728d14b940072f671355ec,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -9632,21 +9603,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
       objectReference: {fileID: 1480635289379432788}
-    - target: {fileID: 6398030084365035184, guid: e12d58a5cd728d14b940072f671355ec,
-        type: 3}
-      propertyPath: m_Name
-      value: StartButtonLocal
-      objectReference: {fileID: 0}
     - target: {fileID: 6398030084365035186, guid: e12d58a5cd728d14b940072f671355ec,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2093391957}
-    - target: {fileID: 6398030085177191195, guid: e12d58a5cd728d14b940072f671355ec,
-        type: 3}
-      propertyPath: m_Name
-      value: BackButtonLocal
-      objectReference: {fileID: 0}
     - target: {fileID: 6398030085177191197, guid: e12d58a5cd728d14b940072f671355ec,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -9762,22 +9723,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: LocalPreparationWindow
       objectReference: {fileID: 0}
-    - target: {fileID: 6398030085263205455, guid: e12d58a5cd728d14b940072f671355ec,
-        type: 3}
-      propertyPath: m_player1SOData
-      value: 
-      objectReference: {fileID: 11400000, guid: 533fe6eee149a3143aab50fbfb5541a8,
-        type: 2}
-    - target: {fileID: 6398030085263205455, guid: e12d58a5cd728d14b940072f671355ec,
-        type: 3}
-      propertyPath: m_playerTextOne
-      value: 
-      objectReference: {fileID: 1868985407}
-    - target: {fileID: 6398030085263205455, guid: e12d58a5cd728d14b940072f671355ec,
-        type: 3}
-      propertyPath: m_playerTextTwo
-      value: 
-      objectReference: {fileID: 2051238374}
     - target: {fileID: 6398030085468637673, guid: e12d58a5cd728d14b940072f671355ec,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -9788,11 +9733,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
       objectReference: {fileID: 1605107464}
-    - target: {fileID: 6398030085468637687, guid: e12d58a5cd728d14b940072f671355ec,
-        type: 3}
-      propertyPath: m_Name
-      value: JoinButtonLocal
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e12d58a5cd728d14b940072f671355ec, type: 3}
 --- !u!224 &1480635287588115570

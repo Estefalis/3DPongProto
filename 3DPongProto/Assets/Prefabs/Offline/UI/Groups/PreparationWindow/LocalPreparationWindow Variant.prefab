@@ -32,6 +32,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 665298988484135939, guid: 4fd24bb2a95defd4a8e8f9d045615342,
+        type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2688936488530790667, guid: 4fd24bb2a95defd4a8e8f9d045615342,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -55,6 +60,11 @@ PrefabInstance:
     - target: {fileID: 2688936488530790667, guid: 4fd24bb2a95defd4a8e8f9d045615342,
         type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3122429240402133904, guid: 4fd24bb2a95defd4a8e8f9d045615342,
+        type: 3}
+      propertyPath: m_Interactable
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3122429240402133905, guid: 4fd24bb2a95defd4a8e8f9d045615342,
@@ -287,6 +297,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6144415438916294754, guid: 4fd24bb2a95defd4a8e8f9d045615342,
+        type: 3}
+      propertyPath: m_Name
+      value: SettingsButtonLocal
+      objectReference: {fileID: 0}
     - target: {fileID: 6144415439081550774, guid: 4fd24bb2a95defd4a8e8f9d045615342,
         type: 3}
       propertyPath: m_text
@@ -324,6 +339,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6144415439383975924, guid: 4fd24bb2a95defd4a8e8f9d045615342,
         type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 6398030084722231285}
+    - target: {fileID: 6144415439383975924, guid: 4fd24bb2a95defd4a8e8f9d045615342,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 0}
@@ -351,6 +371,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6144415439383975926, guid: 4fd24bb2a95defd4a8e8f9d045615342,
+        type: 3}
+      propertyPath: m_Name
+      value: StartButtonLocal
       objectReference: {fileID: 0}
     - target: {fileID: 6144415439539647214, guid: 4fd24bb2a95defd4a8e8f9d045615342,
         type: 3}
@@ -507,6 +532,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6144415440190888541, guid: 4fd24bb2a95defd4a8e8f9d045615342,
+        type: 3}
+      propertyPath: m_Name
+      value: BackButtonLocal
+      objectReference: {fileID: 0}
     - target: {fileID: 6144415440280966409, guid: 4fd24bb2a95defd4a8e8f9d045615342,
         type: 3}
       propertyPath: m_playerSOData.Array.size
@@ -646,6 +676,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: LocalPreparationWindow
       objectReference: {fileID: 0}
+    - target: {fileID: 6144415440313265123, guid: 4fd24bb2a95defd4a8e8f9d045615342,
+        type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6144415440313265124, guid: 4fd24bb2a95defd4a8e8f9d045615342,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -731,6 +766,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6144415440486643889, guid: 4fd24bb2a95defd4a8e8f9d045615342,
+        type: 3}
+      propertyPath: m_Name
+      value: JoinButtonLocal
+      objectReference: {fileID: 0}
     - target: {fileID: 6144415440733851472, guid: 4fd24bb2a95defd4a8e8f9d045615342,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -779,6 +819,11 @@ PrefabInstance:
     - target: {fileID: 6144415440766160476, guid: 4fd24bb2a95defd4a8e8f9d045615342,
         type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6144415440943882711, guid: 4fd24bb2a95defd4a8e8f9d045615342,
+        type: 3}
+      propertyPath: m_Interactable
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6144415440943882712, guid: 4fd24bb2a95defd4a8e8f9d045615342,
@@ -933,3 +978,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4fd24bb2a95defd4a8e8f9d045615342, type: 3}
+--- !u!114 &6398030084722231285 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6144415439739877043, guid: 4fd24bb2a95defd4a8e8f9d045615342,
+    type: 3}
+  m_PrefabInstance: {fileID: 977007611465396550}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
