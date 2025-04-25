@@ -142,84 +142,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (!Application.isFocused)  //TODO: Test, if Navigation still works, if game is not focussed.
                 return;
 
-            #region Runtime-ButtonPress
             UpdateLastSelectedObject();
 
-            if (m_inputActions.UserInterface.Submit.WasPressedThisFrame())  //Limit check to once per frame!
-            {
-                switch (m_fieldIsInEditMode)
-                {
-                    case false: //InputField is currently not in Edit-Mode. Switch into Edit-Mode!
-                    {
-                        m_fieldIsInEditMode = true;
-                        break;
-                    }
-                    case true:  //InputField is currently in Edit-Mode. Switch out of Edit-Mode!
-                    {
-                        m_fieldIsInEditMode = false;
-                        break;
-                    }
-                }
-            }
-
-            if (m_inputActions.UserInterface.Cancel.WasPressedThisFrame() && !m_firstElement.gameObject.activeInHierarchy && !m_fieldIsInEditMode)
-                CloseToPreviousElement();
-            #endregion
-        }
-
-        private void InputFieldCheck(GameObject _incomingGameObject)
-        {
-            //If '_incomingGameObject' is a TMP_InputField.
-            if (_incomingGameObject.TryGetComponent<TMP_InputField>(out var inputField))
-            {
-                //true == newest G0 from InputFieldCheck() || false == previous saved GO from UpdateLastSelectedObject().
-                switch (inputField.gameObject == m_eventSystem.currentSelectedGameObject)
-                {
-                    case true:  //GO is the newest, current selected Object AND a TMP_InputField.
-                    {
-                        if (m_lastSelectedInputField == null)
-                        {
-                            m_lastSelectedInputField = inputField;  //Save the latest selected TMP_InputField for later changes.
-#if UNITY_EDITOR
-                            Debug.Log($"switch current IF: {m_lastSelectedInputField.name}.");
-#endif
-                            m_lastSelectedInputField.image.color = m_lastSelectedInputField.colors.selectedColor;
-                        }
-
-                        switch (m_fieldIsInEditMode)
-                        {
-                            case false:
-                            {
-                                m_lastSelectedInputField.interactable = false;
-                                break;
-                            }
-                            case true:
-                            {
-                                m_lastSelectedInputField.interactable = true;
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                    case false: //GO is the TMP_InputField we just left.
-                    {
-                        if (m_lastSelectedInputField != null)
-                        {
-#if UNITY_EDITOR
-                            Debug.Log($"Left last {inputField.name} IF.");
-#endif
-                            m_fieldIsInEditMode = false;
-                            inputField.image.color = inputField.colors.normalColor;
-                            if (inputField.interactable)
-                                inputField.interactable = false;
-                            if (!inputField.enabled)
-                                inputField.enabled = true;
-                            m_lastSelectedInputField = null;
-                        }
-                        break;
-                    }
-                }
-            }
+            HandleButtonPresses();
         }
 
         #region Non_InputAction_Subscriptions
@@ -325,6 +250,91 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 #if UNITY_EDITOR
             //Debug.Log(m_lastSelectedGameObject);
 #endif
+        }
+
+        private void InputFieldCheck(GameObject _incomingGameObject)
+        {
+            //If '_incomingGameObject' is a TMP_InputField.
+            if (_incomingGameObject.TryGetComponent<TMP_InputField>(out var inputField))
+            {
+                //true == newest G0 from InputFieldCheck() || false == previous saved GO from UpdateLastSelectedObject().
+                switch (inputField.gameObject == m_eventSystem.currentSelectedGameObject)
+                {
+                    case true:  //GO is the newest, current selected Object AND a TMP_InputField.
+                    {
+                        if (m_lastSelectedInputField == null)
+                        {
+                            m_lastSelectedInputField = inputField;  //Save the latest selected TMP_InputField for later changes.
+#if UNITY_EDITOR
+                            Debug.Log($"switch current IF: {m_lastSelectedInputField.name}.");
+#endif
+                            m_lastSelectedInputField.image.color = m_lastSelectedInputField.colors.selectedColor;
+                        }
+
+                        switch (m_fieldIsInEditMode)
+                        {
+                            case false:
+                            {
+                                #region Cursor doesn't activate, but Player has still to press Submit to move to next GO.
+                                //m_eventSystem.SetSelectedGameObject(m_lastSelectedInputField.gameObject);
+                                //m_lastSelectedInputField.enabled = false;
+                                #endregion
+                                m_lastSelectedInputField.interactable = false;
+                                break;
+                            }
+                            case true:
+                            {
+                                #region Cursor doesn't activate, but Player has still to press Submit to move to next GO.
+                                //m_lastSelectedInputField.enabled = true;
+                                #endregion
+                                m_lastSelectedInputField.interactable = true;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                    case false: //GO is the TMP_InputField we just left.
+                    {
+                        if (m_lastSelectedInputField != null)
+                        {
+#if UNITY_EDITOR
+                            Debug.Log($"Left last {inputField.name} IF.");
+#endif
+                            m_fieldIsInEditMode = false;
+                            inputField.image.color = inputField.colors.normalColor;
+                            if (inputField.interactable)
+                                inputField.interactable = false;
+                            if (!inputField.enabled)
+                                inputField.enabled = true;
+                            m_lastSelectedInputField = null;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void HandleButtonPresses()
+        {
+            if (m_inputActions.UserInterface.Submit.WasPressedThisFrame())  //Limit check to once per frame!
+            {
+                switch (m_fieldIsInEditMode)
+                {
+                    case false: //InputField is currently not in Edit-Mode. Switch into Edit-Mode.
+                    {
+                        m_fieldIsInEditMode = true;
+                        break;
+                    }
+                    case true:  //InputField is currently in Edit-Mode. Switch out of Edit-Mode.
+                    {
+                        m_fieldIsInEditMode = false;
+                        break;
+                    }
+                }
+            }
+
+            if (m_inputActions.UserInterface.Cancel.WasPressedThisFrame() && !m_firstElement.gameObject.activeInHierarchy && !m_fieldIsInEditMode)
+                CloseToPreviousElement();
         }
 
         private void SetUIElements()
