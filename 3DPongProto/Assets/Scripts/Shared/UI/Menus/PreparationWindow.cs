@@ -56,11 +56,11 @@ namespace ThreeDeePongProto.Shared.UI
         private readonly string m_matchFileName = "/Match";
         private readonly string m_fileFormat = ".json";
 
-        private IPersistentData m_persistentData = new SerializingData();
-        private bool m_encryptionEnabled = false;
+        private readonly IPersistentData m_persistentData = new SerializingData();
+        private readonly bool m_encryptionEnabled = false;
         #endregion
 
-        private static event Action<int> aToggleButtonAccess;
+        private static event Action<int> AToggleButtonAccess;
         PlayerData m_playerData;
 
         private void Awake()
@@ -79,13 +79,13 @@ namespace ThreeDeePongProto.Shared.UI
 
         private void OnEnable()
         {
-            aToggleButtonAccess += ToggleButtonAccess;
+            AToggleButtonAccess += ToggleButtonAccess;
             AddGroupListener();
         }
 
         private void OnDisable()
         {
-            aToggleButtonAccess -= ToggleButtonAccess;
+            AToggleButtonAccess -= ToggleButtonAccess;
             RemoveGroupListener();
         }
 
@@ -288,7 +288,7 @@ namespace ThreeDeePongProto.Shared.UI
             SetUpPlayerAmount(m_matchUIStates.EPlayerAmount);
 
             m_currentPlayers = (int)m_matchUIStates.EPlayerAmount;
-            aToggleButtonAccess?.Invoke(m_currentPlayers);
+            AToggleButtonAccess?.Invoke(m_currentPlayers);
         }
 
         private void HandleToggleOneChanges(bool _toggle)
@@ -383,13 +383,13 @@ namespace ThreeDeePongProto.Shared.UI
 
             if (string.IsNullOrWhiteSpace(m_nameInputFields[_index].text))
             {
-                aToggleButtonAccess?.Invoke(m_currentPlayers);
+                AToggleButtonAccess?.Invoke(m_currentPlayers);
                 return;
             }
 
             m_matchValues.PlayerSOData[_index].PlayerName = m_nameInputFields[_index].text;
 
-            aToggleButtonAccess?.Invoke(m_currentPlayers);
+            AToggleButtonAccess?.Invoke(m_currentPlayers);
         }
 
         private void ToggleButtonAccess(int _ePlayerAmount)

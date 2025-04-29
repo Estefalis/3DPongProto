@@ -58,6 +58,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private TMP_InputField m_lastSelectedInputField = null;
         private bool m_fieldIsInEditMode = false;
+        private string m_currentInputFieldContent = "";
 
         #region Actions_and_Functions
         internal static event Action AResumeTheGame;          //LocalMatchManager unpauses the Game.
@@ -266,7 +267,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         {
                             m_lastSelectedInputField = inputField;  //Save the latest selected TMP_InputField for later changes.
 #if UNITY_EDITOR
-                            Debug.Log($"switch current IF: {m_lastSelectedInputField.name}.");
+                            //Debug.Log($"switch current IF: {m_lastSelectedInputField.name}.");
 #endif
                             m_lastSelectedInputField.image.color = m_lastSelectedInputField.colors.selectedColor;
                         }
@@ -275,19 +276,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         {
                             case false:
                             {
-                                #region Cursor doesn't activate, but Player has still to press Submit to move to next GO.
-                                //m_eventSystem.SetSelectedGameObject(m_lastSelectedInputField.gameObject);
-                                //m_lastSelectedInputField.enabled = false;
-                                #endregion
-                                m_lastSelectedInputField.interactable = false;
+                                ExitEditMode();
                                 break;
                             }
                             case true:
                             {
-                                #region Cursor doesn't activate, but Player has still to press Submit to move to next GO.
-                                //m_lastSelectedInputField.enabled = true;
-                                #endregion
-                                m_lastSelectedInputField.interactable = true;
+                                EnterEditMode();
                                 break;
                             }
                         }
@@ -298,7 +292,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         if (m_lastSelectedInputField != null)
                         {
 #if UNITY_EDITOR
-                            Debug.Log($"Left last {inputField.name} IF.");
+                            //Debug.Log($"Left last {inputField.name} IF. Saved old IF Content: {m_currentInputFieldContent}");
 #endif
                             m_fieldIsInEditMode = false;
                             inputField.image.color = inputField.colors.normalColor;
@@ -306,6 +300,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                                 inputField.interactable = false;
                             if (!inputField.enabled)
                                 inputField.enabled = true;
+                            if (inputField.isFocused)
+                                inputField.DeactivateInputField();
+                            if (m_currentInputFieldContent != string.Empty)
+                                m_currentInputFieldContent = string.Empty;  //m_currentInputFieldContent reset each time we leave an IF.
                             m_lastSelectedInputField = null;
                         }
                         break;
@@ -314,27 +312,92 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             }
         }
 
+        private void ExitEditMode()
+        {
+            if (m_lastSelectedInputField == null)
+                return;
+
+            if (m_lastSelectedInputField.interactable)
+            {
+                m_lastSelectedInputField.interactable = false;
+                m_lastSelectedInputField.DeactivateInputField();
+            }
+        }
+
+        private void EnterEditMode()
+        {
+            if (m_lastSelectedInputField == null)
+                return;
+
+            if (!m_lastSelectedInputField.interactable)
+            {
+                m_currentInputFieldContent = m_lastSelectedInputField.text;   //Save the text for a possible Cancel-Action.
+                m_lastSelectedInputField.interactable = true;
+                m_lastSelectedInputField.ActivateInputField();
+            }
+        }
+
         private void HandleButtonPresses()
         {
+            #region Submit-Actions
             if (m_inputActions.UserInterface.Submit.WasPressedThisFrame())  //Limit check to once per frame!
+            {
+                if (m_lastSelectedInputField != null)   //Only set 'm_fieldIsInEditMode' to true, if being in an InputField.
+                {
+                    switch (m_fieldIsInEditMode)
+                    {
+                        case false: //InputField is currently not in Edit-Mode, switch into Edit-Mode.
+                        {
+                            m_fieldIsInEditMode = true;
+                            break;
+                        }
+                        case true:  //InputField is currently in Edit-Mode, switch out of Edit-Mode.
+                        {
+                            m_fieldIsInEditMode = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region Cancel-Actions
+            if (m_inputActions.UserInterface.Cancel.WasPressedThisFrame())  //Limit check to once per frame!
             {
                 switch (m_fieldIsInEditMode)
                 {
-                    case false: //InputField is currently not in Edit-Mode. Switch into Edit-Mode.
+                    case false: //If InputField is currently not in Edit-Mode, close to previous Transform-Parent in Stack.
                     {
-                        m_fieldIsInEditMode = true;
+                        if (!m_firstElement.gameObject.activeInHierarchy)   //Prevents closing the very first menu Transform-Parent.
+                            CloseToPreviousElement();
                         break;
                     }
-                    case true:  //InputField is currently in Edit-Mode. Switch out of Edit-Mode.
+                    case true:  //If InputField is currently in Edit-Mode, switch out of Edit-Mode and reset to previous IF content.
                     {
-                        m_fieldIsInEditMode = false;
+                        if (m_lastSelectedInputField != null)               //Prevents NullReferenceException when no IF is active/set.
+                        {
+                            if (m_currentInputFieldContent != string.Empty)
+                                m_lastSelectedInputField.text = m_currentInputFieldContent;    //Saved content of the last InputField.
+                            //NOTE: m_currentInputFieldContent will be reset on leaving InputFields.
+
+                            m_fieldIsInEditMode = false;
+                        }
+                        
+                        ExitEditMode();
                         break;
                     }
                 }
             }
+            #endregion
 
-            if (m_inputActions.UserInterface.Cancel.WasPressedThisFrame() && !m_firstElement.gameObject.activeInHierarchy && !m_fieldIsInEditMode)
-                CloseToPreviousElement();
+            #region Point-Actions
+            if (m_inputActions.UserInterface.Point.WasPressedThisFrame())
+            {
+                //TODO: Think of a way to activate InputFields with interactable set on false.
+                //InputFieldCheck(m_lastSelectedGameObject);
+                //EnterEditMode();
+            }
+            #endregion
         }
 
         private void SetUIElements()

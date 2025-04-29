@@ -920,7 +920,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""name"": """",
                     ""id"": ""706797dc-bfc4-4e1d-8b5e-b2848abb306c"",
-                    ""path"": ""<Keyboard>/backspace"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse;KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",

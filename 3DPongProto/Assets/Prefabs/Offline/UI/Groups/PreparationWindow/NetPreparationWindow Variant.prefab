@@ -392,6 +392,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6144415439739877043, guid: 4fd24bb2a95defd4a8e8f9d045615342,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 4117013874014034900}
     - target: {fileID: 6144415439739877044, guid: 4fd24bb2a95defd4a8e8f9d045615342,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -894,3 +899,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4fd24bb2a95defd4a8e8f9d045615342, type: 3}
+--- !u!114 &4117013874014034900 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 665298988484135939, guid: 4fd24bb2a95defd4a8e8f9d045615342,
+    type: 3}
+  m_PrefabInstance: {fileID: 3465818608942192599}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
