@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using ThreeDeePongProto.Shared.InputActions;
 using ThreeDeePongProto.Shared.Managers;
@@ -61,7 +62,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private string m_currentInputFieldContent = "";
 
         #region Actions_and_Functions
-        internal static event Action AResumeTheGame;          //LocalMatchManager unpauses the Game.
+        internal static event Action AResumeTheGame;          //LocalMatchManager to resume the Game.
         internal static event Action<int> AReLoadScene;       //(New)UserInputManager with central SceneManager.LoadScene().
         internal static event Action AEndInfiniteMatch;
         #endregion
@@ -81,7 +82,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_inputActions.Enable();
             m_uiActionMap = m_inputActions.UserInterface;
 
-            //Because 'OnNavigationInput', 'OnSubmitInput' and 'OnCancelInput' have to be handled differently, this foreach is needed.
+            //Because 'OnNavigationInput', 'OnSubmitInput' and 'OnCancelInput' have to be handled differently, this loop is needed.
             foreach (InputActionMap actionMap in m_inputActions.asset.actionMaps)
             {
                 if (m_navigationKey[0].gameObject.activeInHierarchy) //Transform active at Start of StartScene.
@@ -122,7 +123,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_inputActions.Disable();
             m_inputActions.UserInterface.CloseGameMenu.performed -= CloseMenu;
 
-            //TODO: Make clear, if unsubscriptions also need a if-condition like subscription above.
+            //TODO: Make clear, if un-subscriptions also need a if-condition like subscription above.
             m_inputActions.UserInterface.Navigate.performed -= OnNavigationInput;
             m_inputActions.UserInterface.Submit.performed -= OnSubmitInput;
 
@@ -140,7 +141,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void Update()
         {
-            if (!Application.isFocused)  //TODO: Test, if Navigation still works, if game is not focussed.
+            if (!Application.isFocused)  //TODO: Test, if Navigation still works, if game is not focused.
                 return;
 
             UpdateLastSelectedObject();
@@ -220,7 +221,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     {
                         case true:
                         {
-                            //1st check for TMP_Inputfield before replacing the latest selected FallBack-GameObject.
+                            //1st check for TMP Input Field before replacing the latest selected FallBack-GameObject.
                             InputFieldCheck(m_lastSelectedGameObject);
                             //Moment, when the previous saved GO is made equal to the selected Object from the eventSystem.
                             m_lastSelectedGameObject = m_eventSystem.currentSelectedGameObject;
@@ -228,7 +229,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         }
                         case false:
                         {
-                            //2nd check for TMP_Inputfield after replacing the latest selected FallBack-GameObject.
+                            //2nd check for TMP Input Field after replacing the latest selected FallBack-GameObject.
                             InputFieldCheck(m_lastSelectedGameObject);
                             break;
                         }
@@ -389,15 +390,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 }
             }
             #endregion
-
-            #region Point-Actions
-            if (m_inputActions.UserInterface.Point.WasPressedThisFrame())
-            {
-                //TODO: Think of a way to activate InputFields with interactable set on false.
-                //InputFieldCheck(m_lastSelectedGameObject);
-                //EnterEditMode();
-            }
-            #endregion
         }
 
         private void SetUIElements()
@@ -538,6 +530,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (nextSelectable != null && nextSelectable.gameObject.activeInHierarchy)
                 m_eventSystem.SetSelectedGameObject(nextSelectable.gameObject);
         }
+
+        public void ClickActivation(GameObject _gameObject)
+        {
+            StartCoroutine(SwitchInputFields(_gameObject));
+        }
+
+        private IEnumerator SwitchInputFields(GameObject _gameObject)
+        {
+            m_fieldIsInEditMode = false;
+            m_eventSystem.SetSelectedGameObject(_gameObject);
+            yield return null;
+            m_fieldIsInEditMode = true;
+        }
         #endregion
 
         #region MenuButton_Methods
@@ -597,7 +602,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 return;
 
             var sceneIndex = SceneManager.GetActiveScene().buildIndex;
-            if (sceneIndex == (int)ESceneNames.StartMenu)   //TODO: Add other 'menoOnly' Scenes.
+            if (sceneIndex == (int)ESceneNames.StartMenu)   //TODO: Add other 'menu Only' Scenes.
                 return;
 
             if (m_firstElement.gameObject.activeInHierarchy)
