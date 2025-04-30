@@ -4,9 +4,9 @@ using UnityEngine;
 
 public enum EGameConnectionModi
 {
-    LocalPC,
-    LAN,
-    Internet
+    LocalGame,
+    LanGame,
+    NetGame
 }
 
 namespace ThreeDeePongProto.Shared.Managers
@@ -75,10 +75,9 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         #region Actions
-        //internal static event Action<Transform> AGroundInstantiated;
         internal static event Action AStartNextRound;
         internal static event Action AStartWinProcedure;
-        internal static event Action ALoadUpHighscores;
+        internal static event Action ALoadUpHighScores;
         #endregion
         #endregion
 
@@ -315,12 +314,6 @@ namespace ThreeDeePongProto.Shared.Managers
             m_playGround.transform.localScale = new Vector3(m_basicFieldValues.SetGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_basicFieldValues.SetGroundLength * m_playGroundLengthScale);
 
             Instantiate(m_playGround, Vector3.zero, Quaternion.Euler(0, 0, 0), m_prefabParent);
-            uint playerCount = (uint)m_matchUIStates.EPlayerAmount;
-
-            //TODO: 'CharacterMovement.SetPlayerRotation' instantiates the playerPrefab. 'playerIndex' needed to spawn from SO.
-            //for (int playerIndex = 0; playerIndex < playerCount; playerIndex++)
-            //    Instantiate(m_matchValues.PlayerSOData[playerIndex].Prefab, m_prefabParent);
-            //AGroundInstantiated?.Invoke(m_prefabParent);
             Instantiate(m_ballPrefab, m_ballPopPos, Quaternion.Euler(0, 0, 0), m_prefabParent);
         }
         #endregion
@@ -346,12 +339,12 @@ namespace ThreeDeePongProto.Shared.Managers
                 m_matchValues.MatchPointsTPTwo >= m_matchValues.MatchPointsTPOne + m_matchValues.WinPointDifference;
             }
 
-            //WinCondition is true, when the current RoundNumber equals the max set roundAmount AND the winpointDifference (PlayerCharacter 1 <-> PlayerCharacter 2) triggers a new round.
+            //WinCondition is true, when the current RoundNumber equals the max set roundAmount AND the winPoint-Difference (PlayerCharacter 1 <-> PlayerCharacter 2) triggers a new round.
             bool winConditionIsMet = m_matchValues.CurrentRoundNr == m_matchUIStates.LastRoundDdIndex && m_nextRoundConditionIsMet;
 
             if (winConditionIsMet)
             {
-                if (m_matchUIStates.EGameConnectModi == EGameConnectionModi.LocalPC)
+                if (m_matchUIStates.EGameConnectModi == EGameConnectionModi.LocalGame)
                     SaveMatchDetails(_winningPlayer, _pointCount);
 
                 AStartWinProcedure?.Invoke();
@@ -384,7 +377,7 @@ namespace ThreeDeePongProto.Shared.Managers
             TimeSpan timespan = TimeSpan.FromSeconds(Time.time - m_matchValues.StartTime);
             m_matchValues.TotalPlaytime = (float)timespan.TotalSeconds;
 
-            ALoadUpHighscores?.Invoke();
+            ALoadUpHighScores?.Invoke();
         }
 
         /// <summary>
@@ -396,7 +389,7 @@ namespace ThreeDeePongProto.Shared.Managers
             {
                 //TODO: PopUp-Window: "No points gained, yet.
 #if UNITY_EDITOR
-                Debug.Log("Noone gained any Points, yet!");
+                Debug.Log("No points gained, yet!");
 #endif
                 return;
             }
@@ -407,7 +400,7 @@ namespace ThreeDeePongProto.Shared.Managers
             TimeSpan timespan = TimeSpan.FromSeconds(Time.time - m_matchValues.StartTime);
             m_matchValues.TotalPlaytime = (float)timespan.TotalSeconds;
 
-            ALoadUpHighscores?.Invoke();
+            ALoadUpHighScores?.Invoke();
         }
 
         /// <summary>

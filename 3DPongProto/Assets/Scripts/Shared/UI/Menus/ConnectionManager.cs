@@ -7,7 +7,7 @@ namespace ThreeDeePongProto.Shared.UI
 {
     public class ConnectionManager : MonoBehaviour
     {
-        [SerializeField] private Button[] m_modiButtons;
+        [SerializeField] private Button[] m_modeButtons;
 
         #region Scriptable Objects
         [SerializeField] private MatchUIStates m_matchUIStates;
@@ -15,19 +15,19 @@ namespace ThreeDeePongProto.Shared.UI
 
         public void SetGameModi(Button _sender)
         {
-            if (_sender == m_modiButtons[0])
+            if (_sender == m_modeButtons[0])
             {
-                SetConnectionInfo(EGameConnectionModi.LocalPC);
+                SetConnectionInfo(EGameConnectionModi.LocalGame);
             }
 
-            if (_sender == m_modiButtons[1])
+            if (_sender == m_modeButtons[1])
             {
-                SetConnectionInfo(EGameConnectionModi.LAN);
+                SetConnectionInfo(EGameConnectionModi.LanGame);
             }
 
-            if (_sender == m_modiButtons[2])
+            if (_sender == m_modeButtons[2])
             {
-                SetConnectionInfo(EGameConnectionModi.Internet);
+                SetConnectionInfo(EGameConnectionModi.NetGame);
             }
         }
 
@@ -45,17 +45,17 @@ namespace ThreeDeePongProto.Shared.UI
 
             switch (m_matchUIStates.EGameConnectModi)
             {
-                case EGameConnectionModi.LocalPC:
+                case EGameConnectionModi.LocalGame:
                 {
                     SceneManager.LoadScene((int)ESceneNames.LocalGame);
                     break;
                 }
-                case EGameConnectionModi.LAN:
+                case EGameConnectionModi.LanGame:
                 {
                     Debug.Log($"Implement the {ESceneNames.LanGame}, once the local scene is completed!");
                     break;
                 }
-                case EGameConnectionModi.Internet:
+                case EGameConnectionModi.NetGame:
                 {
                     Debug.Log($"Implement the {ESceneNames.NetGame}, once the local scene is completed!");
                     break;
