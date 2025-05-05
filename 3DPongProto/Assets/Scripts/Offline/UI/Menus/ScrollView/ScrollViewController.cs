@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using ThreeDeePongProto.Shared.HelperClasses;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,13 +12,6 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         Vertical,
         Horizontal,
         Grid
-    }
-
-    internal enum NavigationType
-    {
-        None,
-        Simple,
-        Nested
     }
 
     public class ScrollViewController : MonoBehaviour
@@ -34,17 +28,16 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         //GridLayoutGroup: StartCorner: Upper Left, StartAxis: Horizontal, ChildAlignment: Upper Left.
         [SerializeField] internal ScrollType m_scrollDirection = ScrollType.Grid;
         [SerializeField] private ContentFillType m_contentFillType = ContentFillType.Filled;
-        [SerializeField] internal NavigationType m_navigationLevel = NavigationType.Simple;
         [SerializeField] private float m_scrollSensitivity = 10.0f;
 
         [Header("ScrollView Components")]
         [SerializeField] internal ScrollRect m_scrollViewRect;
         [SerializeField] internal RectTransform m_scrollViewContent;
         [SerializeField] private LayoutGroup m_layoutGroup;
-                
+
         //[SerializeField] private bool m_borderLoop = false;
-        
-        internal Selectable m_simpleSelectable;
+
+        //internal Selectable m_simpleSelectable;
         internal int m_leftPadding;
         internal int m_rightPadding;
         internal int m_topPadding;
@@ -73,21 +66,26 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         internal Vector2 m_firstChildRT;
 
         internal GridLayoutGroup m_gridSettings;
-        [SerializeField] 
+        [SerializeField]
         internal Vector2Int m_gridSize;
 
         #region Lists_and_Dictionaries
-        private List<GameObject> m_dictKeys;
-        internal Dictionary<GameObject, RectTransform> m_contentChildAnchorPos = new();
-        internal Dictionary<GameObject, Navigation> m_objectNavigation = new();
+        #region Old manual scrolling before rework 2025
+        //private List<GameObject> m_dictKeys; 
+        #endregion
+        internal List<Selectable> m_ContainedSelectables { get; private set; } = new List<Selectable>();
+        internal Dictionary<GameObject, RectTransform> m_ContentChildAnchorPos = new();
+        internal Dictionary<GameObject, Navigation> m_ObjectNavigation = new();
         #endregion
 
         private void Awake()
         {
-            m_contentChildAnchorPos.Clear();
-            m_objectNavigation.Clear();
-            m_dictKeys = new();
-            m_dictKeys.Clear();
+            m_ContentChildAnchorPos.Clear();
+            m_ObjectNavigation.Clear();
+            #region Old manual scrolling before rework 2025
+            //m_dictKeys = new();
+            //m_dictKeys.Clear(); 
+            #endregion
 
             GetScrollViewComponents();
             GetScrollOptionAndLayout(m_scrollViewRect);
@@ -105,8 +103,8 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         private void OnDisable()
         {
-            m_contentChildAnchorPos.Clear();
-            m_objectNavigation.Clear();
+            m_ContentChildAnchorPos.Clear();
+            m_ObjectNavigation.Clear();
         }
 
         private void GetScrollViewComponents()
@@ -231,9 +229,29 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                     case false:
                     {
                         m_contentFillType = ContentFillType.Filled;
+                        CacheSelectableChildren();
                         break;
                     }
                 }
+            }
+        }
+
+        internal void CacheSelectableChildren()
+        {
+            if (m_scrollViewContent != null)
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(m_scrollViewContent);
+                //Find all Selectable-Components (Button, Toggle, Slider, InputField...), even if they are inactive. (true)
+                m_ContainedSelectables = m_scrollViewContent.GetComponentsInChildren<Selectable>(true).ToList();
+#if UNITY_EDITOR
+                Debug.Log($"ScrollViewController: Found {m_ContainedSelectables.Count} Selectables in Content.");
+#endif
+            }
+            else
+            {
+#if UNITY_EDITOR
+                Debug.LogError("ScrollViewController: Content RectTransform is null!", this);
+#endif
             }
         }
 
@@ -301,43 +319,43 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         //        {
         //            if (containsToggle)
         //            {
-        //                m_contentChildAnchorPos.Add(toggle.gameObject, _contentElementAnchorPos);
-        //                m_objectNavigation.Add(toggle.gameObject, toggle.navigation);
+        //                m_ContentChildAnchorPos.Add(toggle.gameObject, _contentElementAnchorPos);
+        //                m_ObjectNavigation.Add(toggle.gameObject, toggle.navigation);
         //            }
 
         //            if (containsSlider)
         //            {
-        //                m_contentChildAnchorPos.Add(slider.gameObject, _contentElementAnchorPos);
-        //                m_objectNavigation.Add(slider.gameObject, slider.navigation);
+        //                m_ContentChildAnchorPos.Add(slider.gameObject, _contentElementAnchorPos);
+        //                m_ObjectNavigation.Add(slider.gameObject, slider.navigation);
         //            }
 
         //            if (containsButton)
         //            {
-        //                m_contentChildAnchorPos.Add(button.gameObject, _contentElementAnchorPos);
-        //                m_objectNavigation.Add(button.gameObject, button.navigation);
+        //                m_ContentChildAnchorPos.Add(button.gameObject, _contentElementAnchorPos);
+        //                m_ObjectNavigation.Add(button.gameObject, button.navigation);
         //            }
         //            break;
         //        }
         //        case ContentFillType.Instantiated:
         //        {
         //            if (containsToggle)
-        //                m_contentChildAnchorPos.Add(toggle.gameObject, _contentElementAnchorPos);
+        //                m_ContentChildAnchorPos.Add(toggle.gameObject, _contentElementAnchorPos);
 
         //            if (containsSlider)
-        //                m_contentChildAnchorPos.Add(slider.gameObject, _contentElementAnchorPos);
+        //                m_ContentChildAnchorPos.Add(slider.gameObject, _contentElementAnchorPos);
 
         //            if (containsButton)
-        //                m_contentChildAnchorPos.Add(button.gameObject, _contentElementAnchorPos);
+        //                m_ContentChildAnchorPos.Add(button.gameObject, _contentElementAnchorPos);
 
         //            if (m_scrollViewContent.childCount < 2)
         //                return;
 
         //            //Looping until this point!
 
-        //            if (m_contentChildAnchorPos.Keys.Count == m_createChildAmount && !m_setNavigationStarted)
+        //            if (m_ContentChildAnchorPos.Keys.Count == m_createChildAmount && !m_setNavigationStarted)
         //            {
         //                m_setNavigationStarted = true;                  //Blocks 2nd access to start the following code only once.
-        //                //SetInstantiateNavigation(m_navigationLevel);
+        //                //SetInstantiateNavigation();
         //            }
         //            break;
         //        }
@@ -347,80 +365,67 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         //}
 
         #region InstaniateNavigation
-        //private void SetInstantiateNavigation(NavigationType _navigationLevel)
+        //private void SetInstantiateNavigation()
         //{
-        //    Navigation navigation;
+        //Navigation navigation;
 
-        //    switch (_navigationLevel)
+        //switch (m_scrollDirection)
+        //{
+        //    case ScrollType.None:
+        //    default:
+        //        break;
+        //    case ScrollType.Vertical:
         //    {
-        //        case NavigationType.None:
-        //        default:
-        //            break;
-        //        case NavigationType.Simple:
+        //        m_dictKeys = new(m_ContentChildAnchorPos.Keys);
+
+        //        for (int i = 0; i < m_ContentChildAnchorPos.Count; i++)
         //        {
-        //            switch (m_scrollDirection)
-        //            {
-        //                case ScrollType.None:
-        //                default:
-        //                    break;
-        //                case ScrollType.Vertical:
-        //                {
-        //                    m_dictKeys = new(m_contentChildAnchorPos.Keys);
+        //            navigation = GetSimpleSelectableNavigation(m_simpleSelectable, i);
 
-        //                    for (int i = 0; i < m_contentChildAnchorPos.Count; i++)
-        //                    {
-        //                        navigation = GetSimpleSelectableNavigation(m_simpleSelectable, i);
+        //            navigation.selectOnUp = GetTopNavigation(m_simpleSelectable, i);
+        //            navigation.selectOnDown = GetBottomNavigation(m_simpleSelectable, i);
 
-        //                        navigation.selectOnUp = GetTopNavigation(m_simpleSelectable, i);
-        //                        navigation.selectOnDown = GetBottomNavigation(m_simpleSelectable, i);
-
-        //                        SetSimpleScrollViewNavigation(m_simpleSelectable, i, navigation);
-        //                    }
-
-        //                    break;
-        //                }
-        //                case ScrollType.Horizontal:
-        //                {
-        //                    m_dictKeys = new(m_contentChildAnchorPos.Keys);
-
-        //                    for (int i = 0; i < m_contentChildAnchorPos.Count; i++)
-        //                    {
-        //                        navigation = GetSimpleSelectableNavigation(m_simpleSelectable, i);
-
-        //                        navigation.selectOnLeft = GetTopNavigation(m_simpleSelectable, i);
-        //                        navigation.selectOnRight = GetBottomNavigation(m_simpleSelectable, i);
-
-        //                        SetSimpleScrollViewNavigation(m_simpleSelectable, i, navigation);
-        //                    }
-
-        //                    break;
-        //                }
-        //                case ScrollType.Grid:  //Instantiate case gets set in 'GetScrollViewObjects()'.
-        //                {
-        //                    m_dictKeys = new(m_contentChildAnchorPos.Keys);
-        //                    m_gridSize = CustomGridLayoutSetup.GetGridSize(m_gridSettings);
-
-        //                    for (int i = 0; i < m_scrollViewContent.childCount; i++)
-        //                    {
-        //                        navigation = GetSimpleSelectableNavigation(m_simpleSelectable, i);
-                                
-        //                        navigation.selectOnUp = GetGridNavigationUp(m_simpleSelectable, i);
-        //                        navigation.selectOnDown = GetGridNavigationDown(m_simpleSelectable, i);
-        //                        navigation.selectOnLeft = GetGridNavigationLeft(m_simpleSelectable, i);
-        //                        navigation.selectOnRight = GetGridNavigationRight(m_simpleSelectable, i);
-
-        //                        SetSimpleScrollViewNavigation(m_simpleSelectable, i, navigation);
-        //                    }
-        //                    break;
-        //                }
-        //            }
-        //            break;
+        //            SetSimpleScrollViewNavigation(m_simpleSelectable, i, navigation);
         //        }
-        //        case NavigationType.Nested:
-        //        {
-        //            break;
-        //        }
+
+        //        break;
         //    }
+        //    case ScrollType.Horizontal:
+        //    {
+        //        m_dictKeys = new(m_ContentChildAnchorPos.Keys);
+
+        //        for (int i = 0; i < m_ContentChildAnchorPos.Count; i++)
+        //        {
+        //            navigation = GetSimpleSelectableNavigation(m_simpleSelectable, i);
+
+        //            navigation.selectOnLeft = GetTopNavigation(m_simpleSelectable, i);
+        //            navigation.selectOnRight = GetBottomNavigation(m_simpleSelectable, i);
+
+        //            SetSimpleScrollViewNavigation(m_simpleSelectable, i, navigation);
+        //        }
+
+        //        break;
+        //    }
+        //    case ScrollType.Grid:  //Instantiate case gets set in 'GetScrollViewObjects()'.
+        //    {
+        //        m_dictKeys = new(m_ContentChildAnchorPos.Keys);
+        //        m_gridSize = CustomGridLayoutSetup.GetGridSize(m_gridSettings);
+
+        //        for (int i = 0; i < m_scrollViewContent.childCount; i++)
+        //        {
+        //            navigation = GetSimpleSelectableNavigation(m_simpleSelectable, i);
+
+        //            navigation.selectOnUp = GetGridNavigationUp(m_simpleSelectable, i);
+        //            navigation.selectOnDown = GetGridNavigationDown(m_simpleSelectable, i);
+        //            navigation.selectOnLeft = GetGridNavigationLeft(m_simpleSelectable, i);
+        //            navigation.selectOnRight = GetGridNavigationRight(m_simpleSelectable, i);
+
+        //            SetSimpleScrollViewNavigation(m_simpleSelectable, i, navigation);
+        //        }
+        //        break;
+        //    }
+        //}
+        //break;
         //}
 
         //private Navigation GetSimpleSelectableNavigation(Selectable _simpleSelectable, int _index)
@@ -449,32 +454,32 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         //    return navigation;
         //}
 
-//        private void SetSimpleScrollViewNavigation(Selectable _simpleSelectable, int _index, Navigation _navigation)
-//        {
-//            switch (_simpleSelectable)
-//            {
-//                case Toggle:
-//                {
-//                    m_dictKeys[_index].GetComponent<Toggle>().navigation = _navigation;
-//                    break;
-//                }
-//                case Slider:
-//                {
-//                    m_dictKeys[_index].GetComponent<Slider>().navigation = _navigation;
-//                    break;
-//                }
-//                case Button:
-//                {
-//                    m_dictKeys[_index].GetComponent<Button>().navigation = _navigation;
-//                    break;
-//                }
-//            }
+        //        private void SetSimpleScrollViewNavigation(Selectable _simpleSelectable, int _index, Navigation _navigation)
+        //        {
+        //            switch (_simpleSelectable)
+        //            {
+        //                case Toggle:
+        //                {
+        //                    m_dictKeys[_index].GetComponent<Toggle>().navigation = _navigation;
+        //                    break;
+        //                }
+        //                case Slider:
+        //                {
+        //                    m_dictKeys[_index].GetComponent<Slider>().navigation = _navigation;
+        //                    break;
+        //                }
+        //                case Button:
+        //                {
+        //                    m_dictKeys[_index].GetComponent<Button>().navigation = _navigation;
+        //                    break;
+        //                }
+        //            }
 
-//            m_objectNavigation.Add(m_dictKeys[_index], _navigation);
-//#if UNITY_EDITOR
-//            //Debug.Log(m_contentChildAnchorPos[m_scrollViewContent.transform.GetChild(_index).gameObject].name);
-//#endif
-//        }
+        //            m_ObjectNavigation.Add(m_dictKeys[_index], _navigation);
+        //#if UNITY_EDITOR
+        //            //Debug.Log(m_ContentChildAnchorPos[m_scrollViewContent.transform.GetChild(_index).gameObject].name);
+        //#endif
+        //        }
 
         #region ScrollView Navigation Directions
         #region Vertical & Horizontal Navigation
@@ -512,374 +517,374 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         #endregion
 
         #region Grid Navigation
-//        private Selectable GetGridNavigationUp(Selectable _selectable, int _currentIndex)
-//        {
-//            switch (m_gridSettings.constraint)
-//            {
-//                case GridLayoutGroup.Constraint.FixedColumnCount:
-//                case GridLayoutGroup.Constraint.FixedRowCount:
-//                {
-//                    bool topBorderFixedColumn = _currentIndex < m_gridSettings.constraintCount;
-//                    bool topBorderFixedRow = _currentIndex < m_gridSize.x;
-//                    bool topBorderIndexSwitch =
-//                        m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? topBorderFixedColumn : topBorderFixedRow;
+        //        private Selectable GetGridNavigationUp(Selectable _selectable, int _currentIndex)
+        //        {
+        //            switch (m_gridSettings.constraint)
+        //            {
+        //                case GridLayoutGroup.Constraint.FixedColumnCount:
+        //                case GridLayoutGroup.Constraint.FixedRowCount:
+        //                {
+        //                    bool topBorderFixedColumn = _currentIndex < m_gridSettings.constraintCount;
+        //                    bool topBorderFixedRow = _currentIndex < m_gridSize.x;
+        //                    bool topBorderIndexSwitch =
+        //                        m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? topBorderFixedColumn : topBorderFixedRow;
 
-//                    int targetIndexFixedColumn = _currentIndex + m_gridSettings.constraintCount * m_gridSize.y - m_gridSettings.constraintCount;
-//                    int targetIndexFixedRow = _currentIndex + m_gridSize.x * m_gridSize.y - m_gridSize.x;
-//                    //int targetIndexSwitch = m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? targetIndexFixedColumn : targetIndexFixedRow;
+        //                    int targetIndexFixedColumn = _currentIndex + m_gridSettings.constraintCount * m_gridSize.y - m_gridSettings.constraintCount;
+        //                    int targetIndexFixedRow = _currentIndex + m_gridSize.x * m_gridSize.y - m_gridSize.x;
+        //                    //int targetIndexSwitch = m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? targetIndexFixedColumn : targetIndexFixedRow;
 
-//                    int altTargetIndexFixedColumn =
-//                        _currentIndex + m_gridSettings.constraintCount * m_gridSize.y - (m_gridSettings.constraintCount * 2);
-//                    int altTargetIndexFixedRow =
-//                        _currentIndex + m_gridSize.x * m_gridSize.y - (m_gridSize.x * 2);
-//                    //int altTargetSwitch = m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? altTargetIndexFixedColumn : altTargetIndexFixedRow;
+        //                    int altTargetIndexFixedColumn =
+        //                        _currentIndex + m_gridSettings.constraintCount * m_gridSize.y - (m_gridSettings.constraintCount * 2);
+        //                    int altTargetIndexFixedRow =
+        //                        _currentIndex + m_gridSize.x * m_gridSize.y - (m_gridSize.x * 2);
+        //                    //int altTargetSwitch = m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? altTargetIndexFixedColumn : altTargetIndexFixedRow;
 
-//                    switch (topBorderIndexSwitch)
-//                    {
-//                        case false:
-//                        {
-//                            return m_gridSettings.constraint switch
-//                            {
-//                                GridLayoutGroup.Constraint.FixedColumnCount => _ = GetSelectableComponent(_selectable, _currentIndex - m_gridSettings.constraintCount),
-//                                GridLayoutGroup.Constraint.FixedRowCount => _ = GetSelectableComponent(_selectable, _currentIndex - m_gridSize.x),
-//                                _ => null,
-//                            };
-//                        }
-//                        case true:
-//                        {
-//                            switch (m_borderLoop)
-//                            {
-//                                case false:
-//                                    return null;
-//                                case true:
-//                                {
-//                                    switch (m_gridSettings.constraint)
-//                                    {
-//                                        case GridLayoutGroup.Constraint.FixedColumnCount:
-//                                        {
-//                                            if (targetIndexFixedColumn <= m_scrollViewContent.childCount - 1)
-//                                                return _ = GetSelectableComponent(_selectable, targetIndexFixedColumn);
-//                                            else if (altTargetIndexFixedColumn != _currentIndex)
-//                                                return _ = GetSelectableComponent(_selectable, altTargetIndexFixedColumn);
-//                                            else
-//                                                return null;    //'else if' and 'return null' prevent the object to set itself to navigate to.
-//                                        }
-//                                        case GridLayoutGroup.Constraint.FixedRowCount:
-//                                        {
-//                                            if (targetIndexFixedRow <= m_scrollViewContent.childCount - 1)
-//                                                return _ = GetSelectableComponent(_selectable, targetIndexFixedRow);
-//                                            else if (altTargetIndexFixedRow != _currentIndex)
-//                                                return _ = GetSelectableComponent(_selectable, altTargetIndexFixedRow);
-//                                            else
-//                                                return null;    //'else if' and 'return null' prevent the object to set itself to navigate to.
-//                                        }
-//                                        default:
-//                                            return null;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                case GridLayoutGroup.Constraint.Flexible:
-//                {
-//                    return null;
-//                }
-//            }
+        //                    switch (topBorderIndexSwitch)
+        //                    {
+        //                        case false:
+        //                        {
+        //                            return m_gridSettings.constraint switch
+        //                            {
+        //                                GridLayoutGroup.Constraint.FixedColumnCount => _ = GetSelectableComponent(_selectable, _currentIndex - m_gridSettings.constraintCount),
+        //                                GridLayoutGroup.Constraint.FixedRowCount => _ = GetSelectableComponent(_selectable, _currentIndex - m_gridSize.x),
+        //                                _ => null,
+        //                            };
+        //                        }
+        //                        case true:
+        //                        {
+        //                            switch (m_borderLoop)
+        //                            {
+        //                                case false:
+        //                                    return null;
+        //                                case true:
+        //                                {
+        //                                    switch (m_gridSettings.constraint)
+        //                                    {
+        //                                        case GridLayoutGroup.Constraint.FixedColumnCount:
+        //                                        {
+        //                                            if (targetIndexFixedColumn <= m_scrollViewContent.childCount - 1)
+        //                                                return _ = GetSelectableComponent(_selectable, targetIndexFixedColumn);
+        //                                            else if (altTargetIndexFixedColumn != _currentIndex)
+        //                                                return _ = GetSelectableComponent(_selectable, altTargetIndexFixedColumn);
+        //                                            else
+        //                                                return null;    //'else if' and 'return null' prevent the object to set itself to navigate to.
+        //                                        }
+        //                                        case GridLayoutGroup.Constraint.FixedRowCount:
+        //                                        {
+        //                                            if (targetIndexFixedRow <= m_scrollViewContent.childCount - 1)
+        //                                                return _ = GetSelectableComponent(_selectable, targetIndexFixedRow);
+        //                                            else if (altTargetIndexFixedRow != _currentIndex)
+        //                                                return _ = GetSelectableComponent(_selectable, altTargetIndexFixedRow);
+        //                                            else
+        //                                                return null;    //'else if' and 'return null' prevent the object to set itself to navigate to.
+        //                                        }
+        //                                        default:
+        //                                            return null;
+        //                                    }
+        //                                }
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //                case GridLayoutGroup.Constraint.Flexible:
+        //                {
+        //                    return null;
+        //                }
+        //            }
 
-//            return null;
-//        }
+        //            return null;
+        //        }
 
-//        private Selectable GetGridNavigationDown(Selectable _selectable, int _currentIndex)
-//        {////'gridSize.y' == 'm_gridSettings.constraintCount' on FixedRowCount.
-//            switch (m_gridSettings.constraint)
-//            {
-//                case GridLayoutGroup.Constraint.FixedColumnCount:
-//                case GridLayoutGroup.Constraint.FixedRowCount:
-//                {
-//                    bool indexOutOfRangeFixedColumn = _currentIndex + m_gridSettings.constraintCount > m_scrollViewContent.childCount - 1;
-//                    bool indexOutOfRangeFixedRow = _currentIndex + m_gridSize.x > m_scrollViewContent.childCount - 1;
+        //        private Selectable GetGridNavigationDown(Selectable _selectable, int _currentIndex)
+        //        {////'gridSize.y' == 'm_gridSettings.constraintCount' on FixedRowCount.
+        //            switch (m_gridSettings.constraint)
+        //            {
+        //                case GridLayoutGroup.Constraint.FixedColumnCount:
+        //                case GridLayoutGroup.Constraint.FixedRowCount:
+        //                {
+        //                    bool indexOutOfRangeFixedColumn = _currentIndex + m_gridSettings.constraintCount > m_scrollViewContent.childCount - 1;
+        //                    bool indexOutOfRangeFixedRow = _currentIndex + m_gridSize.x > m_scrollViewContent.childCount - 1;
 
-//                    bool indexOufOfRangedSwitch =
-//                        m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? indexOutOfRangeFixedColumn : indexOutOfRangeFixedRow;
+        //                    bool indexOufOfRangedSwitch =
+        //                        m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? indexOutOfRangeFixedColumn : indexOutOfRangeFixedRow;
 
-//                    switch (indexOufOfRangedSwitch)
-//                    {
-//                        case false:
-//                        {
-//                            switch (m_gridSettings.constraint)
-//                            {
-//                                case GridLayoutGroup.Constraint.FixedColumnCount:
-//                                {
-//                                    return _ = GetSelectableComponent(_selectable, _currentIndex + m_gridSettings.constraintCount);
-//                                }
-//                                case GridLayoutGroup.Constraint.FixedRowCount:
-//                                {
-//                                    return _ = GetSelectableComponent(_selectable, _currentIndex + m_gridSize.x);
-//                                }
-//                                default:
-//                                    return null;
-//                            }
-//                        }
-//                        case true:
-//                        {
-//                            switch (m_borderLoop)
-//                            {
-//                                case false:
-//                                    return null;
-//                                case true:
-//                                {
-//                                    switch (m_gridSettings.constraint)
-//                                    {
-//                                        case GridLayoutGroup.Constraint.FixedColumnCount:
-//                                        {
-//                                            if (_currentIndex % m_gridSettings.constraintCount != _currentIndex)
-//                                                return _ = GetSelectableComponent(_selectable, _currentIndex % m_gridSettings.constraintCount);
-//                                            else
-//                                                return null;    //'return null' prevents the object to set itself to navigate to.
-//                                        }
-//                                        case GridLayoutGroup.Constraint.FixedRowCount:
-//                                        {
-//                                            if (_currentIndex % m_gridSize.x != _currentIndex)
-//                                                return _ = GetSelectableComponent(_selectable, _currentIndex % m_gridSize.x);
-//                                            else
-//                                                return null;    //'return null' prevents the object to set itself to navigate to.
-//                                        }
-//                                        default:
-//                                            return null;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                case GridLayoutGroup.Constraint.Flexible:
-//                {
-//                    return null;
-//                }
-//            }
+        //                    switch (indexOufOfRangedSwitch)
+        //                    {
+        //                        case false:
+        //                        {
+        //                            switch (m_gridSettings.constraint)
+        //                            {
+        //                                case GridLayoutGroup.Constraint.FixedColumnCount:
+        //                                {
+        //                                    return _ = GetSelectableComponent(_selectable, _currentIndex + m_gridSettings.constraintCount);
+        //                                }
+        //                                case GridLayoutGroup.Constraint.FixedRowCount:
+        //                                {
+        //                                    return _ = GetSelectableComponent(_selectable, _currentIndex + m_gridSize.x);
+        //                                }
+        //                                default:
+        //                                    return null;
+        //                            }
+        //                        }
+        //                        case true:
+        //                        {
+        //                            switch (m_borderLoop)
+        //                            {
+        //                                case false:
+        //                                    return null;
+        //                                case true:
+        //                                {
+        //                                    switch (m_gridSettings.constraint)
+        //                                    {
+        //                                        case GridLayoutGroup.Constraint.FixedColumnCount:
+        //                                        {
+        //                                            if (_currentIndex % m_gridSettings.constraintCount != _currentIndex)
+        //                                                return _ = GetSelectableComponent(_selectable, _currentIndex % m_gridSettings.constraintCount);
+        //                                            else
+        //                                                return null;    //'return null' prevents the object to set itself to navigate to.
+        //                                        }
+        //                                        case GridLayoutGroup.Constraint.FixedRowCount:
+        //                                        {
+        //                                            if (_currentIndex % m_gridSize.x != _currentIndex)
+        //                                                return _ = GetSelectableComponent(_selectable, _currentIndex % m_gridSize.x);
+        //                                            else
+        //                                                return null;    //'return null' prevents the object to set itself to navigate to.
+        //                                        }
+        //                                        default:
+        //                                            return null;
+        //                                    }
+        //                                }
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //                case GridLayoutGroup.Constraint.Flexible:
+        //                {
+        //                    return null;
+        //                }
+        //            }
 
-//            return null;
-//        }
+        //            return null;
+        //        }
 
-//        private Selectable GetGridNavigationLeft(Selectable _selectable, int _currentIndex)
-//        {
-//            bool indexSaveWithinRange = _currentIndex > 0;  //Index 0 gets handled in 'else case'.
+        //        private Selectable GetGridNavigationLeft(Selectable _selectable, int _currentIndex)
+        //        {
+        //            bool indexSaveWithinRange = _currentIndex > 0;  //Index 0 gets handled in 'else case'.
 
-//            bool leftBorderFixedColumn = _currentIndex % m_gridSettings.constraintCount == 0;
-//            int lastChildIndexFixedColumn = (m_scrollViewContent.childCount - 1) % m_gridSettings.constraintCount;
+        //            bool leftBorderFixedColumn = _currentIndex % m_gridSettings.constraintCount == 0;
+        //            int lastChildIndexFixedColumn = (m_scrollViewContent.childCount - 1) % m_gridSettings.constraintCount;
 
-//            bool leftBorderFixedRow = _currentIndex % m_gridSize.x == 0;
-//            int lastChildIndexFixedRow = (m_scrollViewContent.childCount - 1) % m_gridSize.x;
+        //            bool leftBorderFixedRow = _currentIndex % m_gridSize.x == 0;
+        //            int lastChildIndexFixedRow = (m_scrollViewContent.childCount - 1) % m_gridSize.x;
 
-//            switch (m_gridSettings.constraint)
-//            {
-//                case GridLayoutGroup.Constraint.FixedColumnCount:
-//                case GridLayoutGroup.Constraint.FixedRowCount:
-//                {
-//                    bool leftBorderIndexSwitch =
-//                        m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? leftBorderFixedColumn : leftBorderFixedRow;
+        //            switch (m_gridSettings.constraint)
+        //            {
+        //                case GridLayoutGroup.Constraint.FixedColumnCount:
+        //                case GridLayoutGroup.Constraint.FixedRowCount:
+        //                {
+        //                    bool leftBorderIndexSwitch =
+        //                        m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? leftBorderFixedColumn : leftBorderFixedRow;
 
-//                    //int lastChildIndexSwitch =
-//                    //    m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? lastChildIndexFixedColumn : lastChildIndexFixedRow;
+        //                    //int lastChildIndexSwitch =
+        //                    //    m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? lastChildIndexFixedColumn : lastChildIndexFixedRow;
 
-//                    int targetIndex = m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? _currentIndex + (m_gridSettings.constraintCount - 1) : _currentIndex + (m_gridSize.x - 1);
+        //                    int targetIndex = m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? _currentIndex + (m_gridSettings.constraintCount - 1) : _currentIndex + (m_gridSize.x - 1);
 
-//                    if (indexSaveWithinRange)
-//                    {
-//                        switch (leftBorderIndexSwitch)
-//                        {
-//                            case false:
-//                                return _ = GetSelectableComponent(_selectable, _currentIndex - 1);
-//                            case true:
-//                            {
-//                                //HINT: childIndex 0 got excluded above to prevent an exception. So contentChild-IDs == _currentIndex.
-//                                switch (m_borderLoop)
-//                                {
-//                                    case false:
-//                                        return null;
-//                                    case true:
-//                                    {
-//                                        switch (targetIndex <= m_scrollViewContent.childCount - 1)
-//                                        {
-//                                            case true:  //TargetIndices are rightBorderIndices from full rows.
-//                                                return _ = GetSelectableComponent(_selectable, targetIndex);
-//                                            case false: //TargetIndex is the last childIndex, if the common TargetIndex would be out of range.
-//                                            {
-//                                                switch (m_gridSettings.constraint)
-//                                                {
-//                                                    case GridLayoutGroup.Constraint.FixedColumnCount:
-//                                                    {
-//                                                        if (_currentIndex % m_gridSettings.constraintCount != lastChildIndexFixedColumn)
-//                                                            return _ =
-//                                                                GetSelectableComponent(_selectable, _currentIndex + lastChildIndexFixedColumn);
-//                                                        //else
-//                                                        return null;    //'return null' prevents the object to set itself to navigate to.
-//                                                    }
-//                                                    case GridLayoutGroup.Constraint.FixedRowCount:
-//                                                    {
-//                                                        if (_currentIndex % m_gridSize.x != lastChildIndexFixedRow)
-//                                                            return _ = GetSelectableComponent(_selectable, _currentIndex + lastChildIndexFixedRow);
-//                                                        //else
-//                                                        return null;    //'return null' prevents the object to set itself to navigate to.
-//                                                    }
-//                                                    default:
-//                                                        return null;
-//                                                }
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                    else
-//                    {
-//                        if (_currentIndex == 0)
-//                        {
-//                            switch (m_borderLoop)
-//                            {
-//                                case false:
-//                                {
-//                                    //TODO: //Get/Find components out of UI. Or last button of the same line on looping.
-//                                    return null;
-//                                }
-//                                case true: //Case for excluded Index 0 from 'leftBorderFixedColumn' or 'leftBorderFixedRow'.
-//                                {
-//                                    switch (m_gridSettings.constraint)
-//                                    {
-//                                        case GridLayoutGroup.Constraint.FixedColumnCount:
-//                                        {
-//                                            return _ = GetSelectableComponent(_selectable, _currentIndex + (m_gridSettings.constraintCount - 1));
-//                                        }
-//                                        case GridLayoutGroup.Constraint.FixedRowCount:
-//                                        {
-//                                            return _ = GetSelectableComponent(_selectable, _currentIndex + (m_gridSize.x - 1));
-//                                        }
-//                                        default:
-//                                            return null;
-//                                    }
-//                                }
+        //                    if (indexSaveWithinRange)
+        //                    {
+        //                        switch (leftBorderIndexSwitch)
+        //                        {
+        //                            case false:
+        //                                return _ = GetSelectableComponent(_selectable, _currentIndex - 1);
+        //                            case true:
+        //                            {
+        //                                //HINT: childIndex 0 got excluded above to prevent an exception. So contentChild-IDs == _currentIndex.
+        //                                switch (m_borderLoop)
+        //                                {
+        //                                    case false:
+        //                                        return null;
+        //                                    case true:
+        //                                    {
+        //                                        switch (targetIndex <= m_scrollViewContent.childCount - 1)
+        //                                        {
+        //                                            case true:  //TargetIndices are rightBorderIndices from full rows.
+        //                                                return _ = GetSelectableComponent(_selectable, targetIndex);
+        //                                            case false: //TargetIndex is the last childIndex, if the common TargetIndex would be out of range.
+        //                                            {
+        //                                                switch (m_gridSettings.constraint)
+        //                                                {
+        //                                                    case GridLayoutGroup.Constraint.FixedColumnCount:
+        //                                                    {
+        //                                                        if (_currentIndex % m_gridSettings.constraintCount != lastChildIndexFixedColumn)
+        //                                                            return _ =
+        //                                                                GetSelectableComponent(_selectable, _currentIndex + lastChildIndexFixedColumn);
+        //                                                        //else
+        //                                                        return null;    //'return null' prevents the object to set itself to navigate to.
+        //                                                    }
+        //                                                    case GridLayoutGroup.Constraint.FixedRowCount:
+        //                                                    {
+        //                                                        if (_currentIndex % m_gridSize.x != lastChildIndexFixedRow)
+        //                                                            return _ = GetSelectableComponent(_selectable, _currentIndex + lastChildIndexFixedRow);
+        //                                                        //else
+        //                                                        return null;    //'return null' prevents the object to set itself to navigate to.
+        //                                                    }
+        //                                                    default:
+        //                                                        return null;
+        //                                                }
+        //                                            }
+        //                                        }
+        //                                    }
+        //                                }
+        //                            }
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        if (_currentIndex == 0)
+        //                        {
+        //                            switch (m_borderLoop)
+        //                            {
+        //                                case false:
+        //                                {
+        //                                    //TODO: //Get/Find components out of UI. Or last button of the same line on looping.
+        //                                    return null;
+        //                                }
+        //                                case true: //Case for excluded Index 0 from 'leftBorderFixedColumn' or 'leftBorderFixedRow'.
+        //                                {
+        //                                    switch (m_gridSettings.constraint)
+        //                                    {
+        //                                        case GridLayoutGroup.Constraint.FixedColumnCount:
+        //                                        {
+        //                                            return _ = GetSelectableComponent(_selectable, _currentIndex + (m_gridSettings.constraintCount - 1));
+        //                                        }
+        //                                        case GridLayoutGroup.Constraint.FixedRowCount:
+        //                                        {
+        //                                            return _ = GetSelectableComponent(_selectable, _currentIndex + (m_gridSize.x - 1));
+        //                                        }
+        //                                        default:
+        //                                            return null;
+        //                                    }
+        //                                }
 
-//                            }
-//                        }
-//                    }
+        //                            }
+        //                        }
+        //                    }
 
-//                    return null;
-//                }
-//                case GridLayoutGroup.Constraint.Flexible:
-//                {
-//                    return null;
-//                }
-//            }
+        //                    return null;
+        //                }
+        //                case GridLayoutGroup.Constraint.Flexible:
+        //                {
+        //                    return null;
+        //                }
+        //            }
 
-//            return null;
-//        }
+        //            return null;
+        //        }
 
-//        private Selectable GetGridNavigationRight(Selectable _selectable, int _currentIndex)
-//        {
-//            bool indexSaveWithinRange = _currentIndex < m_scrollViewContent.childCount - 1;
+        //        private Selectable GetGridNavigationRight(Selectable _selectable, int _currentIndex)
+        //        {
+        //            bool indexSaveWithinRange = _currentIndex < m_scrollViewContent.childCount - 1;
 
-//            bool leftBorderFixedColumn = _currentIndex % m_gridSettings.constraintCount == 0;
-//            bool rightBorderFixedColumn = _currentIndex % m_gridSettings.constraintCount == m_gridSettings.constraintCount - 1;
+        //            bool leftBorderFixedColumn = _currentIndex % m_gridSettings.constraintCount == 0;
+        //            bool rightBorderFixedColumn = _currentIndex % m_gridSettings.constraintCount == m_gridSettings.constraintCount - 1;
 
-//#if UNITY_EDITOR
-//            //if (_currentIndex % m_gridSize.x == 0)
-//            //Debug.Log($"Modulo0: {_currentIndex} | Modulo-GridX: {_currentIndex + (m_gridSize.x + m_gridSize.x % m_gridSize.x - 1)}");
-//#endif
-//            bool leftBorderFixedRow = _currentIndex % m_gridSize.x == 0;
-//            bool rightBorderFixedRow = _currentIndex % m_gridSize.x == m_gridSize.x - 1;
+        //#if UNITY_EDITOR
+        //            //if (_currentIndex % m_gridSize.x == 0)
+        //            //Debug.Log($"Modulo0: {_currentIndex} | Modulo-GridX: {_currentIndex + (m_gridSize.x + m_gridSize.x % m_gridSize.x - 1)}");
+        //#endif
+        //            bool leftBorderFixedRow = _currentIndex % m_gridSize.x == 0;
+        //            bool rightBorderFixedRow = _currentIndex % m_gridSize.x == m_gridSize.x - 1;
 
-//            switch (m_gridSettings.constraint)
-//            {
-//                case GridLayoutGroup.Constraint.FixedColumnCount:
-//                case GridLayoutGroup.Constraint.FixedRowCount:
-//                {
-//                    bool rightBorderIndexSwitch = m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? rightBorderFixedColumn : rightBorderFixedRow;
+        //            switch (m_gridSettings.constraint)
+        //            {
+        //                case GridLayoutGroup.Constraint.FixedColumnCount:
+        //                case GridLayoutGroup.Constraint.FixedRowCount:
+        //                {
+        //                    bool rightBorderIndexSwitch = m_gridSettings.constraint == GridLayoutGroup.Constraint.FixedColumnCount ? rightBorderFixedColumn : rightBorderFixedRow;
 
-//                    if (indexSaveWithinRange)
-//                    {
-//                        switch (rightBorderIndexSwitch)
-//                        {
-//                            case false:
-//                                return _ = GetSelectableComponent(_selectable, _currentIndex + 1);
-//                            case true:
-//                            {
-//                                switch (m_borderLoop)
-//                                {
-//                                    case false:
-//                                        return null;
-//                                    case true:
-//                                    {
-//                                        switch (m_gridSettings.constraint)
-//                                        {
-//                                            case GridLayoutGroup.Constraint.FixedColumnCount:
-//                                            {
-//                                                //Loop for full filled rows with 'rightBorderFixedColumn'.
-//                                                return _ = GetSelectableComponent(_selectable, _currentIndex - (m_gridSettings.constraintCount - 1));
-//                                            }
-//                                            case GridLayoutGroup.Constraint.FixedRowCount:
-//                                            {
-//                                                //Loop for full filled rows with 'rightBorderFixedRow'.
-//                                                return _ = GetSelectableComponent(_selectable, _currentIndex - (m_gridSize.x - 1));
-//                                            }
-//                                            default:
-//                                                return null;
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                    else
-//                    {
-//                        if (_currentIndex == m_scrollViewContent.childCount - 1)
-//                        {
-//                            switch (m_borderLoop)
-//                            {
-//                                case false:
-//                                {
-//                                    //TODO: //Get/Find components out of UI. Or first button of the same line on looping.
-//                                    return null;
-//                                }
-//                                case true: //Case for incomplete rows without 'rightBorderFixedColumn' or 'rightBorderFixedRow'.
-//                                {
-//                                    //'else return null' prevents the object to set itself to navigate to.
-//                                    switch (m_gridSettings.constraint)
-//                                    {
-//                                        case GridLayoutGroup.Constraint.FixedColumnCount:
-//                                        {
-//                                            if (!leftBorderFixedColumn)
-//                                                return _ = GetSelectableComponent(_selectable, _currentIndex - (_currentIndex % m_gridSettings.constraintCount));
-//                                            else
-//                                                return null; //TODO: //Get/Find components out of UI. Or first button of the same line on looping.
-//                                        }
-//                                        case GridLayoutGroup.Constraint.FixedRowCount:
-//                                        {
-//                                            if (!leftBorderFixedRow)
-//                                                return _ = GetSelectableComponent(_selectable, _currentIndex - (_currentIndex % m_gridSize.x));
-//                                            else
-//                                                return null; //TODO: //Get/Find components out of UI. Or first button of the same line on looping.
-//                                        }
-//                                        default:
-//                                            return null;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
+        //                    if (indexSaveWithinRange)
+        //                    {
+        //                        switch (rightBorderIndexSwitch)
+        //                        {
+        //                            case false:
+        //                                return _ = GetSelectableComponent(_selectable, _currentIndex + 1);
+        //                            case true:
+        //                            {
+        //                                switch (m_borderLoop)
+        //                                {
+        //                                    case false:
+        //                                        return null;
+        //                                    case true:
+        //                                    {
+        //                                        switch (m_gridSettings.constraint)
+        //                                        {
+        //                                            case GridLayoutGroup.Constraint.FixedColumnCount:
+        //                                            {
+        //                                                //Loop for full filled rows with 'rightBorderFixedColumn'.
+        //                                                return _ = GetSelectableComponent(_selectable, _currentIndex - (m_gridSettings.constraintCount - 1));
+        //                                            }
+        //                                            case GridLayoutGroup.Constraint.FixedRowCount:
+        //                                            {
+        //                                                //Loop for full filled rows with 'rightBorderFixedRow'.
+        //                                                return _ = GetSelectableComponent(_selectable, _currentIndex - (m_gridSize.x - 1));
+        //                                            }
+        //                                            default:
+        //                                                return null;
+        //                                        }
+        //                                    }
+        //                                }
+        //                            }
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        if (_currentIndex == m_scrollViewContent.childCount - 1)
+        //                        {
+        //                            switch (m_borderLoop)
+        //                            {
+        //                                case false:
+        //                                {
+        //                                    //TODO: //Get/Find components out of UI. Or first button of the same line on looping.
+        //                                    return null;
+        //                                }
+        //                                case true: //Case for incomplete rows without 'rightBorderFixedColumn' or 'rightBorderFixedRow'.
+        //                                {
+        //                                    //'else return null' prevents the object to set itself to navigate to.
+        //                                    switch (m_gridSettings.constraint)
+        //                                    {
+        //                                        case GridLayoutGroup.Constraint.FixedColumnCount:
+        //                                        {
+        //                                            if (!leftBorderFixedColumn)
+        //                                                return _ = GetSelectableComponent(_selectable, _currentIndex - (_currentIndex % m_gridSettings.constraintCount));
+        //                                            else
+        //                                                return null; //TODO: //Get/Find components out of UI. Or first button of the same line on looping.
+        //                                        }
+        //                                        case GridLayoutGroup.Constraint.FixedRowCount:
+        //                                        {
+        //                                            if (!leftBorderFixedRow)
+        //                                                return _ = GetSelectableComponent(_selectable, _currentIndex - (_currentIndex % m_gridSize.x));
+        //                                            else
+        //                                                return null; //TODO: //Get/Find components out of UI. Or first button of the same line on looping.
+        //                                        }
+        //                                        default:
+        //                                            return null;
+        //                                    }
+        //                                }
+        //                            }
+        //                        }
+        //                    }
 
-//                    return null;
-//                }
-//                case GridLayoutGroup.Constraint.Flexible:
-//                {
-//                    return null;
-//                }
-//                default:
-//                    return null;
-//            }
-//        }
-        #endregion 
+        //                    return null;
+        //                }
+        //                case GridLayoutGroup.Constraint.Flexible:
+        //                {
+        //                    return null;
+        //                }
+        //                default:
+        //                    return null;
+        //            }
+        //        }
+        #endregion
         #endregion
 
         //private Selectable GetSelectableComponent(Selectable _selectableObject, int _targetIndex)

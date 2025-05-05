@@ -1,9 +1,11 @@
-using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.InputActions;
 using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
+#region Old manual scrolling before rework 2025
+using ThreeDeePongProto.Offline.UI.Menu;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+#endregion
 
 //Credit to: Unity ScrollView Auto Scroll from 'Des CSK'. https://www.youtube.com/watch?v=l2_rHUffkJw 
 namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
@@ -27,7 +29,10 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         private Vector2 m_positionTo;
         #endregion
 
-        private bool m_selectedObjectInScrollView, m_autoScrollingEnabled;
+        #region Old manual scrolling before rework 2025
+        //private bool m_selectedObjectInScrollView;
+        #endregion
+        private bool m_autoScrollingEnabled;
         private bool m_mouseIsInScrollView;
         private Vector2 m_mouseScrollValue, m_mousePosition;
 
@@ -43,15 +48,16 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
             ResetVariables();
 
-            //m_scrollViewController.m_scrollViewRect.scrollSensitivity = 0.0f;
-
+            m_scrollViewController.m_scrollViewRect.scrollSensitivity = 0.0f;
             m_autoScrollingEnabled = m_scrollViewController.ContentChildrenSet & m_scrollViewController.ObjectNavigationSet;
         }
 
         private void Update()
         {
             GetMouseValues();
-            UpdateCurrentObject(MenuManager.LastSelectedGameObject);
+            #region Old manual scrolling before rework 2025
+            //UpdateCurrentObject(MenuManager.LastSelectedGameObject);
+            #endregion
 
             TransitionProgress();
             CalculatePosition();
@@ -94,25 +100,26 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         }
         #endregion
 
-        private void UpdateCurrentObject(GameObject _lastSelectedObject)
-        {
-            switch (m_scrollViewController.m_contentChildAnchorPos.ContainsKey(_lastSelectedObject))
-            {
-                case true:
-                {
-                    m_selectedObjectInScrollView = true;
-                    AutoScrollToNextGameObject(_lastSelectedObject);
-                    ScrollSelectNextGameObject(_lastSelectedObject);
-                    break;
-                }
-                case false:
-                {
-                    m_selectedObjectInScrollView = false;
-                    break;
-                }
-            }
+        #region Old manual scrolling before rework 2025
+        //private void UpdateCurrentObject(GameObject _lastSelectedObject)
+        //{
+        //    switch (m_scrollViewController.m_ContentChildAnchorPos.ContainsKey(_lastSelectedObject))
+        //    {
+        //        case true:
+        //        {
+        //            m_selectedObjectInScrollView = true;
+        //            AutoScrollToNextGameObject(_lastSelectedObject);
+        //            ScrollSelectNextGameObject(_lastSelectedObject);
+        //            break;
+        //        }
+        //        case false:
+        //        {
+        //            m_selectedObjectInScrollView = false;
+        //            break;
+        //        }
+        //    }
 
-        }
+        //}
 
         #region AutoScroll to next GameObject
         /// <summary>
@@ -120,246 +127,247 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         /// </summary>
         /// <param name="_newGOTo"></param>
         /// <param name="_taskDelay"></param>
-        private void AutoScrollToNextGameObject(GameObject _selectedObject)
-        {
-            if (!m_autoScrollingEnabled || !m_selectedObjectInScrollView)
-            {
-                return;
-            }
+        //private void AutoScrollToNextGameObject(GameObject _selectedObject)
+        //{
+        //    if (!m_autoScrollingEnabled || !m_selectedObjectInScrollView)
+        //    {
+        //        return;
+        //    }
 
-            switch (m_scrollViewController.m_scrollDirection)
-            {
-                case ScrollType.Vertical:
-                {
-                    ScrollVertical(_selectedObject);
-                    break;
-                }
-                case ScrollType.Horizontal:
-                {
-                    ScrollHorizontal(_selectedObject);
-                    break;
-                }
-                case ScrollType.Grid:
-                {
-                    ScrollVertical(_selectedObject);
-                    ScrollHorizontal(_selectedObject);
-                    break;
-                }
-                case ScrollType.None:
-                default:
-                    break;
-            }
-        }
+        //    switch (m_scrollViewController.m_scrollDirection)
+        //    {
+        //        case ScrollType.Vertical:
+        //        {
+        //            ScrollVertical(_selectedObject);
+        //            break;
+        //        }
+        //        case ScrollType.Horizontal:
+        //        {
+        //            ScrollHorizontal(_selectedObject);
+        //            break;
+        //        }
+        //        case ScrollType.Grid:
+        //        {
+        //            ScrollVertical(_selectedObject);
+        //            ScrollHorizontal(_selectedObject);
+        //            break;
+        //        }
+        //        case ScrollType.None:
+        //        default:
+        //            break;
+        //    }
+        //}
 
-        private void ScrollVertical(GameObject _gameObject)
-        {
-            float viewRectLocalTopBorder = m_scrollViewController.m_scrollViewRectTransform.localPosition.y;
-            float viewRectLocalBottomBorder = GetLocalBottomBorder(m_scrollViewController.m_scrollViewRectTransform.gameObject);
+        //private void ScrollVertical(GameObject _gameObject)
+        //{
+        //    float viewRectLocalTopBorder = m_scrollViewController.m_scrollViewRectTransform.localPosition.y;
+        //    float viewRectLocalBottomBorder = GetLocalBottomBorder(m_scrollViewController.m_scrollViewRectTransform.gameObject);
 
-            //top
-            float gameObjectTopBorder = GetRelativeTopBorder(_gameObject);
-            float gameObjectTopOffset = gameObjectTopBorder + viewRectLocalTopBorder;
+        //    //top
+        //    float gameObjectTopBorder = GetRelativeTopBorder(_gameObject);
+        //    float gameObjectTopOffset = gameObjectTopBorder + viewRectLocalTopBorder;
 
-            //bottom
-            float gameObjectBottomBorder = GetRelativeBottomBorder(_gameObject);
-            float gameObjectBottomOffset = gameObjectBottomBorder - viewRectLocalBottomBorder;
+        //    //bottom
+        //    float gameObjectBottomBorder = GetRelativeBottomBorder(_gameObject);
+        //    float gameObjectBottomOffset = gameObjectBottomBorder - viewRectLocalBottomBorder;
 
-            //topDifference
-            float topDifference = gameObjectTopOffset - viewRectLocalTopBorder;
+        //    //topDifference
+        //    float topDifference = gameObjectTopOffset - viewRectLocalTopBorder;
 
-            if (topDifference > 0)
-                ScrollVerticalByAmount(topDifference + m_scrollViewController.m_topPadding);
+        //    if (topDifference > 0)
+        //        ScrollVerticalByAmount(topDifference + m_scrollViewController.m_topPadding);
 
-            //bottomDifference
-            float bottomDifference = gameObjectBottomOffset - viewRectLocalBottomBorder;
+        //    //bottomDifference
+        //    float bottomDifference = gameObjectBottomOffset - viewRectLocalBottomBorder;
             
-            if (bottomDifference < 0)
-                ScrollVerticalByAmount(bottomDifference - m_scrollViewController.m_bottomPadding);
-        }
+        //    if (bottomDifference < 0)
+        //        ScrollVerticalByAmount(bottomDifference - m_scrollViewController.m_bottomPadding);
+        //}
 
-        private void ScrollHorizontal(GameObject _gameObject)
-        {
-            float viewRectLocalLeftBorder = m_scrollViewController.m_scrollViewRectTransform.localPosition.x;
-            float viewRectLocalRightBorder = GetLocalRightBorder(m_scrollViewController.m_scrollViewRectTransform.gameObject);
+        //private void ScrollHorizontal(GameObject _gameObject)
+        //{
+        //    float viewRectLocalLeftBorder = m_scrollViewController.m_scrollViewRectTransform.localPosition.x;
+        //    float viewRectLocalRightBorder = GetLocalRightBorder(m_scrollViewController.m_scrollViewRectTransform.gameObject);
 
-            //left
-            float gameObjectLeftBorder = GetRelativeLeftBorder(_gameObject);
-            float gameObjectLeftOffset = gameObjectLeftBorder + viewRectLocalLeftBorder;
+        //    //left
+        //    float gameObjectLeftBorder = GetRelativeLeftBorder(_gameObject);
+        //    float gameObjectLeftOffset = gameObjectLeftBorder + viewRectLocalLeftBorder;
 
-            //right
-            float gameObjectRightBorder = GetRelativeRightBorder(_gameObject);
-            float gameObjectRightOffset = gameObjectRightBorder - viewRectLocalRightBorder;
+        //    //right
+        //    float gameObjectRightBorder = GetRelativeRightBorder(_gameObject);
+        //    float gameObjectRightOffset = gameObjectRightBorder - viewRectLocalRightBorder;
 
-            //leftDifference
-            float leftDifference = gameObjectLeftOffset - viewRectLocalLeftBorder;
+        //    //leftDifference
+        //    float leftDifference = gameObjectLeftOffset - viewRectLocalLeftBorder;
 
-            if (leftDifference < 0)
-                ScrollHorizontalByAmount(-leftDifference + m_scrollViewController.m_leftPadding);
+        //    if (leftDifference < 0)
+        //        ScrollHorizontalByAmount(-leftDifference + m_scrollViewController.m_leftPadding);
 
-            //rightDifference
-            float rightDifference = gameObjectRightOffset - viewRectLocalRightBorder;
+        //    //rightDifference
+        //    float rightDifference = gameObjectRightOffset - viewRectLocalRightBorder;
 
-            if (rightDifference > 0)
-                ScrollHorizontalByAmount(-rightDifference - m_scrollViewController.m_rightPadding);
-        }
+        //    if (rightDifference > 0)
+        //        ScrollHorizontalByAmount(-rightDifference - m_scrollViewController.m_rightPadding);
+        //}
 
-        private void ScrollVerticalByAmount(float _distanceY)
-        {
-            Vector2 scrollPosFrom = m_scrollViewController.m_scrollViewContent.localPosition;
-            Vector2 scrollPosTo = scrollPosFrom;
-            scrollPosTo.y -= _distanceY;
+        //private void ScrollVerticalByAmount(float _distanceY)
+        //{
+        //    Vector2 scrollPosFrom = m_scrollViewController.m_scrollViewContent.localPosition;
+        //    Vector2 scrollPosTo = scrollPosFrom;
+        //    scrollPosTo.y -= _distanceY;
 
-            TransitionFromTo(scrollPosFrom, scrollPosTo, m_transitionDuration);
-        }
+        //    TransitionFromTo(scrollPosFrom, scrollPosTo, m_transitionDuration);
+        //}
 
-        private void ScrollHorizontalByAmount(float _distanceX)
-        {
-            Vector2 scrollPosFrom = m_scrollViewController.m_scrollViewContent.localPosition;
-            Vector2 scrollPosTo = scrollPosFrom;
-            scrollPosTo.x += _distanceX;
+        //private void ScrollHorizontalByAmount(float _distanceX)
+        //{
+        //    Vector2 scrollPosFrom = m_scrollViewController.m_scrollViewContent.localPosition;
+        //    Vector2 scrollPosTo = scrollPosFrom;
+        //    scrollPosTo.x += _distanceX;
 
-            TransitionFromTo(scrollPosFrom, scrollPosTo, m_transitionDuration);
-        }
+        //    TransitionFromTo(scrollPosFrom, scrollPosTo, m_transitionDuration);
+        //}
 
         #region ScrollBorder Calculations
-        private float GetRelativeTopBorder(GameObject _object)
-        {
-            float contentY = m_scrollViewController.m_scrollViewContent.anchoredPosition.y;
-            //float elementTopBorderLocalY = GetLocalTopBorder(_object);
-            float elementTopBorderLocalY = m_scrollViewController.m_contentChildAnchorPos[_object].localPosition.y;
-            float elementTopBorderRelativeY = elementTopBorderLocalY + contentY;
-
-            return elementTopBorderRelativeY;
-        }
-
-        private float GetRelativeLeftBorder(GameObject _object)
-        {
-            float contentX = m_scrollViewController.m_scrollViewContent.anchoredPosition.x;
-            //float elementTopBorderLocalX = GetLocalLeftBorder(_object);
-            float elementTopBorderLocalX = m_scrollViewController.m_contentChildAnchorPos[_object].localPosition.x;
-            float elementTopBorderRelativeX = elementTopBorderLocalX + contentX;
-
-            return elementTopBorderRelativeX;
-        }
-
-        private float GetRelativeBottomBorder(GameObject _object)
-        {
-            float contentY = m_scrollViewController.m_scrollViewContent.anchoredPosition.y;
-            //float elementBottomBorderLocalY = GetLocalBottomBorder(_object);
-            float elementBottomBorderLocalY = m_scrollViewController.m_contentChildAnchorPos[_object].anchoredPosition.y - m_scrollViewController.m_scrollViewRectTransform.rect.size.y + m_scrollViewController.m_firstChildRT.y;
-            float elementBottomBorderRelativeY = elementBottomBorderLocalY + contentY;
-
-            return elementBottomBorderRelativeY;
-        }
-
-        private float GetRelativeRightBorder(GameObject _object)
-        {
-            float contentX = m_scrollViewController.m_scrollViewContent.anchoredPosition.x;
-            float elementRightBorderLocalX = GetLocalRightBorder(_object);
-
-            float elementRightBorderRelativeX = elementRightBorderLocalX + contentX;
-
-            return elementRightBorderRelativeX;
-        }
-
-        #region Replaced BorderCalculation Methods after using Dicts!
-        //private float GetLocalTopBorder(GameObject _object)
+        //private float GetRelativeTopBorder(GameObject _object)
         //{
+        //    float contentY = m_scrollViewController.m_scrollViewContent.anchoredPosition.y;
+        //    //float elementTopBorderLocalY = GetLocalTopBorder(_object);
+        //    float elementTopBorderLocalY = m_scrollViewController.m_ContentChildAnchorPos[_object].localPosition.y;
+        //    float elementTopBorderRelativeY = elementTopBorderLocalY + contentY;
+
+        //    return elementTopBorderRelativeY;
+        //}
+
+        //private float GetRelativeLeftBorder(GameObject _object)
+        //{
+        //    float contentX = m_scrollViewController.m_scrollViewContent.anchoredPosition.x;
+        //    //float elementTopBorderLocalX = GetLocalLeftBorder(_object);
+        //    float elementTopBorderLocalX = m_scrollViewController.m_ContentChildAnchorPos[_object].localPosition.x;
+        //    float elementTopBorderRelativeX = elementTopBorderLocalX + contentX;
+
+        //    return elementTopBorderRelativeX;
+        //}
+
+        //private float GetRelativeBottomBorder(GameObject _object)
+        //{
+        //    float contentY = m_scrollViewController.m_scrollViewContent.anchoredPosition.y;
+        //    //float elementBottomBorderLocalY = GetLocalBottomBorder(_object);
+        //    float elementBottomBorderLocalY = m_scrollViewController.m_ContentChildAnchorPos[_object].anchoredPosition.y - m_scrollViewController.m_scrollViewRectTransform.rect.size.y + m_scrollViewController.m_firstChildRT.y;
+        //    float elementBottomBorderRelativeY = elementBottomBorderLocalY + contentY;
+
+        //    return elementBottomBorderRelativeY;
+        //}
+
+        //private float GetRelativeRightBorder(GameObject _object)
+        //{
+        //    float contentX = m_scrollViewController.m_scrollViewContent.anchoredPosition.x;
+        //    float elementRightBorderLocalX = GetLocalRightBorder(_object);
+
+        //    float elementRightBorderRelativeX = elementRightBorderLocalX + contentX;
+
+        //    return elementRightBorderRelativeX;
+        //}
+
+        //#region Replaced BorderCalculation Methods after using Dictionaries
+        ////private float GetLocalTopBorder(GameObject _object)
+        ////{
+        ////    Vector2 localPos = _object.transform.localPosition;
+
+        ////    return localPos.y;
+        ////}
+
+        ////private float GetLocalLeftBorder(GameObject _object)
+        ////{
+        ////    Vector2 localPos = _object.transform.localPosition;
+
+        ////    return localPos.x;
+        ////}
+        //#endregion
+
+        //private float GetLocalBottomBorder(GameObject _object)
+        //{
+        //    Vector2 rectSize = m_scrollViewController.m_scrollViewRectTransform.rect.size;
         //    Vector2 localPos = _object.transform.localPosition;
+
+        //    localPos.y -= rectSize.y - m_scrollViewController.m_firstChildRT.y;
 
         //    return localPos.y;
         //}
 
-        //private float GetLocalLeftBorder(GameObject _object)
+        //private float GetLocalRightBorder(GameObject _object)
         //{
+        //    Vector2 rectSize = m_scrollViewController.m_scrollViewRectTransform.rect.size;
         //    Vector2 localPos = _object.transform.localPosition;
+
+        //    localPos.x += rectSize.x - m_scrollViewController.m_firstChildRT.x;
 
         //    return localPos.x;
         //}
         #endregion
+                
+        //private void ScrollSelectNextGameObject(GameObject _selectedObject)
+        //{
+        //    if (m_mouseScrollValue.y != 0 && m_mouseIsInScrollView)
+        //    {
+        //        switch (m_scrollViewController.m_scrollDirection)
+        //        {
+        //            case ScrollType.Vertical:
+        //            case ScrollType.Grid:
+        //            {
+        //                switch (m_mouseScrollValue.y > 0)
+        //                {
+        //                    case true:
+        //                    {
+        //                        MoveToNextObject(m_scrollViewController.m_ObjectNavigation[_selectedObject].selectOnUp);
+        //                        break;
+        //                    }
+        //                    case false:
+        //                    {
+        //                        MoveToNextObject(m_scrollViewController.m_ObjectNavigation[_selectedObject].selectOnDown);
+        //                        break;
+        //                    }
+        //                }
 
-        private float GetLocalBottomBorder(GameObject _object)
-        {
-            Vector2 rectSize = m_scrollViewController.m_scrollViewRectTransform.rect.size;
-            Vector2 localPos = _object.transform.localPosition;
+        //                break;
+        //            }
+        //            case ScrollType.Horizontal:
+        //            {
+        //                switch (m_mouseScrollValue.y > 0)
+        //                {
+        //                    case true:
+        //                    {
+        //                        MoveToNextObject(m_scrollViewController.m_ObjectNavigation[_selectedObject].selectOnLeft);
+        //                        break;
+        //                    }
+        //                    case false:
+        //                    {
+        //                        MoveToNextObject(m_scrollViewController.m_ObjectNavigation[_selectedObject].selectOnRight);
+        //                        break;
+        //                    }
+        //                }
 
-            localPos.y -= rectSize.y - m_scrollViewController.m_firstChildRT.y;
+        //                break;
+        //            }
+        //            case ScrollType.None:
+        //            default:
+        //                break;
+        //        }
+        //    }
+        //}
 
-            return localPos.y;
-        }
-
-        private float GetLocalRightBorder(GameObject _object)
-        {
-            Vector2 rectSize = m_scrollViewController.m_scrollViewRectTransform.rect.size;
-            Vector2 localPos = _object.transform.localPosition;
-
-            localPos.x += rectSize.x - m_scrollViewController.m_firstChildRT.x;
-
-            return localPos.x;
-        }
+        //private void MoveToNextObject(Selectable _nextObject)
+        //{
+        //    switch (_nextObject == null)
+        //    {
+        //        case true:
+        //            return;
+        //        case false:
+        //            EventSystem.current.SetSelectedGameObject(_nextObject.gameObject);
+        //            break;
+        //    }
+        //}
         #endregion
-
-        private void ScrollSelectNextGameObject(GameObject _selectedObject)
-        {
-            if (m_mouseScrollValue.y != 0 && m_mouseIsInScrollView)
-            {
-                switch (m_scrollViewController.m_scrollDirection)
-                {
-                    case ScrollType.Vertical:
-                    case ScrollType.Grid:
-                    {
-                        switch (m_mouseScrollValue.y > 0)
-                        {
-                            case true:
-                            {
-                                MoveToNextObject(m_scrollViewController.m_objectNavigation[_selectedObject].selectOnUp);
-                                break;
-                            }
-                            case false:
-                            {
-                                MoveToNextObject(m_scrollViewController.m_objectNavigation[_selectedObject].selectOnDown);
-                                break;
-                            }
-                        }
-
-                        break;
-                    }
-                    case ScrollType.Horizontal:
-                    {
-                        switch (m_mouseScrollValue.y > 0)
-                        {
-                            case true:
-                            {
-                                MoveToNextObject(m_scrollViewController.m_objectNavigation[_selectedObject].selectOnLeft);
-                                break;
-                            }
-                            case false:
-                            {
-                                MoveToNextObject(m_scrollViewController.m_objectNavigation[_selectedObject].selectOnRight);
-                                break;
-                            }
-                        }
-
-                        break;
-                    }
-                    case ScrollType.None:
-                    default:
-                        break;
-                }
-            }
-        }
-
-        private void MoveToNextObject(Selectable _nextObject)
-        {
-            switch (_nextObject == null)
-            {
-                case true:
-                    return;
-                case false:
-                    EventSystem.current.SetSelectedGameObject(_nextObject.gameObject);
-                    break;
-            }
-        }
         #endregion
 
         private void TransitionProgress()
