@@ -43,7 +43,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
             ResetVariables();
 
-            m_scrollViewController.m_scrollViewRect.scrollSensitivity = 0.0f;
+            //m_scrollViewController.m_scrollViewRect.scrollSensitivity = 0.0f;
 
             m_autoScrollingEnabled = m_scrollViewController.ContentChildrenSet & m_scrollViewController.ObjectNavigationSet;
         }
@@ -208,7 +208,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
             Vector2 scrollPosFrom = m_scrollViewController.m_scrollViewContent.localPosition;
             Vector2 scrollPosTo = scrollPosFrom;
             scrollPosTo.y -= _distanceY;
-            //scrollPosTo.y = Mathf.Clamp(scrollPosTo.y -= _distanceY, 0.0f, m_scrollViewController.m_scrollViewContent.rect.height);
+
             TransitionFromTo(scrollPosFrom, scrollPosTo, m_transitionDuration);
         }
 
@@ -217,7 +217,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
             Vector2 scrollPosFrom = m_scrollViewController.m_scrollViewContent.localPosition;
             Vector2 scrollPosTo = scrollPosFrom;
             scrollPosTo.x += _distanceX;
-            //scrollPosTo.x = Mathf.Clamp(scrollPosTo.x += _distanceX, -m_scrollViewController.m_scrollViewContent.rect.width, 0.0f);
+
             TransitionFromTo(scrollPosFrom, scrollPosTo, m_transitionDuration);
         }
 

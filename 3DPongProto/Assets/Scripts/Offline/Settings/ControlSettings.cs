@@ -10,11 +10,16 @@ namespace ThreeDeePongProto.Shared.Settings
     {
         #region Content Views
         [Header("Content Views")]
-        [SerializeField] private Button[] m_playerButtons;
-        [SerializeField] private Transform[] m_contentSubTransforms;
-        //[SerializeField] private Transform[] m_menuButtonTransforms;
         [SerializeField, Range(0.1f, 0.9f)] private float m_reducedAlphaValue = 0.5f;
         [SerializeField, Range(0.5f, 1f)] private float m_maxAlphaValue = 1f;
+        [SerializeField] private Button[] m_playerButtons;
+        [SerializeField] private Transform[] m_contentSubTransforms;
+
+        [Header("Change Button Navigation")]
+        [SerializeField] private Selectable[] m_lastKbSelectable;
+        [SerializeField] private Selectable[] m_lastGpSelectable;
+        [SerializeField] private Button m_resetButton;
+        [SerializeField] private Button m_backButton;
 
         private int m_currentViewIndex;
         public static event Action<int> PlayerViewIndex;        //Subscriber: RebindManager.
@@ -41,12 +46,12 @@ namespace ThreeDeePongProto.Shared.Settings
         [SerializeField] private Toggle m_rotToggleKeysEP;
         [SerializeField] private bool m_customToggleDefaults;
         [Space]
-        [SerializeField, Range(1, 20)] float m_xMovespeedDefault = 10f;
+        [SerializeField, Range(1, 20)] float m_xMoveSpeedDefault = 10f;
         [SerializeField, Range(1, 5)] float m_yRotationDefault = 2.5f;
         [SerializeField, Range(1, 10)] private float m_adjustSliderStep = 2.0f;
 
-        private Dictionary<Toggle, Slider> m_toggleSliderConnectXEP = new();
-        private Dictionary<Toggle, Slider> m_toggleSliderConnectYEP = new();
+        private readonly Dictionary<Toggle, Slider> m_toggleSliderConnectXEP = new();
+        private readonly Dictionary<Toggle, Slider> m_toggleSliderConnectYEP = new();
 
         #region A Dictionary-Array of Dictionaries. INTERESTING enough to keep it.
         //private Dictionary<Toggle, Slider>[] m_toggleSliderXYConnectEP = new Dictionary<Toggle, Slider>[]
@@ -80,14 +85,8 @@ namespace ThreeDeePongProto.Shared.Settings
             m_currentViewIndex = 0;
             SetActivePlayerView(m_playerButtons[m_currentViewIndex]);
 
-            //for (int i = 0; i < m_contentSubTransforms.Length; i++)
-            //{
-            //    if (m_contentSubTransforms[i] != null)
-            //    {
             m_toggleSliderConnectXEP.Add(m_moveToggleKeysEP, m_MoveValueSliderXEP);
             m_toggleSliderConnectYEP.Add(m_rotToggleKeysEP, m_RotValueSliderYEP);
-            //    }
-            //}
 
             for (int i = 0; i < m_contentSubTransforms.Length; i++)
             {
@@ -236,84 +235,30 @@ namespace ThreeDeePongProto.Shared.Settings
 
         private void SensitivitySliderXValueChanges(float _sliderXValue)
         {
-            //switch (m_currentViewIndex)
-            //{
-            //case 0:
-            if (m_moveToggleKeysEP.isOn)   //Player1 XToggle!
+            if (m_moveToggleKeysEP.isOn)
             {
                 m_controlUIValues[0].LastXMoveSpeed = _sliderXValue;  //Player1 SO.
-                                                                      //m_MoveValueTextPs[0].text = $"{_sliderXValue:N2}";     //Player1 XText.
-                                                                      //}
-                                                                      //break;
-                                                                      //case 1:
-                                                                      //    if (m_moveToggleKeysEP[1].isOn)   //Player2 XToggle!
-                                                                      //    {
                 m_controlUIValues[1].LastXMoveSpeed = _sliderXValue;  //Player2 SO.
-                                                                      //        m_MoveValueTextPs[1].text = $"{_sliderXValue:N2}";     //Player2 XText.
-                                                                      //    }
-                                                                      //    break;
-                                                                      //case 2:
-                                                                      //    if (m_moveToggleKeysEP[2].isOn)   //Player3 XToggle!
-                                                                      //    {
                 m_controlUIValues[2].LastXMoveSpeed = _sliderXValue;  //Player3 SO.
-                                                                      //        m_MoveValueTextPs[2].text = $"{_sliderXValue:N2}";     //Player3 XText.
-                                                                      //    }
-                                                                      //    break;
-                                                                      //case 3:
-                                                                      //    if (m_moveToggleKeysEP[3].isOn)   //Player4 XToggle!
-                                                                      //    {
                 m_controlUIValues[3].LastXMoveSpeed = _sliderXValue;  //Player4 SO.
-                m_MoveValueTextPs.text = $"{_sliderXValue:N2}";     //Player4 XText.
-                                                                    //}
-                                                                    //    break;
-                                                                    //    default:
-                                                                    //        break;
+                m_MoveValueTextPs.text = $"{_sliderXValue:N2}";
             }
         }
 
         private void SensitivitySliderYValueChanges(float _sliderYValue)
         {
-            //switch (m_currentViewIndex)
-            //{
-            //    case 0:
-            if (m_rotToggleKeysEP.isOn)   //Player1 YToggle!
+            if (m_rotToggleKeysEP.isOn)
             {
-                m_controlUIValues[0].LastYRotSpeed = _sliderYValue;  //Player1 SO.
-                                                                     //            m_RotValueTextPs[0].text = $"{_sliderYValue:N2}";    //Player1 YText.
-                                                                     //        }
-                                                                     //        break;
-                                                                     //    case 1:
-                                                                     //        if (m_rotToggleKeysEP[1].isOn)   //Player2 YToggle!
-                                                                     //        {
+                m_controlUIValues[0].LastYRotSpeed = _sliderYValue; //Player1 SO.
                 m_controlUIValues[1].LastYRotSpeed = _sliderYValue; //Player2 SO.
-                                                                    //            m_RotValueTextPs[1].text = $"{_sliderYValue:N2}";
-                                                                    //        }
-                                                                    //        break;
-                                                                    //    case 2:
-                                                                    //        if (m_rotToggleKeysEP[2].isOn)   //Player3 YToggle!
-                                                                    //        {
                 m_controlUIValues[2].LastYRotSpeed = _sliderYValue; //Player3 SO.
-                                                                    //            m_RotValueTextPs[2].text = $"{_sliderYValue:N2}";
-                                                                    //        }
-                                                                    //        break;
-                                                                    //    case 3:
-                                                                    //        if (m_rotToggleKeysEP[3].isOn)      //Player4 YToggle!
-                                                                    //        {
                 m_controlUIValues[3].LastYRotSpeed = _sliderYValue; //Player4 SO.
                 m_RotValueTextPs.text = $"{_sliderYValue:N2}";
-                //        }
-                //        break;
-                //    default:
-                //        break;
             }
         }
 
         private void MoveToggleXValueChanges(bool _toggleX)
         {
-            //switch (m_currentViewIndex)
-            //{
-            //    case 0: //PlayerCharacter 1
-            //    {
             m_controlUIStates[0].CustomXSensitivity = _toggleX;
             m_controlUIStates[1].CustomXSensitivity = _toggleX;
             m_controlUIStates[2].CustomXSensitivity = _toggleX;
@@ -323,8 +268,8 @@ namespace ThreeDeePongProto.Shared.Settings
             {
                 case false:
                 {
-                    m_MoveValueSliderXEP.value = m_xMovespeedDefault; //MoveSlider X
-                    m_MoveValueTextPs.text = $"{m_xMovespeedDefault:N2}";
+                    m_MoveValueSliderXEP.value = m_xMoveSpeedDefault; //MoveSlider X
+                    m_MoveValueTextPs.text = $"{m_xMoveSpeedDefault:N2}";
                     m_MoveValueSliderXEP.interactable = false;
                     break;
                 }
@@ -336,88 +281,10 @@ namespace ThreeDeePongProto.Shared.Settings
                     break;
                 }
             }
-            //break;
-            //}
-            //case 1: //PlayerCharacter 2
-            //{
-            //m_controlUIStates[1].CustomXSensitivity = _toggleX;
-
-            //switch (_toggleX)
-            //{
-            //    case false:
-            //    {
-            //        m_MoveValueSliderXEP[1].value = m_xMovespeedDefault; //MoveSlider X
-            //        m_MoveValueTextPs[1].text = $"{m_xMovespeedDefault:N2}";
-            //        m_MoveValueSliderXEP[1].interactable = false;
-            //        break;
-            //    }
-            //    case true:
-            //    {
-            //        m_MoveValueSliderXEP[1].value = m_controlUIValues[1].LastXMoveSpeed;
-            //        m_MoveValueTextPs[1].text = $"{m_controlUIValues[1].LastXMoveSpeed:N2}";
-            //        m_MoveValueSliderXEP[1].interactable = true;
-            //        break;
-            //    }
-            //}
-            //break;
-            //}
-            //case 2: //PlayerCharacter 3
-            //{
-            //m_controlUIStates[2].CustomXSensitivity = _toggleX;
-
-            //switch (_toggleX)
-            //{
-            //    case false:
-            //    {
-            //        m_MoveValueSliderXEP[2].value = m_xMovespeedDefault; //MoveSlider X
-            //        m_MoveValueTextPs[2].text = $"{m_xMovespeedDefault:N2}";
-            //        m_MoveValueSliderXEP[2].interactable = false;
-            //        break;
-            //    }
-            //    case true:
-            //    {
-            //        m_MoveValueSliderXEP[2].value = m_controlUIValues[2].LastXMoveSpeed;
-            //        m_MoveValueTextPs[2].text = $"{m_controlUIValues[2].LastXMoveSpeed:N2}";
-            //        m_MoveValueSliderXEP[2].interactable = true;
-            //        break;
-            //    }
-            //}
-            //break;
-            //}
-            //case 3: //PlayerCharacter 4
-            //{
-            //m_controlUIStates[3].CustomXSensitivity = _toggleX;
-
-            //switch (_toggleX)
-            //{
-            //    case false:
-            //    {
-            //        m_MoveValueSliderXEP[3].value = m_xMovespeedDefault; //MoveSlider X
-            //        m_MoveValueTextPs[3].text = $"{m_xMovespeedDefault:N2}";
-            //        m_MoveValueSliderXEP[3].interactable = false;
-            //        break;
-            //    }
-            //    case true:
-            //    {
-            //        m_MoveValueSliderXEP[3].value = m_controlUIValues[3].LastXMoveSpeed;
-            //        m_MoveValueTextPs[3].text = $"{m_controlUIValues[3].LastXMoveSpeed:N2}";
-            //        m_MoveValueSliderXEP[3].interactable = true;
-            //        break;
-            //    }
-            //}
-            //break;
-            //}
-            //default:
-            //    break;
-            //}
         }
 
         private void RotToggleYValueChanges(bool _toggleY)
         {
-            //switch (m_currentViewIndex)
-            //{
-            //    case 0: //PlayerCharacter 1
-            //    {
             m_controlUIStates[0].CustomYSensitivity = _toggleY;
             m_controlUIStates[1].CustomYSensitivity = _toggleY;
             m_controlUIStates[2].CustomYSensitivity = _toggleY;
@@ -440,80 +307,6 @@ namespace ThreeDeePongProto.Shared.Settings
                     break;
                 }
             }
-            //        break;
-            //    }
-            //    case 1: //PlayerCharacter 2
-            //    {
-            //        m_controlUIStates[1].CustomYSensitivity = _toggleY;
-
-            //        switch (_toggleY)
-            //        {
-            //            case false:
-            //            {
-            //                m_RotValueSliderYEP[1].value = m_yRotationDefault;  //RotSlider Y
-            //                m_RotValueTextPs[1].text = $"{m_yRotationDefault:N2}";
-            //                m_RotValueSliderYEP[1].interactable = false;
-            //                break;
-            //            }
-            //            case true:
-            //            {
-            //                m_RotValueSliderYEP[1].value = m_controlUIValues[1].LastYRotSpeed;
-            //                m_RotValueTextPs[1].text = $"{m_controlUIValues[1].LastYRotSpeed:N2}";
-            //                m_RotValueSliderYEP[1].interactable = true;
-            //                break;
-            //            }
-            //        }
-            //        break;
-            //    }
-            //    case 2: //PlayerCharacter 3
-            //    {
-            //        m_controlUIStates[2].CustomYSensitivity = _toggleY;
-
-            //        switch (_toggleY)
-            //        {
-            //            case false:
-            //            {
-            //                m_RotValueSliderYEP[2].value = m_yRotationDefault;  //RotSlider Y
-            //                m_RotValueTextPs[2].text = $"{m_yRotationDefault:N2}";
-            //                m_RotValueSliderYEP[2].interactable = false;
-            //                break;
-            //            }
-            //            case true:
-            //            {
-            //                m_RotValueSliderYEP[2].value = m_controlUIValues[2].LastYRotSpeed;
-            //                m_RotValueTextPs[2].text = $"{m_controlUIValues[2].LastYRotSpeed:N2}";
-            //                m_RotValueSliderYEP[2].interactable = true;
-            //                break;
-            //            }
-            //        }
-            //        break;
-            //    }
-            //    case 3: //PlayerCharacter 4
-            //    {
-            //        m_controlUIStates[3].CustomYSensitivity = _toggleY;
-
-            //        switch (_toggleY)
-            //        {
-            //            case false:
-            //            {
-            //                m_RotValueSliderYEP[3].value = m_yRotationDefault;
-            //                m_RotValueTextPs[3].text = $"{m_yRotationDefault:N2}";
-            //                m_RotValueSliderYEP[3].interactable = false;
-            //                break;
-            //            }
-            //            case true:
-            //            {
-            //                m_RotValueSliderYEP[3].value = m_controlUIValues[3].LastYRotSpeed;
-            //                m_RotValueTextPs[3].text = $"{m_controlUIValues[3].LastYRotSpeed:N2}";
-            //                m_RotValueSliderYEP[3].interactable = true;
-            //                break;
-            //            }
-            //        }
-            //        break;
-            //    }
-            //    default:
-            //        break;
-            //}
         }
 
         public void SetActivePlayerView(Button _sender)
@@ -523,17 +316,16 @@ namespace ThreeDeePongProto.Shared.Settings
                 if (_sender == m_playerButtons[i])
                 {
                     m_contentSubTransforms[i].gameObject.SetActive(true);
-                    //m_menuButtonTransforms[i].gameObject.SetActive(true);
                     Color tempAlpha1 = m_playerButtons[i].image.color;
                     tempAlpha1.a = m_maxAlphaValue;
                     m_playerButtons[i].image.color = tempAlpha1;
                     m_currentViewIndex = i; //Routes the Default Button Resets.
                     PlayerViewIndex?.Invoke(m_currentViewIndex);
+                    UpdateButtonNavUp();
                 }
                 else
                 {
                     m_contentSubTransforms[i].gameObject.SetActive(false);
-                    //m_menuButtonTransforms[i].gameObject.SetActive(false);
                     Color tempAlpha05 = m_playerButtons[i].image.color;
                     tempAlpha05.a = m_reducedAlphaValue;
                     m_playerButtons[i].image.color = tempAlpha05;
@@ -552,8 +344,8 @@ namespace ThreeDeePongProto.Shared.Settings
             {
                 case false:
                 {
-                    m_MoveValueSliderXEP.value = m_xMovespeedDefault;    //MoveSlider X
-                    m_MoveValueTextPs.text = $"{m_xMovespeedDefault:N2}";
+                    m_MoveValueSliderXEP.value = m_xMoveSpeedDefault;    //MoveSlider X
+                    m_MoveValueTextPs.text = $"{m_xMoveSpeedDefault:N2}";
                     break;
                 }
                 case true:
@@ -586,38 +378,6 @@ namespace ThreeDeePongProto.Shared.Settings
                 {
                     m_playerXRotInvertToggles[i].isOn = m_controlUIStates[i].InvertXAxis;
                     m_playerYRotInvertToggles[i].isOn = m_controlUIStates[i].InvertYAxis;
-
-                    //switch (m_controlUIStates[i].CustomXSensitivity)
-                    //{
-                    //    case false:
-                    //    {
-                    //        m_MoveValueSliderXEP[i].value = m_xMovespeedDefault;    //MoveSlider X
-                    //        m_MoveValueTextPs[i].text = $"{m_xMovespeedDefault:N2}";
-                    //        break;
-                    //    }
-                    //    case true:
-                    //    {
-                    //        m_MoveValueSliderXEP[i].value = m_controlUIValues[i].LastXMoveSpeed;   //MoveSlider X
-                    //        m_MoveValueTextPs[i].text = $"{m_controlUIValues[i].LastXMoveSpeed:N2}";
-                    //        break;
-                    //    }
-                    //}
-
-                    //switch (m_controlUIStates[i].CustomYSensitivity)
-                    //{
-                    //    case false:
-                    //    {
-                    //        m_RotValueSliderYEP[i].value = m_yRotationDefault;  //RotSlider Y
-                    //        m_RotValueTextPs[i].text = $"{m_yRotationDefault:N2}";
-                    //        break;
-                    //    }
-                    //    case true:
-                    //    {
-                    //        m_RotValueSliderYEP[i].value = m_controlUIValues[i].LastYRotSpeed;  //RotSlider Y
-                    //        m_RotValueTextPs[i].text = $"{m_controlUIValues[i].LastYRotSpeed:N2}";
-                    //        break;
-                    //    }
-                    //}
                 }
             }
         }
@@ -664,9 +424,34 @@ namespace ThreeDeePongProto.Shared.Settings
                 connectedSlider.value += connectedSlider.maxValue * (0.01f * m_adjustSliderStep);
         }
 
+        private void UpdateButtonNavUp()
+        {
+            Navigation resetButtonNav = m_resetButton.GetComponent<Button>().navigation;
+            foreach (Selectable selectable in m_lastKbSelectable)
+            {
+                if (selectable.gameObject.activeInHierarchy)
+                {
+                    resetButtonNav.selectOnUp = m_lastKbSelectable[m_currentViewIndex];
+                    m_resetButton.navigation = resetButtonNav;
+                    break;
+                }
+            }
+
+            Navigation backButtonNav = m_backButton.GetComponent<Button>().navigation;
+            foreach (Selectable selectable in m_lastGpSelectable)
+            {
+                if (selectable.gameObject.activeInHierarchy)
+                {
+                    backButtonNav.selectOnUp = m_lastGpSelectable[m_currentViewIndex];
+                    m_backButton.navigation = backButtonNav;
+                    break;
+                }
+            }
+        }
+
         public void ReSetDefault()
         {
-            m_MoveValueSliderXEP.value = m_xMovespeedDefault;
+            m_MoveValueSliderXEP.value = m_xMoveSpeedDefault;
             m_RotValueSliderYEP.value = m_yRotationDefault;
             m_moveToggleKeysEP.isOn = m_customToggleDefaults;
             m_rotToggleKeysEP.isOn = m_customToggleDefaults;
