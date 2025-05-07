@@ -39,7 +39,7 @@ namespace ThreeDeePongProto.Shared.Managers
     public class UserInputManager : MonoBehaviour
     {
         //public static UserInputManager Instance { get; private set; }
-        private PlayerInputActions m_inputActions;
+        public static PlayerInputActions m_CentralActionsInstance;
         private readonly InputAction[] m_selectPlayers = new InputAction[4];
 
         [Header("References")]
@@ -68,7 +68,7 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         #region Actions_and_Functions
-        internal static event Action<string> AChangeActiveActionMap;    //Announce cheme switch, so PlayerInput components can react.
+        internal static event Action<string> AChangeActiveActionMap;    //Announce scheme-switch, so PlayerInput components can react.
         #endregion
 
         private const string m_keyboardMouseScheme = "KeyboardMouse";
@@ -91,11 +91,14 @@ namespace ThreeDeePongProto.Shared.Managers
 
             m_lastActionMap = "";
 
-            m_inputActions = new();
-            m_selectPlayers[0] = m_inputActions.PlayerActions.SelectPlayer1;
-            m_selectPlayers[1] = m_inputActions.PlayerActions.SelectPlayer2;
-            m_selectPlayers[2] = m_inputActions.PlayerActions.SelectPlayer3;
-            m_selectPlayers[3] = m_inputActions.PlayerActions.SelectPlayer4;
+            if (m_CentralActionsInstance == null)
+                m_CentralActionsInstance = new();
+
+            m_CentralActionsInstance.Enable();
+            m_selectPlayers[0] = m_CentralActionsInstance.PlayerActions.SelectPlayer1;
+            m_selectPlayers[1] = m_CentralActionsInstance.PlayerActions.SelectPlayer2;
+            m_selectPlayers[2] = m_CentralActionsInstance.PlayerActions.SelectPlayer3;
+            m_selectPlayers[3] = m_CentralActionsInstance.PlayerActions.SelectPlayer4;
 
             m_playerInputManager = GetComponent<PlayerInputManager>();
             SetUpPlayerInputManager(m_playerInputManager);
@@ -121,7 +124,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void Update()
         {
-            if (m_inputActions == null)
+            if (m_CentralActionsInstance == null)
                 return;
 
             for (int actionIndex = 0; actionIndex < m_selectPlayers.Length; actionIndex++)
@@ -179,7 +182,7 @@ namespace ThreeDeePongProto.Shared.Managers
             int numberOfPlayers = (m_matchValues.PlayerSOData != null && m_matchValues.PlayerSOData.Count > 0)
                                 ? m_matchValues.PlayerSOData.Count : m_defaultPlayerNumber;
 
-            //Liste of available Gamepads.
+            //List of available Gamepads.
             m_availableGamepads = new(Gamepad.all);
 
             for (int playerIndex = 0; playerIndex < numberOfPlayers; playerIndex++)
@@ -206,7 +209,7 @@ namespace ThreeDeePongProto.Shared.Managers
 #if UNITY_EDITOR
                         Debug.LogError($"Atleast one device is null. Player {playerIndex} can't join.");
 #endif
-                        //If the _inputdevice is invalid and a Gamepad re-add it to the list of available Gamepads.
+                        //If the inputDevice is invalid and a Gamepad re-add it to the list of available Gamepads.
                         if (controlScheme == m_gamePadScheme && devicesToPair.Length > 0)
                             m_availableGamepads.Add(devicesToPair[0]);
                         continue;
@@ -234,7 +237,7 @@ namespace ThreeDeePongProto.Shared.Managers
 #if UNITY_EDITOR
                         Debug.LogError($"An error occured on .JoinPlayer for Player {playerIndex}!");
 #endif
-                        //If the _inputdevice is invalid and a Gamepad re-add it to the list of available Gamepads.
+                        //If the inputDevice is invalid and a Gamepad re-add it to the list of available Gamepads.
                         if (controlScheme == m_gamePadScheme && devicesToPair.Length > 0)
                             m_availableGamepads.Add(devicesToPair[0]);
                     }
@@ -281,7 +284,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 //Determine the correct Keyboard scheme.
                 string keyboardScheme = $"KeyboardPlayerID{disconnectedPlayerIndex}";
                 //Check if scheme exists. (important!)
-                if (m_inputActions.asset.FindControlScheme(keyboardScheme) == null)
+                if (m_CentralActionsInstance.asset.FindControlScheme(keyboardScheme) == null)
                 {
 #if UNITY_EDITOR
                     Debug.LogError($"Fallback scheme '{keyboardScheme}' not found! Cannot switch player {disconnectedPlayerIndex} to keyboard.");
@@ -292,7 +295,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 }
 
                 //Get keyboard devices.
-                List<InputDevice> keyboardDeviceList = new List<InputDevice> { Keyboard.current };
+                List<InputDevice> keyboardDeviceList = new() { Keyboard.current };
                 if (Mouse.current != null)
                     keyboardDeviceList.Add(Mouse.current);
 
@@ -352,7 +355,7 @@ namespace ThreeDeePongProto.Shared.Managers
         #region None-CallbackContext_Subscription_Methods
         private void EnablePlayerActionMap(bool _enable)
         {
-            if (m_inputActions == null)
+            if (m_CentralActionsInstance == null)
                 return;
 
             for (int action = 0; action < m_selectPlayers.Length; action++)
@@ -426,9 +429,9 @@ namespace ThreeDeePongProto.Shared.Managers
             }
         }
 
-        private void OnDeviceChange(InputDevice _inputdevice, InputDeviceChange _deviceChange)
+        private void OnDeviceChange(InputDevice _inputDevice, InputDeviceChange _deviceChange)
         {
-            if (_inputdevice is Gamepad gamepad)
+            if (_inputDevice is Gamepad gamepad)
             {
                 switch (_deviceChange)
                 {

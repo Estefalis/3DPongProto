@@ -24,7 +24,7 @@ namespace ThreeDeePongProto.Shared.Managers
         //[SerializeField] private bool m_deleteAllPlayerPrefs = false;
         #endregion
 
-        [SerializeField] private bool m_loadRebindDicts = true;
+        [SerializeField] private bool m_loadRebindDict = true;
 
         #region ChangeActionMaps
         //ActionEvent to switch between ActionMaps within the InputActionAsset.
@@ -36,14 +36,14 @@ namespace ThreeDeePongProto.Shared.Managers
         public static event Action m_RebindCanceled;
         public static event Action<InputAction, int> m_rebindStarted;
 
-        private static Dictionary<string, string> m_keyboardRebindDict = new Dictionary<string, string>();
-        private static Dictionary<string, string> m_gamepadRebindDict = new Dictionary<string, string>();
+        private static Dictionary<string, string> m_keyboardRebindDict = new();
+        private static Dictionary<string, string> m_gamepadRebindDict = new();
 
         private const string m_cancelWithKeyboardButton = "<Keyboard>/escape";
         private const string m_cancelWithGamepadButton = "<Gamepad>/select";
 
         private const string m_keyboardMouseScheme = "KeyboardMouse", m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3", m_keyboardDevice = "Keyboard";
-        private const string m_gamePadScheme = "Gamepad";                       //Inputsystem's Gamepad scheme. (groups)
+        private const string m_gamePadScheme = "Gamepad";                       //InputSystem's Gamepad scheme. (groups)
 
         private const string m_keyboardPath = "Keyboard";                       //EffectivePath string.
         private const string m_gamepadPath = "Gamepad";                         //EffectivePath string.
@@ -52,8 +52,8 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         #region KeyBinding Icons
-        [SerializeField] public GamepadIcons m_pS;
-        [SerializeField] public GamepadIcons m_xbox;
+        [SerializeField] private GamepadIcons m_pS;
+        [SerializeField] private GamepadIcons m_xBox;
         private static event Func<string, string, Sprite> m_extractButtonImage;
         #endregion
 
@@ -83,7 +83,7 @@ namespace ThreeDeePongProto.Shared.Managers
             //if (m_deleteAllPlayerPrefs)
             //{
             //    PlayerPrefs.DeleteAll();
-            //    Debug.Log("All PlayerPrefs deleted!");
+            //    Debug.Log("All PlayerPref deleted!");
             //}
             #endregion
 
@@ -106,7 +106,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void OnEnable()
         {
-            if (m_loadRebindDicts)
+            if (m_loadRebindDict)
             {
                 m_keyboardRebindDict = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_encryptionEnabled);
                 m_gamepadRebindDict = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_encryptionEnabled);
@@ -234,7 +234,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 //XBox case currently not in use.
                 //case EKeyControlScheme.XBoxGamepad:
                 //{
-                //    buttonImage = m_xbox.GetGamepadSprite(_controlPath);
+                //    buttonImage = m_xBox.GetGamepadSprite(_controlPath);
                 //    return buttonImage;
                 //}
                 default:
@@ -278,7 +278,7 @@ namespace ThreeDeePongProto.Shared.Managers
         }
 
         /// <summary>
-        /// Execusion of the Key-Rebindings with the submitted parameters, related to ActionMap and Binding-Indices.
+        /// Key-Rebind execution with the submitted parameters, related to ActionMap and Binding-Indices.
         /// </summary>
         /// <param name="_actionToRebind"></param>
         /// <param name="_bindingIndex"></param>
@@ -301,7 +301,7 @@ namespace ThreeDeePongProto.Shared.Managers
 #endif
 
             #region Rebind Operation OnComplete (Including Keyboard & Gamepad Override Saves.)
-            //assignment of the OnComplete'operation' delegate.
+            //assignment of the OnComplete' operation' delegate.
             rebind.OnComplete(operation =>
             {
                 _actionToRebind.Enable();
@@ -379,7 +379,7 @@ namespace ThreeDeePongProto.Shared.Managers
             });
 
             #region Rebind Operation OnCancel (Including '.WithCancelingThrough' Button-Switch.)
-            //assignment of the OnCancel'operation' delegate.
+            //assignment of the OnCancel' operation' delegate.
             rebind.OnCancel(operation =>
             {
                 _actionToRebind.Enable();
@@ -409,7 +409,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
             #region Exclude controls from the rebind process
             rebind.WithControlsExcluding("<Keyboard>/escape");  //Else ESC gets set on keyboard button rebinds on cancellation.
-            if (_excludeMouse)  //Ignore the mouse on redinds.
+            if (_excludeMouse)  //Ignore mouse on rebinding.
                 rebind.WithControlsExcluding("Mouse");
             rebind.WithControlsExcluding("<DualSenseGamepadHID>/systemButton");
             rebind.WithControlsExcluding("<DualSenseGamepadHID>/micButton");
@@ -1010,7 +1010,7 @@ namespace ThreeDeePongProto.Shared.Managers
         }
 
         /// <summary>
-        /// Resets each Composite child. Control Schemes are still required to 'switch' between the corresponding _device Type dicts.
+        /// Resets each Composite child. Control Schemes are still required to 'switch' between the corresponding _device Type dictionaries.
         /// </summary>
         /// <param name="_inputAction"></param>
         private static void ResetCompositeOverrides(InputAction _inputAction)

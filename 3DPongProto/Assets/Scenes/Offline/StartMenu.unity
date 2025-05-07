@@ -249,13 +249,14 @@ GameObject:
   - component: {fileID: 32744707}
   - component: {fileID: 32744711}
   - component: {fileID: 32744710}
+  - component: {fileID: 32744712}
   m_Layer: 5
-  m_Name: HoriScrollViewInt
+  m_Name: HoriScrollView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &32744705
 RectTransform:
   m_ObjectHideFlags: 0
@@ -360,7 +361,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_scrollViewController: {fileID: 32744711}
-  m_transitionDuration: 0.05
+  m_eScrollTarget: 2
+  m_transitionDuration: 0.1
 --- !u!114 &32744711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,15 +375,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53ccba42f474cf94989276bed3ea220e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_fillContent: {fileID: 0}
+  m_fillContent: {fileID: 32744712}
   m_autoScrolling: {fileID: 32744710}
-  m_scrollDirection: 3
   m_contentFillType: 0
+  m_scrollDirection: 2
   m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
+  m_eMouseScrolling: 1
   m_gridSize: {x: 0, y: 0}
+--- !u!114 &32744712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 32744704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6154e0210382454a8201918cb5342e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_scrollViewController: {fileID: 32744711}
+  m_spawnPrefab: {fileID: 9022728904379417136, guid: c4d387aef11262042a66ad7b05ae8a4c,
+    type: 3}
+  m_createChildAmount: 5
 --- !u!1 &44915268
 GameObject:
   m_ObjectHideFlags: 0
@@ -4927,8 +4946,9 @@ GameObject:
   - component: {fileID: 903394531}
   - component: {fileID: 903394535}
   - component: {fileID: 903394534}
+  - component: {fileID: 903394536}
   m_Layer: 5
-  m_Name: VertScrollViewInt
+  m_Name: VertScrollView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5038,7 +5058,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_scrollViewController: {fileID: 903394535}
-  m_transitionDuration: 0.05
+  m_eScrollTarget: 2
+  m_transitionDuration: 0.1
 --- !u!114 &903394535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5051,15 +5072,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53ccba42f474cf94989276bed3ea220e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_fillContent: {fileID: 0}
+  m_fillContent: {fileID: 903394536}
   m_autoScrolling: {fileID: 903394534}
-  m_scrollDirection: 3
   m_contentFillType: 0
+  m_scrollDirection: 1
   m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
+  m_eMouseScrolling: 1
   m_gridSize: {x: 0, y: 0}
+--- !u!114 &903394536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903394529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6154e0210382454a8201918cb5342e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_scrollViewController: {fileID: 903394535}
+  m_spawnPrefab: {fileID: 9022728904379417136, guid: 8f6288d1944edf94fb9ff13723d57525,
+    type: 3}
+  m_createChildAmount: 5
 --- !u!1 &911978389
 GameObject:
   m_ObjectHideFlags: 0
@@ -10846,13 +10884,14 @@ GameObject:
   - component: {fileID: 1836731496}
   - component: {fileID: 1836731500}
   - component: {fileID: 1836731499}
+  - component: {fileID: 1836731501}
   m_Layer: 5
-  m_Name: GridScrollViewInt
+  m_Name: GridScrollView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1836731495
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10957,7 +10996,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_scrollViewController: {fileID: 1836731500}
-  m_transitionDuration: 0.05
+  m_eScrollTarget: 2
+  m_transitionDuration: 0.1
 --- !u!114 &1836731500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10970,15 +11010,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53ccba42f474cf94989276bed3ea220e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_fillContent: {fileID: 0}
+  m_fillContent: {fileID: 1836731501}
   m_autoScrolling: {fileID: 1836731499}
-  m_scrollDirection: 3
   m_contentFillType: 0
+  m_scrollDirection: 3
   m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
+  m_eMouseScrolling: 2
   m_gridSize: {x: 0, y: 0}
+--- !u!114 &1836731501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1836731494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6154e0210382454a8201918cb5342e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_scrollViewController: {fileID: 1836731500}
+  m_spawnPrefab: {fileID: 9022728904379417136, guid: c4d387aef11262042a66ad7b05ae8a4c,
+    type: 3}
+  m_createChildAmount: 50
 --- !u!1 &1853817896
 GameObject:
   m_ObjectHideFlags: 0
@@ -15418,12 +15475,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_fillContent: {fileID: 7592631600590828204}
   m_autoScrolling: {fileID: 1944674010019380475}
-  m_scrollDirection: 3
   m_contentFillType: 0
+  m_scrollDirection: 1
   m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
+  m_eMouseScrolling: 1
   m_gridSize: {x: 0, y: 0}
 --- !u!224 &1480635287588115570
 RectTransform:
@@ -19336,7 +19394,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_scrollViewController: {fileID: 1426086331171775396}
-  m_transitionDuration: 0.05
+  m_eScrollTarget: 1
+  m_transitionDuration: 0.1
 --- !u!222 &1950543069550927470
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -22810,12 +22869,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_fillContent: {fileID: 8851716425176408918}
   m_autoScrolling: {fileID: 6760940468427774238}
-  m_scrollDirection: 3
   m_contentFillType: 0
+  m_scrollDirection: 1
   m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
+  m_eMouseScrolling: 1
   m_gridSize: {x: 0, y: 0}
 --- !u!222 &4351071274262633268
 CanvasRenderer:
@@ -24977,12 +25037,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_fillContent: {fileID: 9113309809763370103}
   m_autoScrolling: {fileID: 6049663449933069761}
-  m_scrollDirection: 3
   m_contentFillType: 0
+  m_scrollDirection: 1
   m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
+  m_eMouseScrolling: 1
   m_gridSize: {x: 0, y: 0}
 --- !u!114 &5518854442364996261
 MonoBehaviour:
@@ -27289,7 +27350,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_scrollViewController: {fileID: 5498632251092882527}
-  m_transitionDuration: 0.05
+  m_eScrollTarget: 1
+  m_transitionDuration: 0.1
 --- !u!222 &6049782660319297416
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -28328,12 +28390,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_fillContent: {fileID: 7057056982239656962}
   m_autoScrolling: {fileID: 7057056982239656961}
-  m_scrollDirection: 3
   m_contentFillType: 0
+  m_scrollDirection: 1
   m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
+  m_eMouseScrolling: 1
   m_gridSize: {x: 0, y: 0}
 --- !u!114 &6389653784719276177
 MonoBehaviour:
@@ -29127,7 +29190,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_scrollViewController: {fileID: 4313558981569709172}
-  m_transitionDuration: 0.05
+  m_eScrollTarget: 1
+  m_transitionDuration: 0.1
 --- !u!1 &6814865354207084285
 GameObject:
   m_ObjectHideFlags: 0
@@ -29852,7 +29916,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_scrollViewController: {fileID: 6366869506224146768}
-  m_transitionDuration: 0.05
+  m_eScrollTarget: 1
+  m_transitionDuration: 0.1
 --- !u!114 &7057056982239656962
 MonoBehaviour:
   m_ObjectHideFlags: 0
