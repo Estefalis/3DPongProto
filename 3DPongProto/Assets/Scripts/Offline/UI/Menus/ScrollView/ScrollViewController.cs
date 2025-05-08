@@ -6,12 +6,12 @@ using UnityEngine.UI;
 
 namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 {
-    internal enum EScrollDirection
+    internal enum EScrollLayout
     {
         None,
         Vertical,
         Horizontal,
-        Both
+        Grid
     }
 
     internal enum EMouseScrolling
@@ -19,7 +19,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         None,
         Vertical,
         Horizontal,
-        Both
+        Auto
     }
 
     public class ScrollViewController : MonoBehaviour
@@ -33,9 +33,9 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         [SerializeField] internal FillContent m_fillContent;
         [SerializeField] internal AutoScroll m_autoScrolling;
 
-        [SerializeField] private EContentFillType m_contentFillType = EContentFillType.Filled;
         //GridLayoutGroup: StartCorner: Upper Left, StartAxis: Horizontal, ChildAlignment: Upper Left.
-        [SerializeField] internal EScrollDirection m_scrollDirection = EScrollDirection.Vertical;
+        [SerializeField] private EContentFillType m_contentFillType = EContentFillType.Filled;
+        [SerializeField] internal EScrollLayout m_scrollLayout = EScrollLayout.Vertical;
         [SerializeField] private float m_scrollSensitivity = 10.0f;
 
         [Header("ScrollView Components")]
@@ -43,18 +43,16 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         [SerializeField] internal RectTransform m_scrollViewContent;
         [SerializeField] private LayoutGroup m_layoutGroup;
 
-        //[SerializeField] private bool m_borderLoop = false;
+        //[SerializeField] private bool m_borderLoop = false;  //Required for instantiated ScrollView contents?
 
-        //internal Selectable m_simpleSelectable;
         internal int m_leftPadding;
         internal int m_rightPadding;
         internal int m_topPadding;
         internal int m_bottomPadding;
         internal float m_horizontalSpacing;
         internal float m_verticalSpacing;
-        //private Vector2 m_cellSize;
 
-        //private bool m_setNavigationStarted = false;
+        //private bool m_setNavigationStarted = false;  //Required for instantiated ScrollView contents?
         internal bool m_childrenSpawned = false;
         private bool m_gotComponents;
         internal bool ContentChildrenSet { get => m_contentChildrenSet; }
@@ -78,26 +76,10 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         [SerializeField] internal Vector2Int m_gridSize;
         internal GridLayoutGroup m_gridSettings;
 
-        #region Lists_and_Dictionaries
-        #region Old manual scrolling before rework 2025
-        //private List<GameObject> m_dictKeys; 
-        #endregion
         internal List<Selectable> m_ContainedSelectables { get; private set; } = new List<Selectable>();
-        #region Old manual scrolling before rework 2025
-        //internal Dictionary<GameObject, RectTransform> m_ContentChildAnchorPos = new();
-        //internal Dictionary<GameObject, Navigation> m_ObjectNavigation = new(); 
-        #endregion
-        #endregion
 
         private void Awake()
         {
-            #region Old manual scrolling before rework 2025
-            //m_ContentChildAnchorPos.Clear();
-            //m_ObjectNavigation.Clear();
-            //m_dictKeys = new();
-            //m_dictKeys.Clear(); 
-            #endregion
-
             GetScrollViewComponents();
             GetScrollOptionAndLayout(m_scrollViewRect);
 
@@ -106,17 +88,6 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
             GetLayoutGroupSettings(m_layoutGroup);
             SetContentFillType();
         }
-
-        //private void OnEnable()
-        //{
-        //    ContentLevelIterations();
-        //}
-
-        //private void OnDisable()
-        //{
-        //    //m_ContentChildAnchorPos.Clear();
-        //    //m_ObjectNavigation.Clear();
-        //}
 
         private void GetScrollViewComponents()
         {
@@ -144,13 +115,13 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                     switch (m_eMouseScrolling)
                     {
                         case EMouseScrolling.Vertical:
-                            m_scrollDirection = EScrollDirection.Vertical;
+                            m_scrollLayout = EScrollLayout.Vertical;
                             break;
                         case EMouseScrolling.Horizontal:
-                            m_scrollDirection = EScrollDirection.Horizontal;
+                            m_scrollLayout = EScrollLayout.Horizontal;
                             break;
-                        case EMouseScrolling.Both:
-                            m_scrollDirection = EScrollDirection.Both;
+                        case EMouseScrolling.Auto:
+                            m_scrollLayout = EScrollLayout.Grid;
                             break;
                         case EMouseScrolling.None:
                         default:
@@ -164,7 +135,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                     {
                         case true:
                         {
-                            m_scrollDirection = EScrollDirection.Vertical;
+                            m_scrollLayout = EScrollLayout.Vertical;
                             break;
                         }
                         case false:
@@ -173,12 +144,12 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                             {
                                 case true:
                                 {
-                                    m_scrollDirection = EScrollDirection.Horizontal;
+                                    m_scrollLayout = EScrollLayout.Horizontal;
                                     break;
                                 }
                                 case false:
                                 {
-                                    m_scrollDirection = EScrollDirection.None;
+                                    m_scrollLayout = EScrollLayout.None;
                                     break;
                                 }
                             }
@@ -207,7 +178,6 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                     //Spacing between elements.
                     m_horizontalSpacing = m_gridSettings.spacing.x;
                     m_verticalSpacing = m_gridSettings.spacing.y;
-                    //m_cellSize = m_gridSettings.cellSize;
 
                     if (m_contentFillType == EContentFillType.Filled)
                         m_gridSize = CustomGridLayoutSetup.GetGridSize(m_gridSettings);
@@ -280,114 +250,5 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 #endif
             }
         }
-
-        /// <summary>
-        /// Searches Content of the currently active ScrollView with nested for-loops, to fill Dictionaries with AnchoredPositions and Navigation Information of the contained GameObjects.
-        /// </summary>
-        //private void ContentLevelIterations()
-        //{
-        //    switch (m_contentChildCount > 0)
-        //    {
-        //        case true:
-        //        {
-        //            var firstChildRect = m_scrollViewContent.GetChild(0).GetComponent<RectTransform>().rect;
-        //            m_firstChildRT = new Vector2(firstChildRect.width, firstChildRect.height);
-
-        //            m_contentChildrenSet = true;
-        //            break;
-        //        }
-        //        case false:
-        //            m_contentChildrenSet = false;
-        //            return;
-        //    }
-
-        //    foreach (Transform transform in m_scrollViewContent.transform)
-        //    {
-        //        m_childRect = transform.GetComponent<RectTransform>();
-
-        //        //Very 1st childLevel.
-        //        GetScrollViewObjects(transform, m_childRect);
-
-        //        //for-loop for 2nd childLevel.
-        //        for (int i = 0; i < transform.childCount; i++)
-        //        {
-        //            Transform subLevelOne = transform.GetChild(i);
-        //            GetScrollViewObjects(subLevelOne, m_childRect);
-
-        //            //for-loop for 3rd childLevel.
-        //            for (int j = 0; j < subLevelOne.childCount; j++)
-        //            {
-        //                Transform subLevelTwo = subLevelOne.GetChild(j);
-        //                GetScrollViewObjects(subLevelTwo, m_childRect);
-
-        //                //for-loop for 4th childLevel.
-        //                for (int k = 0; k < subLevelTwo.childCount; k++)
-        //                {
-        //                    Transform subLevelThree = subLevelTwo.GetChild(k);
-        //                    GetScrollViewObjects(subLevelThree, m_childRect);
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    m_objectNavigationSet = true;
-        //}
-
-        //private void GetScrollViewObjects(Transform _transformLevel, RectTransform _contentElementAnchorPos)
-        //{
-        //    bool containsToggle = _transformLevel.TryGetComponent(out Toggle toggle);
-        //    bool containsSlider = _transformLevel.TryGetComponent(out Slider slider);
-        //    bool containsButton = _transformLevel.TryGetComponent(out Button button);
-
-        //    switch (m_contentFillType)
-        //    {
-        //        case EContentFillType.Filled:
-        //        {
-        //            if (containsToggle)
-        //            {
-        //                m_ContentChildAnchorPos.Add(toggle.gameObject, _contentElementAnchorPos);
-        //                m_ObjectNavigation.Add(toggle.gameObject, toggle.navigation);
-        //            }
-
-        //            if (containsSlider)
-        //            {
-        //                m_ContentChildAnchorPos.Add(slider.gameObject, _contentElementAnchorPos);
-        //                m_ObjectNavigation.Add(slider.gameObject, slider.navigation);
-        //            }
-
-        //            if (containsButton)
-        //            {
-        //                m_ContentChildAnchorPos.Add(button.gameObject, _contentElementAnchorPos);
-        //                m_ObjectNavigation.Add(button.gameObject, button.navigation);
-        //            }
-        //            break;
-        //        }
-        //        case EContentFillType.Instantiated:
-        //        {
-        //            if (containsToggle)
-        //                m_ContentChildAnchorPos.Add(toggle.gameObject, _contentElementAnchorPos);
-
-        //            if (containsSlider)
-        //                m_ContentChildAnchorPos.Add(slider.gameObject, _contentElementAnchorPos);
-
-        //            if (containsButton)
-        //                m_ContentChildAnchorPos.Add(button.gameObject, _contentElementAnchorPos);
-
-        //            if (m_scrollViewContent.childCount < 2)
-        //                return;
-
-        //            //Looping until this point!
-
-        //            if (m_ContentChildAnchorPos.Keys.Count == m_createChildAmount && !m_setNavigationStarted)
-        //            {
-        //                m_setNavigationStarted = true;                  //Blocks 2nd access to start the following code only once.
-        //                //SetInstantiateNavigation();
-        //            }
-        //            break;
-        //        }
-        //        default:
-        //            break;
-        //    }
-        //}
     }
 }

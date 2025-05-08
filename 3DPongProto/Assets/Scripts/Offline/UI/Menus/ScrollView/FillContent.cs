@@ -30,12 +30,12 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         //{
         //Navigation navigation;
 
-        //switch (m_scrollDirection)
+        //switch (m_scrollLayout)
         //{
-        //    case EScrollDirection.None:
+        //    case EScrollLayout.None:
         //    default:
         //        break;
-        //    case EScrollDirection.Vertical:
+        //    case EScrollLayout.Vertical:
         //    {
         //        m_dictKeys = new(m_ContentChildAnchorPos.Keys);
 
@@ -51,7 +51,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         //        break;
         //    }
-        //    case EScrollDirection.Horizontal:
+        //    case EScrollLayout.Horizontal:
         //    {
         //        m_dictKeys = new(m_ContentChildAnchorPos.Keys);
 
@@ -67,7 +67,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         //        break;
         //    }
-        //    case EScrollDirection.Grid:  //Instantiate case gets set in 'GetScrollViewObjects()'.
+        //    case EScrollLayout.Grid:  //Instantiate case gets set in 'GetScrollViewObjects()'.
         //    {
         //        m_dictKeys = new(m_ContentChildAnchorPos.Keys);
         //        m_gridSize = CustomGridLayoutSetup.GetGridSize(m_gridSettings);

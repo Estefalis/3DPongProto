@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using ThreeDeePongProto.Shared.InputActions;
 using ThreeDeePongProto.Shared.Managers;
 using TMPro;
@@ -12,6 +13,13 @@ using UnityEngine.UI;
 
 namespace ThreeDeePongProto.Offline.UI.Menu
 {
+    internal enum EButtonTransition
+    {
+        None,
+        Alpha,
+        Color
+    }
+
     public class MenuManager : MonoBehaviour
     {
         private PlayerInputActions m_inputActions;
@@ -36,11 +44,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         #region Alpha-Buttons and SubPages.
         //I could not leave this undone. Only the clicked button shall be dominant, the others should visibly stay in the back.
-        [Header("Button Alpha-Values")]
+        [Header("Button Transition")]
+        [SerializeField] private EButtonTransition m_eButtonTransition = EButtonTransition.Color;
         [SerializeField, Range(0.1f, 0.9f)] private float m_reducedAlphaValue = 0.5f;
         [SerializeField, Range(0.5f, 1f)] private float m_maxAlphaValue = 1f;
         [Space]
-        [SerializeField] private Button[] m_alphaButtons;
+        [SerializeField] private Button[] m_categoryButtons;
         //Simply just to (de-)activate the corresponding Transforms for each Settings-Category.
         [SerializeField] private Transform[] m_subPageTransforms;
         #endregion
@@ -93,7 +102,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         actionMap.Disable();
                 }
                 else
-                    actionMap.Disable();                            //Transform inactive at Start of GameScene.
+                    actionMap.Disable();                             //Transform inactive at Start of GameScene.
             }
 
             m_lastSelectedGameObject = null;
@@ -114,8 +123,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 m_inputActions.UserInterface.Submit.performed += OnSubmitInput;
             }
 
-            AResumeTheGame += OnResumeTheGame;
             UserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
+            AResumeTheGame += OnResumeTheGame;
         }
 
         private void OnDisable()    //Copy content into 'OnDestroy()', if needed.
@@ -127,8 +136,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_inputActions.UserInterface.Navigate.performed -= OnNavigationInput;
             m_inputActions.UserInterface.Submit.performed -= OnSubmitInput;
 
-            AResumeTheGame -= OnResumeTheGame;
             UserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
+            AResumeTheGame -= OnResumeTheGame;
         }
 
         private void Start()
@@ -145,20 +154,79 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 return;
 
             UpdateLastSelectedObject();
-
             HandleButtonPresses();
         }
 
-        #region Non_InputAction_Subscriptions
-        private void OnResumeTheGame()
+        #region Prepare Navigation-Stack and (de-)activate Menu-Transforms to navigate.
+        /// <summary>
+        /// 'm_activeElement' Stack requires a set element to start with, to prevent a null error.
+        /// </summary>
+        /// <param name="_firstElement"></param>
+        private void SetFirstStackElement(Transform _firstElement)
         {
-            if (m_firstElement.gameObject.activeInHierarchy)
-            {
-                UserInputManager.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
-                m_firstElement.gameObject.SetActive(false);
-            }
+            m_activeElement.Push(_firstElement);
         }
 
+        private void SetUIElements()
+        {
+            for (int navMenu = 0; navMenu < m_navigationKey.Length; navMenu++)
+                m_targetNavigationElement.Add(m_navigationKey[navMenu], m_navigationValue[navMenu]);
+
+            SetNavigationGameObject(m_firstElement);
+        }
+
+        public void NextElement(Transform _next)
+        {
+            if (!Application.isFocused)
+                return;
+
+            Transform currentElement = m_activeElement.Peek();
+            currentElement.gameObject.SetActive(false);
+
+            m_activeElement.Push(_next);
+            _next.gameObject.SetActive(true);
+
+            SetNavigationGameObject(_next);
+        }
+
+        internal void CloseToPreviousElement()
+        {
+            if (!Application.isFocused)
+                return;
+
+            Transform currentElement = m_activeElement.Pop();
+            currentElement.gameObject.SetActive(false);
+
+            if (m_activeElement.Count == 0)
+                SetFirstStackElement(m_firstElement);
+
+            Transform previousElement = m_activeElement.Peek();
+            previousElement.gameObject.SetActive(true);
+            SetNavigationGameObject(previousElement);
+        }
+
+        /// <summary>
+        /// Sets the lastSelected Transform and GameObject from the dictionary required for navigation in each new enabled Transform.
+        /// </summary>
+        /// <param name="_activeTransform"></param>
+        internal void SetNavigationGameObject(Transform _activeTransform)
+        {
+            switch (_activeTransform == null)
+            {
+                case false:
+                {
+                    GameObject selectElement = m_targetNavigationElement[_activeTransform];
+                    m_lastSelectedGameObject = selectElement;   //BEFORE active Transform switch, new selectElement replaces the old!
+                    m_eventSystem.SetSelectedGameObject(selectElement);
+                    break;
+                }
+                case true:
+                    return;
+            }
+        }
+        #endregion
+
+        #region Subscriptions not related to the InputSystem
         /// <summary>
         /// Method to react on ActionMap changes triggered via static method 'ToggleActionMaps'.
         /// </summary>
@@ -182,6 +250,17 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             }
         }
 
+        private void OnResumeTheGame()
+        {
+            if (m_firstElement.gameObject.activeInHierarchy)
+            {
+                UserInputManager.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
+                m_firstElement.gameObject.SetActive(false);
+            }
+        }
+        #endregion
+
+        #region Custom-Methods
         private void OnOpenMenu()
         {
             if (!m_firstElement.gameObject.activeInHierarchy)
@@ -207,9 +286,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (m_uiActionMap.enabled)
                 m_uiActionMap.Disable();
         }
-        #endregion
 
-        #region Non-Subscription-Custom-Methods
         private void UpdateLastSelectedObject()
         {
             switch (m_eventSystem.currentSelectedGameObject == null)
@@ -225,6 +302,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                             InputFieldCheck(m_lastSelectedGameObject);
                             //Moment, when the previous saved GO is made equal to the selected Object from the eventSystem.
                             m_lastSelectedGameObject = m_eventSystem.currentSelectedGameObject;
+                            //2nd has to be in the same frame, or it blinks!
+                            ButtonTransition(m_lastSelectedGameObject);
                             break;
                         }
                         case false:
@@ -383,7 +462,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
                             m_fieldIsInEditMode = false;
                         }
-                        
+
                         ExitEditMode();
                         break;
                     }
@@ -392,97 +471,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             #endregion
         }
 
-        private void SetUIElements()
+        private void ButtonTransition(GameObject _incomingGameObject)
         {
-            for (int navMenu = 0; navMenu < m_navigationKey.Length; navMenu++)
-                m_targetNavigationElement.Add(m_navigationKey[navMenu], m_navigationValue[navMenu]);
-
-            SetNavigationGameObject(m_firstElement);
-        }
-
-        #region Stack-Methods to (de-)activate Menu-Transforms and set the active UI-Element.
-        /// <summary>
-        /// 'm_activeElement' Stack requires a set element to start with, to prevent a null error.
-        /// </summary>
-        /// <param name="_firstElement"></param>
-        private void SetFirstStackElement(Transform _firstElement)
-        {
-            m_activeElement.Push(_firstElement);
-        }
-
-        public void NextElement(Transform _next)
-        {
-            if (!Application.isFocused)
+            if (!_incomingGameObject.TryGetComponent<Button>(out var button))   //Exclude none buttons.
                 return;
 
-            Transform currentElement = m_activeElement.Peek();
-            currentElement.gameObject.SetActive(false);
-
-            m_activeElement.Push(_next);
-            _next.gameObject.SetActive(true);
-
-            SetNavigationGameObject(_next);
-        }
-
-        public void CloseToPreviousElement()
-        {
-            if (!Application.isFocused)
-                return;
-
-            Transform currentElement = m_activeElement.Pop();
-            currentElement.gameObject.SetActive(false);
-
-            if (m_activeElement.Count == 0)
-                SetFirstStackElement(m_firstElement);
-
-            Transform previousElement = m_activeElement.Peek();
-            previousElement.gameObject.SetActive(true);
-            SetNavigationGameObject(previousElement);
-        }
-
-        /// <summary>
-        /// Sets the lastSelected Transform and GameObject from the dictionary required for navigation in each new enabled Transform.
-        /// </summary>
-        /// <param name="_activeTransform"></param>
-        internal void SetNavigationGameObject(Transform _activeTransform)
-        {
-            switch (_activeTransform == null)
+            if (m_categoryButtons.Contains(button))                             //Only act, if button is in array.
             {
-                case false:
-                {
-                    GameObject selectElement = m_targetNavigationElement[_activeTransform];
-                    m_lastSelectedGameObject = selectElement;   //BEFORE active Transform switch, new selectElement replaces the old!
-                    m_eventSystem.SetSelectedGameObject(selectElement);
-                    break;
-                }
-                case true:
-                    return;
-            }
-        }
-        #endregion
-
-        /// <summary>
-        /// Each Button pressed sets the visibly activated/deactivated Button and enables/disables the corresponding Settings-SubPage.
-        /// </summary>
-        /// <param name="_sender"></param>
-        public void SetButtonAlpha(Button _sender)
-        {
-            for (int i = 0; i < m_alphaButtons.Length; i++)
-            {
-                if (_sender == m_alphaButtons[i])
-                {
-                    m_subPageTransforms[i].gameObject.SetActive(true);
-                    Color tempAlpha1 = m_alphaButtons[i].image.color;
-                    tempAlpha1.a = m_maxAlphaValue;
-                    m_alphaButtons[i].image.color = tempAlpha1;
-                }
-                else
-                {
-                    m_subPageTransforms[i].gameObject.SetActive(false);
-                    Color tempAlpha05 = m_alphaButtons[i].image.color;
-                    tempAlpha05.a = m_reducedAlphaValue;
-                    m_alphaButtons[i].image.color = tempAlpha05;
-                }
+                CategorySwitch(button);
             }
         }
 
@@ -543,6 +539,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             yield return null;
             m_fieldIsInEditMode = true;
         }
+
+        private void InVisibleButton(bool _infiniteMatch)
+        {
+            switch (_infiniteMatch)
+            {
+                case true:
+                    m_hiddenFinishButton.gameObject.SetActive(true);
+                    break;
+                case false:
+                    m_hiddenFinishButton.gameObject.SetActive(false);
+                    break;
+            }
+        }
         #endregion
 
         #region MenuButton_Methods
@@ -572,16 +581,56 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             }
         }
 
-        private void InVisibleButton(bool _infiniteMatch)
+        /// <summary>
+        /// Each Button pressed sets the visibly activated/deactivated Button and enables/disables the corresponding Settings-SubPage.
+        /// </summary>
+        /// <param name="_sender"></param>
+        public void CategorySwitch(Button _sender)
         {
-            switch (_infiniteMatch)
+            for (int cb = 0; cb < m_categoryButtons.Length; cb++)
             {
-                case true:
-                    m_hiddenFinishButton.gameObject.SetActive(true);
-                    break;
-                case false:
-                    m_hiddenFinishButton.gameObject.SetActive(false);
-                    break;
+                if (_sender == m_categoryButtons[cb])
+                {
+                    m_subPageTransforms[cb].gameObject.SetActive(true);
+                    switch (m_eButtonTransition)
+                    {
+                        case EButtonTransition.Alpha:
+                        {
+                            Color maxAlpha = m_categoryButtons[cb].image.color;
+                            maxAlpha.a = m_maxAlphaValue;
+                            m_categoryButtons[cb].image.color = maxAlpha;
+                            break;
+                        }
+                        case EButtonTransition.Color:
+                        {
+                            m_categoryButtons[cb].image.color = m_categoryButtons[cb].colors.selectedColor;
+                            break;
+                        }
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    m_subPageTransforms[cb].gameObject.SetActive(false);
+                    switch (m_eButtonTransition)
+                    {
+                        case EButtonTransition.Alpha:
+                        {
+                            Color reducedAlpha = m_categoryButtons[cb].image.color;
+                            reducedAlpha.a = m_reducedAlphaValue;
+                            m_categoryButtons[cb].image.color = reducedAlpha;
+                            break;
+                        }
+                        case EButtonTransition.Color:
+                        {
+                            m_categoryButtons[cb].image.color = m_categoryButtons[cb].colors.disabledColor;
+                            break;
+                        }
+                        default:
+                            break;
+                    }
+                }
             }
         }
 
@@ -595,7 +644,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         }
         #endregion
 
-        #region CallbackContext_Methods
+        #region CallbackContext-Subscription_Methods
         private void CloseMenu(InputAction.CallbackContext _callbackContext)
         {
             if (!Application.isFocused)

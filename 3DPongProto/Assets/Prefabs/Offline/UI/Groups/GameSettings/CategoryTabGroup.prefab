@@ -39,7 +39,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.9145875}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 1.25}
   m_SizeDelta: {x: 0, y: 70}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &5422136370439487
@@ -60,7 +60,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 5
+  m_Spacing: 5.3
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -102,13 +102,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 191651573622431225, guid: 8f6288d1944edf94fb9ff13723d57525,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 191651573622431225, guid: 8f6288d1944edf94fb9ff13723d57525,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 191651573622431225, guid: 8f6288d1944edf94fb9ff13723d57525,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetButtonAlpha
+      value: CategorySwitch
       objectReference: {fileID: 0}
     - target: {fileID: 191651573622431225, guid: 8f6288d1944edf94fb9ff13723d57525,
         type: 3}
@@ -330,7 +335,7 @@ PrefabInstance:
     - target: {fileID: 191651573622431225, guid: 8f6288d1944edf94fb9ff13723d57525,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetButtonAlpha
+      value: CategorySwitch
       objectReference: {fileID: 0}
     - target: {fileID: 191651573622431225, guid: 8f6288d1944edf94fb9ff13723d57525,
         type: 3}
@@ -547,7 +552,7 @@ PrefabInstance:
     - target: {fileID: 191651573622431225, guid: 8f6288d1944edf94fb9ff13723d57525,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetButtonAlpha
+      value: CategorySwitch
       objectReference: {fileID: 0}
     - target: {fileID: 191651573622431225, guid: 8f6288d1944edf94fb9ff13723d57525,
         type: 3}
@@ -769,7 +774,7 @@ PrefabInstance:
     - target: {fileID: 191651573622431225, guid: 8f6288d1944edf94fb9ff13723d57525,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetButtonAlpha
+      value: CategorySwitch
       objectReference: {fileID: 0}
     - target: {fileID: 191651573622431225, guid: 8f6288d1944edf94fb9ff13723d57525,
         type: 3}
@@ -991,7 +996,7 @@ PrefabInstance:
     - target: {fileID: 191651573622431225, guid: 8f6288d1944edf94fb9ff13723d57525,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetButtonAlpha
+      value: CategorySwitch
       objectReference: {fileID: 0}
     - target: {fileID: 191651573622431225, guid: 8f6288d1944edf94fb9ff13723d57525,
         type: 3}
