@@ -299,7 +299,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         case true:
                         {
                             //1st check for TMP Input Field before replacing the latest selected FallBack-GameObject.
-                            InputFieldCheck(m_lastSelectedGameObject);
+                            if (m_lastSelectedGameObject != null)
+                                InputFieldCheck(m_lastSelectedGameObject);
                             //Moment, when the previous saved GO is made equal to the selected Object from the eventSystem.
                             m_lastSelectedGameObject = m_eventSystem.currentSelectedGameObject;
                             //2nd has to be in the same frame, or it blinks!
