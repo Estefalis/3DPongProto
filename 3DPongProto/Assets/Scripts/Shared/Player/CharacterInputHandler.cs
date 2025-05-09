@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ThreeDeePongProto.Shared.HelperClasses;
 using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -22,7 +21,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private InputActionMap m_uiMap, m_playerMap;
 
         private const string m_moveString = "Move", m_rotateString = "Rotate", m_pushString = "Push", m_resetString = "ResetRotation", m_zoomString = "Zoom";
-        private const string m_kickBallString = "KickBall", m_cursorString = "CursorVisibility", m_openGameMenuString = "OpenGameMenu", m_mousePositionString = "MousePosition", m_selectWindowString = "SelectPlayerWindow";
+        private const string m_kickBallString = "KickBall", m_cursorString = "CursorVisibility", m_openGameMenuString = "OpenGameMenu", m_mousePositionString = "MousePosition";
 
         internal List<InputBinding> m_playerBindings = new();
         private int m_playerID;
@@ -106,7 +105,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 #elif UNITY_NETCODE
                 return GetComponent<NetworkBehaviour>().IsLocalPlayer;
 #else
-            return true; //Singleplayer.
+            return true; //SinglePlayer.
 #endif
         }
 
@@ -278,10 +277,12 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (!IsLocalPlayer())
                 return;
 
+            #region Save for later!
             //string bindingControlScheme = _callbackContext.action.bindings[_callbackContext.action.GetBindingIndexForControl(_callbackContext.control)].groups;
 
             //if (bindingControlScheme != _playerInput.currentControlScheme)
             //    return;
+            #endregion
 
             Vector2 moveVector = _callbackContext.ReadValue<Vector2>();
             m_playerController.m_playerMovement.SetInputVector(moveVector, m_playerID, false);
@@ -292,16 +293,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (!IsLocalPlayer())
                 return;
 
-            //if (_playerInput.devices.Contains(_callbackContext.control.device))
-            //{
-            //    string bindingControlScheme = _callbackContext.action.bindings[_callbackContext.action.GetBindingIndexForControl(_callbackContext.control)].groups;
-
-            //    if (bindingControlScheme == _playerInput.currentControlScheme)
-            //    {
             Vector2 moveVector = Vector2.zero;
             m_playerController.m_playerMovement.SetInputVector(moveVector, m_playerID, false);
-            //    }
-            //}
         }
 
         //Process 'Rotate'-Action.
@@ -310,9 +303,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (!IsLocalPlayer())
                 return;
 
-            //string bindingControlScheme = _callbackContext.action.bindings[_callbackContext.action.GetBindingIndexForControl(_callbackContext.control)].groups;
-
-            //if (bindingControlScheme == _playerInput.currentControlScheme)
             m_rotationVector = _callbackContext.ReadValue<Vector2>();
         }
 
@@ -321,9 +311,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (!IsLocalPlayer())
                 return;
 
-            //string bindingControlScheme = _callbackContext.action.bindings[_callbackContext.action.GetBindingIndexForControl(_callbackContext.control)].groups;
-
-            //if (bindingControlScheme == _playerInput.currentControlScheme)
             m_rotationVector = Vector2.zero; //Reset InputVector, once button is released/playerAction is canceled.
         }
 
@@ -333,16 +320,11 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (!IsLocalPlayer())
                 return;
 
-            //string bindingControlScheme = _callbackContext.action.bindings[_callbackContext.action.GetBindingIndexForControl(_callbackContext.control)].groups;
-
-            //if (bindingControlScheme == _playerInput.currentControlScheme)
-            //{
             if (_callbackContext.ReadValueAsButton())
             {
                 m_playerController.m_playerMovement.m_receivedUserID = m_playerInput.user.id;
                 m_playerController.m_playerMovement.InitializePush(m_playerID, true);
             }
-            //}
         }
 
         private void OnResetRotation(InputAction.CallbackContext _callbackContext)
@@ -350,13 +332,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (!IsLocalPlayer())
                 return;
 
-            //string bindingControlScheme = _callbackContext.action.bindings[_callbackContext.action.GetBindingIndexForControl(_callbackContext.control)].groups;
-
-            //if (bindingControlScheme == _playerInput.currentControlScheme)
-            //{
             if (_callbackContext.ReadValueAsButton())
                 m_playerController.m_playerMovement.ResetPlayerRotation(m_playerID);
-            //}
         }
 
         private void OnKickBall(InputAction.CallbackContext _callbackContext)
@@ -364,13 +341,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (!IsLocalPlayer())
                 return;
 
-            //string bindingControlScheme = _callbackContext.action.bindings[_callbackContext.action.GetBindingIndexForControl(_callbackContext.control)].groups;
-
-            //if (bindingControlScheme == _playerInput.currentControlScheme)
-            //{
             if (_callbackContext.ReadValueAsButton())
                 AKickBall?.Invoke(m_playerID);  //Tell the Ball, that it has been kicked! *kick*
-            //}
         }
 
         private void OnZoom(InputAction.CallbackContext _callbackContext)
@@ -378,13 +350,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (!IsLocalPlayer())
                 return;
 
-            //string bindingControlScheme = _callbackContext.action.bindings[_callbackContext.action.GetBindingIndexForControl(_callbackContext.control)].groups;
-
-            //if (bindingControlScheme == _playerInput.currentControlScheme)
-            //{
             Vector2 zoomVector = _callbackContext.ReadValue<Vector2>();
             m_playerController.m_playerCameraController.Zoom(zoomVector, _callbackContext.control.device, m_playerID);
-            //}
         }
 
         private void OnZoomCanceled(InputAction.CallbackContext _callbackContext)
@@ -392,9 +359,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (!IsLocalPlayer())
                 return;
 
-            //string bindingControlScheme = _callbackContext.action.bindings[_callbackContext.action.GetBindingIndexForControl(_callbackContext.control)].groups;
-
-            //if (bindingControlScheme == _playerInput.currentControlScheme)
             m_playerController.m_playerCameraController.Zoom(Vector2.zero, _callbackContext.control.device, m_playerID);
         }
 
@@ -412,7 +376,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (!IsLocalPlayer())
                 return;
 
-            if (/*m_playerID == 0 && */UserInputManager.SetActionMap == EInputActionMaps.PlayerActions.ToString())
+            if (UserInputManager.SetActionMap == EInputActionMaps.PlayerActions.ToString())
                 UserInputManager.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
         }
         #endregion

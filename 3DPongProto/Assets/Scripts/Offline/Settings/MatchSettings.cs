@@ -72,8 +72,8 @@ namespace ThreeDeePongProto.Shared.Settings
         private List<string> m_playersTeamTwo;
 
         #region Key-Value-Connection
-        private Dictionary<Button, Slider> m_reduceLineSlider = new Dictionary<Button, Slider>();
-        private Dictionary<Button, Slider> m_increaseLineSlider = new Dictionary<Button, Slider>();
+        private readonly Dictionary<Button, Slider> m_reduceLineSlider = new Dictionary<Button, Slider>();
+        private readonly Dictionary<Button, Slider> m_increaseLineSlider = new Dictionary<Button, Slider>();
         #endregion
         #endregion
 

@@ -373,8 +373,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_scrollViewController: {fileID: 32744711}
-  m_eScrollTarget: 2
+  m_eScrollTarget: 1
   m_transitionDuration: 0.1
+  m_mouseScrollThreshold: 0.1
+  m_mouseNavigationDelay: 0.2
 --- !u!114 &32744711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -390,12 +392,11 @@ MonoBehaviour:
   m_fillContent: {fileID: 32744712}
   m_autoScrolling: {fileID: 32744710}
   m_contentFillType: 0
-  m_scrollLayout: 1
+  m_eScrollType: 2
   m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_eMouseScrolling: 1
   m_gridSize: {x: 0, y: 0}
 --- !u!114 &32744712
 MonoBehaviour:
@@ -412,7 +413,7 @@ MonoBehaviour:
   m_scrollViewController: {fileID: 32744711}
   m_spawnPrefab: {fileID: 9022728904379417136, guid: c4d387aef11262042a66ad7b05ae8a4c,
     type: 3}
-  m_createChildAmount: 5
+  m_createChildAmount: 10
 --- !u!114 &38752310 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5848741482369656005, guid: d5d526be9fc149148aeb5951486723ed,
@@ -5186,6 +5187,8 @@ MonoBehaviour:
   m_scrollViewController: {fileID: 903394535}
   m_eScrollTarget: 2
   m_transitionDuration: 0.1
+  m_mouseScrollThreshold: 0.1
+  m_mouseNavigationDelay: 0.2
 --- !u!114 &903394535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5201,12 +5204,11 @@ MonoBehaviour:
   m_fillContent: {fileID: 903394536}
   m_autoScrolling: {fileID: 903394534}
   m_contentFillType: 0
-  m_scrollLayout: 1
+  m_eScrollType: 1
   m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_eMouseScrolling: 1
   m_gridSize: {x: 0, y: 0}
 --- !u!114 &903394536
 MonoBehaviour:
@@ -5223,7 +5225,7 @@ MonoBehaviour:
   m_scrollViewController: {fileID: 903394535}
   m_spawnPrefab: {fileID: 9022728904379417136, guid: 8f6288d1944edf94fb9ff13723d57525,
     type: 3}
-  m_createChildAmount: 5
+  m_createChildAmount: 10
 --- !u!1 &911978389
 GameObject:
   m_ObjectHideFlags: 0
@@ -11148,6 +11150,8 @@ MonoBehaviour:
   m_scrollViewController: {fileID: 1836731500}
   m_eScrollTarget: 2
   m_transitionDuration: 0.1
+  m_mouseScrollThreshold: 0.1
+  m_mouseNavigationDelay: 0.2
 --- !u!114 &1836731500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11163,12 +11167,11 @@ MonoBehaviour:
   m_fillContent: {fileID: 1836731501}
   m_autoScrolling: {fileID: 1836731499}
   m_contentFillType: 0
-  m_scrollLayout: 1
+  m_eScrollType: 3
   m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_eMouseScrolling: 2
   m_gridSize: {x: 0, y: 0}
 --- !u!114 &1836731501
 MonoBehaviour:
@@ -15617,12 +15620,11 @@ MonoBehaviour:
   m_fillContent: {fileID: 7592631600590828204}
   m_autoScrolling: {fileID: 1944674010019380475}
   m_contentFillType: 0
-  m_scrollLayout: 1
+  m_eScrollType: 1
   m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_eMouseScrolling: 1
   m_gridSize: {x: 0, y: 0}
 --- !u!224 &1480635287588115570
 RectTransform:
@@ -19670,6 +19672,8 @@ MonoBehaviour:
   m_scrollViewController: {fileID: 1426086331171775396}
   m_eScrollTarget: 1
   m_transitionDuration: 0.1
+  m_mouseScrollThreshold: 0.1
+  m_mouseNavigationDelay: 0.2
 --- !u!222 &1950543069550927470
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -23144,12 +23148,11 @@ MonoBehaviour:
   m_fillContent: {fileID: 8851716425176408918}
   m_autoScrolling: {fileID: 6760940468427774238}
   m_contentFillType: 0
-  m_scrollLayout: 1
+  m_eScrollType: 1
   m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_eMouseScrolling: 1
   m_gridSize: {x: 0, y: 0}
 --- !u!222 &4351071274262633268
 CanvasRenderer:
@@ -25312,12 +25315,11 @@ MonoBehaviour:
   m_fillContent: {fileID: 9113309809763370103}
   m_autoScrolling: {fileID: 6049663449933069761}
   m_contentFillType: 0
-  m_scrollLayout: 1
+  m_eScrollType: 1
   m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_eMouseScrolling: 1
   m_gridSize: {x: 0, y: 0}
 --- !u!114 &5518854442364996261
 MonoBehaviour:
@@ -26741,6 +26743,8 @@ MonoBehaviour:
   m_scrollViewController: {fileID: 5498632251092882527}
   m_eScrollTarget: 1
   m_transitionDuration: 0.1
+  m_mouseScrollThreshold: 0.1
+  m_mouseNavigationDelay: 0.2
 --- !u!222 &6049782660319297416
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -27780,12 +27784,11 @@ MonoBehaviour:
   m_fillContent: {fileID: 7057056982239656962}
   m_autoScrolling: {fileID: 7057056982239656961}
   m_contentFillType: 0
-  m_scrollLayout: 1
+  m_eScrollType: 3
   m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
   m_layoutGroup: {fileID: 0}
-  m_eMouseScrolling: 1
   m_gridSize: {x: 0, y: 0}
 --- !u!114 &6389653784719276177
 MonoBehaviour:
@@ -28581,6 +28584,8 @@ MonoBehaviour:
   m_scrollViewController: {fileID: 4313558981569709172}
   m_eScrollTarget: 1
   m_transitionDuration: 0.1
+  m_mouseScrollThreshold: 0.1
+  m_mouseNavigationDelay: 0.2
 --- !u!1 &6814865354207084285
 GameObject:
   m_ObjectHideFlags: 0
@@ -29307,6 +29312,8 @@ MonoBehaviour:
   m_scrollViewController: {fileID: 6366869506224146768}
   m_eScrollTarget: 1
   m_transitionDuration: 0.1
+  m_mouseScrollThreshold: 0.1
+  m_mouseNavigationDelay: 0.2
 --- !u!114 &7057056982239656962
 MonoBehaviour:
   m_ObjectHideFlags: 0

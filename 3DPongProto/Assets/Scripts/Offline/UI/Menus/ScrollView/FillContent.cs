@@ -23,6 +23,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
             m_scrollViewController.m_childrenSpawned = true;
             m_scrollViewController.m_contentChildCount = m_scrollViewController.m_scrollViewContent.childCount;
             m_scrollViewController.CacheSelectableChildren();
+            //TODO: Set m_objectNavigationSet = true; properly in ScrollViewController after navigation is set.
         }
 
         #region InstaniateNavigation
@@ -30,12 +31,12 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         //{
         //Navigation navigation;
 
-        //switch (m_scrollLayout)
+        //switch (m_eScrollDirection)
         //{
-        //    case EScrollLayout.None:
+        //    case EScrollDirection.None:
         //    default:
         //        break;
-        //    case EScrollLayout.Vertical:
+        //    case EScrollDirection.Vertical:
         //    {
         //        m_dictKeys = new(m_ContentChildAnchorPos.Keys);
 
@@ -51,7 +52,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         //        break;
         //    }
-        //    case EScrollLayout.Horizontal:
+        //    case EScrollDirection.Horizontal:
         //    {
         //        m_dictKeys = new(m_ContentChildAnchorPos.Keys);
 
@@ -67,7 +68,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         //        break;
         //    }
-        //    case EScrollLayout.Grid:  //Instantiate case gets set in 'GetScrollViewObjects()'.
+        //    case EScrollDirection.Auto:  //Instantiate case gets set in 'GetScrollViewObjects()'.
         //    {
         //        m_dictKeys = new(m_ContentChildAnchorPos.Keys);
         //        m_gridSize = CustomGridLayoutSetup.GetGridSize(m_gridSettings);

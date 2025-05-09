@@ -87,8 +87,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             Cursor.lockState = m_cursorLockMode;
             Cursor.visible = m_showCursor;
 
-            m_inputActions = new PlayerInputActions();
-            m_inputActions.Enable();
+            if (UserInputManager.m_CentralActionsInstance == null)
+            {
+                Debug.LogError("CentralActionsInstance in UserInputManager is null!", this);
+                enabled = false;
+                return;
+            }
+
+            m_inputActions = UserInputManager.m_CentralActionsInstance;            
             m_uiActionMap = m_inputActions.UserInterface;
 
             //Because 'OnNavigationInput', 'OnSubmitInput' and 'OnCancelInput' have to be handled differently, this loop is needed.
@@ -129,7 +135,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnDisable()    //Copy content into 'OnDestroy()', if needed.
         {
-            m_inputActions.Disable();
             m_inputActions.UserInterface.CloseGameMenu.performed -= CloseMenu;
 
             //TODO: Make clear, if un-subscriptions also need a if-condition like subscription above.

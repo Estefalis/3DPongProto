@@ -1,7 +1,9 @@
+using System.Linq;
 using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.InputActions;
 using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
@@ -33,21 +35,20 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         private Vector2 m_normalizedPosTo;
         #endregion
 
+        [Header("Mouse Scrolling")]
+        [SerializeField] private float m_mouseScrollThreshold = 0.1f;
+        [SerializeField] private float m_mouseNavigationDelay = 0.2f;
+        private float m_nextMouseWheelNavTime = 0f;
+
         private bool m_autoScrollingEnabled;
         private bool m_mouseIsInScrollView;
         private Vector2 m_mouseScrollValue, m_mousePosition;
 
-        private GameObject m_lastCheckedSelectedObject = null;
-
-        private void OnDisable()
-        {
-            m_inputActions?.Disable();
-        }
+        private GameObject m_lastCheckedSelectedObject = null, m_lastSelectedObject = null;
 
         private void Start()
         {
             m_inputActions = UserInputManager.m_CentralActionsInstance;
-            m_inputActions?.Enable();
 
             ResetVariables();
 
@@ -57,9 +58,11 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         private void Update()
         {
-            SetScrollTarget(MenuManager.LastSelectedGameObject);
+            m_lastSelectedObject = MenuManager.LastSelectedGameObject;
+            SetScrollTarget();
             GetMouseValues();
-            //HandleMouseWheelScrollTrigger();
+            MouseScrolling();
+
             TransitionProgress();
 
             if (m_inProgress)
@@ -73,8 +76,10 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         #region GetMouseValues
         private void GetMouseValues()
         {
+            if (m_inputActions == null || !m_inputActions.UserInterface.enabled)
+                return;
+
             m_mouseScrollValue = m_inputActions.UserInterface.ScrollWheel.ReadValue<Vector2>();
-            m_mouseScrollValue.Normalize();
             m_mousePosition = m_inputActions.UserInterface.Point.ReadValue<Vector2>();
 
             switch (MouseIsInScrollView(m_mousePosition))
@@ -104,28 +109,28 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         }
         #endregion
 
-        private void SetScrollTarget(GameObject _selectedObject)
+        private void SetScrollTarget()
         {
-            if (_selectedObject != null && _selectedObject != m_lastCheckedSelectedObject)
+            if (m_lastSelectedObject != null && m_lastSelectedObject != m_lastCheckedSelectedObject)
             {
                 switch (m_eScrollTarget)
                 {
                     case EScrollTarget.Selectable:  //Get selected Object.
                     {
-                        Selectable currentSelectable = _selectedObject.GetComponent<Selectable>();
+                        Selectable currentSelectable = m_lastSelectedObject.GetComponent<Selectable>();
                         //Check if the Selectable is part of the ScrollView and scroll, if needed.
                         if (m_scrollViewController.m_ContainedSelectables.Contains(currentSelectable))
                         {
-                            RectTransform selectedRect = _selectedObject.GetComponent<RectTransform>();
+                            RectTransform selectedRect = m_lastSelectedObject.GetComponent<RectTransform>();
                             CalculateAndScroll(selectedRect);
                         }
                         break;
                     }
                     case EScrollTarget.ContentChild:    //Get childObject of scrollViewContent we are in.
                     {
-                        if (_selectedObject.transform.IsChildOf(m_scrollViewController.m_scrollViewContent))
+                        if (m_lastSelectedObject.transform.IsChildOf(m_scrollViewController.m_scrollViewContent))
                         {
-                            RectTransform rectToScrollTo = FindDirectContentChild(_selectedObject.transform);
+                            RectTransform rectToScrollTo = FindDirectContentChild(m_lastSelectedObject.transform);
                             if (rectToScrollTo != null)
                             {
                                 //Use current contentChild Transform for calculation.
@@ -136,7 +141,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 #if UNITY_EDITOR
                                 Debug.LogWarning($"No direct contentChild object found. Using Fallback.", this);
 #endif
-                                CalculateAndScroll(_selectedObject.GetComponent<RectTransform>());   //Fallback.
+                                CalculateAndScroll(m_lastSelectedObject.GetComponent<RectTransform>());   //Fallback.
                             }
                         }
                         break;
@@ -146,7 +151,46 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                         break;
                 }
 
-                m_lastCheckedSelectedObject = _selectedObject; //Save for next frame.
+                m_lastCheckedSelectedObject = m_lastSelectedObject; //Save for next frame.
+            }
+        }
+
+        private void MouseScrolling()
+        {
+            if (!m_mouseIsInScrollView)
+                return;
+
+            if (m_inputActions == null || !m_inputActions.UserInterface.enabled || Time.unscaledTime < m_nextMouseWheelNavTime)
+                return;
+
+            if (m_mouseScrollValue.y != 0)
+            {
+                float scrollInputY = m_mouseScrollValue.y;
+
+                if (Mathf.Abs(scrollInputY) > m_mouseScrollThreshold)
+                {
+                    //Check for Navigation-Objects.
+                    if (!m_lastSelectedObject.TryGetComponent<Selectable>(out var currentSelectable))
+                        return;
+
+                    Selectable nextSelectable = null;
+
+                    if (scrollInputY > 0)   //Scrolling Up!
+                    {
+
+                    }
+                    else                    //Scrolling Down!
+                    {
+
+                    }
+
+                    if (nextSelectable != null && nextSelectable.gameObject.activeInHierarchy)
+                    {
+                        Debug.Log($"MouseScrolling to: {nextSelectable.gameObject.name}");
+                        EventSystem.current.SetSelectedGameObject(nextSelectable.gameObject);
+                        m_nextMouseWheelNavTime = Time.unscaledTime + m_mouseNavigationDelay;
+                    }
+                }
             }
         }
 
@@ -349,10 +393,10 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         //{
         //    if (m_mouseScrollValue.y != 0 && m_mouseIsInScrollView)
         //    {
-        //        switch (m_scrollViewController.m_scrollLayout)
+        //        switch (m_scrollViewController.m_eScrollDirection)
         //        {
-        //            case EScrollLayout.Vertical:
-        //            case EScrollLayout.Grid:
+        //            case EScrollDirection.Vertical:
+        //            case EScrollDirection.Auto:
         //            {
         //                switch (m_mouseScrollValue.y > 0)
         //                {
@@ -370,7 +414,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         //                break;
         //            }
-        //            case EScrollLayout.Horizontal:
+        //            case EScrollDirection.Horizontal:
         //            {
         //                switch (m_mouseScrollValue.y > 0)
         //                {
@@ -388,7 +432,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         //                break;
         //            }
-        //            case EScrollLayout.None:
+        //            case EScrollDirection.None:
         //            default:
         //                break;
         //        }

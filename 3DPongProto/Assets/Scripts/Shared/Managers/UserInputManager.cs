@@ -100,6 +100,9 @@ namespace ThreeDeePongProto.Shared.Managers
             m_selectPlayers[2] = m_CentralActionsInstance.PlayerActions.SelectPlayer3;
             m_selectPlayers[3] = m_CentralActionsInstance.PlayerActions.SelectPlayer4;
 
+            m_CentralActionsInstance.PlayerActions.Disable();
+            m_CentralActionsInstance.UserInterface.Disable();
+
             m_playerInputManager = GetComponent<PlayerInputManager>();
             SetUpPlayerInputManager(m_playerInputManager);
         }
@@ -119,6 +122,7 @@ namespace ThreeDeePongProto.Shared.Managers
             MenuManager.AReLoadScene -= OnReLoadScene;
             InputSystem.onDeviceChange -= OnDeviceChange;
 
+            m_CentralActionsInstance.Disable();
             EnablePlayerActionMap(false);
         }
 

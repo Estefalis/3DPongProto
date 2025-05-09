@@ -89,7 +89,8 @@ namespace ThreeDeePongProto.Shared.Managers
 
             //Alternative: m_PlayerInputActions ??= new PlayerInputActions();
             if (m_PlayerInputActions == null)
-                m_PlayerInputActions = new PlayerInputActions();
+                //m_PlayerInputActions = new PlayerInputActions();
+                m_PlayerInputActions = UserInputManager.m_CentralActionsInstance;
 
             //var playerInput = FindObjectOfType<PlayerInput>();
             //if (playerInput != null)
@@ -848,9 +849,7 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             //TODO: Add m_keyboardSchemePID1 - 3 for Rebind-Load.
             if (m_PlayerInputActions == null)
-            {
                 m_PlayerInputActions = new PlayerInputActions();
-            }
 
             InputAction inputAction = m_PlayerInputActions.asset.FindAction(_actionName);
 
