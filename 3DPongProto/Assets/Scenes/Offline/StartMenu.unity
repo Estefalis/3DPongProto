@@ -27784,7 +27784,7 @@ MonoBehaviour:
   m_fillContent: {fileID: 7057056982239656962}
   m_autoScrolling: {fileID: 7057056982239656961}
   m_contentFillType: 0
-  m_eScrollType: 3
+  m_eScrollType: 1
   m_scrollSensitivity: 10
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}

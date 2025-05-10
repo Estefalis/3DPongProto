@@ -1,4 +1,3 @@
-using System.Linq;
 using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.InputActions;
 using ThreeDeePongProto.Shared.Managers;
@@ -40,7 +39,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         [SerializeField] private float m_mouseNavigationDelay = 0.2f;
         private float m_nextMouseWheelNavTime = 0f;
 
-        private bool m_autoScrollingEnabled;
+        private bool m_childrenNavigationSet;
         private bool m_mouseIsInScrollView;
         private Vector2 m_mouseScrollValue, m_mousePosition;
 
@@ -53,15 +52,23 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
             ResetVariables();
 
             m_scrollViewController.m_scrollViewRect.scrollSensitivity = 0.0f;
-            m_autoScrollingEnabled = m_scrollViewController.ContentChildrenSet & m_scrollViewController.ObjectNavigationSet;
+            m_childrenNavigationSet = m_scrollViewController.ContentChildrenSet /*&& m_scrollViewController.ChildrenNavigationSet*/;
+            //TODO: Set m_childrenNavigationSet properly in ScrollViewController.
         }
 
         private void Update()
         {
+            if (!m_childrenNavigationSet)
+                return;
+
             m_lastSelectedObject = MenuManager.LastSelectedGameObject;
-            SetScrollTarget();
-            GetMouseValues();
-            MouseScrolling();
+            SetScrollTarget();      //AutoScroll with keyboard, gamepad, etc and ScrollCalculations.
+
+            if (m_inputActions != null && m_inputActions.UserInterface.enabled)
+            {
+                GetMouseValues();
+                MouseScrolling();   //AutoScroll with MouseWheel.
+            }
 
             TransitionProgress();
 
@@ -76,9 +83,6 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         #region GetMouseValues
         private void GetMouseValues()
         {
-            if (m_inputActions == null || !m_inputActions.UserInterface.enabled)
-                return;
-
             m_mouseScrollValue = m_inputActions.UserInterface.ScrollWheel.ReadValue<Vector2>();
             m_mousePosition = m_inputActions.UserInterface.Point.ReadValue<Vector2>();
 
@@ -126,7 +130,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                         }
                         break;
                     }
-                    case EScrollTarget.ContentChild:    //Get childObject of scrollViewContent we are in.
+                    case EScrollTarget.ContentChild:    //Get direct childObject of scrollViewContent we are in.
                     {
                         if (m_lastSelectedObject.transform.IsChildOf(m_scrollViewController.m_scrollViewContent))
                         {
@@ -157,10 +161,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         private void MouseScrolling()
         {
-            if (!m_mouseIsInScrollView)
-                return;
-
-            if (m_inputActions == null || !m_inputActions.UserInterface.enabled || Time.unscaledTime < m_nextMouseWheelNavTime)
+            if (!m_mouseIsInScrollView || Time.unscaledTime < m_nextMouseWheelNavTime || m_scrollViewController.m_EScrollDirection == EScrollDirection.None)
                 return;
 
             if (m_mouseScrollValue.y != 0)

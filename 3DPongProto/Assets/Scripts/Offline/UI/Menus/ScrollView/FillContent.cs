@@ -20,10 +20,8 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                 Instantiate(m_spawnPrefab, m_scrollViewController.m_scrollViewContent);
             }
 
-            m_scrollViewController.m_childrenSpawned = true;
-            m_scrollViewController.m_contentChildCount = m_scrollViewController.m_scrollViewContent.childCount;
             m_scrollViewController.CacheSelectableChildren();
-            //TODO: Set m_objectNavigationSet = true; properly in ScrollViewController after navigation is set.
+            //TODO: Set m_childrenNavigationSet = true; properly in ScrollViewController after navigation is set.
         }
 
         #region InstaniateNavigation

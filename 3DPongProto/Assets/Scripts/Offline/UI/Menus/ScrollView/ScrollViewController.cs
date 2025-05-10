@@ -6,6 +6,13 @@ using UnityEngine.UI;
 
 namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 {
+    internal enum EScrollDirection
+    {
+        None,
+        Vertical,
+        Horizontal
+    }
+
     public class ScrollViewController : MonoBehaviour
     {
         private enum EContentFillType
@@ -20,13 +27,6 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
             Vertical,
             Horizontal,
             Auto
-        }
-
-        internal enum EScrollDirection
-        {
-            None,
-            Vertical,
-            Horizontal
         }
 
         [SerializeField] internal FillContent m_fillContent;
@@ -54,24 +54,16 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         internal float m_horizontalSpacing;
         internal float m_verticalSpacing;
 
-        //private bool m_setNavigationStarted = false;  //Required for instantiated ScrollView contents?
-        internal bool m_childrenSpawned = false;
         private bool m_gotComponents;
         internal bool ContentChildrenSet { get => m_contentChildrenSet; }
         private bool m_contentChildrenSet = false;
-        internal bool ObjectNavigationSet { get => m_objectNavigationSet; }
-        private bool m_objectNavigationSet = false;
+        internal bool ChildrenNavigationSet { get => m_childrenNavigationSet; }
+        private bool m_childrenNavigationSet = false;
 
-        /*[SerializeField] */
         private Vector2 m_maskedScrollWindow;      //Fix (masked) Width & Height
-        /*[SerializeField] */
         private Vector2 m_fullContentWindow;       //Full Width & Height.
-        /*[SerializeField] */
-        internal int m_contentChildCount;
 
         internal RectTransform m_scrollViewRectTransform;
-        private RectTransform m_childRect;      //Rect for each child of the Content and it's '.anchoredPosition'.
-        internal Vector2 m_firstChildRT;
 
         [Header("Grid")]
         [SerializeField] internal Vector2Int m_gridSize;
@@ -84,6 +76,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
             GetScrollViewComponents();
 
             m_gotComponents = m_scrollViewRect != null && m_scrollViewContent != null;
+            m_contentChildrenSet = m_gotComponents && m_scrollViewContent.childCount > 0;
 
             GetLayoutGroupSettings(m_layoutGroup);
             SetContentFillType();
@@ -103,11 +96,6 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         private void GetLayoutGroupSettings(LayoutGroup _layoutGroup)
         {
-            bool verticalScrolling = m_scrollViewRect.verticalScrollbar != null && m_scrollViewRect.vertical;
-            bool horizontalScrolling = m_scrollViewRect.horizontalScrollbar != null && m_scrollViewRect.horizontal;
-
-            bool bothDirectionPossible = verticalScrolling && horizontalScrolling;
-
             switch (_layoutGroup)
             {
                 case GridLayoutGroup:
@@ -140,12 +128,12 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                         }
                         case EScrollType.Vertical:
                         {
-                            SetScrollDirection(verticalScrolling, EScrollType.Vertical);
+                            m_eScrollDirection = EScrollDirection.Vertical;
                             break;
                         }
                         case EScrollType.Horizontal:
                         {
-                            SetScrollDirection(horizontalScrolling, EScrollType.Horizontal);
+                            m_eScrollDirection = EScrollDirection.Horizontal;
                             break;
                         }
                         case EScrollType.None:
@@ -163,9 +151,9 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                     m_verticalSpacing = _layoutGroup.GetComponent<VerticalLayoutGroup>().spacing;      //Spacing between Elements.
 
                     if (m_eScrollType == EScrollType.Vertical || m_eScrollType == EScrollType.Auto)
-                        SetScrollDirection(verticalScrolling, EScrollType.Vertical);
+                        m_eScrollDirection = EScrollDirection.Vertical;
                     else
-                        SetScrollDirection(false, EScrollType.Vertical);
+                        m_eScrollDirection = EScrollDirection.None;
                     break;
                 }
                 case HorizontalLayoutGroup:
@@ -176,9 +164,9 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                     m_horizontalSpacing = _layoutGroup.GetComponent<HorizontalLayoutGroup>().spacing;  //Spacing between Elements.
 
                     if (m_eScrollType == EScrollType.Horizontal || m_eScrollType == EScrollType.Auto)
-                        SetScrollDirection(horizontalScrolling, EScrollType.Horizontal);
+                        m_eScrollDirection = EScrollDirection.Horizontal;
                     else
-                        SetScrollDirection(false, EScrollType.Horizontal);
+                        m_eScrollDirection = EScrollDirection.None;
                     break;
                 }
                 default:
@@ -188,30 +176,13 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
             m_maskedScrollWindow = new Vector2(m_scrollViewRectTransform.rect.width, m_scrollViewRectTransform.rect.height);
             m_fullContentWindow = new Vector2(m_scrollViewContent.rect.width, m_scrollViewContent.rect.height);   //.x - .width, .y - .height.
-            
-            m_contentChildCount = m_scrollViewContent.childCount;
-        }
-
-        private void SetScrollDirection(bool _switch, EScrollType _eScrollType)
-        {
-            switch (_switch)
-            {
-                case true:
-                {
-                    m_eScrollDirection = (EScrollDirection)_eScrollType;
-                    break;
-                }
-                case false:
-                    m_eScrollDirection = EScrollDirection.None;
-                    break;
-            }
         }
 
         private void SetContentFillType()
         {
             if (m_gotComponents)
             {
-                switch (m_contentChildCount == 0 && !m_childrenSpawned && m_fillContent.m_spawnPrefab != null)
+                switch (!m_contentChildrenSet && m_fillContent.m_spawnPrefab != null)
                 {
                     case true:
                     {
@@ -232,9 +203,9 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         internal void CacheSelectableChildren()
         {
-            if (m_scrollViewContent != null)
+            if (m_gotComponents)
             {
-                m_childrenSpawned = m_scrollViewContent.childCount > 0;
+                m_contentChildrenSet = m_scrollViewContent.childCount > 0;
                 LayoutRebuilder.ForceRebuildLayoutImmediate(m_scrollViewContent);
                 //Find all Selectable-Components (Button, Toggle, Slider, InputField...), even if they are inactive. (true)
                 m_ContainedSelectables = m_scrollViewContent.GetComponentsInChildren<Selectable>(true).ToList();
