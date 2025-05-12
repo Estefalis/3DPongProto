@@ -15,12 +15,18 @@ namespace ThreeDeePongProto.Shared.Settings
         [Space]
         [SerializeField] private ControlUIStates[] m_controlUIStates;
         [SerializeField] private ControlUIValues[] m_controlUIValues;
+        [Space]
+        [SerializeField] private PlayerSOData[] m_playerSOData;
         #endregion
+
+        private PlayerData m_playerData;
 
         #region Serialization
         private readonly string m_settingStatesFolderPath = "/SaveData/Settings-States";
         private readonly string m_settingsValuesFolderPath = "/SaveData/Settings-Values";
         private readonly string m_fieldSettingsPath = "/SaveData/FieldSettings";
+        private readonly string m_playerDataFolderPath = "/SaveData/PlayerData";
+        private readonly string m_playerDataSubPath = "/Player";
         private readonly string m_volumeFileName = "/Volume";
         private readonly string m_graphicFileName = "/Graphic";
         private readonly string m_controlFileName = "/ControlPlayer";
@@ -38,6 +44,15 @@ namespace ThreeDeePongProto.Shared.Settings
             LoadVolumeSettings();
             LoadMatchSettings();
             LoadControlSettings();
+
+            if (m_playerSOData.Length > 0)
+            {
+                for (int i = 0; i < m_playerSOData.Length; i++)
+                {
+                    if (m_playerSOData[i] != null)
+                        LoadPlayerData(i);
+                }
+            }
             #endregion
         }
 
@@ -115,6 +130,35 @@ namespace ThreeDeePongProto.Shared.Settings
 
                     m_controlUIValues[i].LastXMoveSpeed = controlUISettingsValues.LastXMoveSpeed;
                     m_controlUIValues[i].LastYRotSpeed = controlUISettingsValues.LastYRotSpeed;
+                }
+            }
+        }
+
+        private void LoadPlayerData(int _playerIndex)
+        {
+            m_playerData = m_persistentData.LoadData<PlayerData>(m_playerDataFolderPath, m_playerDataSubPath + $"{_playerIndex}", m_fileFormat, m_encryptionEnabled);
+
+            switch (m_playerData.KeepNameOnLoad)
+            {
+                case true:
+                {
+                    //m_playerSOData[_playerIndex].Prefab = m_playerData.PrefabName;  //Get Prefab by name, if desired.
+                    m_playerSOData[_playerIndex].PlayerName = m_playerData.PlayerName;
+                    m_playerSOData[_playerIndex].PlayerId = m_playerData.PlayerId;
+                    //m_playerSOData[_playerIndex].Avatar = m_playerData.Avatar;    //Get Avatar by name, if desired.
+                    m_playerSOData[_playerIndex].KeepNameOnLoad = m_playerData.KeepNameOnLoad;
+                    m_playerSOData[_playerIndex].PlayerOnFrontline = m_playerData.PlayerOnFrontline;
+                    m_playerSOData[_playerIndex].DefaultKeyboard = m_playerData.DefaultKeyboard;
+                    m_playerSOData[_playerIndex].ToggleID = m_playerData.ToggleID;
+                    break;
+                }
+                case false:
+                {
+                    m_playerSOData[_playerIndex].PlayerName = "";
+                    m_playerSOData[_playerIndex].KeepNameOnLoad = false;
+                    m_playerSOData[_playerIndex].PlayerOnFrontline = false;
+                    m_playerSOData[_playerIndex].DefaultKeyboard = false;
+                    break;
                 }
             }
         }

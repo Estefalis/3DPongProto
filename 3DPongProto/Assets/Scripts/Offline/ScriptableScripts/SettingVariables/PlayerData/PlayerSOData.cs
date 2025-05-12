@@ -12,4 +12,5 @@ public class PlayerSOData : ScriptableObject
     public bool KeepNameOnLoad;
     public bool PlayerOnFrontline;
     public bool DefaultKeyboard;
+    public int ToggleID;
 }

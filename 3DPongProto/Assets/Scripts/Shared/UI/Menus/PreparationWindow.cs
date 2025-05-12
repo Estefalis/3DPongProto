@@ -63,7 +63,6 @@ namespace ThreeDeePongProto.Shared.UI
         #endregion
 
         private static event Action<int> AToggleButtonAccess;
-        PlayerData m_playerData;
 
         private void Awake()
         {
@@ -72,7 +71,7 @@ namespace ThreeDeePongProto.Shared.UI
                 for (int i = 0; i < m_playerSOData.Length; i++)
                 {
                     if (m_playerSOData[i] != null)
-                        LoadPreparationUIValues(i);
+                        SetPlayerUIData(i);
                 }
             }
         }
@@ -144,34 +143,14 @@ namespace ThreeDeePongProto.Shared.UI
         }
 
         #region Start_Setup
-        private void LoadPreparationUIValues(int _playerIndex)
+        private void SetPlayerUIData(int _playerIndex)
         {
-            m_playerData = m_persistentData.LoadData<PlayerData>(m_playerDataFolderPath, m_playerDataSubPath + $"{_playerIndex}", m_fileFormat, m_encryptionEnabled);
-
-            switch (m_playerData.KeepNameOnLoad)
-            {
-                case true:
-                {
-                    m_playerSOData[_playerIndex].PlayerName = m_playerData.PlayerName;
-                    m_playerSOData[_playerIndex].KeepNameOnLoad = m_playerData.KeepNameOnLoad;
-                    m_playerSOData[_playerIndex].PlayerOnFrontline = m_playerData.PlayerOnFrontline;
-                    m_playerSOData[_playerIndex].DefaultKeyboard = m_playerData.DefaultKeyboard;
-                    break;
-                }
-                case false:
-                {
-                    m_playerSOData[_playerIndex].PlayerName = "";
-                    m_playerSOData[_playerIndex].KeepNameOnLoad = false;
-                    m_playerSOData[_playerIndex].PlayerOnFrontline = false;
-                    m_playerSOData[_playerIndex].DefaultKeyboard = false;
-                    break;
-                }
-            }
-
             if (m_nameInputFields[_playerIndex] != null)
                 m_nameInputFields[_playerIndex].text = m_playerSOData[_playerIndex].PlayerName;
             if (m_inputFieldToggles[_playerIndex] != null)
                 m_inputFieldToggles[_playerIndex].isOn = m_playerSOData[_playerIndex].KeepNameOnLoad;
+            if (m_deviceToggles[_playerIndex] != null)
+                m_deviceToggles[_playerIndex].isOn = m_playerSOData[_playerIndex].DefaultKeyboard;
         }
 
         private void SetupWindow(EGameConnectionModi _connectMode, EPlayerAmount _ePlayerAmount)
@@ -481,7 +460,7 @@ namespace ThreeDeePongProto.Shared.UI
         }
         #endregion
 
-        //GameObjects like Prefab or Sprite can't be null, to prevent NullReferenceExceptions.
+        //Scriptable Objects CAN be used like structs to save data. BUT not, if they got foreign/extra references, like gameObject-Prefabs or Sprites. Need to save their names as string instead.
         private void SavePlayerData(int _index)
         {
             if (m_playerSOData[_index] == null)
@@ -491,8 +470,7 @@ namespace ThreeDeePongProto.Shared.UI
             var prefabName = playerSO.Prefab.name;
             var avatarName = playerSO.Avatar.name;
             var toggleID = m_inputFieldToggles[_index].GetInstanceID();
-
-            //Scriptable Objects CAN be used like structs to save data. BUT not, if they got foreign/extra references, like gameObject-Prefabs or Sprites.
+                        
             PlayerData playerData = new(prefabName, playerSO.PlayerName, playerSO.PlayerId, avatarName, playerSO.KeepNameOnLoad, playerSO.PlayerOnFrontline, playerSO.DefaultKeyboard, toggleID);
             m_persistentData.SaveData(m_playerDataFolderPath, m_playerDataSubPath + $"{_index}", m_fileFormat, playerData, m_encryptionEnabled, true);
         }

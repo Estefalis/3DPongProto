@@ -8,7 +8,7 @@ namespace ThreeDeePongProto.Shared.Settings
 {
     public class MatchSettings : MonoBehaviour
     {
-        //TODO: Desired Inputfield-behaviour to select the gameObject without a blinking cursor and to enable editing on pressing Enter.
+        //TODO: Desired InputField behavior to select the gameObject without a blinking cursor and to enable editing on pressing Enter.
         #region SerializeField-Member-Variables
         #region Player-Names
         [Header("Player-Details")]
@@ -85,11 +85,14 @@ namespace ThreeDeePongProto.Shared.Settings
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
         [SerializeField] private GraphicUIStates m_graphicUiStates;
+        [SerializeField] private PlayerSOData[] m_playerSOData;
         #endregion
 
         #region Serialization
         private readonly string m_settingsStatesFolderPath = "/SaveData/Settings-States";
         private readonly string m_fieldSettingsPath = "/SaveData/FieldSettings";
+        private readonly string m_playerDataFolderPath = "/SaveData/PlayerData";
+        private readonly string m_playerDataSubPath = "/Player";
         private readonly string m_matchFileName = "/Match";
         private readonly string m_fileFormat = ".json";
 
@@ -99,7 +102,6 @@ namespace ThreeDeePongProto.Shared.Settings
 
         private void Awake()
         {
-            //PreparationWindow.PlayerAmountUpdated += UpdateObjectsVisibility;
             SetupLineDictionaries();
 
             if (m_matchUIStates == null || m_matchValues == null)
@@ -109,15 +111,13 @@ namespace ThreeDeePongProto.Shared.Settings
 
         private void OnEnable()
         {
-            //TODO: InitialUISetup and UpdateLineUpTMPs check for nulled Scriptables.
+            //TODO: InitialUISetup and UpdateLineUpTMPs check for nulled Scriptable.
             InitializeUISetup();
-            UpdateLineUpTMPs();
             AddGroupListeners();
         }
 
         private void OnDisable()
         {
-            //PreparationWindow.PlayerAmountUpdated -= UpdateObjectsVisibility;
             RemoveGroupListeners();
 
             m_persistentData.SaveData(m_settingsStatesFolderPath, m_matchFileName, m_fileFormat, m_matchUIStates, m_encryptionEnabled, true);
@@ -290,7 +290,7 @@ namespace ThreeDeePongProto.Shared.Settings
         }
 
         /// <summary>
-        /// dropdownIndex-Changes set Booleans on playerSOData-Scriptables to set their goalDistance-Positions on Match-Start.
+        /// dropdownIndex-Changes set Booleans on playerSOData Scriptable to set their goalDistance-Positions on Match-Start.
         /// </summary>
         /// <param name="_dropdown"></param>
         private void OnTeamOneFrontlineDropdownValueChanged(TMP_Dropdown _dropdown)
@@ -319,7 +319,7 @@ namespace ThreeDeePongProto.Shared.Settings
         }
 
         /// <summary>
-        /// dropdownIndex-Changes set Booleans on playerSOData-Scriptables to set their goalDistance-Positions on Match-Start.
+        /// dropdownIndex-Changes set Booleans on playerSOData Scriptable to set their goalDistance-Positions on Match-Start.
         /// </summary>
         /// <param name="_dropdown"></param>
         private void OnTeamTwoFrontlineDropdownValueChanged(TMP_Dropdown _dropdown)
@@ -348,7 +348,7 @@ namespace ThreeDeePongProto.Shared.Settings
         }
 
         /// <summary>
-        /// dropdownIndex-Changes set Booleans on playerSOData-Scriptables to set their goalDistance-Positions on Match-Start.
+        /// dropdownIndex-Changes set Booleans on playerSOData Scriptable to set their goalDistance-Positions on Match-Start.
         /// </summary>
         /// <param name="_dropdown"></param>
         private void OnTeamOneBacklineDropdownValueChanged(TMP_Dropdown _dropdown)
@@ -377,7 +377,7 @@ namespace ThreeDeePongProto.Shared.Settings
         }
 
         /// <summary>
-        /// dropdownIndex-Changes set Booleans on playerSOData-Scriptables to set their goalDistance-Positions on Match-Start.
+        /// dropdownIndex-Changes set Booleans on playerSOData Scriptable to set their goalDistance-Positions on Match-Start.
         /// </summary>
         /// <param name="_dropdown"></param>
         private void OnTeamTwoBacklineDropdownValueChanged(TMP_Dropdown _dropdown)
@@ -439,7 +439,7 @@ namespace ThreeDeePongProto.Shared.Settings
             SetupMatchDropdowns(fieldWidthDdIndex);
             SetupMatchDropdowns(fieldLengthDdIndex);
 
-            SetupLineUpSliders();
+            SetupDistanceSliders();
             UpdateLineUpTMPs();
 
             UpdateObjectsVisibility(m_matchUIStates.EPlayerAmount);
@@ -460,13 +460,23 @@ namespace ThreeDeePongProto.Shared.Settings
 
         private void UpdateObjectsVisibility(EPlayerAmount _ePlayerAmount)
         {
-            uint switchPlayerAmount = (uint)_ePlayerAmount;
+            m_playersTeamOne = new List<string>();
+            m_playersTeamTwo = new List<string>();
 
-            switch (switchPlayerAmount)
+            int playerAmount = (int)_ePlayerAmount;    //EPlayerAmount.Four => int 4 || EPlayerAmount.Two => int 2
+            for (int playerID = 0; playerID < playerAmount; playerID++)
+            {
+                if (playerID % 2 == 0)
+                    m_playersTeamOne.Add($"Player {playerID + 1}");
+                if (playerID % 2 != 0)
+                    m_playersTeamTwo.Add($"Player {playerID + 1}");
+            }
+
+            switch (playerAmount)
             {
                 case 4:
                 {
-                    ////In case 4 PlayerCharacter shall play, set the Splitscreen Mode to load to ECameraModi.FourSplit.
+                    //In case 4 PlayerCharacter shall play, set the SplitScreen Mode to load to ECameraModi.FourSplit.
                     m_graphicUiStates.SetCameraMode = ECameraModi.FourSplit;
                     ObjectsToHide(true, true, 225.0f);
                     SetupFrontlineDropdowns();
@@ -474,12 +484,15 @@ namespace ThreeDeePongProto.Shared.Settings
                 }
                 case 2:
                 {
-                    ////In case 2 PlayerCharacter shall play, set the Splitscreen Mode to load to ECameraModi.TwoHorizontal.
+                    //In case 2 PlayerCharacter shall play, set the SplitScreen Mode to load to ECameraModi.TwoHorizontal.
                     m_graphicUiStates.SetCameraMode = ECameraModi.TwoHorizontal;
                     ObjectsToHide(false, false, 714.0f);
                     break;
                 }
             }
+
+            if (m_matchUIStates == null)
+                Debug.LogWarning($"matchUIStates Scriptable is null. Please set it up in the inspector!");
 
             SetupBacklineDropdowns();
         }
@@ -611,70 +624,54 @@ namespace ThreeDeePongProto.Shared.Settings
 
         private void SetupFrontlineDropdowns()
         {
-            m_playersTeamOne = new List<string>();
-            m_playersTeamTwo = new List<string>();
-
-            for (int i = 0; i < m_matchValues.PlayerSOData.Count; i++)
+            if (m_frontLineDds.Length > 0)
             {
-                if (m_matchValues.PlayerSOData[i].PlayerId % 2 == 0)
-                    m_playersTeamOne.Add($"Player {i + 1}");
-                if (m_matchValues.PlayerSOData[i].PlayerId % 2 != 0)
-                    m_playersTeamTwo.Add($"Player {i + 1}");
+                foreach (var dropdown in m_frontLineDds)
+                    dropdown.ClearOptions();
+
+                m_frontLineDds[0].AddOptions(m_playersTeamOne);
+                m_frontLineDds[1].AddOptions(m_playersTeamTwo);
+
+                if (m_matchUIStates != null)
+                {
+                    m_frontLineDds[0].value = m_matchUIStates.TPOneFrontlineDdIndex;
+                    m_frontLineDds[1].value = m_matchUIStates.TPTwoFrontlineDdIndex;
+                }
+                else
+                {
+                    DefaultFrontlineDdValue(0);
+                    DefaultFrontlineDdValue(1);
+                }
+
+                foreach (var dropdown in m_frontLineDds)
+                    dropdown.RefreshShownValue();
             }
-
-            m_frontLineDds[0].ClearOptions();
-            m_frontLineDds[0].AddOptions(m_playersTeamOne);
-
-            if (m_matchUIStates != null)
-                m_frontLineDds[0].value = m_matchUIStates.TPOneFrontlineDdIndex;
-            else
-                DefaultFrontlineDdValue(0);
-
-            m_frontLineDds[0].RefreshShownValue();
-
-            m_frontLineDds[1].ClearOptions();
-            m_frontLineDds[1].AddOptions(m_playersTeamTwo);
-
-            if (m_matchUIStates != null)
-                m_frontLineDds[1].value = m_matchUIStates.TPTwoFrontlineDdIndex;
-            else
-                DefaultFrontlineDdValue(1);
-
-            m_frontLineDds[1].RefreshShownValue();
         }
 
         private void SetupBacklineDropdowns()
         {
-            m_playersTeamOne = new List<string>();
-            m_playersTeamTwo = new List<string>();
-
-            for (int i = 0; i < m_matchValues.PlayerSOData.Count; i++)
+            if (m_backLineDds.Length > 0)
             {
-                if (m_matchValues.PlayerSOData[i].PlayerId % 2 % 2 == 0)
-                    m_playersTeamOne.Add($"Player {i + 1}");
-                if (m_matchValues.PlayerSOData[i].PlayerId % 2 % 2 != 0)
-                    m_playersTeamTwo.Add($"Player {i + 1}");
+                foreach (var dropdown in m_backLineDds)
+                    dropdown.ClearOptions();
+
+                m_backLineDds[0].AddOptions(m_playersTeamOne);
+                m_backLineDds[1].AddOptions(m_playersTeamTwo);
+
+                if (m_matchUIStates != null)
+                {
+                    m_backLineDds[0].value = m_matchUIStates.TPOneBacklineDdIndex;
+                    m_backLineDds[1].value = m_matchUIStates.TPTwoBacklineDdIndex;
+                }
+                else
+                {
+                    DefaultBacklineDdValue(0);
+                    DefaultBacklineDdValue(1);
+                }
+
+                foreach (var dropdown in m_backLineDds)
+                    dropdown.RefreshShownValue();
             }
-
-            m_backLineDds[0].ClearOptions();
-            m_backLineDds[0].AddOptions(m_playersTeamOne);
-
-            if (m_matchUIStates != null)
-                m_backLineDds[0].value = m_matchUIStates.TPOneBacklineDdIndex;
-            else
-                DefaultBacklineDdValue(0);
-
-            m_backLineDds[0].RefreshShownValue();
-
-            m_backLineDds[1].ClearOptions();
-            m_backLineDds[1].AddOptions(m_playersTeamTwo);
-
-            if (m_matchUIStates != null)
-                m_backLineDds[1].value = m_matchUIStates.TPTwoBacklineDdIndex;
-            else
-                DefaultBacklineDdValue(1);
-
-            m_backLineDds[1].RefreshShownValue();
         }
 
         private void SetupLineDictionaries()
@@ -690,7 +687,7 @@ namespace ThreeDeePongProto.Shared.Settings
             }
         }
 
-        private void SetupLineUpSliders()
+        private void SetupDistanceSliders()
         {
             //FrontSlider
             m_distanceSliderValues[0].value = m_distanceSliderValues[0].minValue + m_basicFieldValues.FrontlineAdjustment;
@@ -738,11 +735,30 @@ namespace ThreeDeePongProto.Shared.Settings
         private void UpdateFrontlineSetup(int _playerId)
         {
             m_matchValues.PlayerSOData[_playerId].PlayerOnFrontline = true;
+
+            SavePlayerData(_playerId);
         }
 
         private void UpdateBacklineSetup(int _playerId)
         {
             m_matchValues.PlayerSOData[_playerId].PlayerOnFrontline = false;
+
+            SavePlayerData(_playerId);
+        }
+
+        //Scriptable Objects CAN be used like structs to save data. BUT not, if they got foreign/extra references, like gameObject-Prefabs or Sprites. Need to save their names as string instead.
+        private void SavePlayerData(int _index)
+        {
+            if (m_playerSOData[_index] == null)
+                return;
+
+            var playerSO = m_playerSOData[_index];
+            var prefabName = playerSO.Prefab.name;
+            var avatarName = playerSO.Avatar.name;
+            var toggleID = playerSO.ToggleID;
+
+            PlayerData playerData = new(prefabName, playerSO.PlayerName, playerSO.PlayerId, avatarName, playerSO.KeepNameOnLoad, playerSO.PlayerOnFrontline, playerSO.DefaultKeyboard, toggleID);
+            m_persistentData.SaveData(m_playerDataFolderPath, m_playerDataSubPath + $"{_index}", m_fileFormat, playerData, m_encryptionEnabled, true);
         }
 
         private void UpdateDropdowns(int _dropdownIndex)
