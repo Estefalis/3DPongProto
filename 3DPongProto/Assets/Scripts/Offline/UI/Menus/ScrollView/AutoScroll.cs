@@ -52,7 +52,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
             ResetVariables();
 
             m_scrollViewController.m_scrollViewRect.scrollSensitivity = 0.0f;
-            m_childrenNavigationSet = m_scrollViewController.ContentChildrenSet /*&& m_scrollViewController.ChildrenNavigationSet*/;
+            m_childrenNavigationSet = m_scrollViewController.ContentChildrenSet /*&& m_scrollViewController.m_ChildrenNavigationSet*/;
             //TODO: Set m_childrenNavigationSet properly in ScrollViewController.
         }
 
@@ -174,20 +174,31 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                     if (!m_lastSelectedObject.TryGetComponent<Selectable>(out var currentSelectable))
                         return;
 
+                    if (!currentSelectable.transform.IsChildOf(m_scrollViewController.m_scrollViewContent.transform))
+                        return;
+
                     Selectable nextSelectable = null;
 
-                    if (scrollInputY > 0)   //Scrolling Up!
+                    if (scrollInputY > 0)   //Scrolling Up/Left!
                     {
-
+                        if (m_scrollViewController.m_eScrollType == EScrollType.Vertical)
+                            nextSelectable = currentSelectable.FindSelectableOnUp();
+                        else if (m_scrollViewController.m_eScrollType == EScrollType.Horizontal)
+                            nextSelectable = currentSelectable.FindSelectableOnLeft();
                     }
-                    else                    //Scrolling Down!
+                    else                    //Scrolling Down/Right!
                     {
-
+                        if (m_scrollViewController.m_eScrollType == EScrollType.Vertical)
+                            nextSelectable = currentSelectable.FindSelectableOnDown();
+                        else if (m_scrollViewController.m_eScrollType == EScrollType.Horizontal)
+                            nextSelectable = currentSelectable.FindSelectableOnRight();
                     }
 
                     if (nextSelectable != null && nextSelectable.gameObject.activeInHierarchy)
                     {
-                        Debug.Log($"MouseScrolling to: {nextSelectable.gameObject.name}");
+#if UNITY_EDITOR
+                        //Debug.Log($"MouseScrolling to: {nextSelectable.gameObject.name}");
+#endif
                         EventSystem.current.SetSelectedGameObject(nextSelectable.gameObject);
                         m_nextMouseWheelNavTime = Time.unscaledTime + m_mouseNavigationDelay;
                     }
@@ -265,7 +276,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                 !Mathf.Approximately(currentNormalizedPos.y, targetNormalizedPos.y))
             {
 #if UNITY_EDITOR
-                Debug.Log($"AutoScroll: Scrolling required! Current: {currentNormalizedPos}, Target: {targetNormalizedPos}");
+                //Debug.Log($"AutoScroll: Scrolling required! Current: {currentNormalizedPos}, Target: {targetNormalizedPos}");
 #endif
                 NormalizedTransitionFromTo(currentNormalizedPos, targetNormalizedPos, m_transitionDuration);
             }
@@ -388,70 +399,6 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
             return Mathf.Clamp01(currentNormalizedX);
         }
-
-        #region Old manual scrolling before rework 2025
-        //private void ScrollSelectNextGameObject(GameObject _selectedObject)
-        //{
-        //    if (m_mouseScrollValue.y != 0 && m_mouseIsInScrollView)
-        //    {
-        //        switch (m_scrollViewController.m_eScrollDirection)
-        //        {
-        //            case EScrollDirection.Vertical:
-        //            case EScrollDirection.Auto:
-        //            {
-        //                switch (m_mouseScrollValue.y > 0)
-        //                {
-        //                    case true:
-        //                    {
-        //                        MoveToNextObject(m_scrollViewController.m_ObjectNavigation[_selectedObject].selectOnUp);
-        //                        break;
-        //                    }
-        //                    case false:
-        //                    {
-        //                        MoveToNextObject(m_scrollViewController.m_ObjectNavigation[_selectedObject].selectOnDown);
-        //                        break;
-        //                    }
-        //                }
-
-        //                break;
-        //            }
-        //            case EScrollDirection.Horizontal:
-        //            {
-        //                switch (m_mouseScrollValue.y > 0)
-        //                {
-        //                    case true:
-        //                    {
-        //                        MoveToNextObject(m_scrollViewController.m_ObjectNavigation[_selectedObject].selectOnLeft);
-        //                        break;
-        //                    }
-        //                    case false:
-        //                    {
-        //                        MoveToNextObject(m_scrollViewController.m_ObjectNavigation[_selectedObject].selectOnRight);
-        //                        break;
-        //                    }
-        //                }
-
-        //                break;
-        //            }
-        //            case EScrollDirection.None:
-        //            default:
-        //                break;
-        //        }
-        //    }
-        //}
-
-        //private void MoveToNextObject(Selectable _nextObject)
-        //{
-        //    switch (_nextObject == null)
-        //    {
-        //        case true:
-        //            return;
-        //        case false:
-        //            EventSystem.current.SetSelectedGameObject(_nextObject.gameObject);
-        //            break;
-        //    }
-        //}
-        #endregion
 
         private void TransitionProgress()
         {

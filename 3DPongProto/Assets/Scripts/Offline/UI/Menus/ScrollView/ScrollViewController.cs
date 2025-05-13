@@ -13,6 +13,14 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         Horizontal
     }
 
+    internal enum EScrollType
+    {
+        None,
+        Vertical,
+        Horizontal,
+        Auto
+    }
+
     public class ScrollViewController : MonoBehaviour
     {
         private enum EContentFillType
@@ -21,31 +29,22 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
             Instantiated
         }
 
-        private enum EScrollType
-        {
-            None,
-            Vertical,
-            Horizontal,
-            Auto
-        }
-
         [SerializeField] internal FillContent m_fillContent;
         [SerializeField] internal AutoScroll m_autoScrolling;
-
-        //GridLayoutGroup: StartCorner: Upper Left, StartAxis: Horizontal, ChildAlignment: Upper Left.
-        [SerializeField] private EContentFillType m_contentFillType = EContentFillType.Filled;
-        [SerializeField] private EScrollType m_eScrollType = EScrollType.Vertical;
-        internal EScrollDirection m_EScrollDirection { get => m_eScrollDirection; }
-        /*[SerializeField] */
-        private EScrollDirection m_eScrollDirection;
-        [SerializeField] private float m_scrollSensitivity = 10.0f;
 
         [Header("ScrollView Components")]
         [SerializeField] internal ScrollRect m_scrollViewRect;
         [SerializeField] internal RectTransform m_scrollViewContent;
         [SerializeField] internal LayoutGroup m_layoutGroup;
 
-        //[SerializeField] private bool m_borderLoop = false;  //Required for instantiated ScrollView contents?
+        [Header("Content Navigation")]
+        [SerializeField] private EContentFillType m_contentFillType = EContentFillType.Filled;
+        [SerializeField] internal EScrollType m_eScrollType = EScrollType.Vertical;
+        [SerializeField] private float m_scrollSensitivity = 10.0f;
+        [SerializeField] internal bool m_loopNavigation = false;    //For instantiated objects.
+
+        internal EScrollDirection m_EScrollDirection { get => m_eScrollDirection; }
+        private EScrollDirection m_eScrollDirection;
 
         internal int m_leftPadding;
         internal int m_rightPadding;
@@ -57,8 +56,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         private bool m_gotComponents;
         internal bool ContentChildrenSet { get => m_contentChildrenSet; }
         private bool m_contentChildrenSet = false;
-        internal bool ChildrenNavigationSet { get => m_childrenNavigationSet; }
-        private bool m_childrenNavigationSet = false;
+        internal bool m_ChildrenNavigationSet = false;
 
         private Vector2 m_maskedScrollWindow;      //Fix (masked) Width & Height
         private Vector2 m_fullContentWindow;       //Full Width & Height.
@@ -66,8 +64,8 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         internal RectTransform m_scrollViewRectTransform;
 
         [Header("Grid")]
-        [SerializeField] internal Vector2Int m_gridSize;
-        internal GridLayoutGroup m_gridSettings;
+        [SerializeField] private Vector2Int m_gridSize;
+        private GridLayoutGroup m_gridSettings;
 
         internal List<Selectable> m_ContainedSelectables { get; private set; } = new List<Selectable>();
 
@@ -195,6 +193,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                     {
                         m_contentFillType = EContentFillType.Filled;
                         CacheSelectableChildren();
+                        m_ChildrenNavigationSet = true;
                         break;
                     }
                 }
@@ -212,6 +211,8 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 #if UNITY_EDITOR
                 //Debug.Log($"ScrollViewController: Found {m_ContainedSelectables.Count} Selectables in Content.");
 #endif
+                if (m_contentFillType == EContentFillType.Instantiated)
+                    m_fillContent.SetupExplicitNavigation(m_contentChildrenSet);
             }
             else
             {
@@ -219,6 +220,19 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                 Debug.LogError("ScrollViewController: Content RectTransform is null!", this);
 #endif
             }
+        }
+
+        public void SetLoopNavigation(bool loop)
+        {
+            if (m_loopNavigation == loop)
+                return;
+
+            m_loopNavigation = loop;
+            CacheSelectableChildren();
+            m_fillContent.SetupExplicitNavigation(); //Update children Navigation.
+#if UNITY_EDITOR
+            Debug.Log($"Loop Navigation {(loop ? "activated" : "deactivated")}.");
+#endif
         }
     }
 }

@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 {
@@ -21,7 +23,91 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
             }
 
             m_scrollViewController.CacheSelectableChildren();
-            //TODO: Set m_childrenNavigationSet = true; properly in ScrollViewController after navigation is set.
+        }
+
+        internal void SetupExplicitNavigation(bool _instantiated = false)
+        {
+            if (!_instantiated)
+                return;
+
+            var scrollControllerList = m_scrollViewController.m_ContainedSelectables;
+            if (scrollControllerList == null || scrollControllerList.Count == 0)
+            {
+                Debug.LogWarning("No Selectables found for Navigation-Setup. Cancelling.");
+                return;
+            }
+
+            Debug.Log($"SetupExplicitNavigation started. Loop: {m_scrollViewController.m_loopNavigation}, Direction: {m_scrollViewController.m_EScrollDirection}, ElementCount: {scrollControllerList.Count}");
+
+            for (int i = 0; i < scrollControllerList.Count; i++)
+            {
+                Selectable currentSelectable = scrollControllerList[i];
+                if (currentSelectable == null)
+                    continue;
+
+                Navigation newNav = new()
+                {
+                    mode = Navigation.Mode.Explicit
+                };
+
+                switch (m_scrollViewController.m_layoutGroup)
+                {
+                    case VerticalLayoutGroup:
+                        newNav.selectOnUp = GetVerticalSelectable(i, -1, scrollControllerList, m_scrollViewController.m_loopNavigation);
+                        newNav.selectOnDown = GetVerticalSelectable(i, 1, scrollControllerList, m_scrollViewController.m_loopNavigation);
+                        //newNav.selectOnLeft = someExternalSelectable;
+                        //newNav.selectOnRight = someOtherExternalSelectable;
+                        break;
+
+                    case HorizontalLayoutGroup:
+                        newNav.selectOnLeft = GetHorizontalSelectable(i, -1, scrollControllerList, m_scrollViewController.m_loopNavigation);
+                        newNav.selectOnRight = GetHorizontalSelectable(i, 1, scrollControllerList, m_scrollViewController.m_loopNavigation);
+                        //newNav.selectOnUp = someExternalSelectable;
+                        //newNav.selectOnDown = someOtherExternalSelectable;
+                        break;
+
+                    case GridLayoutGroup:
+                        //newNav.selectOnUp = GetGridSelectable(i, Vector2Int.up, m_ContainedSelectables, m_loopNavigation);
+                        //newNav.selectOnDown = GetGridSelectable(i, Vector2Int.down, m_ContainedSelectables, m_loopNavigation);
+                        //newNav.selectOnLeft = GetGridSelectable(i, Vector2Int.left, m_ContainedSelectables, m_loopNavigation);
+                        //newNav.selectOnRight = GetGridSelectable(i, Vector2Int.right, m_ContainedSelectables, m_loopNavigation);
+
+                        //Start Grid-Test: Set Automatic Navigation.
+                        newNav.mode = Navigation.Mode.Automatic;
+                        break;
+                }
+
+                currentSelectable.navigation = newNav;
+            }
+
+            m_scrollViewController.m_ChildrenNavigationSet = true;
+#if UNITY_EDITOR
+            Debug.Log("Explicit Navigation set.");
+#endif
+        }
+
+
+        private Selectable GetVerticalSelectable(int _currentIndex, int _direction, List<Selectable> _listItems, bool _loopNavigation)
+        {
+            int targetIndex = _currentIndex + _direction;
+            if (_loopNavigation)
+            {
+                if (targetIndex < 0)
+                    targetIndex = _listItems.Count - 1;
+                else if (targetIndex >= _listItems.Count)
+                    targetIndex = 0;
+            }
+
+            if (targetIndex >= 0 && targetIndex < _listItems.Count)
+            {
+                return _listItems[targetIndex];
+            }
+            return null; //Returns null, if _loopNavigation is false, or there is no targetElement.
+        }
+
+        private Selectable GetHorizontalSelectable(int _currentIndex, int _direction, List<Selectable> _listItems, bool _loopNavigation)
+        {
+            return GetVerticalSelectable(_currentIndex, _direction, _listItems, _loopNavigation);
         }
 
         #region InstaniateNavigation
@@ -140,8 +226,8 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         //            //Debug.Log(m_ContentChildAnchorPos[m_scrollViewContent.transform.GetChild(_index).gameObject].name);
         //#endif
         //        }
+        #endregion
 
-        #region ScrollView Navigation Directions
         #region Vertical & Horizontal Navigation
         //private Selectable GetTopNavigation(Selectable _simpleSelectable, int _objectIndex)
         //{
@@ -544,39 +630,6 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         //                    return null;
         //            }
         //        }
-        #endregion
-        #endregion
-
-        //private Selectable GetSelectableComponent(Selectable _selectableObject, int _targetIndex)
-        //{
-        //    Toggle selectableToggle;
-        //    Slider selectableSlider;
-        //    Button selectableButton;
-
-        //    switch (_selectableObject)
-        //    {
-        //        case Toggle:
-        //        {
-        //            selectableToggle =
-        //                m_scrollViewContent.transform.GetChild(_targetIndex).GetComponent<Toggle>();
-        //            return selectableToggle.GetComponent<Selectable>();
-        //        }
-        //        case Slider:
-        //        {
-        //            selectableSlider =
-        //                m_scrollViewContent.transform.GetChild(_targetIndex).GetComponent<Slider>();
-        //            return selectableSlider.GetComponent<Selectable>();
-        //        }
-        //        case Button:
-        //        {
-        //            selectableButton =
-        //                m_scrollViewContent.transform.GetChild(_targetIndex).GetComponent<Button>();
-        //            return selectableButton.GetComponent<Selectable>();
-        //        }
-        //        default:
-        //            return null;
-        //    }
-        //}
         #endregion
     }
 }

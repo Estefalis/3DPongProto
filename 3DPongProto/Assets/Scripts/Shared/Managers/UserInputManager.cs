@@ -121,9 +121,13 @@ namespace ThreeDeePongProto.Shared.Managers
             SceneManager.sceneLoaded -= OnSceneManagerLoaded;
             MenuManager.AReLoadScene -= OnReLoadScene;
             InputSystem.onDeviceChange -= OnDeviceChange;
-
-            m_CentralActionsInstance.Disable();
+                        
             EnablePlayerActionMap(false);
+        }
+
+        private void OnApplicationQuit()
+        {
+            m_CentralActionsInstance.Disable();
         }
 
         private void Update()
