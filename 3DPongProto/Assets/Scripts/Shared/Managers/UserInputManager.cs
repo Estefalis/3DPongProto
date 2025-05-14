@@ -55,8 +55,8 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         private static EInputActionMaps m_newActiveActionMap = EInputActionMaps.None;
-        internal static string SetActionMap { get => m_lastActionMap; }
-        private static string m_lastActionMap;
+        internal static string SetActionMap { get => m_lastSetActionMap; }
+        private static string m_lastSetActionMap;
         internal static int FocusedKeyboardPlayerID { get; private set; } = 0; //Keeps track of focused player. Standard PlayerID 0.
 
         #region Lists_and_Dictionaries
@@ -89,7 +89,7 @@ namespace ThreeDeePongProto.Shared.Managers
             //}
             #endregion
 
-            m_lastActionMap = "";
+            m_lastSetActionMap = "";
 
             if (m_CentralActionsInstance == null)
                 m_CentralActionsInstance = new();
@@ -121,7 +121,7 @@ namespace ThreeDeePongProto.Shared.Managers
             SceneManager.sceneLoaded -= OnSceneManagerLoaded;
             MenuManager.AReLoadScene -= OnReLoadScene;
             InputSystem.onDeviceChange -= OnDeviceChange;
-                        
+
             EnablePlayerActionMap(false);
         }
 
@@ -496,12 +496,18 @@ namespace ThreeDeePongProto.Shared.Managers
         /// <param name="_actionMap"></param>
         internal static void ToggleActionMaps(string _actionMap)
         {
-            if (m_lastActionMap == _actionMap)
+            if (m_lastSetActionMap == _actionMap)
                 return;
 
-            m_lastActionMap = _actionMap;
-            m_newActiveActionMap = _actionMap == EInputActionMaps.PlayerActions.ToString()
-                ? EInputActionMaps.PlayerActions : EInputActionMaps.UserInterface;
+            m_lastSetActionMap = _actionMap;
+
+            foreach (InputActionMap actionMap in m_CentralActionsInstance.asset.actionMaps)
+            {
+                if (actionMap.name != _actionMap)
+                    actionMap.Disable();
+                else
+                    actionMap.Enable();
+            }
 
             AChangeActiveActionMap?.Invoke(_actionMap);
         }

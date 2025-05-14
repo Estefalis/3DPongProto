@@ -94,22 +94,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 return;
             }
 
-            m_inputActions = UserInputManager.m_CentralActionsInstance;            
+            m_inputActions = UserInputManager.m_CentralActionsInstance;
             m_uiActionMap = m_inputActions.UserInterface;
 
-            //Because 'OnNavigationInput', 'OnSubmitInput' and 'OnCancelInput' have to be handled differently, this loop is needed.
-            foreach (InputActionMap actionMap in m_inputActions.asset.actionMaps)
-            {
-                if (m_navigationKey[0].gameObject.activeInHierarchy) //Transform active at Start of StartScene.
-                {
-                    if (actionMap == m_uiActionMap)
-                        actionMap.Enable();
-                    else
-                        actionMap.Disable();
-                }
-                else
-                    actionMap.Disable();                             //Transform inactive at Start of GameScene.
-            }
+            //If MenuManager's firstElement is active (MainMenu), toggle UserInterface Map. Else (GameScene) PlayerActions.
+            if (m_firstElement.gameObject.activeInHierarchy)
+                UserInputManager.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
+            else
+                UserInputManager.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
 
             m_lastSelectedGameObject = null;
             m_targetNavigationElement.Clear();
@@ -120,8 +112,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnEnable()
         {
-            m_inputActions.UserInterface.CloseGameMenu.performed += CloseMenu;
-
             if (!m_navigationKey[0].gameObject.activeInHierarchy)
             {
                 //Navigation and Submit work in Scenes without PlayerInput components. This if-test prevents doubled performed actions.
@@ -135,8 +125,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnDisable()    //Copy content into 'OnDestroy()', if needed.
         {
-            m_inputActions.UserInterface.CloseGameMenu.performed -= CloseMenu;
-
             //TODO: Make clear, if un-subscriptions also need a if-condition like subscription above.
             m_inputActions.UserInterface.Navigate.performed -= OnNavigationInput;
             m_inputActions.UserInterface.Submit.performed -= OnSubmitInput;
@@ -194,7 +182,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             SetNavigationGameObject(_next);
         }
 
-        internal void CloseToPreviousElement()
+        public void CloseToPreviousElement()
         {
             if (!Application.isFocused)
                 return;
@@ -257,11 +245,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnResumeTheGame()
         {
-            if (m_firstElement.gameObject.activeInHierarchy)
-            {
-                UserInputManager.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
-                m_firstElement.gameObject.SetActive(false);
-            }
+            //Toggle ActionMap-switch to PlayerActions.
+            UserInputManager.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
         }
         #endregion
 
@@ -273,23 +258,15 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 m_firstElement.gameObject.SetActive(true);
                 SetNavigationGameObject(m_firstElement);
             }
-
-            if (m_inputActions == null)
-                return;
-
-            if (!m_uiActionMap.enabled)
-                m_uiActionMap.Enable();
         }
 
         private void OnCloseMenu()
         {
-            SetNavigationGameObject(m_firstElement);
-
-            if (m_inputActions == null)
-                return;
-
-            if (m_uiActionMap.enabled)
-                m_uiActionMap.Disable();
+            if (m_firstElement.gameObject.activeInHierarchy)
+            {
+                m_firstElement.gameObject.SetActive(false);
+                SetNavigationGameObject(m_firstElement);
+            }
         }
 
         private void UpdateLastSelectedObject()
@@ -425,6 +402,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void HandleButtonPresses()
         {
+            if (!Application.isFocused)
+                return;
+
             #region Submit-Actions
             if (m_inputActions.UserInterface.Submit.WasPressedThisFrame())  //Limit check to once per frame!
             {
@@ -456,6 +436,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     {
                         if (!m_firstElement.gameObject.activeInHierarchy)   //Prevents closing the very first menu Transform-Parent.
                             CloseToPreviousElement();
+                        else if (m_firstElement.gameObject.activeInHierarchy)
+                        {
+                            var sceneIndex = SceneManager.GetActiveScene().buildIndex;
+                            if (sceneIndex != (int)ESceneNames.StartMenu)
+                            {
+                                AResumeTheGame?.Invoke();   //Cancel InputAction triggers gameResume procedure.
+                            }
+                        }
                         break;
                     }
                     case true:  //If InputField is currently in Edit-Mode, switch out of Edit-Mode and reset to previous IF content.
@@ -651,19 +639,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #endregion
 
         #region CallbackContext-Subscription_Methods
-        private void CloseMenu(InputAction.CallbackContext _callbackContext)
-        {
-            if (!Application.isFocused)
-                return;
-
-            var sceneIndex = SceneManager.GetActiveScene().buildIndex;
-            if (sceneIndex == (int)ESceneNames.StartMenu)   //TODO: Add other 'menu Only' Scenes.
-                return;
-
-            if (m_firstElement.gameObject.activeInHierarchy)
-                AResumeTheGame?.Invoke();
-        }
-
         private void OnNavigationInput(InputAction.CallbackContext _callbackContext)
         {
             if (!Application.isFocused)

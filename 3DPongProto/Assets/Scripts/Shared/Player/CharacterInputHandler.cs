@@ -113,12 +113,10 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             if (_actionMap == EInputActionMaps.UserInterface.ToString())
             {
-                //m_playerMap.Disable();
                 m_playerInput.SwitchCurrentActionMap(EInputActionMaps.UserInterface.ToString());
             }
             else if (_actionMap == EInputActionMaps.PlayerActions.ToString())
             {
-                //m_playerMap.Enable();
                 m_playerInput.SwitchCurrentActionMap(EInputActionMaps.PlayerActions.ToString());
             }
         }
@@ -375,7 +373,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             if (!IsLocalPlayer())
                 return;
-
+            
+            //Depending on MenuManager's inactive firstElement in GameScene, it triggers PlayerActions ActionMap in GameScene.
             if (UserInputManager.SetActionMap == EInputActionMaps.PlayerActions.ToString())
                 UserInputManager.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
         }

@@ -472,6 +472,11 @@ namespace ThreeDeePongProto.Shared.Settings
                     m_playersTeamTwo.Add($"Player {playerID + 1}");
             }
 
+            if (m_matchUIStates == null)
+                Debug.LogWarning($"matchUIStates Scriptable is null. Please set it up in the inspector!");
+
+            SetupBacklineDropdowns();
+
             switch (playerAmount)
             {
                 case 4:
@@ -490,11 +495,6 @@ namespace ThreeDeePongProto.Shared.Settings
                     break;
                 }
             }
-
-            if (m_matchUIStates == null)
-                Debug.LogWarning($"matchUIStates Scriptable is null. Please set it up in the inspector!");
-
-            SetupBacklineDropdowns();
         }
 
         private void ObjectsToHide(bool _frontParent, bool _backDropdowns, float _backTextWidth)
