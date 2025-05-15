@@ -127,10 +127,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3402877753034357989, guid: fcaee9628a1354c488849acb3674ed99,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 18
+      objectReference: {fileID: 0}
     - target: {fileID: 8895202709314080691, guid: fcaee9628a1354c488849acb3674ed99,
         type: 3}
       propertyPath: m_Name
-      value: PlayerAmountDd
+      value: PlayerAmountDdVar
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fcaee9628a1354c488849acb3674ed99, type: 3}

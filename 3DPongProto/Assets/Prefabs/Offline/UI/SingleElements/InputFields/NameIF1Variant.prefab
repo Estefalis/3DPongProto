@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: 5839482468613626837, guid: a1cbb0dce08f6794fb690f33851b8cb2,
         type: 3}
       propertyPath: m_Name
-      value: NameIF1
+      value: NameIF1Variant
       objectReference: {fileID: 0}
     - target: {fileID: 5839482468613626838, guid: a1cbb0dce08f6794fb690f33851b8cb2,
         type: 3}
@@ -124,6 +124,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5839482468613626839, guid: a1cbb0dce08f6794fb690f33851b8cb2,
         type: 3}
+      propertyPath: m_Colors.m_DisabledColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5839482468613626839, guid: a1cbb0dce08f6794fb690f33851b8cb2,
+        type: 3}
+      propertyPath: m_Colors.m_DisabledColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5839482468613626839, guid: a1cbb0dce08f6794fb690f33851b8cb2,
+        type: 3}
+      propertyPath: m_Colors.m_DisabledColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5839482468613626839, guid: a1cbb0dce08f6794fb690f33851b8cb2,
+        type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
       objectReference: {fileID: 0}
@@ -136,6 +151,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5839482468710424237, guid: a1cbb0dce08f6794fb690f33851b8cb2,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 24.15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a1cbb0dce08f6794fb690f33851b8cb2, type: 3}
