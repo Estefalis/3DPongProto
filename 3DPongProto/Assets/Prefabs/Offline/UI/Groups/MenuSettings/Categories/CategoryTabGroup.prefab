@@ -88,7 +88,7 @@ PrefabInstance:
     - target: {fileID: 2199645157574396738, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_Name
-      value: GraphicsButtonVar
+      value: GraphicsButton
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -240,7 +240,7 @@ PrefabInstance:
     - target: {fileID: 2199645157574396738, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_Name
-      value: VolumeButtonVar
+      value: VolumeButton
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -412,7 +412,7 @@ PrefabInstance:
     - target: {fileID: 2199645157574396738, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_Name
-      value: NetworkButtonVar
+      value: NetworkButton
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -569,7 +569,7 @@ PrefabInstance:
     - target: {fileID: 2199645157574396738, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_Name
-      value: ControlsButtonVar
+      value: ControlsButton
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -726,7 +726,7 @@ PrefabInstance:
     - target: {fileID: 2199645157574396738, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_Name
-      value: MatchButtonVar
+      value: MatchButton
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}

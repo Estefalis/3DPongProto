@@ -88,6 +88,8 @@ namespace ThreeDeePongProto.Shared.Settings
         [SerializeField] private PlayerSOData[] m_playerSOData;
         #endregion
 
+        private int m_lastAmount = -1;
+
         #region Serialization
         private readonly string m_settingsStatesFolderPath = "/SaveData/Settings-States";
         private readonly string m_fieldSettingsPath = "/SaveData/FieldSettings";
@@ -442,7 +444,8 @@ namespace ThreeDeePongProto.Shared.Settings
             SetupDistanceSliders();
             UpdateLineUpTMPs();
 
-            UpdateObjectsVisibility(m_matchUIStates.EPlayerAmount);
+            SetPlayerData((int)m_matchUIStates.EPlayerAmount);
+            UpdateObjectsVisibility(m_lastAmount);
         }
 
         private void SetRotationResetText(bool _rotationReset)
@@ -458,12 +461,31 @@ namespace ThreeDeePongProto.Shared.Settings
             }
         }
 
-        private void UpdateObjectsVisibility(EPlayerAmount _ePlayerAmount)
+        private void SetPlayerData(int _playerAmount)
+        {
+            if (m_lastAmount == _playerAmount)
+                return;
+
+            m_lastAmount = _playerAmount;
+
+            m_matchValues.PlayerSOData.Clear();
+            m_matchValues.PlayerSOData = new();
+
+            for (int i = 0; i < m_lastAmount; i++)  //EPlayerAmount.Four => int 4 || EPlayerAmount.Two => int 2
+            {
+                if (m_playerSOData.Length > 0 && m_playerSOData[i] != null)
+                    m_matchValues.PlayerSOData.Add(m_playerSOData[i]);
+            }
+        }
+
+        private void UpdateObjectsVisibility(int _playerAmount)
         {
             m_playersTeamOne = new List<string>();
             m_playersTeamTwo = new List<string>();
+            m_playersTeamOne.Clear();
+            m_playersTeamTwo.Clear();
 
-            int playerAmount = (int)_ePlayerAmount;    //EPlayerAmount.Four => int 4 || EPlayerAmount.Two => int 2
+            int playerAmount = _playerAmount;    //EPlayerAmount.Four => int 4 || EPlayerAmount.Two => int 2
             for (int playerID = 0; playerID < playerAmount; playerID++)
             {
                 if (playerID % 2 == 0)

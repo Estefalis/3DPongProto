@@ -12,10 +12,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: ButtonImageKb
       objectReference: {fileID: 0}
+    - target: {fileID: 2509531060148079307, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_text
+      value: W
+      objectReference: {fileID: 0}
+    - target: {fileID: 2509531060148079307, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 31.7
+      objectReference: {fileID: 0}
     - target: {fileID: 2509531060148079309, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
       propertyPath: m_Name
       value: ButtonGpText
+      objectReference: {fileID: 0}
+    - target: {fileID: 2509531060264101382, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_text
+      value: Push Paddle
       objectReference: {fileID: 0}
     - target: {fileID: 2509531060264101385, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
@@ -45,17 +60,48 @@ PrefabInstance:
     - target: {fileID: 2509531060326514965, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
       propertyPath: m_text
-      value: A
+      value: W
       objectReference: {fileID: 0}
     - target: {fileID: 2509531060326514967, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
       propertyPath: m_Name
       value: ButtonKbText
       objectReference: {fileID: 0}
+    - target: {fileID: 2509531060462451292, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_selectedBinding
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2509531060462451292, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_inputBinding.m_Id
+      value: e1d2e272-caff-488f-9dec-01e6ec77ef8d
+      objectReference: {fileID: 0}
+    - target: {fileID: 2509531060462451292, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_inputBinding.m_Path
+      value: <Keyboard>/upArrow
+      objectReference: {fileID: 0}
+    - target: {fileID: 2509531060462451292, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_inputActionReference
+      value: 
+      objectReference: {fileID: -1822565719444639933, guid: 10bcd34be915850428dc91a0ac6c1a9f,
+        type: 3}
+    - target: {fileID: 2509531060462451292, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_inputBinding.m_Action
+      value: Push
+      objectReference: {fileID: 0}
+    - target: {fileID: 2509531060462451292, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_inputBinding.m_Groups
+      value: KeyboardPlayerID1
+      objectReference: {fileID: 0}
     - target: {fileID: 2509531060462451294, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
       propertyPath: m_Name
-      value: ButtonGp
+      value: ButtonGpPPP2
       objectReference: {fileID: 0}
     - target: {fileID: 2509531060579204852, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
@@ -165,7 +211,7 @@ PrefabInstance:
     - target: {fileID: 2509531060579204855, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
       propertyPath: m_Name
-      value: RebindKeyGroupVariant
+      value: PushPaddleKeyGroupVar
       objectReference: {fileID: 0}
     - target: {fileID: 2509531061419505452, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
@@ -200,7 +246,7 @@ PrefabInstance:
     - target: {fileID: 2509531061962685659, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
       propertyPath: m_Name
-      value: ButtonKb
+      value: ButtonKbPPP2
       objectReference: {fileID: 0}
     - target: {fileID: 2509531062249128632, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
@@ -226,6 +272,37 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: InputButtonGp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3139322597922871632, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_inputBinding.m_Id
+      value: 8e316275-ed43-4791-819c-8d332385a840
+      objectReference: {fileID: 0}
+    - target: {fileID: 3139322597922871632, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_inputBinding.m_Path
+      value: <Keyboard>/w
+      objectReference: {fileID: 0}
+    - target: {fileID: 3139322597922871632, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_inputActionReference
+      value: 
+      objectReference: {fileID: -1822565719444639933, guid: 10bcd34be915850428dc91a0ac6c1a9f,
+        type: 3}
+    - target: {fileID: 3139322597922871632, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_inputBinding.m_Action
+      value: Push
+      objectReference: {fileID: 0}
+    - target: {fileID: 3139322597922871632, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_inputBinding.m_Groups
+      value: KeyboardPlayerID0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3139322597922871632, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_humanReadableStringOptions
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3579551642052345595, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
@@ -260,7 +337,7 @@ PrefabInstance:
     - target: {fileID: 5733469947531154935, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
       propertyPath: m_Name
-      value: ResetButtonGp
+      value: ResetButtonGpPP
       objectReference: {fileID: 0}
     - target: {fileID: 6150266356281338082, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
@@ -285,7 +362,17 @@ PrefabInstance:
     - target: {fileID: 6888225875640373058, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
       propertyPath: m_Name
-      value: ResetButtonKb
+      value: ResetButtonKbPP
+      objectReference: {fileID: 0}
+    - target: {fileID: 8048381432050610004, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8048381432050610004, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8509824160315786169, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}

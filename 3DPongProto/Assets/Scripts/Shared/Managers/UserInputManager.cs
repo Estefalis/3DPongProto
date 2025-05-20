@@ -54,7 +54,6 @@ namespace ThreeDeePongProto.Shared.Managers
         [SerializeField] private MatchValues m_matchValues;
         #endregion
 
-        private static EInputActionMaps m_newActiveActionMap = EInputActionMaps.None;
         internal static string SetActionMap { get => m_lastSetActionMap; }
         private static string m_lastSetActionMap;
         internal static int FocusedKeyboardPlayerID { get; private set; } = 0; //Keeps track of focused player. Standard PlayerID 0.

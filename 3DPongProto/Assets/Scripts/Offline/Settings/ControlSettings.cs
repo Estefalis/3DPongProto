@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace ThreeDeePongProto.Shared.Settings
@@ -10,20 +12,22 @@ namespace ThreeDeePongProto.Shared.Settings
     {
         #region Content Views
         [Header("Content Views")]
-        [SerializeField, Range(0.1f, 0.9f)] private float m_reducedAlphaValue = 0.5f;
-        [SerializeField, Range(0.5f, 1f)] private float m_maxAlphaValue = 1f;
+        //[SerializeField, Range(0.1f, 0.9f)] private float m_reducedAlphaValue = 0.5f;
+        //[SerializeField, Range(0.5f, 1f)] private float m_maxAlphaValue = 1f;
         [SerializeField] private Button[] m_playerButtons;
         [SerializeField] private Transform[] m_contentSubTransforms;
 
         [Header("Change Button Navigation")]
         [SerializeField] private Selectable[] m_lastKbSelectable;
         [SerializeField] private Selectable[] m_lastGpSelectable;
+        [SerializeField] private Transform m_zoomGroup;         //Or any other last group about the playerButtons.
         [SerializeField] private Button m_resetButton;
         [SerializeField] private Button m_backButton;
 
         private int m_currentViewIndex;
-        public static event Action<int> PlayerViewIndex;        //Subscriber: RebindManager.
-        public static event Action ResetPlayerViewRebinds;      //Subscriber: RebindManager.
+        private List<Selectable> m_zoomSelectables = new();
+        internal static event Action<int> PlayerViewIndex;        //Subscriber: RebindManager.
+        internal static event Action ResetPlayerViewRebinds;      //Subscriber: RebindManager.
         #endregion
 
         #region Axis Inversion
@@ -83,7 +87,9 @@ namespace ThreeDeePongProto.Shared.Settings
         private void Awake()
         {
             m_currentViewIndex = 0;
-            SetActivePlayerView(m_playerButtons[m_currentViewIndex]);
+            //To update navigation.SelectOnDown on playerIndex change.
+            m_zoomSelectables = m_zoomGroup.GetComponentsInChildren<Selectable>(true).ToList();
+            SetActiveRebindScrollView(m_playerButtons[m_currentViewIndex]);
 
             m_toggleSliderConnectXEP.Add(m_moveToggleKeysEP, m_MoveValueSliderXEP);
             m_toggleSliderConnectYEP.Add(m_rotToggleKeysEP, m_RotValueSliderYEP);
@@ -117,6 +123,18 @@ namespace ThreeDeePongProto.Shared.Settings
             for (int j = 0; j < m_controlUIValues.Length; j++)
             {
                 m_persistentData.SaveData(m_settingsValuesFolderPath, m_controlFileName + $"{j}", m_fileFormat, m_controlUIValues[j], m_encryptionEnabled, true);
+            }
+        }
+
+        private void Update()
+        {
+            if (!EventSystem.current.currentSelectedGameObject.TryGetComponent<Button>(out var button) && !m_playerButtons.Contains(button))
+                return;
+
+            for (int i = 0; i < m_playerButtons.Length; i++)
+            {
+                if (m_playerButtons[i] == button)
+                    SetActiveRebindScrollView(m_playerButtons[i]);
             }
         }
 
@@ -309,26 +327,26 @@ namespace ThreeDeePongProto.Shared.Settings
             }
         }
 
-        public void SetActivePlayerView(Button _sender)
+        public void SetActiveRebindScrollView(Button _sender)
         {
             for (int i = 0; i < m_playerButtons.Length; i++)
             {
                 if (_sender == m_playerButtons[i])
                 {
                     m_contentSubTransforms[i].gameObject.SetActive(true);
-                    Color tempAlpha1 = m_playerButtons[i].image.color;
-                    tempAlpha1.a = m_maxAlphaValue;
-                    m_playerButtons[i].image.color = tempAlpha1;
+                    //Color tempAlpha1 = m_playerButtons[i].image.color;
+                    //tempAlpha1.a = m_maxAlphaValue;
+                    //m_playerButtons[i].image.color = tempAlpha1;
                     m_currentViewIndex = i; //Routes the Default Button Resets.
                     PlayerViewIndex?.Invoke(m_currentViewIndex);
-                    UpdateButtonNavUp();
+                    UpdateNavigationOnSwitch();
                 }
                 else
                 {
                     m_contentSubTransforms[i].gameObject.SetActive(false);
-                    Color tempAlpha05 = m_playerButtons[i].image.color;
-                    tempAlpha05.a = m_reducedAlphaValue;
-                    m_playerButtons[i].image.color = tempAlpha05;
+                    //Color tempAlpha05 = m_playerButtons[i].image.color;
+                    //tempAlpha05.a = m_reducedAlphaValue;
+                    //m_playerButtons[i].image.color = tempAlpha05;
                 }
             }
         }
@@ -337,7 +355,7 @@ namespace ThreeDeePongProto.Shared.Settings
         #region Custom Methods
         private void InitialUISetup()
         {
-            m_moveToggleKeysEP.isOn = m_controlUIStates[0].CustomXSensitivity;  //TODO: May relocate save data.
+            m_moveToggleKeysEP.isOn = m_controlUIStates[0].CustomXSensitivity;
             m_rotToggleKeysEP.isOn = m_controlUIStates[0].CustomYSensitivity;
 
             switch (m_controlUIStates[0].CustomXSensitivity)
@@ -424,8 +442,18 @@ namespace ThreeDeePongProto.Shared.Settings
                 connectedSlider.value += connectedSlider.maxValue * (0.01f * m_adjustSliderStep);
         }
 
-        private void UpdateButtonNavUp()
+        private void UpdateNavigationOnSwitch()
         {
+            foreach (Selectable selectable in m_zoomSelectables)
+            {
+                if (selectable.gameObject.activeInHierarchy)
+                {
+                    Navigation navigation = selectable.navigation;
+                    navigation.selectOnDown = m_playerButtons[m_currentViewIndex];
+                    selectable.navigation = navigation;
+                }
+            }
+
             Navigation resetButtonNav = m_resetButton.GetComponent<Button>().navigation;
             foreach (Selectable selectable in m_lastKbSelectable)
             {

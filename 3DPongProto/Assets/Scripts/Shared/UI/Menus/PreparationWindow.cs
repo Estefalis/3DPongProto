@@ -48,6 +48,7 @@ namespace ThreeDeePongProto.Shared.UI
 
         private const uint m_MINPLAYER = 1;
         private int m_currentPlayers;
+        private int m_lastAmount = -1;
         private List<string> m_maxPlayerAmount;
 
         #region Serialization
@@ -285,7 +286,7 @@ namespace ThreeDeePongProto.Shared.UI
             SaveSettingsStates();
 
             //Required, so MatchSettings can set the Backline-Dropdown in the Settings-Menu visible/invisible.
-            SetUpPlayerAmount(m_matchUIStates.EPlayerAmount);
+            SetPlayerData((int)m_matchUIStates.EPlayerAmount);
 
             m_currentPlayers = (int)m_matchUIStates.EPlayerAmount;
             AToggleButtonAccess?.Invoke(m_currentPlayers);
@@ -368,13 +369,17 @@ namespace ThreeDeePongProto.Shared.UI
         #endregion
         #endregion
 
-        private void SetUpPlayerAmount(EPlayerAmount _ePlayerAmount)
+        private void SetPlayerData(int _playerAmount)
         {
-            m_matchValues.PlayerSOData.Clear();
-            m_matchValues.PlayerSOData = new();
+            if(m_lastAmount == _playerAmount)
+                return;
 
-            int playerAmount = (int)_ePlayerAmount;    //EPlayerAmount.Four => int 4 || EPlayerAmount.Two => int 2
-            for (int i = 0; i < playerAmount; i++)
+            m_lastAmount = _playerAmount;
+
+            m_matchValues.PlayerSOData = new();
+            m_matchValues.PlayerSOData.Clear();
+
+            for (int i = 0; i < m_lastAmount; i++)  //EPlayerAmount.Four => int 4 || EPlayerAmount.Two => int 2
             {
                 if (m_playerSOData.Length > 0 && m_playerSOData[i] != null)
                 {
