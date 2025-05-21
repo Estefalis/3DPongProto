@@ -12,8 +12,6 @@ namespace ThreeDeePongProto.Shared.Settings
     {
         #region Content Views
         [Header("Content Views")]
-        //[SerializeField, Range(0.1f, 0.9f)] private float m_reducedAlphaValue = 0.5f;
-        //[SerializeField, Range(0.5f, 1f)] private float m_maxAlphaValue = 1f;
         [SerializeField] private Button[] m_playerButtons;
         [SerializeField] private Transform[] m_contentSubTransforms;
 
@@ -334,9 +332,6 @@ namespace ThreeDeePongProto.Shared.Settings
                 if (_sender == m_playerButtons[i])
                 {
                     m_contentSubTransforms[i].gameObject.SetActive(true);
-                    //Color tempAlpha1 = m_playerButtons[i].image.color;
-                    //tempAlpha1.a = m_maxAlphaValue;
-                    //m_playerButtons[i].image.color = tempAlpha1;
                     m_currentViewIndex = i; //Routes the Default Button Resets.
                     PlayerViewIndex?.Invoke(m_currentViewIndex);
                     UpdateNavigationOnSwitch();
@@ -344,9 +339,6 @@ namespace ThreeDeePongProto.Shared.Settings
                 else
                 {
                     m_contentSubTransforms[i].gameObject.SetActive(false);
-                    //Color tempAlpha05 = m_playerButtons[i].image.color;
-                    //tempAlpha05.a = m_reducedAlphaValue;
-                    //m_playerButtons[i].image.color = tempAlpha05;
                 }
             }
         }
