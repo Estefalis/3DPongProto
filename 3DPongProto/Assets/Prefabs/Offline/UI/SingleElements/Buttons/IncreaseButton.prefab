@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 226264908012607797}
   - component: {fileID: 226264908012607794}
   m_Layer: 5
-  m_Name: ButtonLouderMaster
+  m_Name: IncreaseButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -227,7 +227,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42.95
+  m_fontSize: 35.8
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1

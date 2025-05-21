@@ -49,7 +49,7 @@ GameObject:
   - component: {fileID: 4532852186587319396}
   - component: {fileID: 4532852186587319399}
   m_Layer: 5
-  m_Name: HandleMasterVolume
+  m_Name: HandleVolume
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -201,7 +201,7 @@ GameObject:
   - component: {fileID: 4532852187148881674}
   - component: {fileID: 4532852187148881677}
   m_Layer: 5
-  m_Name: FillMasterVolume
+  m_Name: FillBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -313,7 +313,7 @@ GameObject:
   - component: {fileID: 4532852187548021927}
   - component: {fileID: 4532852187548021924}
   m_Layer: 5
-  m_Name: SliderMaster
+  m_Name: Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

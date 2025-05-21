@@ -618,7 +618,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         }
                         case EButtonTransition.Color:
                         {
-                            m_categoryButtons[cb].image.color = m_categoryButtons[cb].colors.disabledColor;
+                            m_categoryButtons[cb].image.color = m_categoryButtons[cb].colors.normalColor;
                             break;
                         }
                         default:

@@ -7,6 +7,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4532852186587319417, guid: 3706afed8dcbb3840bb7b202b9c0a7e8,
+        type: 3}
+      propertyPath: m_Name
+      value: HandleBar
+      objectReference: {fileID: 0}
     - target: {fileID: 4532852187148881676, guid: 3706afed8dcbb3840bb7b202b9c0a7e8,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -20,7 +25,7 @@ PrefabInstance:
     - target: {fileID: 4532852187548021926, guid: 3706afed8dcbb3840bb7b202b9c0a7e8,
         type: 3}
       propertyPath: m_Name
-      value: SliderMaster
+      value: SliderVar
       objectReference: {fileID: 0}
     - target: {fileID: 4532852187548021927, guid: 3706afed8dcbb3840bb7b202b9c0a7e8,
         type: 3}

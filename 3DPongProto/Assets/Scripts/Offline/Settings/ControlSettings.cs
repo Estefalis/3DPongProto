@@ -10,6 +10,34 @@ namespace ThreeDeePongProto.Shared.Settings
 {
     public class ControlSettings : MonoBehaviour
     {
+        #region Axis Sensitivity
+        [Header("Movement Sensitivity")]
+        [SerializeField] private Slider m_MovespeedSliderX;
+        [SerializeField] private TextMeshProUGUI m_MovespeedText;
+        [SerializeField] private Toggle m_moveToggleKey;
+        [SerializeField] private Slider m_RotationSliderY;
+        [SerializeField] private TextMeshProUGUI m_RotationText;
+        [SerializeField] private Toggle m_rotationToggleKey;
+        [SerializeField] private bool m_customToggleDefaults;
+        [Space]
+        [SerializeField, Range(1, 20)] float m_moveSpeedDefaultX = 10f;
+        [SerializeField, Range(1, 5)] float m_rotationDefaultY = 2.5f;
+        [SerializeField, Range(1, 10)] private float m_adjustSliderStep = 2.0f;
+
+        private readonly Dictionary<Toggle, Slider> m_toggleSliderConnectX = new();
+        private readonly Dictionary<Toggle, Slider> m_toggleSliderConnectY = new();
+
+        #region A Dictionary-Array of Dictionaries. INTERESTING enough to keep it.
+        //private Dictionary<Toggle, Slider>[] m_toggleSliderXYConnectEP = new Dictionary<Toggle, Slider>[]
+        //{
+        //    new Dictionary<Toggle, Slider>(),
+        //    new Dictionary<Toggle, Slider>(),
+        //    new Dictionary<Toggle, Slider>(),
+        //    new Dictionary<Toggle, Slider>()
+        //};
+        #endregion
+        #endregion
+
         #region Content Views
         [Header("Content Views")]
         [SerializeField] private Button[] m_playerButtons;
@@ -38,34 +66,6 @@ namespace ThreeDeePongProto.Shared.Settings
         [Space]
         #endregion
 
-        #region Axis Sensitivity
-        [Header("Axis Sensitivity")]
-        [SerializeField] private Slider m_MoveValueSliderXEP;
-        [SerializeField] private Slider m_RotValueSliderYEP;
-        [SerializeField] private TextMeshProUGUI m_MoveValueTextPs;
-        [SerializeField] private TextMeshProUGUI m_RotValueTextPs;
-        [SerializeField] private Toggle m_moveToggleKeysEP;
-        [SerializeField] private Toggle m_rotToggleKeysEP;
-        [SerializeField] private bool m_customToggleDefaults;
-        [Space]
-        [SerializeField, Range(1, 20)] float m_xMoveSpeedDefault = 10f;
-        [SerializeField, Range(1, 5)] float m_yRotationDefault = 2.5f;
-        [SerializeField, Range(1, 10)] private float m_adjustSliderStep = 2.0f;
-
-        private readonly Dictionary<Toggle, Slider> m_toggleSliderConnectXEP = new();
-        private readonly Dictionary<Toggle, Slider> m_toggleSliderConnectYEP = new();
-
-        #region A Dictionary-Array of Dictionaries. INTERESTING enough to keep it.
-        //private Dictionary<Toggle, Slider>[] m_toggleSliderXYConnectEP = new Dictionary<Toggle, Slider>[]
-        //{
-        //    new Dictionary<Toggle, Slider>(),
-        //    new Dictionary<Toggle, Slider>(),
-        //    new Dictionary<Toggle, Slider>(),
-        //    new Dictionary<Toggle, Slider>()
-        //};
-        #endregion
-        #endregion
-
         #region Scriptable-References
         [Header("Scriptable Objects")]
         [SerializeField] private ControlUIStates[] m_controlUIStates;
@@ -89,8 +89,8 @@ namespace ThreeDeePongProto.Shared.Settings
             m_zoomSelectables = m_zoomGroup.GetComponentsInChildren<Selectable>(true).ToList();
             SetActiveRebindScrollView(m_playerButtons[m_currentViewIndex]);
 
-            m_toggleSliderConnectXEP.Add(m_moveToggleKeysEP, m_MoveValueSliderXEP);
-            m_toggleSliderConnectYEP.Add(m_rotToggleKeysEP, m_RotValueSliderYEP);
+            m_toggleSliderConnectX.Add(m_moveToggleKey, m_MovespeedSliderX);
+            m_toggleSliderConnectY.Add(m_rotationToggleKey, m_RotationSliderY);
 
             for (int i = 0; i < m_contentSubTransforms.Length; i++)
             {
@@ -148,8 +148,8 @@ namespace ThreeDeePongProto.Shared.Settings
                 {
                     m_playerXRotInvertToggles[i].onValueChanged.AddListener(XRotInversionChange);
                     m_playerYRotInvertToggles[i].onValueChanged.AddListener(YRotInversionChange);
-                    m_moveToggleKeysEP.onValueChanged.AddListener(MoveToggleXValueChanges);
-                    m_rotToggleKeysEP.onValueChanged.AddListener(RotToggleYValueChanges);
+                    m_moveToggleKey.onValueChanged.AddListener(MoveToggleXValueChanges);
+                    m_rotationToggleKey.onValueChanged.AddListener(RotToggleYValueChanges);
                 }
             }
 
@@ -157,8 +157,8 @@ namespace ThreeDeePongProto.Shared.Settings
             {
                 if (m_controlUIValues[j] != null)
                 {
-                    m_MoveValueSliderXEP.onValueChanged.AddListener(SensitivitySliderXValueChanges);
-                    m_RotValueSliderYEP.onValueChanged.AddListener(SensitivitySliderYValueChanges);
+                    m_MovespeedSliderX.onValueChanged.AddListener(SensitivitySliderXValueChanges);
+                    m_RotationSliderY.onValueChanged.AddListener(SensitivitySliderYValueChanges);
                 }
             }
 
@@ -184,8 +184,8 @@ namespace ThreeDeePongProto.Shared.Settings
                 {
                     m_playerXRotInvertToggles[i].onValueChanged.RemoveListener(XRotInversionChange);
                     m_playerYRotInvertToggles[i].onValueChanged.RemoveListener(YRotInversionChange);
-                    m_moveToggleKeysEP.onValueChanged.RemoveListener(MoveToggleXValueChanges);
-                    m_rotToggleKeysEP.onValueChanged.RemoveListener(RotToggleYValueChanges);
+                    m_moveToggleKey.onValueChanged.RemoveListener(MoveToggleXValueChanges);
+                    m_rotationToggleKey.onValueChanged.RemoveListener(RotToggleYValueChanges);
                 }
             }
 
@@ -193,8 +193,8 @@ namespace ThreeDeePongProto.Shared.Settings
             {
                 if (m_controlUIValues[j] != null)
                 {
-                    m_MoveValueSliderXEP.onValueChanged.RemoveListener(SensitivitySliderXValueChanges);
-                    m_RotValueSliderYEP.onValueChanged.RemoveListener(SensitivitySliderYValueChanges);
+                    m_MovespeedSliderX.onValueChanged.RemoveListener(SensitivitySliderXValueChanges);
+                    m_RotationSliderY.onValueChanged.RemoveListener(SensitivitySliderYValueChanges);
                 }
             }
 
@@ -251,25 +251,25 @@ namespace ThreeDeePongProto.Shared.Settings
 
         private void SensitivitySliderXValueChanges(float _sliderXValue)
         {
-            if (m_moveToggleKeysEP.isOn)
+            if (m_moveToggleKey.isOn)
             {
                 m_controlUIValues[0].LastXMoveSpeed = _sliderXValue;  //Player1 SO.
                 m_controlUIValues[1].LastXMoveSpeed = _sliderXValue;  //Player2 SO.
                 m_controlUIValues[2].LastXMoveSpeed = _sliderXValue;  //Player3 SO.
                 m_controlUIValues[3].LastXMoveSpeed = _sliderXValue;  //Player4 SO.
-                m_MoveValueTextPs.text = $"{_sliderXValue:N2}";
+                m_MovespeedText.text = $"{_sliderXValue:N2}";
             }
         }
 
         private void SensitivitySliderYValueChanges(float _sliderYValue)
         {
-            if (m_rotToggleKeysEP.isOn)
+            if (m_rotationToggleKey.isOn)
             {
                 m_controlUIValues[0].LastYRotSpeed = _sliderYValue; //Player1 SO.
                 m_controlUIValues[1].LastYRotSpeed = _sliderYValue; //Player2 SO.
                 m_controlUIValues[2].LastYRotSpeed = _sliderYValue; //Player3 SO.
                 m_controlUIValues[3].LastYRotSpeed = _sliderYValue; //Player4 SO.
-                m_RotValueTextPs.text = $"{_sliderYValue:N2}";
+                m_RotationText.text = $"{_sliderYValue:N2}";
             }
         }
 
@@ -284,16 +284,16 @@ namespace ThreeDeePongProto.Shared.Settings
             {
                 case false:
                 {
-                    m_MoveValueSliderXEP.value = m_xMoveSpeedDefault; //MoveSlider X
-                    m_MoveValueTextPs.text = $"{m_xMoveSpeedDefault:N2}";
-                    m_MoveValueSliderXEP.interactable = false;
+                    m_MovespeedSliderX.value = m_moveSpeedDefaultX; //MoveSlider X
+                    m_MovespeedText.text = $"{m_moveSpeedDefaultX:N2}";
+                    m_MovespeedSliderX.interactable = false;
                     break;
                 }
                 case true:
                 {
-                    m_MoveValueSliderXEP.value = m_controlUIValues[0].LastXMoveSpeed;
-                    m_MoveValueTextPs.text = $"{m_controlUIValues[0].LastXMoveSpeed:N2}";
-                    m_MoveValueSliderXEP.interactable = true;
+                    m_MovespeedSliderX.value = m_controlUIValues[0].LastXMoveSpeed;
+                    m_MovespeedText.text = $"{m_controlUIValues[0].LastXMoveSpeed:N2}";
+                    m_MovespeedSliderX.interactable = true;
                     break;
                 }
             }
@@ -310,16 +310,16 @@ namespace ThreeDeePongProto.Shared.Settings
             {
                 case false:
                 {
-                    m_RotValueSliderYEP.value = m_yRotationDefault;  //RotSlider Y
-                    m_RotValueTextPs.text = $"{m_yRotationDefault:N2}";
-                    m_RotValueSliderYEP.interactable = false;
+                    m_RotationSliderY.value = m_rotationDefaultY;  //RotSlider Y
+                    m_RotationText.text = $"{m_rotationDefaultY:N2}";
+                    m_RotationSliderY.interactable = false;
                     break;
                 }
                 case true:
                 {
-                    m_RotValueSliderYEP.value = m_controlUIValues[0].LastYRotSpeed;
-                    m_RotValueTextPs.text = $"{m_controlUIValues[0].LastYRotSpeed:N2}";
-                    m_RotValueSliderYEP.interactable = true;
+                    m_RotationSliderY.value = m_controlUIValues[0].LastYRotSpeed;
+                    m_RotationText.text = $"{m_controlUIValues[0].LastYRotSpeed:N2}";
+                    m_RotationSliderY.interactable = true;
                     break;
                 }
             }
@@ -347,21 +347,21 @@ namespace ThreeDeePongProto.Shared.Settings
         #region Custom Methods
         private void InitialUISetup()
         {
-            m_moveToggleKeysEP.isOn = m_controlUIStates[0].CustomXSensitivity;
-            m_rotToggleKeysEP.isOn = m_controlUIStates[0].CustomYSensitivity;
+            m_moveToggleKey.isOn = m_controlUIStates[0].CustomXSensitivity;
+            m_rotationToggleKey.isOn = m_controlUIStates[0].CustomYSensitivity;
 
             switch (m_controlUIStates[0].CustomXSensitivity)
             {
                 case false:
                 {
-                    m_MoveValueSliderXEP.value = m_xMoveSpeedDefault;    //MoveSlider X
-                    m_MoveValueTextPs.text = $"{m_xMoveSpeedDefault:N2}";
+                    m_MovespeedSliderX.value = m_moveSpeedDefaultX;    //MoveSlider X
+                    m_MovespeedText.text = $"{m_moveSpeedDefaultX:N2}";
                     break;
                 }
                 case true:
                 {
-                    m_MoveValueSliderXEP.value = m_controlUIValues[0].LastXMoveSpeed;   //MoveSlider X
-                    m_MoveValueTextPs.text = $"{m_controlUIValues[0].LastXMoveSpeed:N2}";
+                    m_MovespeedSliderX.value = m_controlUIValues[0].LastXMoveSpeed;   //MoveSlider X
+                    m_MovespeedText.text = $"{m_controlUIValues[0].LastXMoveSpeed:N2}";
                     break;
                 }
             }
@@ -370,14 +370,14 @@ namespace ThreeDeePongProto.Shared.Settings
             {
                 case false:
                 {
-                    m_RotValueSliderYEP.value = m_yRotationDefault;  //RotSlider Y
-                    m_RotValueTextPs.text = $"{m_yRotationDefault:N2}";
+                    m_RotationSliderY.value = m_rotationDefaultY;  //RotSlider Y
+                    m_RotationText.text = $"{m_rotationDefaultY:N2}";
                     break;
                 }
                 case true:
                 {
-                    m_RotValueSliderYEP.value = m_controlUIValues[0].LastYRotSpeed;  //RotSlider Y
-                    m_RotValueTextPs.text = $"{m_controlUIValues[0].LastYRotSpeed:N2}";
+                    m_RotationSliderY.value = m_controlUIValues[0].LastYRotSpeed;  //RotSlider Y
+                    m_RotationText.text = $"{m_controlUIValues[0].LastYRotSpeed:N2}";
                     break;
                 }
             }
@@ -396,15 +396,15 @@ namespace ThreeDeePongProto.Shared.Settings
         {
             //Get the corresponding Slider (Value) in the Dictionary, for each submitted Toggle (Key), by the Button inside Unity.
             Slider connectedSlider = null;
-            bool toggleFound = m_toggleSliderConnectXEP.ContainsKey(_connectedToggle);
+            bool toggleFound = m_toggleSliderConnectX.ContainsKey(_connectedToggle);
 
             switch (toggleFound)
             {
                 case true:
-                    connectedSlider = m_toggleSliderConnectXEP[_connectedToggle];
+                    connectedSlider = m_toggleSliderConnectX[_connectedToggle];
                     break;
                 case false:
-                    connectedSlider = m_toggleSliderConnectYEP[_connectedToggle];
+                    connectedSlider = m_toggleSliderConnectY[_connectedToggle];
                     break;
             }
 
@@ -417,15 +417,15 @@ namespace ThreeDeePongProto.Shared.Settings
         {
             //Get the corresponding Slider (Value) in the Dictionary, for each submitted Toggle (Key), by the Button inside Unity.
             Slider connectedSlider = null;
-            bool toggleFound = m_toggleSliderConnectXEP.ContainsKey(_connectedToggle);
+            bool toggleFound = m_toggleSliderConnectX.ContainsKey(_connectedToggle);
 
             switch (toggleFound)
             {
                 case true:
-                    connectedSlider = m_toggleSliderConnectXEP[_connectedToggle];
+                    connectedSlider = m_toggleSliderConnectX[_connectedToggle];
                     break;
                 case false:
-                    connectedSlider = m_toggleSliderConnectYEP[_connectedToggle];
+                    connectedSlider = m_toggleSliderConnectY[_connectedToggle];
                     break;
             }
 
@@ -471,10 +471,10 @@ namespace ThreeDeePongProto.Shared.Settings
 
         public void ReSetDefault()
         {
-            m_MoveValueSliderXEP.value = m_xMoveSpeedDefault;
-            m_RotValueSliderYEP.value = m_yRotationDefault;
-            m_moveToggleKeysEP.isOn = m_customToggleDefaults;
-            m_rotToggleKeysEP.isOn = m_customToggleDefaults;
+            m_MovespeedSliderX.value = m_moveSpeedDefaultX;
+            m_RotationSliderY.value = m_rotationDefaultY;
+            m_moveToggleKey.isOn = m_customToggleDefaults;
+            m_rotationToggleKey.isOn = m_customToggleDefaults;
             m_playerXRotInvertToggles[m_currentViewIndex].isOn = m_xRotInvertDefaults[m_currentViewIndex];
             m_playerYRotInvertToggles[m_currentViewIndex].isOn = m_yRotInvertDefaults[m_currentViewIndex];
 
