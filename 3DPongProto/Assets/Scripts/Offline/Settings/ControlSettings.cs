@@ -11,17 +11,19 @@ namespace ThreeDeePongProto.Shared.Settings
     public class ControlSettings : MonoBehaviour
     {
         #region Axis Sensitivity
-        [Header("Movement Sensitivity")]
+        //'_connectedToggle.isOn', 'm_moveToggleKey.isOn' and 'm_rotationToggleKey.isOn' need to be inverted together, to enable/disable reduce-/increaseButtons and slider-changes. Including InitialUISetup() switch.
+        [Header("Movement Speed")]
         [SerializeField] private Slider m_MovespeedSliderX;
         [SerializeField] private TextMeshProUGUI m_MovespeedText;
         [SerializeField] private Toggle m_moveToggleKey;
+        [Header("Rotation Speed")]
         [SerializeField] private Slider m_RotationSliderY;
         [SerializeField] private TextMeshProUGUI m_RotationText;
         [SerializeField] private Toggle m_rotationToggleKey;
         [SerializeField] private bool m_customToggleDefaults;
         [Space]
         [SerializeField, Range(1, 20)] float m_moveSpeedDefaultX = 10f;
-        [SerializeField, Range(1, 5)] float m_rotationDefaultY = 2.5f;
+        [SerializeField, Range(1, 5)] float m_rotSpeedDefaultY = 2.5f;
         [SerializeField, Range(1, 10)] private float m_adjustSliderStep = 2.0f;
 
         private readonly Dictionary<Toggle, Slider> m_toggleSliderConnectX = new();
@@ -58,8 +60,8 @@ namespace ThreeDeePongProto.Shared.Settings
 
         #region Axis Inversion
         [Header("Axis Inversion")]
-        [SerializeField] private Toggle[] m_playerXRotInvertToggles;
-        [SerializeField] private Toggle[] m_playerYRotInvertToggles;
+        [SerializeField] private Toggle[] m_xAxisInvertToggles;
+        [SerializeField] private Toggle[] m_yAxisInvertToggles;
 
         [SerializeField] private bool[] m_xRotInvertDefaults;
         [SerializeField] private bool[] m_yRotInvertDefaults;
@@ -142,35 +144,47 @@ namespace ThreeDeePongProto.Shared.Settings
         #region UnRegister-Listener-Region
         private void AddSliderAndToggleListener()
         {
-            for (int i = 0; i < m_controlUIStates.Length; i++)
-            {
-                if (m_controlUIStates[i] != null)
-                {
-                    m_playerXRotInvertToggles[i].onValueChanged.AddListener(XRotInversionChange);
-                    m_playerYRotInvertToggles[i].onValueChanged.AddListener(YRotInversionChange);
-                    m_moveToggleKey.onValueChanged.AddListener(MoveToggleXValueChanges);
-                    m_rotationToggleKey.onValueChanged.AddListener(RotToggleYValueChanges);
-                }
-            }
+            for (int x = 0; x < m_xAxisInvertToggles.Length; x++)
+                m_xAxisInvertToggles[x].onValueChanged.AddListener(MoveAxisInversion);
 
-            for (int j = 0; j < m_controlUIValues.Length; j++)
-            {
-                if (m_controlUIValues[j] != null)
-                {
-                    m_MovespeedSliderX.onValueChanged.AddListener(SensitivitySliderXValueChanges);
-                    m_RotationSliderY.onValueChanged.AddListener(SensitivitySliderYValueChanges);
-                }
-            }
+            for (int y = 0; y < m_yAxisInvertToggles.Length; y++)
+                m_yAxisInvertToggles[y].onValueChanged.AddListener(RotationAxisInversion);
 
-            m_playerXRotInvertToggles[0].onValueChanged.AddListener(XRotInversionChange);
-            m_playerXRotInvertToggles[1].onValueChanged.AddListener(XRotInversionChange);
-            m_playerXRotInvertToggles[2].onValueChanged.AddListener(XRotInversionChange);
-            m_playerXRotInvertToggles[3].onValueChanged.AddListener(XRotInversionChange);
+            m_moveToggleKey.onValueChanged.AddListener(MoveToggleXValueChanges);
+            m_rotationToggleKey.onValueChanged.AddListener(RotToggleYValueChanges);
 
-            m_playerYRotInvertToggles[0].onValueChanged.AddListener(YRotInversionChange);
-            m_playerYRotInvertToggles[1].onValueChanged.AddListener(YRotInversionChange);
-            m_playerYRotInvertToggles[2].onValueChanged.AddListener(YRotInversionChange);
-            m_playerYRotInvertToggles[3].onValueChanged.AddListener(YRotInversionChange);
+            m_MovespeedSliderX.onValueChanged.AddListener(SensitivitySliderXValueChanges);
+            m_RotationSliderY.onValueChanged.AddListener(SensitivitySliderYValueChanges);
+
+            //for (int i = 0; i < m_controlUIStates.Length; i++)
+            //{
+            //    if (m_controlUIStates[i] != null)
+            //    {
+            //        //m_xAxisInvertToggles[y].onValueChanged.AddListener(MoveAxisInversion);
+            //        //m_yAxisInvertToggles[y].onValueChanged.AddListener(RotationAxisInversion);
+            //        //m_moveToggleKey.onValueChanged.AddListener(MoveToggleXValueChanges);
+            //        //m_rotationToggleKey.onValueChanged.AddListener(RotToggleYValueChanges);
+            //    }
+            //}
+
+            //for (int j = 0; j < m_controlUIValues.Length; j++)
+            //{
+            //    if (m_controlUIValues[j] != null)
+            //    {
+            //        //m_MovespeedSliderX.onValueChanged.AddListener(SensitivitySliderXValueChanges);
+            //        //m_RotationSliderY.onValueChanged.AddListener(SensitivitySliderYValueChanges);
+            //    }
+            //}
+
+            //m_xAxisInvertToggles[0].onValueChanged.AddListener(MoveAxisInversion);
+            //m_xAxisInvertToggles[1].onValueChanged.AddListener(MoveAxisInversion);
+            //m_xAxisInvertToggles[2].onValueChanged.AddListener(MoveAxisInversion);
+            //m_xAxisInvertToggles[3].onValueChanged.AddListener(MoveAxisInversion);
+
+            //m_yAxisInvertToggles[0].onValueChanged.AddListener(RotationAxisInversion);
+            //m_yAxisInvertToggles[1].onValueChanged.AddListener(RotationAxisInversion);
+            //m_yAxisInvertToggles[2].onValueChanged.AddListener(RotationAxisInversion);
+            //m_yAxisInvertToggles[3].onValueChanged.AddListener(RotationAxisInversion);
         }
 
         /// <summary>
@@ -178,122 +192,176 @@ namespace ThreeDeePongProto.Shared.Settings
         /// </summary>
         private void RemoveSliderAndToggleListener()
         {
-            for (int i = 0; i < m_controlUIStates.Length; i++)
-            {
-                if (m_controlUIStates[i] != null)
-                {
-                    m_playerXRotInvertToggles[i].onValueChanged.RemoveListener(XRotInversionChange);
-                    m_playerYRotInvertToggles[i].onValueChanged.RemoveListener(YRotInversionChange);
-                    m_moveToggleKey.onValueChanged.RemoveListener(MoveToggleXValueChanges);
-                    m_rotationToggleKey.onValueChanged.RemoveListener(RotToggleYValueChanges);
-                }
-            }
+            for (int x = 0; x < m_xAxisInvertToggles.Length; x++)
+                m_xAxisInvertToggles[x].onValueChanged.RemoveListener(MoveAxisInversion);
 
-            for (int j = 0; j < m_controlUIValues.Length; j++)
-            {
-                if (m_controlUIValues[j] != null)
-                {
-                    m_MovespeedSliderX.onValueChanged.RemoveListener(SensitivitySliderXValueChanges);
-                    m_RotationSliderY.onValueChanged.RemoveListener(SensitivitySliderYValueChanges);
-                }
-            }
+            for (int y = 0; y < m_yAxisInvertToggles.Length; y++)
+                m_yAxisInvertToggles[y].onValueChanged.RemoveListener(RotationAxisInversion);
 
-            m_playerXRotInvertToggles[0].onValueChanged.RemoveListener(XRotInversionChange);
-            m_playerXRotInvertToggles[1].onValueChanged.RemoveListener(XRotInversionChange);
-            m_playerXRotInvertToggles[2].onValueChanged.RemoveListener(XRotInversionChange);
-            m_playerXRotInvertToggles[3].onValueChanged.RemoveListener(XRotInversionChange);
+            m_moveToggleKey.onValueChanged.RemoveListener(MoveToggleXValueChanges);
+            m_rotationToggleKey.onValueChanged.RemoveListener(RotToggleYValueChanges);
 
-            m_playerYRotInvertToggles[0].onValueChanged.RemoveListener(YRotInversionChange);
-            m_playerYRotInvertToggles[1].onValueChanged.RemoveListener(YRotInversionChange);
-            m_playerYRotInvertToggles[2].onValueChanged.RemoveListener(YRotInversionChange);
-            m_playerYRotInvertToggles[3].onValueChanged.RemoveListener(YRotInversionChange);
+            m_MovespeedSliderX.onValueChanged.RemoveListener(SensitivitySliderXValueChanges);
+            m_RotationSliderY.onValueChanged.RemoveListener(SensitivitySliderYValueChanges);
+
+            //for (int i = 0; i < m_controlUIStates.Length; i++)
+            //{
+            //    if (m_controlUIStates[i] != null)
+            //    {
+            //        m_xAxisInvertToggles[i].onValueChanged.RemoveListener(MoveAxisInversion);
+            //        m_yAxisInvertToggles[i].onValueChanged.RemoveListener(RotationAxisInversion);
+            //        m_moveToggleKey.onValueChanged.RemoveListener(MoveToggleXValueChanges);
+            //        m_rotationToggleKey.onValueChanged.RemoveListener(RotToggleYValueChanges);
+            //    }
+            //}
+
+            //for (int j = 0; j < m_controlUIValues.Length; j++)
+            //{
+            //    if (m_controlUIValues[j] != null)
+            //    {
+            //        m_MovespeedSliderX.onValueChanged.RemoveListener(SensitivitySliderXValueChanges);
+            //        m_RotationSliderY.onValueChanged.RemoveListener(SensitivitySliderYValueChanges);
+            //    }
+            //}
+
+            //m_xAxisInvertToggles[0].onValueChanged.RemoveListener(MoveAxisInversion);
+            //m_xAxisInvertToggles[1].onValueChanged.RemoveListener(MoveAxisInversion);
+            //m_xAxisInvertToggles[2].onValueChanged.RemoveListener(MoveAxisInversion);
+            //m_xAxisInvertToggles[3].onValueChanged.RemoveListener(MoveAxisInversion);
+
+            //m_yAxisInvertToggles[0].onValueChanged.RemoveListener(RotationAxisInversion);
+            //m_yAxisInvertToggles[1].onValueChanged.RemoveListener(RotationAxisInversion);
+            //m_yAxisInvertToggles[2].onValueChanged.RemoveListener(RotationAxisInversion);
+            //m_yAxisInvertToggles[3].onValueChanged.RemoveListener(RotationAxisInversion);
         }
         #endregion
 
         #region Listener-Methods
-        private void XRotInversionChange(bool _xAxisInversion)
+        private void MoveAxisInversion(bool _xAxisInversion)
         {
-            switch (m_currentViewIndex)
+            if (m_controlUIStates.Length < 1)
+                return;
+
+            for (int i = 0; i < m_controlUIStates.Length; i++)
             {
-                case 0:
-                    m_controlUIStates[0].InvertXAxis = _xAxisInversion;
-                    break;
-                case 1:
-                    m_controlUIStates[1].InvertXAxis = _xAxisInversion;
-                    break;
-                case 2:
-                    m_controlUIStates[2].InvertXAxis = _xAxisInversion;
-                    break;
-                case 3:
-                    m_controlUIStates[3].InvertXAxis = _xAxisInversion;
-                    break;
+                if (m_controlUIStates[i] != null && m_currentViewIndex == i)
+                    m_controlUIStates[i].InvertXAxis = _xAxisInversion;
             }
+
+            //switch (m_currentViewIndex)
+            //{
+            //    case 0:
+            //        m_controlUIStates[0].InvertXAxis = _xAxisInversion;
+            //        break;
+            //    case 1:
+            //        m_controlUIStates[1].InvertXAxis = _xAxisInversion;
+            //        break;
+            //    case 2:
+            //        m_controlUIStates[2].InvertXAxis = _xAxisInversion;
+            //        break;
+            //    case 3:
+            //        m_controlUIStates[3].InvertXAxis = _xAxisInversion;
+            //        break;
+            //}
         }
 
-        private void YRotInversionChange(bool _yAxisInversion)
+        private void RotationAxisInversion(bool _yAxisInversion)
         {
-            switch (m_currentViewIndex)
+            if (m_controlUIStates.Length < 1)
+                return;
+
+            for (int i = 0; i < m_controlUIStates.Length; i++)
             {
-                case 0:
-                    m_controlUIStates[0].InvertYAxis = _yAxisInversion;
-                    break;
-                case 1:
-                    m_controlUIStates[1].InvertYAxis = _yAxisInversion;
-                    break;
-                case 2:
-                    m_controlUIStates[2].InvertYAxis = _yAxisInversion;
-                    break;
-                case 3:
-                    m_controlUIStates[3].InvertYAxis = _yAxisInversion;
-                    break;
+                if (m_controlUIStates[i] != null && m_currentViewIndex == i)
+                    m_controlUIStates[i].InvertYAxis = _yAxisInversion;
             }
+
+            //switch (m_currentViewIndex)
+            //{
+            //    case 0:
+            //        m_controlUIStates[0].InvertYAxis = _yAxisInversion;
+            //        break;
+            //    case 1:
+            //        m_controlUIStates[1].InvertYAxis = _yAxisInversion;
+            //        break;
+            //    case 2:
+            //        m_controlUIStates[2].InvertYAxis = _yAxisInversion;
+            //        break;
+            //    case 3:
+            //        m_controlUIStates[3].InvertYAxis = _yAxisInversion;
+            //        break;
+            //}
         }
 
         private void SensitivitySliderXValueChanges(float _sliderXValue)
         {
-            if (m_moveToggleKey.isOn)
+            if (m_controlUIValues.Length < 1)
+                return;
+
+            if (!m_moveToggleKey.isOn)
             {
-                m_controlUIValues[0].LastXMoveSpeed = _sliderXValue;  //Player1 SO.
-                m_controlUIValues[1].LastXMoveSpeed = _sliderXValue;  //Player2 SO.
-                m_controlUIValues[2].LastXMoveSpeed = _sliderXValue;  //Player3 SO.
-                m_controlUIValues[3].LastXMoveSpeed = _sliderXValue;  //Player4 SO.
+                for (int x = 0; x < m_controlUIValues.Length; x++)
+                {
+                    if (m_controlUIValues[x] != null)
+                        m_controlUIValues[x].LastXMoveSpeed = _sliderXValue; //One MoveSpeed for all! Player1-4 SO.
+                }
+                //m_controlUIValues[0].LastXMoveSpeed = _sliderXValue;  //Player1 SO.
+                //m_controlUIValues[1].LastXMoveSpeed = _sliderXValue;  //Player2 SO.
+                //m_controlUIValues[2].LastXMoveSpeed = _sliderXValue;  //Player3 SO.
+                //m_controlUIValues[3].LastXMoveSpeed = _sliderXValue;  //Player4 SO.
                 m_MovespeedText.text = $"{_sliderXValue:N2}";
             }
         }
 
         private void SensitivitySliderYValueChanges(float _sliderYValue)
         {
-            if (m_rotationToggleKey.isOn)
+            if (m_controlUIValues.Length < 1)
+                return;
+
+            if (!m_rotationToggleKey.isOn)
             {
-                m_controlUIValues[0].LastYRotSpeed = _sliderYValue; //Player1 SO.
-                m_controlUIValues[1].LastYRotSpeed = _sliderYValue; //Player2 SO.
-                m_controlUIValues[2].LastYRotSpeed = _sliderYValue; //Player3 SO.
-                m_controlUIValues[3].LastYRotSpeed = _sliderYValue; //Player4 SO.
+                for (int y = 0; y < m_controlUIValues.Length; y++)
+                {
+                    if (m_controlUIValues[y] != null)
+                        m_controlUIValues[y].LastYRotSpeed = _sliderYValue; //One RotationSpeed for all! Player1-4 SO.
+                }
+                //m_controlUIValues[0].LastYRotSpeed = _sliderYValue; //Player1 SO.
+                //m_controlUIValues[1].LastYRotSpeed = _sliderYValue; //Player2 SO.
+                //m_controlUIValues[2].LastYRotSpeed = _sliderYValue; //Player3 SO.
+                //m_controlUIValues[3].LastYRotSpeed = _sliderYValue; //Player4 SO.
                 m_RotationText.text = $"{_sliderYValue:N2}";
             }
         }
 
         private void MoveToggleXValueChanges(bool _toggleX)
         {
-            m_controlUIStates[0].CustomXSensitivity = _toggleX;
-            m_controlUIStates[1].CustomXSensitivity = _toggleX;
-            m_controlUIStates[2].CustomXSensitivity = _toggleX;
-            m_controlUIStates[3].CustomXSensitivity = _toggleX;
+            if (m_controlUIStates.Length < 1)
+                return;
+
+            for (int x = 0; x < m_controlUIStates.Length; x++)
+            {
+                if (m_controlUIStates[x] != null)
+                    m_controlUIStates[x].CustomXSensitivity = _toggleX;
+            }
+            //m_controlUIStates[0].CustomXSensitivity = _toggleX;
+            //m_controlUIStates[1].CustomXSensitivity = _toggleX;
+            //m_controlUIStates[2].CustomXSensitivity = _toggleX;
+            //m_controlUIStates[3].CustomXSensitivity = _toggleX;
 
             switch (_toggleX)
             {
                 case false:
                 {
-                    m_MovespeedSliderX.value = m_moveSpeedDefaultX; //MoveSlider X
-                    m_MovespeedText.text = $"{m_moveSpeedDefaultX:N2}";
-                    m_MovespeedSliderX.interactable = false;
+                    m_MovespeedSliderX.value = m_controlUIValues[0].LastXMoveSpeed;
+                    m_MovespeedText.text = $"{m_controlUIValues[0].LastXMoveSpeed:N2}";
+                    m_MovespeedSliderX.interactable = true;
                     break;
                 }
                 case true:
                 {
-                    m_MovespeedSliderX.value = m_controlUIValues[0].LastXMoveSpeed;
-                    m_MovespeedText.text = $"{m_controlUIValues[0].LastXMoveSpeed:N2}";
-                    m_MovespeedSliderX.interactable = true;
+                    m_MovespeedSliderX.value = m_moveSpeedDefaultX; //MoveSlider X
+                    m_MovespeedText.text = $"{m_moveSpeedDefaultX:N2}";
+                    m_MovespeedSliderX.interactable = false;
                     break;
                 }
             }
@@ -301,25 +369,31 @@ namespace ThreeDeePongProto.Shared.Settings
 
         private void RotToggleYValueChanges(bool _toggleY)
         {
-            m_controlUIStates[0].CustomYSensitivity = _toggleY;
-            m_controlUIStates[1].CustomYSensitivity = _toggleY;
-            m_controlUIStates[2].CustomYSensitivity = _toggleY;
-            m_controlUIStates[3].CustomYSensitivity = _toggleY;
+            if (m_controlUIStates.Length < 1)
+                return;
+
+            for (int y = 0; y < m_controlUIStates.Length; y++)
+                m_controlUIStates[y].CustomYSensitivity = _toggleY;
+
+            //m_controlUIStates[0].CustomYSensitivity = _toggleY;
+            //m_controlUIStates[1].CustomYSensitivity = _toggleY;
+            //m_controlUIStates[2].CustomYSensitivity = _toggleY;
+            //m_controlUIStates[3].CustomYSensitivity = _toggleY;
 
             switch (_toggleY)
             {
                 case false:
                 {
-                    m_RotationSliderY.value = m_rotationDefaultY;  //RotSlider Y
-                    m_RotationText.text = $"{m_rotationDefaultY:N2}";
-                    m_RotationSliderY.interactable = false;
+                    m_RotationSliderY.value = m_controlUIValues[0].LastYRotSpeed;
+                    m_RotationText.text = $"{m_controlUIValues[0].LastYRotSpeed:N2}";
+                    m_RotationSliderY.interactable = true;
                     break;
                 }
                 case true:
                 {
-                    m_RotationSliderY.value = m_controlUIValues[0].LastYRotSpeed;
-                    m_RotationText.text = $"{m_controlUIValues[0].LastYRotSpeed:N2}";
-                    m_RotationSliderY.interactable = true;
+                    m_RotationSliderY.value = m_rotSpeedDefaultY;  //RotSlider Y
+                    m_RotationText.text = $"{m_rotSpeedDefaultY:N2}";
+                    m_RotationSliderY.interactable = false;
                     break;
                 }
             }
@@ -354,14 +428,14 @@ namespace ThreeDeePongProto.Shared.Settings
             {
                 case false:
                 {
-                    m_MovespeedSliderX.value = m_moveSpeedDefaultX;    //MoveSlider X
-                    m_MovespeedText.text = $"{m_moveSpeedDefaultX:N2}";
+                    m_MovespeedSliderX.value = m_controlUIValues[0].LastXMoveSpeed;   //MoveSlider X
+                    m_MovespeedText.text = $"{m_controlUIValues[0].LastXMoveSpeed:N2}";
                     break;
                 }
                 case true:
                 {
-                    m_MovespeedSliderX.value = m_controlUIValues[0].LastXMoveSpeed;   //MoveSlider X
-                    m_MovespeedText.text = $"{m_controlUIValues[0].LastXMoveSpeed:N2}";
+                    m_MovespeedSliderX.value = m_moveSpeedDefaultX;    //MoveSlider X
+                    m_MovespeedText.text = $"{m_moveSpeedDefaultX:N2}";
                     break;
                 }
             }
@@ -370,14 +444,14 @@ namespace ThreeDeePongProto.Shared.Settings
             {
                 case false:
                 {
-                    m_RotationSliderY.value = m_rotationDefaultY;  //RotSlider Y
-                    m_RotationText.text = $"{m_rotationDefaultY:N2}";
+                    m_RotationSliderY.value = m_controlUIValues[0].LastYRotSpeed;  //RotSlider Y
+                    m_RotationText.text = $"{m_controlUIValues[0].LastYRotSpeed:N2}";
                     break;
                 }
                 case true:
                 {
-                    m_RotationSliderY.value = m_controlUIValues[0].LastYRotSpeed;  //RotSlider Y
-                    m_RotationText.text = $"{m_controlUIValues[0].LastYRotSpeed:N2}";
+                    m_RotationSliderY.value = m_rotSpeedDefaultY;  //RotSlider Y
+                    m_RotationText.text = $"{m_rotSpeedDefaultY:N2}";
                     break;
                 }
             }
@@ -386,8 +460,8 @@ namespace ThreeDeePongProto.Shared.Settings
             {
                 if (m_contentSubTransforms[i] != null)
                 {
-                    m_playerXRotInvertToggles[i].isOn = m_controlUIStates[i].InvertXAxis;
-                    m_playerYRotInvertToggles[i].isOn = m_controlUIStates[i].InvertYAxis;
+                    m_xAxisInvertToggles[i].isOn = m_controlUIStates[i].InvertXAxis;
+                    m_yAxisInvertToggles[i].isOn = m_controlUIStates[i].InvertYAxis;
                 }
             }
         }
@@ -396,20 +470,29 @@ namespace ThreeDeePongProto.Shared.Settings
         {
             //Get the corresponding Slider (Value) in the Dictionary, for each submitted Toggle (Key), by the Button inside Unity.
             Slider connectedSlider = null;
-            bool toggleFound = m_toggleSliderConnectX.ContainsKey(_connectedToggle);
 
-            switch (toggleFound)
-            {
-                case true:
-                    connectedSlider = m_toggleSliderConnectX[_connectedToggle];
-                    break;
-                case false:
-                    connectedSlider = m_toggleSliderConnectY[_connectedToggle];
-                    break;
-            }
+            bool moveToggleMatch = m_toggleSliderConnectX.ContainsKey(_connectedToggle) && _connectedToggle == m_moveToggleKey;
+            bool rotationToggleMatch = m_toggleSliderConnectY.ContainsKey(_connectedToggle) && _connectedToggle == m_rotationToggleKey;
+
+            if (moveToggleMatch)
+                connectedSlider = m_toggleSliderConnectX[_connectedToggle];
+            if (rotationToggleMatch)
+                connectedSlider = m_toggleSliderConnectY[_connectedToggle];
+
+            //bool toggleFound = m_toggleSliderConnectX.ContainsKey(_connectedToggle) && _connectedToggle == m_moveToggleKey;
+
+            //switch (toggleFound)
+            //{
+            //    case true:
+            //        connectedSlider = m_toggleSliderConnectX[_connectedToggle];
+            //        break;
+            //    case false:
+            //        connectedSlider = m_toggleSliderConnectY[_connectedToggle];
+            //        break;
+            //}
 
             //Only if the submitted Toggle isn't on, then the Button can lower the SliderValue.
-            if (_connectedToggle.isOn)
+            if (!_connectedToggle.isOn)
                 connectedSlider.value -= connectedSlider.maxValue * (0.01f * m_adjustSliderStep);
         }
 
@@ -417,20 +500,29 @@ namespace ThreeDeePongProto.Shared.Settings
         {
             //Get the corresponding Slider (Value) in the Dictionary, for each submitted Toggle (Key), by the Button inside Unity.
             Slider connectedSlider = null;
-            bool toggleFound = m_toggleSliderConnectX.ContainsKey(_connectedToggle);
 
-            switch (toggleFound)
-            {
-                case true:
-                    connectedSlider = m_toggleSliderConnectX[_connectedToggle];
-                    break;
-                case false:
-                    connectedSlider = m_toggleSliderConnectY[_connectedToggle];
-                    break;
-            }
+            bool moveToggleMatch = m_toggleSliderConnectX.ContainsKey(_connectedToggle) && _connectedToggle == m_moveToggleKey;
+            bool rotationToggleMatch = m_toggleSliderConnectY.ContainsKey(_connectedToggle) && _connectedToggle == m_rotationToggleKey;
+
+            if (moveToggleMatch)
+                connectedSlider = m_toggleSliderConnectX[_connectedToggle];
+            if (rotationToggleMatch)
+                connectedSlider = m_toggleSliderConnectY[_connectedToggle];
+
+            //bool toggleFound = m_toggleSliderConnectX.ContainsKey(_connectedToggle);
+
+            //switch (toggleFound)
+            //{
+            //    case true:
+            //        connectedSlider = m_toggleSliderConnectX[_connectedToggle];
+            //        break;
+            //    case false:
+            //        connectedSlider = m_toggleSliderConnectY[_connectedToggle];
+            //        break;
+            //}
 
             //Only if the submitted Toggle isn't on, then the Button can increase the SliderValue.
-            if (_connectedToggle.isOn)
+            if (!_connectedToggle.isOn)
                 connectedSlider.value += connectedSlider.maxValue * (0.01f * m_adjustSliderStep);
         }
 
@@ -472,11 +564,11 @@ namespace ThreeDeePongProto.Shared.Settings
         public void ReSetDefault()
         {
             m_MovespeedSliderX.value = m_moveSpeedDefaultX;
-            m_RotationSliderY.value = m_rotationDefaultY;
+            m_RotationSliderY.value = m_rotSpeedDefaultY;
             m_moveToggleKey.isOn = m_customToggleDefaults;
             m_rotationToggleKey.isOn = m_customToggleDefaults;
-            m_playerXRotInvertToggles[m_currentViewIndex].isOn = m_xRotInvertDefaults[m_currentViewIndex];
-            m_playerYRotInvertToggles[m_currentViewIndex].isOn = m_yRotInvertDefaults[m_currentViewIndex];
+            m_xAxisInvertToggles[m_currentViewIndex].isOn = m_xRotInvertDefaults[m_currentViewIndex];
+            m_yAxisInvertToggles[m_currentViewIndex].isOn = m_yRotInvertDefaults[m_currentViewIndex];
 
             ResetPlayerViewRebinds?.Invoke();   //Active KeyRebindButtons in the currently active PlayerView shall reset their bindings.
         }

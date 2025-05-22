@@ -1534,7 +1534,7 @@ MonoBehaviour:
   m_rotationToggleKey: {fileID: 4389219788613800714}
   m_customToggleDefaults: 181
   m_moveSpeedDefaultX: 10
-  m_rotationDefaultY: 2.5
+  m_rotSpeedDefaultY: 2.5
   m_adjustSliderStep: 2
   m_playerButtons:
   - {fileID: 706475667562797625}
@@ -1559,16 +1559,8 @@ MonoBehaviour:
   m_zoomGroup: {fileID: 4408856760845764607}
   m_resetButton: {fileID: 2902378683305801311}
   m_backButton: {fileID: 6603129261428772433}
-  m_playerXRotInvertToggles:
-  - {fileID: 3628116103158577164}
-  - {fileID: 2453800702881998439}
-  - {fileID: 7544896904838939150}
-  - {fileID: 8287210658989118252}
-  m_playerYRotInvertToggles:
-  - {fileID: 5693366284018465715}
-  - {fileID: 6869934033872987608}
-  - {fileID: 1580646806560276913}
-  - {fileID: 1033954381518573715}
+  m_xAxisInvertToggles: []
+  m_yAxisInvertToggles: []
   m_xRotInvertDefaults: 00000000
   m_yRotInvertDefaults: 00000000
   m_controlUIStates:
@@ -6161,11 +6153,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Spacing
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8314012747494224381, guid: 8ab7a3d338f5f3842a91023867623f5a,
-        type: 3}
-      propertyPath: m_text
-      value: Custom
       objectReference: {fileID: 0}
     - target: {fileID: 8314012747494224381, guid: 8ab7a3d338f5f3842a91023867623f5a,
         type: 3}
@@ -12410,11 +12397,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Spacing
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8314012747494224381, guid: 8ab7a3d338f5f3842a91023867623f5a,
-        type: 3}
-      propertyPath: m_text
-      value: Custom
       objectReference: {fileID: 0}
     - target: {fileID: 8314012747494224381, guid: 8ab7a3d338f5f3842a91023867623f5a,
         type: 3}
