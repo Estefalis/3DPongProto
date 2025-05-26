@@ -22,6 +22,26 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4532852187548021924, guid: 3706afed8dcbb3840bb7b202b9c0a7e8,
+        type: 3}
+      propertyPath: m_Colors.m_PressedColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4532852187548021924, guid: 3706afed8dcbb3840bb7b202b9c0a7e8,
+        type: 3}
+      propertyPath: m_Colors.m_DisabledColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4532852187548021924, guid: 3706afed8dcbb3840bb7b202b9c0a7e8,
+        type: 3}
+      propertyPath: m_Colors.m_SelectedColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4532852187548021924, guid: 3706afed8dcbb3840bb7b202b9c0a7e8,
+        type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4532852187548021926, guid: 3706afed8dcbb3840bb7b202b9c0a7e8,
         type: 3}
       propertyPath: m_Name

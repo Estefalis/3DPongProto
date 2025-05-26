@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 public enum ECameraModi
 {
-    SingleCam,
-    TwoVertical,
-    TwoHorizontal,
-    FourSplit,
-    EndCount
+    None = 0,
+    SingleCam = 1,
+    Vertical,
+    Horizontal,
+    Quartet = 4
 }
 
 namespace ThreeDeePongProto.Shared.Settings
@@ -19,13 +19,14 @@ namespace ThreeDeePongProto.Shared.Settings
         #region Object-References
         [SerializeField] private TMP_Dropdown m_qualityDropdown;
         [SerializeField] private TMP_Dropdown m_resolutionDropdown;
-        [SerializeField] private Toggle m_fullscreenToggle;
+        [SerializeField] private Toggle m_fullScreenToggle;                 //Listener method is IN Unity!
+        [SerializeField] private TextMeshProUGUI m_fullScreenToggleText;
         [SerializeField] private TMP_Dropdown m_screenSplitDropdown;
         #endregion
 
         [SerializeField] private int m_systemQualityLevel;
         [SerializeField] private int m_currentResolutionIndex;
-        [SerializeField] private bool m_defaultFullscreen = true;
+        [SerializeField] private bool m_defaultFullScreen = true;
         [SerializeField] private ECameraModi m_eCameraMode;
 
         private Resolution[] m_screenResolutions;
@@ -46,8 +47,8 @@ namespace ThreeDeePongProto.Shared.Settings
         private readonly string m_graphicFileName = "/Graphic";
         private readonly string m_fileFormat = ".json";
 
-        private IPersistentData m_persistentData = new SerializingData();
-        private bool m_encryptionEnabled = false;
+        private readonly IPersistentData m_persistentData = new SerializingData();
+        private readonly bool m_encryptionEnabled = false;
         #endregion
 
         private void Awake()
@@ -69,21 +70,13 @@ namespace ThreeDeePongProto.Shared.Settings
 
         private void Start()
         {
-            //TODO: InitialUISetup check for nulled Scriptables.
+            //TODO: InitialUISetup check for nulled Scriptable.
             InitialUISetup();
         }
 
         private void OnDisable()
         {
             m_persistentData.SaveData(m_settingStatesFolderPath, m_graphicFileName, m_fileFormat, m_graphicUIStates, m_encryptionEnabled, true);
-        }
-
-        private void InitialUISetup()
-        {
-            m_qualityDropdown.value = m_graphicUIStates.QualityLevelIndex;
-            m_resolutionDropdown.value = m_graphicUIStates.SelectedResolutionIndex;
-            m_fullscreenToggle.isOn = m_graphicUIStates.FullScreenMode;
-            m_screenSplitDropdown.value = (int)m_graphicUIStates.SetCameraMode;
         }
 
         private void GetAvailableResolutions()
@@ -93,13 +86,13 @@ namespace ThreeDeePongProto.Shared.Settings
             m_resolutionDropdown.ClearOptions();
 
             //List for the variable Amount of available Resolution-Options on your system.
-            List<string> resolutionOptionsList = new List<string>();
+            List<string> resolutionOptionsList = new();
 
             int currentResolutionIndex = 0;
             for (int i = 0; i < m_screenResolutions.Length; i++)
             {
                 //Creation of a formatted string to display the available system-resolutions in the UI-Dropdown.
-                //Adding the refreshrate prevents confusion on double entries.
+                //Adding the refreshRate prevents confusion on double entries.
                 string resolution = $"{m_screenResolutions[i].width} x {m_screenResolutions[i].height} @{m_screenResolutions[i].refreshRate}hz";
                 resolutionOptionsList.Add(resolution);
 
@@ -122,14 +115,43 @@ namespace ThreeDeePongProto.Shared.Settings
             m_screenModiList = new();
             uint currentPlayer = (uint)m_matchUIStates.EPlayerAmount;
             //Automatize the shown ECameraModi in the 'm_screenSplitDropdown' based on the player in the match.
-            m_maxScreenModiIndex = currentPlayer switch
-            {
-                2 => m_maxScreenModiIndex = (int)ECameraModi.EndCount - 1,  //m_maxScreenModiIndex = EPlayerAmount.Four
-                4 => m_maxScreenModiIndex = (int)ECameraModi.EndCount,     //m_maxScreenModiIndex = EPlayerAmount.EndCount
-                _ => m_maxScreenModiIndex = (int)ECameraModi.EndCount,
-            };
 
-            for (int i = 0; i < m_maxScreenModiIndex; i++)
+            switch (currentPlayer)
+            {
+                case 0:
+                {
+                    m_eCameraMode = ECameraModi.None;
+                    m_maxScreenModiIndex = 0;
+                    break;
+                }
+                case 1:
+                {
+                    m_eCameraMode = ECameraModi.SingleCam;
+                    m_maxScreenModiIndex = 1;
+                    break;
+                }
+                case 2:
+                {
+                    //TODO: Switch based on PlayerSetting.
+                    m_eCameraMode = ECameraModi.Horizontal;
+                    m_maxScreenModiIndex = 2;
+                    break;
+                }
+                case 4:
+                {
+                    m_eCameraMode = ECameraModi.Quartet;
+                    m_maxScreenModiIndex = 4;
+                    break;
+                }
+                default:
+                {
+                    m_eCameraMode = ECameraModi.SingleCam;
+                    m_maxScreenModiIndex = 1;
+                    break;
+                }
+            }
+
+            for (int i = 0; i < m_maxScreenModiIndex + 1; i++)
             {
                 m_screenModiList.Add($"{(ECameraModi)i}");
             }
@@ -145,7 +167,29 @@ namespace ThreeDeePongProto.Shared.Settings
             m_screenSplitDropdown.RefreshShownValue();
         }
 
-        //Set by UI-SplitscreenDropdown.
+        private void InitialUISetup()
+        {
+            m_qualityDropdown.value = m_graphicUIStates.QualityLevelIndex;
+            m_resolutionDropdown.value = m_graphicUIStates.SelectedResolutionIndex;
+            m_fullScreenToggle.isOn = m_graphicUIStates.FullScreenMode;
+            SetFullScreenText(m_fullScreenToggle.isOn);
+            m_screenSplitDropdown.value = (int)m_graphicUIStates.SetCameraMode;
+        }
+
+        private void SetFullScreenText(bool _fullScreen)
+        {
+            switch (_fullScreen)
+            {
+                case true:
+                    m_fullScreenToggleText.text = "On";
+                    break;
+                case false:
+                    m_fullScreenToggleText.text = "Off";
+                    break;
+            }
+        }
+
+        //Set by UI-SplitScreenDropdown.
         public void SetActiveCameras()
         {
             m_graphicUIStates.SetCameraMode = (ECameraModi)m_screenSplitDropdown.value;
@@ -170,13 +214,14 @@ namespace ThreeDeePongProto.Shared.Settings
                 m_graphicUIStates.SelectedResolutionIndex = _resolutionIndex;
         }
 
-        public void SetFullscreen(bool _setFullscreen)
+        public void SetFullScreen(bool _setFullScreen)
         {
-            Screen.fullScreen = _setFullscreen;
-            m_fullscreenToggle.isOn = _setFullscreen;
+            Screen.fullScreen = _setFullScreen;
+            m_fullScreenToggle.isOn = _setFullScreen;
+            SetFullScreenText(m_fullScreenToggle.isOn);
 
             if (m_graphicUIStates != null)
-                m_graphicUIStates.FullScreenMode = _setFullscreen;
+                m_graphicUIStates.FullScreenMode = _setFullScreen;
         }
 
         public void ReSetDefault()
@@ -184,7 +229,8 @@ namespace ThreeDeePongProto.Shared.Settings
             m_qualityDropdown.value = m_systemQualityLevel;
             //Index equal to your System-Resolution, set by 'GetAvailableResolutions();'.
             m_resolutionDropdown.value = m_currentResolutionIndex;
-            m_fullscreenToggle.isOn = m_defaultFullscreen;
+            m_fullScreenToggle.isOn = m_defaultFullScreen;
+            SetFullScreenText(m_fullScreenToggle.isOn);
             m_screenSplitDropdown.value = (int)m_eCameraMode;
         }
     }

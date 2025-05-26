@@ -59,13 +59,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1507424125540448104, guid: 6b3cde808c486be4f985015a746710af,
         type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 1507424125540448104, guid: 6b3cde808c486be4f985015a746710af,
-        type: 3}
       propertyPath: m_SizeDelta.y
-      value: 40
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1507424125540448104, guid: 6b3cde808c486be4f985015a746710af,
         type: 3}
@@ -77,15 +72,55 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3934292565719495781, guid: 6b3cde808c486be4f985015a746710af,
+        type: 3}
+      propertyPath: m_ChildControlHeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3934292565719495781, guid: 6b3cde808c486be4f985015a746710af,
+        type: 3}
+      propertyPath: m_ChildForceExpandWidth
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3934292565719495781, guid: 6b3cde808c486be4f985015a746710af,
+        type: 3}
+      propertyPath: m_ChildForceExpandHeight
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4018555338004189734, guid: 6b3cde808c486be4f985015a746710af,
         type: 3}
       propertyPath: m_text
-      value: 
+      value: On
       objectReference: {fileID: 0}
     - target: {fileID: 4018555338004189734, guid: 6b3cde808c486be4f985015a746710af,
         type: 3}
       propertyPath: m_fontSize
-      value: 36
+      value: 35.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413879616462497704, guid: 6b3cde808c486be4f985015a746710af,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413879616462497704, guid: 6b3cde808c486be4f985015a746710af,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413879616462497704, guid: 6b3cde808c486be4f985015a746710af,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413879616462497704, guid: 6b3cde808c486be4f985015a746710af,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413879616462497704, guid: 6b3cde808c486be4f985015a746710af,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5108492720276076825, guid: 6b3cde808c486be4f985015a746710af,
         type: 3}
@@ -110,7 +145,7 @@ PrefabInstance:
     - target: {fileID: 7419922657392030813, guid: 6b3cde808c486be4f985015a746710af,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7419922657392030813, guid: 6b3cde808c486be4f985015a746710af,
         type: 3}
@@ -119,17 +154,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7419922657392030813, guid: 6b3cde808c486be4f985015a746710af,
         type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 7419922657392030813, guid: 6b3cde808c486be4f985015a746710af,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
+      propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7419922657392030813, guid: 6b3cde808c486be4f985015a746710af,
         type: 3}
-      propertyPath: m_AnchoredPosition.y
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7419922657392030813, guid: 6b3cde808c486be4f985015a746710af,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7556320360876788546, guid: 6b3cde808c486be4f985015a746710af,

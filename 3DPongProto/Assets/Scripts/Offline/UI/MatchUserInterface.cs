@@ -112,21 +112,21 @@ namespace ThreeDeePongProto.Offline.UI
                     UpdateVisibleTransformList(m_playerParentTransform[0]);
                     break;
                 }
-                case ECameraModi.TwoVertical:
+                case ECameraModi.Vertical:
                 {
                     m_playerParentTransform[0].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height + m_playerInfoYPos, 0);
                     m_playerParentTransform[1].position = new Vector3(_runtimeFullsizeRect.width * 0.5f + m_playerInfoXPos, _runtimeFullsizeRect.height + m_playerInfoYPos, 0);
                     UpdateVisibleTransformList(m_playerParentTransform[0], m_playerParentTransform[1]);
                     break;
                 }
-                case ECameraModi.TwoHorizontal:
+                case ECameraModi.Horizontal:
                 {
                     m_playerParentTransform[0].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height * 0.5f + m_playerInfoYPos, 0);
                     m_playerParentTransform[1].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height + m_playerInfoYPos, 0);
                     UpdateVisibleTransformList(m_playerParentTransform[0], m_playerParentTransform[1]);
                     break;
                 }
-                case ECameraModi.FourSplit:
+                case ECameraModi.Quartet:
                 {
                     m_playerParentTransform[0].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height * 0.5f + m_playerInfoYPos, 0);
                     m_playerParentTransform[1].position = new Vector3(_runtimeFullsizeRect.width * 0.5f + m_playerInfoXPos, _runtimeFullsizeRect.height * 0.5f + m_playerInfoYPos, 0);

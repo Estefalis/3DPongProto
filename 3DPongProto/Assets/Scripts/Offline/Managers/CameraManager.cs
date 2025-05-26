@@ -187,27 +187,27 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                     SetSingleCamera();
                     break;
                 }
-                case ECameraModi.TwoVertical:
+                case ECameraModi.Vertical:
                 {
-                    if (AvailableCameras[1] != null && m_lastSetCameraMode == ECameraModi.TwoVertical)
+                    if (AvailableCameras[1] != null && m_lastSetCameraMode == ECameraModi.Vertical)
                         SetCamerasVertical(AvailableCameras[0], AvailableCameras[1]);
                     break;
                 }
-                case ECameraModi.TwoHorizontal:
+                case ECameraModi.Horizontal:
                 {
-                    if (AvailableCameras[1] != null && m_lastSetCameraMode == ECameraModi.TwoHorizontal)
+                    if (AvailableCameras[1] != null && m_lastSetCameraMode == ECameraModi.Horizontal)
                         SetCamerasHorizontal(AvailableCameras[0], AvailableCameras[1]);
                     break;
                 }
-                case ECameraModi.FourSplit:
+                case ECameraModi.Quartet:
                 {
-                    if (AvailableCameras[2] != null && AvailableCameras[3] != null && m_lastSetCameraMode == ECameraModi.FourSplit)
+                    if (AvailableCameras[2] != null && AvailableCameras[3] != null && m_lastSetCameraMode == ECameraModi.Quartet)
                         SetFourSplit(AvailableCameras[0], AvailableCameras[1], AvailableCameras[2], AvailableCameras[3]);
                     break;
                 }
-                default:    //TwoHorizontal
-                    m_lastSetCameraMode = ECameraModi.TwoHorizontal;
-                    if (AvailableCameras[1] != null && m_lastSetCameraMode == ECameraModi.TwoHorizontal)
+                default:    //Horizontal
+                    m_lastSetCameraMode = ECameraModi.Horizontal;
+                    if (AvailableCameras[1] != null && m_lastSetCameraMode == ECameraModi.Horizontal)
                         SetCamerasHorizontal(AvailableCameras[0], AvailableCameras[1]);
                     break;
             }
@@ -225,22 +225,22 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                     RuntimeFullsizeRect = AvailableCameras[0].pixelRect;
                     break;
                 }
-                case ECameraModi.TwoVertical:
+                case ECameraModi.Vertical:
                 {
                     RuntimeFullsizeRect = new Rect(0, 0, AvailableCameras[0].pixelRect.width + AvailableCameras[1].pixelRect.width, AvailableCameras[0].pixelRect.height);
                     break;
                 }
-                case ECameraModi.TwoHorizontal:
+                case ECameraModi.Horizontal:
                 {
                     RuntimeFullsizeRect = new Rect(0, 0, AvailableCameras[0].pixelRect.width, AvailableCameras[0].pixelRect.height + AvailableCameras[1].pixelRect.height);
                     break;
                 }
-                case ECameraModi.FourSplit:
+                case ECameraModi.Quartet:
                 {
                     RuntimeFullsizeRect = new Rect(0, 0, AvailableCameras[0].pixelRect.width + AvailableCameras[1].pixelRect.width, AvailableCameras[0].pixelRect.height + AvailableCameras[1].pixelRect.height);
                     break;
                 }
-                default:    //TwoHorizontal
+                default:    //Horizontal
                 {
                     RuntimeFullsizeRect = new Rect(0, 0, AvailableCameras[0].pixelRect.width, AvailableCameras[0].pixelRect.height + AvailableCameras[1].pixelRect.height);
                     break;

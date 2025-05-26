@@ -125,8 +125,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         //                m_playerWindowID = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
         //                break;
         //            }
-        //            //TwoVertical
-        //            case ECameraModi.TwoVertical:
+        //            //Vertical
+        //            case ECameraModi.Vertical:
         //            {
         //                //if _mousePosition.x > Cam1.xMin m_playerWindowID = IndexOf Cam1, else IndexOf Cam0.
         //                m_playerWindowID = _mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin
@@ -134,8 +134,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         //                    : m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
         //                break;
         //            }
-        //            //TwoHorizontal
-        //            case ECameraModi.TwoHorizontal:
+        //            //Horizontal
+        //            case ECameraModi.Horizontal:
         //            {
         //                //if _mousePosition.y > Cam1.yMin m_playerWindowID = IndexOf Cam1, else IndexOf Cam0.
         //                m_playerWindowID = _mousePosition.y >= m_cameraManager.AvailableCameras[1].pixelRect.yMin
@@ -143,8 +143,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         //                    : m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
         //                break;
         //            }
-        //            //FourSplit
-        //            case ECameraModi.FourSplit:
+        //            //Quartet
+        //            case ECameraModi.Quartet:
         //            {
         //                if (m_mousePosition.x < m_cameraManager.AvailableCameras[0].pixelRect.xMax && m_mousePosition.y < m_cameraManager.AvailableCameras[0].pixelRect.yMax)
         //                {

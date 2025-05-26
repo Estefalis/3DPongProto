@@ -268,14 +268,14 @@ namespace ThreeDeePongProto.Shared.UI
                 case 1:
                 {
                     m_matchUIStates.EPlayerAmount = EPlayerAmount.Two;
-                    m_graphicUiStates.SetCameraMode = ECameraModi.TwoHorizontal;
+                    m_graphicUiStates.SetCameraMode = ECameraModi.Horizontal;
                     ObjectsToHide(false, false, true);
                     break;
                 }
                 case 2:
                 {
                     m_matchUIStates.EPlayerAmount = EPlayerAmount.Four;
-                    m_graphicUiStates.SetCameraMode = ECameraModi.FourSplit;
+                    m_graphicUiStates.SetCameraMode = ECameraModi.Quartet;
                     ObjectsToHide(true, true, true);
                     break;
                 }

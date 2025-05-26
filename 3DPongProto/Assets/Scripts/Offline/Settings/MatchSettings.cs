@@ -32,15 +32,15 @@ namespace ThreeDeePongProto.Shared.Settings
 
         #region Line-Ups
         [Header("Line-Up")]
-        [SerializeField] private TMP_Dropdown[] m_frontLineDds;
-        [SerializeField] private TMP_Dropdown[] m_backLineDds;
-        [SerializeField] private int m_frontLineDefaultValue = 0;
-        [SerializeField] private int m_backLineDefaultValue = 0;
-        [Space]
         [SerializeField] private TextMeshProUGUI m_backFloatText;
         [SerializeField] private TextMeshProUGUI m_frontFloatText;
         [SerializeField] private float m_distanceSliderDefaults = 0;
         [SerializeField] private float m_sliderAdjustStep = 0.01f;
+        [Space]
+        [SerializeField] private TMP_Dropdown[] m_frontLineDds;
+        [SerializeField] private TMP_Dropdown[] m_backLineDds;
+        [SerializeField] private int m_frontLineDefaultValue = 0;
+        [SerializeField] private int m_backLineDefaultValue = 0;
         #endregion
 
         #region Rounds and Points
@@ -52,16 +52,16 @@ namespace ThreeDeePongProto.Shared.Settings
         #region Hiding
         [Header("Hiding")]
         [SerializeField] private Transform m_frontParentTransform;
-        [SerializeField] private Transform m_backPTwoDdGroup;
+        [SerializeField] private Transform m_backLineDdGroup;
         [SerializeField] private TextMeshProUGUI m_backLineUpText;
         #endregion
         #endregion
         [Space]
 
         #region Lists and Dictionaries
-        [SerializeField] private List<Button> m_reduceButtonKeys = new List<Button>();
-        [SerializeField] private List<Button> m_increaseButtonKeys = new List<Button>();
-        [SerializeField] private List<Slider> m_distanceSliderValues = new List<Slider>();
+        [SerializeField] private List<Button> m_reduceButtonKeys = new();
+        [SerializeField] private List<Button> m_increaseButtonKeys = new();
+        [SerializeField] private List<Slider> m_distanceSliderValues = new();
 
         private List<string> m_roundsDdList;
         private List<string> m_maxPointsDdList;
@@ -72,8 +72,8 @@ namespace ThreeDeePongProto.Shared.Settings
         private List<string> m_playersTeamTwo;
 
         #region Key-Value-Connection
-        private readonly Dictionary<Button, Slider> m_reduceLineSlider = new Dictionary<Button, Slider>();
-        private readonly Dictionary<Button, Slider> m_increaseLineSlider = new Dictionary<Button, Slider>();
+        private readonly Dictionary<Button, Slider> m_reduceLineSlider = new();
+        private readonly Dictionary<Button, Slider> m_increaseLineSlider = new();
         #endregion
         #endregion
 
@@ -98,8 +98,8 @@ namespace ThreeDeePongProto.Shared.Settings
         private readonly string m_matchFileName = "/Match";
         private readonly string m_fileFormat = ".json";
 
-        private IPersistentData m_persistentData = new SerializingData();
-        private bool m_encryptionEnabled = false;
+        private readonly IPersistentData m_persistentData = new SerializingData();
+        private readonly bool m_encryptionEnabled = false;
         #endregion
 
         private void Awake()
@@ -503,16 +503,16 @@ namespace ThreeDeePongProto.Shared.Settings
             {
                 case 4:
                 {
-                    //In case 4 PlayerCharacter shall play, set the SplitScreen Mode to load to ECameraModi.FourSplit.
-                    m_graphicUiStates.SetCameraMode = ECameraModi.FourSplit;
+                    //In case 4 PlayerCharacter shall play, set the SplitScreen Mode to load to ECameraModi.Quartet.
+                    m_graphicUiStates.SetCameraMode = ECameraModi.Quartet;
                     ObjectsToHide(true, true, 225.0f);
                     SetupFrontlineDropdowns();
                     break;
                 }
                 case 2:
                 {
-                    //In case 2 PlayerCharacter shall play, set the SplitScreen Mode to load to ECameraModi.TwoHorizontal.
-                    m_graphicUiStates.SetCameraMode = ECameraModi.TwoHorizontal;
+                    //In case 2 PlayerCharacter shall play, set the SplitScreen Mode to load to ECameraModi.Horizontal.
+                    m_graphicUiStates.SetCameraMode = ECameraModi.Horizontal;
                     ObjectsToHide(false, false, 714.0f);
                     break;
                 }
@@ -522,7 +522,7 @@ namespace ThreeDeePongProto.Shared.Settings
         private void ObjectsToHide(bool _frontParent, bool _backDropdowns, float _backTextWidth)
         {
             m_frontParentTransform.gameObject.SetActive(_frontParent);
-            m_backPTwoDdGroup.gameObject.SetActive(_backDropdowns);
+            m_backLineDdGroup.gameObject.SetActive(_backDropdowns);
             m_backLineUpText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _backTextWidth);
         }
 
