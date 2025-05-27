@@ -981,7 +981,7 @@ MonoBehaviour:
   m_maxPointsDropdown: {fileID: 741551068115327129}
   m_finishButton: {fileID: 1450293847}
   m_contentParentTransform: {fileID: 383893856}
-  m_highscoreEntryChildPrefab: {fileID: 6225738724942728192, guid: 9bad064e1da580c4b9b255f8a0043f6c,
+  m_highScoreEntryChildPrefab: {fileID: 6225738724942728192, guid: 9bad064e1da580c4b9b255f8a0043f6c,
     type: 3}
   m_noDataPrefab: {fileID: 7876011991351949999, guid: 12f70dfacccaa6d448fd783e4a2a9277,
     type: 3}
@@ -5073,18 +5073,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1793610832 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8944666342380593882, guid: 430c392282a61bb4482c69a3b60f8b8e,
-    type: 3}
-  m_PrefabInstance: {fileID: 5523567775437958938}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1793610833 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3325953363085553670, guid: 430c392282a61bb4482c69a3b60f8b8e,
@@ -7951,7 +7939,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 4938937939454417543}
+      objectReference: {fileID: 0}
     - target: {fileID: 3370736242798330068, guid: cf067c36ec1381742a9398a8cf109ae8,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -8041,7 +8029,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 1793610832}
+      objectReference: {fileID: 0}
     - target: {fileID: 8100183243731048185, guid: cf067c36ec1381742a9398a8cf109ae8,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -10126,18 +10114,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &4938937939454417543 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6415343725603148121, guid: 430c392282a61bb4482c69a3b60f8b8e,
-    type: 3}
-  m_PrefabInstance: {fileID: 5523567775437958938}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5258602198036560004
 GameObject:
   m_ObjectHideFlags: 0

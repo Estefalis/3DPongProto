@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace ThreeDeePongProto.Shared.Highscores
 {
-    public class HighscoreBoard : MonoBehaviour
+    public class HighScoreBoard : MonoBehaviour
     {
         private enum EListSortMode
         {
@@ -27,29 +27,28 @@ namespace ThreeDeePongProto.Shared.Highscores
         [SerializeField] private Button m_finishButton;
         [Space]
         [SerializeField] private Transform m_contentParentTransform;
-        [SerializeField] private HighscoreEntryPrefab m_highscoreEntryChildPrefab;
+        [SerializeField] private HighscoreEntryPrefab m_highScoreEntryChildPrefab;
         [SerializeField] private GameObject m_noDataPrefab;
-        //[SerializeField] private int m_maxHighscoreSlots;
 
         [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
 
         [SerializeField] private bool m_sortLowToHigh;
 
+        [SerializeField] private EListSortMode m_listSortMode;
+
         private List<string> m_roundsDdList;
         private List<string> m_maxPointsDdList;
-        private int m_firstRoundOffset = 1, m_firstPointOffset = 1;
-
-        [SerializeField] private EListSortMode m_listSortMode;
+        private readonly int m_firstRoundOffset = 1;
+        private readonly int m_firstPointOffset = 1;
         private int m_parentChildCount;
-        //private float m_slotHeight;
 
         #region Serialization
-        private readonly string m_highscoreListFolderPath = "/SaveData/Highscore Lists";
+        private readonly string m_highScoreListFolderPath = "/SaveData/HighScore Lists";
         private readonly string m_highscoresFileName = "/Highscores";
         private readonly string m_fileFormat = ".json";
 
-        private IPersistentData m_persistentData = new SerializingData();
+        private readonly IPersistentData m_persistentData = new SerializingData();
         [SerializeField] private bool m_encryptionEnabled = false;
         #endregion
 
@@ -57,8 +56,8 @@ namespace ThreeDeePongProto.Shared.Highscores
         {
             SetupDropdowns();
 
-            //TODO: Action to join load these inside the game, so the highscore list can be used outside of matches.
-            //m_slotHeight = m_highscoreEntryChildPrefab.GetComponent<RectTransform>().rect.height;
+            //TODO: Action to join load these inside the game, so the highScore list can be used outside of matches.
+            //m_slotHeight = m_highScoreEntryChildPrefab.GetComponent<RectTransform>().rect.height;
             m_parentChildCount = m_contentParentTransform.GetComponent<Transform>().childCount;
 
             m_eventSystem.SetSelectedGameObject(m_finishButton.gameObject);
@@ -69,8 +68,8 @@ namespace ThreeDeePongProto.Shared.Highscores
 
         private void OnEnable()
         {
-            LocalMatchManager.AStartWinProcedure += DisplayHighscoreBoard;
-            LocalMatchManager.ALoadUpHighScores += LoadHighscoresOnGameEnd;
+            LocalMatchManager.AStartWinProcedure += DisplayHighScoreBoard;
+            LocalMatchManager.ALoadUpHighScores += LoadHighScoresOnGameEnd;
 
             m_roundsDropdown.onValueChanged.AddListener(OnRoundDropdownChanges);
             m_maxPointsDropdown.onValueChanged.AddListener(OnMaxPointDropdownChanges);
@@ -80,8 +79,8 @@ namespace ThreeDeePongProto.Shared.Highscores
         {
             gameObject.SetActive(false);
 
-            LocalMatchManager.AStartWinProcedure -= DisplayHighscoreBoard;
-            LocalMatchManager.ALoadUpHighScores -= LoadHighscoresOnGameEnd;
+            LocalMatchManager.AStartWinProcedure -= DisplayHighScoreBoard;
+            LocalMatchManager.ALoadUpHighScores -= LoadHighScoresOnGameEnd;
         }
 
         private void SetupDropdowns()
@@ -97,7 +96,7 @@ namespace ThreeDeePongProto.Shared.Highscores
                 m_roundsDdList.Add(i.ToString());
             }
             m_roundsDropdown.AddOptions(m_roundsDdList);
-            //TODO: Option to set this dropdown value, when people want to check Highscores from the mainmenu.
+            //TODO: Option to set this dropdown value, when people want to check Highscores from the mainMenu.
             m_roundsDropdown.value = m_matchUIStates.LastRoundDdIndex;
             m_roundsDropdown.RefreshShownValue();
 
@@ -110,38 +109,38 @@ namespace ThreeDeePongProto.Shared.Highscores
                 m_maxPointsDdList.Add(i.ToString());
             }
             m_maxPointsDropdown.AddOptions(m_maxPointsDdList);
-            //TODO: Option to set this dropdown value, when people want to check Highscores from the mainmenu.
+            //TODO: Option to set this dropdown value, when people want to check Highscores from the mainMenu.
             m_maxPointsDropdown.value = m_matchUIStates.LastMaxPointDdIndex;
             m_maxPointsDropdown.RefreshShownValue();
         }
 
         /// <summary>
-        /// Loads the HighscoreList with the current WinValue after the game ended.
+        /// Loads the HighScoreList with the current WinValue after the game ended.
         /// </summary>
-        private void LoadHighscoresOnGameEnd()
+        private void LoadHighScoresOnGameEnd()
         {
             m_disableTransform.gameObject.SetActive(true);
 
             foreach (Transform child in m_contentParentTransform)
                 Destroy(child.gameObject);
 
-            HighscoreList highscoreList = m_persistentData.LoadData<HighscoreList>($"{m_highscoreListFolderPath}/{m_matchUIStates.LastRoundDdIndex}/{m_matchUIStates.LastMaxPointDdIndex}", m_highscoresFileName, m_fileFormat, m_encryptionEnabled);
+            HighscoreList highScoreList = m_persistentData.LoadData<HighscoreList>($"{m_highScoreListFolderPath}/{m_matchUIStates.LastRoundDdIndex}/{m_matchUIStates.LastMaxPointDdIndex}", m_highscoresFileName, m_fileFormat, m_encryptionEnabled);
 
-            if (highscoreList == null)
+            if (highScoreList == null)
             {
-                highscoreList = new HighscoreList();
-                AddNewEntryDataSlot(highscoreList);
+                highScoreList = new HighscoreList();
+                AddNewEntryDataSlot(highScoreList);
                 return;
             }
             else
             {
                 //SortMode None on the first time. (Loaded as saved.)
-                SortListByEnum(highscoreList);
+                SortListByEnum(highScoreList);
 
                 m_parentChildCount = 0;
-                foreach (HighscoreEntryData highscores in highscoreList.highscores)
+                foreach (HighscoreEntryData highscores in highScoreList.highscores)
                 {
-                    HighscoreEntryPrefab highscoreEntrySlot = Instantiate(m_highscoreEntryChildPrefab, m_contentParentTransform);
+                    HighscoreEntryPrefab highScoreEntrySlot = Instantiate(m_highScoreEntryChildPrefab, m_contentParentTransform);
 
                     int rank = +1 + m_parentChildCount++;
                     string rankSuffix = rank switch
@@ -152,10 +151,10 @@ namespace ThreeDeePongProto.Shared.Highscores
                         _ => $"{rank}th",
                     };
 
-                    highscoreEntrySlot.Initialize(rankSuffix, highscores.SetMaxRounds, highscores.SetMaxPoints, highscores.TotalPoints, highscores.WinningPlayer, highscores.MatchWinDate, highscores.TotalPlaytime);
+                    highScoreEntrySlot.Initialize(rankSuffix, highscores.SetMaxRounds, highscores.SetMaxPoints, highscores.TotalPoints, highscores.WinningPlayer, highscores.MatchWinDate, highscores.TotalPlaytime);
                 }
 
-                AddNewEntryDataSlot(highscoreList);
+                AddNewEntryDataSlot(highScoreList);
             }
         }
 
@@ -170,7 +169,7 @@ namespace ThreeDeePongProto.Shared.Highscores
         }
 
         /// <summary>
-        /// Manual HighscoreLists-Switch by DropdownChanges, after the Game ended, to see other HighscoreLists.
+        /// Manual HighScoreLists-Switch by DropdownChanges, after the Game ended, to see other HighScoreLists.
         /// </summary>
         /// <param name="_roundValue"></param>
         /// <param name="_maxPointValue"></param>
@@ -179,9 +178,9 @@ namespace ThreeDeePongProto.Shared.Highscores
             foreach (Transform child in m_contentParentTransform)
                 Destroy(child.gameObject);
 
-            HighscoreList highscoreList = m_persistentData.LoadData<HighscoreList>($"{m_highscoreListFolderPath}/{_roundValue}/{_maxPointValue}", m_highscoresFileName, m_fileFormat, m_encryptionEnabled);
+            HighscoreList highScoreList = m_persistentData.LoadData<HighscoreList>($"{m_highScoreListFolderPath}/{_roundValue}/{_maxPointValue}", m_highscoresFileName, m_fileFormat, m_encryptionEnabled);
 
-            if (highscoreList == null)
+            if (highScoreList == null)
             {
                 _ = Instantiate(m_noDataPrefab, m_contentParentTransform);  //_ replaces GameObject noDataNotification, if the GameObject isn't used.
                 //noDataNotification.gameObject.SetActive(true);
@@ -189,12 +188,12 @@ namespace ThreeDeePongProto.Shared.Highscores
             }
 
             //SortMode None on the first time. (Loaded as saved.)
-            SortListByEnum(highscoreList);
+            SortListByEnum(highScoreList);
 
             m_parentChildCount = 0;
-            foreach (HighscoreEntryData highscores in highscoreList.highscores)
+            foreach (HighscoreEntryData highscores in highScoreList.highscores)
             {
-                HighscoreEntryPrefab highscoreEntrySlot = Instantiate(m_highscoreEntryChildPrefab, m_contentParentTransform);
+                HighscoreEntryPrefab highScoreEntrySlot = Instantiate(m_highScoreEntryChildPrefab, m_contentParentTransform);
 
                 int rank = +1 + m_parentChildCount++;
                 string rankSuffix = rank switch
@@ -205,11 +204,11 @@ namespace ThreeDeePongProto.Shared.Highscores
                     _ => $"{rank}th",
                 };
 
-                highscoreEntrySlot.Initialize(rankSuffix, highscores.SetMaxRounds, highscores.SetMaxPoints, highscores.TotalPoints, highscores.WinningPlayer, highscores.MatchWinDate, highscores.TotalPlaytime);
+                highScoreEntrySlot.Initialize(rankSuffix, highscores.SetMaxRounds, highscores.SetMaxPoints, highscores.TotalPoints, highscores.WinningPlayer, highscores.MatchWinDate, highscores.TotalPlaytime);
             }
         }
 
-        private HighscoreList SortListByEnum(HighscoreList _highscoreList)
+        private HighscoreList SortListByEnum(HighscoreList _highScoreList)
         {
             switch (m_listSortMode)
             {
@@ -218,108 +217,108 @@ namespace ThreeDeePongProto.Shared.Highscores
                 case EListSortMode.TotalPoints:
                 {
                     m_sortLowToHigh = !m_sortLowToHigh;
-                    SortListByTotalPoints(_highscoreList);
+                    SortListByTotalPoints(_highScoreList);
                     break;
                 }
                 case EListSortMode.PlayerNames:
                 { break; }
                 case EListSortMode.MatchWinDate:
                 {
-                    //The WinDate SortBehaviour was partly strange. Sending the parameter here, while don't elsewhere, currently avoids bool setting errors. 
+                    //The WinDate SortBehavior was partly strange. Sending the parameter here, while don't elsewhere, currently avoids bool setting errors. 
                     m_sortLowToHigh = !m_sortLowToHigh;
-                    SortListByMatchWinDate(_highscoreList, m_sortLowToHigh);
+                    SortListByMatchWinDate(_highScoreList, m_sortLowToHigh);
                     break;
                 }
                 case EListSortMode.TotalPlaytime:
                 {
                     m_sortLowToHigh = !m_sortLowToHigh;
-                    SortListByTotalPlaytime(_highscoreList);
+                    SortListByTotalPlaytime(_highScoreList);
                     break;
                 }
             }
 
-            return _highscoreList;
+            return _highScoreList;
         }
 
-        private HighscoreList SortListByTotalPoints(HighscoreList _highscoreList)
+        private HighscoreList SortListByTotalPoints(HighscoreList _highScoreList)
         {
             #region Linq-IfElse
             //if (m_sortLowToHigh)
-            //    _highscoreList.highscores = _highscoreList.highscores.OrderBy(linqSorts => linqSorts.TotalPoints).ToList();
+            //    _highScoreList.highscores = _highScoreList.highscores.OrderBy(linqSorts => linqSorts.TotalPoints).ToList();
             //else
-            //    _highscoreList.highscores = _highscoreList.highscores.OrderByDescending(linqSorts => linqSorts.TotalPoints).ToList();
+            //    _highScoreList.highscores = _highScoreList.highscores.OrderByDescending(linqSorts => linqSorts.TotalPoints).ToList();
 
-            //return _highscoreList;
+            //return _highScoreList;
             #endregion
 
             #region Linq-Switch
             switch (m_sortLowToHigh)
             {
                 case true:
-                    _highscoreList.highscores = _highscoreList.highscores.OrderBy(linqSorts => linqSorts.TotalPoints).ToList();
+                    _highScoreList.highscores = _highScoreList.highscores.OrderBy(linqSorts => linqSorts.TotalPoints).ToList();
                     break;
                 case false:
-                    _highscoreList.highscores = _highscoreList.highscores.OrderByDescending(linqSorts => linqSorts.TotalPoints).ToList();
+                    _highScoreList.highscores = _highScoreList.highscores.OrderByDescending(linqSorts => linqSorts.TotalPoints).ToList();
                     break;
             }
 
-            return _highscoreList;
+            return _highScoreList;
             #endregion
         }
 
-        private HighscoreList SortListByMatchWinDate(HighscoreList _highscoreList, bool _sortLowToHigh)
+        private HighscoreList SortListByMatchWinDate(HighscoreList _highScoreList, bool _sortLowToHigh)
         {
             #region Linq-IfElse
             //if (m_sortLowToHigh)
-            //    _highscoreList.highscores = _highscoreList.highscores.OrderBy(linqSorts => linqSorts.MatchWinDate).ToList();
+            //    _highScoreList.highscores = _highScoreList.highscores.OrderBy(linqSorts => linqSorts.MatchWinDate).ToList();
             //else
-            //    _highscoreList.highscores = _highscoreList.highscores.OrderByDescending(linqSorts => linqSorts.MatchWinDate).ToList();
+            //    _highScoreList.highscores = _highScoreList.highscores.OrderByDescending(linqSorts => linqSorts.MatchWinDate).ToList();
 
-            //return _highscoreList;
+            //return _highScoreList;
             #endregion
 
             #region Linq-Switch
             switch (_sortLowToHigh)
             {
                 case true:
-                    _highscoreList.highscores = _highscoreList.highscores.OrderBy(linqSorts => linqSorts.MatchWinDate).ToList();
+                    _highScoreList.highscores = _highScoreList.highscores.OrderBy(linqSorts => linqSorts.MatchWinDate).ToList();
                     break;
                 case false:
-                    _highscoreList.highscores = _highscoreList.highscores.OrderByDescending(linqSorts => linqSorts.MatchWinDate).ToList();
+                    _highScoreList.highscores = _highScoreList.highscores.OrderByDescending(linqSorts => linqSorts.MatchWinDate).ToList();
                     break;
             }
 
-            return _highscoreList;
+            return _highScoreList;
             #endregion
         }
 
-        private HighscoreList SortListByTotalPlaytime(HighscoreList _highscoreList)
+        private HighscoreList SortListByTotalPlaytime(HighscoreList _highScoreList)
         {
             #region Linq-IfElse
             //if (m_sortLowToHigh)
-            //    _highscoreList.highscores = _highscoreList.highscores.OrderBy(linqSorts => linqSorts.TotalPlaytime).ToList();
+            //    _highScoreList.highscores = _highScoreList.highscores.OrderBy(linqSorts => linqSorts.TotalPlaytime).ToList();
             //else
-            //    _highscoreList.highscores = _highscoreList.highscores.OrderByDescending(linqSorts => linqSorts.TotalPlaytime).ToList();
+            //    _highScoreList.highscores = _highScoreList.highscores.OrderByDescending(linqSorts => linqSorts.TotalPlaytime).ToList();
 
-            //return _highscoreList;
+            //return _highScoreList;
             #endregion
 
             #region Linq-Switch
             switch (m_sortLowToHigh)
             {
                 case true:
-                    _highscoreList.highscores = _highscoreList.highscores.OrderBy(linqSorts => linqSorts.TotalPlaytime).ToList();
+                    _highScoreList.highscores = _highScoreList.highscores.OrderBy(linqSorts => linqSorts.TotalPlaytime).ToList();
                     break;
                 case false:
-                    _highscoreList.highscores = _highscoreList.highscores.OrderByDescending(linqSorts => linqSorts.TotalPlaytime).ToList();
+                    _highScoreList.highscores = _highScoreList.highscores.OrderByDescending(linqSorts => linqSorts.TotalPlaytime).ToList();
                     break;
             }
 
-            return _highscoreList;
+            return _highScoreList;
             #endregion
         }
 
-        private void DisplayHighscoreBoard()
+        private void DisplayHighScoreBoard()
         {
             m_disableTransform.gameObject.SetActive(true);
         }
@@ -370,7 +369,7 @@ namespace ThreeDeePongProto.Shared.Highscores
         }
         #endregion
 
-        private void AddNewEntryDataSlot(HighscoreList _highscoreList)
+        private void AddNewEntryDataSlot(HighscoreList _highScoreList)
         {
             int rank = +1 + m_parentChildCount++;
             string rankSuffix = rank switch
@@ -381,15 +380,15 @@ namespace ThreeDeePongProto.Shared.Highscores
                 _ => $"{rank}th",
             };
 
-            _highscoreList.highscores.Add(new HighscoreEntryData(m_matchUIStates.LastRoundDdIndex, m_matchUIStates.LastMaxPointDdIndex, m_matchValues.TotalPoints, m_matchValues.WinningPlayer, m_matchValues.MatchWinDate, m_matchValues.TotalPlaytime));
+            _highScoreList.highscores.Add(new HighscoreEntryData(m_matchUIStates.LastRoundDdIndex, m_matchUIStates.LastMaxPointDdIndex, m_matchValues.TotalPoints, m_matchValues.WinningPlayer, m_matchValues.MatchWinDate, m_matchValues.TotalPlaytime));
 
-            HighscoreEntryPrefab highscoreEntrySlot = Instantiate(m_highscoreEntryChildPrefab, m_contentParentTransform);
-            highscoreEntrySlot.Initialize(rankSuffix, m_matchUIStates.LastRoundDdIndex, m_matchUIStates.LastMaxPointDdIndex, m_matchValues.TotalPoints, m_matchValues.WinningPlayer, m_matchValues.MatchWinDate, m_matchValues.TotalPlaytime);
+            HighscoreEntryPrefab highScoreEntrySlot = Instantiate(m_highScoreEntryChildPrefab, m_contentParentTransform);
+            highScoreEntrySlot.Initialize(rankSuffix, m_matchUIStates.LastRoundDdIndex, m_matchUIStates.LastMaxPointDdIndex, m_matchValues.TotalPoints, m_matchValues.WinningPlayer, m_matchValues.MatchWinDate, m_matchValues.TotalPlaytime);
 
-            SortListByTotalPoints(_highscoreList);
+            SortListByTotalPoints(_highScoreList);
 
             //(/Folder/SubFolder/RoundInfinityFolder on 0/MaxPointsInfinityFolder on 0, /FileName, .format)
-            m_persistentData.SaveData($"{m_highscoreListFolderPath}/{m_roundsDropdown.value}/{m_maxPointsDropdown.value}", m_highscoresFileName, m_fileFormat, _highscoreList, m_encryptionEnabled, true);
+            m_persistentData.SaveData($"{m_highScoreListFolderPath}/{m_roundsDropdown.value}/{m_maxPointsDropdown.value}", m_highscoresFileName, m_fileFormat, _highScoreList, m_encryptionEnabled, true);
         }
     }
 }
