@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,12 +28,14 @@ namespace ThreeDeePongProto.Shared.Settings
         #region Field-Dimension
         [Header("Field-Dimension")]
         [SerializeField] private Toggle m_fixRatioToggle;
-        [SerializeField] private TMP_Dropdown[] m_fieldScaleDropdowns;
+        //[SerializeField] private TMP_Dropdown[] m_fieldScaleDropdowns;
+        [SerializeField] private TMP_Dropdown m_fieldWidthDropdown;
+        [SerializeField] private TMP_Dropdown m_fieldLengthDropdown;
 
         [SerializeField] private int m_maxFieldWidth = 30;
         [SerializeField] private int m_maxFieldLength = 60;
-        [SerializeField] private int m_fieldWidthDdIndex = 0;
-        [SerializeField] private int m_fieldLengthDdIndex = 0;
+        [SerializeField] private int m_fieldWidthDdResetTo = 0;
+        [SerializeField] private int m_fieldLengthDdResetTo = 0;
         [SerializeField] private bool m_fixAspectRatio = false;
         #endregion
 
@@ -47,8 +48,7 @@ namespace ThreeDeePongProto.Shared.Settings
         [Space]
         [SerializeField] private TMP_Dropdown[] m_frontLineDds;
         [SerializeField] private TMP_Dropdown[] m_backLineDds;
-        [SerializeField] private int m_frontLineDefaultValue = 0;
-        [SerializeField] private int m_backLineDefaultValue = 0;
+        [SerializeField] private int m_lineDdResetTo = 0;
         #endregion
 
         #region Hiding
@@ -139,14 +139,11 @@ namespace ThreeDeePongProto.Shared.Settings
             //MaxPoints
             m_maxPointsDropdown.onValueChanged.AddListener(OnMaxPointDropdownValueChanged);
 
-            m_fixRatioToggle.onValueChanged.AddListener(delegate
-            { OnRatioToggleValueChanged(m_fixRatioToggle); });
+            m_fixRatioToggle.onValueChanged.AddListener(OnRatioToggleValueChanged);
             //Field-Width
-            m_fieldScaleDropdowns[0].onValueChanged.AddListener(delegate
-            { OnWidthDropdownValueChanged(m_fieldScaleDropdowns[0]); });
+            m_fieldWidthDropdown.onValueChanged.AddListener(OnWidthDropdownValueChanged);
             //Field-Length
-            m_fieldScaleDropdowns[1].onValueChanged.AddListener(delegate
-            { OnLengthDropdownValueChanged(m_fieldScaleDropdowns[1]); });
+            m_fieldLengthDropdown.onValueChanged.AddListener(OnLengthDropdownValueChanged);
 
             if ((int)m_matchUIStates.EPlayerAmount > 3)
             {
@@ -176,14 +173,11 @@ namespace ThreeDeePongProto.Shared.Settings
             //MaxPoints
             m_maxPointsDropdown.onValueChanged.RemoveListener(OnMaxPointDropdownValueChanged);
 
-            m_fixRatioToggle.onValueChanged.RemoveListener(delegate
-            { OnRatioToggleValueChanged(m_fixRatioToggle); });
+            m_fixRatioToggle.onValueChanged.RemoveListener(OnRatioToggleValueChanged);
             //Field-Width
-            m_fieldScaleDropdowns[0].onValueChanged.RemoveListener(delegate
-            { OnWidthDropdownValueChanged(m_fieldScaleDropdowns[0]); });
+            m_fieldWidthDropdown.onValueChanged.RemoveListener(OnWidthDropdownValueChanged);
             //Field-Length
-            m_fieldScaleDropdowns[1].onValueChanged.RemoveListener(delegate
-            { OnLengthDropdownValueChanged(m_fieldScaleDropdowns[1]); });
+            m_fieldLengthDropdown.onValueChanged.RemoveListener(OnLengthDropdownValueChanged);
 
             if (m_matchValues.PlayerSOData.Count > 3)
             {
@@ -210,19 +204,19 @@ namespace ThreeDeePongProto.Shared.Settings
         /// Enabling this Toggle shall fix changes of width and length of the playfield to 1:2 ratio, while changing values on one of the two dropdowns.
         /// </summary>
         /// <param name="_toggle"></param>
-        private void OnRatioToggleValueChanged(Toggle _toggle)
+        private void OnRatioToggleValueChanged(bool _isOn)
         {
-            switch (_toggle.isOn)
+            switch (_isOn)
             {
                 case true:
                 {
-                    m_fieldScaleDropdowns[1].value = m_fieldScaleDropdowns[0].value * 2;    //Length Dd value = width Dd value * 2.
-                    m_matchUIStates.FixRatio = _toggle.isOn;
+                    m_fieldLengthDropdown.value = m_fieldWidthDropdown.value * 2;    //Length Dd value = width Dd value * 2.
+                    m_matchUIStates.FixRatio = _isOn;
                     break;
                 }
                 case false:
                 {
-                    m_matchUIStates.FixRatio = _toggle.isOn;
+                    m_matchUIStates.FixRatio = _isOn;
                     break;
                 }
             }
@@ -280,28 +274,22 @@ namespace ThreeDeePongProto.Shared.Settings
             }
         }
 
-        private void OnWidthDropdownValueChanged(TMP_Dropdown _dropdown)
+        private void OnWidthDropdownValueChanged(int _dropdownValue)
         {
             if (m_fixRatioToggle.isOn)
-            {
-                //m_fixRatioToggle.isOn = true;
-                m_fieldScaleDropdowns[1].value = _dropdown.value * 2;
-            }
+                m_fieldLengthDropdown.value = _dropdownValue * 2;
 
-            m_basicFieldValues.SetGroundWidth = _dropdown.value + m_firstWidthOffset;
-            m_matchUIStates.LastFieldWidthDdIndex = _dropdown.value;         //Save last set fieldWidthDropdown value in Scriptable.
+            m_basicFieldValues.SetGroundWidth = _dropdownValue + m_firstWidthOffset;
+            m_matchUIStates.LastFieldWidthDdIndex = _dropdownValue;         //Save last set fieldWidthDropdown value in Scriptable.
         }
 
-        private void OnLengthDropdownValueChanged(TMP_Dropdown _dropdown)
+        private void OnLengthDropdownValueChanged(int _dropdownValue)
         {
             if (m_fixRatioToggle.isOn)
-            {
-                //m_fixRatioToggle.isOn = true;
-                m_fieldScaleDropdowns[2].value = (int)(_dropdown.value * 0.5f);
-            }
+                m_fieldWidthDropdown.value = (int)(_dropdownValue * 0.5f);
 
-            m_basicFieldValues.SetGroundLength = _dropdown.value + m_firstLengthOffset;
-            m_matchUIStates.LastFieldLengthDdIndex = _dropdown.value;       //Save last set fieldLengthDropdown value in Scriptable.
+            m_basicFieldValues.SetGroundLength = _dropdownValue + m_firstLengthOffset;
+            m_matchUIStates.LastFieldLengthDdIndex = _dropdownValue;        //Save last set fieldLengthDropdown value in Scriptable.
         }
 
         /// <summary>
@@ -445,12 +433,10 @@ namespace ThreeDeePongProto.Shared.Settings
             m_rotationReset.isOn = m_matchUIStates.RotationReset;
             SetRotationResetText(m_rotationReset.isOn);
 
-            //int roundDdIndex = m_roundsDropdown;          //Currently initialized right above the switch w/o array index.
-            //int maxPointDdIndex = m_maxPointsDropdown;    //Currently initialized right above the switch w/o array index.
-            int fieldWidthDdIndex = Array.FindIndex(m_fieldScaleDropdowns, (fn) => fn == m_fieldScaleDropdowns[0]);
-            int fieldLengthDdIndex = Array.FindIndex(m_fieldScaleDropdowns, (fn) => fn == m_fieldScaleDropdowns[1]);
-            SetupMatchDropdowns(fieldWidthDdIndex);
-            SetupMatchDropdowns(fieldLengthDdIndex);
+            SetupMatchDropdowns(m_roundsDropdown);
+            SetupMatchDropdowns(m_maxPointsDropdown);
+            SetupMatchDropdowns(m_fieldWidthDropdown);
+            SetupMatchDropdowns(m_fieldLengthDropdown);
 
             SetupDistanceSliders();
             UpdateLineUpTMPs();
@@ -461,7 +447,7 @@ namespace ThreeDeePongProto.Shared.Settings
 
         private void SetRotationResetText(bool _rotationReset)
         {
-            m_rotationResetText.text = _rotationReset == true ? "On" : "Off";   //lambda-switch.
+            m_rotationResetText.text = _rotationReset == true ? "On" : "Off";
         }
 
         private void SetPlayerData(int _playerAmount)
@@ -530,116 +516,88 @@ namespace ThreeDeePongProto.Shared.Settings
         }
 
         #region Fill-Dropdowns-On-Start
-        private void SetupMatchDropdowns(int _dropdownID)
+        private void SetupMatchDropdowns(TMP_Dropdown _dropdown)
         {
+            _dropdown.ClearOptions();
+
             #region Round_Dropdown
-            //Rounds
-            m_roundsDropdown.ClearOptions();
-            m_roundsDdList = new List<string> { "\u221E" };
-
-            for (int i = m_firstRoundOffset; i < m_matchUIStates.MaxRounds + 1; i++)
+            if (_dropdown == m_roundsDropdown)
             {
-                m_roundsDdList.Add(i.ToString());
+                m_roundsDdList = new List<string> { "\u221E" };
+
+                for (int i = m_firstRoundOffset; i < m_matchUIStates.MaxRounds + 1; i++)
+                    m_roundsDdList.Add(i.ToString());
+
+                m_roundsDropdown.AddOptions(m_roundsDdList);
+
+                if (m_matchUIStates != null)
+                    m_roundsDropdown.value = m_matchUIStates.LastRoundDdIndex;
+                else
+                    m_roundsDropdown.value = m_maxRoundDdIndex;
+
+                //m_matchUIStates.LastRoundDdIndex = m_roundsDropdown.value;
             }
-
-            m_roundsDropdown.AddOptions(m_roundsDdList);
-
-            if (m_matchUIStates != null)
-            {
-                m_roundsDropdown.value = m_matchUIStates.LastRoundDdIndex;
-            }
-            else
-            {
-                m_roundsDropdown.value = m_maxRoundDdIndex;
-            }
-
-            m_roundsDropdown.RefreshShownValue();
-            m_roundsDropdown.interactable = true;
-
-            m_matchUIStates.LastRoundDdIndex = m_roundsDropdown.value;
             #endregion
 
             #region MaxPoints_Dropdown
-            //MaxPoints
-            m_maxPointsDropdown.ClearOptions();
-            m_maxPointsDdList = new List<string> { "\u221E" };
-
-            for (int i = m_firstPointOffset; i < m_matchUIStates.MaxPoints + 1; i++)
+            if (_dropdown == m_maxPointsDropdown)
             {
-                //'m_maxPointsDropdown.options.Add (new Dropdown.OptionData() { text = variable });' in foreach-loops.
-                m_maxPointsDdList.Add(i.ToString());
+                m_maxPointsDdList = new List<string> { "\u221E" };
+
+                for (int i = m_firstPointOffset; i < m_matchUIStates.MaxPoints + 1; i++)
+                    m_maxPointsDdList.Add(i.ToString());
+
+                m_maxPointsDropdown.AddOptions(m_maxPointsDdList);
+
+                if (m_matchUIStates != null)
+                    m_maxPointsDropdown.value = m_matchUIStates.LastMaxPointDdIndex;
+                else
+                    m_maxPointsDropdown.value = m_maxPointDdIndex;
+
+                //m_matchUIStates.LastMaxPointDdIndex = m_maxPointsDropdown.value;
             }
-
-            m_maxPointsDropdown.AddOptions(m_maxPointsDdList);
-
-            if (m_matchUIStates != null)
-            {
-                m_maxPointsDropdown.value = m_matchUIStates.LastMaxPointDdIndex;
-            }
-            else
-            {
-                m_maxPointsDropdown.value = m_maxPointDdIndex;
-            }
-
-            m_maxPointsDropdown.RefreshShownValue();
-            m_maxPointsDropdown.interactable = true;
-
-            m_matchUIStates.LastMaxPointDdIndex = m_maxPointsDropdown.value;
             #endregion
 
-            switch (_dropdownID)
+            #region FieldWidth_Dropdown
+            if (_dropdown == m_fieldWidthDropdown)
             {
-                case 0: //FieldWidth
-                {
-                    m_widthList = new List<string>();
+                m_widthList = new List<string>();
 
-                    for (int i = m_firstWidthOffset; i < m_maxFieldWidth + 1; i++)
-                    {
-                        m_widthList.Add(i.ToString());
-                    }
+                for (int i = m_firstWidthOffset; i < m_maxFieldWidth + 1; i++)
+                    m_widthList.Add(i.ToString());
 
-                    m_fieldScaleDropdowns[_dropdownID].ClearOptions();
-                    m_fieldScaleDropdowns[_dropdownID].AddOptions(m_widthList);
+                m_fieldWidthDropdown.AddOptions(m_widthList);
 
-                    if (m_matchUIStates != null)
-                    {
-                        m_fieldScaleDropdowns[_dropdownID].value = m_matchUIStates.LastFieldWidthDdIndex;
-                    }
-                    else
-                    {
-                        DefaultMatchDdValue(_dropdownID);
-                    }
+                if (m_matchUIStates != null)
+                    m_fieldWidthDropdown.value = m_matchUIStates.LastFieldWidthDdIndex;
+                else
+                    m_fieldWidthDropdown.value = m_maxFieldWidth;
 
-                    m_fieldScaleDropdowns[_dropdownID].RefreshShownValue();
-                    break;
-                }
-                case 1: //FieldLength
-                {
-                    m_lengthList = new List<string>();
-
-                    for (int i = m_firstLengthOffset; i < m_maxFieldLength + 1; i++)
-                    {
-                        m_lengthList.Add(i.ToString());
-                    }
-
-                    m_fieldScaleDropdowns[_dropdownID].ClearOptions();
-                    m_fieldScaleDropdowns[_dropdownID].AddOptions(m_lengthList);
-
-                    if (m_matchUIStates != null)
-                    {
-                        m_fieldScaleDropdowns[_dropdownID].value = m_matchUIStates.LastFieldLengthDdIndex;
-                    }
-                    else
-                    {
-                        DefaultMatchDdValue(_dropdownID);
-                    }
-
-                    m_fieldScaleDropdowns[_dropdownID].RefreshShownValue();
-                    break;
-                }
-                default:
-                    break;
+                //m_matchUIStates.LastFieldWidthDdIndex = m_fieldWidthDropdown.value;
             }
+            #endregion
+
+            #region FieldLength_Dropdown
+            if (_dropdown == m_fieldLengthDropdown)
+            {
+                m_lengthList = new List<string>();
+
+                for (int i = m_firstLengthOffset; i < m_maxFieldLength + 1; i++)
+                    m_lengthList.Add(i.ToString());
+
+                m_fieldLengthDropdown.AddOptions(m_lengthList);
+
+                if (m_matchUIStates != null)
+                    m_fieldLengthDropdown.value = m_matchUIStates.LastFieldLengthDdIndex;
+                else
+                    m_fieldLengthDropdown.value = m_maxFieldLength;
+
+                //m_matchUIStates.LastFieldLengthDdIndex = m_fieldLengthDropdown.value;
+            }
+            #endregion
+
+            _dropdown.RefreshShownValue();
+            _dropdown.interactable = true;
         }
         #endregion
 
@@ -660,8 +618,8 @@ namespace ThreeDeePongProto.Shared.Settings
                 }
                 else
                 {
-                    DefaultFrontlineDdValue(0);
-                    DefaultFrontlineDdValue(1);
+                    m_frontLineDds[0].value = 0;
+                    m_frontLineDds[1].value = 1;
                 }
 
                 foreach (var dropdown in m_frontLineDds)
@@ -686,8 +644,8 @@ namespace ThreeDeePongProto.Shared.Settings
                 }
                 else
                 {
-                    DefaultBacklineDdValue(0);
-                    DefaultBacklineDdValue(1);
+                    m_backLineDds[0].value = 0;
+                    m_backLineDds[1].value = 1;
                 }
 
                 foreach (var dropdown in m_backLineDds)
@@ -756,20 +714,18 @@ namespace ThreeDeePongProto.Shared.Settings
         private void UpdateFrontlineSetup(int _playerId)
         {
             m_matchValues.PlayerSOData[_playerId].PlayerOnFrontline = true;
-
             SavePlayerData(_playerId);
         }
 
         private void UpdateBacklineSetup(int _playerId)
         {
             m_matchValues.PlayerSOData[_playerId].PlayerOnFrontline = false;
-
             SavePlayerData(_playerId);
         }
 
-        //Scriptable Objects CAN be used like structs to save data. BUT not, if they got foreign/extra references, like gameObject-Prefabs or Sprites. Need to save their names as string instead.
         private void SavePlayerData(int _index)
         {
+            //Scriptable Objects CAN be used like structs to save data. BUT not, if they got foreign/extra references, like gameObject-Prefabs or Sprites. Need to save their names as string instead.
             if (m_playerSOData[_index] == null)
                 return;
 
@@ -782,73 +738,24 @@ namespace ThreeDeePongProto.Shared.Settings
             m_persistentData.SaveData(m_playerDataFolderPath, m_playerDataSubPath + $"{_index}", m_fileFormat, playerData, m_encryptionEnabled, true);
         }
 
-        public void DefaultMatchDdValue(int _tmpDropdownIndex)
-        {
-            m_roundsDropdown.value = m_maxRoundDdIndex;
-            m_maxPointsDropdown.value = m_maxPointDdIndex;
-
-            switch (_tmpDropdownIndex)
-            {
-                case 0:
-                {
-                    m_fieldScaleDropdowns[0].value = m_fieldWidthDdIndex;
-                    break;
-                }
-                case 1:
-                {
-                    m_fieldScaleDropdowns[1].value = m_fieldLengthDdIndex;
-                    break;
-                }
-                default:
-                    break;
-            }
-        }
-
-        private void DefaultBacklineDdValue(int _index)
-        {
-            switch (_index)
-            {
-                case 0:
-                    m_backLineDds[0].value = m_backLineDefaultValue;
-                    break;
-                case 1:
-                    m_backLineDds[1].value = m_backLineDefaultValue;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void DefaultFrontlineDdValue(int _index)
-        {
-            switch (_index)
-            {
-                case 0:
-                    m_frontLineDds[0].value = m_frontLineDefaultValue;
-                    break;
-                case 1:
-                    m_frontLineDds[1].value = m_frontLineDefaultValue;
-                    break;
-                default:
-                    break;
-            }
-        }
-
         public void ReSetDefault()
         {
-            m_fixRatioToggle.isOn = m_fixAspectRatio;
             m_rotationReset.isOn = m_paddleRotResetDefault;
 
             m_roundsDropdown.value = m_maxRoundDdIndex;
             m_maxPointsDropdown.value = m_maxPointDdIndex;
-            m_fieldScaleDropdowns[0].value = m_fieldWidthDdIndex;
-            m_fieldScaleDropdowns[1].value = m_fieldLengthDdIndex;
+
+            m_fixRatioToggle.isOn = m_fixAspectRatio;
+            m_fieldWidthDropdown.value = m_fieldWidthDdResetTo;
+            m_fieldLengthDropdown.value = m_fieldLengthDdResetTo;
 
             m_distanceSliderValues[0].value = m_distanceSliderDefaults;
             m_distanceSliderValues[1].value = m_distanceSliderDefaults;
 
-            m_backLineDds[0].value = m_backLineDefaultValue;
-            m_backLineDds[1].value = m_backLineDefaultValue;
+            m_backLineDds[0].value = m_lineDdResetTo;
+            m_backLineDds[1].value = m_lineDdResetTo + 1;
+            m_frontLineDds[0].value = m_lineDdResetTo;
+            m_frontLineDds[1].value = m_lineDdResetTo + 1;
         }
         #endregion
     }

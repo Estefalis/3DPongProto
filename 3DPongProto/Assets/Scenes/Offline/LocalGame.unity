@@ -1736,6 +1736,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 521710088}
   m_CullTransparentMesh: 1
+--- !u!114 &570862151 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3336308886493525426, guid: 430c392282a61bb4482c69a3b60f8b8e,
+    type: 3}
+  m_PrefabInstance: {fileID: 5523567775437958938}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &570862152 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8018198073155230893, guid: 430c392282a61bb4482c69a3b60f8b8e,
+    type: 3}
+  m_PrefabInstance: {fileID: 5523567775437958938}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &575248054 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5641008733523396202, guid: 430c392282a61bb4482c69a3b60f8b8e,
@@ -7939,7 +7963,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 570862151}
     - target: {fileID: 3370736242798330068, guid: cf067c36ec1381742a9398a8cf109ae8,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -8029,7 +8053,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 570862152}
     - target: {fileID: 8100183243731048185, guid: cf067c36ec1381742a9398a8cf109ae8,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -10427,6 +10451,11 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
       objectReference: {fileID: 1330309229}
+    - target: {fileID: 3336308886493525426, guid: 430c392282a61bb4482c69a3b60f8b8e,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 1330309230}
     - target: {fileID: 3355466202869081318, guid: 430c392282a61bb4482c69a3b60f8b8e,
         type: 3}
       propertyPath: m_text
@@ -10552,6 +10581,11 @@ PrefabInstance:
       propertyPath: m_text
       value: NACH-RECHTS
       objectReference: {fileID: 0}
+    - target: {fileID: 8018198073155230893, guid: 430c392282a61bb4482c69a3b60f8b8e,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 1330309227}
     - target: {fileID: 8181000366668786036, guid: 430c392282a61bb4482c69a3b60f8b8e,
         type: 3}
       propertyPath: m_text

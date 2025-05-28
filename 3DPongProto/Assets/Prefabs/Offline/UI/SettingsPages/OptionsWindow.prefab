@@ -1555,6 +1555,16 @@ PrefabInstance:
       objectReference: {fileID: 9208185751558558176}
     - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
         type: 3}
+      propertyPath: m_fieldWidthDropdown
+      value: 
+      objectReference: {fileID: 2042730692205365001}
+    - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
+        type: 3}
+      propertyPath: m_fieldLengthDropdown
+      value: 
+      objectReference: {fileID: 6043592521836149982}
+    - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
+        type: 3}
       propertyPath: m_fieldScaleDropdowns.Array.size
       value: 2
       objectReference: {fileID: 0}
