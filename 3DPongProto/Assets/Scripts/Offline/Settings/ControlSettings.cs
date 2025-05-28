@@ -24,6 +24,7 @@ namespace ThreeDeePongProto.Shared.Settings
         [SerializeField] private TextMeshProUGUI m_MovespeedText;
         [SerializeField] private Toggle m_moveToggleKey;
         [SerializeField] private bool m_moveToggleXDefault;
+
         [Header("Rotation Speed")]
         [SerializeField] private Slider m_RotationSliderY;
         [SerializeField] private TextMeshProUGUI m_RotationText;

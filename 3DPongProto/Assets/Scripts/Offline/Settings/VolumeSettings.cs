@@ -52,16 +52,16 @@ namespace ThreeDeePongProto.Shared.Settings
 
         #region Variables
         [Header("Variables")]
-        //Mathf-Log(arithm)-Multiplier
-        [SerializeField] private float m_adjustSliderStep = 0.05f;
+        //Mathf.Log-Multiplier
         [SerializeField] private float m_logarithmMultiplier = 20f;
+        [SerializeField] private float m_adjustSliderStep = 0.05f;
         [SerializeField] private float m_muteAmountVariable = -80f;
         #endregion
 
         [Space]
         [SerializeField] private Toggle[] m_muteToggleKeys;
         [SerializeField] private Slider[] m_volumeSliderValues;
-        private Dictionary<Toggle, Slider> m_toggleSliderConnection = new Dictionary<Toggle, Slider>();
+        private Dictionary<Toggle, Slider> m_toggleSliderConnection = new();
 
         #region Scriptable-References
         [Header("Scriptable Objects")]
@@ -75,8 +75,8 @@ namespace ThreeDeePongProto.Shared.Settings
         private readonly string m_volumeFileName = "/Volume";
         private readonly string m_fileFormat = ".json";
 
-        private IPersistentData m_persistentData = new SerializingData();
-        private bool m_encryptionEnabled = false;
+        private readonly IPersistentData m_persistentData = new SerializingData();
+        private readonly bool m_encryptionEnabled = false;
         #endregion
 
         private void Awake()
@@ -105,7 +105,7 @@ namespace ThreeDeePongProto.Shared.Settings
 
         private void Start()
         {
-            //TODO: InitialUISetup check for nulled Scriptables.
+            //TODO: InitialUISetup check for nulled Scriptable.
             InitialUISetup();
         }
 
@@ -187,7 +187,7 @@ namespace ThreeDeePongProto.Shared.Settings
 
         private void HandleSFXSliderValueChanges(float _value)
         {
-            //Set SoundeffectsVolume-floats with the audioMixer. (Also sets the Slider back to the saved amount on unmuting.)
+            //Set SoundEffectsVolume floats with the audioMixer. (Also sets the Slider back to the saved amount on unmuting.)
             m_audioMixer.SetFloat(m_sfxVolumeParameter, Mathf.Log10(_value) * m_logarithmMultiplier);
 
             m_muteSFXCheckboxShowsActive = false;
@@ -210,7 +210,7 @@ namespace ThreeDeePongProto.Shared.Settings
 
         #region Mute Listener Changes
         /// <summary>
-        /// Sets and Unsets All Slider to their minValue/lastestSavedValue and Toggles on/off.
+        /// Sets and Unsets All Slider to their minValue/latestSavedValue and Toggles on/off.
         /// </summary>
         /// <param name="_mute"></param>
         private void HandleMasterToggleValueChanges(bool _mute)
@@ -221,7 +221,7 @@ namespace ThreeDeePongProto.Shared.Settings
             //If we activate the Toggle to mute the MasterVolume.
             if (_mute)
             {
-                //Tempsave the corresponding SliderValue in a ScriptableObject.
+                //TempSave the corresponding SliderValue in a ScriptableObject.
                 m_volumeUIValues.LatestMasterVolume = m_volumeSliderValues[0].value;
                 //Set Sliders 'minValue' as new value, while muting.
                 m_volumeSliderValues[0].value = m_volumeSliderValues[0].minValue;
@@ -250,7 +250,7 @@ namespace ThreeDeePongProto.Shared.Settings
             //If we activate the Toggle to mute the BGMVolume.
             if (_mute)
             {
-                //Tempsave the corresponding SliderValue in a ScriptableObject.
+                //TempSave the corresponding SliderValue in a ScriptableObject.
                 m_volumeUIValues.LatestBGMVolume = m_volumeSliderValues[1].value;
                 //Set Sliders 'minValue' as new value, while muting.
                 m_volumeSliderValues[1].value = m_volumeSliderValues[1].minValue;
@@ -276,7 +276,7 @@ namespace ThreeDeePongProto.Shared.Settings
             //If we activate the Toggle to mute the SFXVolume.
             if (_mute)
             {
-                //Tempsave the corresponding SliderValue in a ScriptableObject.
+                //TempSave the corresponding SliderValue in a ScriptableObject.
                 m_volumeUIValues.LatestSFXVolume = m_volumeSliderValues[2].value;
                 //Set Sliders 'minValue' as new value, while muting.
                 m_volumeSliderValues[2].value = m_volumeSliderValues[2].minValue;

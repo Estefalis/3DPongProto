@@ -70,7 +70,6 @@ namespace ThreeDeePongProto.Shared.Settings
 
         private void Start()
         {
-            //TODO: InitialUISetup check for nulled Scriptable.
             InitialUISetup();
         }
 
@@ -169,11 +168,13 @@ namespace ThreeDeePongProto.Shared.Settings
 
         private void InitialUISetup()
         {
+            //Can there even be fix default values for these on variable PC settings?
             m_qualityDropdown.value = m_graphicUIStates.QualityLevelIndex;
             m_resolutionDropdown.value = m_graphicUIStates.SelectedResolutionIndex;
-            m_fullScreenToggle.isOn = m_graphicUIStates.FullScreenMode;
-            SetFullScreenText(m_fullScreenToggle.isOn);
             m_screenSplitDropdown.value = (int)m_graphicUIStates.SetCameraMode;
+            m_fullScreenToggle.isOn = m_graphicUIStates.FullScreenMode;
+
+            SetFullScreenText(m_fullScreenToggle.isOn);
         }
 
         private void SetFullScreenText(bool _fullScreen)
