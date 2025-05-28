@@ -942,7 +942,7 @@ GameObject:
   - component: {fileID: 2622358266137838907}
   - component: {fileID: 2622358266137838906}
   m_Layer: 5
-  m_Name: SliderMasterGroup
+  m_Name: SettingsSliderGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
