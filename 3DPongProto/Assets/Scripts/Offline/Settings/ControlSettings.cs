@@ -388,7 +388,7 @@ namespace ThreeDeePongProto.Shared.Settings
             }
         }
 
-        public void LowerSliderValue(Toggle _connectedToggle)
+        public void ReduceSliderValue(Toggle _connectedToggle)
         {
             //Get the corresponding Slider (Value) in the Dictionary, for each submitted Toggle (Key), by the Button inside Unity.
             Slider connectedSlider = null;

@@ -53,9 +53,8 @@ namespace ThreeDeePongProto.Shared.Settings
 
         #region Hiding
         [Header("Hiding")]
-        [SerializeField] private Transform m_frontParentTransform;
         [SerializeField] private Transform m_backLineDdGroup;
-        [SerializeField] private TextMeshProUGUI m_backLineUpText;
+        [SerializeField] private Transform m_frontLineParent;
         #endregion
         #endregion
         [Space]
@@ -494,7 +493,7 @@ namespace ThreeDeePongProto.Shared.Settings
                 {
                     //In case 4 PlayerCharacter shall play, set the SplitScreen Mode to load to ECameraModi.Quartet.
                     m_graphicUiStates.SetCameraMode = ECameraModi.Quartet;
-                    ObjectsToHide(true, true, 225.0f);
+                    ObjectsToHide(true, true);
                     SetupFrontlineDropdowns();
                     break;
                 }
@@ -502,17 +501,17 @@ namespace ThreeDeePongProto.Shared.Settings
                 {
                     //In case 2 PlayerCharacter shall play, set the SplitScreen Mode to load to ECameraModi.Horizontal.
                     m_graphicUiStates.SetCameraMode = ECameraModi.Horizontal;
-                    ObjectsToHide(false, false, 714.0f);
+                    ObjectsToHide(false, false);
                     break;
                 }
             }
         }
 
-        private void ObjectsToHide(bool _frontParent, bool _backDropdowns, float _backTextWidth)
+        private void ObjectsToHide(bool _frontParent, bool _backDropdowns/*, float _backTextWidth*/)
         {
-            m_frontParentTransform.gameObject.SetActive(_frontParent);
+            m_frontLineParent.gameObject.SetActive(_frontParent);
             m_backLineDdGroup.gameObject.SetActive(_backDropdowns);
-            m_backLineUpText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _backTextWidth);
+            //m_backLineText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _backTextWidth);
         }
 
         #region Fill-Dropdowns-On-Start

@@ -566,7 +566,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             AReLoadScene?.Invoke((int)ESceneNames.StartMenu);   //Possible without '?.Invoke'?
         }
 
-        public void EndOfInfiniteMatch()
+        public void EndInfiniteMatch()
         {
             if (m_matchValues.TotalPointsTPOne > 0 || m_matchValues.TotalPointsTPTwo > 0)
             {

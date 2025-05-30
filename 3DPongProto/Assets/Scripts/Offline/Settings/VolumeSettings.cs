@@ -61,7 +61,7 @@ namespace ThreeDeePongProto.Shared.Settings
         [Space]
         [SerializeField] private Toggle[] m_muteToggleKeys;
         [SerializeField] private Slider[] m_volumeSliderValues;
-        private Dictionary<Toggle, Slider> m_toggleSliderConnection = new();
+        private readonly Dictionary<Toggle, Slider> m_toggleSliderConnection = new();
 
         #region Scriptable-References
         [Header("Scriptable Objects")]
@@ -326,7 +326,7 @@ namespace ThreeDeePongProto.Shared.Settings
             }
         }
 
-        public void LowerSliderValue(Toggle _connectedMute)
+        public void ReduceSliderValue(Toggle _connectedMute)
         {
             //Get the corresponding Slider (Value) in the Dictionary, for each submitted Mute (Key), by the Button inside Unity.
             Slider connectedSlider = m_toggleSliderConnection[_connectedMute];

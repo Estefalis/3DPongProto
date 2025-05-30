@@ -930,6 +930,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8300024030274522045, guid: bdc8965946bea004284f5cbcfb2fce77,
+        type: 3}
+      propertyPath: m_Name
+      value: BGMIncreaseButton
+      objectReference: {fileID: 0}
     - target: {fileID: 8300024030274522046, guid: bdc8965946bea004284f5cbcfb2fce77,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -970,6 +975,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 6564748912870272971}
+    - target: {fileID: 8300024030922254388, guid: bdc8965946bea004284f5cbcfb2fce77,
+        type: 3}
+      propertyPath: m_Name
+      value: BGMReduceButton
+      objectReference: {fileID: 0}
     - target: {fileID: 8300024030922254389, guid: bdc8965946bea004284f5cbcfb2fce77,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -1175,6 +1185,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 630016443572891537, guid: 854e36d3afb6920468cffc33ff307d3b,
+        type: 3}
+      propertyPath: m_Name
+      value: MasterButtonIncrease
+      objectReference: {fileID: 0}
     - target: {fileID: 630016443572891538, guid: 854e36d3afb6920468cffc33ff307d3b,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -1210,6 +1225,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 6564748912870272971}
+    - target: {fileID: 630016443948895256, guid: 854e36d3afb6920468cffc33ff307d3b,
+        type: 3}
+      propertyPath: m_Name
+      value: MasterReduceButton
+      objectReference: {fileID: 0}
     - target: {fileID: 630016443948895257, guid: 854e36d3afb6920468cffc33ff307d3b,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -1889,6 +1909,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1411760312903952231, guid: ce3d24302c5c99144a54be52e8ad39c4,
+        type: 3}
+      propertyPath: m_Name
+      value: SFXReduceButton
+      objectReference: {fileID: 0}
     - target: {fileID: 1411760313317573868, guid: ce3d24302c5c99144a54be52e8ad39c4,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
@@ -1928,6 +1953,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411760313317573870, guid: ce3d24302c5c99144a54be52e8ad39c4,
+        type: 3}
+      propertyPath: m_Name
+      value: SFXIncreaseButton
       objectReference: {fileID: 0}
     - target: {fileID: 1595726810494042684, guid: ce3d24302c5c99144a54be52e8ad39c4,
         type: 3}
