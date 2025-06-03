@@ -10130,61 +10130,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1008670894}
-    - target: {fileID: 816205766942516710, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: F
-      objectReference: {fileID: 0}
-    - target: {fileID: 816205767060631096, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: D
-      objectReference: {fileID: 0}
-    - target: {fileID: 939429280307051947, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /A|NACH-LINKS|F|J/ /D|NACH-RECHTS|H|L'
-      objectReference: {fileID: 0}
-    - target: {fileID: 939429280489715317, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /A|NACH-LINKS|F|J/ /D|NACH-RECHTS|H|L'
-      objectReference: {fileID: 0}
-    - target: {fileID: 939429281159033506, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /Q|UMSCHALT RECHTS|R|U/ /E|1 (ZEHNERTASTATUR)|Z|O'
-      objectReference: {fileID: 0}
-    - target: {fileID: 939429281248344444, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /Q|UMSCHALT RECHTS|R|U/ /E|1 (ZEHNERTASTATUR)|Z|O'
-      objectReference: {fileID: 0}
-    - target: {fileID: 939429281348199701, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: B
-      objectReference: {fileID: 0}
-    - target: {fileID: 939429282287066635, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /Q|UMSCHALT RECHTS|R|U/ /E|1 (ZEHNERTASTATUR)|Z|O'
-      objectReference: {fileID: 0}
-    - target: {fileID: 939429282402260437, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /Q|UMSCHALT RECHTS|R|U/ /E|1 (ZEHNERTASTATUR)|Z|O'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1498960252197525458, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /A|NACH-LINKS|F|J/ /D|NACH-RECHTS|H|L'
-      objectReference: {fileID: 0}
-    - target: {fileID: 1498960252384844812, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /A|NACH-LINKS|F|J/ /D|NACH-RECHTS|H|L'
-      objectReference: {fileID: 0}
     - target: {fileID: 1658627259719079141, guid: 430c392282a61bb4482c69a3b60f8b8e,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -10195,51 +10140,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1008670894}
-    - target: {fileID: 2187532693328213719, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: NACH-RECHTS
-      objectReference: {fileID: 0}
-    - target: {fileID: 2187532693508226313, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: A
-      objectReference: {fileID: 0}
-    - target: {fileID: 2485833834207252634, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /A|NACH-LINKS|F|J/ /D|NACH-RECHTS|H|L'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2485833834330839876, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /A|NACH-LINKS|F|J/ /D|NACH-RECHTS|H|L'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2562004526461824160, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /A|NACH-LINKS|F|J/ /D|NACH-RECHTS|H|L'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2562004526648190846, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /A|NACH-LINKS|F|J/ /D|NACH-RECHTS|H|L'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2823811941733861521, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: W
-      objectReference: {fileID: 0}
-    - target: {fileID: 2864339852629428648, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: R
-      objectReference: {fileID: 0}
-    - target: {fileID: 2864339852705727094, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: E
-      objectReference: {fileID: 0}
     - target: {fileID: 3325953363085553670, guid: 430c392282a61bb4482c69a3b60f8b8e,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
@@ -10250,36 +10150,6 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
       objectReference: {fileID: 1330309230}
-    - target: {fileID: 3355466202869081318, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: Q
-      objectReference: {fileID: 0}
-    - target: {fileID: 3355466203017178936, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: 1 (ZEHNERTASTATUR)
-      objectReference: {fileID: 0}
-    - target: {fileID: 3433870910064441524, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /Q|UMSCHALT RECHTS|R|U/ /E|1 (ZEHNERTASTATUR)|Z|O'
-      objectReference: {fileID: 0}
-    - target: {fileID: 3433870910175441770, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /Q|UMSCHALT RECHTS|R|U/ /E|1 (ZEHNERTASTATUR)|Z|O'
-      objectReference: {fileID: 0}
-    - target: {fileID: 3981916203037152767, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /Q|UMSCHALT RECHTS|R|U/ /E|1 (ZEHNERTASTATUR)|Z|O'
-      objectReference: {fileID: 0}
-    - target: {fileID: 3981916203116076577, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /Q|UMSCHALT RECHTS|R|U/ /E|1 (ZEHNERTASTATUR)|Z|O'
-      objectReference: {fileID: 0}
     - target: {fileID: 4444127673440108132, guid: 430c392282a61bb4482c69a3b60f8b8e,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
@@ -10290,21 +10160,6 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
       objectReference: {fileID: 1330309231}
-    - target: {fileID: 4675509738257808461, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /Q|UMSCHALT RECHTS|R|U/ /E|1 (ZEHNERTASTATUR)|Z|O'
-      objectReference: {fileID: 0}
-    - target: {fileID: 4675509738442700691, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /Q|UMSCHALT RECHTS|R|U/ /E|1 (ZEHNERTASTATUR)|Z|O'
-      objectReference: {fileID: 0}
-    - target: {fileID: 4811373800284580577, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: W
-      objectReference: {fileID: 0}
     - target: {fileID: 5641008733523396202, guid: 430c392282a61bb4482c69a3b60f8b8e,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
@@ -10335,56 +10190,16 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
       objectReference: {fileID: 1330309229}
-    - target: {fileID: 6226600402127120951, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /Q|UMSCHALT RECHTS|R|U/ /E|1 (ZEHNERTASTATUR)|Z|O'
-      objectReference: {fileID: 0}
-    - target: {fileID: 6226600402216460777, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /Q|UMSCHALT RECHTS|R|U/ /E|1 (ZEHNERTASTATUR)|Z|O'
-      objectReference: {fileID: 0}
-    - target: {fileID: 6415343725603148121, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_Navigation.m_SelectOnUp
-      value: 
-      objectReference: {fileID: 1330309230}
-    - target: {fileID: 6810524335542370691, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: NACH-OBEN
-      objectReference: {fileID: 0}
-    - target: {fileID: 6957283527849718993, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: W
-      objectReference: {fileID: 0}
     - target: {fileID: 7269079902916013291, guid: 430c392282a61bb4482c69a3b60f8b8e,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
       objectReference: {fileID: 1330309229}
-    - target: {fileID: 7561429880471636061, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /A|NACH-LINKS|F|J/ /D|NACH-RECHTS|H|L'
-      objectReference: {fileID: 0}
-    - target: {fileID: 7561429880562549635, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /A|NACH-LINKS|F|J/ /D|NACH-RECHTS|H|L'
-      objectReference: {fileID: 0}
     - target: {fileID: 8018198073155230893, guid: 430c392282a61bb4482c69a3b60f8b8e,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
       objectReference: {fileID: 1330309227}
-    - target: {fileID: 8181000366668786036, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: SCROLL
-      objectReference: {fileID: 0}
     - target: {fileID: 8261976392910612778, guid: 430c392282a61bb4482c69a3b60f8b8e,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -10515,16 +10330,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8665405403597828067, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /A|NACH-LINKS|F|J/ /D|NACH-RECHTS|H|L'
-      objectReference: {fileID: 0}
-    - target: {fileID: 8665405403784225853, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_text
-      value: ' /A|NACH-LINKS|F|J/ /D|NACH-RECHTS|H|L'
-      objectReference: {fileID: 0}
     - target: {fileID: 8744496160377222102, guid: 430c392282a61bb4482c69a3b60f8b8e,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -10545,11 +10350,6 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
       objectReference: {fileID: 1330309228}
-    - target: {fileID: 8944666342380593882, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_Navigation.m_SelectOnUp
-      value: 
-      objectReference: {fileID: 1330309227}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 430c392282a61bb4482c69a3b60f8b8e, type: 3}
 --- !u!224 &5523567775437958939 stripped

@@ -123,7 +123,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                     {
                         Selectable currentSelectable = m_lastSelectedObject.GetComponent<Selectable>();
                         //Check if the Selectable is part of the ScrollView and scroll, if needed.
-                        if (m_scrollViewController.m_ContainedSelectables.Contains(currentSelectable))
+                        if (m_scrollViewController.ContainedSelectables.Contains(currentSelectable))
                         {
                             RectTransform selectedRect = m_lastSelectedObject.GetComponent<RectTransform>();
                             CalculateAndScroll(selectedRect);
@@ -161,7 +161,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         private void MouseScrolling()
         {
-            if (!m_mouseIsInScrollView || Time.unscaledTime < m_nextMouseWheelNavTime || m_scrollViewController.m_EScrollDirection == EScrollDirection.None)
+            if (!m_mouseIsInScrollView || Time.unscaledTime < m_nextMouseWheelNavTime || m_scrollViewController.EScrollDirection == EScrollDirection.None)
                 return;
 
             if (m_mouseScrollValue.y != 0)

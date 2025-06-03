@@ -29,7 +29,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
             Instantiated
         }
 
-        [SerializeField] internal FillContent m_fillContent;
+        [SerializeField] internal InstantiateContent m_instantiateContent;
         [SerializeField] internal AutoScroll m_autoScrolling;
 
         [Header("ScrollView Components")]
@@ -43,7 +43,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         [SerializeField] private float m_scrollSensitivity = 10.0f;
         [SerializeField] internal bool m_loopNavigation = false;    //For instantiated objects.
 
-        internal EScrollDirection m_EScrollDirection { get => m_eScrollDirection; }
+        internal EScrollDirection EScrollDirection { get => m_eScrollDirection; }
         private EScrollDirection m_eScrollDirection;
 
         internal int m_leftPadding;
@@ -67,7 +67,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         [SerializeField] private Vector2Int m_gridSize;
         private GridLayoutGroup m_gridSettings;
 
-        internal List<Selectable> m_ContainedSelectables { get; private set; } = new List<Selectable>();
+        internal List<Selectable> ContainedSelectables { get; private set; } = new List<Selectable>();
 
         private void Awake()
         {
@@ -180,13 +180,13 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         {
             if (m_gotComponents)
             {
-                switch (!m_contentChildrenSet && m_fillContent.m_spawnPrefab != null)
+                switch (!m_contentChildrenSet && m_instantiateContent.m_spawnPrefab != null)
                 {
                     case true:
                     {
                         m_contentFillType = EContentFillType.Instantiated;
-                        if (m_fillContent != null)
-                            m_fillContent.SpawnContentChildren();
+                        if (m_instantiateContent != null)
+                            m_instantiateContent.SpawnContentChildren();
                         break;
                     }
                     case false:
@@ -207,12 +207,12 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                 m_contentChildrenSet = m_scrollViewContent.childCount > 0;
                 LayoutRebuilder.ForceRebuildLayoutImmediate(m_scrollViewContent);
                 //Find all Selectable-Components (Button, Toggle, Slider, InputField...), even if they are inactive. (true)
-                m_ContainedSelectables = m_scrollViewContent.GetComponentsInChildren<Selectable>(true).ToList();
+                ContainedSelectables = m_scrollViewContent.GetComponentsInChildren<Selectable>(true).ToList();
 #if UNITY_EDITOR
-                //Debug.Log($"ScrollViewController: Found {m_ContainedSelectables.Count} Selectables in Content.");
+                //Debug.Log($"ScrollViewController: Found {ContainedSelectables.Count} Selectables in Content.");
 #endif
                 if (m_contentFillType == EContentFillType.Instantiated)
-                    m_fillContent.SetupExplicitNavigation(m_contentChildrenSet);
+                    m_instantiateContent.SetupExplicitNavigation(m_contentChildrenSet);
             }
             else
             {
@@ -229,7 +229,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
             m_loopNavigation = loop;
             CacheSelectableChildren();
-            m_fillContent.SetupExplicitNavigation(); //Update children Navigation.
+            m_instantiateContent.SetupExplicitNavigation(); //Update children Navigation.
 #if UNITY_EDITOR
             Debug.Log($"Loop Navigation {(loop ? "activated" : "deactivated")}.");
 #endif

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 {
-    internal class FillContent : MonoBehaviour
+    internal class InstantiateContent : MonoBehaviour
     {
         [SerializeField] internal ScrollViewController m_scrollViewController;
 
@@ -30,14 +30,14 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
             if (!_instantiated)
                 return;
 
-            var scrollControllerList = m_scrollViewController.m_ContainedSelectables;
+            var scrollControllerList = m_scrollViewController.ContainedSelectables;
             if (scrollControllerList == null || scrollControllerList.Count == 0)
             {
                 Debug.LogWarning("No Selectables found for Navigation-Setup. Cancelling.");
                 return;
             }
 
-            Debug.Log($"SetupExplicitNavigation started. Loop: {m_scrollViewController.m_loopNavigation}, Direction: {m_scrollViewController.m_EScrollDirection}, ElementCount: {scrollControllerList.Count}");
+            Debug.Log($"SetupExplicitNavigation started. Loop: {m_scrollViewController.m_loopNavigation}, Direction: {m_scrollViewController.EScrollDirection}, ElementCount: {scrollControllerList.Count}");
 
             for (int i = 0; i < scrollControllerList.Count; i++)
             {
@@ -67,10 +67,10 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                         break;
 
                     case GridLayoutGroup:
-                        //newNav.selectOnUp = GetGridSelectable(i, Vector2Int.up, m_ContainedSelectables, m_loopNavigation);
-                        //newNav.selectOnDown = GetGridSelectable(i, Vector2Int.down, m_ContainedSelectables, m_loopNavigation);
-                        //newNav.selectOnLeft = GetGridSelectable(i, Vector2Int.left, m_ContainedSelectables, m_loopNavigation);
-                        //newNav.selectOnRight = GetGridSelectable(i, Vector2Int.right, m_ContainedSelectables, m_loopNavigation);
+                        //newNav.selectOnUp = GetGridSelectable(i, Vector2Int.up, ContainedSelectables, m_loopNavigation);
+                        //newNav.selectOnDown = GetGridSelectable(i, Vector2Int.down, ContainedSelectables, m_loopNavigation);
+                        //newNav.selectOnLeft = GetGridSelectable(i, Vector2Int.left, ContainedSelectables, m_loopNavigation);
+                        //newNav.selectOnRight = GetGridSelectable(i, Vector2Int.right, ContainedSelectables, m_loopNavigation);
 
                         //Start Grid-Test: Set Automatic Navigation.
                         newNav.mode = Navigation.Mode.Automatic;

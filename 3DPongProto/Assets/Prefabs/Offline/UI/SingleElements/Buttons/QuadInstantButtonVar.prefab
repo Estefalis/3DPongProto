@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: 2789275067205247388, guid: c996fb91c88a45549ad24cd9475a3649,
         type: 3}
       propertyPath: m_text
-      value: Btn-ID 9
+      value: Btn-ID 49
       objectReference: {fileID: 0}
     - target: {fileID: 2789275067205247388, guid: c996fb91c88a45549ad24cd9475a3649,
         type: 3}
@@ -20,7 +20,7 @@ PrefabInstance:
     - target: {fileID: 2983369774566327299, guid: c996fb91c88a45549ad24cd9475a3649,
         type: 3}
       propertyPath: m_Name
-      value: Btn-ID 9
+      value: Btn-ID 49
       objectReference: {fileID: 0}
     - target: {fileID: 4389203722231817507, guid: c996fb91c88a45549ad24cd9475a3649,
         type: 3}
@@ -126,6 +126,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6266971317865438154, guid: c996fb91c88a45549ad24cd9475a3649,
+        type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c996fb91c88a45549ad24cd9475a3649, type: 3}

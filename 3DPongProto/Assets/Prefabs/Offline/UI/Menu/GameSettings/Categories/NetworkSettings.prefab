@@ -568,7 +568,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53ccba42f474cf94989276bed3ea220e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_fillContent: {fileID: 8140988846325706512}
+  m_instantiateContent: {fileID: 8140988846325706512}
   m_autoScrolling: {fileID: 8140988846325706526}
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
@@ -604,13 +604,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8140988846325706521}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6154e0210382454a8201918cb5342e4, type: 3}
+  m_Script: {fileID: 11500000, guid: f5e81fea9f5f6214781a59e407c62db9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_scrollViewController: {fileID: 8140988846325706527}
   m_spawnPrefab: {fileID: 9022728904379417136, guid: 8f6288d1944edf94fb9ff13723d57525,
     type: 3}
-  m_createChildAmount: 10
+  m_createChildAmount: 5
 --- !u!1 &8140988846358551756
 GameObject:
   m_ObjectHideFlags: 0
@@ -849,7 +849,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53ccba42f474cf94989276bed3ea220e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_fillContent: {fileID: 8140988846658698992}
+  m_instantiateContent: {fileID: 8140988846658698992}
   m_autoScrolling: {fileID: 8140988846658699006}
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
@@ -885,13 +885,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8140988846658699000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6154e0210382454a8201918cb5342e4, type: 3}
+  m_Script: {fileID: 11500000, guid: f5e81fea9f5f6214781a59e407c62db9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_scrollViewController: {fileID: 8140988846658699007}
   m_spawnPrefab: {fileID: 9022728904379417136, guid: c4d387aef11262042a66ad7b05ae8a4c,
     type: 3}
-  m_createChildAmount: 10
+  m_createChildAmount: 5
 --- !u!1 &8140988846695799796
 GameObject:
   m_ObjectHideFlags: 0
@@ -1715,7 +1715,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53ccba42f474cf94989276bed3ea220e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_fillContent: {fileID: 8140988847254919061}
+  m_instantiateContent: {fileID: 8140988847254919061}
   m_autoScrolling: {fileID: 8140988847254919059}
   m_scrollViewRect: {fileID: 0}
   m_scrollViewContent: {fileID: 0}
@@ -1751,13 +1751,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8140988847254919070}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6154e0210382454a8201918cb5342e4, type: 3}
+  m_Script: {fileID: 11500000, guid: f5e81fea9f5f6214781a59e407c62db9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_scrollViewController: {fileID: 8140988847254919060}
   m_spawnPrefab: {fileID: 9022728904379417136, guid: c4d387aef11262042a66ad7b05ae8a4c,
     type: 3}
-  m_createChildAmount: 50
+  m_createChildAmount: 5
 --- !u!1 &8140988847333195502
 GameObject:
   m_ObjectHideFlags: 0
