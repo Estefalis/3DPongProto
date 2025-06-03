@@ -31,13 +31,16 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                 return;
 
             var scrollControllerList = m_scrollViewController.ContainedSelectables;
+            var loopNavigation = m_scrollViewController.m_loopNavigation;
+
             if (scrollControllerList == null || scrollControllerList.Count == 0)
             {
                 Debug.LogWarning("No Selectables found for Navigation-Setup. Cancelling.");
                 return;
             }
-
+#if UNITY_EDITOR
             Debug.Log($"SetupExplicitNavigation started. Loop: {m_scrollViewController.m_loopNavigation}, Direction: {m_scrollViewController.EScrollDirection}, ElementCount: {scrollControllerList.Count}");
+#endif
 
             for (int i = 0; i < scrollControllerList.Count; i++)
             {
@@ -53,24 +56,24 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                 switch (m_scrollViewController.m_layoutGroup)
                 {
                     case VerticalLayoutGroup:
-                        newNav.selectOnUp = GetVerticalSelectable(i, -1, scrollControllerList, m_scrollViewController.m_loopNavigation);
-                        newNav.selectOnDown = GetVerticalSelectable(i, 1, scrollControllerList, m_scrollViewController.m_loopNavigation);
+                        newNav.selectOnUp = GetVerticalSelectable(i, -1, scrollControllerList, loopNavigation);
+                        newNav.selectOnDown = GetVerticalSelectable(i, 1, scrollControllerList, loopNavigation);
                         //newNav.selectOnLeft = someExternalSelectable;
                         //newNav.selectOnRight = someOtherExternalSelectable;
                         break;
 
                     case HorizontalLayoutGroup:
-                        newNav.selectOnLeft = GetHorizontalSelectable(i, -1, scrollControllerList, m_scrollViewController.m_loopNavigation);
-                        newNav.selectOnRight = GetHorizontalSelectable(i, 1, scrollControllerList, m_scrollViewController.m_loopNavigation);
+                        newNav.selectOnLeft = GetHorizontalSelectable(i, -1, scrollControllerList, loopNavigation);
+                        newNav.selectOnRight = GetHorizontalSelectable(i, 1, scrollControllerList, loopNavigation);
                         //newNav.selectOnUp = someExternalSelectable;
                         //newNav.selectOnDown = someOtherExternalSelectable;
                         break;
 
                     case GridLayoutGroup:
-                        //newNav.selectOnUp = GetGridSelectable(i, Vector2Int.up, ContainedSelectables, m_loopNavigation);
-                        //newNav.selectOnDown = GetGridSelectable(i, Vector2Int.down, ContainedSelectables, m_loopNavigation);
-                        //newNav.selectOnLeft = GetGridSelectable(i, Vector2Int.left, ContainedSelectables, m_loopNavigation);
-                        //newNav.selectOnRight = GetGridSelectable(i, Vector2Int.right, ContainedSelectables, m_loopNavigation);
+                        //newNav.selectOnUp = GetGridSelectable(i, Vector2Int.up, scrollControllerList, loopNavigation);
+                        //newNav.selectOnDown = GetGridSelectable(i, Vector2Int.down, scrollControllerList, loopNavigation);
+                        //newNav.selectOnLeft = GetGridSelectable(i, Vector2Int.left, scrollControllerList, loopNavigation);
+                        //newNav.selectOnRight = GetGridSelectable(i, Vector2Int.right, scrollControllerList, loopNavigation);
 
                         //Start Grid-Test: Set Automatic Navigation.
                         newNav.mode = Navigation.Mode.Automatic;
@@ -108,6 +111,11 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         private Selectable GetHorizontalSelectable(int _currentIndex, int _direction, List<Selectable> _listItems, bool _loopNavigation)
         {
             return GetVerticalSelectable(_currentIndex, _direction, _listItems, _loopNavigation);
+        }
+
+        private Selectable GetGridSelectable(int _currentIndex, int _direction, List<Selectable> _listItems, bool _loopNavigation)
+        {
+            return null;
         }
 
         #region InstaniateNavigation

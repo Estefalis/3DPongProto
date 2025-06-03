@@ -36,7 +36,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         [Header("Mouse Scrolling")]
         [SerializeField] private float m_mouseScrollThreshold = 0.1f;
-        [SerializeField] private float m_mouseNavigationDelay = 0.2f;
+        [SerializeField] private float m_mouseNavigationDelay = 0.1f;
         private float m_nextMouseWheelNavTime = 0f;
 
         private bool m_childrenNavigationSet;
@@ -53,6 +53,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
             m_scrollViewController.m_scrollViewRect.scrollSensitivity = 0.0f;
             m_childrenNavigationSet = m_scrollViewController.ContentChildrenSet /*&& m_scrollViewController.m_ChildrenNavigationSet*/;
+
             //TODO: Set m_childrenNavigationSet properly in ScrollViewController.
         }
 
@@ -117,13 +118,13 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         {
             if (m_lastSelectedObject != null && m_lastSelectedObject != m_lastCheckedSelectedObject)
             {
+                bool isContentChild = m_lastSelectedObject.transform.IsChildOf(m_scrollViewController.m_scrollViewContent);
+
                 switch (m_eScrollTarget)
                 {
                     case EScrollTarget.Selectable:  //Get selected Object.
                     {
-                        Selectable currentSelectable = m_lastSelectedObject.GetComponent<Selectable>();
-                        //Check if the Selectable is part of the ScrollView and scroll, if needed.
-                        if (m_scrollViewController.ContainedSelectables.Contains(currentSelectable))
+                        if (isContentChild)
                         {
                             RectTransform selectedRect = m_lastSelectedObject.GetComponent<RectTransform>();
                             CalculateAndScroll(selectedRect);
@@ -132,7 +133,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                     }
                     case EScrollTarget.ContentChild:    //Get direct childObject of scrollViewContent we are in.
                     {
-                        if (m_lastSelectedObject.transform.IsChildOf(m_scrollViewController.m_scrollViewContent))
+                        if (isContentChild)
                         {
                             RectTransform rectToScrollTo = FindDirectContentChild(m_lastSelectedObject.transform);
                             if (rectToScrollTo != null)

@@ -41,7 +41,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         [SerializeField] private EContentFillType m_contentFillType = EContentFillType.Filled;
         [SerializeField] internal EScrollType m_eScrollType = EScrollType.Vertical;
         [SerializeField] private float m_scrollSensitivity = 10.0f;
-        [SerializeField] internal bool m_loopNavigation = false;    //For instantiated objects.
+        [SerializeField] internal bool m_loopNavigation = false;
 
         internal EScrollDirection EScrollDirection { get => m_eScrollDirection; }
         private EScrollDirection m_eScrollDirection;

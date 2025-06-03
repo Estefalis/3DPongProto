@@ -594,7 +594,7 @@ MonoBehaviour:
   m_eScrollTarget: 2
   m_transitionDuration: 0.1
   m_mouseScrollThreshold: 0.1
-  m_mouseNavigationDelay: 0.2
+  m_mouseNavigationDelay: 0.1
 --- !u!114 &8140988846325706512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -875,7 +875,7 @@ MonoBehaviour:
   m_eScrollTarget: 1
   m_transitionDuration: 0.1
   m_mouseScrollThreshold: 0.1
-  m_mouseNavigationDelay: 0.2
+  m_mouseNavigationDelay: 0.1
 --- !u!114 &8140988846658698992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1741,7 +1741,7 @@ MonoBehaviour:
   m_eScrollTarget: 2
   m_transitionDuration: 0.1
   m_mouseScrollThreshold: 0.1
-  m_mouseNavigationDelay: 0.2
+  m_mouseNavigationDelay: 0.1
 --- !u!114 &8140988847254919061
 MonoBehaviour:
   m_ObjectHideFlags: 0
