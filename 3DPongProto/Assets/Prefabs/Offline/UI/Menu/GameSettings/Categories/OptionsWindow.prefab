@@ -158,6 +158,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: NetworkSettings
       objectReference: {fileID: 0}
+    - target: {fileID: 8140988847254919060, guid: bea2f0cc60b8d454a8333b8bf21d7328,
+        type: 3}
+      propertyPath: m_eLoopOption
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8140988847254919060, guid: bea2f0cc60b8d454a8333b8bf21d7328,
+        type: 3}
+      propertyPath: m_eSetScrollType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8140988847254919061, guid: bea2f0cc60b8d454a8333b8bf21d7328,
         type: 3}
       propertyPath: m_createChildAmount

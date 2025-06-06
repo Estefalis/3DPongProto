@@ -182,16 +182,16 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
                     if (scrollInputY > 0)   //Scrolling Up/Left!
                     {
-                        if (m_scrollViewController.m_eScrollType == EScrollType.Vertical)
+                        if (m_scrollViewController.EScrollDirection == EScrollDirection.Vertical)
                             nextSelectable = currentSelectable.FindSelectableOnUp();
-                        else if (m_scrollViewController.m_eScrollType == EScrollType.Horizontal)
+                        else if (m_scrollViewController.EScrollDirection == EScrollDirection.Horizontal)
                             nextSelectable = currentSelectable.FindSelectableOnLeft();
                     }
                     else                    //Scrolling Down/Right!
                     {
-                        if (m_scrollViewController.m_eScrollType == EScrollType.Vertical)
+                        if (m_scrollViewController.EScrollDirection == EScrollDirection.Vertical)
                             nextSelectable = currentSelectable.FindSelectableOnDown();
-                        else if (m_scrollViewController.m_eScrollType == EScrollType.Horizontal)
+                        else if (m_scrollViewController.EScrollDirection == EScrollDirection.Horizontal)
                             nextSelectable = currentSelectable.FindSelectableOnRight();
                     }
 

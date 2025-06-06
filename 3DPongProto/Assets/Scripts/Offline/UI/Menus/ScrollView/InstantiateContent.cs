@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 {
+    //Instantiated Navigation made with help from Gemini 2.5 Pro.
     internal class InstantiateContent : MonoBehaviour
     {
         [SerializeField] internal ScrollViewController m_scrollViewController;
@@ -17,9 +18,13 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         {
             for (int i = 0; i < m_createChildAmount; i++)
             {
-                m_spawnPrefab.name = $"Btn-ID {i}";
-                m_spawnPrefab.GetComponentInChildren<TextMeshProUGUI>().text = $"Btn-ID {i}";
-                Instantiate(m_spawnPrefab, m_scrollViewController.m_scrollViewContent);
+                GameObject newChild = Instantiate(m_spawnPrefab, m_scrollViewController.m_scrollViewContent);
+                newChild.name = $"Btn-ID {i}";
+                TextMeshProUGUI textComponent = newChild.GetComponentInChildren<TextMeshProUGUI>();
+                if (textComponent != null)
+                    textComponent.text = $"Btn-ID {i}";
+                else
+                    Debug.LogWarning($"Prefab child 'Btn-ID {i}' has no TextMeshProUGUI component.");
             }
 
             m_scrollViewController.CacheSelectableChildren();
@@ -31,7 +36,8 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                 return;
 
             var scrollControllerList = m_scrollViewController.ContainedSelectables;
-            var loopNavigation = m_scrollViewController.m_loopNavigation;
+            var loopNavigation = m_scrollViewController.m_loopNavigation == true ? ELoopOption.LastToFirstCount : ELoopOption.None;
+            ELoopOption loopOption = m_scrollViewController.m_eLoopOption;
 
             if (scrollControllerList == null || scrollControllerList.Count == 0)
             {
@@ -48,36 +54,41 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                 if (currentSelectable == null)
                     continue;
 
-                Navigation newNav = new()
-                {
-                    mode = Navigation.Mode.Explicit
-                };
+                Navigation newNav = new() { mode = Navigation.Mode.Explicit };
 
                 switch (m_scrollViewController.m_layoutGroup)
                 {
                     case VerticalLayoutGroup:
-                        newNav.selectOnUp = GetVerticalSelectable(i, -1, scrollControllerList, loopNavigation);
-                        newNav.selectOnDown = GetVerticalSelectable(i, 1, scrollControllerList, loopNavigation);
+                    {
+                        newNav.selectOnUp = GetVerticalNavigation(i, -1, scrollControllerList, loopNavigation);
+                        newNav.selectOnDown = GetVerticalNavigation(i, 1, scrollControllerList, loopNavigation);
                         //newNav.selectOnLeft = someExternalSelectable;
                         //newNav.selectOnRight = someOtherExternalSelectable;
                         break;
-
+                    }
                     case HorizontalLayoutGroup:
-                        newNav.selectOnLeft = GetHorizontalSelectable(i, -1, scrollControllerList, loopNavigation);
-                        newNav.selectOnRight = GetHorizontalSelectable(i, 1, scrollControllerList, loopNavigation);
+                    {
+                        newNav.selectOnLeft = GetHorizontalNavigation(i, -1, scrollControllerList, loopNavigation);
+                        newNav.selectOnRight = GetHorizontalNavigation(i, 1, scrollControllerList, loopNavigation);
                         //newNav.selectOnUp = someExternalSelectable;
                         //newNav.selectOnDown = someOtherExternalSelectable;
                         break;
-
+                    }
                     case GridLayoutGroup:
-                        //newNav.selectOnUp = GetGridSelectable(i, Vector2Int.up, scrollControllerList, loopNavigation);
-                        //newNav.selectOnDown = GetGridSelectable(i, Vector2Int.down, scrollControllerList, loopNavigation);
-                        //newNav.selectOnLeft = GetGridSelectable(i, Vector2Int.left, scrollControllerList, loopNavigation);
-                        //newNav.selectOnRight = GetGridSelectable(i, Vector2Int.right, scrollControllerList, loopNavigation);
+                    {
+                        if (m_scrollViewController.ConstraintCount <= 0)
+                            newNav.mode = Navigation.Mode.Automatic;
+                        else
+                        {
+                            //Up/Down _direction are switched in Unity.
+                            newNav.selectOnUp = GetGridNavigation(i, Vector2Int.down, scrollControllerList, loopOption);
+                            newNav.selectOnDown = GetGridNavigation(i, Vector2Int.up, scrollControllerList, loopOption);
+                            newNav.selectOnLeft = GetGridNavigation(i, Vector2Int.left, scrollControllerList, loopOption);
+                            newNav.selectOnRight = GetGridNavigation(i, Vector2Int.right, scrollControllerList, loopOption);
+                        }
 
-                        //Start Grid-Test: Set Automatic Navigation.
-                        newNav.mode = Navigation.Mode.Automatic;
                         break;
+                    }
                 }
 
                 currentSelectable.navigation = newNav;
@@ -90,32 +101,172 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         }
 
 
-        private Selectable GetVerticalSelectable(int _currentIndex, int _direction, List<Selectable> _listItems, bool _loopNavigation)
+        private Selectable GetVerticalNavigation(int _currentIndex, int _direction, List<Selectable> _listItems, ELoopOption _eLoopOption)
         {
             int targetIndex = _currentIndex + _direction;
-            if (_loopNavigation)
+            if (_eLoopOption == ELoopOption.LastToFirstCount)
             {
                 if (targetIndex < 0)
-                    targetIndex = _listItems.Count - 1;
+                    targetIndex = _listItems.Count - 1;             //Last element.
                 else if (targetIndex >= _listItems.Count)
-                    targetIndex = 0;
+                    targetIndex = 0;                                //First element.
             }
 
             if (targetIndex >= 0 && targetIndex < _listItems.Count)
             {
                 return _listItems[targetIndex];
             }
-            return null; //Returns null, if _loopNavigation is false, or there is no targetElement.
+            return null;                                            //Returns null, if !_loopOption, or there is no targetElement.
         }
 
-        private Selectable GetHorizontalSelectable(int _currentIndex, int _direction, List<Selectable> _listItems, bool _loopNavigation)
+        private Selectable GetHorizontalNavigation(int _currentIndex, int _direction, List<Selectable> _listItems, ELoopOption _eLoopOption)
         {
-            return GetVerticalSelectable(_currentIndex, _direction, _listItems, _loopNavigation);
+            return GetVerticalNavigation(_currentIndex, _direction, _listItems, _eLoopOption);
         }
 
-        private Selectable GetGridSelectable(int _currentIndex, int _direction, List<Selectable> _listItems, bool _loopNavigation)
+        private Selectable GetGridNavigation(int _currentIndex, Vector2Int _direction, List<Selectable> _listItems, ELoopOption _loopOption)
         {
-            return null;
+            //Basic checks and Initializing.
+            if (_listItems == null || _listItems.Count <= 1)
+                return null;    //No navigation possible, if list is null, or if there are less than 2 elements.
+
+            int totalItems = _listItems.Count;
+            int constraintCount = m_scrollViewController.ConstraintCount;
+            if (constraintCount <= 0)
+                return null;    //No navigation possible, without a valid 'constraintCount'.
+
+            int numCols = constraintCount;
+            int numRows = Mathf.CeilToInt((float)totalItems / (float)numCols);
+            int currentRow = _currentIndex / numCols;
+            int currentCol = _currentIndex % numCols;
+
+            //ELoopOption switch to structure navigation logics.
+            switch (_loopOption)
+            {
+                //Special case: Strict looping within each Row/Column.
+                case ELoopOption.LastToFirstRowColumn:
+                {
+                    //Horizontal navigation-loop within a row.
+                    if (_direction.x != 0)
+                    {
+                        var itemsInCurrentRow = new List<Selectable>();
+                        var indicesInCurrentRow = new List<int>();
+
+                        //List-Collection of elements within the current row.
+                        for (int c = 0; c < numCols; ++c)
+                        {
+                            int itemIndex = currentRow * numCols + c;
+                            if (itemIndex < totalItems)
+                            {
+                                itemsInCurrentRow.Add(_listItems[itemIndex]);
+                                indicesInCurrentRow.Add(c); //Saving Column-Index.
+                            }
+                        }
+
+                        if (itemsInCurrentRow.Count == 0)
+                            return null;
+
+                        //Find the position of the current element in the filtered Row-List.
+                        int currentItemSubIndex = indicesInCurrentRow.IndexOf(currentCol);
+                        if (currentItemSubIndex == -1)
+                            return null;
+
+                        //Calculate the targetIndex and apply the loop.
+                        int targetItemSubIndex = currentItemSubIndex + _direction.x;
+                        if (targetItemSubIndex < 0)
+                            targetItemSubIndex = itemsInCurrentRow.Count - 1;
+                        else if (targetItemSubIndex >= itemsInCurrentRow.Count)
+                            targetItemSubIndex = 0;
+
+                        return itemsInCurrentRow[targetItemSubIndex];
+                    }
+                    //Vertical navigation-loop within the column.
+                    else if (_direction.y != 0)
+                    {
+                        var itemsInCurrentCol = new List<Selectable>();
+                        var indicesInCurrentCol = new List<int>();
+
+                        //List-Collection of elements within the current column.
+                        for (int r = 0; r < numRows; ++r)
+                        {
+                            int itemIndex = r * numCols + currentCol;
+                            if (itemIndex < totalItems)
+                            {
+                                itemsInCurrentCol.Add(_listItems[itemIndex]);
+                                indicesInCurrentCol.Add(r); //Saving Row-Index.
+                            }
+                        }
+
+                        if (itemsInCurrentCol.Count == 0)
+                            return null;
+
+                        //Find the position of the current element in the filtered Column-List.
+                        int currentItemSubIndex = indicesInCurrentCol.IndexOf(currentRow);
+                        if (currentItemSubIndex == -1)
+                            return null;
+
+                        //Calculate the targetIndex and apply the loop.
+                        int targetItemSubIndex = currentItemSubIndex + _direction.y;
+                        if (targetItemSubIndex < 0)
+                            targetItemSubIndex = itemsInCurrentCol.Count - 1;
+                        else if (targetItemSubIndex >= itemsInCurrentCol.Count)
+                            targetItemSubIndex = 0;
+
+                        return itemsInCurrentCol[targetItemSubIndex];
+                    }
+                    break; //End of ELoopOption.LastToFirstRowColumn.
+                }
+
+                //STANDARD-NAVIGATION for ELoopOption.None & ELoopOption.LastToFirstCount: "Grid Wrap" horizontal, Standard vertical.
+                case ELoopOption.None:                  //No loop between first and last contentChild.
+                case ELoopOption.LastToFirstCount:      //Loop between first and last contentChild.
+                {
+                    if (_loopOption == ELoopOption.LastToFirstCount)
+                    {
+                        if (_currentIndex == 0 && (_direction.y < 0 || _direction.x < 0)) //V2 Up/Left on 1st element.
+                        {
+                            return _listItems[totalItems - 1];  //returns last child to loop to.
+                        }
+                        if (_currentIndex == totalItems - 1 && (_direction.y > 0 || _direction.x > 0)) //V2 Down/Right on last element.
+                        {
+                            return _listItems[0];               //returns first child to loop to.
+                        }
+                    }
+                    //ELoopOption.None: return null, to enable manual navigation to external Selectables.
+
+                    //Horizontal "Grid Wrap" Navigation.
+                    if (_direction.x != 0)
+                    {
+                        //Go to next/back to previous line in the contentChildCount by adding incoming +/- _direction.x (GridWrap).
+                        int targetIndex = _currentIndex + _direction.x;
+                        if (targetIndex >= 0 && targetIndex < totalItems)
+                        {
+                            return _listItems[targetIndex];
+                        }
+                    }
+
+                    //Standard vertical Navigation.
+                    if (_direction.y != 0)
+                    {
+                        //Navigate to the element above/below in the same Column.
+                        int targetRow = currentRow + _direction.y;
+                        //Check, if the targetIndex is within the grid.
+                        if (targetRow >= 0 && targetRow < numRows)
+                        {
+                            int targetIndex = targetRow * numCols + currentCol;
+                            //Check, if the targeted Element does exist. Prevents jumping into incomplete last rows.
+                            if (targetIndex >= 0 && targetIndex < totalItems)
+                            {
+                                return _listItems[targetIndex];
+                            }
+                        }
+                    }
+
+                    return null;    //Fallback, if no navigation cannot be found/set.
+                }
+            }
+
+            return null;    //Final switch-Fallback.
         }
 
         #region InstaniateNavigation
