@@ -63,8 +63,8 @@ namespace ThreeDeePongProto.Shared.Settings
 
         private int m_currentViewIndex;
         private List<Selectable> m_zoomSelectables = new();
-        internal static event Action<int> PlayerViewIndex;        //Subscriber: RebindManager.
-        internal static event Action ResetPlayerViewRebinds;      //Subscriber: RebindManager.
+        internal static event Action<int> PlayerViewIndex;        //Subscriber: RebindManagerSP.
+        internal static event Action ResetPlayerViewRebinds;      //Subscriber: RebindManagerSP.
         #endregion
 
         #region Axis Inversion

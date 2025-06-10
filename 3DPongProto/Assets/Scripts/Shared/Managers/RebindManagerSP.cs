@@ -10,7 +10,7 @@ using UnityEngine.InputSystem;
 
 namespace ThreeDeePongProto.Shared.Managers
 {
-    public class RebindManager : MonoBehaviour
+    public class RebindManagerSP : MonoBehaviour
     {
         private enum ActiveInputActionMap
         {
@@ -57,7 +57,7 @@ namespace ThreeDeePongProto.Shared.Managers
         private static event Func<string, string, Sprite> m_extractButtonImage;
         #endregion
 
-        private static ActiveInputActionMap m_activeInputActionMap = ActiveInputActionMap.None; //Inside ToggleActionMaps!
+        private static ActiveInputActionMap m_activeInputActionMap = ActiveInputActionMap.None; //Used inside ToggleActionMaps!
 
         #region Serialization
         private static int m_playerIndex;
@@ -71,7 +71,7 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         /// <summary>
-        /// CharacterMainController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the RebindManager into 'Awake()', to prevent Exceptions.
+        /// CharacterMainController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the RebindManagerSP into 'Awake()', to prevent Exceptions.
         /// </summary>
         private void Awake()
         {
@@ -92,16 +92,6 @@ namespace ThreeDeePongProto.Shared.Managers
                 //m_PlayerInputActions = new PlayerInputActions();
                 m_PlayerInputActions = UserInputManager.m_CentralActionsInstance;
 
-            //var playerInput = FindObjectOfType<PlayerInput>();
-            //if (playerInput != null)
-            //{
-            //    if (playerInput.actions != m_PlayerInputActions.asset)
-            //    {
-            //        Debug.LogWarning("PlayerInput and RebindManager use different ActionAssets. Please synchronize them.");
-            //        playerInput.actions = m_PlayerInputActions.asset;
-            //    }
-            //}
-
             m_PlayerInputActions.PlayerActions.Enable();
         }
 
@@ -116,8 +106,6 @@ namespace ThreeDeePongProto.Shared.Managers
             m_extractButtonImage += ExtractImage;
 
             ControlSettings.PlayerViewIndex += PlayerIndex;
-
-            //InputUser.onChange += OnChange;
         }
 
         private void OnDisable()
@@ -126,7 +114,6 @@ namespace ThreeDeePongProto.Shared.Managers
 
             ControlSettings.PlayerViewIndex -= PlayerIndex;
 
-            //InputUser.onChange -= OnChange;
             m_PlayerInputActions.Disable();
         }
 
@@ -1078,21 +1065,6 @@ namespace ThreeDeePongProto.Shared.Managers
                 }
             }
         }
-        #endregion
-
-        #region On-Device-Change
-        //private void OnChange(InputUser _inputUser, InputUserChange _inputUserChange, InputDevice _inputDevice)
-        //{
-        //    //if (_inputUser.controlScheme.Value.name == null)
-        //    //    return;
-
-        //    ////Only works with adding a 'PlayerInput component'. Avoid conflicts with another 'PlayerInput component', if more are set.
-        //    //switch (_inputUserChange)
-        //    //{
-        //    //    case InputUserChange.ControlSchemeChanged: Debug.Log(_inputUser.controlScheme.Value.name); break;
-        //    //    default: break;
-        //    //}
-        //}
         #endregion
     }
 }
