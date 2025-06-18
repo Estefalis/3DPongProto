@@ -7,7 +7,6 @@ using UnityEngine;
 public class MatchValues : ScriptableObject
 {
     public List<PlayerSOData> PlayerSOData;
-    //public List<GameObject> PlayerPrefabs;
     public uint MaxPlayerInGame;
     [Header("Round-Details")]
     public float StartTime;             //each Match

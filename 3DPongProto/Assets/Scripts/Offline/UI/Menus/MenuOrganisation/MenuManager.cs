@@ -22,6 +22,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
     public class MenuManager : MonoBehaviour
     {
+        private RebindManager m_rebindManager;
+
         private PlayerInputActions m_inputActions;
         private InputActionMap m_uiActionMap;
 
@@ -72,7 +74,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         #region Actions_and_Functions
         internal static event Action AResumeTheGame;          //LocalMatchManager to resume the Game.
-        internal static event Action<int> AReLoadScene;       //(New)UserInputManager with central SceneManager.LoadScene().
+        internal static event Action<int> AReLoadScene;       //UserInputManager with central SceneManager.LoadScene().
         internal static event Action AEndInfiniteMatch;
         #endregion
 
@@ -84,6 +86,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void Awake()
         {
+            m_rebindManager = FindObjectOfType<RebindManager>();
+
             Cursor.lockState = m_cursorLockMode;
             Cursor.visible = m_showCursor;
 
@@ -563,6 +567,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         public void ReturnToMainMenu()
         {
+            m_rebindManager.ResetProcessedPlayersList();        //Or whenever a player leaves.
             AReLoadScene?.Invoke((int)ESceneNames.StartMenu);   //Possible without '?.Invoke'?
         }
 

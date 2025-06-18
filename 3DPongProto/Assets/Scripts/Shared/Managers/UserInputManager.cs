@@ -11,10 +11,11 @@ using UnityEngine.SceneManagement;
 
 internal enum ESceneNames
 {
-    StartMenu = 0,
-    LocalGame = 1,
-    LanGame = 2,
-    NetGame = 3
+    BootScene = 0,
+    StartMenu = 1,
+    LocalGame = 2,
+    LanGame = 3,
+    NetGame = 4
 }
 
 internal enum EPlayerMenuControl
@@ -36,7 +37,7 @@ internal enum EInputActionMaps
 
 namespace ThreeDeePongProto.Shared.Managers
 {
-    public class UserInputManager : MonoBehaviour
+    public class UserInputManager : PersistentSingleton<UserInputManager>
     {
         //public static UserInputManager Instance { get; private set; }
         public static PlayerInputActions m_CentralActionsInstance;
@@ -56,7 +57,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         internal static string SetActionMap { get => m_lastSetActionMap; }
         private static string m_lastSetActionMap;
-        internal static int FocusedKeyboardPlayerID { get; private set; } = 0; //Keeps track of focused player. Standard PlayerID 0.
+        internal static int FocusedKeyboardPlayerID { get; private set; } = 0; //Keeps track of focused p. Standard PlayerID 0.
 
         #region Lists_and_Dictionaries
         private List<InputDevice> m_availableGamepads;
@@ -73,20 +74,9 @@ namespace ThreeDeePongProto.Shared.Managers
         private const string m_keyboardMouseScheme = "KeyboardMouse";
         private const string m_gamePadScheme = "Gamepad";
 
-        private void Awake()
+        protected override void Awake()
         {
-            #region Singleton_Pattern
-            //if (Instance == null)
-            //{
-            //    Instance = this;
-            //    //DontDestroyOnLoad(gameObject);
-            //}
-            //else
-            //{
-            //    Destroy(gameObject);
-            //    return;
-            //}
-            #endregion
+            base.Awake();
 
             m_lastSetActionMap = "";
 
@@ -94,13 +84,20 @@ namespace ThreeDeePongProto.Shared.Managers
                 m_CentralActionsInstance = new();
 
             m_CentralActionsInstance.Enable();
-            m_selectPlayers[0] = m_CentralActionsInstance.PlayerActions.SelectPlayer1;
-            m_selectPlayers[1] = m_CentralActionsInstance.PlayerActions.SelectPlayer2;
-            m_selectPlayers[2] = m_CentralActionsInstance.PlayerActions.SelectPlayer3;
-            m_selectPlayers[3] = m_CentralActionsInstance.PlayerActions.SelectPlayer4;
 
             m_CentralActionsInstance.PlayerActions.Disable();
             m_CentralActionsInstance.UserInterface.Disable();
+
+            for (int p = 0; p < m_selectPlayers.Length; p++)
+            {
+                if (m_selectPlayers.Length > 0 && m_selectPlayers[p] != null)
+                {
+                    m_selectPlayers[p] = m_CentralActionsInstance.PlayerActions.SelectPlayer1;
+                    m_selectPlayers[p] = m_CentralActionsInstance.PlayerActions.SelectPlayer2;
+                    m_selectPlayers[p] = m_CentralActionsInstance.PlayerActions.SelectPlayer3;
+                    m_selectPlayers[p] = m_CentralActionsInstance.PlayerActions.SelectPlayer4;
+                }
+            }
 
             m_playerInputManager = GetComponent<PlayerInputManager>();
             SetUpPlayerInputManager(m_playerInputManager);
@@ -168,7 +165,7 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         #region Custom_Methods
-        private void SpawnPlayers()
+        private void SpawnLocalPlayers()
         {
             if (m_playerInputManager == null)
             {
@@ -201,7 +198,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 controlScheme = GetControlSchemeForPlayer(playerIndex, devicesToPair);
 
                 #region Dictionary and Boolean-Section to handle gamepad re-connects.
-                //When spawning player 'playerIndex' with device and controlScheme, store gamepad, null for keyboard origin.
+                //When spawning p 'playerIndex' with device and controlScheme, store gamepad, null for keyboard origin.
                 m_playerOriginalDevice[playerIndex] = (devicesToPair[0] is not Gamepad) ? null : devicesToPair[0];
                 m_playerOriginalScheme[playerIndex] = controlScheme;
                 m_isPlayerUsingFallback[playerIndex] = false;
@@ -269,7 +266,7 @@ namespace ThreeDeePongProto.Shared.Managers
             PlayerInput disconnectedPlayerInput = null;
             int disconnectedPlayerIndex = -1;
 
-            //Find player using this gamepad.
+            //Find p using this gamepad.
             foreach (PlayerInput pi in PlayerInput.all)
             {
                 if (pi.devices.Contains(_disconnectedGamepad))
@@ -285,7 +282,7 @@ namespace ThreeDeePongProto.Shared.Managers
 #if UNITY_EDITOR
                 Debug.Log($"Gamepad '{_disconnectedGamepad.displayName}' disconnected from Player {disconnectedPlayerIndex}. Switching to keyboard.");
 #endif
-                //Store that this player is now using fallback.
+                //Store that this p is now using fallback.
                 m_isPlayerUsingFallback[disconnectedPlayerIndex] = true;
 
                 //Determine the correct Keyboard scheme.
@@ -296,7 +293,7 @@ namespace ThreeDeePongProto.Shared.Managers
 #if UNITY_EDITOR
                     Debug.LogError($"Fallback scheme '{keyboardScheme}' not found! Cannot switch player {disconnectedPlayerIndex} to keyboard.");
 #endif
-                    //Potentially disable input for this player entirely?
+                    //Potentially disable input for this p entirely?
                     disconnectedPlayerInput.DeactivateInput(); //Or just leave them without device?
                     return;
                 }
@@ -306,7 +303,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 if (Mouse.current != null)
                     keyboardDeviceList.Add(Mouse.current);
 
-                //Switch the player.
+                //Switch the p.
                 disconnectedPlayerInput.SwitchCurrentControlScheme(keyboardScheme, keyboardDeviceList.ToArray());
             }
         }
@@ -324,7 +321,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 {
                     bool currentlyUsingFallback = m_isPlayerUsingFallback.TryGetValue(playerIndex, out bool usingFallback) && usingFallback;
 
-                    //Check if original device matches AND player is currently using fallback.
+                    //Check if original device matches AND p is currently using fallback.
                     if (originalDevice.deviceId == _reconnectedGamepad.deviceId && currentlyUsingFallback)
                     {
                         playerIndexToSwitchBack = playerIndex;
@@ -347,9 +344,9 @@ namespace ThreeDeePongProto.Shared.Managers
             }
             else
             {
-                //Is the Gamepad already assigned to another player?
+                //Is the Gamepad already assigned to another p?
                 bool alreadyAssigned = PlayerInput.all.Any(pi => pi.devices.Any(d => d.deviceId == _reconnectedGamepad.deviceId));
-                //If the gamepad is not already assigned to a player, add it the 'm_availableGamepads'-list.
+                //If the gamepad is not already assigned to a p, add it the 'm_availableGamepads'-list.
                 if (!m_availableGamepads.Contains(_reconnectedGamepad))
                 {
                     m_availableGamepads.Add(_reconnectedGamepad);
@@ -367,17 +364,20 @@ namespace ThreeDeePongProto.Shared.Managers
 
             for (int action = 0; action < m_selectPlayers.Length; action++)
             {
-                switch (_enable)
+                if (m_selectPlayers.Length > 0 && m_selectPlayers[action] != null)
                 {
-                    case true:
+                    switch (_enable)
                     {
-                        m_selectPlayers[action].Enable();
-                        break;
-                    }
-                    case false:
-                    {
-                        m_selectPlayers[action].Disable();
-                        break;
+                        case true:
+                        {
+                            m_selectPlayers[action].Enable();
+                            break;
+                        }
+                        case false:
+                        {
+                            m_selectPlayers[action].Disable();
+                            break;
+                        }
                     }
                 }
             }
@@ -391,17 +391,21 @@ namespace ThreeDeePongProto.Shared.Managers
         private void OnSceneManagerLoaded(Scene scene, LoadSceneMode mode)
         {
             int sceneIndex = scene.buildIndex;
+            bool localGame = sceneIndex == (int)ESceneNames.LocalGame;
 
-            switch (sceneIndex)
-            {
-                case 1:
-                {
-                    SpawnPlayers();
-                    break;
-                }
-                default:
-                    break;
-            }
+            if (localGame)
+                SpawnLocalPlayers();
+
+            //switch (sceneIndex)
+            //{
+            //    case 1:
+            //    {
+            //        SpawnLocalPlayers();
+            //        break;
+            //    }
+            //    default:
+            //        break;
+            //}
         }
 
         /// <summary>
@@ -410,29 +414,10 @@ namespace ThreeDeePongProto.Shared.Managers
         /// <param name="_sceneIndex"></param>
         private void OnReLoadScene(int _sceneIndex)
         {
-            switch (_sceneIndex)
+            if (_sceneIndex > 0) //Exclude BootScene with DDOL-Managers.
             {
-                case 0:
-                    SceneManager.LoadScene((int)ESceneNames.StartMenu);
-                    break;
-                case 1:
-                    SceneManager.LoadScene((int)ESceneNames.LocalGame);
-                    break;
-                case 2:
-                {
-                    Debug.Log("When the LanGame mode is finished... .");
-                    //SceneManager.LoadScene((int)ESceneNames.LanGame);
-                }
-                break;
-                case 3:
-                {
-                    Debug.Log("When the NetGame mode is finished... .");
-                    //SceneManager.LoadScene((int)ESceneNames.NetGame);
-                }
-                break;
-                default:
-                    Debug.Log("Scene is not implemented, yet!");
-                    break;
+                if (_sceneIndex < SceneManager.sceneCountInBuildSettings - 1)   //-1 marks last SceneIndex.
+                    SceneManager.LoadScene(_sceneIndex);
             }
         }
 

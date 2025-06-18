@@ -10,14 +10,15 @@ using UnityEngine.InputSystem;
 
 namespace ThreeDeePongProto.Shared.Managers
 {
+    internal enum ActiveInputActionMap
+    {
+        None,
+        PlayerActions,
+        UserInterface
+    }
+
     public class RebindManagerSP : MonoBehaviour
     {
-        private enum ActiveInputActionMap
-        {
-            None,
-            PlayerActions,
-            UserInterface
-        }
 
         public static PlayerInputActions m_PlayerInputActions;  //Reference to the PlayerAction-InputAsset.
         #region PlayerPref Example

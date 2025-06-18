@@ -45,7 +45,7 @@ PrefabInstance:
     - target: {fileID: 2509531060148079307, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
       propertyPath: m_fontSize
-      value: 31.7
+      value: 35.8
       objectReference: {fileID: 0}
     - target: {fileID: 2509531060148079309, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
@@ -100,12 +100,12 @@ PrefabInstance:
     - target: {fileID: 2509531060462451292, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
       propertyPath: m_inputBinding.m_Id
-      value: e1d2e272-caff-488f-9dec-01e6ec77ef8d
+      value: 8e316275-ed43-4791-819c-8d332385a840
       objectReference: {fileID: 0}
     - target: {fileID: 2509531060462451292, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
       propertyPath: m_inputBinding.m_Path
-      value: <Keyboard>/upArrow
+      value: <Keyboard>/w
       objectReference: {fileID: 0}
     - target: {fileID: 2509531060462451292, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
@@ -121,12 +121,12 @@ PrefabInstance:
     - target: {fileID: 2509531060462451292, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
       propertyPath: m_inputBinding.m_Groups
-      value: KeyboardPlayerID1
+      value: KeyboardPlayerID0
       objectReference: {fileID: 0}
     - target: {fileID: 2509531060462451294, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
       propertyPath: m_Name
-      value: ButtonGpPPP2
+      value: Rebind - Push (0)
       objectReference: {fileID: 0}
     - target: {fileID: 2509531060462451295, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
@@ -256,7 +256,7 @@ PrefabInstance:
     - target: {fileID: 2509531060579204855, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
       propertyPath: m_Name
-      value: RebindKeyGroupVariant
+      value: RebindKeyGroupVar
       objectReference: {fileID: 0}
     - target: {fileID: 2509531061419505452, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
@@ -313,15 +313,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2509531061962685655, guid: 773a22e837edd1f418ad1c7478891320,
-        type: 3}
-      propertyPath: m_InputActionReference
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 2509531061962685659, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
       propertyPath: m_Name
-      value: ButtonKbPPP2
+      value: Rebind - Push (0)
       objectReference: {fileID: 0}
     - target: {fileID: 2509531062249128632, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
@@ -390,12 +385,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3139322597922871632, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
-      propertyPath: m_inputActionReference
-      value: 
-      objectReference: {fileID: -1822565719444639933, guid: 10bcd34be915850428dc91a0ac6c1a9f,
-        type: 3}
-    - target: {fileID: 3139322597922871632, guid: 773a22e837edd1f418ad1c7478891320,
-        type: 3}
       propertyPath: m_inputBinding.m_Action
       value: Push
       objectReference: {fileID: 0}
@@ -403,11 +392,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_inputBinding.m_Groups
       value: KeyboardPlayerID0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3139322597922871632, guid: 773a22e837edd1f418ad1c7478891320,
-        type: 3}
-      propertyPath: m_humanReadableStringOptions
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3579551642052345595, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
