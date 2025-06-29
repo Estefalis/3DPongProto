@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-//using System.Linq; //Important for duplicate check.
-//using TMPro;
+using ThreeDeePongProto.Shared.InputActions;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -10,13 +10,12 @@ namespace ThreeDeePongProto.Shared.Managers
 {
     public class RebindManager : PersistentSingleton<RebindManager>
     {
-        //public static RebindManager Instance { get; private set; }    //Replaced by/outsourced to PersistentSingleton<RebindManager>.
         [SerializeField] private PlayerInputManager m_playerInputManager;
-        [Header("Global Asset Reference")]
-        [Tooltip("Drag in the Main-InputActionAsset for system-wide Bindings.")]
-        [SerializeField] private InputActionAsset m_globalActionAsset;
+
+        [SerializeField] private PlayerInputActions _globalActionsInstance;
 
         private InputActionRebindingExtensions.RebindingOperation _rebindingOperation;
+        //_____________________________________________________________________________________________________________________________
 
         private readonly HashSet<int> _playerIndicesWithLoadedBindings = new();         //Memory to prevent multiple loading processes.
 
@@ -31,7 +30,9 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private const string m_rebindExcludeMouse = "<Mouse>";                          //Control-Paths REQUIRE <>. LayoutNames DO NOT!
         private const string m_keyboardEscape = "<Keyboard>/escape";                    //Control-Paths REQUIRE <>. LayoutNames DO NOT!
-        private const string m_gamepadSystemBtn = "<DualSenseGamepadHID>/systemButton"; //Control-Paths REQUIRE <>. LayoutNames DO NOT!
+        private const string m_gamepadSelect = "<Gamepad>/select";                      //Control-Paths REQUIRE <>. LayoutNames DO NOT!
+        private const string m_gamepadSysBtn = "<Gamepad>/systemButton";                //Control-Paths REQUIRE <>. LayoutNames DO NOT!
+        private const string m_gamepadSysBtnDS = "<DualSenseGamepadHID>/systemButton";  //Control-Paths REQUIRE <>. LayoutNames DO NOT!
         private const string m_gamepadMicroBtn = "<DualSenseGamepadHID>/micButton";     //Control-Paths REQUIRE <>. LayoutNames DO NOT!
 
         public event Action OnRebindComplete;
@@ -40,6 +41,13 @@ namespace ThreeDeePongProto.Shared.Managers
         protected override void Awake()
         {
             base.Awake();
+
+            _globalActionsInstance = new PlayerInputActions();
+            //_globalActionsInstance = UserInputManager.m_CentralActionsInstance;
+
+            //Activate ActionMaps that shall be used globally.
+            _globalActionsInstance.PlayerActions.Enable();
+            _globalActionsInstance.UserInterface.Enable();
 
             LoadGlobalBindings();
         }
@@ -103,15 +111,10 @@ namespace ThreeDeePongProto.Shared.Managers
             _mouseBindingRegistry.Clear();
 
             //2. Register global Bindings.
-            foreach (var action in m_globalActionAsset)
+            foreach (var action in _globalActionsInstance)
                 RegisterBindingsForAction(action);
 
             //3. Find all PlayerInput components in the scene.
-
-            //PlayerInput[] preExistingPlayers = FindObjectsOfType<PlayerInput>();
-            //if (preExistingPlayers.Length > 0)
-            //    Debug.Log($"Found {preExistingPlayers.Length} already existing Player in the Scene. Loading their Bindings...");
-
             //If preExistingPlayers is needed elsewhere: foreach (var playerInput in preExistingPlayers)
             foreach (var playerInput in FindObjectsOfType<PlayerInput>())      //If preExistingPlayers is not needed elsewhere.
             {
@@ -132,16 +135,24 @@ namespace ThreeDeePongProto.Shared.Managers
         /// <param name="_actionToRebind">The action to rebind.</param>
         /// <param name="_bindingIndex">BindingIndex to rebind.</param>
         /// <param name="_excludeMouse">Bool to exclude the mouse or not.</param>
-        public void StartPlayerRebinding(PlayerInput _playerInput, InputAction _actionToRebind, int _bindingIndex, bool _excludeMouse)
+        public void StartPlayerRebinding(PlayerInput _playerInput, string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, bool _excludeMouse)
         {
-            if (_playerInput == null || _actionToRebind == null)
+            if (_playerInput == null || string.IsNullOrEmpty(_actionName))
                 return;
 
+            InputAction actionToRebind = _playerInput.actions.FindAction(_actionName);
+            if (actionToRebind == null)
+            {
+                Debug.LogError($"Action '{_actionName}' could not be found in the PlayerInput component.");
+                return;
+            }
+
+            _playerInput.ActivateInput();
             //Deactivate the ActionMap of the Player to prevent conflicts.
             _playerInput.SwitchCurrentActionMap($"{ActiveInputActionMap.UserInterface}");
 
             //Closure: Define HERE what is to do. And hand it over to PerformRebinding, to execute it THERE, if required.
-            PerformRebinding(_actionToRebind, _bindingIndex, /*_statusText, */_excludeMouse,
+            PerformRebinding(actionToRebind, _bindingIndex, _statusText, _excludeMouse,
             //OnCompleteCallback: Submit what shall happen on a successful rebind operation.
             () =>
             {
@@ -202,34 +213,37 @@ namespace ThreeDeePongProto.Shared.Managers
         /// <summary>
         /// Starts Rebinding for a global Action.
         /// </summary>
-        public void StartGlobalRebinding(InputAction _actionToRebind, int _bindingIndex, /*TextMeshProUGUI _statusText, */bool _excludeMouse)
+        public void StartGlobalRebinding(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, bool _excludeMouse)
         {
-            if (m_globalActionAsset == null)
+            InputAction actionToRebind = _globalActionsInstance.FindAction(_actionName);
+            if (actionToRebind == null)
             {
-                Debug.LogError("Global InputActionAsset is not assigned in the RebindManager!");
+                Debug.LogError($"Action '{_actionName}' could not be found in the global Asset.");
                 return;
             }
 
-            //Manage ActionMaps manually.
-            m_globalActionAsset.FindActionMap($"{ActiveInputActionMap.PlayerActions}").Disable();
-            m_globalActionAsset.FindActionMap($"{ActiveInputActionMap.UserInterface}").Enable();
+            // ActionMap Management auf the global Instance.
+            _globalActionsInstance.PlayerActions.Disable();
+            _globalActionsInstance.UserInterface.Enable();
 
             //Closure: Define HERE what is to do. And hand it over to PerformRebinding, to execute it THERE, if required.
-            PerformRebinding(_actionToRebind, _bindingIndex, /*_statusText, */_excludeMouse,
+            PerformRebinding(actionToRebind, _bindingIndex, _statusText, _excludeMouse,
             () =>
             {
                 SaveGlobalBindings();
-                m_globalActionAsset.FindActionMap($"{ActiveInputActionMap.PlayerActions}").Enable();
+                _globalActionsInstance.PlayerActions.Enable();
+                _globalActionsInstance.UserInterface.Disable();
             },
             () =>
             {
-                m_globalActionAsset.FindActionMap($"{ActiveInputActionMap.PlayerActions}").Enable();
+                _globalActionsInstance.PlayerActions.Enable();
+                _globalActionsInstance.UserInterface.Disable();
             });
         }
 
         internal InputAction GetGlobalAction(string _actionName)
         {
-            return m_globalActionAsset.FindAction(_actionName);
+            return _globalActionsInstance.FindAction(_actionName);
         }
 
         /// <summary>
@@ -237,12 +251,14 @@ namespace ThreeDeePongProto.Shared.Managers
         /// </summary>
         internal void SaveGlobalBindings()
         {
-            if (m_globalActionAsset == null)
+            if (_globalActionsInstance == null)
                 return;
 
-            var overrides = m_globalActionAsset.SaveBindingOverridesAsJson();
+            var overrides = _globalActionsInstance.SaveBindingOverridesAsJson();
+#if UNITY_EDITOR
+            Debug.LogWarning("== GLOBALE BINDINGS SAVED ==\n" + overrides);
+#endif
             PlayerPrefs.SetString(SYSTEM_BINDINGS_KEY, overrides);
-            Debug.Log("Saving global bindings.");
         }
 
         /// <summary>
@@ -250,14 +266,14 @@ namespace ThreeDeePongProto.Shared.Managers
         /// </summary>
         private void LoadGlobalBindings()
         {
-            if (m_globalActionAsset == null)
+            if (_globalActionsInstance == null)
                 return;
 
             string overridesJson = PlayerPrefs.GetString(SYSTEM_BINDINGS_KEY);
             if (!string.IsNullOrEmpty(overridesJson))
             {
-                m_globalActionAsset.LoadBindingOverridesFromJson(overridesJson);
-                Debug.Log("Loading global bindings.");
+                _globalActionsInstance.LoadBindingOverridesFromJson(overridesJson);
+                Debug.Log("Loading global bindings in the new Instance.");
             }
         }
         #endregion
@@ -266,16 +282,19 @@ namespace ThreeDeePongProto.Shared.Managers
         /// <summary>
         /// Central method to execute the interactive Rebinding-Process.
         /// </summary>
-        private void PerformRebinding(InputAction _actionToRebind, int _bindingIndex, /*TextMeshProUGUI statusText, */bool _excludeMouse, Action _onCompleteCodeBlock, Action _onCancelCodeBlock)
+        private void PerformRebinding(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI statusText, bool _excludeMouse, Action _onCompleteCodeBlock, Action _onCancelCodeBlock)
         {
-            //statusText.text = "Please press a Button...";
+            statusText.text = "Press a Button";
 
             var originalBinding = _actionToRebind.bindings[_bindingIndex];      //Save original bindings for a later use.
+            _actionToRebind.Disable();
 
             _rebindingOperation = _actionToRebind.PerformInteractiveRebinding(_bindingIndex)
-                .WithControlsExcluding(m_keyboardEscape)                        //Never rebind Escape.
                 .WithCancelingThrough(m_keyboardEscape)                         //Use Escape to cancel rebinding.
-                .WithControlsExcluding(m_gamepadSystemBtn)                      //Never rebind gamepad's SystemButton.
+                .WithCancelingThrough(m_gamepadSelect)                          //Use Select button to cancel rebinding.
+                .WithControlsExcluding(m_keyboardEscape)                        //Never rebind Escape.
+                .WithControlsExcluding(m_gamepadSysBtn)                      //PlayStation/Xbox Home Button
+                .WithControlsExcluding(m_gamepadSysBtnDS)                    //Never rebind gamepad's SystemButton.
                 .WithControlsExcluding(m_gamepadMicroBtn)                       //Never rebind gamepad's microphone button.
                                                                                 //.WithControlsExcluding("<Gamepad>/start")                       //TODO: RShould gamepad's startButton be rebound?
                 .OnMatchWaitForAnother(0.1f);
@@ -289,20 +308,27 @@ namespace ThreeDeePongProto.Shared.Managers
                 if (CheckForDuplicateBinding(_actionToRebind, newPath))
                 {
                     //Cancel the operation, if a duplicate is found.
-                    //statusText.text = "Button already assigned!";
                     _actionToRebind.RemoveBindingOverride(_bindingIndex);   //Remove temporary Changes.
                     //.Dispose() replace .Cancel(), to turn from a fix cancelling behavior to custom-controlled UI behavior. 
                     operation.Dispose();
-                    Invoke(nameof(ResetStatusText), 1.5f);                  //Cancel-Delay so the player can read the Information.
+                    _actionToRebind.Enable();
+                    //Invoke(nameof(ResetStatusText), 1.5f);                  //Cancel-Delay so the player can read the Information.
+                    ResetStatusText();
                 }
             })
             //Call on successful Rebinding, if no duplicate was found.
             .OnComplete(operation =>
             {
+                operation.action.Enable();
+
+                var binding = _actionToRebind.bindings[_bindingIndex];
+
+                Debug.Log($"NEW Override-Path of the Binding: {binding.overridePath}"); //<-----------
+
                 //1. Unregister old bindings in dictionaries.
                 UnregisterBinding(originalBinding);
                 //2. Register new bindings in dictionaries.
-                RegisterBinding(_actionToRebind.bindings[_bindingIndex], _actionToRebind);
+                RegisterBinding(_actionToRebind.bindings[_bindingIndex], operation.action);
 
                 //statusText.text = string.Empty;
                 operation.Dispose();
@@ -311,8 +337,9 @@ namespace ThreeDeePongProto.Shared.Managers
             })
             .OnCancel(operation =>
             {
-                //statusText.text = string.Empty;
+                operation.action.Enable();
                 operation.Dispose();
+
                 _onCancelCodeBlock?.Invoke(); //On Cancel just switch back to PlayerActionMap.
                 OnRebindCanceled?.Invoke();
             });
@@ -428,17 +455,72 @@ namespace ThreeDeePongProto.Shared.Managers
         //Helper-methods to determine the deviceType.
         private bool IsKeyboardBinding(InputBinding binding)
         {
+            if (string.IsNullOrEmpty(binding.groups))
+                return false;
+
             return binding.groups.Contains("Keyboard", StringComparison.InvariantCultureIgnoreCase);
         }
 
         private bool IsGamepadBinding(InputBinding binding)
         {
+            if (string.IsNullOrEmpty(binding.groups))
+                return false;
+
             return binding.groups.Contains("Gamepad", StringComparison.InvariantCultureIgnoreCase);
         }
 
         private bool IsMouseBinding(InputBinding binding)
         {
+            if (binding.effectivePath == null)
+                return false;
+
             return binding.effectivePath != null && binding.effectivePath.StartsWith("<Mouse>", StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        public string GetBindingDisplayString(string actionName, int bindingIndex, PlayerInput playerInput, bool isGlobal)
+        {
+            InputAction action = null;
+            if (isGlobal)
+            {
+                action = _globalActionsInstance.FindAction(actionName);
+            }
+            else if (playerInput != null)
+            {
+                action = playerInput.actions.FindAction(actionName);
+            }
+            //Debug.Log($"{action.bindings[bindingIndex].path} - {action.bindings[bindingIndex].overridePath} - {action.bindings[bindingIndex].effectivePath}");
+            return action?.GetBindingDisplayString(bindingIndex) ?? "N/A";
+        }
+
+        public void ResetBinding(string actionName, int bindingIndex, PlayerInput playerInput, bool isGlobal)
+        {
+            InputAction action = null;
+            if (isGlobal)
+            {
+                action = _globalActionsInstance.FindAction(actionName);
+            }
+            else if (playerInput != null)
+            {
+                action = playerInput.actions.FindAction(actionName);
+            }
+
+            if (action == null)
+                return;
+
+            // Wichtig: Bevor wir den Override entfernen, müssen wir die alte Bindung deregistrieren.
+            UnregisterBinding(action.bindings[bindingIndex]);
+
+            action.RemoveBindingOverride(bindingIndex);
+
+            // Den Reset speichern
+            if (isGlobal)
+            {
+                SaveGlobalBindings();
+            }
+            else
+            {
+                SavePlayerBindings(playerInput);
+            }
         }
         #endregion
         #endregion

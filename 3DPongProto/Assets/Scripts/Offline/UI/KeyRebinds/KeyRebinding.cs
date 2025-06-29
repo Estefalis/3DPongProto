@@ -25,11 +25,10 @@ namespace ThreeDeePongProto.Shared.Rebinding
 
         [Header("UI-Fields")]
         //[SerializeField] private TextMeshProUGUI m_actionTitle;
+        [SerializeField] private Button m_resetButton;
         [SerializeField] private Image m_buttonImage;
         [SerializeField] private Button m_rebindButton;
         [SerializeField] private TextMeshProUGUI m_rebindButtonText;
-        [SerializeField] private Button m_resetButton;
-        //[SerializeField] private GameObject m_rebindOverlay;      //If an extra Overlay is required.
 
         [Header("Player-Reference")]
         [Tooltip("If the targeted Action belongs to specific player, then isSystemBinding = false.")]
@@ -96,16 +95,25 @@ namespace ThreeDeePongProto.Shared.Rebinding
         /// </summary>
         public void UpdateBindingDisplay()
         {
-            if (m_rebindButtonText != null && m_inputActionReference.action != null)
+            if (m_rebindButtonText != null)
             {
-                if (!m_inputActionReference.action.bindings[m_selectedBindingIndex].isComposite)
-                {
-                    InputAction action = GetAction();
-                    if (action == null)
-                        return;
+                InputAction action = GetAction();
+                if (action == null)
+                    return;
 
-                    m_rebindButtonText.text = action.GetBindingDisplayString(m_selectedBindingIndex, m_displayStringOptions);
+                if (action.name != string.Empty)
+                {
+                    string displayString = RebindManager.Instance.GetBindingDisplayString(
+                            action.name,
+                            m_selectedBindingIndex,
+                            m_targetPlayerInput,
+                            m_isGlobalBinding);
+
+                    //Debug.Log($"ActionName sent: {action.name} | DisplayName received: {displayString}");
+                    m_rebindButtonText.text = displayString;
                 }
+
+                //m_rebindButtonText.text = action.GetBindingDisplayString(m_selectedBindingIndex, m_displayStringOptions);
             }
 
             //if (m_buttonImage != null && m_buttonImage.gameObject.activeInHierarchy)
@@ -139,26 +147,29 @@ namespace ThreeDeePongProto.Shared.Rebinding
         /// </summary>
         private void StartRebindingProcess()
         {
+            if (m_inputActionReference == null || m_inputActionReference.action == null)
+                return;
+
             InputAction action = GetAction();
             if (action == null)
                 return;
 
-            //m_rebindOverlay.SetActive(true);
-            //TextMeshProUGUI statusText = m_rebindOverlay.GetComponentInChildren<TextMeshProUGUI>();
+            if (action.name == string.Empty)
+                return;
 
             if (m_isGlobalBinding)
             {
-                RebindManager.Instance.StartGlobalRebinding(action, m_selectedBindingIndex, /*statusText, */ m_excludeMouse);
+                RebindManager.Instance.StartGlobalRebinding(action.name, m_selectedBindingIndex, m_rebindButtonText, m_excludeMouse);
             }
             else
             {
                 if (m_targetPlayerInput == null)
                 {
                     Debug.LogError("Player need a PlayerInput-Reference assigned for KeyRebinding!", this.gameObject);
-                    //m_rebindOverlay.SetActive(false);
                     return;
                 }
-                RebindManager.Instance.StartPlayerRebinding(m_targetPlayerInput, action, m_selectedBindingIndex, /*statusText, */ m_excludeMouse);
+
+                RebindManager.Instance.StartPlayerRebinding(m_targetPlayerInput, action.name, m_selectedBindingIndex, m_rebindButtonText, m_excludeMouse);
             }
         }
 
@@ -167,44 +178,44 @@ namespace ThreeDeePongProto.Shared.Rebinding
         /// </summary>
         private void ResetThisRebinding()
         {
+            if (m_inputActionReference == null || m_inputActionReference.action == null)
+                return;
+
             InputAction action = GetAction();
             if (action == null)
                 return;
 
-            action.RemoveBindingOverride(m_selectedBindingIndex);
+            if (action.name != string.Empty)
+                return;
 
-            //Save the current state after reset.
-            if (m_isGlobalBinding)
-            {
-                RebindManager.Instance.SaveGlobalBindings();
-            }
-            else
-            {
-                if (m_targetPlayerInput == null)
-                    return;
-                RebindManager.Instance.SavePlayerBindings(m_targetPlayerInput);
-            }
+            RebindManager.Instance.ResetBinding(action.name, m_selectedBindingIndex, m_targetPlayerInput, m_isGlobalBinding);
 
             UpdateBindingDisplay();
         }
 
         /// <summary>
-        /// Helper-method to either load a global or player-specific action-instance.
+        /// Helper-method to either load a global or player-specific action-instance. Essential for UI-Display.
         /// </summary>
         private InputAction GetAction()
         {
             if (m_inputActionReference == null || m_inputActionReference.action == null)
                 return null;
 
+            string actionName = m_inputActionReference.action.name;
+
             if (m_isGlobalBinding)
             {
-                return RebindManager.Instance.GetGlobalAction(m_inputActionReference.action.name);
+                if (RebindManager.Instance == null)
+                    return null;
+
+                return RebindManager.Instance.GetGlobalAction(actionName);
             }
             else
             {
                 if (m_targetPlayerInput == null)
                     return null;
-                return m_targetPlayerInput.actions.FindAction(m_inputActionReference.action.name);
+
+                return m_targetPlayerInput.actions.FindAction(actionName);
             }
         }
     }

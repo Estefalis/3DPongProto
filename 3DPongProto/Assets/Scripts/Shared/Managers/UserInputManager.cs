@@ -395,17 +395,6 @@ namespace ThreeDeePongProto.Shared.Managers
 
             if (localGame)
                 SpawnLocalPlayers();
-
-            //switch (sceneIndex)
-            //{
-            //    case 1:
-            //    {
-            //        SpawnLocalPlayers();
-            //        break;
-            //    }
-            //    default:
-            //        break;
-            //}
         }
 
         /// <summary>

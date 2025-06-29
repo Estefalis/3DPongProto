@@ -931,7 +931,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                 {
                     ""name"": """",
                     ""id"": ""b2266891-8a7e-44a9-891b-91843e258fa0"",
-                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""path"": ""<Gamepad>/select"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",

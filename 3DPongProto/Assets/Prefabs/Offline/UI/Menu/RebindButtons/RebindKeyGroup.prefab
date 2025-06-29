@@ -618,8 +618,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_inputActionReference: {fileID: 0}
   m_selectedBindingIndex: 0
-  m_humanReadableStringOptions: 0
   m_displayStringOptions: 0
+  m_isGlobalBinding: 0
   m_excludeMouse: 1
   m_inputBinding:
     m_Name: 
@@ -630,10 +630,10 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
-  m_buttonImage: {fileID: 0}
-  m_rebindButton: {fileID: 0}
-  m_rebindButtonText: {fileID: 0}
-  m_resetButton: {fileID: 0}
+  m_resetButton: {fileID: 8048381432050610004}
+  m_buttonImage: {fileID: 5373583968872865941}
+  m_rebindButton: {fileID: 2509531060462451291}
+  m_rebindButtonText: {fileID: 2509531060148079307}
   m_targetPlayerInput: {fileID: 0}
 --- !u!1 &2509531060579204855
 GameObject:
@@ -942,8 +942,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_inputActionReference: {fileID: 0}
   m_selectedBindingIndex: 0
-  m_humanReadableStringOptions: 0
   m_displayStringOptions: 0
+  m_isGlobalBinding: 0
   m_excludeMouse: 1
   m_inputBinding:
     m_Name: 
@@ -954,10 +954,10 @@ MonoBehaviour:
     m_Groups: 
     m_Action: 
     m_Flags: 0
-  m_buttonImage: {fileID: 0}
-  m_rebindButton: {fileID: 0}
-  m_rebindButtonText: {fileID: 0}
-  m_resetButton: {fileID: 0}
+  m_resetButton: {fileID: 4828572829453772869}
+  m_buttonImage: {fileID: 5202953337551828031}
+  m_rebindButton: {fileID: 2509531061962685656}
+  m_rebindButtonText: {fileID: 2509531060326514965}
   m_targetPlayerInput: {fileID: 0}
 --- !u!1 &2509531062249128635
 GameObject:

@@ -292,8 +292,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_playerInputManager: {fileID: 414762846}
-  m_globalActionAsset: {fileID: -944628639613478452, guid: 10bcd34be915850428dc91a0ac6c1a9f,
-    type: 3}
 --- !u!4 &901376908
 Transform:
   m_ObjectHideFlags: 0
