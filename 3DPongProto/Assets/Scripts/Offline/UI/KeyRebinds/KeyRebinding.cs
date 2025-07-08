@@ -18,10 +18,8 @@ namespace ThreeDeePongProto.Shared.Rebinding
         [SerializeField] private bool m_isGlobalBinding = false;
         [SerializeField] private bool m_excludeMouse = true; //Exclude the Mouse on the Rebind-Process.
 
-#if UNITY_EDITOR
         [Header("Binding-Informations - DON'T CHANGE ANYTHING HERE!")]
         [SerializeField] private InputBinding m_inputBinding;
-#endif
 
         [Header("UI-Fields")]
         //[SerializeField] private TextMeshProUGUI m_actionTitle;
@@ -58,6 +56,7 @@ namespace ThreeDeePongProto.Shared.Rebinding
 
         private void OnEnable()
         {
+            GetBindingInformation();
             UpdateBindingDisplay();
         }
 
@@ -185,10 +184,10 @@ namespace ThreeDeePongProto.Shared.Rebinding
             if (action == null)
                 return;
 
-            if (action.name != string.Empty)
+            if (action.name == string.Empty)
                 return;
 
-            RebindManager.Instance.ResetBinding(action.name, m_selectedBindingIndex, m_targetPlayerInput, m_isGlobalBinding);
+            RebindManager.Instance.ResetSpecificBinding(action.name, m_selectedBindingIndex, m_targetPlayerInput, m_isGlobalBinding);
 
             UpdateBindingDisplay();
         }

@@ -57,9 +57,10 @@ namespace ThreeDeePongProto.Shared.Managers
 
         internal static string SetActionMap { get => m_lastSetActionMap; }
         private static string m_lastSetActionMap;
-        internal static int FocusedKeyboardPlayerID { get; private set; } = 0; //Keeps track of focused p. Standard PlayerID 0.
+        internal static int FocusedKeyboardPlayerID { get; private set; } = 0; //Keep track of focused playerWindow. Standard PlayerID 0.
 
         #region Lists_and_Dictionaries
+        private List<PlayerInput> m_activePlayers = new List<PlayerInput>();
         private List<InputDevice> m_availableGamepads;
         private readonly Dictionary<int, InputDevice> m_playerOriginalDevice = new();
         private readonly Dictionary<int, string> m_playerOriginalScheme = new();
@@ -100,6 +101,9 @@ namespace ThreeDeePongProto.Shared.Managers
             }
 
             m_playerInputManager = GetComponent<PlayerInputManager>();
+            m_playerInputManager.onPlayerJoined += HandlePlayerJoined;
+            m_playerInputManager.onPlayerLeft += HandlePlayerLeft;
+
             SetUpPlayerInputManager(m_playerInputManager);
         }
 
@@ -357,6 +361,22 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         #region None-CallbackContext_Subscription_Methods
+        private void HandlePlayerJoined(PlayerInput _playerInput)
+        {
+            m_activePlayers.Add(_playerInput);
+            RebindManager.Instance.LoadPlayerBindings(_playerInput);
+        }
+
+        private void HandlePlayerLeft(PlayerInput _playerInput)
+        {
+            m_activePlayers.Remove(_playerInput);
+        }
+
+        internal List<PlayerInput> GetActivePlayers()
+        {
+            return m_activePlayers;
+        }
+
         private void EnablePlayerActionMap(bool _enable)
         {
             if (m_CentralActionsInstance == null)

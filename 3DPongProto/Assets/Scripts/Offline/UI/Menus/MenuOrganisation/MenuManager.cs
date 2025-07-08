@@ -567,7 +567,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         public void ReturnToMainMenu()
         {
-            m_rebindManager.ResetProcessedPlayersList();        //Or whenever a player leaves.
+            //m_rebindManager.ResetProcessedPlayersList();        //Or whenever a player leaves.
             AReLoadScene?.Invoke((int)ESceneNames.StartMenu);   //Possible without '?.Invoke'?
         }
 

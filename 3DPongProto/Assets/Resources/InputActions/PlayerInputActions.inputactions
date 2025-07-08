@@ -1037,6 +1037,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "InitialAnyKeyOption",
+            "id": "afcb4ede-4584-458b-aa54-277231cd9b82",
+            "actions": [
+                {
+                    "name": "PressToContinue",
+                    "type": "Button",
+                    "id": "53b88330-433d-499d-92c1-058a0ccff355",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "fab3c228-60bd-47e6-95b3-af66890940f2",
+                    "path": "<Keyboard>/anyKey",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "PressToContinue",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

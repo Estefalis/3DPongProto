@@ -1,130 +1,43 @@
 using System;
-using System.Collections.Generic;
-using ThreeDeePongProto.Shared.InputActions;
+using System.IO;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 namespace ThreeDeePongProto.Shared.Managers
 {
     public class RebindManager : PersistentSingleton<RebindManager>
     {
-        [SerializeField] private PlayerInputManager m_playerInputManager;
+        [Tooltip(tooltip: "Reference of the Main-InputActionAsset for global Rebindings.")]
+        [SerializeField] private InputActionAsset m_mainActionAsset;
 
-        [SerializeField] private PlayerInputActions _globalActionsInstance;
-
-        private InputActionRebindingExtensions.RebindingOperation _rebindingOperation;
-        //_____________________________________________________________________________________________________________________________
-
-        private readonly HashSet<int> _playerIndicesWithLoadedBindings = new();         //Memory to prevent multiple loading processes.
-
-        private readonly Dictionary<string, InputAction> _keyboardBindingRegistry = new();
-        private readonly Dictionary<string, InputAction> _gamepadBindingRegistry = new();
-        private readonly Dictionary<string, InputAction> _mouseBindingRegistry = new();
-
-        private const string SYSTEM_BINDINGS_KEY = "KeyBindings_System";
-        private string GetPlayerBindingsKey(int playerIndex) => $"KeyBindings_Player{playerIndex}";
-
-        private const string m_keyboardLayoutName = "Keyboard", m_gamepadLayoutName = "Gamepad", m_mouseLayoutName = "Mouse";
-
-        private const string m_rebindExcludeMouse = "<Mouse>";                          //Control-Paths REQUIRE <>. LayoutNames DO NOT!
-        private const string m_keyboardEscape = "<Keyboard>/escape";                    //Control-Paths REQUIRE <>. LayoutNames DO NOT!
-        private const string m_gamepadSelect = "<Gamepad>/select";                      //Control-Paths REQUIRE <>. LayoutNames DO NOT!
-        private const string m_gamepadSysBtn = "<Gamepad>/systemButton";                //Control-Paths REQUIRE <>. LayoutNames DO NOT!
-        private const string m_gamepadSysBtnDS = "<DualSenseGamepadHID>/systemButton";  //Control-Paths REQUIRE <>. LayoutNames DO NOT!
-        private const string m_gamepadMicroBtn = "<DualSenseGamepadHID>/micButton";     //Control-Paths REQUIRE <>. LayoutNames DO NOT!
+        private InputActionRebindingExtensions.RebindingOperation m_rebindingOperation;
 
         public event Action OnRebindComplete;
         public event Action OnRebindCanceled;
+        public event Action<string> OnRebindError; //To prevent errors like "Button is already set to..."
+
+        private const string GLOBAL_BINDINGS_FILENAME = "global_bindings.json";
+        private string GetPlayerBindingsPath(int _playerIndex) => Path.Combine(Application.persistentDataPath, $"player_{_playerIndex}_bindings.json");
+
+        #region WithCancelingThrough- & WithControlsExcluding-Strings
+        //Control-Paths REQUIRE <>. LayoutNames DO NOT!
+        private const string m_rebindExcludeMouse = "<Mouse>";
+        private const string m_keyboardEscape = "<Keyboard>/escape";
+        private const string m_gamepadSelect = "<Gamepad>/select";
+        private const string m_gamepadStart = "<Gamepad>/start";
+        private const string m_gamepadSysBtn = "<Gamepad>/systemButton";
+        private const string m_gamepadSysBtnDS = "<DualSenseGamepadHID>/systemButton";
+        private const string m_gamepadMicroBtn = "<DualSenseGamepadHID>/micButton";
+        private const string m_keyboardAnyKey = "<Keyboard>/anyKey";
+        private const string m_gamepadAnyKey = "<Gamepad>/<Button>";
+        #endregion
 
         protected override void Awake()
         {
             base.Awake();
-
-            _globalActionsInstance = new PlayerInputActions();
-            //_globalActionsInstance = UserInputManager.m_CentralActionsInstance;
-
-            //Activate ActionMaps that shall be used globally.
-            _globalActionsInstance.PlayerActions.Enable();
-            _globalActionsInstance.UserInterface.Enable();
-
-            LoadGlobalBindings();
-        }
-
-        private void OnEnable()
-        {
-            if (m_playerInputManager != null)
-                m_playerInputManager.onPlayerJoined += HandlePlayerJoined;
-
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-
-        private void OnDisable()
-        {
-            if (m_playerInputManager != null)
-                m_playerInputManager.onPlayerJoined -= HandlePlayerJoined;
-
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-        }
-
-        #region Load_playerBindings_on_demand
-        /// <summary>
-        /// This method gets called automatic, when a new player joins.
-        /// </summary>
-        /// <param name="playerInput">PlayerInput-Instance of the new player.</param>
-        private void HandlePlayerJoined(PlayerInput playerInput)
-        {
-            if (_playerIndicesWithLoadedBindings.Contains(playerInput.playerIndex))
-                return;
-
-            Debug.Log($"Load and register bindings of the joined player {playerInput.playerIndex}.");
-
-            //1. Load playerBindings and register them when a player joins.
-            LoadPlayerBindings(playerInput);
-
-            //2. Directly add those bindings to the binding-Registries.
-            foreach (var action in playerInput.actions)
-                RegisterBindingsForAction(action);
-
-            //3. "Remember" that those players are already processed.
-            _playerIndicesWithLoadedBindings.Add(playerInput.playerIndex);
-        }
-
-        /// <summary>
-        /// Method gets called, once a scene is fully loaded.
-        /// </summary>
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            InitializeAndPolluteRegistries();
-        }
-        #endregion
-
-        /// <summary>
-        /// Initialize all bindings und fill dictionaries as central binding-registries für gamepad and keyboardMouse.
-        /// </summary>
-        public void InitializeAndPolluteRegistries()
-        {
-            //1. Clear Start-Point.
-            _keyboardBindingRegistry.Clear();
-            _gamepadBindingRegistry.Clear();
-            _mouseBindingRegistry.Clear();
-
-            //2. Register global Bindings.
-            foreach (var action in _globalActionsInstance)
-                RegisterBindingsForAction(action);
-
-            //3. Find all PlayerInput components in the scene.
-            //If preExistingPlayers is needed elsewhere: foreach (var playerInput in preExistingPlayers)
-            foreach (var playerInput in FindObjectsOfType<PlayerInput>())      //If preExistingPlayers is not needed elsewhere.
-            {
-                LoadPlayerBindings(playerInput);
-
-                foreach (var action in playerInput.actions)
-                    RegisterBindingsForAction(action);
-            }
-
-            Debug.Log($"Central bindingRegistries initialized.");
+            LoadAllBindings();
         }
 
         #region Player-Specific_Rebinding
@@ -135,77 +48,10 @@ namespace ThreeDeePongProto.Shared.Managers
         /// <param name="_actionToRebind">The action to rebind.</param>
         /// <param name="_bindingIndex">BindingIndex to rebind.</param>
         /// <param name="_excludeMouse">Bool to exclude the mouse or not.</param>
-        public void StartPlayerRebinding(PlayerInput _playerInput, string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, bool _excludeMouse)
+        public void StartPlayerRebinding(PlayerInput _playerInput, string _actionName, int _bindingIndex, TextMeshProUGUI _textComponent, bool _excludeMouse)
         {
-            if (_playerInput == null || string.IsNullOrEmpty(_actionName))
-                return;
-
-            InputAction actionToRebind = _playerInput.actions.FindAction(_actionName);
-            if (actionToRebind == null)
-            {
-                Debug.LogError($"Action '{_actionName}' could not be found in the PlayerInput component.");
-                return;
-            }
-
-            _playerInput.ActivateInput();
-            //Deactivate the ActionMap of the Player to prevent conflicts.
-            _playerInput.SwitchCurrentActionMap($"{ActiveInputActionMap.UserInterface}");
-
-            //Closure: Define HERE what is to do. And hand it over to PerformRebinding, to execute it THERE, if required.
-            PerformRebinding(actionToRebind, _bindingIndex, _statusText, _excludeMouse,
-            //OnCompleteCallback: Submit what shall happen on a successful rebind operation.
-            () =>
-            {
-                SavePlayerBindings(_playerInput);
-                _playerInput.SwitchCurrentActionMap($"{ActiveInputActionMap.PlayerActions}");
-            },
-            //OnCancelCallback: Submit what shall happen on a canceled rebind operation.
-            () =>
-            {
-                _playerInput.SwitchCurrentActionMap($"{ActiveInputActionMap.PlayerActions}");
-            }
-        );
-        }
-
-        /// <summary>
-        /// Saves the overrides for the specific player.
-        /// </summary>
-        /// <param name="_playerInput"></param>
-        internal void SavePlayerBindings(PlayerInput _playerInput)
-        {
-            var overrides = _playerInput.actions.SaveBindingOverridesAsJson();
-            PlayerPrefs.SetString(GetPlayerBindingsKey(_playerInput.playerIndex), overrides);
-#if UNITY_EDITOR
-            Debug.Log($"Saving Bindings for Player {_playerInput.playerIndex}.");
-#endif
-        }
-
-        /// <summary>
-        /// Loads the overrides for the specific player.
-        /// </summary>
-        public void LoadPlayerBindings(PlayerInput _playerInput)
-        {
-            string overridesJson = PlayerPrefs.GetString(GetPlayerBindingsKey(_playerInput.playerIndex));
-            if (!string.IsNullOrEmpty(overridesJson))
-            {
-                _playerInput.actions.LoadBindingOverridesFromJson(overridesJson);
-#if UNITY_EDITOR
-                Debug.Log($"Loading Bindings for Player {_playerInput.playerIndex}.");
-#endif
-            }
-        }
-
-        /// <summary>
-        /// Reset all Bindings für the specific player.
-        /// </summary>
-        public void ResetAllBindings(PlayerInput playerInput)
-        {
-            playerInput.actions.RemoveAllBindingOverrides();
-            PlayerPrefs.DeleteKey($"KeyBindings_Player{playerInput.playerIndex}");
-#if UNITY_EDITOR
-            Debug.Log($"All Bindings for Player {playerInput.playerIndex} are resetted.");
-#endif
-            ResetStatusText();  //Or a single event Action, if required. Actually 'OnRebindCanceled'.
+            InputAction action = _playerInput.actions.FindAction(_actionName, throwIfNotFound: true);
+            PerformRebinding(action, _bindingIndex, _playerInput, _excludeMouse);
         }
         #endregion
 
@@ -213,68 +59,15 @@ namespace ThreeDeePongProto.Shared.Managers
         /// <summary>
         /// Starts Rebinding for a global Action.
         /// </summary>
-        public void StartGlobalRebinding(string _actionName, int _bindingIndex, TextMeshProUGUI _statusText, bool _excludeMouse)
+        public void StartGlobalRebinding(string _actionName, int _bindingIndex, TextMeshProUGUI _textComponent, bool _excludeMouse)
         {
-            InputAction actionToRebind = _globalActionsInstance.FindAction(_actionName);
-            if (actionToRebind == null)
-            {
-                Debug.LogError($"Action '{_actionName}' could not be found in the global Asset.");
-                return;
-            }
-
-            // ActionMap Management auf the global Instance.
-            _globalActionsInstance.PlayerActions.Disable();
-            _globalActionsInstance.UserInterface.Enable();
-
-            //Closure: Define HERE what is to do. And hand it over to PerformRebinding, to execute it THERE, if required.
-            PerformRebinding(actionToRebind, _bindingIndex, _statusText, _excludeMouse,
-            () =>
-            {
-                SaveGlobalBindings();
-                _globalActionsInstance.PlayerActions.Enable();
-                _globalActionsInstance.UserInterface.Disable();
-            },
-            () =>
-            {
-                _globalActionsInstance.PlayerActions.Enable();
-                _globalActionsInstance.UserInterface.Disable();
-            });
+            InputAction actionToRebind = m_mainActionAsset.FindAction(_actionName, throwIfNotFound: true);
+            PerformRebinding(actionToRebind, _bindingIndex, null, _excludeMouse);
         }
 
         internal InputAction GetGlobalAction(string _actionName)
         {
-            return _globalActionsInstance.FindAction(_actionName);
-        }
-
-        /// <summary>
-        /// Save global overrides.
-        /// </summary>
-        internal void SaveGlobalBindings()
-        {
-            if (_globalActionsInstance == null)
-                return;
-
-            var overrides = _globalActionsInstance.SaveBindingOverridesAsJson();
-#if UNITY_EDITOR
-            Debug.LogWarning("== GLOBALE BINDINGS SAVED ==\n" + overrides);
-#endif
-            PlayerPrefs.SetString(SYSTEM_BINDINGS_KEY, overrides);
-        }
-
-        /// <summary>
-        /// Load global overrides on game start.
-        /// </summary>
-        private void LoadGlobalBindings()
-        {
-            if (_globalActionsInstance == null)
-                return;
-
-            string overridesJson = PlayerPrefs.GetString(SYSTEM_BINDINGS_KEY);
-            if (!string.IsNullOrEmpty(overridesJson))
-            {
-                _globalActionsInstance.LoadBindingOverridesFromJson(overridesJson);
-                Debug.Log("Loading global bindings in the new Instance.");
-            }
+            return m_mainActionAsset.FindAction(_actionName);
         }
         #endregion
 
@@ -282,256 +75,200 @@ namespace ThreeDeePongProto.Shared.Managers
         /// <summary>
         /// Central method to execute the interactive Rebinding-Process.
         /// </summary>
-        private void PerformRebinding(InputAction _actionToRebind, int _bindingIndex, TextMeshProUGUI statusText, bool _excludeMouse, Action _onCompleteCodeBlock, Action _onCancelCodeBlock)
+        private void PerformRebinding(InputAction _actionToRebind, int _bindingIndex, PlayerInput _playerInput, bool _excludeMouse)
         {
-            statusText.text = "Press a Button";
+            //statusText.text = "Press a Button";
+            m_rebindingOperation?.Cancel();
+            _actionToRebind.actionMap.Disable();
 
-            var originalBinding = _actionToRebind.bindings[_bindingIndex];      //Save original bindings for a later use.
-            _actionToRebind.Disable();
-
-            _rebindingOperation = _actionToRebind.PerformInteractiveRebinding(_bindingIndex)
+            m_rebindingOperation = _actionToRebind.PerformInteractiveRebinding(_bindingIndex)
                 .WithCancelingThrough(m_keyboardEscape)                         //Use Escape to cancel rebinding.
                 .WithCancelingThrough(m_gamepadSelect)                          //Use Select button to cancel rebinding.
+                .WithControlsExcluding(m_keyboardAnyKey)                        //Any Key is NOT an option!
+                .WithControlsExcluding(m_gamepadAnyKey)                         //WildCard to create a "gamepad-Any Key".
                 .WithControlsExcluding(m_keyboardEscape)                        //Never rebind Escape.
-                .WithControlsExcluding(m_gamepadSysBtn)                      //PlayStation/Xbox Home Button
-                .WithControlsExcluding(m_gamepadSysBtnDS)                    //Never rebind gamepad's SystemButton.
+                .WithControlsExcluding(m_gamepadSysBtn)                         //PlayStation/Xbox Home Button
+                .WithControlsExcluding(m_gamepadSysBtnDS)                       //Never rebind gamepad's SystemButton.
                 .WithControlsExcluding(m_gamepadMicroBtn)                       //Never rebind gamepad's microphone button.
-                                                                                //.WithControlsExcluding("<Gamepad>/start")                       //TODO: RShould gamepad's startButton be rebound?
+                .WithControlsExcluding(m_gamepadStart)                          //TODO: Should gamepad's startButton be rebound?
                 .OnMatchWaitForAnother(0.1f);
 
             if (_excludeMouse)
-                _rebindingOperation.WithControlsExcluding(m_rebindExcludeMouse);
+                m_rebindingOperation.WithControlsExcluding(m_rebindExcludeMouse);
 
             //Call, while a button is pressed. But before the ReBinding is finished.
-            _rebindingOperation.OnApplyBinding((operation, newPath) =>
+            m_rebindingOperation.OnComplete(operation =>
             {
-                if (CheckForDuplicateBinding(_actionToRebind, newPath))
+                string newPath = operation.action.bindings[_bindingIndex].effectivePath;
+                if (newPath != null && (newPath.EndsWith("/anyKey") || newPath.EndsWith("/<Button>")))
                 {
-                    //Cancel the operation, if a duplicate is found.
-                    _actionToRebind.RemoveBindingOverride(_bindingIndex);   //Remove temporary Changes.
-                    //.Dispose() replace .Cancel(), to turn from a fix cancelling behavior to custom-controlled UI behavior. 
+                    //"anyKey" is handled equal to a cancelation.
+                    operation.action.RemoveBindingOverride(_bindingIndex); //Remove any change.
                     operation.Dispose();
-                    _actionToRebind.Enable();
-                    //Invoke(nameof(ResetStatusText), 1.5f);                  //Cancel-Delay so the player can read the Information.
-                    ResetStatusText();
+                    _actionToRebind.actionMap.Enable();
+                    OnRebindCanceled?.Invoke(); //Notify the UI to update itself, after the process is aborted.
+                    Debug.LogWarning("This special Command is excluded from Rebinding to prevent errors.");
+                    return; //Exit./Don't execute the following code.
                 }
-            })
-            //Call on successful Rebinding, if no duplicate was found.
-            .OnComplete(operation =>
-            {
-                operation.action.Enable();
 
-                var binding = _actionToRebind.bindings[_bindingIndex];
+                //Check if another action is using the binding already.
+                if (CheckForDuplicate(operation.action, _bindingIndex, _playerInput))
+                {
+                    operation.action.RemoveBindingOverride(_bindingIndex);
+                    OnRebindError?.Invoke("This button is already set to another command!");
+                }
 
-                Debug.Log($"NEW Override-Path of the Binding: {binding.overridePath}"); //<-----------
-
-                //1. Unregister old bindings in dictionaries.
-                UnregisterBinding(originalBinding);
-                //2. Register new bindings in dictionaries.
-                RegisterBinding(_actionToRebind.bindings[_bindingIndex], operation.action);
-
-                //statusText.text = string.Empty;
                 operation.Dispose();
-                _onCompleteCodeBlock?.Invoke(); //On Success Save Player/System-Bindings & switch back to PlayerActionMap.
-                OnRebindComplete?.Invoke();
-            })
-            .OnCancel(operation =>
-            {
-                operation.action.Enable();
-                operation.Dispose();
-
-                _onCancelCodeBlock?.Invoke(); //On Cancel just switch back to PlayerActionMap.
-                OnRebindCanceled?.Invoke();
+                _actionToRebind.actionMap.Enable();
+                SaveAllBindings();
+                OnRebindComplete?.Invoke(); //Notify the UI to update itself on completion.
             });
 
-            _rebindingOperation.Start();
-        }
+            m_rebindingOperation.OnCancel(operation =>
+            {
+                operation.Dispose();
+                _actionToRebind.actionMap.Enable();
+                OnRebindCanceled?.Invoke(); //Notify the UI to update itself, after the process is aborted.
+            });
 
-        private void ResetStatusText()
-        {
-            OnRebindCanceled?.Invoke(); //Update UI.
+            m_rebindingOperation.Start();
         }
 
         /// <summary>
-        /// New global DuplicateBinding-Check using the new deviceBinding-registries.
+        /// Checks for duplicate bindings. A binding is only a duplicate if it shares the same path 
+        /// AND is in the same Action Map. This check now uses a more robust self-identification
+        /// to prevent flagging the binding that is currently being changed as a duplicate of itself.
         /// </summary>
-        /// <param name="actionToRebind">Current Action to rebind.</param>
-        /// <param name="newPath">Button for the new command.</param>
-        /// <returns>True, if the button is already occupied by another Action.</returns>
-        private bool CheckForDuplicateBinding(InputAction actionToRebind, string newPath)
+        private bool CheckForDuplicate(InputAction _actionToRebind, int _bindingIndex, PlayerInput _playerForContext)
         {
-            var isKeyboard = InputSystem.IsFirstLayoutBasedOnSecond(newPath, m_keyboardLayoutName);   //No <> on Layout-Names!
-            var isGamepad = InputSystem.IsFirstLayoutBasedOnSecond(newPath, m_gamepadLayoutName);     //No <> on Layout-Names!
-            var isMouse = InputSystem.IsFirstLayoutBasedOnSecond(newPath, m_mouseLayoutName);         //No <> on Layout-Names!
+            InputBinding newBinding = _actionToRebind.bindings[_bindingIndex];
+            if (string.IsNullOrEmpty(newBinding.effectivePath))
+                return false;
 
-            InputAction conflictingAction = null;
+            //1. Check against all global bindings
+            foreach (var action in m_mainActionAsset.actionMaps.SelectMany(map => map.actions))
+            {
+                if (action.actionMap != _actionToRebind.actionMap)
+                    continue;
 
-            if (isKeyboard)
-            {
-                _keyboardBindingRegistry.TryGetValue(newPath, out conflictingAction);
-            }
-            else if (isGamepad)
-            {
-                _gamepadBindingRegistry.TryGetValue(newPath, out conflictingAction);
-            }
-            else if (isMouse)
-            {
-                _mouseBindingRegistry.TryGetValue(newPath, out conflictingAction);
+                for (int i = 0; i < action.bindings.Count; i++)
+                {
+                    var binding = action.bindings[i];
+                    if (string.IsNullOrEmpty(binding.effectivePath))
+                        continue;
+
+                    //Robust-Self-Check for the same global action.
+                    bool isSelf = _playerForContext == null && action == _actionToRebind && i == _bindingIndex;
+                    if (isSelf)
+                        continue;
+
+                    if (binding.effectivePath == newBinding.effectivePath)
+                    {
+                        Debug.LogWarning($"Duplicate found! Path '{newBinding.effectivePath}' is already used by global action '{action.name}' in the same action map.");
+                        return true;
+                    }
+                }
             }
 
-            //Conflict-case, if another Action already uses the rebinding path we try to set.
-            if (conflictingAction != null && conflictingAction != actionToRebind)
+            //2. Check against all other player bindings
+            foreach (var player in UserInputManager.Instance.GetActivePlayers())
             {
-                Debug.LogWarning($"Duplicate found! '{newPath}' is already in use by Action '{conflictingAction.name}'.");
-                return true;
+                foreach (var action in player.actions)
+                {
+                    if (action.actionMap != _actionToRebind.actionMap)
+                        continue;
+
+                    for (int i = 0; i < action.bindings.Count; i++)
+                    {
+                        var binding = action.bindings[i];
+                        if (string.IsNullOrEmpty(binding.effectivePath))
+                            continue;
+
+                        //Robust-Self-Check for the same player-based action.
+                        bool isSelf = player == _playerForContext && action == _actionToRebind && i == _bindingIndex;
+                        if (isSelf)
+                            continue;
+
+                        if (binding.effectivePath == newBinding.effectivePath)
+                        {
+                            Debug.LogWarning($"Duplicate found! Path '{newBinding.effectivePath}' is already used by Player {player.playerIndex} for action '{action.name}' in the same action map.");
+                            return true;
+                        }
+                    }
+                }
             }
 
-            return false;
+            return false; //No duplicate found.
         }
 
         #region Helper-Methods_for_dictionary_population.
-        private void RegisterBindingsForAction(InputAction action)
+        public string GetBindingDisplayString(string _actionName, int _bindingIndex, PlayerInput _playerInput, bool _isGlobal)
         {
-            foreach (var binding in action.bindings)
-            {
-                //Ignore bindings that aren't mapped to a specific key. (like composite wrappers)
-                if (string.IsNullOrEmpty(binding.effectivePath))
-                    continue;
-
-                //Pass the parent 'action' object along with the individual 'binding'.
-                RegisterBinding(binding, action);
-            }
-        }
-
-        private void RegisterBinding(InputBinding binding, InputAction inputAction)
-        {
-            var path = binding.effectivePath;
-
-            if (string.IsNullOrEmpty(path) || inputAction == null)
-                return;
-
-            //Get the device of the binding. And assign the 'parentAction' object, which is the correct type for our dictionary.
-            if (IsKeyboardBinding(binding))
-            {
-                _keyboardBindingRegistry[path] = inputAction;
-            }
-            else if (IsGamepadBinding(binding))
-            {
-                _gamepadBindingRegistry[path] = inputAction;
-            }
-            else if (IsMouseBinding(binding))
-            {
-                _mouseBindingRegistry[path] = inputAction;
-            }
-        }
-
-        private void UnregisterBinding(InputBinding binding)
-        {
-            var path = binding.effectivePath;
-            var actionName = binding.action;
-
-            if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(actionName))
-                return;
-
-            //May write: if(registeredAction.name == binding.action) { _keyboardBindingRegistry.Remove(path); } instead of && in 1st if{}.
-            if (IsKeyboardBinding(binding))
-            {
-                //Remove the dictionary entry only if it is equal to the Action.
-                if (_keyboardBindingRegistry.TryGetValue(path, out var registeredAction) && registeredAction.name == binding.action)
-                    _keyboardBindingRegistry.Remove(path);
-            }
-            else if (IsGamepadBinding(binding))
-            {
-                if (_gamepadBindingRegistry.TryGetValue(path, out var registeredAction) && registeredAction.name == binding.action)
-                    _gamepadBindingRegistry.Remove(path);
-            }
-            else if (IsMouseBinding(binding))
-            {
-                if (_mouseBindingRegistry.TryGetValue(path, out var registeredAction) && registeredAction.name == binding.action)
-                    _mouseBindingRegistry.Remove(path);
-            }
-        }
-
-        //Helper-methods to determine the deviceType.
-        private bool IsKeyboardBinding(InputBinding binding)
-        {
-            if (string.IsNullOrEmpty(binding.groups))
-                return false;
-
-            return binding.groups.Contains("Keyboard", StringComparison.InvariantCultureIgnoreCase);
-        }
-
-        private bool IsGamepadBinding(InputBinding binding)
-        {
-            if (string.IsNullOrEmpty(binding.groups))
-                return false;
-
-            return binding.groups.Contains("Gamepad", StringComparison.InvariantCultureIgnoreCase);
-        }
-
-        private bool IsMouseBinding(InputBinding binding)
-        {
-            if (binding.effectivePath == null)
-                return false;
-
-            return binding.effectivePath != null && binding.effectivePath.StartsWith("<Mouse>", StringComparison.InvariantCultureIgnoreCase);
-        }
-
-        public string GetBindingDisplayString(string actionName, int bindingIndex, PlayerInput playerInput, bool isGlobal)
-        {
-            InputAction action = null;
-            if (isGlobal)
-            {
-                action = _globalActionsInstance.FindAction(actionName);
-            }
-            else if (playerInput != null)
-            {
-                action = playerInput.actions.FindAction(actionName);
-            }
-            //Debug.Log($"{action.bindings[bindingIndex].path} - {action.bindings[bindingIndex].overridePath} - {action.bindings[bindingIndex].effectivePath}");
-            return action?.GetBindingDisplayString(bindingIndex) ?? "N/A";
-        }
-
-        public void ResetBinding(string actionName, int bindingIndex, PlayerInput playerInput, bool isGlobal)
-        {
-            InputAction action = null;
-            if (isGlobal)
-            {
-                action = _globalActionsInstance.FindAction(actionName);
-            }
-            else if (playerInput != null)
-            {
-                action = playerInput.actions.FindAction(actionName);
-            }
+            InputAction action = _isGlobal ? GetGlobalAction(_actionName) : _playerInput.actions.FindAction(_actionName);
 
             if (action == null)
-                return;
+                return "N/A";
 
-            // Wichtig: Bevor wir den Override entfernen, müssen wir die alte Bindung deregistrieren.
-            UnregisterBinding(action.bindings[bindingIndex]);
-
-            action.RemoveBindingOverride(bindingIndex);
-
-            // Den Reset speichern
-            if (isGlobal)
-            {
-                SaveGlobalBindings();
-            }
-            else
-            {
-                SavePlayerBindings(playerInput);
-            }
+            return action.GetBindingDisplayString(_bindingIndex);
         }
         #endregion
-        #endregion
+
+        private void SaveAllBindings()
+        {
+            var globalOverrides = m_mainActionAsset.SaveBindingOverridesAsJson();
+            File.WriteAllText(Path.Combine(Application.persistentDataPath, GLOBAL_BINDINGS_FILENAME), globalOverrides);
+
+            foreach (var player in UserInputManager.Instance.GetActivePlayers())
+            {
+                var playerOverrides = player.actions.SaveBindingOverridesAsJson();
+                File.WriteAllText(GetPlayerBindingsPath(player.playerIndex), playerOverrides);
+            }
+            Debug.Log("All bindings saved.");
+        }
+
+        public void LoadAllBindings()
+        {
+            string globalFilePath = Path.Combine(Application.persistentDataPath, GLOBAL_BINDINGS_FILENAME);
+            if (File.Exists(globalFilePath))
+            {
+                string json = File.ReadAllText(globalFilePath);
+                m_mainActionAsset.LoadBindingOverridesFromJson(json);
+            }
+        }
+
+        public void LoadPlayerBindings(PlayerInput _player)
+        {
+            string playerFilePath = GetPlayerBindingsPath(_player.playerIndex);
+            if (File.Exists(playerFilePath))
+            {
+                string json = File.ReadAllText(playerFilePath);
+                _player.actions.LoadBindingOverridesFromJson(json);
+                Debug.Log($"Bindings for Player {_player.playerIndex} loaded.");
+            }
+        }
+
+        public void ResetSpecificBinding(string _actionName, int _bindingIndex, PlayerInput _playerInput, bool _isGlobal)
+        {
+            InputAction actionToReset = _isGlobal ? m_mainActionAsset.FindAction(_actionName, throwIfNotFound: true)
+            : _playerInput.actions.FindAction(_actionName, throwIfNotFound: true);
+
+            actionToReset.RemoveBindingOverride(_bindingIndex);
+            SaveAllBindings();
+            OnRebindComplete?.Invoke(); //Notify UI-Update method.
+        }
 
         /// <summary>
-        /// Method to reset Lists of already processed players, whenever player disappear or are no longer used.
+        /// Reset all Bindings for the specific player of the active UI-window and all global Actions.
         /// </summary>
-        public void ResetProcessedPlayersList()
+        public void ResetAllBindings(/*PlayerInput _playerInput*/)
         {
-            _playerIndicesWithLoadedBindings.Clear();
-            Debug.Log("Resetting already processed playerLists.");
+            //            _playerInput.actions.RemoveAllBindingOverrides();
+            //            PlayerPrefs.DeleteKey($"KeyBindings_Player{_playerInput.playerIndex}");
+            //#if UNITY_EDITOR
+            //            Debug.Log($"All Bindings for Player {_playerInput.playerIndex} are resetted.");
+            //#endif
+            //            ResetStatusText();  //Or a single event Action, if required. Actually 'OnRebindCanceled'.
         }
+        #endregion
     }
 }

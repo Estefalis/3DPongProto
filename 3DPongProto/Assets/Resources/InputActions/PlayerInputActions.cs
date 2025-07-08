@@ -1061,6 +1061,34 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""InitialAnyKeyOption"",
+            ""id"": ""afcb4ede-4584-458b-aa54-277231cd9b82"",
+            ""actions"": [
+                {
+                    ""name"": ""PressToContinue"",
+                    ""type"": ""Button"",
+                    ""id"": ""53b88330-433d-499d-92c1-058a0ccff355"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""fab3c228-60bd-47e6-95b3-af66890940f2"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""PressToContinue"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -1189,6 +1217,9 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_UserInterface_RightClick = m_UserInterface.FindAction("RightClick", throwIfNotFound: true);
             m_UserInterface_CursorVisibility = m_UserInterface.FindAction("CursorVisibility", throwIfNotFound: true);
             m_UserInterface_CloseGameMenu = m_UserInterface.FindAction("CloseGameMenu", throwIfNotFound: true);
+            // InitialAnyKeyOption
+            m_InitialAnyKeyOption = asset.FindActionMap("InitialAnyKeyOption", throwIfNotFound: true);
+            m_InitialAnyKeyOption_PressToContinue = m_InitialAnyKeyOption.FindAction("PressToContinue", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -1506,6 +1537,52 @@ namespace ThreeDeePongProto.Shared.InputActions
             }
         }
         public UserInterfaceActions @UserInterface => new UserInterfaceActions(this);
+
+        // InitialAnyKeyOption
+        private readonly InputActionMap m_InitialAnyKeyOption;
+        private List<IInitialAnyKeyOptionActions> m_InitialAnyKeyOptionActionsCallbackInterfaces = new List<IInitialAnyKeyOptionActions>();
+        private readonly InputAction m_InitialAnyKeyOption_PressToContinue;
+        public struct InitialAnyKeyOptionActions
+        {
+            private @PlayerInputActions m_Wrapper;
+            public InitialAnyKeyOptionActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @PressToContinue => m_Wrapper.m_InitialAnyKeyOption_PressToContinue;
+            public InputActionMap Get() { return m_Wrapper.m_InitialAnyKeyOption; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(InitialAnyKeyOptionActions set) { return set.Get(); }
+            public void AddCallbacks(IInitialAnyKeyOptionActions instance)
+            {
+                if (instance == null || m_Wrapper.m_InitialAnyKeyOptionActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_InitialAnyKeyOptionActionsCallbackInterfaces.Add(instance);
+                @PressToContinue.started += instance.OnPressToContinue;
+                @PressToContinue.performed += instance.OnPressToContinue;
+                @PressToContinue.canceled += instance.OnPressToContinue;
+            }
+
+            private void UnregisterCallbacks(IInitialAnyKeyOptionActions instance)
+            {
+                @PressToContinue.started -= instance.OnPressToContinue;
+                @PressToContinue.performed -= instance.OnPressToContinue;
+                @PressToContinue.canceled -= instance.OnPressToContinue;
+            }
+
+            public void RemoveCallbacks(IInitialAnyKeyOptionActions instance)
+            {
+                if (m_Wrapper.m_InitialAnyKeyOptionActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IInitialAnyKeyOptionActions instance)
+            {
+                foreach (var item in m_Wrapper.m_InitialAnyKeyOptionActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_InitialAnyKeyOptionActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public InitialAnyKeyOptionActions @InitialAnyKeyOption => new InitialAnyKeyOptionActions(this);
         private int m_KeyboardMouseSchemeIndex = -1;
         public InputControlScheme KeyboardMouseScheme
         {
@@ -1588,6 +1665,10 @@ namespace ThreeDeePongProto.Shared.InputActions
             void OnRightClick(InputAction.CallbackContext context);
             void OnCursorVisibility(InputAction.CallbackContext context);
             void OnCloseGameMenu(InputAction.CallbackContext context);
+        }
+        public interface IInitialAnyKeyOptionActions
+        {
+            void OnPressToContinue(InputAction.CallbackContext context);
         }
     }
 }
