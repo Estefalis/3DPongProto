@@ -135,20 +135,23 @@ namespace ThreeDeePongProto.Shared.Managers
         }
 
         /// <summary>
-        /// Checks for duplicate bindings. A binding is only a duplicate if it shares the same path 
-        /// AND is in the same Action Map. This check now uses a more robust self-identification
-        /// to prevent flagging the binding that is currently being changed as a duplicate of itself.
+        /// Checks for duplicate bindings with a robust, context-aware logic.
+        /// A binding is a duplicate if it shares the same path AND the same action map.
+        /// It correctly identifies the binding being changed to avoid self-duplication.
         /// </summary>
         private bool CheckForDuplicate(InputAction _actionToRebind, int _bindingIndex, PlayerInput _playerForContext)
         {
             InputBinding newBinding = _actionToRebind.bindings[_bindingIndex];
             if (string.IsNullOrEmpty(newBinding.effectivePath))
+            {
                 return false;
+            }
 
-            //1. Check against all global bindings
+            // 1. Check against all global bindings
             foreach (var action in m_mainActionAsset.actionMaps.SelectMany(map => map.actions))
             {
-                if (action.actionMap != _actionToRebind.actionMap)
+                // **WICHTIG:** Nur innerhalb derselben Action Map prüfen.
+                if (action.actionMap.id != _actionToRebind.actionMap.id)
                     continue;
 
                 for (int i = 0; i < action.bindings.Count; i++)
@@ -157,8 +160,8 @@ namespace ThreeDeePongProto.Shared.Managers
                     if (string.IsNullOrEmpty(binding.effectivePath))
                         continue;
 
-                    //Robust-Self-Check for the same global action.
-                    bool isSelf = _playerForContext == null && action == _actionToRebind && i == _bindingIndex;
+                    // **ROBUSTER SELF-CHECK (GLOBAL):**
+                    bool isSelf = _playerForContext == null && action.id == _actionToRebind.id && i == _bindingIndex;
                     if (isSelf)
                         continue;
 
@@ -170,12 +173,13 @@ namespace ThreeDeePongProto.Shared.Managers
                 }
             }
 
-            //2. Check against all other player bindings
+            // 2. Check against all player bindings
             foreach (var player in UserInputManager.Instance.GetActivePlayers())
             {
                 foreach (var action in player.actions)
                 {
-                    if (action.actionMap != _actionToRebind.actionMap)
+                    // **WICHTIG:** Nur innerhalb derselben Action Map prüfen.
+                    if (action.actionMap.id != _actionToRebind.actionMap.id)
                         continue;
 
                     for (int i = 0; i < action.bindings.Count; i++)
@@ -184,8 +188,8 @@ namespace ThreeDeePongProto.Shared.Managers
                         if (string.IsNullOrEmpty(binding.effectivePath))
                             continue;
 
-                        //Robust-Self-Check for the same player-based action.
-                        bool isSelf = player == _playerForContext && action == _actionToRebind && i == _bindingIndex;
+                        // **ROBUSTER SELF-CHECK (PLAYER):**
+                        bool isSelf = _playerForContext != null && player.playerIndex == _playerForContext.playerIndex && action.id == _actionToRebind.id && i == _bindingIndex;
                         if (isSelf)
                             continue;
 
@@ -198,7 +202,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 }
             }
 
-            return false; //No duplicate found.
+            return false; // No duplicate found
         }
 
         #region Helper-Methods_for_dictionary_population.

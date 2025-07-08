@@ -2325,6 +2325,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2136304140}
+    - target: {fileID: 939429281265240536, guid: 430c392282a61bb4482c69a3b60f8b8e,
+        type: 3}
+      propertyPath: m_text
+      value: Kick Ball
+      objectReference: {fileID: 0}
     - target: {fileID: 1658627259719079141, guid: 430c392282a61bb4482c69a3b60f8b8e,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
