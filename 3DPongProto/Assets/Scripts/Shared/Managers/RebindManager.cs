@@ -117,10 +117,11 @@ namespace ThreeDeePongProto.Shared.Managers
                     operation.action.RemoveBindingOverride(_bindingIndex);
                     OnRebindError?.Invoke("This button is already set to another command!");
                 }
+                else
+                    SaveAllBindings();
 
                 operation.Dispose();
                 _actionToRebind.actionMap.Enable();
-                SaveAllBindings();
                 OnRebindComplete?.Invoke(); //Notify the UI to update itself on completion.
             });
 
@@ -143,66 +144,77 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             InputBinding newBinding = _actionToRebind.bindings[_bindingIndex];
             if (string.IsNullOrEmpty(newBinding.effectivePath))
-            {
                 return false;
-            }
 
-            // 1. Check against all global bindings
-            foreach (var action in m_mainActionAsset.actionMaps.SelectMany(map => map.actions))
+            if (_playerForContext != null)
             {
-                // **WICHTIG:** Nur innerhalb derselben Action Map prüfen.
-                if (action.actionMap.id != _actionToRebind.actionMap.id)
-                    continue;
-
-                for (int i = 0; i < action.bindings.Count; i++)
+                // 1. Prüfe gegen globale Aktionen
+                foreach (var action in m_mainActionAsset.actionMaps.SelectMany(map => map.actions))
                 {
-                    var binding = action.bindings[i];
-                    if (string.IsNullOrEmpty(binding.effectivePath))
-                        continue;
-
-                    // **ROBUSTER SELF-CHECK (GLOBAL):**
-                    bool isSelf = _playerForContext == null && action.id == _actionToRebind.id && i == _bindingIndex;
-                    if (isSelf)
-                        continue;
-
-                    if (binding.effectivePath == newBinding.effectivePath)
+                    if (action.actionMap.id != _actionToRebind.actionMap.id)
+                        continue; // Nur gleiche Action Maps vergleichen
+                    if (action.bindings.Any(binding => binding.effectivePath == newBinding.effectivePath))
                     {
-                        Debug.LogWarning($"Duplicate found! Path '{newBinding.effectivePath}' is already used by global action '{action.name}' in the same action map.");
+                        Debug.LogWarning($"Duplicate found! Path '{newBinding.effectivePath}' is already used by global action '{action.name}'.");
                         return true;
                     }
                 }
-            }
 
-            // 2. Check against all player bindings
-            foreach (var player in UserInputManager.Instance.GetActivePlayers())
-            {
-                foreach (var action in player.actions)
+                // 2. Prüfe gegen ANDERE Spieler
+                foreach (var player in UserInputManager.Instance.GetActivePlayers())
                 {
-                    // **WICHTIG:** Nur innerhalb derselben Action Map prüfen.
-                    if (action.actionMap.id != _actionToRebind.actionMap.id)
-                        continue;
+                    if (player.playerIndex == _playerForContext.playerIndex)
+                        continue; // Ignoriere den Spieler selbst
 
-                    for (int i = 0; i < action.bindings.Count; i++)
+                    foreach (var action in player.actions)
                     {
-                        var binding = action.bindings[i];
-                        if (string.IsNullOrEmpty(binding.effectivePath))
+                        if (action.actionMap.id != _actionToRebind.actionMap.id)
                             continue;
-
-                        // **ROBUSTER SELF-CHECK (PLAYER):**
-                        bool isSelf = _playerForContext != null && player.playerIndex == _playerForContext.playerIndex && action.id == _actionToRebind.id && i == _bindingIndex;
-                        if (isSelf)
-                            continue;
-
-                        if (binding.effectivePath == newBinding.effectivePath)
+                        if (action.bindings.Any(binding => binding.effectivePath == newBinding.effectivePath))
                         {
-                            Debug.LogWarning($"Duplicate found! Path '{newBinding.effectivePath}' is already used by Player {player.playerIndex} for action '{action.name}' in the same action map.");
+                            Debug.LogWarning($"Duplicate found! Path '{newBinding.effectivePath}' is already used by Player {player.playerIndex} for action '{action.name}'.");
+                            return true;
+                        }
+                    }
+                }
+            }
+            // --- KONTEXT: WIR REBINDEN EINE GLOBALE AKTION ---
+            else
+            {
+                // 1. Prüfe gegen alle Spieler-Aktionen
+                foreach (var player in UserInputManager.Instance.GetActivePlayers())
+                {
+                    foreach (var action in player.actions)
+                    {
+                        if (action.actionMap.id != _actionToRebind.actionMap.id)
+                            continue;
+                        if (action.bindings.Any(binding => binding.effectivePath == newBinding.effectivePath))
+                        {
+                            Debug.LogWarning($"Duplicate found! Path '{newBinding.effectivePath}' is already used by Player {player.playerIndex} for action '{action.name}'.");
                             return true;
                         }
                     }
                 }
             }
 
-            return false; // No duplicate found
+            // WICHTIG: Prüfe zuletzt auf Duplikate innerhalb der EIGENEN Action-Liste (z.B. MoveLeft vs. MoveRight)
+            foreach (var action in _actionToRebind.actionMap.actions)
+            {
+                for (int i = 0; i < action.bindings.Count; i++)
+                {
+                    // Ignoriere die exakte Bindung, die wir gerade ändern
+                    if (action.id == _actionToRebind.id && i == _bindingIndex)
+                        continue;
+
+                    if (action.bindings[i].effectivePath == newBinding.effectivePath)
+                    {
+                        Debug.LogWarning($"Duplicate found! Path '{newBinding.effectivePath}' is already used by action '{action.name}' in the same list.");
+                        return true;
+                    }
+                }
+            }
+
+            return false; // Kein Duplikat gefunden
         }
 
         #region Helper-Methods_for_dictionary_population.
