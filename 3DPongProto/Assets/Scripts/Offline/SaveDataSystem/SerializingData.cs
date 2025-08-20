@@ -1,123 +1,144 @@
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Security.Cryptography;
-using System.Text;
-using Newtonsoft.Json;
 using UnityEngine;
 
-public class SerializingData : IPersistentData
+/// <summary>
+/// A robust serialization class that handles saving and loading data to/from a JSON file.
+/// It uses a temporary/backup file strategy to prevent data loss during writes.
+/// </summary>
+/// <typeparam name="T">The data type to serialize. Must be a class with a parameterless constructor.</typeparam>
+public class SerializingData<T> : IPersistentData<T> where T : class, new()
 {
+    private readonly string m_filePath;
+    private readonly string m_backupFilePath;
+    private readonly string m_tempFilePath;
+    private readonly bool m_useEncryption;
+
+    private const string m_saveDataFolderPath = "/SaveData/";
+
     private const string m_KEY = "Yx/P5QVTRuUt55p82QNnkI1LXbXM4/qsxM9P7eihc0o=";
     private const string m_IV = "L5j2EvGAywqpH86whhvjWA=="; //InitializationVector.
 
-    public bool SaveData<T>(string _subFolder, string _fileName, string _fileFormat, T _data, bool _encrypted, bool _overwriteFile = true)
+    /// <summary>
+    /// Initializes the serializer for a specific file.
+    /// </summary>
+    /// <param name="_fileName">The name of the file, e.g., "bindings.json".</param>
+    /// <param name="_subFolder">Optional subfolder within Application.persistentDataPath.</param>
+    /// <param name="_useEncryption">Whether to encrypt the saved data.</param>
+    public SerializingData(string _fileName, string _subFolder = m_saveDataFolderPath, bool _useEncryption = false)
     {
-        #region Directory Check
-        if (!Directory.Exists(Application.persistentDataPath + _subFolder))
+        string directoryPath = Path.Combine(Application.persistentDataPath, _subFolder.TrimStart('/'));
+
+        //Ensure the directory exists.
+        Directory.CreateDirectory(directoryPath);
+
+        m_filePath = Path.Combine(directoryPath, _fileName);
+        m_backupFilePath = m_filePath + ".bak";
+        m_tempFilePath = m_filePath + ".tmp";
+        this.m_useEncryption = _useEncryption;
+    }
+
+    /// <summary>
+    /// Loads the data from the JSON file.
+    /// Will attempt to load from a backup if the main file is corrupt.
+    /// Will return a new object if no valid file is found.
+    /// </summary>
+    public T Load()
+    {
+        //Prioritize the main file.
+        if (File.Exists(m_filePath))
         {
-#if UNITY_EDITOR
-            Debug.Log(" The folder-path does not exist. Creating it now.");
-#endif
-            Directory.CreateDirectory(Application.persistentDataPath + _subFolder);
+            T data = ReadAndDeserialize(m_filePath);
+            if (data != null)
+            {
+                return data;
+            }
         }
-        #endregion
 
-        string combinedPath = Application.persistentDataPath + _subFolder + _fileName + _fileFormat;
-
-        #region Overwrite Check
-        if (File.Exists(combinedPath) && !_overwriteFile)
+        //If main file failed or doesn't exist, try the backup.
+        if (File.Exists(m_backupFilePath))
         {
-#if UNITY_EDITOR
-            Debug.Log("The data will not be saved, due to settings of the user. Exiting.");
-#endif
-            return false;
+            Debug.LogWarning("Main save file was corrupt or missing. Attempting to load from backup.");
+            T data = ReadAndDeserialize(m_backupFilePath);
+            if (data != null)
+            {
+                return data; //Successfully loaded from backup.
+            }
         }
-        #endregion
 
+        //If all else fails, return a new default object.
+        Debug.Log("No valid save file found. Creating new default data.");
+        return new T();
+    }
+
+    /// <summary>
+    /// Saves the data to a JSON file using a fail-safe atomic write.
+    /// </summary>
+    public void Save(T data)
+    {
         try
         {
-            if (File.Exists(combinedPath))
+            string jsonData = JsonConvert.SerializeObject(data, Formatting.Indented);
+
+            //1. Write to a temporary file.
+            if (m_useEncryption)
             {
-#if UNITY_EDITOR
-                //Debug.Log("The data already exists. Deleting the old file and writing a new one.");
-#endif
-                File.Delete(combinedPath);
+                //Encryption logic writes directly to the temp file _stream.
+                using FileStream tempStream = File.Create(m_tempFilePath);
+                WriteEncryptedData(jsonData, tempStream);
             }
             else
             {
-#if UNITY_EDITOR
-                Debug.Log("Creating a new file. Just a moment, please.");
-#endif
+                File.WriteAllText(m_tempFilePath, jsonData);
             }
 
-            using FileStream stream = File.Create(combinedPath);
-
-            if (_encrypted)
+            //2. Replace the old backup with the current main file (if it exists).
+            if (File.Exists(m_filePath))
             {
-                WriteEncryptedData(_data, stream);
+                File.Replace(m_tempFilePath, m_filePath, m_backupFilePath);
             }
             else
             {
-                stream.Close();
-                //TODO: Place to add more Serialize options. (switch with _fileFormat?)
-                File.WriteAllText(combinedPath, JsonConvert.SerializeObject(_data, Formatting.Indented));
+                //3. If no main file exists, just rename the temp file.
+                File.Move(m_tempFilePath, m_filePath);
             }
 
-            return true;
+            //Optional: Clean up the temporary backup file created by File.Replace.
+            if (File.Exists(m_backupFilePath))
+            {
+                File.Delete(m_backupFilePath);
+            }
         }
-        catch (Exception _exception)
+        catch (Exception e)
         {
-            Debug.LogError($"Cannot save the data, because of {_exception.Message} {_exception.StackTrace}.");
-            return false;
+            Debug.LogError($"Failed to save data to {m_filePath}. Reason: {e.Message}\n{e.StackTrace}");
         }
     }
 
-    public T LoadData<T>(string _subFolder, string _fileName, string _fileFormat, bool _encrypted)
+    private T ReadAndDeserialize(string path)
     {
-        #region Directory Check
-        if (!Directory.Exists(Application.persistentDataPath + _subFolder))
-        {
-#if UNITY_EDITOR
-            Debug.Log($"Path to load the data does not exist. Creating it for the next time... .");
-#endif
-            Directory.CreateDirectory(Application.persistentDataPath + _subFolder);
-        }
-        #endregion
-
-        string path = Application.persistentDataPath + _subFolder + _fileName + _fileFormat;
-
-        if (!File.Exists(path))
-        {
-            Debug.LogError($"The file at {path} cannot be loaded, because it does not exist.");
-            //throw new FileNotFoundException($"{path} does not exit!");
-
-            return default; //The receiver can check for/and react to 'Null'.
-        }
-
         try
         {
-            T data;
-
-            if (_encrypted)
-            {
-                data = ReadEncryptedData<T>(path);
+            if (m_useEncryption)
+            {                
+                return ReadEncryptedData(path);  //Decryption logic reads from the path.
             }
             else
             {
-                //TODO: Place to add more Deserialize options. (switch with _fileFormat?)
-                data = JsonConvert.DeserializeObject<T>(File.ReadAllText(path));
+                string jsonData = File.ReadAllText(path);
+                return JsonConvert.DeserializeObject<T>(jsonData);
             }
-
-            return data;
         }
-        catch (Exception _exception)
+        catch (Exception e)
         {
-            Debug.LogError($"Failed to load the data, due to {_exception.Message} {_exception.StackTrace}.");
-            throw _exception;
+            Debug.LogError($"Failed to read or deserialize file at {path}. Reason: {e.Message}");
+            return null;
         }
     }
 
-    private void WriteEncryptedData<T>(T _data, FileStream _stream)
+    private void WriteEncryptedData(string _jsonData, FileStream _stream)
     {
         using Aes aesEncryptionProvider = Aes.Create();
         //Has to be commented out, to use the 2 Debug.Logs below, to get new Key and IV.___
@@ -125,20 +146,25 @@ public class SerializingData : IPersistentData
         aesEncryptionProvider.IV = Convert.FromBase64String(m_IV);
         //_________________________________________________________________________________
 
-        using ICryptoTransform cryptoTransform = aesEncryptionProvider.CreateEncryptor();
-        using CryptoStream cryptoStream = new CryptoStream(_stream, cryptoTransform, CryptoStreamMode.Write);
+        using ICryptoTransform encryptor = aesEncryptionProvider.CreateEncryptor();
+        using CryptoStream cryptoStream = new CryptoStream(_stream, encryptor, CryptoStreamMode.Write);
+        using StreamWriter writer = new StreamWriter(cryptoStream);
+        writer.Write(_jsonData);
 
-        //OneTime use for Key and IV creation set, on top of this class:_____________________________
-        //Debug.Log($" Key: {Convert.ToBase64String(aesEncryptionProvider.Key)}");
-        //Debug.Log($"InitializeBasic Vector: {Convert.ToBase64String(aesEncryptionProvider.IV)}");
-        //___________________________________________________________________________________________
+        //using ICryptoTransform cryptoTransform = aesEncryptionProvider.CreateEncryptor();
+        //using CryptoStream cryptoStream = new CryptoStream(_stream, cryptoTransform, CryptoStreamMode.Write);
 
-        //Encoding.ASCII from the Tutorial 'https://www.youtube.com/watch?v=mntS45g8OK4'.
-        //TODO: Place to add more Serialize options. (switch with _fileFormat?)
-        cryptoStream.Write(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(_data, Formatting.Indented)));
+        ////OneTime use for Key and IV creation set, on top of this class:_____________________________
+        ////Debug.Log($" Key: {Convert.ToBase64String(aesEncryptionProvider.Key)}");
+        ////Debug.Log($"InitializeBasic Vector: {Convert.ToBase64String(aesEncryptionProvider.IV)}");
+        ////___________________________________________________________________________________________
+
+        ////Encoding.ASCII from the Tutorial 'https://www.youtube.com/watch?v=mntS45g8OK4'.
+        ////TODO: Place to add more Serialize options. (switch with _fileFormat?)
+        //cryptoStream.Write(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(_data, Formatting.Indented)));
     }
 
-    private T ReadEncryptedData<T>(string _path)
+    private T ReadEncryptedData(string _path)
     {
         byte[] fileBytes = File.ReadAllBytes(_path);
 
@@ -146,15 +172,22 @@ public class SerializingData : IPersistentData
         aesDecryptionProvider.Key = Convert.FromBase64String(m_KEY);
         aesDecryptionProvider.IV = Convert.FromBase64String(m_IV);
 
-        using ICryptoTransform cryptoTransform = aesDecryptionProvider.CreateDecryptor(aesDecryptionProvider.Key, aesDecryptionProvider.IV);
-        using MemoryStream decryptionStream = new(fileBytes);
-        using CryptoStream cryptoStream = new(decryptionStream, cryptoTransform, CryptoStreamMode.Read);
+        using ICryptoTransform decryptor = aesDecryptionProvider.CreateDecryptor(aesDecryptionProvider.Key, aesDecryptionProvider.IV);
+        using MemoryStream memoryStream = new MemoryStream(fileBytes);
+        using CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
+        using StreamReader reader = new StreamReader(cryptoStream);
+        string decryptedJson = reader.ReadToEnd();
+        return JsonConvert.DeserializeObject<T>(decryptedJson);
 
-        using StreamReader reader = new(cryptoStream);
-        string decryptedData = reader.ReadToEnd();
+        //using ICryptoTransform cryptoTransform = aesDecryptionProvider.CreateDecryptor(aesDecryptionProvider.Key, aesDecryptionProvider.IV);
+        //using MemoryStream decryptionStream = new(fileBytes);
+        //using CryptoStream cryptoStream = new(decryptionStream, cryptoTransform, CryptoStreamMode.Read);
 
-        Debug.Log($"Decrypted data. On any error check used KEY and/or Initialization Vector: {decryptedData}.");
-        //TODO: Place to add more Deserialize options. (switch with _fileFormat?)
-        return JsonConvert.DeserializeObject<T>(decryptedData);
+        //using StreamReader reader = new(cryptoStream);
+        //string decryptedData = reader.ReadToEnd();
+
+        //Debug.Log($"Decrypted data. On any error check used KEY and/or Initialization Vector: {decryptedData}.");
+        ////TODO: Place to add more Deserialize options. (switch with _fileFormat?)
+        //return JsonConvert.DeserializeObject<T>(decryptedData);
     }
 }

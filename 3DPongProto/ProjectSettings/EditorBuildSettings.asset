@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Offline/LocalGame.unity
     guid: 55bdb10357bec9148926e594711ec277
   - enabled: 1
-    path: Assets/Scenes/Local/FutureLanGame.unity
+    path: Assets/Scenes/Lan/FutureLanGame.unity
     guid: 6dd8223efb4f9c1448cd64d0b3fbc781
   - enabled: 1
     path: Assets/Scenes/Online/FutureNetGame.unity

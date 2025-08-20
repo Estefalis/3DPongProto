@@ -35,7 +35,7 @@ namespace ThreeDeePongProto.Shared.Managers
         #region KeyRebinding
         public static event Action m_RebindComplete;
         public static event Action m_RebindCanceled;
-        public static event Action<InputAction, int> m_rebindStarted;
+        //public static event Action<InputAction, int> m_rebindStarted;
 
         private static Dictionary<string, string> m_keyboardRebindDict = new();
         private static Dictionary<string, string> m_gamepadRebindDict = new();
@@ -67,8 +67,8 @@ namespace ThreeDeePongProto.Shared.Managers
         private static readonly string m_gamepadMapFileName = "/Gamepad/Player";
         private static readonly string m_fileFormat = ".json";
 
-        private static readonly IPersistentData m_persistentData = new SerializingData();
-        private static readonly bool m_encryptionEnabled = false;
+        //private static readonly IPersistentData m_persistentData = new SerializingData();
+        //private static readonly bool m_encryptionEnabled = false;
         #endregion
 
         /// <summary>
@@ -100,20 +100,20 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             if (m_loadRebindDict)
             {
-                m_keyboardRebindDict = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_encryptionEnabled);
-                m_gamepadRebindDict = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_encryptionEnabled);
+                //m_keyboardRebindDict = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_encryptionEnabled);
+                //m_gamepadRebindDict = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_encryptionEnabled);
             }
 
             m_extractButtonImage += ExtractImage;
 
-            ControlSettings.PlayerViewIndex += PlayerIndex;
+            //ControlSettings.PlayerViewIndex += PlayerIndex;
         }
 
         private void OnDisable()
         {
             m_extractButtonImage -= ExtractImage;
 
-            ControlSettings.PlayerViewIndex -= PlayerIndex;
+            //ControlSettings.PlayerViewIndex -= PlayerIndex;
 
             m_PlayerInputActions.Disable();
         }
@@ -405,7 +405,7 @@ namespace ThreeDeePongProto.Shared.Managers
             rebind.WithControlsExcluding("<Gamepad>/start");    //We don't want to completely f... all of our rebinds. Trust me. <(o.O)".
             #endregion
 
-            m_rebindStarted?.Invoke(_actionToRebind, _bindingIndex);
+            //m_rebindStarted?.Invoke(_actionToRebind, _bindingIndex);
 
             rebind.Start(); //Real Start of the rebind process.
         }
@@ -721,7 +721,7 @@ namespace ThreeDeePongProto.Shared.Managers
             //}
             #endregion
 
-            m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
+            //m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
         }
 
         /// <summary>
@@ -760,7 +760,7 @@ namespace ThreeDeePongProto.Shared.Managers
             }
             #endregion
 
-            m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
+            //m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
         }
 
         /// <summary>
@@ -795,7 +795,7 @@ namespace ThreeDeePongProto.Shared.Managers
                     }
                     #endregion
 
-                    m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
+                    //m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
                     break;
                 }
                 case m_gamepadPath:
@@ -820,7 +820,7 @@ namespace ThreeDeePongProto.Shared.Managers
                     }
                     #endregion
 
-                    m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
+                    //m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
                     break;
                 }
                 default:
@@ -956,7 +956,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 }
                 #endregion
 
-                m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
+                //m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
                 #endregion
             }
         }
@@ -991,7 +991,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 }
                 #endregion
 
-                m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
+                //m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
                 #endregion
             }
         }
@@ -1034,7 +1034,7 @@ namespace ThreeDeePongProto.Shared.Managers
                                 }
                             }
 
-                            m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
+                            //m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
                             break;
                         }
                         #endregion
@@ -1056,7 +1056,7 @@ namespace ThreeDeePongProto.Shared.Managers
                                 }
                             }
 
-                            m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
+                            //m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
                             break;
                         }
                         #endregion

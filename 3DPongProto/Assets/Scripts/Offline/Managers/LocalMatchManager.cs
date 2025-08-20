@@ -86,414 +86,402 @@ namespace ThreeDeePongProto.Shared.Managers
         private readonly string m_matchFileName = "/Match";
         private readonly string m_fileFormat = ".json";
 
-        private readonly IPersistentData m_persistentData = new SerializingData();
-        private readonly bool m_encryptionEnabled = false;
-        #endregion
+        //private readonly IPersistentData m_persistentData = new SerializingData();
+        //private readonly bool m_encryptionEnabled = false;
+        //        #endregion
 
-        private void Awake()
-        {
-            if (m_defaultPaddleScale == Vector3.zero)
-                m_defaultPaddleScale = new Vector3(3.5f, 1.0f, 0.5f);
+        //        private void Awake()
+        //        {
+        //            if (m_defaultPaddleScale == Vector3.zero)
+        //                m_defaultPaddleScale = new Vector3(3.5f, 1.0f, 0.5f);
 
-            m_matchUIStates.GameRuns = true;
+        //            m_matchUIStates.GameRuns = true;
 
-            PrepareMatchStart();
-            LoadMatchSettings();
-            ReSetMatch();
-        }
+        //            PrepareMatchStart();
+        //            //LoadMatchSettings(); //Loaded in LoadSettingsValues.cs!!!
+        //            ReSetMatch();
+        //        }
 
-        private void OnEnable()
-        {
-            MenuManager.AResumeTheGame += ResumeGame;
-            MenuManager.AReLoadScene += ResetPauseAndTimescale;
-            MenuManager.AEndInfiniteMatch += LetsEndInfiniteMatch;
+        //        private void OnEnable()
+        //        {
+        //            MenuManager.AResumeTheGame += ResumeGame;
+        //            MenuManager.AReLoadScene += ResetPauseAndTimescale;
+        //            MenuManager.AEndInfiniteMatch += LetsEndInfiniteMatch;
 
-            Ball.RoundCountStarts += MatchStartValues;
-            Ball.HitGoalOne += UpdateTPTwoPoints;
-            Ball.HitGoalTwo += UpdateTPOnePoints;
+        //            Ball.RoundCountStarts += MatchStartValues;
+        //            Ball.HitGoalOne += UpdateTPTwoPoints;
+        //            Ball.HitGoalTwo += UpdateTPOnePoints;
 
-            AStartNextRound += LetsStartNextRound;
-            AStartWinProcedure += LetsStartWinProcedure;
+        //            AStartNextRound += LetsStartNextRound;
+        //            AStartWinProcedure += LetsStartWinProcedure;
 
-            UserInputManager.AChangeActiveActionMap += PauseAndTimeScale;
-        }
+        //            UserInputManager.AChangeActiveActionMap += PauseAndTimeScale;
+        //        }
 
-        private void OnDisable()
-        {
-            //Useable for Infinite Matches.
-            m_matchValues.TotalPointsTPOne = 0;
-            m_matchValues.TotalPointsTPTwo = 0;
-            m_matchUIStates.GameRuns = false;
+        //        private void OnDisable()
+        //        {
+        //            //Useable for Infinite Matches.
+        //            m_matchValues.TotalPointsTPOne = 0;
+        //            m_matchValues.TotalPointsTPTwo = 0;
+        //            m_matchUIStates.GameRuns = false;
 
-            MenuManager.AResumeTheGame -= ResumeGame;
-            MenuManager.AReLoadScene -= ResetPauseAndTimescale;
-            MenuManager.AEndInfiniteMatch -= LetsEndInfiniteMatch;
+        //            MenuManager.AResumeTheGame -= ResumeGame;
+        //            MenuManager.AReLoadScene -= ResetPauseAndTimescale;
+        //            MenuManager.AEndInfiniteMatch -= LetsEndInfiniteMatch;
 
-            Ball.RoundCountStarts -= MatchStartValues;
-            Ball.HitGoalOne -= UpdateTPTwoPoints;
-            Ball.HitGoalTwo -= UpdateTPOnePoints;
+        //            Ball.RoundCountStarts -= MatchStartValues;
+        //            Ball.HitGoalOne -= UpdateTPTwoPoints;
+        //            Ball.HitGoalTwo -= UpdateTPOnePoints;
 
-            AStartNextRound -= LetsStartNextRound;
-            AStartWinProcedure -= LetsStartWinProcedure;
+        //            AStartNextRound -= LetsStartNextRound;
+        //            AStartWinProcedure -= LetsStartWinProcedure;
 
-            UserInputManager.AChangeActiveActionMap -= PauseAndTimeScale;
-        }
+        //            UserInputManager.AChangeActiveActionMap -= PauseAndTimeScale;
+        //        }
 
-        #region Custom-Methods
-        private void PrepareMatchStart()
-        {
-            m_matchUIStates.MaxRounds = m_setMaxRounds;
-            m_matchUIStates.MaxPoints = m_setMaxPoints;
+        //        #region Custom-Methods
+        //        private void PrepareMatchStart()
+        //        {
+        //            m_matchUIStates.RoundsToWin = m_setMaxRounds;
+        //            m_matchUIStates.PointsEachRound = m_setMaxPoints;
 
-            m_gameIsPaused = false;
+        //            m_gameIsPaused = false;
 
-            if (m_matchValues != null)
-            {
-                m_matchValues.CurrentRoundNr = m_startRound;
-                m_matchValues.WinPointDifference = m_winPointDifference;
-                m_matchValues.MaxPushDistance = m_maxPushDistance;
+        //            if (m_matchValues != null)
+        //            {
+        //                m_matchValues.CurrentRoundNr = m_startRound;
+        //                m_matchValues.WinPointDifference = m_winPointDifference;
+        //                m_matchValues.MaxPushDistance = m_maxPushDistance;
 
-                m_matchValues.XPaddleScale = m_defaultPaddleScale.x;
-                m_matchValues.YPaddleScale = m_defaultPaddleScale.y;
-                m_matchValues.ZPaddleScale = m_defaultPaddleScale.z;
-            }
+        //                m_matchValues.XPaddleScale = m_defaultPaddleScale.x;
+        //                m_matchValues.YPaddleScale = m_defaultPaddleScale.y;
+        //                m_matchValues.ZPaddleScale = m_defaultPaddleScale.z;
+        //            }
 
-            m_ballYPos = m_ballPrefab.GetComponent<SphereCollider>().radius;
-            m_ballPopPos = new Vector3(0.0f, m_ballYPos, 0.0f);
-        }
+        //            m_ballYPos = m_ballPrefab.GetComponent<SphereCollider>().radius;
+        //            m_ballPopPos = new Vector3(0.0f, m_ballYPos, 0.0f);
+        //        }
 
-        private void LoadMatchSettings()
-        {
-            BasicFieldSetup basicFieldSetup = m_persistentData.LoadData<BasicFieldSetup>(m_fieldSettingsPath, m_matchFileName, m_fileFormat, m_encryptionEnabled);
+        //        private void MatchStartValues()
+        //        {
+        //            m_matchHasStarted = true;
+        //            m_matchStartTime = Time.time;
+        //            m_matchValues.StartTime = Time.time;    //OR m_matchValues.StartDateTime = DateTime.Now.Ticks;
+        //        }
 
-            m_basicFieldValues.SetGroundWidth = basicFieldSetup.SetGroundWidth;
-            m_basicFieldValues.SetGroundLength = basicFieldSetup.SetGroundLength;
-            m_basicFieldValues.MinBackLineDistance = basicFieldSetup.MinBackLineDistance;
-            m_basicFieldValues.MinFrontLineDistance = basicFieldSetup.MinFrontLineDistance;
-            m_basicFieldValues.BacklineAdjustment = basicFieldSetup.BackLineAdjustment;
-            m_basicFieldValues.FrontlineAdjustment = basicFieldSetup.FrontLineAdjustment;
-        }
+        //        private void UpdateTPOnePoints()
+        //        {
+        //            if (m_matchValues.PlayerSOData == null || m_matchValues == null)
+        //            {
+        //#if UNITY_EDITOR
+        //                Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
+        //#endif
+        //                return;
+        //            }
 
-        private void MatchStartValues()
-        {
-            m_matchHasStarted = true;
-            m_matchStartTime = Time.time;
-            m_matchValues.StartTime = Time.time;    //OR m_matchValues.StartDateTime = DateTime.Now.Ticks;
-        }
+        //            //Reset each Round.
+        //            ++m_matchValues.MatchPointsTPOne;
+        //            //Reset only on Disable.
+        //            ++m_matchValues.TotalPointsTPOne;
 
-        private void UpdateTPOnePoints()
-        {
-            if (m_matchValues.PlayerSOData == null || m_matchValues == null)
-            {
-#if UNITY_EDITOR
-                Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
-#endif
-                return;
-            }
+        //            switch ((int)m_matchUIStates.EPlayerAmount)
+        //            {
+        //                //TODO: Include AI NPC + Multiplayer.
+        //                case 1:
+        //                {
+        //                    if (m_scoredPlayer == null)
+        //                        m_scoredPlayer = $"{m_NPCName} from Team 1";
+        //                    else
+        //                        m_scoredPlayer = m_matchValues.PlayerSOData[0].PlayerName;
+        //                    break;
+        //                }
+        //                //Solo
+        //                case 2:
+        //                {
+        //                    if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
+        //                        m_scoredPlayer = m_matchValues.PlayerSOData[0].PlayerName;
+        //                    break;
+        //                }
+        //                //Team
+        //                case 4:
+        //                {
+        //                    if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
+        //                        m_scoredPlayer = $"{m_matchValues.PlayerSOData[0].PlayerName} & {m_matchValues.PlayerSOData[2].PlayerName}";
+        //                    break;
+        //                }
+        //                default:
+        //                    break;
+        //            }
 
-            //Reset each Round.
-            ++m_matchValues.MatchPointsTPOne;
-            //Reset only on Disable.
-            ++m_matchValues.TotalPointsTPOne;
+        //            CheckMatchConditions(m_scoredPlayer, m_matchValues.TotalPointsTPOne);
+        //        }
 
-            switch ((int)m_matchUIStates.EPlayerAmount)
-            {
-                //TODO: Include AI NPC + Multiplayer.
-                case 1:
-                {
-                    if (m_scoredPlayer == null)
-                        m_scoredPlayer = $"{m_NPCName} from Team 1";
-                    else
-                        m_scoredPlayer = m_matchValues.PlayerSOData[0].PlayerName;
-                    break;
-                }
-                //Solo
-                case 2:
-                {
-                    if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
-                        m_scoredPlayer = m_matchValues.PlayerSOData[0].PlayerName;
-                    break;
-                }
-                //Team
-                case 4:
-                {
-                    if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
-                        m_scoredPlayer = $"{m_matchValues.PlayerSOData[0].PlayerName} & {m_matchValues.PlayerSOData[2].PlayerName}";
-                    break;
-                }
-                default:
-                    break;
-            }
+        //        private void UpdateTPTwoPoints()
+        //        {
+        //            if (m_matchValues.PlayerSOData == null || m_matchValues == null)
+        //            {
+        //#if UNITY_EDITOR
+        //                Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
+        //#endif
+        //                return;
+        //            }
 
-            CheckMatchConditions(m_scoredPlayer, m_matchValues.TotalPointsTPOne);
-        }
+        //            //Reset each Round.
+        //            ++m_matchValues.MatchPointsTPTwo;
+        //            //Reset only on Disable.
+        //            ++m_matchValues.TotalPointsTPTwo;
 
-        private void UpdateTPTwoPoints()
-        {
-            if (m_matchValues.PlayerSOData == null || m_matchValues == null)
-            {
-#if UNITY_EDITOR
-                Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
-#endif
-                return;
-            }
+        //            switch ((int)m_matchUIStates.EPlayerAmount)
+        //            {
+        //                //TODO: Include AI NPC + Multiplayer.
+        //                case 1:
+        //                {
+        //                    if (m_scoredPlayer == null)
+        //                        m_scoredPlayer = $"{m_NPCName} from Team 2";
+        //                    else
+        //                        m_scoredPlayer = m_matchValues.PlayerSOData[1].PlayerName;
+        //                    break;
+        //                }
+        //                //Solo
+        //                case 2:
+        //                {
+        //                    if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
+        //                        m_scoredPlayer = m_matchValues.PlayerSOData[1].PlayerName;
+        //                    break;
+        //                }
+        //                //Team
+        //                case 4:
+        //                {
+        //                    if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
+        //                        m_scoredPlayer = $"{m_matchValues.PlayerSOData[1].PlayerName} & {m_matchValues.PlayerSOData[3].PlayerName}";
+        //                    break;
+        //                }
+        //                default:
+        //                    break;
+        //            }
 
-            //Reset each Round.
-            ++m_matchValues.MatchPointsTPTwo;
-            //Reset only on Disable.
-            ++m_matchValues.TotalPointsTPTwo;
+        //            CheckMatchConditions(m_scoredPlayer, m_matchValues.TotalPointsTPTwo);
+        //        }
 
-            switch ((int)m_matchUIStates.EPlayerAmount)
-            {
-                //TODO: Include AI NPC + Multiplayer.
-                case 1:
-                {
-                    if (m_scoredPlayer == null)
-                        m_scoredPlayer = $"{m_NPCName} from Team 2";
-                    else
-                        m_scoredPlayer = m_matchValues.PlayerSOData[1].PlayerName;
-                    break;
-                }
-                //Solo
-                case 2:
-                {
-                    if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
-                        m_scoredPlayer = m_matchValues.PlayerSOData[1].PlayerName;
-                    break;
-                }
-                //Team
-                case 4:
-                {
-                    if (m_scoredPlayer != null || m_scoredPlayer != string.Empty)
-                        m_scoredPlayer = $"{m_matchValues.PlayerSOData[1].PlayerName} & {m_matchValues.PlayerSOData[3].PlayerName}";
-                    break;
-                }
-                default:
-                    break;
-            }
+        //        private void ReSetMatch()
+        //        {
+        //            if (m_matchValues == null)
+        //            {
+        //#if UNITY_EDITOR
+        //                Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
+        //#endif
+        //                DefaultPlayfield();
+        //                SetPauseAndTimeScale(m_gameIsPaused);
+        //                return;
+        //            }
 
-            CheckMatchConditions(m_scoredPlayer, m_matchValues.TotalPointsTPTwo);
-        }
+        //            ReSetPlayfield();
+        //            ResetRoundValues();
+        //            SetPauseAndTimeScale(m_gameIsPaused);
+        //        }
 
-        private void ReSetMatch()
-        {
-            if (m_matchValues == null)
-            {
-#if UNITY_EDITOR
-                Debug.Log("MatchManager: Forgot to add a Scriptable Object in the Editor!");
-#endif
-                DefaultPlayfield();
-                SetPauseAndTimeScale(m_gameIsPaused);
-                return;
-            }
+        //        private void DefaultPlayfield()
+        //        {
+        //            m_playGround.GetComponent<Transform>();
+        //            m_playGround.transform.localScale = new Vector3(m_playGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_playGroundLength * m_playGroundLengthScale);
+        //        }
 
-            ReSetPlayfield();
-            ResetRoundValues();
-            SetPauseAndTimeScale(m_gameIsPaused);
-        }
+        //        private void ResetRoundValues()
+        //        {
+        //            if (m_matchValues != null)
+        //            {
+        //                m_matchValues.MatchPointsTPOne = 0;
+        //                m_matchValues.MatchPointsTPTwo = 0;
+        //            }
+        //        }
 
-        private void DefaultPlayfield()
-        {
-            m_playGround.GetComponent<Transform>();
-            m_playGround.transform.localScale = new Vector3(m_playGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_playGroundLength * m_playGroundLengthScale);
-        }
+        //        #region Match-Presets
+        //        private void ReSetPlayfield()
+        //        {
+        //            m_playGround.GetComponent<Transform>();
+        //            m_playGround.transform.localScale = new Vector3(m_basicFieldValues.SetGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_basicFieldValues.SetGroundLength * m_playGroundLengthScale);
 
-        private void ResetRoundValues()
-        {
-            if (m_matchValues != null)
-            {
-                m_matchValues.MatchPointsTPOne = 0;
-                m_matchValues.MatchPointsTPTwo = 0;
-            }
-        }
+        //            Instantiate(m_playGround, Vector3.zero, Quaternion.Euler(0, 0, 0), m_prefabParent);
+        //            Instantiate(m_ballPrefab, m_ballPopPos, Quaternion.Euler(0, 0, 0), m_prefabParent);
+        //        }
+        //        #endregion
 
-        #region Match-Presets
-        private void ReSetPlayfield()
-        {
-            m_playGround.GetComponent<Transform>();
-            m_playGround.transform.localScale = new Vector3(m_basicFieldValues.SetGroundWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_basicFieldValues.SetGroundLength * m_playGroundLengthScale);
+        //        private void CheckMatchConditions(string _winningPlayer, double _pointCount)
+        //        {
+        //            if (m_matchValues == null)
+        //                return;
 
-            Instantiate(m_playGround, Vector3.zero, Quaternion.Euler(0, 0, 0), m_prefabParent);
-            Instantiate(m_ballPrefab, m_ballPopPos, Quaternion.Euler(0, 0, 0), m_prefabParent);
-        }
-        #endregion
+        //            //If either no max Round or max Point amount is set, then there shall be no next Round.
+        //            if (m_matchUIStates.IsInfiniteMatch)
+        //            {
+        //                m_nextRoundConditionIsMet = false;
+        //                return;
+        //            }
+        //            else
+        //            {
+        //                m_nextRoundConditionIsMet =
+        //                m_matchValues.MatchPointsTPOne >= m_matchUIStates.LastMaxPointDdIndex &&
+        //                m_matchValues.MatchPointsTPOne >= m_matchValues.MatchPointsTPTwo + m_matchValues.WinPointDifference
+        //                ||
+        //                m_matchValues.MatchPointsTPTwo >= m_matchUIStates.LastMaxPointDdIndex &&
+        //                m_matchValues.MatchPointsTPTwo >= m_matchValues.MatchPointsTPOne + m_matchValues.WinPointDifference;
+        //            }
 
-        private void CheckMatchConditions(string _winningPlayer, double _pointCount)
-        {
-            if (m_matchValues == null)
-                return;
+        //            //WinCondition is true, when the current RoundNumber equals the max set roundAmount AND the winPoint-Difference (PlayerCharacter 1 <-> PlayerCharacter 2) triggers a new round.
+        //            bool winConditionIsMet = m_matchValues.CurrentRoundNr == m_matchUIStates.LastRoundDdIndex && m_nextRoundConditionIsMet;
 
-            //If either no max Round or max Point amount is set, then there shall be no next Round.
-            if (m_matchUIStates.InfiniteMatch)
-            {
-                m_nextRoundConditionIsMet = false;
-                return;
-            }
-            else
-            {
-                m_nextRoundConditionIsMet =
-                m_matchValues.MatchPointsTPOne >= m_matchUIStates.LastMaxPointDdIndex &&
-                m_matchValues.MatchPointsTPOne >= m_matchValues.MatchPointsTPTwo + m_matchValues.WinPointDifference
-                ||
-                m_matchValues.MatchPointsTPTwo >= m_matchUIStates.LastMaxPointDdIndex &&
-                m_matchValues.MatchPointsTPTwo >= m_matchValues.MatchPointsTPOne + m_matchValues.WinPointDifference;
-            }
+        //            if (winConditionIsMet)
+        //            {
+        //                if (m_matchUIStates.EGameConnectModi == EGameConnectionModi.LocalGame)
+        //                    SaveMatchDetails(_winningPlayer, _pointCount);
 
-            //WinCondition is true, when the current RoundNumber equals the max set roundAmount AND the winPoint-Difference (PlayerCharacter 1 <-> PlayerCharacter 2) triggers a new round.
-            bool winConditionIsMet = m_matchValues.CurrentRoundNr == m_matchUIStates.LastRoundDdIndex && m_nextRoundConditionIsMet;
+        //                AStartWinProcedure?.Invoke();
+        //                return;
+        //            }
+        //            ;
 
-            if (winConditionIsMet)
-            {
-                if (m_matchUIStates.EGameConnectModi == EGameConnectionModi.LocalGame)
-                    SaveMatchDetails(_winningPlayer, _pointCount);
+        //            switch (m_nextRoundConditionIsMet)
+        //            {
+        //                case true:
+        //                {
+        //                    AStartNextRound?.Invoke();
+        //                    break;
+        //                }
+        //                case false:
+        //                {
+        //#if UNITY_EDITOR
+        //                    Debug.Log($"MatchManager: {m_scoredPlayer} scored. Congratulations!");
+        //#endif
+        //                    break;
+        //                }
+        //            }
+        //        }
 
-                AStartWinProcedure?.Invoke();
-                return;
-            }
-            ;
+        //        private void SaveMatchDetails(string _winningPlayer, double _winPlayerPoints)
+        //        {
+        //            m_matchValues.WinningPlayer = _winningPlayer;
+        //            m_matchValues.TotalPoints = _winPlayerPoints;
+        //            m_matchValues.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+        //            TimeSpan timespan = TimeSpan.FromSeconds(Time.time - m_matchValues.StartTime);
+        //            m_matchValues.TotalPlaytime = (float)timespan.TotalSeconds;
 
-            switch (m_nextRoundConditionIsMet)
-            {
-                case true:
-                {
-                    AStartNextRound?.Invoke();
-                    break;
-                }
-                case false:
-                {
-#if UNITY_EDITOR
-                    Debug.Log($"MatchManager: {m_scoredPlayer} scored. Congratulations!");
-#endif
-                    break;
-                }
-            }
-        }
+        //            ALoadUpHighScores?.Invoke();
+        //        }
 
-        private void SaveMatchDetails(string _winningPlayer, double _winPlayerPoints)
-        {
-            m_matchValues.WinningPlayer = _winningPlayer;
-            m_matchValues.TotalPoints = _winPlayerPoints;
-            m_matchValues.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-            TimeSpan timespan = TimeSpan.FromSeconds(Time.time - m_matchValues.StartTime);
-            m_matchValues.TotalPlaytime = (float)timespan.TotalSeconds;
+        //        /// <summary>
+        //        /// Method called by a Button that is hidden in the 'Pause Menu', until the match is in "Infinity-Mode".
+        //        /// </summary>
+        //        private void LetsEndInfiniteMatch()
+        //        {
+        //            if (m_matchValues.TotalPointsTPOne == 0 && m_matchValues.TotalPointsTPTwo == 0)
+        //            {
+        //                //TODO: PopUp-Window: "No points gained, yet.
+        //#if UNITY_EDITOR
+        //                Debug.Log("No points gained, yet!");
+        //#endif
+        //                return;
+        //            }
 
-            ALoadUpHighScores?.Invoke();
-        }
+        //            //m_matchValues.WinningPlayer gets set while checking for GetHigherPlayerScore.
+        //            m_matchValues.TotalPoints = GetHigherPlayerScore(m_matchValues.TotalPointsTPOne, m_matchValues.TotalPointsTPTwo);
+        //            m_matchValues.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+        //            TimeSpan timespan = TimeSpan.FromSeconds(Time.time - m_matchValues.StartTime);
+        //            m_matchValues.TotalPlaytime = (float)timespan.TotalSeconds;
 
-        /// <summary>
-        /// Method called by a Button that is hidden in the 'Pause Menu', until the match is in "Infinity-Mode".
-        /// </summary>
-        private void LetsEndInfiniteMatch()
-        {
-            if (m_matchValues.TotalPointsTPOne == 0 && m_matchValues.TotalPointsTPTwo == 0)
-            {
-                //TODO: PopUp-Window: "No points gained, yet.
-#if UNITY_EDITOR
-                Debug.Log("No points gained, yet!");
-#endif
-                return;
-            }
+        //            ALoadUpHighScores?.Invoke();
+        //        }
 
-            //m_matchValues.WinningPlayer gets set while checking for GetHigherPlayerScore.
-            m_matchValues.TotalPoints = GetHigherPlayerScore(m_matchValues.TotalPointsTPOne, m_matchValues.TotalPointsTPTwo);
-            m_matchValues.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-            TimeSpan timespan = TimeSpan.FromSeconds(Time.time - m_matchValues.StartTime);
-            m_matchValues.TotalPlaytime = (float)timespan.TotalSeconds;
+        //        /// <summary>
+        //        /// Method to get the Higher Value for Infinite Matches.
+        //        /// </summary>
+        //        /// <param name="_infinitePointsTPOne"></param>
+        //        /// <param name="_infinitePointsTPTwo"></param>
+        //        /// <returns></returns>
+        //        private double GetHigherPlayerScore(double _infinitePointsTPOne, double _infinitePointsTPTwo)
+        //        {
+        //            if (_infinitePointsTPOne != _infinitePointsTPTwo)
+        //            {
+        //                bool higherPoints = _infinitePointsTPOne > _infinitePointsTPTwo;
+        //                switch (higherPoints)
+        //                {
+        //                    case true:
+        //                    {
+        //                        //Team One.
+        //                        m_matchValues.WinningPlayer = $"{m_matchValues.PlayerSOData[0].PlayerName} & {m_matchValues.PlayerSOData[2].PlayerName}";
+        //                        return _infinitePointsTPOne;
+        //                    }
+        //                    case false:
+        //                    {
+        //                        //Team Two.
+        //                        m_matchValues.WinningPlayer = $"{m_matchValues.PlayerSOData[1].PlayerName} & {m_matchValues.PlayerSOData[3].PlayerName}";
+        //                        return _infinitePointsTPTwo;
+        //                    }
+        //                }
+        //            }
+        //            else
+        //            {
+        //                m_matchValues.WinningPlayer = $"{m_matchValues.PlayerSOData[0].PlayerName} & {m_matchValues.PlayerSOData[2].PlayerName} draw \nto {m_matchValues.PlayerSOData[1].PlayerName} & {m_matchValues.PlayerSOData[3].PlayerName}";
+        //                return _infinitePointsTPOne;
+        //            }
+        //        }
 
-            ALoadUpHighScores?.Invoke();
-        }
+        //        private void LetsStartNextRound()
+        //        {
+        //            if (m_matchValues == null)
+        //                return;
+        //#if UNITY_EDITOR
+        //            Debug.Log("Next Round starts!");
+        //#endif
+        //            //TODO: May implement a procedure to transition into the next set Round, if desired.
 
-        /// <summary>
-        /// Method to get the Higher Value for Infinite Matches.
-        /// </summary>
-        /// <param name="_infinitePointsTPOne"></param>
-        /// <param name="_infinitePointsTPTwo"></param>
-        /// <returns></returns>
-        private double GetHigherPlayerScore(double _infinitePointsTPOne, double _infinitePointsTPTwo)
-        {
-            if (_infinitePointsTPOne != _infinitePointsTPTwo)
-            {
-                bool higherPoints = _infinitePointsTPOne > _infinitePointsTPTwo;
-                switch (higherPoints)
-                {
-                    case true:
-                    {
-                        //Team One.
-                        m_matchValues.WinningPlayer = $"{m_matchValues.PlayerSOData[0].PlayerName} & {m_matchValues.PlayerSOData[2].PlayerName}";
-                        return _infinitePointsTPOne;
-                    }
-                    case false:
-                    {
-                        //Team Two.
-                        m_matchValues.WinningPlayer = $"{m_matchValues.PlayerSOData[1].PlayerName} & {m_matchValues.PlayerSOData[3].PlayerName}";
-                        return _infinitePointsTPTwo;
-                    }
-                }
-            }
-            else
-            {
-                m_matchValues.WinningPlayer = $"{m_matchValues.PlayerSOData[0].PlayerName} & {m_matchValues.PlayerSOData[2].PlayerName} draw \nto {m_matchValues.PlayerSOData[1].PlayerName} & {m_matchValues.PlayerSOData[3].PlayerName}";
-                return _infinitePointsTPOne;
-            }
-        }
+        //            //Increase the RoundNr by 1.
+        //            m_matchValues.CurrentRoundNr++;
+        //            ResetRoundValues();
+        //        }
 
-        private void LetsStartNextRound()
-        {
-            if (m_matchValues == null)
-                return;
-#if UNITY_EDITOR
-            Debug.Log("Next Round starts!");
-#endif
-            //TODO: May implement a procedure to transition into the next set Round, if desired.
+        //        private void LetsStartWinProcedure()
+        //        {
+        //#if UNITY_EDITOR
+        //            Debug.Log("Won!");
+        //#endif
+        //            //TODO: Start the WinProcedure.
+        //        }
 
-            //Increase the RoundNr by 1.
-            m_matchValues.CurrentRoundNr++;
-            ResetRoundValues();
-        }
+        //        private void ResetPauseAndTimescale(int _)
+        //        {
+        //            //May use the integer to treat scene timeScales different in the future.
+        //            SetPauseAndTimeScale(false);
+        //        }
 
-        private void LetsStartWinProcedure()
-        {
-#if UNITY_EDITOR
-            Debug.Log("Won!");
-#endif
-            //TODO: Start the WinProcedure.
-        }
+        //        private void ResumeGame()
+        //        {
+        //            SetPauseAndTimeScale(false);
+        //        }
 
-        private void ResetPauseAndTimescale(int _)
-        {
-            //May use the integer to treat scene timeScales different in the future.
-            SetPauseAndTimeScale(false);
-        }
+        //        private void SetPauseAndTimeScale(bool _isPaused)
+        //        {
+        //            switch (_isPaused)
+        //            {
+        //                case false:
+        //                {
+        //                    Time.timeScale = 1f;
+        //                    m_gameIsPaused = false;
+        //                    break;
+        //                }
+        //                case true:
+        //                {
+        //                    Time.timeScale = 0f;
+        //                    m_gameIsPaused = true;
+        //                    break;
+        //                }
+        //            }
+        //        }
 
-        private void ResumeGame()
-        {
-            SetPauseAndTimeScale(false);
-        }
-
-        private void SetPauseAndTimeScale(bool _isPaused)
-        {
-            switch (_isPaused)
-            {
-                case false:
-                {
-                    Time.timeScale = 1f;
-                    m_gameIsPaused = false;
-                    break;
-                }
-                case true:
-                {
-                    Time.timeScale = 0f;
-                    m_gameIsPaused = true;
-                    break;
-                }
-            }
-        }
-
-        private void PauseAndTimeScale(string _actionMap)
-        {
-            if (_actionMap == EInputActionMaps.UserInterface.ToString())
-                SetPauseAndTimeScale(true);
-        }
+        //        private void PauseAndTimeScale(string _actionMap)
+        //        {
+        //            if (_actionMap == EInputActionMaps.UserInterface.ToString())
+        //                SetPauseAndTimeScale(true);
+        //        }
         #endregion
     }
 }

@@ -4,9 +4,9 @@ namespace ThreeDeePongProto.Shared.Settings
 {
     public class NetworkSettings : MonoBehaviour
     {
-        private void Awake()
-        {
+        //private void Awake()
+        //{
             
-        }
+        //}
     }
 }

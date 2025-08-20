@@ -16,6 +16,12 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         internal void SpawnContentChildren()
         {
+            if (m_spawnPrefab == null)
+            {
+                Debug.LogWarning($"Prefab to spawn is not set!");
+                return;
+            }
+
             for (int i = 0; i < m_createChildAmount; i++)
             {
                 GameObject newChild = Instantiate(m_spawnPrefab, m_scrollViewController.m_scrollViewContent);
@@ -45,7 +51,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                 return;
             }
 #if UNITY_EDITOR
-            Debug.Log($"SetupExplicitNavigation started. Loop: {m_scrollViewController.m_loopNavigation}, Direction: {m_scrollViewController.EScrollDirection}, ElementCount: {scrollControllerList.Count}");
+            //Debug.Log($"SetupExplicitNavigation started. Loop: {m_scrollViewController.m_loopNavigation}, Direction: {m_scrollViewController.EScrollDirection}, ElementCount: {scrollControllerList.Count}");
 #endif
 
             for (int i = 0; i < scrollControllerList.Count; i++)

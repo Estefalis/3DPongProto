@@ -126,7 +126,7 @@ PrefabInstance:
     - target: {fileID: 2509531060462451294, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
       propertyPath: m_Name
-      value: Rebind - Push (0)
+      value: Rebind - Push [KeyboardPlayerID0]
       objectReference: {fileID: 0}
     - target: {fileID: 2509531060462451295, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}

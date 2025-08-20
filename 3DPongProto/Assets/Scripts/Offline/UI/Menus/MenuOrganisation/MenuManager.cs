@@ -22,8 +22,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
     public class MenuManager : MonoBehaviour
     {
-        private RebindManager m_rebindManager;
-
         private PlayerInputActions m_inputActions;
         private InputActionMap m_uiActionMap;
 
@@ -34,7 +32,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #region MenuNavigation
         #region Select First Elements by using the EventSystem.
         [Header("Select First Elements")]
-        [SerializeField] internal Transform m_firstElement;
+        [SerializeField] internal Transform m_firstTransformElement; //To prevent confusion: DictKey, not dictValue.
         private readonly Stack<Transform> m_activeElement = new();
         [Space]
 
@@ -59,9 +57,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [Header("Mouse Cursor")]
         [SerializeField] private CursorLockMode m_cursorLockMode = CursorLockMode.Confined;
         [SerializeField] private bool m_showCursor = true;
-
-        //[SerializeField] private float m_stickDeadZoneMin = 0.1f;
-        //[SerializeField] private float m_stickDeadZoneMax = 0.5f;
+        
         internal static GameObject LastSelectedGameObject { get => m_lastSelectedGameObject; }
         private static GameObject m_lastSelectedGameObject;
         #endregion
@@ -80,14 +76,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         #region Scriptable_Objects
         [Header("Scriptable Objects")]
-        [SerializeField] private MatchUIStates m_matchUIStates;
+        //[SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
         #endregion
 
         private void Awake()
         {
-            m_rebindManager = FindObjectOfType<RebindManager>();
-
             Cursor.lockState = m_cursorLockMode;
             Cursor.visible = m_showCursor;
 
@@ -102,7 +96,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_uiActionMap = m_inputActions.UserInterface;
 
             //If MenuManager's firstElement is active (MainMenu), toggle UserInterface Map. Else (GameScene) PlayerActions.
-            if (m_firstElement.gameObject.activeInHierarchy)
+            if (m_firstTransformElement.gameObject.activeInHierarchy)
                 UserInputManager.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
             else
                 UserInputManager.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
@@ -110,7 +104,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_lastSelectedGameObject = null;
             m_targetNavigationElement.Clear();
 
-            SetFirstStackElement(m_firstElement);
+            SetFirstStackElement(m_firstTransformElement);
             SetUIElements();    //Also sets the lastSelectedElement.
         }
 
@@ -142,7 +136,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_playerInput = FindObjectOfType<PlayerInput>();
 
             if (m_hiddenFinishButton != null)
-                InVisibleButton(m_matchUIStates.InfiniteMatch);     //m_matchUIStates get load in LoadSettingsValues > Awake().
+                InVisibleButton(SettingsManager.Instance.CurrentSettings.Match.EGameMode == EGameMode.Infinite);
         }
 
         private void Update()
@@ -169,7 +163,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             for (int navMenu = 0; navMenu < m_navigationKey.Length; navMenu++)
                 m_targetNavigationElement.Add(m_navigationKey[navMenu], m_navigationValue[navMenu]);
 
-            SetNavigationGameObject(m_firstElement);
+            SetNavigationGameObject(m_firstTransformElement);
         }
 
         public void NextElement(Transform _next)
@@ -195,10 +189,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             currentElement.gameObject.SetActive(false);
 
             if (m_activeElement.Count == 0)
-                SetFirstStackElement(m_firstElement);
+                SetFirstStackElement(m_firstTransformElement);
 
             Transform previousElement = m_activeElement.Peek();
             previousElement.gameObject.SetActive(true);
+
             SetNavigationGameObject(previousElement);
         }
 
@@ -218,7 +213,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     break;
                 }
                 case true:
+                {
+                    Debug.LogWarning("FocusTarget is null!");
                     return;
+                }
             }
         }
         #endregion
@@ -257,19 +255,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #region Custom-Methods
         private void OnOpenMenu()
         {
-            if (!m_firstElement.gameObject.activeInHierarchy)
+            if (!m_firstTransformElement.gameObject.activeInHierarchy)
             {
-                m_firstElement.gameObject.SetActive(true);
-                SetNavigationGameObject(m_firstElement);
+                m_firstTransformElement.gameObject.SetActive(true);
+                SetNavigationGameObject(m_firstTransformElement);
             }
         }
 
         private void OnCloseMenu()
         {
-            if (m_firstElement.gameObject.activeInHierarchy)
+            if (m_firstTransformElement.gameObject.activeInHierarchy)
             {
-                m_firstElement.gameObject.SetActive(false);
-                SetNavigationGameObject(m_firstElement);
+                m_firstTransformElement.gameObject.SetActive(false);
+                SetNavigationGameObject(m_firstTransformElement);
             }
         }
 
@@ -438,9 +436,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 {
                     case false: //If InputField is currently not in Edit-Mode, close to previous Transform-Parent in Stack.
                     {
-                        if (!m_firstElement.gameObject.activeInHierarchy)   //Prevents closing the very first menu Transform-Parent.
+                        if (!m_firstTransformElement.gameObject.activeInHierarchy)   //Prevents closing the very first menu Transform-Parent.
                             CloseToPreviousElement();
-                        else if (m_firstElement.gameObject.activeInHierarchy)
+                        else if (m_firstTransformElement.gameObject.activeInHierarchy)
                         {
                             var sceneIndex = SceneManager.GetActiveScene().buildIndex;
                             if (sceneIndex != (int)ESceneNames.StartMenu)
@@ -567,12 +565,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         public void ReturnToMainMenu()
         {
-            //m_rebindManager.ResetProcessedPlayersList();        //Or whenever a player leaves.
             AReLoadScene?.Invoke((int)ESceneNames.StartMenu);   //Possible without '?.Invoke'?
         }
 
         public void EndInfiniteMatch()
         {
+            //TODO: Change reference to MatchSettingsData!!!
+            if (m_matchValues == null)
+            {
+                Debug.LogWarning("Scriptable null. Code adjustment needed!");
+                return;
+            }
+
+            //TODO: Replace SO values for runtime MatchValues.
             if (m_matchValues.TotalPointsTPOne > 0 || m_matchValues.TotalPointsTPTwo > 0)
             {
                 AEndInfiniteMatch?.Invoke();

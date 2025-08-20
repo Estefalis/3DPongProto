@@ -364,7 +364,7 @@ namespace ThreeDeePongProto.Shared.Managers
         private void HandlePlayerJoined(PlayerInput _playerInput)
         {
             m_activePlayers.Add(_playerInput);
-            RebindManager.Instance.LoadPlayerBindings(_playerInput);
+            RebindManager.Instance.ApplyOverridesToPlayer(_playerInput);
         }
 
         private void HandlePlayerLeft(PlayerInput _playerInput)

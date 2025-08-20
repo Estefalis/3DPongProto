@@ -1,9 +1,8 @@
 using System;
 
 [Serializable]
-public struct GraphicUISettingsStates
+public class GraphicUISettingsStates
 {
-    //LoadStructure for GraphicSettingsUI.
     public int QualityLevelIndex;
     public int SelectedResolutionIndex;
     public bool FullScreenMode;

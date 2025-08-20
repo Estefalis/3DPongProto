@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using ThreeDeePongProto.Shared.Managers;
 using ThreeDeePongProto.Shared.Settings;
 using UnityEngine;
 
@@ -31,7 +32,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private const float m_HalfHeightHor = 0.5f;
         private const float m_HalfWidthVer = 0.5f;
 
-        private ECameraModi m_lastSetCameraMode;
+        private int m_lastSetCameraMode;
         internal static Rect RuntimeFullsizeRect { get; private set; }
 
         #region Scriptable Objects
@@ -57,12 +58,13 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private IEnumerator Start()
         {
-            if (m_graphicUIStates == null)
-            {
-                m_lastSetCameraMode = m_graphicsSettings.ECameraMode;
-            }
-            else
-                m_lastSetCameraMode = m_graphicUIStates.SetCameraMode;
+            m_lastSetCameraMode = SettingsManager.Instance.CurrentSettings.Graphic.CameraMode;
+            //if (m_graphicUIStates == null)
+            //{
+            //    m_lastSetCameraMode = SettingsManager.Instance.CurrentSettings.Graphic.CameraMode;
+            //}
+            //else
+            //    m_lastSetCameraMode = m_graphicUIStates.SetCameraMode;
 
             yield return new WaitUntil(CamerasEqualPlayerCount);
 
@@ -178,9 +180,10 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         }
 
         #region Set Cameras and Rects (Old SetCameraRects.cs)
-        private void SetCameraMode(ECameraModi _cameraMode)
+        private void SetCameraMode(int _cameraMode)
         {
-            switch (_cameraMode)
+            ECameraModi eCamMode = (ECameraModi)m_lastSetCameraMode;
+            switch ((ECameraModi)_cameraMode)
             {
                 case ECameraModi.SingleCam:
                 {
@@ -189,25 +192,25 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                 }
                 case ECameraModi.Vertical:
                 {
-                    if (AvailableCameras[1] != null && m_lastSetCameraMode == ECameraModi.Vertical)
+                    if (AvailableCameras[1] != null && eCamMode == ECameraModi.Vertical)
                         SetCamerasVertical(AvailableCameras[0], AvailableCameras[1]);
                     break;
                 }
                 case ECameraModi.Horizontal:
                 {
-                    if (AvailableCameras[1] != null && m_lastSetCameraMode == ECameraModi.Horizontal)
+                    if (AvailableCameras[1] != null && eCamMode == ECameraModi.Horizontal)
                         SetCamerasHorizontal(AvailableCameras[0], AvailableCameras[1]);
                     break;
                 }
                 case ECameraModi.Quartet:
                 {
-                    if (AvailableCameras[2] != null && AvailableCameras[3] != null && m_lastSetCameraMode == ECameraModi.Quartet)
+                    if (AvailableCameras[2] != null && AvailableCameras[3] != null && eCamMode == ECameraModi.Quartet)
                         SetFourSplit(AvailableCameras[0], AvailableCameras[1], AvailableCameras[2], AvailableCameras[3]);
                     break;
                 }
                 default:    //Horizontal
-                    m_lastSetCameraMode = ECameraModi.Horizontal;
-                    if (AvailableCameras[1] != null && m_lastSetCameraMode == ECameraModi.Horizontal)
+                    m_lastSetCameraMode = (int)ECameraModi.Horizontal;
+                    if (AvailableCameras[1] != null && eCamMode == ECameraModi.Horizontal)
                         SetCamerasHorizontal(AvailableCameras[0], AvailableCameras[1]);
                     break;
             }
@@ -218,7 +221,8 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         /// </summary>
         private void UpdateFullsizeRect()
         {
-            switch (m_lastSetCameraMode)
+            ECameraModi eCamMode = (ECameraModi)m_lastSetCameraMode;
+            switch (eCamMode)
             {
                 case ECameraModi.SingleCam:
                 {
@@ -250,7 +254,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private void SetCamerasAndRects()
         {
-            #region Camera nullCheck with for loop
+            //Camera nullCheck with for loop.
             for (int i = 0; i < AvailableCameras.Count; i++)
             {
                 if (AvailableCameras[i] != null)
@@ -263,7 +267,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                     AvailableCameras[i].pixelRect = RuntimeFullsizeRect;
                 }
             }
-            #endregion
         }
 
         private void SetSingleCamera()

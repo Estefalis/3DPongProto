@@ -1,14 +1,19 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using ThreeDeePongProto.Shared.Managers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public enum ECameraModi
 {
     None = 0,
     SingleCam = 1,
-    Vertical,
-    Horizontal,
+    Horizontal = 2,
+    Vertical = 3,
     Quartet = 4
 }
 
@@ -16,223 +21,246 @@ namespace ThreeDeePongProto.Shared.Settings
 {
     public class GraphicSettings : MonoBehaviour
     {
-        #region Object-References
+        [Header("UI References")]
         [SerializeField] private TMP_Dropdown m_qualityDropdown;
         [SerializeField] private TMP_Dropdown m_resolutionDropdown;
-        [SerializeField] private Toggle m_fullScreenToggle;                 //Listener method is IN Unity!
+        [SerializeField] private Toggle m_fullScreenToggle;
         [SerializeField] private TextMeshProUGUI m_fullScreenToggleText;
         [SerializeField] private TMP_Dropdown m_screenSplitDropdown;
-        #endregion
+        [SerializeField] private Slider m_brightnessSlider;
+        [SerializeField] private TextMeshProUGUI m_brightnessText;
+        [SerializeField] private Toggle m_brightnessToggle;
+        [SerializeField] private Volume m_globalVolume; //URP.
 
-        [SerializeField] private int m_systemQualityLevel;
-        [SerializeField] private int m_currentResolutionIndex;
-        [SerializeField] private bool m_defaultFullScreen = true;
-        [SerializeField] private ECameraModi m_eCameraMode;
+        [SerializeField, Range(0.1f, 10.0f)] private float m_adjustSliderStep = 1.0f;
 
-        private Resolution[] m_screenResolutions;
-        public ECameraModi ECameraMode { get => m_eCameraMode; }
+        private List<Resolution> m_availableResolutions = new();
+        //private readonly float m_defaultBrightness = 0.0001f;
 
-        private int m_maxScreenModiIndex;
-        private List<string> m_screenModiList;
+        private GraphicSettingsData m_graphicData;
 
-        #region Scriptable Variables
-        [Header("Scriptable Objects")]
-        [SerializeField] private GraphicUIStates m_graphicUIStates;
-        [SerializeField] private MatchValues m_matchValues;
-        [SerializeField] private MatchUIStates m_matchUIStates;
-        #endregion
-
-        #region Serialization
-        private readonly string m_settingStatesFolderPath = "/SaveData/Settings-States";
-        private readonly string m_graphicFileName = "/Graphic";
-        private readonly string m_fileFormat = ".json";
-
-        private readonly IPersistentData m_persistentData = new SerializingData();
-        private readonly bool m_encryptionEnabled = false;
-        #endregion
-
-        private void Awake()
+        private void OnEnable()
         {
-            m_systemQualityLevel = QualitySettings.GetQualityLevel();
-            GetAvailableResolutions();
-
-            SetupSplitDropdown();
-
-            if (m_graphicUIStates == null)
-            {
-#if UNITY_EDITOR
-                Debug.LogWarning("GraphicSettings: Forgot to add a Scriptable Object in the Editor!");
-#endif
-                ReSetDefault();
-            }
-            //else LoadGraphicSettings(); moved to 'MenuNavigation.cs'.       
-        }
-
-        private void Start()
-        {
-            InitialUISetup();
+            m_graphicData = SettingsManager.Instance.CurrentSettings.Graphic;
+            SettingsManager.Instance.OnSettingsChanged += SetUIElements;
+            SetUIElements();    //Includes AddListeners();
         }
 
         private void OnDisable()
         {
-            m_persistentData.SaveData(m_settingStatesFolderPath, m_graphicFileName, m_fileFormat, m_graphicUIStates, m_encryptionEnabled, true);
+            SettingsManager.Instance.OnSettingsChanged -= SetUIElements;
+            RemoveListeners();
+            //SettingsManager.Instance.SaveSettings();    //While there is no ApplyButton. Or none wanted.
         }
 
-        private void GetAvailableResolutions()
+        #region UnRegister-Listener-Region
+        private void AddListeners()
         {
-            m_screenResolutions = Screen.resolutions;
+            m_qualityDropdown.onValueChanged.AddListener(OnQualityChanged);
+            m_resolutionDropdown.onValueChanged.AddListener(OnResolutionChanged);
+            m_fullScreenToggle.onValueChanged.AddListener(OnFullScreenChanged);
+            m_screenSplitDropdown.onValueChanged.AddListener(OnCameraModeChanged);
+            m_brightnessSlider.onValueChanged.AddListener(OnBrightnessChanged);
+            m_brightnessToggle.onValueChanged.AddListener(OnBrightnessToggleChanged);
+        }
 
+        private void RemoveListeners()
+        {
+            m_qualityDropdown.onValueChanged.RemoveListener(OnQualityChanged);
+            m_resolutionDropdown.onValueChanged.RemoveListener(OnResolutionChanged);
+            m_fullScreenToggle.onValueChanged.RemoveListener(OnFullScreenChanged);
+            m_screenSplitDropdown.onValueChanged.RemoveListener(OnCameraModeChanged);
+            m_brightnessSlider.onValueChanged.RemoveListener(OnBrightnessChanged);
+            m_brightnessToggle.onValueChanged.RemoveListener(OnBrightnessToggleChanged);
+        }
+        #endregion
+
+        #region Listener-Methods
+        private void OnQualityChanged(int index) => m_graphicData.QualityLevelIndex = index;
+        private void OnResolutionChanged(int index) => m_graphicData.ResolutionString = m_availableResolutions[index].ToString();
+        private void OnFullScreenChanged(bool isOn) => m_graphicData.FullScreenMode = isOn;
+        private void OnCameraModeChanged(int index) => m_graphicData.CameraMode = index;
+
+
+        #region Public Button Methods
+        public void DecreaseBrightness() => AdjustBrightness(false);
+        public void IncreaseBrightness() => AdjustBrightness(true);
+        #endregion 
+
+        private void OnBrightnessChanged(float _value)
+        {
+            //SettingsManager valueChanges only.
+            m_graphicData.Brightness = _value;
+
+            //Slider > minValue = toggle value is false.
+            if (m_graphicData.UseDefBrightness && _value > m_brightnessSlider.minValue)
+                m_graphicData.UseDefBrightness = false;
+
+            SetUIElements();
+            ApplyBrightness();
+        }
+
+        private void OnBrightnessToggleChanged(bool _isOn)
+        {
+            m_graphicData.UseDefBrightness = _isOn;
+            if (_isOn)
+            {
+                //Save current brightness before seting it to defaultValue.
+                m_graphicData.BrightnessBeforeDefault = m_graphicData.Brightness;
+                m_graphicData.Brightness = m_brightnessSlider.minValue;
+            }
+            else
+            {
+                //Reset saved brightnessValue to the saved amount.
+                m_graphicData.Brightness = m_graphicData.BrightnessBeforeDefault;
+            }
+
+            SetUIElements();
+            ApplyBrightness();
+        }
+        #endregion
+
+        private void ApplyBrightness()
+        {
+            if (m_globalVolume != null && m_globalVolume.profile.TryGet<ColorAdjustments>(out var colorAdjustments))
+            {
+                colorAdjustments.postExposure.value = m_graphicData.Brightness;
+            }
+        }
+
+        private void SetUIElements()
+        {
+            RemoveListeners();
+
+            //Quality
+            m_qualityDropdown.value = m_graphicData.QualityLevelIndex;
+
+            //Fullscreen
+            m_fullScreenToggle.isOn = m_graphicData.FullScreenMode;
+            m_fullScreenToggleText.text = m_graphicData.FullScreenMode ? "On" : "Off";
+
+            m_brightnessToggle.isOn = m_graphicData.UseDefBrightness;
+            m_brightnessSlider.value = m_graphicData.Brightness;
+            m_brightnessText.text = $"{m_brightnessSlider.value:P0}";
+
+            //Resolution & SplitScreen
+            SetResolutionDropdown();
+            SetSplitScreenDropdown();
+
+            AddListeners();
+        }
+
+        private void SetResolutionDropdown()
+        {
+            m_availableResolutions = Screen.resolutions.ToList();
             m_resolutionDropdown.ClearOptions();
 
             //List for the variable Amount of available Resolution-Options on your system.
-            List<string> resolutionOptionsList = new();
-
+            List<string> resolutionOptions = new();
             int currentResolutionIndex = 0;
-            for (int i = 0; i < m_screenResolutions.Length; i++)
-            {
-                //Creation of a formatted string to display the available system-resolutions in the UI-Dropdown.
-                //Adding the refreshRate prevents confusion on double entries.
-                string resolution = $"{m_screenResolutions[i].width} x {m_screenResolutions[i].height} @{m_screenResolutions[i].refreshRate}hz";
-                resolutionOptionsList.Add(resolution);
 
-                //Screen-Width and -Height have to be handled separate. 
-                if (m_screenResolutions[i].width == Screen.currentResolution.width && m_screenResolutions[i].height == Screen.currentResolution.height)
+            for (int i = 0; i < m_availableResolutions.Count; i++)
+            {
+                resolutionOptions.Add(m_availableResolutions[i].ToString());
+
+                //Find the Index of the saved resolution.
+                if (m_availableResolutions[i].ToString() == m_graphicData.ResolutionString)
                 {
                     currentResolutionIndex = i;
-                    //System-ResolutionIndex.
-                    m_currentResolutionIndex = i;
                 }
             }
 
-            m_resolutionDropdown.AddOptions(resolutionOptionsList);
+            m_resolutionDropdown.AddOptions(resolutionOptions);
             m_resolutionDropdown.value = currentResolutionIndex;
             m_resolutionDropdown.RefreshShownValue();
         }
 
-        private void SetupSplitDropdown()
+        private void SetSplitScreenDropdown()
         {
-            m_screenModiList = new();
-            uint currentPlayer = (uint)m_matchUIStates.EPlayerAmount;
-            //Automatize the shown ECameraModi in the 'm_screenSplitDropdown' based on the player in the match.
-
-            switch (currentPlayer)
-            {
-                case 0:
-                {
-                    m_eCameraMode = ECameraModi.None;
-                    m_maxScreenModiIndex = 0;
-                    break;
-                }
-                case 1:
-                {
-                    m_eCameraMode = ECameraModi.SingleCam;
-                    m_maxScreenModiIndex = 1;
-                    break;
-                }
-                case 2:
-                {
-                    //TODO: Switch based on PlayerSetting.
-                    m_eCameraMode = ECameraModi.Horizontal;
-                    m_maxScreenModiIndex = 2;
-                    break;
-                }
-                case 4:
-                {
-                    m_eCameraMode = ECameraModi.Quartet;
-                    m_maxScreenModiIndex = 4;
-                    break;
-                }
-                default:
-                {
-                    m_eCameraMode = ECameraModi.SingleCam;
-                    m_maxScreenModiIndex = 1;
-                    break;
-                }
-            }
-
-            for (int i = 0; i < m_maxScreenModiIndex + 1; i++)
-            {
-                m_screenModiList.Add($"{(ECameraModi)i}");
-            }
+            //Get Data from the SettingsManager.
+            int playerCount = SettingsManager.Instance.CurrentSettings.Match.PlayerCount;
+            ECameraModi savedCameraMode = (ECameraModi)m_graphicData.CameraMode;
 
             m_screenSplitDropdown.ClearOptions();
-            m_screenSplitDropdown.AddOptions(m_screenModiList);
+            var options = new List<string>();
 
-            if (m_graphicUIStates != null)
-                m_screenSplitDropdown.value = (int)m_graphicUIStates.SetCameraMode;
-            else
-                m_screenSplitDropdown.value = (int)m_eCameraMode;
+            //Create a new options list, based on the current playerCount.
+            switch (playerCount)
+            {
+                case 1:
+                    options.Add(ECameraModi.SingleCam.ToString());
+                    break;
+                case 2:
+                    options.Add(ECameraModi.Vertical.ToString());
+                    options.Add(ECameraModi.Horizontal.ToString());
+                    break;
+                case 4:
+                    options.Add(ECameraModi.Quartet.ToString());
+                    break;
+                default: // Für 0 oder andere Fälle
+                    options.Add(ECameraModi.None.ToString());
+                    break;
+            }
 
+            //Fill the dropdown with thew new options.
+            m_screenSplitDropdown.AddOptions(options);
+
+            //Find the saveMode in the options list and set the _value.
+            int selectedIndex = options.IndexOf(savedCameraMode.ToString());
+
+            //Fallback: Find and set the first available Index as standard.
+            if (selectedIndex < 0)
+                selectedIndex = 0;
+
+            m_screenSplitDropdown.SetValueWithoutNotify(selectedIndex);
             m_screenSplitDropdown.RefreshShownValue();
         }
 
-        private void InitialUISetup()
+        private void AdjustBrightness(bool _increase)
         {
-            //Can there even be fix default values for these on variable PC settings?
-            m_qualityDropdown.value = m_graphicUIStates.QualityLevelIndex;
-            m_resolutionDropdown.value = m_graphicUIStates.SelectedResolutionIndex;
-            m_screenSplitDropdown.value = (int)m_graphicUIStates.SetCameraMode;
-            m_fullScreenToggle.isOn = m_graphicUIStates.FullScreenMode;
+            if (m_brightnessSlider == null)
+                return;
 
-            SetFullScreenText(m_fullScreenToggle.isOn);
-        }
-
-        private void SetFullScreenText(bool _fullScreen)
-        {
-            switch (_fullScreen)
+            //If defaultBrightness-Mode is on, deactivate it. And start from slider's minValue.
+            if (m_graphicData.UseDefBrightness)
             {
-                case true:
-                    m_fullScreenToggleText.text = "On";
-                    break;
-                case false:
-                    m_fullScreenToggleText.text = "Off";
-                    break;
+                m_graphicData.UseDefBrightness = false;
+
+                m_brightnessSlider.value = m_brightnessSlider.minValue;
+
+                //Notify the Toggle, but without triggering it's listener.
+                m_brightnessToggle.SetIsOnWithoutNotify(false);
             }
+
+            float absoluteStep = m_brightnessSlider.maxValue * (m_adjustSliderStep / 100.0f); //1.0f means a sliderStep of 1%.
+            float step = _increase ? absoluteStep : -absoluteStep;
+            m_brightnessSlider.value += step; //Triggers OnValueChanged-Listener automaticly.
         }
 
         //Set by UI-SplitScreenDropdown.
         public void SetActiveCameras()
         {
-            m_graphicUIStates.SetCameraMode = (ECameraModi)m_screenSplitDropdown.value;
+            m_graphicData.CameraMode = m_screenSplitDropdown.value;    //Previous ECameraModi.
         }
 
-        public void SetGraphicQuality(int _qualityIndex)
+        public void ApplyAndSave()
         {
-            QualitySettings.SetQualityLevel(_qualityIndex);
-            m_qualityDropdown.value = _qualityIndex;
+            //Apply System-Settinga.
+            QualitySettings.SetQualityLevel(m_graphicData.QualityLevelIndex);
+            Screen.fullScreen = m_graphicData.FullScreenMode;
 
-            if (m_graphicUIStates != null)
-                m_graphicUIStates.QualityLevelIndex = _qualityIndex;
+            //Find and set the saved resolution.
+            Resolution resToSet = m_availableResolutions.Find(r => r.ToString() == m_graphicData.ResolutionString);
+            Screen.SetResolution(resToSet.width, resToSet.height, m_graphicData.FullScreenMode);
+
+            //Save settings permanently.
+            SettingsManager.Instance.SaveSettings();
         }
 
-        public void SetResolution(int _resolutionIndex)
+        //Public method for the general ResetButton of GraphicSettings.
+        public void ResetSettings()
         {
-            Resolution resolution = m_screenResolutions[_resolutionIndex];
-            Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
-            m_resolutionDropdown.value = _resolutionIndex;
-
-            if (m_graphicUIStates != null)
-                m_graphicUIStates.SelectedResolutionIndex = _resolutionIndex;
-        }
-
-        public void SetFullScreen(bool _setFullScreen)
-        {
-            Screen.fullScreen = _setFullScreen;
-            m_fullScreenToggle.isOn = _setFullScreen;
-            SetFullScreenText(m_fullScreenToggle.isOn);
-
-            if (m_graphicUIStates != null)
-                m_graphicUIStates.FullScreenMode = _setFullScreen;
-        }
-
-        public void ReSetDefault()
-        {
-            m_qualityDropdown.value = m_systemQualityLevel;
-            //Index equal to your System-Resolution, set by 'GetAvailableResolutions();'.
-            m_resolutionDropdown.value = m_currentResolutionIndex;
-            m_fullScreenToggle.isOn = m_defaultFullScreen;
-            SetFullScreenText(m_fullScreenToggle.isOn);
-            m_screenSplitDropdown.value = (int)m_eCameraMode;
+            SettingsManager.Instance.ResetGraphicSettings();
         }
     }
 }

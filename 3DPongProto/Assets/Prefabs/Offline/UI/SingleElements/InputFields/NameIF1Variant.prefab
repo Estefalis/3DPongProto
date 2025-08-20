@@ -87,5 +87,15 @@ PrefabInstance:
       propertyPath: m_fontSize
       value: 27.65
       objectReference: {fileID: 0}
+    - target: {fileID: 5839482468814331409, guid: a1cbb0dce08f6794fb690f33851b8cb2,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5839482468814331409, guid: a1cbb0dce08f6794fb690f33851b8cb2,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a1cbb0dce08f6794fb690f33851b8cb2, type: 3}

@@ -9,31 +9,27 @@ namespace ThreeDeePongProto.Shared.UI
     {
         [SerializeField] private Button[] m_modeButtons;
 
-        #region Scriptable Objects
-        [SerializeField] private MatchUIStates m_matchUIStates;
-        #endregion
-
         public void SetGameModi(Button _sender)
         {
             if (_sender == m_modeButtons[0])
             {
-                SetConnectionInfo(EGameConnectionModi.LocalGame);
+                SetConnectionInfo((int)EGameConnectionModi.LocalGame);
             }
 
             if (_sender == m_modeButtons[1])
             {
-                SetConnectionInfo(EGameConnectionModi.LanGame);
+                SetConnectionInfo((int)EGameConnectionModi.LanGame);
             }
 
             if (_sender == m_modeButtons[2])
             {
-                SetConnectionInfo(EGameConnectionModi.NetGame);
+                SetConnectionInfo((int)EGameConnectionModi.NetGame);
             }
         }
 
-        private void SetConnectionInfo(EGameConnectionModi _eGameModi)
+        private void SetConnectionInfo(int _eGameModi)
         {
-            m_matchUIStates.EGameConnectModi = _eGameModi;
+            SettingsManager.Instance.CurrentSettings.Match.GameConnectMode = _eGameModi;
 #if UNITY_EDITOR
             //Debug.Log($"Spiel-Modus: {_eGameModi}");
 #endif
@@ -41,7 +37,8 @@ namespace ThreeDeePongProto.Shared.UI
 
         public void StartMatch()
         {
-            switch (m_matchUIStates.EGameConnectModi)
+            var gameConnectMode = (EGameConnectionModi)SettingsManager.Instance.CurrentSettings.Match.GameConnectMode;
+            switch (gameConnectMode)
             {
                 case EGameConnectionModi.LocalGame:
                 {

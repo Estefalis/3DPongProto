@@ -9,7 +9,7 @@ public struct PlayerData
     public string Avatar;
     public bool KeepNameOnLoad;
     public bool PlayerOnFrontline;
-    public bool DefaultKeyboard;    //TODO: Implement a choice to prefer Keyboard and Mouse or Gamepad as main inputDevice.
+    public bool DefaultKeyboard;
     public int ToggleID;
 
     public PlayerData(string _prefabName, string _playerName, int _playerID, string _avatarName, bool _keepNameOnLoad, bool _playerOnFrontLine, bool _defaultKeyboard, int _toggleID)

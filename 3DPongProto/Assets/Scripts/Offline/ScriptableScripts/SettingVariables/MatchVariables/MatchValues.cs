@@ -25,7 +25,7 @@ public class MatchValues : ScriptableObject
     public double TotalPointsTPTwo;     //each Match
 
     [Header("Player-Adjustments")]
-    public float PaddleWidthAdjustment; //each Match (Match Manager sends PlayerCharacter)
+    public float PaddleWidthAdjustment; //each Match (MatchManager sends PlayerCharacter)
     public float MaxPushDistance;       //each Match
     public float XPaddleScale;          //each Match
     public float YPaddleScale;          //each Match
