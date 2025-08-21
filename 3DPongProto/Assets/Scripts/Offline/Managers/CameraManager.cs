@@ -78,17 +78,18 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
                 UpdateCamRectDicts();
             }
-
+            
             SetCameraMode(m_lastSetCameraMode);
 
-            //UpdateFullsizeRect();
+            UpdateFullsizeRect();   //TODO: Disabling this at start, or not? Was disabled.
         }
 
         private void Update()
         {
-            if (AvailableCameras.Count < m_matchValues.PlayerSOData.Count)
+            //Old: m_matchValues.PlayerSOData.Count
+            if (AvailableCameras.Count < SettingsManager.Instance.CurrentSettings.Match.PlayerCount)
             {
-                Debug.LogError($"Not enough cameras available. Expected: {m_matchValues.PlayerSOData.Count}, Available: {AvailableCameras.Count}");
+                Debug.LogError($"Not enough cameras available. Expected: {SettingsManager.Instance.CurrentSettings.Match.PlayerCount}, Available: {AvailableCameras.Count}");
                 return;
             }
             UpdateFullsizeRect();
@@ -100,7 +101,8 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         /// <returns></returns>
         private bool CamerasEqualPlayerCount()
         {
-            switch (AvailableCameras.Count == m_matchValues.PlayerSOData.Count)
+            //Old: m_matchValues.PlayerSOData.Count
+            switch (AvailableCameras.Count == SettingsManager.Instance.CurrentSettings.Match.PlayerCount)
             {
                 case true:
                     return true;

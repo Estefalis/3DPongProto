@@ -20,6 +20,7 @@ namespace ThreeDeePongProto.Shared.UI
     {
         #region UI-References
         [Header("UI-References")]
+        //TODO: Add RoomName for Online Games. Lan games also, depending on setup and experience.
         [SerializeField] private TMP_InputField[] m_nameInputFields;
         [SerializeField] private Toggle[] m_keepNameToggles;
         [SerializeField] private Toggle[] m_deviceToggles;

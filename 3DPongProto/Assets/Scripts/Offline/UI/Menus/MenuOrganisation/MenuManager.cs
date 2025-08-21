@@ -76,7 +76,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         #region Scriptable_Objects
         [Header("Scriptable Objects")]
-        //[SerializeField] private MatchUIStates m_matchUIStates;
+        [SerializeField] private MatchUIStates m_matchUIStates;
         [SerializeField] private MatchValues m_matchValues;
         #endregion
 
