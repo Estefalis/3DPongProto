@@ -20,8 +20,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             if (_eventData.button != PointerEventData.InputButton.Left)
                 return;
-
-            if(m_menuManager != null)
+            
+            if (m_menuManager != null)
                 m_menuManager.ClickActivation(m_ownInputField.gameObject);
         }
     }

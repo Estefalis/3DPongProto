@@ -57,16 +57,16 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [Header("Mouse Cursor")]
         [SerializeField] private CursorLockMode m_cursorLockMode = CursorLockMode.Confined;
         [SerializeField] private bool m_showCursor = true;
-        
+
         internal static GameObject LastSelectedGameObject { get => m_lastSelectedGameObject; }
         private static GameObject m_lastSelectedGameObject;
         #endregion
 
         [SerializeField] private Button m_hiddenFinishButton;
 
+        [SerializeField] private TMP_Dropdown[] m_uIDropdowns;
         private TMP_InputField m_lastSelectedInputField = null;
-        private bool m_fieldIsInEditMode = false;
-        private string m_currentInputFieldContent = "";
+        private TMP_InputField m_activeInputField = null;
 
         #region Actions_and_Functions
         internal static event Action AResumeTheGame;          //LocalMatchManager to resume the Game.
@@ -74,11 +74,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         internal static event Action AEndInfiniteMatch;
         #endregion
 
-        #region Scriptable_Objects
-        [Header("Scriptable Objects")]
-        [SerializeField] private MatchUIStates m_matchUIStates;
-        [SerializeField] private MatchValues m_matchValues;
-        #endregion
+        private string m_currentInputFieldContent = "";
+        //private bool m_fieldIsInEditMode = false;
+        //[Header("Scriptable Objects")]
+        //[SerializeField] private MatchUIStates m_matchUIStates;
+        //[SerializeField] private MatchValues m_matchValues;
 
         private void Awake()
         {
@@ -117,6 +117,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 m_inputActions.UserInterface.Submit.performed += OnSubmitInput;
             }
 
+            SettingsManager.Instance.OnSettingsChanged += HandleSettingsChanged;
             UserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
             AResumeTheGame += OnResumeTheGame;
         }
@@ -127,6 +128,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_inputActions.UserInterface.Navigate.performed -= OnNavigationInput;
             m_inputActions.UserInterface.Submit.performed -= OnSubmitInput;
 
+            SettingsManager.Instance.OnSettingsChanged -= HandleSettingsChanged;
             UserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
             AResumeTheGame -= OnResumeTheGame;
         }
@@ -145,7 +147,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 return;
 
             UpdateLastSelectedObject();
-            HandleButtonPresses();
+            HandleUIInteractions();
+            //HandleButtonPresses();
         }
 
         #region Prepare Navigation-Stack and (de-)activate Menu-Transforms to navigate.
@@ -313,9 +316,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     break;
                 }
             }
-#if UNITY_EDITOR
-            //Debug.Log(m_lastSelectedGameObject);
-#endif
         }
 
         private void InputFieldCheck(GameObject _incomingGameObject)
@@ -337,19 +337,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                             m_lastSelectedInputField.image.color = m_lastSelectedInputField.colors.selectedColor;
                         }
 
-                        switch (m_fieldIsInEditMode)
-                        {
-                            case false:
-                            {
-                                ExitEditMode();
-                                break;
-                            }
-                            case true:
-                            {
-                                EnterEditMode();
-                                break;
-                            }
-                        }
+                        //switch (m_fieldIsInEditMode)
+                        //{
+                        //    case false:
+                        //    {
+                        //        ExitEditMode();
+                        //        break;
+                        //    }
+                        //    case true:
+                        //    {
+                        //        EnterEditMode();
+                        //        break;
+                        //    }
+                        //}
                         break;
                     }
                     case false: //GO is the TMP_InputField we just left.
@@ -359,16 +359,16 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 #if UNITY_EDITOR
                             //Debug.Log($"Left last {inputField.name} IF. Saved old IF Content: {m_currentInputFieldContent}");
 #endif
-                            m_fieldIsInEditMode = false;
+                            //m_fieldIsInEditMode = false;
                             inputField.image.color = inputField.colors.normalColor;
                             if (inputField.interactable)
                                 inputField.interactable = false;
                             if (!inputField.enabled)
                                 inputField.enabled = true;
-                            if (inputField.isFocused)
-                                inputField.DeactivateInputField();
-                            if (m_currentInputFieldContent != string.Empty)
-                                m_currentInputFieldContent = string.Empty;  //m_currentInputFieldContent reset each time we leave an IF.
+                            //if (inputField.isFocused)
+                            //    inputField.DeactivateInputField();
+                            //if (m_currentInputFieldContent != string.Empty)
+                            //    m_currentInputFieldContent = string.Empty;  //m_currentInputFieldContent reset each time we leave an IF.
                             m_lastSelectedInputField = null;
                         }
                         break;
@@ -377,94 +377,225 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             }
         }
 
-        private void ExitEditMode()
-        {
-            if (m_lastSelectedInputField == null)
-                return;
-
-            if (m_lastSelectedInputField.interactable)
-            {
-                m_lastSelectedInputField.interactable = false;
-                m_lastSelectedInputField.DeactivateInputField();
-            }
-        }
-
-        private void EnterEditMode()
-        {
-            if (m_lastSelectedInputField == null)
-                return;
-
-            if (!m_lastSelectedInputField.interactable)
-            {
-                m_currentInputFieldContent = m_lastSelectedInputField.text;   //Save the text for a possible Cancel-Action.
-                m_lastSelectedInputField.interactable = true;
-                m_lastSelectedInputField.ActivateInputField();
-            }
-        }
-
-        private void HandleButtonPresses()
+        private void HandleUIInteractions()
         {
             if (!Application.isFocused)
                 return;
 
-            #region Submit-Actions
-            if (m_inputActions.UserInterface.Submit.WasPressedThisFrame())  //Limit check to once per frame!
+            var uiActions = m_inputActions.UserInterface;
+
+            //CANCEL-Logic
+            if (uiActions.Cancel.WasPressedThisFrame())
             {
-                if (m_lastSelectedInputField != null)   //Only set 'm_fieldIsInEditMode' to true, if being in an InputField.
+                if (HandleHighPriorityCancelActions())
                 {
-                    switch (m_fieldIsInEditMode)
-                    {
-                        case false: //InputField is currently not in Edit-Mode, switch into Edit-Mode.
-                        {
-                            m_fieldIsInEditMode = true;
-                            break;
-                        }
-                        case true:  //InputField is currently in Edit-Mode, switch out of Edit-Mode.
-                        {
-                            m_fieldIsInEditMode = false;
-                            break;
-                        }
-                    }
+                    return;
+                }
+
+                //If nothing has a higher priority, navigate back.
+                if (m_activeElement.Count > 1)
+                {
+                    //Debug.Log("Should navigate back now.");
+                    CloseToPreviousElement();
+                }
+                else if (SceneManager.GetActiveScene().buildIndex != (int)ESceneNames.StartMenu)
+                {
+                    AResumeTheGame?.Invoke(); //Resume back to the game in GameScene.
                 }
             }
-            #endregion
 
-            #region Cancel-Actions
-            if (m_inputActions.UserInterface.Cancel.WasPressedThisFrame())  //Limit check to once per frame!
+            //SUBMIT-Logic
+            if (uiActions.Submit.WasPressedThisFrame())
             {
-                switch (m_fieldIsInEditMode)
+                //Blocks the Submit-Logic, if actions like KeyRebinding or Dropdowns have priority.
+                if ((RebindManager.Instance != null && RebindManager.Instance.IsRebinding)/* || IsAnyDropdownOpen()*/)
                 {
-                    case false: //If InputField is currently not in Edit-Mode, close to previous Transform-Parent in Stack.
-                    {
-                        if (!m_firstTransformElement.gameObject.activeInHierarchy)   //Prevents closing the very first menu Transform-Parent.
-                            CloseToPreviousElement();
-                        else if (m_firstTransformElement.gameObject.activeInHierarchy)
-                        {
-                            var sceneIndex = SceneManager.GetActiveScene().buildIndex;
-                            if (sceneIndex != (int)ESceneNames.StartMenu)
-                            {
-                                AResumeTheGame?.Invoke();   //Cancel InputAction triggers gameResume procedure.
-                            }
-                        }
-                        break;
-                    }
-                    case true:  //If InputField is currently in Edit-Mode, switch out of Edit-Mode and reset to previous IF content.
-                    {
-                        if (m_lastSelectedInputField != null)               //Prevents NullReferenceException when no IF is active/set.
-                        {
-                            if (m_currentInputFieldContent != string.Empty)
-                                m_lastSelectedInputField.text = m_currentInputFieldContent;    //Saved content of the last InputField.
-                            //NOTE: m_currentInputFieldContent will be reset on leaving InputFields.
+                    return;
+                }
 
-                            m_fieldIsInEditMode = false;
-                        }
+                //Else process the InputField-Logic.
+                HandleInputFieldSubmit();
+            }
+        }
 
-                        ExitEditMode();
-                        break;
-                    }
+        /// <summary>
+        /// Submit-Action Logic of InputFields.
+        /// </summary>
+        private void HandleInputFieldSubmit()
+        {
+            var currentSelected = m_eventSystem.currentSelectedGameObject;
+
+            if (m_activeInputField != null)
+            {
+                //End Edit-Mode while being in an InputField
+                m_activeInputField.interactable = false;
+                m_activeInputField.DeactivateInputField();
+                m_activeInputField = null;
+            }
+            else if (currentSelected != null && currentSelected.TryGetComponent<TMP_InputField>(out var selectedField))
+            {
+                //An InputField is selected and Edit-Mode shall get started
+                m_activeInputField = selectedField;
+                m_currentInputFieldContent = selectedField.text; // Text für "Cancel" merken
+                m_activeInputField.interactable = true;
+                m_activeInputField.ActivateInputField();
+            }
+        }
+
+        #region DELETE
+        //private void ExitEditMode()
+        //{
+        //    if (m_lastSelectedInputField == null)
+        //        return;
+
+        //    if (m_lastSelectedInputField.interactable)
+        //    {
+        //        m_lastSelectedInputField.interactable = false;
+        //        m_lastSelectedInputField.DeactivateInputField();
+        //    }
+        //}
+
+        //private void EnterEditMode()
+        //{
+        //    if (m_lastSelectedInputField == null)
+        //        return;
+
+        //    if (!m_lastSelectedInputField.interactable)
+        //    {
+        //        //m_currentInputFieldContent = m_lastSelectedInputField.text;   //Save the text for a possible Cancel-Action.
+        //        m_lastSelectedInputField.interactable = true;
+        //        m_lastSelectedInputField.ActivateInputField();
+        //    }
+        //}
+
+        //private void HandleButtonPresses()
+        //{
+        //    if (!Application.isFocused)
+        //        return;
+
+        //    #region Submit-Actions
+        //    if (m_inputActions.UserInterface.Submit.WasPressedThisFrame())  //Limit check to once per frame!
+        //    {
+        //        if (m_lastSelectedInputField != null)   //Only set 'm_fieldIsInEditMode' to true, if being in an InputField.
+        //        {
+        //            //switch (m_fieldIsInEditMode)
+        //            //{
+        //            //    case false: //InputField is currently not in Edit-Mode, switch into Edit-Mode.
+        //            //    {
+        //            //        m_fieldIsInEditMode = true;
+        //            //        break;
+        //            //    }
+        //            //    case true:  //InputField is currently in Edit-Mode, switch out of Edit-Mode.
+        //            //    {
+        //            //        m_fieldIsInEditMode = false;
+        //            //        break;
+        //            //    }
+        //            //}
+        //        }
+        //    }
+        //    #endregion
+
+        //    #region Cancel-Actions
+        //    //NEW
+        //    if (m_inputActions.UserInterface.Cancel.WasPressedThisFrame())
+        //    {
+        //        //Check for a prioritized UI-Interaction and skip Back-Navigation on true.
+        //        if (HandleHighPriorityCancelActions())
+        //            return;
+
+        //        //Navigate back the to previous stack-Element, if we are not already on the very first element.
+        //        if (m_activeElement.Count > 1)
+        //        {
+        //            CloseToPreviousElement();
+        //        }
+        //        else if (SceneManager.GetActiveScene().buildIndex != (int)ESceneNames.StartMenu)
+        //        {
+        //            //Close menu and resume the game, if we are on the last stack-Element.
+        //            AResumeTheGame?.Invoke();
+        //        }
+        //    }
+
+        //    //OLD
+        //    //if (m_inputActions.UserInterface.Cancel.WasPressedThisFrame())  //Limit check to once per frame!
+        //    //{
+        //    //    switch (m_fieldIsInEditMode)
+        //    //    {
+        //    //        case false: //If InputField is currently not in Edit-Mode, close to previous Transform-Parent in Stack.
+        //    //        {
+        //    //            if (!m_firstTransformElement.gameObject.activeInHierarchy)   //Prevents closing the very first menu Transform-Parent.
+        //    //                CloseToPreviousElement();
+        //    //            else if (m_firstTransformElement.gameObject.activeInHierarchy)
+        //    //            {
+        //    //                var sceneIndex = SceneManager.GetActiveScene().buildIndex;
+        //    //                if (sceneIndex != (int)ESceneNames.StartMenu)
+        //    //                {
+        //    //                    AResumeTheGame?.Invoke();   //Cancel InputAction triggers gameResume procedure.
+        //    //                }
+        //    //            }
+        //    //            break;
+        //    //        }
+        //    //        case true:  //If InputField is currently in Edit-Mode, switch out of Edit-Mode and reset to previous IF content.
+        //    //        {
+        //    //            if (m_lastSelectedInputField != null)               //Prevents NullReferenceException when no IF is active/set.
+        //    //            {
+        //    //                if (m_currentInputFieldContent != string.Empty)
+        //    //                    m_lastSelectedInputField.text = m_currentInputFieldContent;    //Saved content of the last InputField.
+        //    //                //NOTE: m_currentInputFieldContent will be reset on leaving InputFields.
+
+        //    //                m_fieldIsInEditMode = false;
+        //    //            }
+
+        //    //            ExitEditMode();
+        //    //            break;
+        //    //        }
+        //    //    }
+        //    //}
+        //    #endregion
+        //}
+        #endregion
+
+        /// <summary>
+        /// Checks for a prioritized UI-Interactions.
+        /// </summary>
+        /// <returns>True, if an action is currently handled, else false.</returns>
+        private bool HandleHighPriorityCancelActions()
+        {
+            if (RebindManager.Instance != null &&
+       (RebindManager.Instance.IsRebinding || RebindManager.Instance.WasJustCancelled))
+                return true;        //Block Cancel-Action. Rebind-Cancel-Action has priority before Menu-Back-Navigation.
+
+            //Check for opened Dropdowns. Dropdown-References required!
+            foreach (var dropdown in m_uIDropdowns) //Basicly the whole private bool IsAnyDropdownOpen() method. Plus return false below.
+            {
+                if (dropdown.IsExpanded)
+                {
+                    dropdown.Hide(); //Closes the dropdown.
+                    return true;     //Block the Cancel-Action, so dropdown gets closed first.
                 }
             }
-            #endregion
+
+            //Check for an active InputField in Edit-Mode.
+            if (m_activeInputField != null)
+            {
+                //Deactivate the inputField to enable navigation.
+                m_activeInputField.text = m_currentInputFieldContent; //Optional: Reset saved Text.
+                m_activeInputField.interactable = false;
+                m_activeInputField.DeactivateInputField();
+                m_activeInputField = null;
+                return true;    //Block the Cancel-Action, to move out of the InputField first.
+            }
+
+            return false;       //No active action prioritized.
+        }
+
+        /// <summary>
+        /// Enables the hiden button, if Infinite GameMode is set.
+        /// </summary>
+        private void HandleSettingsChanged()
+        {
+            bool isInfinite = SettingsManager.Instance.CurrentSettings.Match.EGameMode == EGameMode.Infinite;
+            if (m_hiddenFinishButton != null)
+                m_hiddenFinishButton.gameObject.SetActive(isInfinite);
         }
 
         private void ButtonTransition(GameObject _incomingGameObject)
@@ -525,15 +656,21 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         public void ClickActivation(GameObject _gameObject)
         {
-            StartCoroutine(SwitchInputFields(_gameObject));
+            StartCoroutine(SetNewObject(_gameObject));
         }
 
-        private IEnumerator SwitchInputFields(GameObject _gameObject)
+        private IEnumerator SetNewObject(GameObject _gameObject)
         {
-            m_fieldIsInEditMode = false;
             m_eventSystem.SetSelectedGameObject(_gameObject);
             yield return null;
-            m_fieldIsInEditMode = true;
+            _gameObject.TryGetComponent(out TMP_InputField inputField);
+
+            if (inputField)
+            {
+                m_activeInputField = inputField;
+                //m_activeInputField.interactable = true;
+                //m_activeInputField.ActivateInputField();
+            }
         }
 
         private void InVisibleButton(bool _infiniteMatch)
@@ -571,18 +708,18 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         public void EndInfiniteMatch()
         {
             //TODO: Change reference to MatchSettingsData!!!
-            if (m_matchValues == null)
-            {
-                Debug.LogWarning("Scriptable null. Code adjustment needed!");
-                return;
-            }
+            //if (m_matchValues == null)
+            //{
+            //    Debug.LogWarning("Scriptable null. Code adjustment needed!");
+            //    return;
+            //}
 
-            //TODO: Replace SO values for runtime MatchValues.
-            if (m_matchValues.TotalPointsTPOne > 0 || m_matchValues.TotalPointsTPTwo > 0)
-            {
-                AEndInfiniteMatch?.Invoke();
-                m_navigationKey[0].gameObject.SetActive(false);
-            }
+            ////TODO: Replace SO values for runtime MatchValues.
+            //if (m_matchValues.TotalPointsTPOne > 0 || m_matchValues.TotalPointsTPTwo > 0)
+            //{
+            //    AEndInfiniteMatch?.Invoke();
+            //    m_navigationKey[0].gameObject.SetActive(false);
+            //}
         }
 
         /// <summary>

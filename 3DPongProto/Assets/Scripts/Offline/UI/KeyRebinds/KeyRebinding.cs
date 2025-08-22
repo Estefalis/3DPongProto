@@ -46,21 +46,25 @@ namespace ThreeDeePongProto.Shared.Rebinding
                     m_resetButton.interactable = false;
                 return;
             }
+        }
 
+        private void OnEnable()
+        {
+            //NOTE: Add Listener in OnEnable(). Doing it in Awake() can skip that, after the first script activation.
             m_rebindButton.onClick.AddListener(StartRebindingProcess);
             m_resetButton.onClick.AddListener(ResetThisRebinding);
 
-            RebindManager.Instance.OnRebindComplete += UpdateBindingDisplay;
-            RebindManager.Instance.OnRebindCanceled += UpdateBindingDisplay;
+            if (RebindManager.Instance != null)
+            {
+                RebindManager.Instance.OnRebindComplete += UpdateBindingDisplay;
+                RebindManager.Instance.OnRebindCanceled += UpdateBindingDisplay;
+            }
 
             //Example for a global reset event
             //ControlSettings.ResetPlayerViewRebinds += UpdateBindingDisplay;
 
             ControlSettings.ResetPlayerViewRebinds += ResetThisRebinding;
-        }
 
-        private void OnEnable()
-        {
             GetBindingInformation();
             UpdateBindingDisplay(); //Ensure the display is correct when the object is enabled.
         }
@@ -124,7 +128,7 @@ namespace ThreeDeePongProto.Shared.Rebinding
                 return;
 
             string actionName = m_inputActionReference.action.name;
-            
+
             //The RebindManager is now the single source of truth for display strings.
             string displayString = RebindManager.Instance.GetBindingDisplayString(
                 actionName,
@@ -150,8 +154,8 @@ namespace ThreeDeePongProto.Shared.Rebinding
         {
             if (m_inputActionReference == null || m_inputActionReference.action == null)
                 return;
-
             string actionName = m_inputActionReference.action.name;
+            Debug.Log($"{actionName}-Button got clicked.");
 
             //We pass all context to the manager and let it handle the logic.
             RebindManager.Instance.StartRebinding(
