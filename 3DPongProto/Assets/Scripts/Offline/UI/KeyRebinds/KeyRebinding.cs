@@ -155,7 +155,6 @@ namespace ThreeDeePongProto.Shared.Rebinding
             if (m_inputActionReference == null || m_inputActionReference.action == null)
                 return;
             string actionName = m_inputActionReference.action.name;
-            Debug.Log($"{actionName}-Button got clicked.");
 
             //We pass all context to the manager and let it handle the logic.
             RebindManager.Instance.StartRebinding(

@@ -11,6 +11,7 @@ namespace ThreeDeePongProto.Shared.Managers
     {
         [Tooltip(tooltip: "Reference of the Main-InputActionAsset for global Rebindings.")]
         [SerializeField] private InputActionAsset m_mainActionAsset;
+        [SerializeField] private string m_targetActionMap = "PlayerActions";
         [SerializeField] private bool m_useEncryption = false;
 
         public event Action OnRebindComplete;
@@ -18,8 +19,6 @@ namespace ThreeDeePongProto.Shared.Managers
 
         public bool IsRebinding { get; private set; }   //Make known, if a rebinding is currently in progress.
         public bool WasJustCancelled { get; private set; }
-
-        private string m_targetActionMap;
 
         #region WithCancelingThrough- & WithControlsExcluding-Strings
         //Control-Paths REQUIRE <>. LayoutNames DO NOT!
@@ -52,11 +51,6 @@ namespace ThreeDeePongProto.Shared.Managers
             //Configure the save system once.
             m_saveSystem = new SerializingData<OverrideSaveData>(m_fileName, m_keyBindingOverrideFolderPath, m_useEncryption);
             LoadAllBindings();                  //Load all overrides at gameStart.
-        }
-
-        private void OnEnable()
-        {
-            m_targetActionMap = UserInputManager.m_CentralActionsInstance.PlayerActions.ToString();
         }
 
         private void OnDisable()
@@ -109,7 +103,6 @@ namespace ThreeDeePongProto.Shared.Managers
                 .Start();
 
             IsRebinding = true;
-            Debug.Log($"IsRebinding: {IsRebinding}");
         }
 
         #region Shared_Logic
@@ -163,10 +156,10 @@ namespace ThreeDeePongProto.Shared.Managers
             {
                 //No duplicate found. Perform a simple rebind.
                 _action.ApplyBindingOverride(_bindingIndex, newPath);
-            UpdateOverrideInList(_action.name, _bindingIndex, _playerIndex, newPath);
-        }
+                UpdateOverrideInList(_action.name, _bindingIndex, _playerIndex, newPath);
+            }
 
-        SaveBindingOverrides();         //Save all changes to the file.
+            SaveBindingOverrides();         //Save all changes to the file.
 
             _action.actionMap.Enable();     //Re-enable the _action map.
             OnRebindComplete?.Invoke();     //Notify UI to update it's display.
@@ -217,7 +210,6 @@ namespace ThreeDeePongProto.Shared.Managers
         private void ProcessRebindCancellation(InputActionRebindingExtensions.RebindingOperation _operation, TextMeshProUGUI _buttonText)
         {
             IsRebinding = false;
-            Debug.Log($"IsRebinding: {IsRebinding}");
             _operation.Dispose();
 
             //Re-enable the _action map.
@@ -256,7 +248,18 @@ namespace ThreeDeePongProto.Shared.Managers
         /// <returns>The conflicting InputBinding if a duplicate is found; otherwise, null.</returns>
         private InputBinding? FindDuplicateBinding(InputBinding _bindingToExclude, string _pathToCheck)
         {
+            if (m_mainActionAsset == null)
+            {
+                Debug.LogError("RebindManager Error: 'm_mainActionAsset' is not set in the Inspector!");
+                return null;
+            }
+
             InputActionMap gameplayMap = m_mainActionAsset.FindActionMap(m_targetActionMap);
+            if (gameplayMap == null)
+            {
+                Debug.LogError($"RebindManager Error: The ActionMap '{m_targetActionMap}' could not be found in the Asset! Please check for typing mistakes.");
+                return null;
+            }
 
             foreach (var action in gameplayMap.actions)
             {

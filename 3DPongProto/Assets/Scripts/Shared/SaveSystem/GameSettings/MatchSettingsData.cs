@@ -10,6 +10,7 @@ public class MatchSettingsData
     public int GameConnectMode;                 //TODO: Move into ConnectManager/Fusion etc.
 
     public EGameMode EGameMode = EGameMode.Normal;
+    public bool ObstaclesEnabled = false;       //NOTE: Enum for multiple Layout-Options may be a better choice for complex structures.
 
     //RoundsToWin and PointsEachRound
     public int RoundsToWin = 5;

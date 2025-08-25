@@ -14,6 +14,7 @@ namespace ThreeDeePongProto.Shared.Settings
     {
         #region UI References
         [Header("Game Mode")]
+        [SerializeField] private Toggle m_obstacleToggle;
         [SerializeField] private TMP_Dropdown m_gameModeDropdown;
         [SerializeField] private bool m_isNormalMode = true;
 
@@ -80,6 +81,8 @@ namespace ThreeDeePongProto.Shared.Settings
         {
             //Game-Modi
             m_gameModeDropdown.onValueChanged.AddListener(OnGameModeChanged);
+            //Obstacle-Option
+            m_obstacleToggle.onValueChanged.AddListener(OnObstacleToggleChanged);
             //Rounds
             m_roundsDropdown.onValueChanged.AddListener(OnRoundDropdownChanged);
             //PointsEachRound
@@ -108,6 +111,8 @@ namespace ThreeDeePongProto.Shared.Settings
         {
             //Game-Modi
             m_gameModeDropdown.onValueChanged.RemoveListener(OnGameModeChanged);
+            //Obstacle-Option
+            m_obstacleToggle.onValueChanged.RemoveListener(OnObstacleToggleChanged);
             //Rounds
             m_roundsDropdown.onValueChanged.RemoveListener(OnRoundDropdownChanged);
             //PointsEachRound
@@ -148,6 +153,11 @@ namespace ThreeDeePongProto.Shared.Settings
             m_matchData.EGameMode = (EGameMode)_dropdownIndex;
             //Update UI, including '.interactable'-Settings.
             SetUIElements();
+        }
+
+        private void OnObstacleToggleChanged(bool _isOn)
+        {
+            m_matchData.ObstaclesEnabled = _isOn;
         }
 
         /// <summary>
