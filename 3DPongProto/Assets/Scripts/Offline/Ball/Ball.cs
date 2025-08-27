@@ -35,7 +35,7 @@ public class Ball : MonoBehaviour
     #region Actions
     public static event Action OnHitGoalOne, OnHitGoalTwo;  //Updates UserInterface in MatchUserInterface.cs
     public static event Action<int> OnHitPlayer;
-    public static event Action RoundCountStarts;        //LocalMatchManager saves MatchStartTime and sets 'MatchHasStarted'-Bool to true.
+    public static event Action OnFirstServe;        //LocalMatchManager saves MatchStartTime and sets 'MatchHasStarted'-Bool to true.
 
     //TODO: Audioplay-Structure: (Emitter, AudioSourceSettings (Diegetic/NonDiegetic), Track-ID (if not random), RandomBool);
     public static event Action<ESoundEmittingObjects, EAudioType, int, bool> PlaySpecificAudio;
@@ -84,8 +84,8 @@ public class Ball : MonoBehaviour
         if (!m_matchManager.GameIsPaused && m_firstPlayerID == firstPlayerID/*&& _masterID == 0*/)
         {
             m_firstPlayerID = _masterID;
-            if (!m_matchManager.MatchStarted)
-                RoundCountStarts?.Invoke();
+            if (!m_matchManager.MatchIsActive)
+                OnFirstServe?.Invoke();
 
             ApplyForceOnBall();
         }

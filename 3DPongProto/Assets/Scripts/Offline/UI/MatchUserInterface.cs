@@ -54,14 +54,14 @@ namespace ThreeDeePongProto.Offline.UI
 
             Ball.OnHitGoalOne += UpdateUserInterface;
             Ball.OnHitGoalTwo += UpdateUserInterface;
-            LocalMatchManager.AStartNextRound += UpdateUserInterface;
+            //LocalMatchManager.OnRoundChanged += UpdateUserInterface;  //TODO: Update MatchUserInterface
         }
 
         private void OnDisable()
         {
             Ball.OnHitGoalOne -= UpdateUserInterface;
             Ball.OnHitGoalTwo -= UpdateUserInterface;
-            LocalMatchManager.AStartNextRound -= UpdateUserInterface;
+            //LocalMatchManager.OnRoundChanged -= UpdateUserInterface;  //TODO: Update MatchUserInterface
         }
 
         private IEnumerator Start()
@@ -94,7 +94,7 @@ namespace ThreeDeePongProto.Offline.UI
 
         private void Update()
         {
-            if (m_matchManager.MatchStarted)
+            if (m_matchManager.MatchIsActive)
                 DisplayTime(Time.time - m_matchManager.MatchStartTime);
         }
 

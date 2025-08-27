@@ -499,7 +499,7 @@ RectTransform:
   - {fileID: 1969194567}
   - {fileID: 4322350903333636756}
   m_Father: {fileID: 1796224490}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2840,11 +2840,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_NPCName: Some Test-NPC
+  m_prefabParent: {fileID: 1061313409}
   m_playGround: {fileID: 5980709644925271523, guid: 81c764eba9528904fa09f522c6f6fba7,
     type: 3}
   m_ballPrefab: {fileID: 3504575717850183147, guid: 9d7ade183afbd1840b3e2bdce92d679f,
     type: 3}
-  m_prefabParent: {fileID: 1061313409}
   m_playerPrefabs: []
   m_highScoreBoard: {fileID: 316173228}
   m_maxPushDistance: 2.5
@@ -4067,7 +4067,7 @@ RectTransform:
   - {fileID: 137301349}
   - {fileID: 1201582106}
   m_Father: {fileID: 1796224490}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -5287,8 +5287,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 171474964}
   - {fileID: 1278380011}
+  - {fileID: 171474964}
   - {fileID: 316173226}
   m_Father: {fileID: 0}
   m_RootOrder: 4

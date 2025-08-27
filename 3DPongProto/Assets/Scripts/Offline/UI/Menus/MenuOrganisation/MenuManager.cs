@@ -69,9 +69,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private TMP_InputField m_activeInputField = null;
 
         #region Actions_and_Functions
-        internal static event Action AResumeTheGame;          //LocalMatchManager to resume the Game.
-        internal static event Action<int> AReLoadScene;       //UserInputManager with central SceneManager.LoadScene().
-        internal static event Action AEndInfiniteMatch;
+        internal static event Action<int> AReLoadScene;         //UserInputManager with central SceneManager.LoadScene().
+        internal static event Action AEndInfiniteMatch;         //LocalMatchManager ends an InfiniteMatch.
         #endregion
 
         private string m_currentInputFieldContent = "";
@@ -119,7 +118,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             SettingsManager.Instance.OnSettingsChanged += HandleSettingsChanged;
             UserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
-            AResumeTheGame += OnResumeTheGame;
         }
 
         private void OnDisable()    //Copy content into 'OnDestroy()', if needed.
@@ -130,7 +128,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             SettingsManager.Instance.OnSettingsChanged -= HandleSettingsChanged;
             UserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
-            AResumeTheGame -= OnResumeTheGame;
         }
 
         private void Start()
@@ -400,7 +397,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 }
                 else if (SceneManager.GetActiveScene().buildIndex != (int)ESceneNames.StartMenu)
                 {
-                    AResumeTheGame?.Invoke(); //Resume back to the game in GameScene.
+                    OnResumeTheGame();  //Resume back to the game in GameScene.
                 }
             }
 
@@ -441,118 +438,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 m_activeInputField.ActivateInputField();
             }
         }
-
-        #region DELETE
-        //private void ExitEditMode()
-        //{
-        //    if (m_lastSelectedInputField == null)
-        //        return;
-
-        //    if (m_lastSelectedInputField.interactable)
-        //    {
-        //        m_lastSelectedInputField.interactable = false;
-        //        m_lastSelectedInputField.DeactivateInputField();
-        //    }
-        //}
-
-        //private void EnterEditMode()
-        //{
-        //    if (m_lastSelectedInputField == null)
-        //        return;
-
-        //    if (!m_lastSelectedInputField.interactable)
-        //    {
-        //        //m_currentInputFieldContent = m_lastSelectedInputField.text;   //Save the text for a possible Cancel-Action.
-        //        m_lastSelectedInputField.interactable = true;
-        //        m_lastSelectedInputField.ActivateInputField();
-        //    }
-        //}
-
-        //private void HandleButtonPresses()
-        //{
-        //    if (!Application.isFocused)
-        //        return;
-
-        //    #region Submit-Actions
-        //    if (m_inputActions.UserInterface.Submit.WasPressedThisFrame())  //Limit check to once per frame!
-        //    {
-        //        if (m_lastSelectedInputField != null)   //Only set 'm_fieldIsInEditMode' to true, if being in an InputField.
-        //        {
-        //            //switch (m_fieldIsInEditMode)
-        //            //{
-        //            //    case false: //InputField is currently not in Edit-Mode, switch into Edit-Mode.
-        //            //    {
-        //            //        m_fieldIsInEditMode = true;
-        //            //        break;
-        //            //    }
-        //            //    case true:  //InputField is currently in Edit-Mode, switch out of Edit-Mode.
-        //            //    {
-        //            //        m_fieldIsInEditMode = false;
-        //            //        break;
-        //            //    }
-        //            //}
-        //        }
-        //    }
-        //    #endregion
-
-        //    #region Cancel-Actions
-        //    //NEW
-        //    if (m_inputActions.UserInterface.Cancel.WasPressedThisFrame())
-        //    {
-        //        //Check for a prioritized UI-Interaction and skip Back-Navigation on true.
-        //        if (HandleHighPriorityCancelActions())
-        //            return;
-
-        //        //Navigate back the to previous stack-Element, if we are not already on the very first element.
-        //        if (m_activeElement.Count > 1)
-        //        {
-        //            CloseToPreviousElement();
-        //        }
-        //        else if (SceneManager.GetActiveScene().buildIndex != (int)ESceneNames.StartMenu)
-        //        {
-        //            //Close menu and resume the game, if we are on the last stack-Element.
-        //            AResumeTheGame?.Invoke();
-        //        }
-        //    }
-
-        //    //OLD
-        //    //if (m_inputActions.UserInterface.Cancel.WasPressedThisFrame())  //Limit check to once per frame!
-        //    //{
-        //    //    switch (m_fieldIsInEditMode)
-        //    //    {
-        //    //        case false: //If InputField is currently not in Edit-Mode, close to previous Transform-Parent in Stack.
-        //    //        {
-        //    //            if (!m_firstTransformElement.gameObject.activeInHierarchy)   //Prevents closing the very first menu Transform-Parent.
-        //    //                CloseToPreviousElement();
-        //    //            else if (m_firstTransformElement.gameObject.activeInHierarchy)
-        //    //            {
-        //    //                var sceneIndex = SceneManager.GetActiveScene().buildIndex;
-        //    //                if (sceneIndex != (int)ESceneNames.StartMenu)
-        //    //                {
-        //    //                    AResumeTheGame?.Invoke();   //Cancel InputAction triggers gameResume procedure.
-        //    //                }
-        //    //            }
-        //    //            break;
-        //    //        }
-        //    //        case true:  //If InputField is currently in Edit-Mode, switch out of Edit-Mode and reset to previous IF content.
-        //    //        {
-        //    //            if (m_lastSelectedInputField != null)               //Prevents NullReferenceException when no IF is active/set.
-        //    //            {
-        //    //                if (m_currentInputFieldContent != string.Empty)
-        //    //                    m_lastSelectedInputField.text = m_currentInputFieldContent;    //Saved content of the last InputField.
-        //    //                //NOTE: m_currentInputFieldContent will be reset on leaving InputFields.
-
-        //    //                m_fieldIsInEditMode = false;
-        //    //            }
-
-        //    //            ExitEditMode();
-        //    //            break;
-        //    //        }
-        //    //    }
-        //    //}
-        //    #endregion
-        //}
-        #endregion
 
         /// <summary>
         /// Checks for a prioritized UI-Interactions.
@@ -664,7 +549,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_eventSystem.SetSelectedGameObject(_gameObject);
             yield return null;
             _gameObject.TryGetComponent(out TMP_InputField inputField);
-
+            //TODO: Enable MouseClick-EditActivation on InputFields.
+            Debug.Log($"Enable MouseClick-EditActivation on InputFields.");
             if (inputField)
             {
                 m_activeInputField = inputField;
@@ -690,7 +576,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #region MenuButton_Methods
         public void ResumeGame()
         {
-            AResumeTheGame?.Invoke();
+            //AResumeTheGame?.Invoke();
+            OnResumeTheGame();
         }
 
         public void RestartGameScene()
