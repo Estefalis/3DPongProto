@@ -4,6 +4,7 @@ using ThreeDeePongProto.Offline.CameraSetup;
 using TMPro;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 namespace ThreeDeePongProto.Offline.UI
 {
@@ -16,25 +17,25 @@ namespace ThreeDeePongProto.Offline.UI
 
         #region SerializeField-Member-Variables
         [Header("Player-Informations")]
-        [SerializeField] private List<Transform> m_playerParentTransform;
-        [SerializeField] private List<TextMeshProUGUI> m_playerNamesTMPList;
-        [SerializeField] private List<TextMeshProUGUI> m_totalPointsTMPList;
+        [SerializeField] private List<Transform> m_playerDetailsParent;
+        [SerializeField] private List<TextMeshProUGUI> m_playerNames;
+        [SerializeField] private List<TextMeshProUGUI> m_playerTotalPoints;
         [SerializeField] private List<GameObject> m_playerAvatarList = new();
-        [SerializeField] private float m_playerInfoXPos = 2f;
-        [SerializeField] private float m_playerInfoYPos = -2f;
+        [SerializeField] private float m_playerInfoXPos = 2.0f;
+        [SerializeField] private float m_playerInfoYPos = -2.0f;
 
         [Header("Round-Details")]
-        [SerializeField] private TextMeshProUGUI m_roundNrTMP;
-        [SerializeField] private TextMeshProUGUI m_elapsedTimeTMP;
-        [SerializeField] private TextMeshProUGUI m_zeroToZeroTMP;
+        [SerializeField] private TextMeshProUGUI m_roundNr;
+        [SerializeField] private TextMeshProUGUI m_elapsedTime;
+        [SerializeField] private TextMeshProUGUI m_pointsVsPoints;
 
-        //[SerializeField] private bool m_timerShallCountUp;
+        [SerializeField] private bool m_timerShallCountUp = true;
         [SerializeField] private bool m_showMilliseconds = false;
 
-        //[Header("Music-Details")]
-        //[SerializeField] private TextMeshProUGUI m_artistNamesTMP;
-        //[SerializeField] private TextMeshProUGUI m_songTitleTMP;
-        //[SerializeField] private GameObject m_songIcon;
+        [Header("Music-Details")]
+        [SerializeField] private TextMeshProUGUI m_artistNames;
+        [SerializeField] private TextMeshProUGUI m_songTitle;
+        [SerializeField] private Image m_songImage;
 
         #region Scriptable Variables
         [SerializeField] private MatchValues m_matchValues;
@@ -49,17 +50,17 @@ namespace ThreeDeePongProto.Offline.UI
         private void OnEnable()
         {
             //TODO: COULD HAVE - Eventually code to keep the 'source image width' equal to it's height.
-            m_playerPointsConnection.Add(m_playerNamesTMPList, m_totalPointsTMPList);
+            m_playerPointsConnection.Add(m_playerNames, m_playerTotalPoints);
 
-            Ball.HitGoalOne += UpdateUserInterface;
-            Ball.HitGoalTwo += UpdateUserInterface;
+            Ball.OnHitGoalOne += UpdateUserInterface;
+            Ball.OnHitGoalTwo += UpdateUserInterface;
             LocalMatchManager.AStartNextRound += UpdateUserInterface;
         }
 
         private void OnDisable()
         {
-            Ball.HitGoalOne -= UpdateUserInterface;
-            Ball.HitGoalTwo -= UpdateUserInterface;
+            Ball.OnHitGoalOne -= UpdateUserInterface;
+            Ball.OnHitGoalTwo -= UpdateUserInterface;
             LocalMatchManager.AStartNextRound -= UpdateUserInterface;
         }
 
@@ -74,7 +75,7 @@ namespace ThreeDeePongProto.Offline.UI
             UpdatePlayerTMPs();
 
             yield return new WaitForSeconds(0.0000000000001f);  //Minimal delay to give the 'm_playerParentTransforms' time to get set on the correct position.
-            SetPlayerInfoPositions(m_graphicUiStates.SetCameraMode);
+            SetPlayerInfoPositions(SettingsManager.Instance.CurrentSettings.Graphic.CameraMode);
         }
 
         /// <summary>
@@ -97,42 +98,42 @@ namespace ThreeDeePongProto.Offline.UI
                 DisplayTime(Time.time - m_matchManager.MatchStartTime);
         }
 
-        private void SetPlayerInfoPositions(ECameraModi eCameraModi)
+        private void SetPlayerInfoPositions(int _eCameraModi)
         {
-            UpdatePlayerInfoPositions(eCameraModi, CameraManager.RuntimeFullsizeRect);
+            UpdatePlayerInfoPositions(_eCameraModi, CameraManager.RuntimeFullsizeRect);
         }
 
-        private void UpdatePlayerInfoPositions(ECameraModi _eCameraModi, Rect _runtimeFullsizeRect)
+        private void UpdatePlayerInfoPositions(int _eCameraModi, Rect _runtimeFullsizeRect)
         {
-            switch (_eCameraModi)
+            switch ((ECameraModi)_eCameraModi)
             {
                 case ECameraModi.SingleCam:
                 {
-                    m_playerParentTransform[0].position = new Vector3(0, _runtimeFullsizeRect.height, 0);
-                    UpdateVisibleTransformList(m_playerParentTransform[0]);
+                    m_playerDetailsParent[0].position = new Vector3(0, _runtimeFullsizeRect.height, 0);
+                    UpdateVisibleTransformList(m_playerDetailsParent[0]);
                     break;
                 }
                 case ECameraModi.Vertical:
                 {
-                    m_playerParentTransform[0].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height + m_playerInfoYPos, 0);
-                    m_playerParentTransform[1].position = new Vector3(_runtimeFullsizeRect.width * 0.5f + m_playerInfoXPos, _runtimeFullsizeRect.height + m_playerInfoYPos, 0);
-                    UpdateVisibleTransformList(m_playerParentTransform[0], m_playerParentTransform[1]);
+                    m_playerDetailsParent[0].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height + m_playerInfoYPos, 0);
+                    m_playerDetailsParent[1].position = new Vector3(_runtimeFullsizeRect.width * 0.5f + m_playerInfoXPos, _runtimeFullsizeRect.height + m_playerInfoYPos, 0);
+                    UpdateVisibleTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1]);
                     break;
                 }
                 case ECameraModi.Horizontal:
                 {
-                    m_playerParentTransform[0].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height * 0.5f + m_playerInfoYPos, 0);
-                    m_playerParentTransform[1].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height + m_playerInfoYPos, 0);
-                    UpdateVisibleTransformList(m_playerParentTransform[0], m_playerParentTransform[1]);
+                    m_playerDetailsParent[0].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height * 0.5f + m_playerInfoYPos, 0);
+                    m_playerDetailsParent[1].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height + m_playerInfoYPos, 0);
+                    UpdateVisibleTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1]);
                     break;
                 }
                 case ECameraModi.Quartet:
                 {
-                    m_playerParentTransform[0].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height * 0.5f + m_playerInfoYPos, 0);
-                    m_playerParentTransform[1].position = new Vector3(_runtimeFullsizeRect.width * 0.5f + m_playerInfoXPos, _runtimeFullsizeRect.height * 0.5f + m_playerInfoYPos, 0);
-                    m_playerParentTransform[2].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height + m_playerInfoYPos, 0);
-                    m_playerParentTransform[3].position = new Vector3(_runtimeFullsizeRect.width * 0.5f + m_playerInfoXPos, _runtimeFullsizeRect.height + m_playerInfoYPos, 0);
-                    UpdateVisibleTransformList(m_playerParentTransform[0], m_playerParentTransform[1], m_playerParentTransform[2], m_playerParentTransform[3]);
+                    m_playerDetailsParent[0].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height * 0.5f + m_playerInfoYPos, 0);
+                    m_playerDetailsParent[1].position = new Vector3(_runtimeFullsizeRect.width * 0.5f + m_playerInfoXPos, _runtimeFullsizeRect.height * 0.5f + m_playerInfoYPos, 0);
+                    m_playerDetailsParent[2].position = new Vector3(0 + m_playerInfoXPos, _runtimeFullsizeRect.height + m_playerInfoYPos, 0);
+                    m_playerDetailsParent[3].position = new Vector3(_runtimeFullsizeRect.width * 0.5f + m_playerInfoXPos, _runtimeFullsizeRect.height + m_playerInfoYPos, 0);
+                    UpdateVisibleTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1], m_playerDetailsParent[2], m_playerDetailsParent[3]);
                     break;
                 }
             }
@@ -151,12 +152,12 @@ namespace ThreeDeePongProto.Offline.UI
 
         private void UpdatePlayerInfoVisibility()
         {
-            for (int i = 0; i < m_playerParentTransform.Count; i++)
+            for (int i = 0; i < m_playerDetailsParent.Count; i++)
             {
-                if (m_playerParentTransform[i] == m_tempVisibleTransform[i])
-                    m_playerParentTransform[i].gameObject.SetActive(true);
+                if (m_playerDetailsParent[i] == m_tempVisibleTransform[i])
+                    m_playerDetailsParent[i].gameObject.SetActive(true);
                 else
-                    m_playerParentTransform[i].gameObject.SetActive(false);
+                    m_playerDetailsParent[i].gameObject.SetActive(false);
             }
         }
 
@@ -179,19 +180,19 @@ namespace ThreeDeePongProto.Offline.UI
             for (int i = 0; i < m_matchValues.PlayerSOData.Count; i++)
             {
                 if (m_matchValues.PlayerSOData[i] != null)
-                m_playerNamesTMPList[i].text = m_matchValues.PlayerSOData[i].PlayerName;
+                    m_playerNames[i].text = m_matchValues.PlayerSOData[i].PlayerName;
             }
         }
 
         private void UpdateRoundTMPs()
         {
-            m_roundNrTMP.text = $"Round {m_matchValues.CurrentRoundNr}";
-            m_zeroToZeroTMP.text = $"{m_matchValues.MatchPointsTPOne} : {m_matchValues.MatchPointsTPTwo}";
+            m_roundNr.text = $"Round {m_matchValues.CurrentRoundNr}";
+            m_pointsVsPoints.text = $"{m_matchValues.MatchPointsTPOne} : {m_matchValues.MatchPointsTPTwo}";
         }
 
         private void UpdatePlayerTMPs()
         {
-            List<TextMeshProUGUI> playerTotalPointsTMP = m_playerPointsConnection[m_playerNamesTMPList];
+            List<TextMeshProUGUI> playerTotalPointsTMP = m_playerPointsConnection[m_playerNames];
 
             playerTotalPointsTMP[0].text = $"Total: {m_matchValues.TotalPointsTPOne}";
             playerTotalPointsTMP[1].text = $"Total: {m_matchValues.TotalPointsTPTwo}";
@@ -206,53 +207,56 @@ namespace ThreeDeePongProto.Offline.UI
         private void DisplayTime(float _timeToDisplay)
         {
             #region Optional CountDown with an adjusted Start- and RoundTime.
-            //if (!m_timerShallCountUp)
-            //{
-            //    if (_timeToDisplay < 0)
-            //        _timeToDisplay = 0;
-            //    else if (!m_showMilliseconds)
-            //    {
-            //        _timeToDisplay += 1;
-            //    }
-
-            //    //Calculating Minutes.
-            //    float minutes = Mathf.FloorToInt(_timeToDisplay / 60);
-            //    //Calculating Seconds.
-            //    float seconds = Mathf.FloorToInt(_timeToDisplay % 60);
-            //    //Calculating Milliseconds.
-            //    if (m_showMilliseconds)
-            //    {
-            //        float milliseconds = _timeToDisplay % 1 * 1000;
-            //        m_elapsedTimeTMP.text = string.Format("{0:00}:{1:00}:{2:000}", minutes, seconds, milliseconds);
-            //    }
-            //    else
-            //    {
-            //        m_elapsedTimeTMP.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-            //    }
-            //}
-            //else if (m_timerShallCountUp)
-            #endregion
-            //{
-            //Mathf.FloorToInt(days: '_timeToDisplay / 86400', hours: '_timeToDisplay / 3600' minutes: '_timeToDisplay / 60', seconds: '_timeToDisplay % 60'.
-            //Calculating Hours.
-            float hours = Mathf.FloorToInt(_timeToDisplay / 3600);
-            //Calculating Minutes.
-            float minutes = Mathf.FloorToInt(_timeToDisplay / 60 % 60);
-            //Calculating Seconds.
-            float seconds = Mathf.FloorToInt(_timeToDisplay % 60);
-            //Calculating Milliseconds.
-            if (m_showMilliseconds)
+            if (!m_timerShallCountUp)
             {
-                float milliseconds = _timeToDisplay % 1 * 1000;
-                //m_elapsedTimeTMP.text = string.Format("{0:00}:{1:00}:{2:000}", minutes, seconds, milliseconds);
-                m_elapsedTimeTMP.text = string.Format("{0:00}:{1:00}:{2:00}:{3:000}", hours, minutes, seconds, milliseconds);
+                if (_timeToDisplay < 0)
+                    _timeToDisplay = 0;
+                else if (!m_showMilliseconds)
+                {
+                    _timeToDisplay += 1;
+                }
+
+                //Calculating Minutes.
+                float minutes = Mathf.FloorToInt(_timeToDisplay / 60);
+                //Calculating Seconds.
+                float seconds = Mathf.FloorToInt(_timeToDisplay % 60);
+                //Calculating Milliseconds.
+                if (m_showMilliseconds)
+                {
+                    float milliseconds = _timeToDisplay % 1 * 1000;
+                    m_elapsedTime.text = string.Format("{0:00}:{1:00}:{2:000}", minutes, seconds, milliseconds);
+                }
+                else
+                {
+                    m_elapsedTime.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+                }
             }
+            #endregion
             else
             {
-                //m_elapsedTimeTMP.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-                m_elapsedTimeTMP.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+                if (m_timerShallCountUp)
+                {
+                    //Mathf.FloorToInt(days: '_timeToDisplay / 86400', hours: '_timeToDisplay / 3600' minutes: '_timeToDisplay / 60', seconds: '_timeToDisplay % 60'.
+                    //Calculating Hours.
+                    float hours = Mathf.FloorToInt(_timeToDisplay / 3600);
+                    //Calculating Minutes.
+                    float minutes = Mathf.FloorToInt(_timeToDisplay / 60 % 60);
+                    //Calculating Seconds.
+                    float seconds = Mathf.FloorToInt(_timeToDisplay % 60);
+                    //Calculating Milliseconds.
+                    if (m_showMilliseconds)
+                    {
+                        float milliseconds = _timeToDisplay % 1 * 1000;
+                        //m_elapsedTime.text = string.Format("{0:00}:{1:00}:{2:000}", minutes, seconds, milliseconds);
+                        m_elapsedTime.text = string.Format("{0:00}:{1:00}:{2:00}:{3:000}", hours, minutes, seconds, milliseconds);
+                    }
+                    else
+                    {
+                        //m_elapsedTime.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+                        m_elapsedTime.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+                    }
+                }
             }
-            //}
         }
     }
 }

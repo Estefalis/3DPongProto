@@ -30,16 +30,19 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         [SerializeField] internal BasicFieldValues m_basicFieldValues;
         #endregion
 
-        private int m_setPlayerID = -1;
+        internal int m_setPlayerID = -1;
         internal float m_groundWidth, m_groundLength;
         internal float m_goalDistance;
         internal float m_maxPushDistance;
         internal Vector3 m_localPaddleScale;
 
         private bool m_inputDisabled = false;
+        private MatchSettingsData m_matchData;
 
         private void Awake()
         {
+            m_matchData = SettingsManager.Instance.CurrentSettings.Match;
+
             //m_userInputManager = FindObjectOfType<UserInputManager>();
             m_localMatchManager = FindObjectOfType<LocalMatchManager>();
             transform.SetParent(m_localMatchManager.PrefabParent);
@@ -61,8 +64,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             if (m_matchValues == null)
             {
-                m_groundWidth = m_localMatchManager.DefaultFieldWidth;
-                m_groundLength = m_localMatchManager.DefaultFieldLength;
+                m_groundWidth = m_matchData.FieldWidth;
+                m_groundLength = m_matchData.FieldLength;
             }
             else
             {
@@ -78,10 +81,10 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 switch (m_defaultFrontLineUp)
                 {
                     case true:
-                        m_goalDistance = m_localMatchManager.DefaultFrontLineDistance;
+                        m_goalDistance = m_matchData.FrontlineDistance;
                         break;
                     case false:
-                        m_goalDistance = m_localMatchManager.DefaultBackLineDistance;
+                        m_goalDistance = m_matchData.BacklineDistance;
                         break;
                 }
 

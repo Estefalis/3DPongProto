@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 100199996}
   - component: {fileID: 100199995}
   m_Layer: 5
-  m_Name: SongTMP
+  m_Name: SongTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -270,7 +270,7 @@ GameObject:
   - component: {fileID: 103813156}
   - component: {fileID: 103813155}
   m_Layer: 5
-  m_Name: TotalPointsPThreeTMP
+  m_Name: PointsPlayer3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -499,7 +499,7 @@ RectTransform:
   - {fileID: 1969194567}
   - {fileID: 4322350903333636756}
   m_Father: {fileID: 1796224490}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -775,7 +775,7 @@ GameObject:
   - component: {fileID: 313760600}
   - component: {fileID: 313760599}
   m_Layer: 5
-  m_Name: ZeroToZeroTMP
+  m_Name: PointsVsPoints
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -923,18 +923,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 316173225}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 941859311}
-  m_Father: {fileID: 1278380011}
-  m_RootOrder: 4
+  m_Father: {fileID: 1796224490}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -0.5}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &316173227
@@ -989,7 +989,6 @@ MonoBehaviour:
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
   m_sortLowToHigh: 0
   m_listSortMode: 0
-  m_encryptionEnabled: 0
 --- !u!1 &331579037
 GameObject:
   m_ObjectHideFlags: 0
@@ -1000,7 +999,7 @@ GameObject:
   m_Component:
   - component: {fileID: 331579038}
   m_Layer: 5
-  m_Name: PlayerInfo
+  m_Name: PlayerDetails
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1197,7 +1196,7 @@ GameObject:
   - component: {fileID: 412765705}
   - component: {fileID: 412765704}
   m_Layer: 5
-  m_Name: TotalPointsPFourTMP
+  m_Name: PointsPlayer4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1332,7 +1331,7 @@ GameObject:
   - component: {fileID: 446524472}
   - component: {fileID: 446524471}
   m_Layer: 5
-  m_Name: PlayerOne
+  m_Name: Player1Info
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1605,7 +1604,7 @@ GameObject:
   - component: {fileID: 481340314}
   - component: {fileID: 481340313}
   m_Layer: 5
-  m_Name: AvatarPOnePanel
+  m_Name: AvatarPlayer1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1681,7 +1680,7 @@ GameObject:
   - component: {fileID: 521710091}
   - component: {fileID: 521710090}
   m_Layer: 5
-  m_Name: ElapsedTimeTMP
+  m_Name: ElapsedTime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1804,18 +1803,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 521710088}
   m_CullTransparentMesh: 1
---- !u!114 &570862151 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3336308886493525426, guid: 430c392282a61bb4482c69a3b60f8b8e,
-    type: 3}
-  m_PrefabInstance: {fileID: 5523567775437958938}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &570862152 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8018198073155230893, guid: 430c392282a61bb4482c69a3b60f8b8e,
@@ -1852,7 +1839,7 @@ GameObject:
   - component: {fileID: 576264386}
   - component: {fileID: 576264385}
   m_Layer: 5
-  m_Name: PlayerThree
+  m_Name: Player3Info
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1930,7 +1917,7 @@ GameObject:
   - component: {fileID: 619619792}
   - component: {fileID: 619619791}
   m_Layer: 5
-  m_Name: AvatarPTwoPanel
+  m_Name: AvatarPlayer2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2006,7 +1993,7 @@ GameObject:
   - component: {fileID: 622108085}
   - component: {fileID: 622108084}
   m_Layer: 5
-  m_Name: PlayerFour
+  m_Name: Player4Info
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2157,7 +2144,7 @@ GameObject:
   - component: {fileID: 702061745}
   - component: {fileID: 702061744}
   m_Layer: 5
-  m_Name: AvatarPFourPanel
+  m_Name: AvatarPlayer4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2741,7 +2728,7 @@ GameObject:
   - component: {fileID: 887586884}
   - component: {fileID: 887586883}
   m_Layer: 5
-  m_Name: SongInfoFrame
+  m_Name: SongDetails
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2817,6 +2804,7 @@ GameObject:
   m_Component:
   - component: {fileID: 911050367}
   - component: {fileID: 911050368}
+  - component: {fileID: 911050369}
   m_Layer: 0
   m_Name: LocalMatchManager
   m_TagString: Untagged
@@ -2857,24 +2845,57 @@ MonoBehaviour:
   m_ballPrefab: {fileID: 3504575717850183147, guid: 9d7ade183afbd1840b3e2bdce92d679f,
     type: 3}
   m_prefabParent: {fileID: 1061313409}
-  m_playGroundWidthScale: 0.1
-  m_playGroundLengthScale: 0.1
-  m_playGroundWidth: 25
-  m_playGroundLength: 50
-  m_minimalFrontLineDistance: 6
-  m_minimalBackLineDistance: 1.5
-  m_setMaxRounds: 5
-  m_setMaxPoints: 25
-  m_startRound: 1
-  m_winPointDifference: 2
+  m_playerPrefabs: []
+  m_highScoreBoard: {fileID: 316173228}
   m_maxPushDistance: 2.5
   m_paddleWidthAdjustStep: 0.25
   m_defaultPaddleScale: {x: 3.5, y: 1, z: 0.5}
-  m_gameIsPaused: 0
-  m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
-  m_basicFieldValues: {fileID: 11400000, guid: b7c0516de58b3a240a6970d999010f71, type: 2}
+--- !u!114 &911050369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 911050366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 665629720bbc64843998e4d222df76a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_matchManager: {fileID: 911050368}
+  m_cameraManager: {fileID: 2131281742}
+  m_playerDetailsParent:
+  - {fileID: 446524470}
+  - {fileID: 1501480241}
+  - {fileID: 576264384}
+  - {fileID: 622108083}
+  m_playerNames:
+  - {fileID: 1208393004}
+  - {fileID: 1654241587}
+  - {fileID: 1823600140}
+  - {fileID: 1451748676}
+  m_playerTotalPoints:
+  - {fileID: 1016119923}
+  - {fileID: 1196216038}
+  - {fileID: 103813155}
+  - {fileID: 412765704}
+  m_playerAvatarList:
+  - {fileID: 481340311}
+  - {fileID: 619619789}
+  - {fileID: 1874074984}
+  - {fileID: 702061742}
+  m_playerInfoXPos: 2
+  m_playerInfoYPos: -2
+  m_roundNr: {fileID: 1163421187}
+  m_elapsedTime: {fileID: 521710090}
+  m_pointsVsPoints: {fileID: 313760599}
+  m_timerShallCountUp: 1
+  m_showMilliseconds: 0
+  m_artistNames: {fileID: 1424050872}
+  m_songTitle: {fileID: 100199995}
+  m_songImage: {fileID: 1242484552}
   m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
-  m_matchHasStarted: 0
+  m_graphicUiStates: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11, type: 2}
 --- !u!224 &913481587 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8149095567867513264, guid: 430c392282a61bb4482c69a3b60f8b8e,
@@ -3046,7 +3067,7 @@ MonoBehaviour:
   m_cursorLockMode: 0
   m_showCursor: 1
   m_hiddenFinishButton: {fileID: 807039820}
-  m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
+  m_uIDropdowns: []
 --- !u!1 &1016119921
 GameObject:
   m_ObjectHideFlags: 0
@@ -3059,7 +3080,7 @@ GameObject:
   - component: {fileID: 1016119924}
   - component: {fileID: 1016119923}
   m_Layer: 5
-  m_Name: TotalPointsPOneTMP
+  m_Name: PointsPlayer1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3365,7 +3386,7 @@ GameObject:
   - component: {fileID: 1163421188}
   - component: {fileID: 1163421187}
   m_Layer: 5
-  m_Name: RoundNumberTMP
+  m_Name: RoundNumber
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3589,7 +3610,7 @@ GameObject:
   - component: {fileID: 1196216039}
   - component: {fileID: 1196216038}
   m_Layer: 5
-  m_Name: TotalPointsPTwoTMP
+  m_Name: PointsPlayer2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3770,7 +3791,7 @@ GameObject:
   - component: {fileID: 1208393005}
   - component: {fileID: 1208393004}
   m_Layer: 5
-  m_Name: NamePlayerOneTMP
+  m_Name: NamePlayer1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3949,7 +3970,7 @@ GameObject:
   - component: {fileID: 1242484553}
   - component: {fileID: 1242484552}
   m_Layer: 5
-  m_Name: IllustrationPanel
+  m_Name: SongImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4022,9 +4043,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1278380011}
-  - component: {fileID: 1278380012}
   m_Layer: 5
-  m_Name: Statistics
+  m_Name: MatchUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4046,57 +4066,14 @@ RectTransform:
   - {fileID: 863830210}
   - {fileID: 137301349}
   - {fileID: 1201582106}
-  - {fileID: 316173226}
   m_Father: {fileID: 1796224490}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 960, y: 539.5}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1278380012
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1278380007}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 665629720bbc64843998e4d222df76a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_matchManager: {fileID: 911050368}
-  m_cameraManager: {fileID: 2131281742}
-  m_playerParentTransform:
-  - {fileID: 446524470}
-  - {fileID: 1501480241}
-  - {fileID: 576264384}
-  - {fileID: 622108083}
-  m_playerNamesTMPList:
-  - {fileID: 1208393004}
-  - {fileID: 1654241587}
-  - {fileID: 1823600140}
-  - {fileID: 1451748676}
-  m_totalPointsTMPList:
-  - {fileID: 1016119923}
-  - {fileID: 1196216038}
-  - {fileID: 103813155}
-  - {fileID: 412765704}
-  m_playerAvatarList:
-  - {fileID: 481340311}
-  - {fileID: 619619789}
-  - {fileID: 1874074984}
-  - {fileID: 702061742}
-  m_playerInfoXPos: 2
-  m_playerInfoYPos: -2
-  m_roundNrTMP: {fileID: 1163421187}
-  m_elapsedTimeTMP: {fileID: 521710090}
-  m_zeroToZeroTMP: {fileID: 313760599}
-  m_showMilliseconds: 0
-  m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
-  m_graphicUiStates: {fileID: 11400000, guid: fc1091b9001b2e24999ff46f38784d11, type: 2}
 --- !u!224 &1330309226 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5422136370439484, guid: cf067c36ec1381742a9398a8cf109ae8,
@@ -4463,7 +4440,7 @@ GameObject:
   - component: {fileID: 1424050873}
   - component: {fileID: 1424050872}
   m_Layer: 5
-  m_Name: ArtistTMP
+  m_Name: ArtistNames
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4809,7 +4786,7 @@ GameObject:
   - component: {fileID: 1451748677}
   - component: {fileID: 1451748676}
   m_Layer: 5
-  m_Name: NamePlayerFourTMP
+  m_Name: NamePlayer4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4944,7 +4921,7 @@ GameObject:
   - component: {fileID: 1501480243}
   - component: {fileID: 1501480242}
   m_Layer: 5
-  m_Name: PlayerTwo
+  m_Name: Player2Info
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5022,7 +4999,7 @@ GameObject:
   - component: {fileID: 1654241588}
   - component: {fileID: 1654241587}
   m_Layer: 5
-  m_Name: NamePlayerTwoTMP
+  m_Name: NamePlayer2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5310,8 +5287,9 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1278380011}
   - {fileID: 171474964}
+  - {fileID: 1278380011}
+  - {fileID: 316173226}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5332,7 +5310,7 @@ GameObject:
   - component: {fileID: 1823600141}
   - component: {fileID: 1823600140}
   m_Layer: 5
-  m_Name: NamePlayerThreeTMP
+  m_Name: NamePlayer3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5555,7 +5533,7 @@ GameObject:
   - component: {fileID: 1874074987}
   - component: {fileID: 1874074986}
   m_Layer: 5
-  m_Name: AvatarPThreePanel
+  m_Name: AvatarPlayer3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7854,7 +7832,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 570862151}
+      objectReference: {fileID: 0}
     - target: {fileID: 3370736242798330068, guid: cf067c36ec1381742a9398a8cf109ae8,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

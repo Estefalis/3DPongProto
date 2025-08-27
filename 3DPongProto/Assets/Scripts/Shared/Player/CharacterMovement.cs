@@ -60,8 +60,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             //SetPlayerRotation(m_playerID);
             m_isPushing = false;
 
-            Ball.HitGoalOne += ResetPlayerRotationOnGoal;
-            Ball.HitGoalTwo += ResetPlayerRotationOnGoal;
+            Ball.OnHitGoalOne += ResetPlayerRotationOnGoal;
+            Ball.OnHitGoalTwo += ResetPlayerRotationOnGoal;
         }
 
         private void OnDisable()
@@ -69,8 +69,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (m_audioSource != null)
                 AudioManager.LetsRemoveAudioSources(m_audioSource);
 
-            Ball.HitGoalOne -= ResetPlayerRotationOnGoal;
-            Ball.HitGoalTwo -= ResetPlayerRotationOnGoal;
+            Ball.OnHitGoalOne -= ResetPlayerRotationOnGoal;
+            Ball.OnHitGoalTwo -= ResetPlayerRotationOnGoal;
         }
 
         private void Start()

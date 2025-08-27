@@ -40,6 +40,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerControllerVarP4
       objectReference: {fileID: 0}
+    - target: {fileID: 4346485511625068478, guid: c0c19374c0ff8984ca12239d839971bb,
+        type: 3}
+      propertyPath: m_TagString
+      value: TpTwo
+      objectReference: {fileID: 0}
     - target: {fileID: 4346485511625068479, guid: c0c19374c0ff8984ca12239d839971bb,
         type: 3}
       propertyPath: m_RootOrder

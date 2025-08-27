@@ -15,6 +15,7 @@ public class MatchSettingsData
     //RoundsToWin and PointsEachRound
     public int RoundsToWin = 5;
     public int PointsEachRound = 25;
+    public int WinPointDifference = 2;
 
     //Field-Dimensions
     public int FieldWidth = 25;

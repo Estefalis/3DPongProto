@@ -28,14 +28,13 @@ public class Ball : MonoBehaviour
     private readonly string m_goalTwo = "GoalTwo";
     private readonly string m_teamPlayerOne = "TpOne";
     private readonly string m_teamPlayerTwo = "TpTwo";
-    //[SerializeField] private readonly string m_teamPlayerThree = "TpThree";
-    //[SerializeField] private readonly string m_teamPlayerFour = "TpFour";
     private readonly string m_eastWall = "EastWall";
     private readonly string m_westWall = "WestWall";
     #endregion
 
     #region Actions
-    public static event Action HitGoalOne, HitGoalTwo;  //Updates UserInterface in MatchUserInterface.cs
+    public static event Action OnHitGoalOne, OnHitGoalTwo;  //Updates UserInterface in MatchUserInterface.cs
+    public static event Action<int> OnHitPlayer;
     public static event Action RoundCountStarts;        //LocalMatchManager saves MatchStartTime and sets 'MatchHasStarted'-Bool to true.
 
     //TODO: Audioplay-Structure: (Emitter, AudioSourceSettings (Diegetic/NonDiegetic), Track-ID (if not random), RandomBool);
@@ -128,7 +127,7 @@ public class Ball : MonoBehaviour
         if (_other.gameObject.CompareTag(m_goalOne))
         {
             //LocalMatchManager: WinCondition-Check & increases Match-Points of PlayerCharacter/Team 2 - MatchUserInterface: Updates MatchUI - PlayerControls: Resets Paddle on Goal.
-            HitGoalOne?.Invoke();
+            OnHitGoalOne?.Invoke();
             //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
             PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
             ResetBall();
@@ -137,7 +136,7 @@ public class Ball : MonoBehaviour
         if (_other.gameObject.CompareTag(m_goalTwo))
         {
             //LocalMatchManager: WinCondition-Check & increases Match-Points of PlayerCharacter/Team 1 - MatchUserInterface: Updates MatchUI - PlayerControls: Resets Paddle on Goal.
-            HitGoalTwo?.Invoke();
+            OnHitGoalTwo?.Invoke();
             //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
             PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
             ResetBall();
@@ -150,12 +149,16 @@ public class Ball : MonoBehaviour
         {
             //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
             PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
+            var player = _collision.gameObject.TryGetComponent(out CharacterMainController playerController);
+            OnHitPlayer?.Invoke(playerController.m_setPlayerID);
         }
 
         if (_collision.gameObject.CompareTag(m_teamPlayerTwo))
         {
             //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
             PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
+            var player = _collision.gameObject.TryGetComponent(out CharacterMainController playerController);
+            OnHitPlayer?.Invoke(playerController.m_setPlayerID);
         }
 
         if (_collision.gameObject.CompareTag(m_eastWall))
