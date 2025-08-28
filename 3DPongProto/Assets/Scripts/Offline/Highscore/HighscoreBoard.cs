@@ -14,8 +14,9 @@ namespace ThreeDeePongProto.Shared.Highscores
         private enum EListSortMode
         {
             None = default,
+            SetRounds,
+            SetPoints,
             TotalPoints,
-            PlayerNames, //Sort- & Search-Option by PlayerNames?
             MatchWinDate,
             TotalPlaytime
         }
@@ -214,14 +215,16 @@ namespace ThreeDeePongProto.Shared.Highscores
             {
                 case EListSortMode.None:
                     break;
+                case EListSortMode.SetRounds:
+                { break; }
+                case EListSortMode.SetPoints:
+                { break; }
                 case EListSortMode.TotalPoints:
                 {
                     m_sortLowToHigh = !m_sortLowToHigh;
                     SortListByTotalPoints(_highScoreList);
                     break;
                 }
-                case EListSortMode.PlayerNames:
-                { break; }
                 case EListSortMode.MatchWinDate:
                 {
                     //The WinDate SortBehavior was partly strange. Sending the parameter here, while don't elsewhere, currently avoids bool setting errors. 
@@ -343,14 +346,6 @@ namespace ThreeDeePongProto.Shared.Highscores
         {
             m_listSortMode = EListSortMode.TotalPoints;
             LoadHighscoresByDropdowns(m_roundsDropdown.value, m_maxPointsDropdown.value);
-        }
-
-        public void SortByPlayerNames()
-        {
-            m_listSortMode = EListSortMode.PlayerNames;
-#if UNITY_EDITOR
-            Debug.Log(m_listSortMode);
-#endif
         }
 
         public void SortByMatchWinDate()

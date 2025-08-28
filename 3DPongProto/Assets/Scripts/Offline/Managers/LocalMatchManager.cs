@@ -355,43 +355,35 @@ namespace ThreeDeePongProto.Shared.Managers
         /// <summary>
         /// Method to get the Higher Value for Infinite Matches.
         /// </summary>
-        /// <param name="_infinitePointsTPOne"></param>
-        /// <param name="_infinitePointsTPTwo"></param>
+        /// <param name="_scoreTeam1"></param>
+        /// <param name="_scoreTeam2"></param>
         /// <returns></returns>
-        private int GetHigherPlayerScore(int _infinitePointsTPOne, int _infinitePointsTPTwo)
+        private int GetHigherPlayerScore(int _scoreTeam1, int _scoreTeam2)
         {
-            //If Score from Team 1 is higher than Team 2, take '_infinitePointsTPOne'.
-            //Else if Score from Team 2 is higher than Team 1, take '_infinitePointsTPOne'.
-            //Else just take Score from Team1. Both are equal (anyway <(~.^)").
-            int highestScore = _infinitePointsTPOne > _infinitePointsTPTwo ? _infinitePointsTPOne : (_infinitePointsTPTwo > _infinitePointsTPOne ? _infinitePointsTPTwo : _infinitePointsTPOne);
-
-            switch (m_matchData.PlayerCount)
+            if (_scoreTeam1 > _scoreTeam2)
             {
-                case 2:
-                {
-                    if (highestScore == _infinitePointsTPOne)
-                        m_infiniteWinner = $"{m_playerProfiles[0].PlayerName}"; //Player 1
-                    else if (highestScore == _infinitePointsTPTwo)
-                        m_infiniteWinner = $"{m_playerProfiles[1].PlayerName}"; //Player 2
-                    else
-                        m_infiniteWinner = $"{m_playerProfiles[0].PlayerName} draw \nto {m_playerProfiles[1].PlayerName}";  //Both
-
-                    return highestScore;
-                }
-                case 4:
-                {
-                    if (highestScore == _infinitePointsTPOne)
-                        m_infiniteWinner = $"{m_playerProfiles[0].PlayerName} & {m_playerProfiles[2].PlayerName}";  //Player 1 & 3
-                    else if (highestScore == _infinitePointsTPTwo)
-                        m_infiniteWinner = $"{m_playerProfiles[1].PlayerName} & {m_playerProfiles[3].PlayerName}";  //Player 2 & 4
-                    else
-                        m_infiniteWinner = $"{m_playerProfiles[0].PlayerName} & {m_playerProfiles[2].PlayerName} draw \nto {m_playerProfiles[1].PlayerName} & {m_playerProfiles[3].PlayerName}";                     //All
-
-                    return highestScore;
-                }
-                default:
-                    return highestScore;
+                //Team 1 wins
+                m_infiniteWinner = (m_matchData.PlayerCount == 4)
+                    ? $"{m_playerProfiles[0].PlayerName} & {m_playerProfiles[2].PlayerName}"
+                    : m_playerProfiles[0].PlayerName;
             }
+            else if (_scoreTeam2 > _scoreTeam1)
+            {
+                //Team 2 wins
+                m_infiniteWinner = (m_matchData.PlayerCount == 4)
+                    ? $"{m_playerProfiles[1].PlayerName} & {m_playerProfiles[3].PlayerName}"
+                    : m_playerProfiles[1].PlayerName;
+            }
+            else
+            {
+                //Draw
+                string team1Name = (m_matchData.PlayerCount == 4) ? $"{m_playerProfiles[0].PlayerName} & {m_playerProfiles[2].PlayerName}" : m_playerProfiles[0].PlayerName;
+                string team2Name = (m_matchData.PlayerCount == 4) ? $"{m_playerProfiles[1].PlayerName} & {m_playerProfiles[3].PlayerName}" : m_playerProfiles[1].PlayerName;
+                m_infiniteWinner = $"{team1Name} draw \nto {team2Name}";
+            }
+
+            //Uses Mathf.Max to get the highest Score.
+            return Mathf.Max(_scoreTeam1, _scoreTeam2);
         }
 
         private void ToggleMatchPause(string _actionMap)
