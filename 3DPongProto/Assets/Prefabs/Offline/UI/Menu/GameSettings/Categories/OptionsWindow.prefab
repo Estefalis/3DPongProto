@@ -422,7 +422,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1428025525963171700}
+      objectReference: {fileID: 4623305630506342532}
     - target: {fileID: 917770286702549589, guid: d5d526be9fc149148aeb5951486723ed,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -792,7 +792,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 5621728230605086770}
+      objectReference: {fileID: 3545689730124145189}
     - target: {fileID: 1473867844471435925, guid: d5d526be9fc149148aeb5951486723ed,
         type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
@@ -937,7 +937,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1428025525963171700}
+      objectReference: {fileID: 4623305630506342532}
     - target: {fileID: 1806012775342135986, guid: d5d526be9fc149148aeb5951486723ed,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -1012,7 +1012,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 329208580059639753}
+      objectReference: {fileID: 3545689730124145189}
     - target: {fileID: 2387445504053342752, guid: d5d526be9fc149148aeb5951486723ed,
         type: 3}
       propertyPath: m_ChildAlignment
@@ -2357,7 +2357,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1428025525963171700}
+      objectReference: {fileID: 4623305630506342532}
     - target: {fileID: 7216893313257186957, guid: d5d526be9fc149148aeb5951486723ed,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -2546,7 +2546,7 @@ PrefabInstance:
     - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
         type: 3}
       propertyPath: m_adjustSliderStep
-      value: 7.62
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
         type: 3}
@@ -2567,7 +2567,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_rotationResetText
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1274440216123161814}
     - target: {fileID: 7469526803554438142, guid: d5d526be9fc149148aeb5951486723ed,
         type: 3}
       propertyPath: m_fieldWidthDropdown
@@ -3702,16 +3702,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1428025525963171700 stripped
+--- !u!114 &1274440216123161814 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2016587773839856360, guid: d5d526be9fc149148aeb5951486723ed,
+  m_CorrespondingSourceObject: {fileID: 1838241453551733066, guid: d5d526be9fc149148aeb5951486723ed,
     type: 3}
   m_PrefabInstance: {fileID: 589134011140896156}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1901855891584421161 stripped

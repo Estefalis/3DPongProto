@@ -33,8 +33,8 @@ public class Ball : MonoBehaviour
     #endregion
 
     #region Actions
-    public static event Action OnHitGoalOne, OnHitGoalTwo;  //Updates UserInterface in MatchUserInterface.cs
-    public static event Action<int> OnHitPlayer;
+    public static event Action OnHitGoalOne, OnHitGoalTwo;  //LocalMatchManager updates MatchUserInterface with OnScoreChanged.
+    public static event Action<int> OnHitPlayer;            //LocalMatchManager keep track of Players hit by Ball for goal-notifications.
     public static event Action OnFirstServe;        //LocalMatchManager saves MatchStartTime and sets 'MatchHasStarted'-Bool to true.
 
     //TODO: Audioplay-Structure: (Emitter, AudioSourceSettings (Diegetic/NonDiegetic), Track-ID (if not random), RandomBool);

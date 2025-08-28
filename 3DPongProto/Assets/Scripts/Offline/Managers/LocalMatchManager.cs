@@ -32,8 +32,8 @@ namespace ThreeDeePongProto.Shared.Managers
         [SerializeField] private Transform m_prefabParent;
         [SerializeField] private GameObject m_playGround;
         [SerializeField] private GameObject m_ballPrefab;
-        [SerializeField] private GameObject[] m_playerPrefabs; // NEU: Array für P1-P4 Prefabs
-        [SerializeField] private HighScoreBoard m_highScoreBoard; // NEU: Referenz auf das Board
+        [SerializeField] private GameObject[] m_playerPrefabs;          // NEU: Array für P1-P4 Prefabs
+        [SerializeField] private HighScoreBoard m_highScoreBoard;
 
         #region Game Rules & Constants
         private const float m_playGroundWidthScale = 0.1f;
@@ -80,13 +80,11 @@ namespace ThreeDeePongProto.Shared.Managers
         #region Actions
         internal static event Action ALoadUpHighScores;
 
-        public event Action<int, int> OnScoreChanged;                   //Sends: scoreTeam1, scoreTeam2
-        public event Action<int> OnRoundChanged;                        //Sends: currentRound
-        public event Action<MatchResult> OnMatchEnded;                  //Sends: MatchResult
-        public event Action<bool> OnPauseStateChanged;                  //Sends: m_gameIsPaused?
-
-        //public event Action<int, int> OnRoundScoreChanged;    // Sends: roundScoreTeam1, roundScoreTeam2 - RoundScore?
-        //public event Action OnMatchInitialized;               // Signal that players and UI can be set up
+        public event Action<int, int> OnScoreChanged;           //Updates scoreTeam1, scoreTeam2 for subscribers
+        public event Action<int> OnRoundChanged;                //Updates currentRound for subscribers
+        public event Action OnMatchInitialized;                 //Tells MatchUserInterface to initialize it's UI.        
+        public event Action<MatchResult> OnMatchEnded;          //Sends: MatchResult
+        //public event Action<bool> OnPauseStateChanged;          //Sends: m_gameIsPaused?
         #endregion
 
         private void Awake()
@@ -96,8 +94,6 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void OnEnable()
         {
-            //MenuManager.AResumeTheGame += OnResumeGame;                 //UserInputManager sets Pause already
-            //MenuManager.AReLoadScene += OnReloadScene;                  //UserInputManager sets Pause already
             MenuManager.AEndInfiniteMatch += EndInfiniteMatch;      //TODO: MenuButton with public LM-ManagerScript-Method?
 
             UserInputManager.AChangeActiveActionMap += ToggleMatchPause;
@@ -108,16 +104,12 @@ namespace ThreeDeePongProto.Shared.Managers
             //if (PlayerInputManager.instance != null)
             //    PlayerInputManager.instance.onPlayerJoined -= OnPlayerJoined;
 
-            //MenuManager.AResumeTheGame -= OnResumeGame;                 //UserInputManager sets Pause already
-            //MenuManager.AReLoadScene -= OnReloadScene;                  //UserInputManager sets Pause already
             MenuManager.AEndInfiniteMatch -= EndInfiniteMatch;
 
             Ball.OnFirstServe -= OnMatchActive;
             Ball.OnHitPlayer -= SetLastTouch;
             Ball.OnHitGoalOne -= OnBallHitsTeam1Goal;
             Ball.OnHitGoalTwo -= OnBallHitsTeam2Goal;
-            //Ball.OnHitGoalOne -= () => OnGoalScored(1);
-            //Ball.OnHitGoalTwo -= () => OnGoalScored(2);
 
             UserInputManager.AChangeActiveActionMap -= ToggleMatchPause;
         }
@@ -127,16 +119,12 @@ namespace ThreeDeePongProto.Shared.Managers
             //if (PlayerInputManager.instance != null)
             //    PlayerInputManager.instance.onPlayerJoined -= OnPlayerJoined;
 
-            //MenuManager.AResumeTheGame -= OnResumeGame;                 //UserInputManager sets Pause already
-            //MenuManager.AReLoadScene -= OnReloadScene;                  //UserInputManager sets Pause already
             MenuManager.AEndInfiniteMatch -= EndInfiniteMatch;
 
             Ball.OnFirstServe -= OnMatchActive;
             Ball.OnHitPlayer -= SetLastTouch;
             Ball.OnHitGoalOne -= OnBallHitsTeam1Goal;
             Ball.OnHitGoalTwo -= OnBallHitsTeam2Goal;
-            //Ball.OnHitGoalOne -= () => OnGoalScored(1);
-            //Ball.OnHitGoalTwo -= () => OnGoalScored(2);
 
             UserInputManager.AChangeActiveActionMap -= ToggleMatchPause;
         }
@@ -163,8 +151,6 @@ namespace ThreeDeePongProto.Shared.Managers
             Ball.OnHitPlayer += SetLastTouch;
             Ball.OnHitGoalOne += OnBallHitsTeam1Goal;
             Ball.OnHitGoalTwo += OnBallHitsTeam2Goal;
-            //Ball.OnHitGoalOne += () => OnGoalScored(1); // Tor gegen Team 1
-            //Ball.OnHitGoalTwo += () => OnGoalScored(2); // Tor gegen Team 2
 
             SetupMatch();
         }
@@ -185,6 +171,7 @@ namespace ThreeDeePongProto.Shared.Managers
             SpawnBall();
             //SpawnPlayer();
 
+            OnMatchInitialized?.Invoke();
             OnScoreChanged?.Invoke(m_totalScoreTeam1, m_totalScoreTeam2);
             OnRoundChanged?.Invoke(m_currentRound);
         }
@@ -406,18 +393,6 @@ namespace ThreeDeePongProto.Shared.Managers
                     return highestScore;
             }
         }
-
-        //private void OnResumeGame()
-        //{
-        //    Debug.Log("Inside OnResumeGame(), triggered from MenuManager.");
-        //    PauseMatch(false);
-        //}
-
-        //private void OnReloadScene(int _sceneIndex)
-        //{
-        //    Debug.Log("Inside OnReloadScene(), triggered from MenuManager.");
-        //    PauseMatch(false);
-        //}
 
         private void ToggleMatchPause(string _actionMap)
         {
