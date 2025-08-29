@@ -859,20 +859,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 784a4c1459c8aaa4db6545164e1290d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_disableTransform: {fileID: 941859311}
-  m_eventSystem: {fileID: 1185994179}
-  m_roundsDropdown: {fileID: 2446055331410395422}
-  m_maxPointsDropdown: {fileID: 741551068115327129}
-  m_finishButton: {fileID: 1450293847}
-  m_contentParentTransform: {fileID: 383893856}
-  m_highScoreEntryChildPrefab: {fileID: 6225738724942728192, guid: 9bad064e1da580c4b9b255f8a0043f6c,
+  m_menuManager: {fileID: 1008670894}
+  m_listFrame: {fileID: 941859311}
+  m_contentParent: {fileID: 383893856}
+  m_entryPrefab: {fileID: 2386518805716554134, guid: 9bad064e1da580c4b9b255f8a0043f6c,
     type: 3}
   m_noDataPrefab: {fileID: 7876011991351949999, guid: 12f70dfacccaa6d448fd783e4a2a9277,
     type: 3}
-  m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
-  m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
-  m_sortLowToHigh: 0
-  m_listSortMode: 0
+  m_sortButtons:
+  - {fileID: 8495242848815026583}
+  - {fileID: 8495242847623870524}
+  - {fileID: 751500666}
+  - {fileID: 8495242848570391909}
+  - {fileID: 8495242846854953137}
+  m_sortDropdowns:
+  - {fileID: 2446055331410395422}
+  - {fileID: 741551068115327129}
 --- !u!1 &331579037
 GameObject:
   m_ObjectHideFlags: 0
@@ -2362,10 +2364,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.MenuOrganisation,
+      - m_Target: {fileID: 1008670894}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuManager,
           Assembly-CSharp
-        m_MethodName: RestartLevel
+        m_MethodName: RestartGameScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4720,10 +4722,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 316173228}
-        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.Highscores.HighscoreBoard,
+      - m_Target: {fileID: 1008670894}
+        m_TargetAssemblyTypeName: ThreeDeePongProto.Offline.UI.Menu.MenuManager,
           Assembly-CSharp
-        m_MethodName: BackToStartMenu
+        m_MethodName: ReturnToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

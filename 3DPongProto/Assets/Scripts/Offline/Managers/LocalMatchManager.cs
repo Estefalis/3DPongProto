@@ -16,9 +16,9 @@ public enum EGameConnectionModi
 public struct MatchResult
 {
     public string WinnerName;
-    public string FinalScore;
-    public string TotalPlayTime;
-    public string MatchWinDate;
+    public int FinalScore;
+    public float TotalPlayTime;
+    public long MatchWinDate;
 }
 
 namespace ThreeDeePongProto.Shared.Managers
@@ -78,8 +78,6 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         #region Actions
-        internal static event Action ALoadUpHighScores;
-
         public event Action<int, int> OnScoreChanged;           //Updates scoreTeam1, scoreTeam2 for subscribers
         public event Action<int> OnRoundChanged;                //Updates currentRound for subscribers
         public event Action OnMatchInitialized;                 //Tells MatchUserInterface to initialize it's UI.        
@@ -317,14 +315,14 @@ namespace ThreeDeePongProto.Shared.Managers
 
             var matchResult = new MatchResult();
             matchResult.WinnerName = _winningPlayer;
-            matchResult.FinalScore = _finalScore.ToString();
-            TimeSpan playTimeSpan = TimeSpan.FromSeconds(Time.time - m_matchStartTime);
-            matchResult.TotalPlayTime = playTimeSpan.TotalSeconds.ToString();
-            matchResult.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+            matchResult.FinalScore = _finalScore;
+            //TimeSpan playTimeSpan = TimeSpan.FromSeconds(Time.time - m_matchStartTime);
+            matchResult.TotalPlayTime = Time.time - m_matchStartTime;
+            //matchResult.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+            matchResult.MatchWinDate = DateTime.UtcNow.Ticks;
 
             OnMatchEnded?.Invoke(matchResult);  //HighScoreBoard subscribes to show the details.
             //TODO: Activate the HighScoreBoard to m_highScoreBoard.ShowResults(result);
-            Debug.Log("Set HighScoreBoard visibility.");
         }
 
         /// <summary>
@@ -334,22 +332,19 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             if (m_totalScoreTeam1 <= 0 || m_totalScoreTeam2 <= 0)
             {
-                Debug.Log("No points gained, yet!");
-                //TODO: PopUp-Window: "No points gained, yet. (Stack Solution!)
+                Debug.Log("No points gained, yet!");    //TODO: PopUp-Window: "No points gained, yet. (Stack Solution!)
                 return;
             }
 
             PauseMatch(true);
 
             var matchResult = new MatchResult();
-            matchResult.FinalScore = GetHigherPlayerScore(m_totalScoreTeam1, m_totalScoreTeam2).ToString();
+            matchResult.FinalScore = GetHigherPlayerScore(m_totalScoreTeam1, m_totalScoreTeam2);
             matchResult.WinnerName = m_infiniteWinner;  //WinnerName AFTER FinalScore, because atm it gets set in GetHigherPlayerScore.
-            TimeSpan playTimeSpan = TimeSpan.FromSeconds(Time.time - m_matchStartTime);
-            matchResult.TotalPlayTime = playTimeSpan.TotalSeconds.ToString();
-            matchResult.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+            matchResult.TotalPlayTime = Time.time - m_matchStartTime;
+            matchResult.MatchWinDate = DateTime.UtcNow.Ticks;
 
             OnMatchEnded?.Invoke(matchResult);
-            //ALoadUpHighScores?.Invoke();
         }
 
         /// <summary>
