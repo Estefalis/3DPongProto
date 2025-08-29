@@ -324,7 +324,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
             OnMatchEnded?.Invoke(matchResult);  //HighScoreBoard subscribes to show the details.
             //TODO: Activate the HighScoreBoard to m_highScoreBoard.ShowResults(result);
-            Debug.Log("Set HighScoreBoard visibility somehow.");
+            Debug.Log("Set HighScoreBoard visibility.");
         }
 
         /// <summary>

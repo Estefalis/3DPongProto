@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace ThreeDeePongProto.Shared.Highscores
 {
     [Serializable]
-    public class HighscoreList
+    public class HighScoreList
     {
-        public List<HighscoreEntryData> highscores = new();
+        public List<HighScoreEntryData> highscores = new();
     }
 }
