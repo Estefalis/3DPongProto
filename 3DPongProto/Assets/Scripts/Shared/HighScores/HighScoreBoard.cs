@@ -31,18 +31,17 @@ namespace ThreeDeePongProto.Shared.Highscores
         [SerializeField] private GameObject m_entryPrefab;
         [SerializeField] private GameObject m_noDataPrefab;
         [SerializeField] private Button[] m_sortButtons;
-        [SerializeField] private TMP_Dropdown[] m_sortDropdowns;
-
-        //[SerializeField] private Transform m_disableTransform;
-        //[SerializeField] private EventSystem m_eventSystem;
-        //[SerializeField] private TMP_Dropdown m_roundsDropdown;
-        //[SerializeField] private TMP_Dropdown m_maxPointsDropdown;
-        //[SerializeField] private Button m_finishButton;
-        //[Space]
+        [SerializeField] private TMP_Dropdown m_roundsDropdown;
+        [SerializeField] private TMP_Dropdown m_maxPointsDropdown;
+        [SerializeField] private TMP_Dropdown m_gameModeDropdown;
 
         //Sorting
-        /*[SerializeField] */private EListSortMode _currentSortMode = EListSortMode.MatchWinDate;
+        /*[SerializeField] */
+        private EListSortMode _currentSortMode = EListSortMode.MatchWinDate;
         private bool _isSortAscending = false;              //m_sortLowToHigh
+
+        private readonly int m_maxRounds = 5;
+        private readonly int m_maxPoints = 25;
 
         private IPersistentData<HighScoreData> _saveSystem;
         private HighScoreData _highScoreData;
@@ -50,75 +49,109 @@ namespace ThreeDeePongProto.Shared.Highscores
         private const string m_fileName = "highscores.json";
         private const string m_subFolder = "/SaveData/";
 
-        //[SerializeField] private HighScoreEntrySlot m_highScoreEntryChildPrefab;
-        //[SerializeField] private GameObject m_noDataPrefab;
-
-        //[SerializeField] private MatchUIStates m_matchUIStates;
-        //[SerializeField] private MatchValues m_matchValues;
-
-        //[SerializeField] private bool m_sortLowToHigh;
-
-        //[SerializeField] private EListSortMode m_listSortMode = EListSortMode.MatchWinDate;
-
-        //private List<string> m_roundsDdList;
-        //private List<string> m_maxPointsDdList;
-        //private readonly int m_firstRoundOffset = 1;
-        //private readonly int m_firstPointOffset = 1;
-        //private int m_parentChildCount;
-
-        #region Serialization
-        //private readonly string m_highScoreListFolderPath = "/SaveData/HighScore Lists";
-        //private readonly string m_highscoresFileName = "/Highscores";
-        //private readonly string m_fileFormat = ".json";
-
-        //private readonly IPersistentData m_persistentData = new SerializingData();
-        //[SerializeField] private bool m_encryptionEnabled = false;
-        #endregion
-
         private void Awake()
         {
             _saveSystem = new SerializingData<HighScoreData>(m_fileName, m_subFolder);
             _highScoreData = _saveSystem.Load();
 
-            // Listener für die Sortier-Buttons hinzufügen
-            for (int i = 0; i < m_sortButtons.Length; i++)
-            {
-                int sortModeIndex = i + 1; // +1, da 'None' an Position 0 der Enum ist
-                m_sortButtons[i].onClick.AddListener(() => OnSortButtonClicked(sortModeIndex));
-            }
-
-            //SetupDropdowns();
-
-            ////TODO: Action to join load these inside the game, so the highScore list can be used outside of matches.
-            ////m_slotHeight = m_highScoreEntryChildPrefab.GetComponent<RectTransform>().rect.height;
-            //m_parentChildCount = m_listFrame.GetComponent<Transform>().childCount;
-
-            //m_eventSystem.SetSelectedGameObject(m_finishButton.gameObject);
-
-            //if (m_disableTransform.gameObject.activeInHierarchy)
-            //    m_disableTransform.gameObject.SetActive(false);
+            m_gameModeDropdown.SetValueWithoutNotify((int)EGameMode.Normal);
         }
 
         private void OnEnable()
         {
-            // Event vom LocalMatchManager abonnieren, um zu wissen, wann wir erscheinen sollen
+            //Subscription to display HighScore on Game end.
             LocalMatchManager.Instance.OnMatchEnded += DisplayBoard;
 
-            //LocalMatchManager.ALoadUpHighScores += LoadHighScoresOnGameEnd;
-            //m_roundsDropdown.onValueChanged.AddListener(OnRoundDropdownChanges);
-            //m_maxPointsDropdown.onValueChanged.AddListener(OnMaxPointDropdownChanges);
+            SetUIElements();
         }
 
         private void OnDisable()
         {
-            gameObject.SetActive(false);    //TODO: Remove?
-
             if (LocalMatchManager.Instance != null)
                 LocalMatchManager.Instance.OnMatchEnded -= DisplayBoard;
 
-            //LocalMatchManager.ALoadUpHighScores -= LoadHighScoresOnGameEnd;
-            //m_roundsDropdown.onValueChanged.RemoveListener(OnRoundDropdownChanges);
-            //m_maxPointsDropdown.onValueChanged.RemoveListener(OnMaxPointDropdownChanges);
+            RemoveListeners();
+        }
+
+        private void AddListeners()
+        {
+            for (int i = 0; i < m_sortButtons.Length; i++)
+            {
+                int sortModeIndex = i + 1; //+1. 'None' = Enum-Position 0.
+                m_sortButtons[i].onClick.AddListener(() => OnSortButtonClicked(sortModeIndex));
+            }
+
+            m_roundsDropdown.onValueChanged.AddListener(OnRoundDropdownChanged);
+            m_maxPointsDropdown.onValueChanged.AddListener(OnMaxPointDropdownChanged);
+            m_gameModeDropdown.onValueChanged.AddListener(OnGameModeChanged);
+        }
+
+        private void RemoveListeners()
+        {
+            for (int i = 0; i < m_sortButtons.Length; i++)
+            {
+                int sortModeIndex = i + 1; //+1. 'None' = Enum-Position 0.
+                m_sortButtons[i].onClick.RemoveListener(() => OnSortButtonClicked(sortModeIndex));
+            }
+
+            m_roundsDropdown.onValueChanged.RemoveListener(OnRoundDropdownChanged);
+            m_maxPointsDropdown.onValueChanged.RemoveListener(OnMaxPointDropdownChanged);
+            m_gameModeDropdown.onValueChanged.RemoveListener(OnGameModeChanged);
+        }
+
+        private void SetUIElements()
+        {
+            RemoveListeners();
+
+            var isNormalMode = m_gameModeDropdown.value == (int)EGameMode.Normal;
+            m_roundsDropdown.interactable = isNormalMode;
+            m_maxPointsDropdown.interactable = isNormalMode;
+
+            SetupRoundsDropdown();
+            SetupMaxPointsDropdown();
+
+            AddListeners();
+        }
+
+        private void OnRoundDropdownChanged(int _dropdownIndex)
+        {
+
+        }
+
+        private void OnMaxPointDropdownChanged(int _dropdownIndex)
+        {
+
+        }
+
+        private void OnGameModeChanged(int _dropdownIndex)
+        {
+
+        }
+
+        private void SetupRoundsDropdown()
+        {
+            //m_roundsDropdown.ClearOptions();
+            //var roundsDdList = new List<string> { "\u221E" };
+
+            //for (int i = 1; i <= m_maxRounds; i++)
+            //    roundsDdList.Add(i.ToString());
+
+            //m_roundsDropdown.AddOptions(roundsDdList);
+            //m_roundsDropdown.SetValueWithoutNotify(m_matchData.EGameMode == EGameMode.Infinite ? 0 : (m_matchData.EGameMode == EGameMode.SuddenDeath ? 1 : m_matchData.RoundsToWin));
+            ////TODO: Change to m_gameModeDropdown.value == (int)EGameMode.Normal!
+        }
+
+        private void SetupMaxPointsDropdown()
+        {
+            //m_maxPointsDropdown.ClearOptions();
+            //var maxPointsDdList = new List<string> { "\u221E" };
+
+            //for (int i = 1; i <= m_maxPoints; i++)
+            //    maxPointsDdList.Add(i.ToString());
+
+            //m_maxPointsDropdown.AddOptions(maxPointsDdList);
+            //m_maxPointsDropdown.SetValueWithoutNotify(m_matchData.EGameMode == EGameMode.Infinite ? 0 : (m_matchData.EGameMode == EGameMode.SuddenDeath ? 1 : m_matchData.PointsEachRound));
+            ////TODO: Change to m_gameModeDropdown.value == (int)EGameMode.Normal!
         }
 
         //private void SetupDropdowns()
@@ -367,11 +400,11 @@ namespace ThreeDeePongProto.Shared.Highscores
             {
                 WinningPlayerName = _matchResult.WinnerName,
                 TotalPoints = _matchResult.FinalScore,
-                TotalPlaytimeSeconds = _matchResult.TotalPlayTime,
+                TotalPlaytime = _matchResult.TotalPlayTime,
                 MatchWinTimestamp = DateTime.UtcNow.Ticks,
                 GameMode = matchSettings.EGameMode,
-                RoundsSetting = matchSettings.RoundsToWin,
-                PointsSetting = matchSettings.PointsEachRound
+                SetRounds = matchSettings.RoundsToWin,
+                SetPointsEachRound = matchSettings.PointsEachRound
             };
 
             //Add Entry to the list
@@ -432,20 +465,40 @@ namespace ThreeDeePongProto.Shared.Highscores
             RefreshDisplay();
         }
 
-        private List<HighScoreEntry> SortScores(List<HighScoreEntry> scores)
+        private List<HighScoreEntry> SortScores(List<HighScoreEntry> _highScores)
         {
             IOrderedEnumerable<HighScoreEntry> sorted;
             switch (_currentSortMode)
             {
+                case EListSortMode.SetRounds:
+                    sorted = _isSortAscending ? _highScores.OrderBy(s => s.SetRounds) : _highScores.OrderByDescending(s => s.SetRounds);
+                    break;
+                case EListSortMode.SetPoints:
+                    sorted = _isSortAscending ? _highScores.OrderBy(s => s.SetPointsEachRound) : _highScores.OrderByDescending(s => s.SetPointsEachRound);
+                    break;
                 case EListSortMode.TotalPoints:
-                    sorted = _isSortAscending ? scores.OrderBy(s => s.TotalPoints) : scores.OrderByDescending(s => s.TotalPoints);
+                    sorted = _isSortAscending ? _highScores.OrderBy(s => s.TotalPoints) : _highScores.OrderByDescending(s => s.TotalPoints);
+                    break;
+                case EListSortMode.TotalPlaytime:
+                    sorted = _isSortAscending ? _highScores.OrderBy(s => s.TotalPlaytime) : _highScores.OrderByDescending(s => s.TotalPlaytime);
                     break;
                 case EListSortMode.MatchWinDate:
-                    sorted = _isSortAscending ? scores.OrderBy(s => s.MatchWinTimestamp) : scores.OrderByDescending(s => s.MatchWinTimestamp);
+                {
+                    sorted = _isSortAscending ? _highScores.OrderBy(s => s.MatchWinTimestamp) : _highScores.OrderByDescending(s => s.MatchWinTimestamp);
+                    #region Idea
+                    // sorted = _isSortAscending
+                    //     ? scores.OrderBy(s => new DateTime(s.MatchWinTimestamp).Year)
+                    //             .ThenBy(s => new DateTime(s.MatchWinTimestamp).Month)
+                    //             .ThenBy(s => new DateTime(s.MatchWinTimestamp).Day)
+                    //     : scores.OrderByDescending(s => new DateTime(s.MatchWinTimestamp).Year)
+                    //             .ThenByDescending(s => new DateTime(s.MatchWinTimestamp).Month)
+                    //             .ThenByDescending(s => new DateTime(s.MatchWinTimestamp).Day);
+                    #endregion
                     break;
-                // ... weitere Fälle für andere Sortierungen ...
+                }
+                //Sorting by playerName isn't planned. But could be implemented by a InputField-PopUp search.
                 default:
-                    return scores;
+                    return _highScores;
             }
             return sorted.ToList();
         }
@@ -453,7 +506,7 @@ namespace ThreeDeePongProto.Shared.Highscores
         private List<HighScoreEntry> FilterScores(List<HighScoreEntry> scores)
         {
             // TODO: Hier kommt später die Filter-Logik basierend auf den Dropdowns rein.
-            // Beispiel: return scores.Where(s => s.GameMode == EGameMode.Infinite).ToList();
+            // Beispiel: return _highScores.Where(s => s.GameMode == EGameMode.Infinite).ToList();
             return scores; // Vorerst keine Filterung
         }
 

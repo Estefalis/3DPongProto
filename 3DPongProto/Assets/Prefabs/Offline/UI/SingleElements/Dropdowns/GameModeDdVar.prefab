@@ -9,6 +9,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 913278296481363965, guid: fcaee9628a1354c488849acb3674ed99,
         type: 3}
+      propertyPath: m_Value
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 913278296481363965, guid: fcaee9628a1354c488849acb3674ed99,
+        type: 3}
       propertyPath: m_Options.m_Options.Array.data[0].m_Text
       value: Infinite
       objectReference: {fileID: 0}

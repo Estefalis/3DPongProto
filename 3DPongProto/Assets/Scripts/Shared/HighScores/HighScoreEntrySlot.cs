@@ -29,7 +29,7 @@ namespace ThreeDeePongProto.Shared.Highscores
             DateTime winDate = new DateTime(entry.MatchWinTimestamp);
             m_matchWinDateText.text = winDate.ToString("yyyy-MM-dd HH:mm");
 
-            TimeSpan timeSpan = TimeSpan.FromSeconds(entry.TotalPlaytimeSeconds);
+            TimeSpan timeSpan = TimeSpan.FromSeconds(entry.TotalPlaytime);
             m_totalPlaytimeText.text = timeSpan.ToString(@"hh\:mm\:ss");
 
             //m_rankText.text = _rank;
