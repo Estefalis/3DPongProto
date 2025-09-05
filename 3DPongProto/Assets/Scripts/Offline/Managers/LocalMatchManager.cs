@@ -81,7 +81,7 @@ namespace ThreeDeePongProto.Shared.Managers
         public event Action<int, int> OnScoreChanged;           //Updates scoreTeam1, scoreTeam2 for subscribers
         public event Action<int> OnRoundChanged;                //Updates currentRound for subscribers
         public event Action OnMatchInitialized;                 //Tells MatchUserInterface to initialize it's UI.        
-        public event Action<MatchResult> OnMatchEnded;          //Sends: MatchResult
+        public event Action<MatchResult, bool> OnLocalMatchEnd;    //Sends: MatchResult
         //public event Action<bool> OnPauseStateChanged;          //Sends: m_gameIsPaused?
         #endregion
 
@@ -286,7 +286,7 @@ namespace ThreeDeePongProto.Shared.Managers
             else
             {
                 //Normal Mode
-                roundIsOver = (m_currentScoreTeam1 >= m_matchData.PointsEachRound && m_currentScoreTeam1 >= m_currentScoreTeam2 + m_matchData.WinPointDifference) || (m_currentScoreTeam2 >= m_matchData.PointsEachRound && m_currentScoreTeam2 >= m_currentScoreTeam1 + m_matchData.WinPointDifference);
+                roundIsOver = (m_currentScoreTeam1 >= m_matchData.RoundPoints && m_currentScoreTeam1 >= m_currentScoreTeam2 + m_matchData.WinPointDifference) || (m_currentScoreTeam2 >= m_matchData.RoundPoints && m_currentScoreTeam2 >= m_currentScoreTeam1 + m_matchData.WinPointDifference);
             }
 
             if (roundIsOver)
@@ -321,8 +321,7 @@ namespace ThreeDeePongProto.Shared.Managers
             //matchResult.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             matchResult.MatchWinDate = DateTime.UtcNow.Ticks;
 
-            OnMatchEnded?.Invoke(matchResult);  //HighScoreBoard subscribes to show the details.
-            //TODO: Activate the HighScoreBoard to m_highScoreBoard.ShowResults(result);
+            OnLocalMatchEnd?.Invoke(matchResult, true);    //isMatchResult
         }
 
         /// <summary>
@@ -344,7 +343,7 @@ namespace ThreeDeePongProto.Shared.Managers
             matchResult.TotalPlayTime = Time.time - m_matchStartTime;
             matchResult.MatchWinDate = DateTime.UtcNow.Ticks;
 
-            OnMatchEnded?.Invoke(matchResult);
+            OnLocalMatchEnd?.Invoke(matchResult, true);    //isMatchResult
         }
 
         /// <summary>

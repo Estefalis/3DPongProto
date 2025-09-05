@@ -13,7 +13,7 @@ namespace ThreeDeePongProto.Shared.Highscores
 
         //Filter-Context for Matches
         public EGameMode GameMode;
-        public int SetRounds;
-        public int SetPointsEachRound;
+        public int RoundSetting;
+        public int PointSetting;
     }
 }

@@ -12,9 +12,9 @@ public class MatchSettingsData
     public EGameMode EGameMode = EGameMode.Normal;
     public bool ObstaclesEnabled = false;       //NOTE: Enum for multiple Layout-Options may be a better choice for complex structures.
 
-    //RoundsToWin and PointsEachRound
+    //RoundSetting and PointSetting
     public int RoundsToWin = 5;
-    public int PointsEachRound = 25;
+    public int RoundPoints = 25;
     public int WinPointDifference = 2;
 
     //Field-Dimensions

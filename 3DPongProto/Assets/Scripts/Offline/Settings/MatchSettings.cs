@@ -85,7 +85,7 @@ namespace ThreeDeePongProto.Shared.Settings
             m_obstacleToggle.onValueChanged.AddListener(OnObstacleToggleChanged);
             //Rounds
             m_roundsDropdown.onValueChanged.AddListener(OnRoundDropdownChanged);
-            //PointsEachRound
+            //PointSetting
             m_maxPointsDropdown.onValueChanged.AddListener(OnMaxPointDropdownChanged);
             //Set fixField ratio
             m_fixRatioToggle.onValueChanged.AddListener(OnRatioToggleChanged);
@@ -115,7 +115,7 @@ namespace ThreeDeePongProto.Shared.Settings
             m_obstacleToggle.onValueChanged.RemoveListener(OnObstacleToggleChanged);
             //Rounds
             m_roundsDropdown.onValueChanged.RemoveListener(OnRoundDropdownChanged);
-            //PointsEachRound
+            //PointSetting
             m_maxPointsDropdown.onValueChanged.RemoveListener(OnMaxPointDropdownChanged);
             //Set fixField ratio
             m_fixRatioToggle.onValueChanged.RemoveListener(OnRatioToggleChanged);
@@ -177,7 +177,7 @@ namespace ThreeDeePongProto.Shared.Settings
         private void OnMaxPointDropdownChanged(int _dropdownIndex)
         {
             if (m_isNormalMode)
-                m_matchData.PointsEachRound = _dropdownIndex;
+                m_matchData.RoundPoints = _dropdownIndex;
         }
 
         private void OnWidthDropdownChanged(int _dropdownValue)
@@ -362,7 +362,7 @@ namespace ThreeDeePongProto.Shared.Settings
                 maxPointsDdList.Add(i.ToString());
 
             m_maxPointsDropdown.AddOptions(maxPointsDdList);
-            m_maxPointsDropdown.SetValueWithoutNotify(m_matchData.EGameMode == EGameMode.Infinite ? 0 : (m_matchData.EGameMode == EGameMode.SuddenDeath ? 1 : m_matchData.PointsEachRound));
+            m_maxPointsDropdown.SetValueWithoutNotify(m_matchData.EGameMode == EGameMode.Infinite ? 0 : (m_matchData.EGameMode == EGameMode.SuddenDeath ? 1 : m_matchData.RoundPoints));
         }
 
         private void SetupFieldDimension()
