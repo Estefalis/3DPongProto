@@ -589,24 +589,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         public void ReturnToMainMenu()
         {
-            AReLoadScene?.Invoke((int)ESceneNames.StartMenu);   //Possible without '?.Invoke'?
+            AReLoadScene?.Invoke((int)ESceneNames.StartMenu);
         }
 
         public void EndInfiniteMatch()
         {
-            //TODO: Change reference to MatchSettingsData!!!
-            //if (m_matchValues == null)
-            //{
-            //    Debug.LogWarning("Scriptable null. Code adjustment needed!");
-            //    return;
-            //}
-
-            ////TODO: Replace SO values for runtime MatchValues.
-            //if (m_matchValues.TotalPointsTPOne > 0 || m_matchValues.TotalPointsTPTwo > 0)
-            //{
-            //    AEndInfiniteMatch?.Invoke();
-            //    m_navigationKey[0].gameObject.SetActive(false);
-            //}
+            AEndInfiniteMatch?.Invoke();    //Sends request to end infinite Matches. Skips HighScoreBoard while noone gained a point.
+            //m_navigationKey[0].gameObject.SetActive(false); ?
         }
 
         /// <summary>

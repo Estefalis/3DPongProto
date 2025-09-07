@@ -25,6 +25,7 @@ namespace ThreeDeePongProto.Shared.Managers
 {
     public class LocalMatchManager : MonoBehaviour
     {
+        [SerializeField] private MenuManager m_menuManager;
         public static LocalMatchManager Instance { get; private set; }
 
         [Header("Scene & Prefab References")]
@@ -78,11 +79,10 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         #region Actions
-        public event Action<int, int> OnScoreChanged;           //Updates scoreTeam1, scoreTeam2 for subscribers
-        public event Action<int> OnRoundChanged;                //Updates currentRound for subscribers
-        public event Action OnMatchInitialized;                 //Tells MatchUserInterface to initialize it's UI.        
-        public event Action<MatchResult, bool> OnLocalMatchEnd;    //Sends: MatchResult
-        //public event Action<bool> OnPauseStateChanged;          //Sends: m_gameIsPaused?
+        public event Action<int, int> OnScoreChanged;               //Updates scoreTeam1, scoreTeam2 for subscribers
+        public event Action<int> OnRoundChanged;                    //Updates currentRound for subscribers
+        public event Action OnMatchInitialized;                     //Tells MatchUserInterface to initialize it's UI.        
+        public event Action<MatchResult, bool> OnLocalMatchEnd;     //Sends: MatchResult
         #endregion
 
         private void Awake()
@@ -331,7 +331,8 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             if (m_totalScoreTeam1 <= 0 || m_totalScoreTeam2 <= 0)
             {
-                Debug.Log("No points gained, yet!");    //TODO: PopUp-Window: "No points gained, yet. (Stack Solution!)
+                Debug.Log("No points gained, yet Loading StartMenu.");    //Optional: PopUp-Window, to ask for playerResponse.
+                m_menuManager.ReturnToMainMenu();
                 return;
             }
 

@@ -2380,6 +2380,11 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
       objectReference: {fileID: 145697964}
+    - target: {fileID: 5109989634475465323, guid: 430c392282a61bb4482c69a3b60f8b8e,
+        type: 3}
+      propertyPath: m_Name
+      value: PlayerAmountDropdown
+      objectReference: {fileID: 0}
     - target: {fileID: 5641008733523396202, guid: 430c392282a61bb4482c69a3b60f8b8e,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
@@ -4058,20 +4063,20 @@ MonoBehaviour:
   m_showCursor: 1
   m_hiddenFinishButton: {fileID: 0}
   m_uIDropdowns:
+  - {fileID: 1409237153}
+  - {fileID: 1983064936}
+  - {fileID: 1983064938}
   - {fileID: 977007613277384199}
+  - {fileID: 1983064935}
   - {fileID: 1920847753}
   - {fileID: 1983064941}
-  - {fileID: 1983064940}
-  - {fileID: 1409237153}
   - {fileID: 1983064939}
-  - {fileID: 1983064938}
-  - {fileID: 1983064937}
-  - {fileID: 1983064936}
-  - {fileID: 1983064935}
+  - {fileID: 1983064940}
   - {fileID: 1983064934}
-  - {fileID: 1983064933}
   - {fileID: 1983064932}
+  - {fileID: 1983064933}
   - {fileID: 1983064931}
+  - {fileID: 1983064937}
 --- !u!1001 &240737787773209198
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4646,6 +4651,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
       objectReference: {fileID: 1480635289379432788}
+    - target: {fileID: 2120749870812207327, guid: e12d58a5cd728d14b940072f671355ec,
+        type: 3}
+      propertyPath: m_Name
+      value: PlayerAmountDropdown
+      objectReference: {fileID: 0}
     - target: {fileID: 2508713754972649018, guid: e12d58a5cd728d14b940072f671355ec,
         type: 3}
       propertyPath: m_AnchorMax.y

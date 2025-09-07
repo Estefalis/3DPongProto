@@ -11,17 +11,9 @@ namespace ThreeDeePongProto.Shared.Highscores
 {
     public class HighScoreBoard : MonoBehaviour
     {
-        private enum EFilterMode
-        {
-            InfiniteMatch = 0,
-            SuddenDeath = 1,
-            SetRounds,
-            SetPoints,
-            TotalPoints,
-            TotalPlaytime,
-            MatchWinDate,
-            ShowAll
-        }
+        private enum EFilterMode { ShowAll, InfiniteMatch, SuddenDeath, Normal }
+
+        private enum ESortColumn { SetRounds, SetPoints, TotalPoints, Playtime, WinDate }
 
         [SerializeField] private MenuManager m_menuManager;
 
@@ -35,40 +27,57 @@ namespace ThreeDeePongProto.Shared.Highscores
         [SerializeField] private TMP_Dropdown m_maxPointsDropdown;
         [SerializeField] private TMP_Dropdown m_filterModeDropdown;
 
+        //Filtering
+        private EFilterMode m_currentFilterMode = EFilterMode.ShowAll;
+        private int m_filterRoundsValue = 0; //ShowAll = 0
+        private int m_filterPointsValue = 0; //ShowAll = 0
+        private bool m_filterInteractable = true;
+
         //Sorting
-        private EFilterMode m_currentFilterMode = EFilterMode.SetRounds;
-        private bool _isSortAscending = false;              //sort Low to High
-        private bool m_noFiltering = true;
+        private ESortColumn m_currentSortColumn = ESortColumn.WinDate;
+        private bool m_isSortAscending = false; //sort Low to High
 
         //LastMatchConfig
+        private bool m_isMatchResult = false;   //isPostMatch
         private EGameMode m_lastGameMode;
         private int m_lastGameRounds;
         private int m_lastGamePoints;
-        private bool m_isMatchResult = false;
 
         private readonly int m_maxRounds = 5;
         private readonly int m_maxPoints = 25;
-        private int m_lastRound;
-        private int m_lastPoints;
+        //private int m_lastRound;
+        //private int m_lastPoints;
 
-        private HighScoreData _highScoreData;
-        private IPersistentData<HighScoreData> _saveSystem;
-
+        //SaveData
+        private HighScoreData m_highScoreData;
+        private IPersistentData<HighScoreData> m_saveSystem;
         private const string m_fileName = "highscores.json";
         private const string m_subFolder = "/SaveData/";
 
         private void Awake()
         {
-            _saveSystem = new SerializingData<HighScoreData>(m_fileName, m_subFolder);
-            _highScoreData = _saveSystem.Load();
+            m_saveSystem = new SerializingData<HighScoreData>(m_fileName, m_subFolder);
+            m_highScoreData = m_saveSystem.Load();
         }
 
         private void OnEnable()
         {
             //Subscription to display HighScore on Game end.
-            LocalMatchManager.Instance.OnLocalMatchEnd += DisplayResult;
+            if (LocalMatchManager.Instance != null)
+                LocalMatchManager.Instance.OnLocalMatchEnd += DisplayResult;
 
-            SetUIElements();
+            if (!m_isMatchResult)
+            {
+                m_currentFilterMode = EFilterMode.ShowAll;
+                RefreshDisplay();
+            }
+
+            //m_currentFilterMode = EFilterMode.ShowAll;
+            //m_filterRoundsValue = 0;
+            //m_filterPointsValue = 0;
+
+            //AddListeners vorher separat?
+            //RefreshDisplay();
         }
 
         private void OnDisable()
@@ -111,9 +120,9 @@ namespace ThreeDeePongProto.Shared.Highscores
 
             SetupFilterDropdown();
 
-            m_noFiltering = m_currentFilterMode == EFilterMode.ShowAll;
-            m_roundsDropdown.interactable = m_noFiltering;
-            m_maxPointsDropdown.interactable = m_noFiltering;
+            m_filterInteractable = !m_isMatchResult && (m_currentFilterMode == EFilterMode.Normal || m_currentFilterMode == EFilterMode.ShowAll);
+            m_roundsDropdown.interactable = m_filterInteractable;
+            m_maxPointsDropdown.interactable = m_filterInteractable;
 
             SetupRoundsDropdown();
             SetupMaxPointsDropdown();
@@ -133,7 +142,8 @@ namespace ThreeDeePongProto.Shared.Highscores
                 filterOptionList.Add($"{enumMemberNames[i]}");
 
             m_filterModeDropdown.AddOptions(filterOptionList);
-            m_filterModeDropdown.SetValueWithoutNotify((int)m_currentFilterMode);
+            //ShowAll is on Index 0. So + 1.
+            m_filterModeDropdown.SetValueWithoutNotify(m_isMatchResult ? (int)m_lastGameMode + 1 : (int)m_currentFilterMode);
         }
 
         private void SetupRoundsDropdown()
@@ -145,8 +155,7 @@ namespace ThreeDeePongProto.Shared.Highscores
                 roundsDdList.Add(i.ToString());
 
             m_roundsDropdown.AddOptions(roundsDdList);
-            m_roundsDropdown.SetValueWithoutNotify(m_isMatchResult ? m_lastGameRounds : m_maxRounds);
-            m_lastRound = m_roundsDropdown.value;
+            m_roundsDropdown.SetValueWithoutNotify(m_isMatchResult ? m_lastGameRounds : m_filterRoundsValue);
         }
 
         private void SetupMaxPointsDropdown()
@@ -158,55 +167,55 @@ namespace ThreeDeePongProto.Shared.Highscores
                 maxPointsDdList.Add(i.ToString());
 
             m_maxPointsDropdown.AddOptions(maxPointsDdList);
-            m_maxPointsDropdown.SetValueWithoutNotify(m_isMatchResult ? m_lastGamePoints : m_maxPoints);
-            m_lastPoints = m_maxPointsDropdown.value;
+            m_maxPointsDropdown.SetValueWithoutNotify(m_isMatchResult ? m_lastGamePoints : m_filterPointsValue);
         }
         #endregion
 
         #region Listener-Methods
-        private void OnSortButtonClicked(int _sortModeIndex)
+        private void OnSortButtonClicked(int _sortColumnIndex)
         {
-            var newSortMode = (EFilterMode)_sortModeIndex;
-            if (newSortMode == m_currentFilterMode)
+            var newSortMode = (ESortColumn)_sortColumnIndex;
+            if (newSortMode == m_currentSortColumn)
             {
-                _isSortAscending = !_isSortAscending;   //Invert Sort-order
+                m_isSortAscending = !m_isSortAscending;   //Invert Sort-order
             }
             else
             {
-                m_currentFilterMode = newSortMode;
-                _isSortAscending = false;               //Standard sortOption is counting from HighToLow
+                m_currentSortColumn = newSortMode;
+                m_isSortAscending = false;               //Standard sortOption is counting from HighToLow
             }
 
             RefreshDisplay();
         }
 
-        private void OnFilterModeChanged(int _dropdownIndex)          //<-----------------------
+        private void OnFilterModeChanged(int _dropdownIndex)
         {
             m_currentFilterMode = (EFilterMode)_dropdownIndex;
 
-            if (m_currentFilterMode == EFilterMode.ShowAll)
+            if (m_currentFilterMode == EFilterMode.ShowAll && m_isMatchResult)
                 m_isMatchResult = false;
 
-            //TODO: Listener Logic
+            m_filterRoundsValue = 0; // Zurücksetzen bei Modus-Wechsel
+            m_filterPointsValue = 0;
 
             RefreshDisplay();
         }
 
-        private void OnRoundDropdownChanged(int _dropdownIndex)     //<-----------------------
+        private void OnRoundDropdownChanged(int _dropdownIndex)
         {
             if (m_isMatchResult)
                 return;
 
-            m_lastRound = _dropdownIndex;
+            m_filterRoundsValue = _dropdownIndex;
             RefreshDisplay();
         }
 
-        private void OnMaxPointDropdownChanged(int _dropdownIndex)  //<-----------------------
+        private void OnMaxPointDropdownChanged(int _dropdownIndex)
         {
             if (m_isMatchResult)
                 return;
 
-            m_lastPoints = _dropdownIndex;
+            m_filterPointsValue = _dropdownIndex;
             RefreshDisplay();
         }
         #endregion
@@ -234,8 +243,8 @@ namespace ThreeDeePongProto.Shared.Highscores
                 };
 
                 //Add Entry to the list
-                _highScoreData.highScores.Add(newEntry);
-                _saveSystem.Save(_highScoreData);
+                m_highScoreData.highScores.Add(newEntry);
+                m_saveSystem.Save(m_highScoreData);
 
                 m_lastGameMode = matchSettings.EGameMode;
                 m_lastGameRounds = matchSettings.RoundsToWin;
@@ -257,21 +266,19 @@ namespace ThreeDeePongProto.Shared.Highscores
         /// </summary>
         public void RefreshDisplay()
         {
-            //Delete all entries at start
+            SetUIElements();
+
+            //Fresh (Re-)start
             foreach (Transform child in m_contentParent)
                 Destroy(child.gameObject);
 
-            //Filter (Later!)
-            List<HighScoreEntry> filteredScores = FilterScores(_highScoreData.highScores);
-
-            //Sort by option
+            //Filtering & Sorting
+            List<HighScoreEntry> filteredScores = FilterScores(m_highScoreData.highScores); //TODO: FilterScore();?
             List<HighScoreEntry> sortedScores = SortScores(filteredScores);
 
             //Show final sortResult
             if (sortedScores.Count == 0)
-            {
                 Instantiate(m_noDataPrefab, m_contentParent);
-            }
             else
             {
                 for (int i = 0; i < sortedScores.Count; i++)
@@ -300,30 +307,17 @@ namespace ThreeDeePongProto.Shared.Highscores
                 IEnumerable<HighScoreEntry> filteredScores = _allScores;
                 EFilterMode selectedFilter = (EFilterMode)m_filterModeDropdown.value;
 
-                switch (selectedFilter)
+                if (m_currentFilterMode != EFilterMode.ShowAll)
                 {
-                    case EFilterMode.InfiniteMatch:
-                        filteredScores = filteredScores.Where(s => s.GameMode == EGameMode.Infinite);
-                        break;
-                    case EFilterMode.SuddenDeath:
-                        filteredScores = filteredScores.Where(s => s.GameMode == EGameMode.SuddenDeath);
-                        break;
-                    case EFilterMode.SetRounds:
-                        filteredScores = filteredScores.Where(s => s.RoundSetting == m_lastRound && s.GameMode != EGameMode.Infinite);
-                        break;
-                    case EFilterMode.SetPoints:
-                        filteredScores = filteredScores.Where(s => s.PointSetting == m_lastPoints && s.GameMode != EGameMode.Infinite);
-                        break;
-                    case EFilterMode.TotalPoints:
-                    case EFilterMode.TotalPlaytime:
-                    case EFilterMode.MatchWinDate:
-                    {
-                        Debug.Log("Code for these FilterOptions still has to be implemented. Or SortButton-Components removed.");
-                        filteredScores = _allScores;
-                        break;
-                    }
-                    default:
-                        break;
+                    filteredScores = filteredScores.Where(s => s.GameMode == (EGameMode)m_currentFilterMode);
+                }
+
+                if (m_currentFilterMode == EFilterMode.Normal || m_currentFilterMode == EFilterMode.ShowAll)
+                {
+                    if (m_filterRoundsValue > 0)
+                        filteredScores = filteredScores.Where(s => s.RoundSetting == m_filterRoundsValue);
+                    if (m_filterPointsValue > 0)
+                        filteredScores = filteredScores.Where(s => s.PointSetting == m_filterPointsValue);
                 }
 
                 return filteredScores.ToList();
@@ -333,25 +327,25 @@ namespace ThreeDeePongProto.Shared.Highscores
         private List<HighScoreEntry> SortScores(List<HighScoreEntry> _highScores)
         {
             IOrderedEnumerable<HighScoreEntry> sorted;
-            switch (m_currentFilterMode)
+            switch (m_currentSortColumn)
             {
-                case EFilterMode.SetRounds:
-                    sorted = _isSortAscending ? _highScores.OrderBy(s => s.RoundSetting) : _highScores.OrderByDescending(s => s.RoundSetting);
+                case ESortColumn.SetRounds:
+                    sorted = m_isSortAscending ? _highScores.OrderBy(s => s.RoundSetting) : _highScores.OrderByDescending(s => s.RoundSetting);
                     break;
-                case EFilterMode.SetPoints:
-                    sorted = _isSortAscending ? _highScores.OrderBy(s => s.PointSetting) : _highScores.OrderByDescending(s => s.PointSetting);
+                case ESortColumn.SetPoints:
+                    sorted = m_isSortAscending ? _highScores.OrderBy(s => s.PointSetting) : _highScores.OrderByDescending(s => s.PointSetting);
                     break;
-                case EFilterMode.TotalPoints:
-                    sorted = _isSortAscending ? _highScores.OrderBy(s => s.TotalPoints) : _highScores.OrderByDescending(s => s.TotalPoints);
+                case ESortColumn.TotalPoints:
+                    sorted = m_isSortAscending ? _highScores.OrderBy(s => s.TotalPoints) : _highScores.OrderByDescending(s => s.TotalPoints);
                     break;
-                case EFilterMode.TotalPlaytime:
-                    sorted = _isSortAscending ? _highScores.OrderBy(s => s.TotalPlaytime) : _highScores.OrderByDescending(s => s.TotalPlaytime);
+                case ESortColumn.Playtime:
+                    sorted = m_isSortAscending ? _highScores.OrderBy(s => s.TotalPlaytime) : _highScores.OrderByDescending(s => s.TotalPlaytime);
                     break;
-                case EFilterMode.MatchWinDate:
+                case ESortColumn.WinDate:
                 {
-                    sorted = _isSortAscending ? _highScores.OrderBy(s => s.MatchWinTimestamp) : _highScores.OrderByDescending(s => s.MatchWinTimestamp);
+                    sorted = m_isSortAscending ? _highScores.OrderBy(s => s.MatchWinTimestamp) : _highScores.OrderByDescending(s => s.MatchWinTimestamp);
                     #region Idea
-                    // sorted = _isSortAscending
+                    // sorted = m_isSortAscending
                     //     ? _allScores.OrderBy(s => new DateTime(s.MatchWinTimestamp).Year)
                     //             .ThenBy(s => new DateTime(s.MatchWinTimestamp).Month)
                     //             .ThenBy(s => new DateTime(s.MatchWinTimestamp).Day)
