@@ -84,21 +84,22 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             Cursor.lockState = m_cursorLockMode;
             Cursor.visible = m_showCursor;
 
-            if (UserInputManager.m_CentralActionsInstance == null)
+            var centralInputAction = UserInputManager.Instance.GetCentralActions();
+            if (centralInputAction == null)
             {
                 Debug.LogError("CentralActionsInstance in UserInputManager is null!", this);
                 enabled = false;
                 return;
             }
 
-            m_inputActions = UserInputManager.m_CentralActionsInstance;
+            m_inputActions = centralInputAction;
             m_uiActionMap = m_inputActions.UserInterface;
 
             //If MenuManager's firstElement is active (MainMenu), toggle UserInterface Map. Else (GameScene) PlayerActions.
             if (m_firstTransformElement.gameObject.activeInHierarchy)
-                UserInputManager.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
+                UserInputManager.Instance.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
             else
-                UserInputManager.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
+                UserInputManager.Instance.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
 
             m_lastSelectedGameObject = null;
             m_targetNavigationElement.Clear();
@@ -248,7 +249,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void OnResumeTheGame()
         {
             //Toggle ActionMap-switch to PlayerActions.
-            UserInputManager.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
+            UserInputManager.Instance.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
         }
         #endregion
 
@@ -583,7 +584,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         public void RestartGameScene()
         {
             var sceneIndex = SceneManager.GetActiveScene().buildIndex;
-            UserInputManager.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
+            UserInputManager.Instance.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
             AReLoadScene?.Invoke(sceneIndex);
         }
 

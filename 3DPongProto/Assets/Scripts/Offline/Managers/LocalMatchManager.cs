@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.Highscores;
-//using ThreeDeePongProto.Shared.PlayerCharacter;
+using ThreeDeePongProto.Shared.PlayerCharacter;
 using UnityEngine;
-//using UnityEngine.InputSystem;
+using UnityEngine.InputSystem;
 
 public enum EGameConnectionModi
 {
@@ -33,7 +33,6 @@ namespace ThreeDeePongProto.Shared.Managers
         [SerializeField] private Transform m_prefabParent;
         [SerializeField] private GameObject m_playGround;
         [SerializeField] private GameObject m_ballPrefab;
-        [SerializeField] private GameObject[] m_playerPrefabs;          // NEU: Array für P1-P4 Prefabs
         [SerializeField] private HighScoreBoard m_highScoreBoard;
 
         #region Game Rules & Constants
@@ -99,8 +98,8 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void OnDisable()
         {
-            //if (PlayerInputManager.instance != null)
-            //    PlayerInputManager.instance.onPlayerJoined -= OnPlayerJoined;
+            if (PlayerInputManager.instance != null)
+                PlayerInputManager.instance.onPlayerJoined -= OnPlayerJoined;
 
             MenuManager.AEndInfiniteMatch -= EndInfiniteMatch;
 
@@ -114,8 +113,8 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void OnDestroy()
         {
-            //if (PlayerInputManager.instance != null)
-            //    PlayerInputManager.instance.onPlayerJoined -= OnPlayerJoined;
+            if (PlayerInputManager.instance != null)
+                PlayerInputManager.instance.onPlayerJoined -= OnPlayerJoined;
 
             MenuManager.AEndInfiniteMatch -= EndInfiniteMatch;
 
@@ -131,20 +130,20 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             var settingsManager = SettingsManager.Instance;
             var profileManager = PlayerProfileManager.Instance;
-            //var playerInputManager = PlayerInputManager.instance;
+            var playerInputManager = PlayerInputManager.instance;
 
-            ////Manager-Security-Checks
-            //if (settingsManager == null || profileManager == null || playerInputManager == null)
-            //{
-            //    Debug.LogError("One or more required Manager were not found!");
-            //    //Optional: Load StartMenu-Scene.
-            //    return;
-            //}
+            //Manager-Security-Checks
+            if (settingsManager == null || profileManager == null || playerInputManager == null)
+            {
+                Debug.LogError("One or more required Manager were not found!");
+                //Optional: Load StartMenu-Scene.
+                return;
+            }
 
             m_matchData = settingsManager.CurrentSettings.Match;
             m_playerProfiles = profileManager.PlayerProfiles;
 
-            //playerInputManager.onPlayerJoined += OnPlayerJoined;
+            playerInputManager.onPlayerJoined += OnPlayerJoined;
             Ball.OnFirstServe += OnMatchActive;
             Ball.OnHitPlayer += SetLastTouch;
             Ball.OnHitGoalOne += OnBallHitsTeam1Goal;
@@ -167,7 +166,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
             BuildPlayField();
             SpawnBall();
-            //SpawnPlayer();
+            UserInputManager.Instance.SpawnPlayersForMatch(m_matchData.PlayerCount);
 
             OnMatchInitialized?.Invoke();
             OnScoreChanged?.Invoke(m_totalScoreTeam1, m_totalScoreTeam2);
@@ -191,40 +190,35 @@ namespace ThreeDeePongProto.Shared.Managers
         }
 
         #region Player-Setup
-        //private void SpawnPlayers()
-        //{
-        //    // Join Behavior im PlayerInputManager muss auf "Join Players Manually" stehen
-        //    for (int i = 0; i < m_matchData.PlayerCount; i++)
-        //    {
-        //        PlayerInputManager.instance.JoinPlayer(i, -1, null, m_playerPrefabs[i]);
-        //    }
-        //}
+        private void OnPlayerJoined(PlayerInput playerInput)
+        {
+            int playerIndex = playerInput.playerIndex;
+            GameObject playerObject = playerInput.gameObject;   //PlayerController position Vector3.zero.
 
-        //private void OnPlayerJoined(PlayerInput playerInput)
-        //{
-        //    int playerIndex = playerInput.playerIndex;
-        //    GameObject playerObject = playerInput.gameObject;
+            PlayerProfileData profile = m_playerProfiles[playerIndex];
+            EPlayerLine line = m_matchData.PlayerPositions[playerIndex];
 
-        //    PlayerProfileData profile = m_playerProfiles[playerIndex];
-        //    EPlayerLine line = m_matchData.PlayerPositions[playerIndex];
+            float zSide = (playerIndex % 2 == 0) ? -1f : 1f;
+            float halfFieldLength = m_matchData.FieldLength / 2f;
+            float lineDistance = (line == EPlayerLine.Backline) ? m_matchData.BacklineDistance : m_matchData.FrontlineDistance;
+            float zPos = zSide * (halfFieldLength - lineDistance); //Sets distance of players X-MoveLine.
 
-        //    float zSide = (playerIndex % 2 == 0) ? -1f : 1f;
-        //    float halfFieldLength = m_matchData.FieldLength / 2f;
-        //    float lineDistance = (line == EPlayerLine.Backline) ? m_matchData.BacklineDistance : m_matchData.FrontlineDistance;
-        //    float zPos = zSide * (halfFieldLength - lineDistance); // Anpassung für Distanz von der Endlinie
+            Vector3 spawnPosition = new Vector3(0, 0.5f, zPos);
+            Quaternion spawnRotation = Quaternion.LookRotation(new Vector3(0, 0, -zSide));
 
-        //    Vector3 spawnPosition = new Vector3(0, 0.5f, zPos);
-        //    Quaternion spawnRotation = Quaternion.LookRotation(new Vector3(0, 0, -zSide));
+            playerObject.transform.SetPositionAndRotation(Vector3.zero, spawnRotation); //Old spawnPosition.
+            playerObject.name = profile.PlayerName;
 
-        //    playerObject.transform.SetPositionAndRotation(spawnPosition, spawnRotation);
-        //    playerObject.name = profile.PlayerName;
-
-        //    // Skalierung und andere Werte an das Spieler-Skript übergeben
-        //    if (playerObject.TryGetComponent<CharacterMainController>(out var controller))
-        //    {
-        //        controller.Initialize(profile, m_matchData);
-        //    }
-        //}
+            //Send PlayerProfile data to the CharacterMainController.
+            if (playerObject.TryGetComponent<CharacterMainController>(out var controller))
+            {
+                controller.Initialize(profile, m_matchData);
+            }
+            else
+            {
+                Debug.LogError($"Could not find a CharacterMainController for Player {playerInput.playerIndex}!");
+            }
+        }
         #endregion
 
         private void OnMatchActive()

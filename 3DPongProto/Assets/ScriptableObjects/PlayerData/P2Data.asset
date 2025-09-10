@@ -19,3 +19,4 @@ MonoBehaviour:
   KeepNameOnLoad: 1
   PlayerOnFrontline: 0
   DefaultKeyboard: 0
+  ToggleID: 1

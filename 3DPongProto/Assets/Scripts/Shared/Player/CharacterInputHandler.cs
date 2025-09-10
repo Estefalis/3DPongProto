@@ -376,7 +376,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             
             //Depending on MenuManager's inactive firstElement in GameScene, it triggers PlayerActions ActionMap in GameScene.
             if (UserInputManager.SetActionMap == EInputActionMaps.PlayerActions.ToString())
-                UserInputManager.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
+                UserInputManager.Instance.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
         }
         #endregion
     }

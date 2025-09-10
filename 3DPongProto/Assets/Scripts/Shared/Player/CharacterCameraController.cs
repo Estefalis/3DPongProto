@@ -1,3 +1,4 @@
+using System;
 using ThreeDeePongProto.Offline.CameraSetup;
 using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private Vector3 m_cameraPosition;
 
         [Header("Smooth Following")]
-        [SerializeField] private Rigidbody m_RbPlayer;
+        /*[SerializeField] */internal Rigidbody m_RbPlayer;
         [SerializeField] internal Camera m_followCamera;
         [SerializeField] private bool m_enableSmoothFollow = true;
         [SerializeField] private Vector3 m_desiredOffset;
@@ -56,6 +57,12 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             m_setGroundWidth = m_basicFieldValues.SetGroundWidth;
         }
 
+        private void OnEnable()
+        {
+            if (m_playerController == null)
+                m_playerController.GetComponentInParent<CharacterMainController>();
+        }
+
         private void OnDisable()
         {
             CameraManager.LetsRemoveCamera(m_followCamera, m_playerID);
@@ -74,11 +81,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
             CharacterInputHandler.ASendMousePosition += NewMousePosition;
         }
-
-        //private void Update()
-        //{
-        //    SelectCameraToZoom(m_mousePosition);
-        //}
 
         private void FixedUpdate()
         {
@@ -110,72 +112,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             m_cameraPosition = new Vector3(m_cameraPosition.x, m_currentHeight, -m_cameraZPos);
         }
 
-        //private void SelectCameraToZoom(Vector2 _mousePosition)
-        //{
-        //    //Sets the camera only, if the mouse is within the gameWindow. width/height > 0 and not more than max width/height.)
-        //    //xMin (Rect.width - Rect.width), yMin (Rect.height - Rect.height). xMax Rect.width, yMax Rect.height.
-        //    if (!(_mousePosition.x < CameraManager.RuntimeFullsizeRect.xMin) && !(_mousePosition.x > CameraManager.RuntimeFullsizeRect.xMax) &&
-        //        !(_mousePosition.y < CameraManager.RuntimeFullsizeRect.yMin) && !(_mousePosition.y > CameraManager.RuntimeFullsizeRect.yMax))
-        //    {
-        //        switch (m_graphicUiStates.SetCameraMode)
-        //        {
-        //            //SingleCamera
-        //            case ECameraModi.SingleCam:
-        //            {
-        //                m_playerWindowID = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
-        //                break;
-        //            }
-        //            //Vertical
-        //            case ECameraModi.Vertical:
-        //            {
-        //                //if _mousePosition.x > Cam1.xMin m_playerWindowID = IndexOf Cam1, else IndexOf Cam0.
-        //                m_playerWindowID = _mousePosition.x >= m_cameraManager.AvailableCameras[1].pixelRect.xMin
-        //                    ? m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1])
-        //                    : m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
-        //                break;
-        //            }
-        //            //Horizontal
-        //            case ECameraModi.Horizontal:
-        //            {
-        //                //if _mousePosition.y > Cam1.yMin m_playerWindowID = IndexOf Cam1, else IndexOf Cam0.
-        //                m_playerWindowID = _mousePosition.y >= m_cameraManager.AvailableCameras[1].pixelRect.yMin
-        //                    ? m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1])
-        //                    : m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
-        //                break;
-        //            }
-        //            //Quartet
-        //            case ECameraModi.Quartet:
-        //            {
-        //                if (m_mousePosition.x < m_cameraManager.AvailableCameras[0].pixelRect.xMax && m_mousePosition.y < m_cameraManager.AvailableCameras[0].pixelRect.yMax)
-        //                {
-        //                    m_playerWindowID = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
-        //                }
-
-        //                if (_mousePosition.x > m_cameraManager.AvailableCameras[1].pixelRect.xMin && _mousePosition.y < m_cameraManager.AvailableCameras[1].pixelRect.yMax)
-        //                {
-        //                    m_playerWindowID = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[1]);
-        //                }
-
-        //                if (_mousePosition.x < m_cameraManager.AvailableCameras[2].pixelRect.xMax && _mousePosition.y > m_cameraManager.AvailableCameras[2].pixelRect.yMin)
-        //                {
-        //                    m_playerWindowID = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[2]);
-        //                }
-
-        //                if (_mousePosition.x > m_cameraManager.AvailableCameras[3].pixelRect.xMin && _mousePosition.y > m_cameraManager.AvailableCameras[3].pixelRect.yMin)
-        //                {
-        //                    m_playerWindowID = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[3]);
-        //                }
-        //                break;
-        //            }
-        //            default:
-        //            {
-        //                m_playerWindowID = m_cameraManager.AvailableCameras.IndexOf(m_cameraManager.AvailableCameras[0]);
-        //                break;
-        //            }
-        //        }
-        //    }
-        //}
-
         private void FollowUnsmoothed()
         {
             //Follows directly in xPosition, but the visible push looks buggy, if not lerped.
@@ -204,15 +140,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             m_mousePosition = _mousePosition;
         }
-
-        ///// <summary>
-        ///// Limit zoom to the inside of the current gameWindow by it's ID.
-        ///// </summary>
-        ///// <returns></returns>
-        //private int GetWindowId()
-        //{
-        //    return m_playerWindowID;
-        //}
 
         private bool MouseInGameWindow(Vector2 _mousePosition)
         {

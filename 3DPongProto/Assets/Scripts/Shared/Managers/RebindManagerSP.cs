@@ -88,10 +88,11 @@ namespace ThreeDeePongProto.Shared.Managers
             //}
             #endregion
 
+            var centralInputAction = UserInputManager.Instance.GetCentralActions();
             //Alternative: m_PlayerInputActions ??= new PlayerInputActions();
             if (m_PlayerInputActions == null)
                 //m_PlayerInputActions = new PlayerInputActions();
-                m_PlayerInputActions = UserInputManager.m_CentralActionsInstance;
+                m_PlayerInputActions = centralInputAction;
 
             m_PlayerInputActions.PlayerActions.Enable();
         }

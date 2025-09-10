@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using ThreeDeePongProto.Shared.AudioManagement;
+using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 
 namespace ThreeDeePongProto.Shared.PlayerCharacter
@@ -41,7 +42,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         internal uint m_receivedUserID;
         private bool m_isPushing, m_valueTaken = false;
         private float m_paddleWidthAdjustment;
-        private float m_maxPushDistance;
         private float m_xDifference;
         private int m_playerID;
 
@@ -49,10 +49,17 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private ControlUIStates m_ownControlUIStates;
         private ControlUIValues m_ownControlUIValues;
 
+        private Vector3 m_paddleScale;
+        private float m_maxPushDistance;
+
         private void Awake()
         {
             if (m_rigidbody == null)
                 m_rigidbody = GetComponent<Rigidbody>();
+
+            //m_playerController = GetComponentInParent<CharacterMainController>();
+            //if (m_playerController != null)
+            //    m_playerController.m_playerMovement = this;
         }
 
         private void OnEnable()
@@ -75,7 +82,9 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void Start()
         {
-            m_maxPushDistance = m_playerController.m_localMatchManager.m_maxPushDistance;
+            m_paddleScale = LocalMatchManager.DEFAULT_PADDLE_SCALE;
+            m_maxPushDistance = LocalMatchManager.Instance.MaxPushDistance;
+
             var adjustedPushTarget = m_initialRbRotation.y != 0 ? m_rigidbody.transform.position.z - m_maxPushDistance : m_rigidbody.transform.position.z + m_maxPushDistance;
             //Sets PushTarget Position with 'm_maxPushDistance'.
             m_pushTarget.transform.position = new Vector3(0.0f, m_pushTarget.transform.position.y, adjustedPushTarget);
@@ -146,16 +155,16 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             m_paddleWidthAdjustment = GetPaddleWidthAdjustment();
 
             m_rigidbody.transform.localScale = new Vector3(
-                m_playerController.m_localPaddleScale.x + m_paddleWidthAdjustment,
-                m_playerController.m_localPaddleScale.y,
-                m_playerController.m_localPaddleScale.z
+                m_paddleScale.x + m_paddleWidthAdjustment,
+                m_paddleScale.y,
+                m_paddleScale.z
             );
 
             //Calculate MoveRange.
             m_maxSideMovement = m_playerController.m_groundWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
 
             float minZ = -m_playerController.m_groundLength * 0.5f + m_playerController.m_goalDistance;
-            float maxZ = minZ + m_playerController.m_maxPushDistance;
+            float maxZ = minZ + m_maxPushDistance;
 
             //Clamp Rigidbody moveRange on X-Axis.
             m_rigidbody.transform.localPosition = new Vector3(
@@ -315,13 +324,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             m_playerID = _playerID;
             SetPlayerRotation(m_playerID);
 
-            if (m_playerController.m_controlUIStates[m_playerID] != null && m_playerController.m_controlUIValues[m_playerID] != null)
-            {
-                m_ownControlUIStates = m_playerController.m_controlUIStates[m_playerID];
-                m_ownControlUIValues = m_playerController.m_controlUIValues[m_playerID];
-            }
-            else
-                Debug.LogError("ERROR! Could not load from Scriptable Objects!");
+            Debug.Log($"PlayerID {_playerID} received.");
         }
 
         /// <summary>
@@ -355,6 +358,16 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 case false:
                     break;
             }
+        }
+
+        internal void Initialize(MatchSettingsData matchData)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void ConnectToMaster(CharacterMainController characterMainController)
+        {
+            throw new NotImplementedException();
         }
     }
 }

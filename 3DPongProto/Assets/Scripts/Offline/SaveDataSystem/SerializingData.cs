@@ -53,6 +53,7 @@ public class SerializingData<T> : IPersistentData<T> where T : class, new()
             T data = ReadAndDeserialize(m_filePath);
             if (data != null)
             {
+                //Debug.Log("Data exists and is loaded.");
                 return data;
             }
         }

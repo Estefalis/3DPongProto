@@ -47,7 +47,8 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         private void Start()
         {
-            m_inputActions = UserInputManager.m_CentralActionsInstance;
+            var centralInputAction = UserInputManager.Instance.GetCentralActions();
+            m_inputActions = centralInputAction;
 
             ResetVariables();
 

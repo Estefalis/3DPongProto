@@ -175,7 +175,7 @@ MonoBehaviour:
       m_SingletonActionBindings: []
       m_Flags: 0
     m_Reference: {fileID: 0}
-  m_PlayerPrefab: {fileID: 1514124386352258763, guid: ba00057dcc1283d429076dee8979ce96,
+  m_PlayerPrefab: {fileID: 8514071642734961145, guid: 21647937294deac4f9e971b9b4c1e278,
     type: 3}
   m_SplitScreen: 0
   m_MaintainAspectRatioInSplitScreen: 0
@@ -198,11 +198,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8ec0eff8661f0547ba0411c873ff447, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_playerController: {fileID: 8514071642734961145, guid: 21647937294deac4f9e971b9b4c1e278,
+    type: 3}
+  m_playerAvatarControls:
+  - {fileID: 2272099097605213362, guid: 6dca6a143deaf884bbd595cd9132ea3f, type: 3}
+  - {fileID: 1432080867342084902, guid: 15fecec83b880d744a5328cc8f088726, type: 3}
+  - {fileID: 3226495494056697844, guid: 99faef6a696b71a4eb71d0b9528b9987, type: 3}
+  - {fileID: 5718459801774832392, guid: c93b3bbdf5de7f240a0b0b81389f62b9, type: 3}
   m_playerInputManager: {fileID: 414762846}
   m_joinByDefault: 1
-  m_defaultPlayerNumber: 2
-  m_matchUIStates: {fileID: 11400000, guid: 67f985eee7672ac47952b94a3792035d, type: 2}
-  m_matchValues: {fileID: 11400000, guid: 96acf709f15feb447af11c5894a1ca9b, type: 2}
 --- !u!4 &414762848
 Transform:
   m_ObjectHideFlags: 0

@@ -256,7 +256,7 @@ namespace ThreeDeePongProto.Shared.Highscores
             //First use MenuManager's <Transform-key, SelectObject-value> dict to activate the HighScoreBoard (Transform).
             m_menuManager.NextElement(m_listFrame);
             //Then tell the UserInputManager to switch the active InputActionMap to UI to skip the MenuManager OnOpenMenu() Method.
-            UserInputManager.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
+            UserInputManager.Instance.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
 
             RefreshDisplay();
         }
