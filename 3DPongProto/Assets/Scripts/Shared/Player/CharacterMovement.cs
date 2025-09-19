@@ -16,55 +16,67 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             Vector3 = 3,
         }
 
-        [SerializeField] private CharacterMainController m_playerController;
-        [SerializeField] private Rigidbody m_rigidbody;
         [SerializeField] protected AudioSource m_audioSource;
         [SerializeField] private Transform m_pushTarget;
         [SerializeField] private ELerpCategory m_elerpCategory = ELerpCategory.FloatZ;
 
-        [Header("Movement")]
-        //[SerializeField, Range(1.0f, 20.0f)] private float m_moveSpeed = 10.0f;
-        private float m_maxSideMovement;
-        private Vector3 m_moveVector;
-
         [Header("Rotation")]
-        //[SerializeField, Range(1.0f, 5.0f)] protected float m_rotationSpeed = 2.5f;
+        //[SerializeField, Range(1.0f, 5.0f)] private float m_rotationSpeed = 2.5f;
         [SerializeField] private float m_maxRotationAngle = 45.0f; //Maximum angle (±45 degrees).
-        private readonly float m_baseRotationSpeed = 100.0f;
-        internal Vector2 m_rotationVector;
-        private Quaternion m_deltaRotation, m_initialRbRotation;
 
         [Header("Push")]
         [SerializeField, Range(0.1f, 20.0f)] private float m_pushSpeed = 10.0f;
         [SerializeField, Range(0.1f, 20.0f)] private float m_retreatSpeed = 12.5f;
         [SerializeField, Range(0.5f, 2.0f)] private float m_pushDuration = 1.0f;
+        private float m_xPosDifference;
+        private bool m_isPushing, m_valueTaken = false;
 
         internal uint m_receivedUserID;
-        private bool m_isPushing, m_valueTaken = false;
-        private float m_paddleWidthAdjustment;
-        private float m_xDifference;
         private int m_playerID;
 
+        //Movement
+        private Vector3 m_moveVector;
         private Vector3 m_rbPushStartPos;
-        private ControlUIStates m_ownControlUIStates;
-        private ControlUIValues m_ownControlUIValues;
-
-        private Vector3 m_paddleScale;
+        private float m_maxSideMovement;
         private float m_maxPushDistance;
+
+        //Rotation
+        private Rigidbody m_rigidbody;
+        private float m_currentYRotationOffset = 0f;
+        private readonly float m_baseRotationSpeed = 100.0f;
+        private float m_moveSpeedX, m_rotationSpeedY;
+        private bool m_invertXAxis, m_invertYAxis;
+        internal Vector2 m_rotationVector;
+        private Quaternion m_deltaRotation, m_initialRbRotation;
+
+        //Positioning & Scale
+        private float m_goalLineDistance;
+        private EPlayerLine m_linePosition;
+        private Vector3 m_paddleScale;
+
+        private CharacterMainController m_playerController;
+        private MatchSettingsData m_matchData;
 
         private void Awake()
         {
-            if (m_rigidbody == null)
-                m_rigidbody = GetComponent<Rigidbody>();
+            m_matchData = SettingsManager.Instance.CurrentSettings.Match;
 
-            //m_playerController = GetComponentInParent<CharacterMainController>();
-            //if (m_playerController != null)
-            //    m_playerController.m_playerMovement = this;
+            m_rigidbody = GetComponentInChildren<Rigidbody>();
+            m_rigidbody.transform.rotation = Quaternion.Euler(Vector3.zero);
+
+            m_playerController = GetComponentInParent<CharacterMainController>();
+            if (m_playerController == null)
+            {
+                Debug.LogError("CharacterMovement could not find CharacterMainController!", this);
+            }
+            else
+            {
+                m_playerController.m_playerCameraController.m_rigidbody = m_rigidbody;
+            }
         }
 
         private void OnEnable()
         {
-            //SetPlayerRotation(m_playerID);
             m_isPushing = false;
 
             Ball.OnHitGoalOne += ResetPlayerRotationOnGoal;
@@ -134,43 +146,37 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void HandleMovement()
         {
-            var xInvert = GetInversion(m_ownControlUIStates.InvertXAxis);
+            float xInvert = m_invertXAxis ? -1f : 1f;
 
             //Move the player relativ to the local Transform-Direction.
             Vector3 rightMovement = m_moveVector.x * xInvert * transform.right;
             Vector3 forwardMovement = m_moveVector.y * m_rigidbody.transform.forward;
 
             //Combined Movement.
-            Vector3 adjustedMoveVector = (rightMovement + forwardMovement).normalized * (m_ownControlUIValues.LastXMoveSpeed * Time.fixedDeltaTime);
+            Vector3 adjustedMoveVector = (rightMovement + forwardMovement).normalized * (m_moveSpeedX * Time.fixedDeltaTime);
             m_rigidbody.MovePosition(m_rigidbody.transform.position + adjustedMoveVector);
         }
 
         /// <summary>
         /// Clamps the paddlemMovement on it's 'localPosition.x' and the calculated movementRange based on paddleWidth and fieldWidth.
-        /// Also clamps the desired minimal and maximal moveDistance on the zAxis based on m_goalDistance and m_maxPushDistance to the playerGoals.
+        /// Also clamps the desired minimal and maximal moveDistance on the zAxis based on m_goalLineDistance and m_maxPushDistance to the playerGoals.
         /// </summary>
         public void ClampMoveRange()
         {
-            //Update Paddle scaling based on current matchValues.
-            m_paddleWidthAdjustment = GetPaddleWidthAdjustment();
-
             m_rigidbody.transform.localScale = new Vector3(
-                m_paddleScale.x + m_paddleWidthAdjustment,
+                m_paddleScale.x,
                 m_paddleScale.y,
                 m_paddleScale.z
             );
 
             //Calculate MoveRange.
-            m_maxSideMovement = m_playerController.m_groundWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
-
-            float minZ = -m_playerController.m_groundLength * 0.5f + m_playerController.m_goalDistance;
-            float maxZ = minZ + m_maxPushDistance;
+            m_maxSideMovement = m_matchData.FieldWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
 
             //Clamp Rigidbody moveRange on X-Axis.
             m_rigidbody.transform.localPosition = new Vector3(
                 Mathf.Clamp(m_rigidbody.transform.localPosition.x, -m_maxSideMovement, m_maxSideMovement),
                 m_rigidbody.transform.localPosition.y,
-                Mathf.Clamp(m_rigidbody.transform.localPosition.z, minZ, maxZ)
+                m_rigidbody.transform.localPosition.z
             );
         }
         #endregion
@@ -178,20 +184,37 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         #region Rotation        
         private void HandleRotation()
         {
-            var yInvert = GetInversion(m_ownControlUIStates.InvertYAxis);
-            Vector3 rotationVector = new(0.0f, m_rotationVector.x, 0.0f); //'Quaternion.Euler' requires a Vector3 for multiplication.
+            float yInvert = m_invertYAxis ? -1.0f : 1.0f;
+            float angleChange = m_rotationVector.x * yInvert * m_rotationSpeedY * m_baseRotationSpeed * Time.fixedDeltaTime;
 
-            //Calculate rotation based on input.
-            m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_ownControlUIValues.LastYRotSpeed * Time.fixedDeltaTime * (rotationVector * yInvert)).normalized;
+            //Addiere the change to the current Offset.
+            m_currentYRotationOffset += angleChange;
 
-            //Apply rotation.
-            Quaternion newRotation = m_rigidbody.rotation * m_deltaRotation;
+            //Clamp the total Offset to the max angle.
+            m_currentYRotationOffset = Mathf.Clamp(m_currentYRotationOffset, -m_maxRotationAngle, m_maxRotationAngle);
 
-            //Clamp rotationAngle on maxValue(s).
-            newRotation.ToAngleAxis(out float angle, out Vector3 axis);
-            angle = Mathf.Clamp(angle, -m_maxRotationAngle, m_maxRotationAngle);
+            //Calculate the new final worldRotation.
+            Quaternion newWorldRotation = m_initialRbRotation * Quaternion.Euler(0, m_currentYRotationOffset, 0);
 
-            m_rigidbody.MoveRotation(Quaternion.AngleAxis(angle, axis));
+            //Apply the new rotation through the Physics-Engine.
+            m_rigidbody.MoveRotation(newWorldRotation.normalized);
+
+            #region Old version
+            //float yInvert = m_invertYAxis ? -1f : 1f;
+            //Vector3 rotationVector = new(0.0f, m_rotationVector.x, 0.0f); //'Quaternion.Euler' requires a Vector3 for multiplication.
+
+            ////Calculate rotation based on input.
+            //m_deltaRotation = Quaternion.Euler(m_baseRotationSpeed * m_rotationSpeedY * Time.fixedDeltaTime * (rotationVector * yInvert)).normalized;
+
+            ////Apply rotation.
+            //Quaternion newRotation = m_rigidbody.rotation * m_deltaRotation;
+
+            ////Clamp rotationAngle on maxValue(s).
+            //newRotation.ToAngleAxis(out float angle, out Vector3 axis);
+            //angle = Mathf.Clamp(angle, -m_maxRotationAngle, m_maxRotationAngle);
+
+            //m_rigidbody.MoveRotation(Quaternion.AngleAxis(angle, axis));
+            #endregion
         }
         #endregion
 
@@ -216,7 +239,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 m_rbPushStartPos = rbStartPosition;
 
                 Vector3 pushTargetPosition = m_pushTarget.transform.position;
-                m_xDifference = pushTargetPosition.x - rbStartPosition.x;
+                m_xPosDifference = pushTargetPosition.x - rbStartPosition.x;
 
                 m_valueTaken = true;
                 float progress = 0.0f;
@@ -237,7 +260,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                         case ELerpCategory.FloatXAndZ:
                         {
                             //float adjustedX = Mathf.Lerp(rbStartPosition.x, rbStartPosition.x + xDifference, progress);
-                            float newX = Mathf.Lerp(rbStartPosition.x, Mathf.Lerp(rbStartPosition.x, rbStartPosition.x + m_xDifference, progress), progress);
+                            float newX = Mathf.Lerp(rbStartPosition.x, Mathf.Lerp(rbStartPosition.x, rbStartPosition.x + m_xPosDifference, progress), progress);
                             float newZ = Mathf.Lerp(rbStartPosition.z, pushTargetPosition.z, progress);
 
                             m_rigidbody.transform.position = new Vector3(newX, rbStartPosition.y, newZ);
@@ -282,7 +305,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                     }
                     case ELerpCategory.FloatXAndZ:
                     {
-                        float newX = Mathf.Lerp(rbStartPosition.x, Mathf.Lerp(rbStartPosition.x, rbStartPosition.x - m_xDifference, progress), progress);
+                        float newX = Mathf.Lerp(rbStartPosition.x, Mathf.Lerp(rbStartPosition.x, rbStartPosition.x - m_xPosDifference, progress), progress);
                         float newZ = Mathf.Lerp(rbStartPosition.z, m_rbPushStartPos.z, progress);
 
                         m_rigidbody.transform.position = new Vector3(newX, rbStartPosition.y, newZ);
@@ -307,37 +330,23 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         }
         #endregion
 
-        #region Delegate-Methods
-        private float GetPaddleWidthAdjustment()
-        {
-            return m_playerController.m_matchValues != null ? m_playerController.m_matchValues.PaddleWidthAdjustment : 0.0f;
-        }
-
-        private float GetInversion(bool _invertAxis)
-        {
-            return _invertAxis ? -1.0f : 1.0f;
-        }
-        #endregion
-
         public void SetPlayerID(int _playerID)
         {
             m_playerID = _playerID;
-            SetPlayerRotation(m_playerID);
-
-            Debug.Log($"PlayerID {_playerID} received.");
+            SetPlayerRotation(/*m_playerID*/);
         }
 
         /// <summary>
         /// Rotations of top parent Transform and Rigidbody need to be adjusted to move correct, depending on positive or negative Z-values.
         /// </summary>
         /// <param name="_playerId"></param>
-        private void SetPlayerRotation(int _playerId)
+        private void SetPlayerRotation(/*int _playerId*/)
         {
-            Quaternion playerRotation = (_playerId % 2 == 0) ? Quaternion.Euler(0, 0, 0) : Quaternion.Euler(0, 180, 0);
-            m_playerController.transform.rotation = playerRotation;
-            m_rigidbody.transform.rotation = playerRotation;
-            m_rigidbody.transform.localRotation = playerRotation;    //Sets y-rotation of all players to 0.
-            m_initialRbRotation = playerRotation;
+            //Quaternion playerRotation = (_playerId % 2 == 0) ? Quaternion.Euler(0, 0, 0) : Quaternion.Euler(0, 180, 0);
+            //m_initialRbRotation = playerRotation;
+            m_initialRbRotation = m_rigidbody.transform.localRotation;  //rbLocalPos set by OnPlayerJoined in LocalMatchManager.
+            gameObject.transform.position = m_playerController.transform.position;
+            m_rigidbody.transform.SetPositionAndRotation(/*m_playerController.*/transform.position, m_initialRbRotation);
         }
 
         internal void ResetPlayerRotation(int _receivedID)
@@ -345,12 +354,14 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (_receivedID != m_playerID)
                 return;
 
-            m_rigidbody.transform.localRotation = m_initialRbRotation;
+            m_currentYRotationOffset = 0.0f;
+            //m_rigidbody.transform.localRotation = m_initialRbRotation;
+            m_rigidbody.MoveRotation(m_initialRbRotation);
         }
 
         private void ResetPlayerRotationOnGoal()
         {
-            switch (m_playerController.m_matchUIStates.RotationReset)
+            switch (m_matchData.RotationReset)
             {
                 case true:
                     m_rigidbody.transform.localRotation = m_initialRbRotation;
@@ -360,14 +371,23 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             }
         }
 
-        internal void Initialize(MatchSettingsData matchData)
+        /// <summary>
+        /// Receives all relevant data from the CharacterController-Parent object.
+        /// </summary>
+        /// <param name="_controlData"></param>
+        /// <param name="_playerProfile"></param>
+        internal void Initialize(ControlSettingsData _controlData, MatchSettingsData _matchData, PlayerProfileData _playerProfile)
         {
-            throw new NotImplementedException();
-        }
+            m_playerID = _playerProfile.PlayerID;
+            m_linePosition = _matchData.PlayerPositions[m_playerID];
+            m_goalLineDistance = (m_linePosition == EPlayerLine.Frontline)
+                ? _matchData.FrontlineDistance
+                : _matchData.BacklineDistance;
 
-        internal void ConnectToMaster(CharacterMainController characterMainController)
-        {
-            throw new NotImplementedException();
+            m_moveSpeedX = _controlData.MoveSpeedX;
+            m_rotationSpeedY = _controlData.RotSpeedY;
+            m_invertXAxis = _playerProfile.InvertMoveAxisX;
+            m_invertYAxis = _playerProfile.InvertRotAxisY;
         }
     }
 }

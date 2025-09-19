@@ -86,10 +86,18 @@ namespace ThreeDeePongProto.Shared.UI
 
         private void Start()
         {
-            m_characterInputActions = RebindManagerSP.m_PlayerInputActions;
-            m_characterInputActions.Enable();
-
-            m_characterInputActions.UserInterface.CursorVisibility.performed += SwitchCursorVisibility;
+            if (m_characterInputActions == null)
+            {
+                Debug.LogError("InputAction source has to be updated!");
+                return;
+            }
+            else
+            {
+                //TODO: Update InputActions from removed RebindManagerSP to RebindManager.Instance.
+                //m_characterInputActions = RebindManager.Instance.;
+                //m_characterInputActions.Enable();
+                //m_characterInputActions.UserInterface.CursorVisibility.performed += SwitchCursorVisibility;
+            }
         }
 
         private void UpdateMicePositions()

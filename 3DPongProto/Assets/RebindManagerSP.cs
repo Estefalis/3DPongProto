@@ -21,11 +21,6 @@ namespace ThreeDeePongProto.Shared.Managers
     {
 
         public static PlayerInputActions m_PlayerInputActions;  //Reference to the PlayerAction-InputAsset.
-        #region PlayerPref Example
-        //[SerializeField] private bool m_deleteAllPlayerPrefs = false;
-        #endregion
-
-        [SerializeField] private bool m_loadRebindDict = true;
 
         #region ChangeActionMaps
         //ActionEvent to switch between ActionMaps within the InputActionAsset.
@@ -60,33 +55,13 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private static ActiveInputActionMap m_activeInputActionMap = ActiveInputActionMap.None; //Used inside ToggleActionMaps!
 
-        #region Serialization
-        private static int m_playerIndex;
-        private static readonly string m_keyBindingOverrideFolderPath = "/SaveData/KeyReBinds";
-        private static readonly string m_keyboardMapFileName = "/Keyboard/Player";
-        private static readonly string m_gamepadMapFileName = "/Gamepad/Player";
-        private static readonly string m_fileFormat = ".json";
-
-        //private static readonly IPersistentData m_persistentData = new SerializingData();
-        //private static readonly bool m_encryptionEnabled = false;
-        #endregion
-
         /// <summary>
         /// CharacterMainController and UIControls need to be moved into 'Start()' and the PlayerInputActions of the RebindManagerSP into 'Awake()', to prevent Exceptions.
         /// </summary>
         private void Awake()
         {
-            m_playerIndex = 0;
             m_keyboardRebindDict.Clear();
             m_gamepadRebindDict.Clear();
-
-            #region PlayerPref Example
-            //if (m_deleteAllPlayerPrefs)
-            //{
-            //    PlayerPrefs.DeleteAll();
-            //    Debug.Log("All PlayerPref deleted!");
-            //}
-            #endregion
 
             var centralInputAction = UserInputManager.Instance.GetCentralActions();
             //Alternative: m_PlayerInputActions ??= new PlayerInputActions();
@@ -99,21 +74,13 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void OnEnable()
         {
-            if (m_loadRebindDict)
-            {
-                //m_keyboardRebindDict = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_encryptionEnabled);
-                //m_gamepadRebindDict = m_persistentData.LoadData<Dictionary<string, string>>(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_encryptionEnabled);
-            }
-
             m_extractButtonImage += ExtractImage;
-
             //ControlSettings.PlayerViewIndex += PlayerIndex;
         }
 
         private void OnDisable()
         {
             m_extractButtonImage -= ExtractImage;
-
             //ControlSettings.PlayerViewIndex -= PlayerIndex;
 
             m_PlayerInputActions.Disable();
@@ -124,14 +91,6 @@ namespace ThreeDeePongProto.Shared.Managers
             m_PlayerInputActions.Disable();
         }
 
-        private static void PlayerIndex(int _playerIndex)
-        {
-            m_playerIndex = _playerIndex;
-#if UNITY_EDITOR
-            //            Debug.Log($"PlayerIndex {m_playerInputIndex}");
-#endif
-        }
-
         #region Change Action Maps
         /// <summary>
         /// Switches ActionMaps, if the active actionMap isn't equal to the submitted one. But does not disable the old actionMaps!
@@ -139,18 +98,6 @@ namespace ThreeDeePongProto.Shared.Managers
         /// <param name="_receivedActionMap"></param>
         internal static void ToggleActionMaps(InputActionMap _receivedActionMap)
         {
-            #region Old_Version
-            ////if you try to change to the same ActionMap skip the rest.
-            //if (_receivedActionMap.enabled)
-            //    return;
-
-            ////else disable the current ActionMap to switch to the next.
-            //m_PlayerInputActions.Disable();
-            //_receivedActionMap.Enable();
-
-            //AChangeActiveActionMap?.Invoke(_receivedActionMap);
-            #endregion
-
             if (_receivedActionMap.enabled)
                 return;
 
@@ -667,13 +614,6 @@ namespace ThreeDeePongProto.Shared.Managers
             Guid keyIndexGuid = _inputAction.bindings[_bindingIndex].id;
             bool dictHasKey = m_keyboardRebindDict.ContainsKey($"{keyIndexGuid}");
 
-            #region PlayerPref Example
-            //for (int i = 0; i < _inputAction.bindings.Count; i++)
-            //{
-            //PlayerPrefs.SetString(_inputAction.actionMap + _inputAction.name + i, _inputAction.bindings[i].overridePath);
-            //}
-            #endregion
-
             #region Save data with unique Guid as Dict Key
             switch (_inputAction.bindings[_bindingIndex].groups)
             {
@@ -704,25 +644,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 default:
                     break;
             }
-            //if (_inputAction.bindings[_bindingIndex].groups == m_keyboardSchemePID0 && !_inputAction.bindings[_bindingIndex].isComposite)
-            //{
-            //    switch (dictHasKey)
-            //    {
-            //        case true:
-            //        {
-            //            m_keyboardRebindDict[$"{keyIndexGuid}"] = $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!";
-            //            break;
-            //        }
-            //        case false:
-            //        {
-            //            m_keyboardRebindDict.Add($"{keyIndexGuid}", $"]{_bindingIndex}.{_inputAction.bindings[_bindingIndex].effectivePath}!");
-            //            break;
-            //        }
-            //    }
-            //}
             #endregion
-
-            //m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
         }
 
         /// <summary>
@@ -734,13 +656,6 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             Guid buttonIndexGuid = _inputAction.bindings[_bindingIndex].id;
             bool dictHasKey = m_gamepadRebindDict.ContainsKey($"{buttonIndexGuid}");
-
-            #region PlayerPref Example
-            //for (int i = 0; i < _inputAction.bindings.Count; i++)
-            //{
-            //PlayerPrefs.SetString(_inputAction.actionMap + _inputAction.name + i, _inputAction.bindings[i].overridePath);
-            //}
-            #endregion
 
             #region Save data with unique Guid as Dict Key
             if (_inputAction.bindings[_bindingIndex].groups == m_gamePadScheme && !_inputAction.bindings[_bindingIndex].isComposite)
@@ -760,8 +675,6 @@ namespace ThreeDeePongProto.Shared.Managers
                 }
             }
             #endregion
-
-            //m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
         }
 
         /// <summary>
@@ -795,8 +708,6 @@ namespace ThreeDeePongProto.Shared.Managers
                         }
                     }
                     #endregion
-
-                    //m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
                     break;
                 }
                 case m_gamepadPath:
@@ -820,8 +731,6 @@ namespace ThreeDeePongProto.Shared.Managers
                         }
                     }
                     #endregion
-
-                    //m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
                     break;
                 }
                 default:
@@ -841,16 +750,6 @@ namespace ThreeDeePongProto.Shared.Managers
                 m_PlayerInputActions = new PlayerInputActions();
 
             InputAction inputAction = m_PlayerInputActions.asset.FindAction(_actionName);
-
-            #region PlayerPref Example
-            //for (int i = 0; i < inputAction.bindings.Count; i++)
-            //{
-            //    if (!string.IsNullOrEmpty(PlayerPrefs.GetString(inputAction.actionMap + inputAction.name + i)))
-            //    {
-            //        inputAction.ApplyBindingOverride(i, PlayerPrefs.GetString(inputAction.actionMap + inputAction.name + i));
-            //    }
-            //}
-            #endregion
 
             Guid uniqueGuid;    //The key in the dictionary.
             int bindingIndex;
@@ -956,8 +855,6 @@ namespace ThreeDeePongProto.Shared.Managers
                     }
                 }
                 #endregion
-
-                //m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
                 #endregion
             }
         }
@@ -991,8 +888,6 @@ namespace ThreeDeePongProto.Shared.Managers
                     }
                 }
                 #endregion
-
-                //m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
                 #endregion
             }
         }
@@ -1034,8 +929,6 @@ namespace ThreeDeePongProto.Shared.Managers
                                     break;
                                 }
                             }
-
-                            //m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_keyboardMapFileName + $"{m_playerIndex}", m_fileFormat, m_keyboardRebindDict, m_encryptionEnabled, true);
                             break;
                         }
                         #endregion
@@ -1056,8 +949,6 @@ namespace ThreeDeePongProto.Shared.Managers
                                     break;
                                 }
                             }
-
-                            //m_persistentData.SaveData(m_keyBindingOverrideFolderPath, m_gamepadMapFileName + $"{m_playerIndex}", m_fileFormat, m_gamepadRebindDict, m_encryptionEnabled, true);
                             break;
                         }
                         #endregion

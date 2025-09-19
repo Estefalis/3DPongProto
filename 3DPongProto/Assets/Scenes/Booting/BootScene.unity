@@ -205,7 +205,6 @@ MonoBehaviour:
   - {fileID: 1432080867342084902, guid: 15fecec83b880d744a5328cc8f088726, type: 3}
   - {fileID: 3226495494056697844, guid: 99faef6a696b71a4eb71d0b9528b9987, type: 3}
   - {fileID: 5718459801774832392, guid: c93b3bbdf5de7f240a0b0b81389f62b9, type: 3}
-  m_playerInputManager: {fileID: 414762846}
   m_joinByDefault: 1
 --- !u!4 &414762848
 Transform:

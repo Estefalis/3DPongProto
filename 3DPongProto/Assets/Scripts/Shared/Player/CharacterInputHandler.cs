@@ -32,6 +32,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         internal static event Action<Vector2> ASendMousePosition;
         #endregion
 
+        //private PlayerProfileData m_playerProfile;
+
         private void OnEnable()
         {
             if (m_playerController == null)
@@ -59,6 +61,9 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 return;
 
             //Use Rotation constantly.
+            if (m_playerController.m_playerMovement == null)
+                return;
+
             m_playerController.m_playerMovement.SetInputVector(m_rotationVector, m_playerID, true);
         }
 
@@ -281,7 +286,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             //if (bindingControlScheme != _playerInput.currentControlScheme)
             //    return;
             #endregion
-
+            
             Vector2 moveVector = _callbackContext.ReadValue<Vector2>();
             m_playerController.m_playerMovement.SetInputVector(moveVector, m_playerID, false);
         }
@@ -300,7 +305,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             if (!IsLocalPlayer())
                 return;
-
+            
             m_rotationVector = _callbackContext.ReadValue<Vector2>();
         }
 
@@ -317,7 +322,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             if (!IsLocalPlayer())
                 return;
-
+            
             if (_callbackContext.ReadValueAsButton())
             {
                 m_playerController.m_playerMovement.m_receivedUserID = m_playerInput.user.id;
@@ -373,11 +378,16 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             if (!IsLocalPlayer())
                 return;
-            
+
             //Depending on MenuManager's inactive firstElement in GameScene, it triggers PlayerActions ActionMap in GameScene.
             if (UserInputManager.SetActionMap == EInputActionMaps.PlayerActions.ToString())
                 UserInputManager.Instance.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
         }
+
+        //internal void StoreData(PlayerProfileData _playerProfile)
+        //{
+        //    m_playerProfile = _playerProfile;
+        //}
         #endregion
     }
 }

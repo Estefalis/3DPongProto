@@ -1,5 +1,3 @@
-using System.Collections;
-using ThreeDeePongProto.Shared.Managers;
 using UnityEngine;
 
 namespace ThreeDeePongProto.Shared.PlayerCharacter
@@ -8,48 +6,36 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
     {
         [SerializeField] internal Transform m_inputAndCamComponent;
 
-        //Local
-        internal CharacterInputHandler m_playerInputHandler;
-        internal CharacterCameraController m_playerCameraController;
+        //Direct Children
+        [SerializeField] internal CharacterInputHandler m_playerInputHandler;
+        [SerializeField] internal CharacterCameraController m_playerCameraController;
 
-        //AvatarControls
-        [SerializeField] internal CharacterMovement m_playerMovement;
-        [SerializeField] internal CharacterInteractions m_playerInteractions;
-        [SerializeField] internal CharacterHealth m_playerHealth;
-
-        //internal LocalMatchManager m_localMatchManager;
-        //[SerializeField] protected bool m_defaultFrontLineUp;
-
-        //#region Scriptable References
-        //[Header("Scriptable References")]
-        //[SerializeField] internal PlayerSOData[] m_playerSODatas;
-        [SerializeField] internal MatchUIStates m_matchUIStates;            //TODO: Removed after CharacterMovement dependency removed.
-        [SerializeField] internal MatchValues m_matchValues;                //TODO: Removed after CharacterMovement dependency removed.
-        //[SerializeField] internal BasicFieldValues m_basicFieldValues;
-        //#endregion
-
-        //internal int m_setPlayerID = -1;
+        //AvatarControls children
+        internal CharacterMovement m_playerMovement { get; private set; }
+        internal CharacterInteractions m_playerInteractions { get; private set; }
+        internal CharacterHealth m_playerHealth { get; private set; }
 
         internal int m_playerID;
-        internal float m_goalDistance;
-        //internal float m_maxPushDistance;
-        //internal Vector3 m_paddleScale;
-        internal float m_groundWidth, m_groundLength;
+        //private bool m_inputDisabled = false;
 
-        private bool m_inputDisabled = false;
-
-        private MatchSettingsData m_matchData;
+        private PlayerProfileData m_profileData;
+        private MatchSettingsData m_matchConfigData;
+        private ControlSettingsData m_controlConfigData;
+        private bool m_isInitialized = false;
 
         private void Awake()
         {
             m_playerInputHandler = GetComponentInChildren<CharacterInputHandler>();
             m_playerCameraController = GetComponentInChildren<CharacterCameraController>();
+            m_playerMovement = GetComponentInChildren<CharacterMovement>();
 
-            m_matchData = SettingsManager.Instance.CurrentSettings.Match;
+            if (m_playerMovement == null)
+                Debug.LogError("CharacterMovement konnte nicht gefunden werden!", this);
+        }
 
-            transform.SetParent(LocalMatchManager.Instance.PrefabParent);   //previous FindObjectOfType<LocalMatchManager>();
-
-            GetFieldDetails();
+        private void Start()
+        {
+            InitializeScripts();
         }
 
         //private void Update()
@@ -61,110 +47,41 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         //    //}
         //}
 
-        private void GetFieldDetails()
+        public void StoreData(ControlSettingsData _controlData, MatchSettingsData _matchData, PlayerProfileData _playerProfile)
         {
-            m_groundWidth = m_matchData.FieldWidth;
-            m_groundLength = m_matchData.FieldLength;
+            m_controlConfigData = _controlData;
+            m_matchConfigData = _matchData;
+            m_profileData = _playerProfile;
+            m_isInitialized = true;
+            m_playerID = _playerProfile.PlayerID;
+
+            //IProvidePlayerID[] idReceivers = GetComponentsInChildren<IProvidePlayerID>();
+            //foreach (var receiver in idReceivers)
+            //    receiver.SetPlayerID(m_playerID);
         }
 
-        public void Initialize(PlayerProfileData profile, MatchSettingsData matchData)
+        private void InitializeScripts()
         {
-            //Find the Rigidbody in the childObjects
-            Rigidbody avatarRigidbody = GetComponentInChildren<Rigidbody>();
-            if (avatarRigidbody == null)
+            if (!m_isInitialized)
             {
-                Debug.LogError("No Rigidbody found!", this);
+                Debug.LogError("CharacterMainController wurde nie vom Manager initialisiert!", this);
                 return;
             }
 
-            //// Verteile die relevanten Daten an die Sub-Systeme
-            m_playerCameraController.m_RbPlayer = avatarRigidbody;      //CameraController is an internal child of this controller.
-            m_playerID = profile.PlayerID;
-
+            //Get all children that use the interface and submit the ID.
             IProvidePlayerID[] idReceivers = GetComponentsInChildren<IProvidePlayerID>();
             foreach (var receiver in idReceivers)
-            {
                 receiver.SetPlayerID(m_playerID);
-            }
 
-            // 2. Positions-Daten aus den Match-Einstellungen berechnen
-            EPlayerLine linePosition = matchData.PlayerPositions[m_playerID];
-            switch (linePosition)
+            ////Send relevant Data to the Sub-Components. (Currently not needed, because Interface sends playerID already.)
+            //if (m_playerInputHandler != null)
+            //    m_playerInputHandler.StoreData(m_profileData);
+
+            if (m_playerMovement != null)
             {
-                case EPlayerLine.Frontline:
-                    m_goalDistance = matchData.FrontlineDistance;
-                    break;
-                case EPlayerLine.Backline:
-                    m_goalDistance = matchData.BacklineDistance;
-                    break;
+                m_playerMovement.Initialize(m_controlConfigData, m_matchConfigData, m_profileData);
             }
-
-            //Set Game-Rules from the LocalMatchManager.
-            //m_paddleScale = LocalMatchManager.DEFAULT_PADDLE_SCALE;
-            //m_maxPushDistance = LocalMatchManager.Instance.MaxPushDistance;
-
-            //TODO: Submit Data to Sub-Components CharacterMovement, CharacterInputHandler
-
-            //// Der InputHandler braucht vielleicht die Invertierungs-Einstellungen aus dem Spielerprofil
-            //m_playerInputHandler.Initialize(profile.InvertMoveX, profile.InvertRotationY);
-
-            //m_playerMovement.SetupValues(_goalDistance, _maxPushDistance);
-            // m_paddleVisuals.SetScale(_paddleScale); // Beispiel für ein anderes Sub-System
-            //m_playerMovement.Initialize(matchData.MoveSpeed); // Beispiel
         }
-
-        //        internal void ReceivePlayerID(int _playerID)
-        //        {
-        //            m_setPlayerID = _playerID;
-
-        //            //Find all Components, that require the ID through Interface.
-        //            IProvidePlayerID[] idReceivers = GetComponentsInChildren<IProvidePlayerID>();
-
-        //            //Submit the playerID to each Script.
-        //            foreach (var receiver in idReceivers)
-        //            {
-        //                receiver.SetPlayerID(m_setPlayerID);
-        //            }
-
-        //            GetPlayerDetails();
-        //#if UNITY_EDITOR
-        //            //Debug.Log($"Player is now set to ID Nr. {_playerID}.");
-        //#endif
-        //        }
-
-        //        internal void GetPlayerDetails()
-        //        {
-        //            if (m_playerSODatas[m_setPlayerID] == null ^ m_matchValues == null)
-        //            {
-        //                switch (m_defaultFrontLineUp)
-        //                {
-        //                    case true:
-        //                        m_goalDistance = m_matchData.FrontlineDistance;
-        //                        break;
-        //                    case false:
-        //                        m_goalDistance = m_matchData.BacklineDistance;
-        //                        break;
-        //                }
-
-        //                m_maxPushDistance = m_localMatchManager.MaxPushDistance;
-        //                m_paddleScale = m_localMatchManager.DefaultPaddleScale;
-        //            }
-        //            else
-        //            {
-        //                switch (m_playerSODatas[m_setPlayerID].PlayerOnFrontline)
-        //                {
-        //                    case true:
-        //                        m_goalDistance = m_basicFieldValues.MinFrontLineDistance + m_basicFieldValues.FrontlineAdjustment + m_basicFieldValues.BacklineAdjustment;
-        //                        break;
-        //                    case false:
-        //                        m_goalDistance = m_basicFieldValues.MinBackLineDistance + m_basicFieldValues.BacklineAdjustment;
-        //                        break;
-        //                }
-
-        //                m_maxPushDistance = m_matchValues.MaxPushDistance;
-        //                m_paddleScale = new Vector3(m_matchValues.XPaddleScale, m_matchValues.YPaddleScale, m_matchValues.ZPaddleScale);
-        //            }
-        //        }
 
         ///// <summary>
         ///// Get a new CharacterInputHandler script, if the old version has to be replaced.

@@ -142,8 +142,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765271f1b15357142b157271826aba01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_playerController: {fileID: 0}
-  m_rigidbody: {fileID: 7358115217408517411}
   m_audioSource: {fileID: 5805424809524488694}
   m_pushTarget: {fileID: 534600181101945569}
   m_elerpCategory: 2

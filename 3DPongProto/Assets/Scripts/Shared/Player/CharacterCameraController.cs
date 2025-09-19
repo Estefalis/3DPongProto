@@ -17,14 +17,13 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private Vector3 m_cameraPosition;
 
         [Header("Smooth Following")]
-        /*[SerializeField] */internal Rigidbody m_RbPlayer;
         [SerializeField] internal Camera m_followCamera;
         [SerializeField] private bool m_enableSmoothFollow = true;
         [SerializeField] private Vector3 m_desiredOffset;
         [Range(1.0f, 30.0f)]
         [SerializeField] private float m_smoothfactor;
-        //'m_maxSideMovement' set in method 'MaxSideMovement()'.
-        private float m_maxSideMovement, m_setGroundWidth;
+        internal Rigidbody m_rigidbody;
+        private float m_maxSideMovement;
 
         [Header("Camera-Zoom")]
         [SerializeField, Min(0.01f)] private float m_minAbsLimit = 0.05f;
@@ -35,55 +34,50 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         internal Vector2 m_mousePosition;
 
         private CameraManager m_cameraManager;
+        private MatchSettingsData m_matchData;
 
-        private const string m_keyboardMouseScheme = "KeyboardMouse"/*, m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3"*/, m_keyboardDevice = "Keyboard";
-        private const string m_gamePadScheme = "Gamepad"/*, m_gamePadSchemePID0 = "GamepadPlayerID0", m_gamePadSchemePID1 = "GamepadPlayerID1", m_gamePadSchemePID2 = "GamepadPlayerID2", m_gamePadSchemePID3 = "GamepadPlayerID3"*/, m_gamepadDevice = "Gamepad";
-
-        #region Scriptable Variables
-        [SerializeField] private GraphicUIStates m_graphicUiStates;
-        [SerializeField] private BasicFieldValues m_basicFieldValues;
-        #endregion
+        //private const string m_keyboardMouseScheme = "KeyboardMouse"/*, m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3"*/, m_keyboardDevice = "Keyboard";
+        //private const string m_gamePadScheme = "Gamepad"/*, m_gamePadSchemePID0 = "GamepadPlayerID0", m_gamePadSchemePID1 = "GamepadPlayerID1", m_gamePadSchemePID2 = "GamepadPlayerID2", m_gamePadSchemePID3 = "GamepadPlayerID3"*/, m_gamepadDevice = "Gamepad";
 
         private int m_playerID;
-        //private int m_playerWindowID;
 
         private void Awake()
         {
+            m_matchData = SettingsManager.Instance.CurrentSettings.Match;
             m_cameraManager = FindObjectOfType<CameraManager>();
-
-            if (m_RbPlayer == null)
-                m_RbPlayer = GetComponentInParent<Rigidbody>();
-
-            m_setGroundWidth = m_basicFieldValues.SetGroundWidth;
         }
 
         private void OnEnable()
         {
             if (m_playerController == null)
                 m_playerController.GetComponentInParent<CharacterMainController>();
+
+            m_followCamera.transform.position = m_playerController.transform.position - new Vector3(m_desiredOffset.x, -m_desiredOffset.y, m_desiredOffset.z);
+            //m_followCamera.transform.position = new Vector3(m_rigidbody.transform.localPosition.x/* + m_desiredOffset.x*/, m_rigidbody.transform.localPosition.y + m_desiredOffset.y, m_rigidbody.transform.localPosition.z + -m_desiredOffset.z);
         }
 
         private void OnDisable()
         {
             CameraManager.LetsRemoveCamera(m_followCamera, m_playerID);
-
             CharacterInputHandler.ASendMousePosition -= NewMousePosition;
         }
 
         private void Start()
         {
-            //3. After Players are instantiated and the LocalMatchManager invokes the Event, the Camera can add itself to the availableCamera-List in the CameraManager.
+            //After Players are instantiated and the LocalMatchManager invokes the Event, the Camera can add itself to the availableCamera-List in the CameraManager.
             CameraManager.LetsRegisterCamera(m_followCamera, m_playerID);
+            CharacterInputHandler.ASendMousePosition += NewMousePosition;
 
-            MaxSideMovement();
+            //MaxSideMovement();
             //Saved vector to keep the playerCamera-startposition.
             CameraPositions(m_cameraManager.AvailableCameras[m_playerID]);
-
-            CharacterInputHandler.ASendMousePosition += NewMousePosition;
         }
 
         private void FixedUpdate()
         {
+            if (m_rigidbody == null)
+                return;
+
             if (!m_enableSmoothFollow)
                 FollowUnsmoothed();
 
@@ -94,15 +88,16 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         }
 
         #region Custom-Methods
+        //Interface. 1 Argument only!
         public void SetPlayerID(int _playerID)
         {
             m_playerID = _playerID;
         }
 
-        private void MaxSideMovement()
-        {
-            m_maxSideMovement = m_setGroundWidth * 0.5f - m_RbPlayer.transform.localScale.x * 0.5f;
-        }
+        //private void MaxSideMovement()
+        //{
+        //    m_maxSideMovement = m_matchData.FieldWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
+        //}
 
         private void CameraPositions(Camera _camera)
         {
@@ -115,7 +110,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private void FollowUnsmoothed()
         {
             //Follows directly in xPosition, but the visible push looks buggy, if not lerped.
-            Vector3 desiredPosition = new Vector3(m_RbPlayer.transform.localPosition.x/* + m_desiredOffset.x*/, m_RbPlayer.transform.localPosition.y + m_desiredOffset.y, m_RbPlayer.transform.localPosition.z + -m_desiredOffset.z);
+            Vector3 desiredPosition = new Vector3(m_rigidbody.transform.localPosition.x/* + m_desiredOffset.x*/, m_rigidbody.transform.localPosition.y + m_desiredOffset.y, m_rigidbody.transform.localPosition.z + -m_desiredOffset.z);
             //Vector3 smoothedFollowing = Vector3.Lerp(m_followCamera.transform.localPosition, desiredPosition, Mathf.Max(m_smoothfactor, 30.0f) * Time.fixedDeltaTime);
             m_followCamera.transform.localPosition = desiredPosition;
             //m_followCamera.transform.localPosition = smoothedFollowing;
@@ -123,7 +118,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void FollowSmoothly()
         {
-            Vector3 desiredPosition = m_RbPlayer.transform.localPosition + new Vector3(m_desiredOffset.x, m_desiredOffset.y, -m_desiredOffset.z);
+            Vector3 desiredPosition = m_rigidbody.transform.localPosition + new Vector3(m_desiredOffset.x, m_desiredOffset.y, -m_desiredOffset.z);
             Vector3 smoothedFollowing = Vector3.Lerp(m_followCamera.transform.localPosition, desiredPosition, m_smoothfactor * Time.fixedDeltaTime);
             m_followCamera.transform.localPosition = smoothedFollowing;
         }

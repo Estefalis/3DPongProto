@@ -42,7 +42,7 @@ using UnityEngine.UIElements;
 // list with elements to be replaced enclosed in curly braces. Everything
 // outside those will taken verbatim. The fragments inside the curly braces
 // in this case refer to the binding composite parts by name. Each such
-// instance is replaced with the display text for the corresponding
+// Instance is replaced with the display text for the corresponding
 // part binding.
 [DisplayStringFormat("{multiplier}*{stick}")]
 public class CustomComposite : InputBindingComposite<Vector2>
@@ -168,7 +168,7 @@ public class CustomCompositeEditor : InputParameterEditor<CustomComposite>
 {
     public override void OnGUI()
     {
-        // Using the 'target' property, we can access an instance of our composite.
+        // Using the 'target' property, we can access an Instance of our composite.
         var currentValue = target.scaleFactor;
 
         // The easiest way to lay out our UI is to simply use EditorGUILayout.

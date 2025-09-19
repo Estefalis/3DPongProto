@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace ThreeDeePongProto.Shared.PlayerCharacter
@@ -9,9 +8,11 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private void Awake()
         {
-            //m_playerController = GetComponentInParent<CharacterMainController>();
-            //if (m_playerController != null)
-            //    m_playerController.m_playerInteractions = this;
+            m_playerController = GetComponentInParent<CharacterMainController>();
+            if (m_playerController == null)
+            {
+                Debug.LogError("CharacterMovement could not find CharacterMainController!", this);
+            }
         }
     }
 }

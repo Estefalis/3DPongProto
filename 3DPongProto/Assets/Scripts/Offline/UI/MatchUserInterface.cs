@@ -55,7 +55,7 @@ namespace ThreeDeePongProto.Offline.UI
 
             if (LocalMatchManager.Instance != null)
             {
-                LocalMatchManager.Instance.OnMatchInitialized += InitializeUI;
+                CameraManager.InitializeMatchUI += InitializeUI;
                 LocalMatchManager.Instance.OnScoreChanged += UpdateScoreDisplays;
                 LocalMatchManager.Instance.OnRoundChanged += UpdateRoundDisplay;
             }
@@ -67,7 +67,7 @@ namespace ThreeDeePongProto.Offline.UI
         {
             if (LocalMatchManager.Instance != null)
             {
-                LocalMatchManager.Instance.OnMatchInitialized -= InitializeUI;
+                CameraManager.InitializeMatchUI += InitializeUI;
                 LocalMatchManager.Instance.OnScoreChanged -= UpdateScoreDisplays;
                 LocalMatchManager.Instance.OnRoundChanged -= UpdateRoundDisplay;
             }

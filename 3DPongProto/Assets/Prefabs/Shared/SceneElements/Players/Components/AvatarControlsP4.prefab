@@ -528,8 +528,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765271f1b15357142b157271826aba01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_playerController: {fileID: 0}
-  m_rigidbody: {fileID: 398457124927144415}
   m_audioSource: {fileID: 3678279201103023370}
   m_pushTarget: {fileID: 7273758024910931485}
   m_elerpCategory: 2

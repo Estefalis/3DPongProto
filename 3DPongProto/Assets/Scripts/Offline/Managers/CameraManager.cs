@@ -32,7 +32,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         private const float m_HalfHeightHor = 0.5f;
         private const float m_HalfWidthVer = 0.5f;
 
-        private int m_lastSetCameraMode;
+        //private int m_lastSetCameraMode;
         internal static Rect RuntimeFullsizeRect { get; private set; }
 
         #region Scriptable Objects
@@ -41,8 +41,16 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         [SerializeField] private MatchValues m_matchValues;
         #endregion
 
+        private GraphicSettingsData m_graphicData;
+        private MatchSettingsData m_matchData;
+
+        public static event Action InitializeMatchUI;                     //Tells MatchUserInterface to initialize it's UI.     
+
         private void Awake()
         {
+            m_graphicData = SettingsManager.Instance.CurrentSettings.Graphic;
+            m_matchData = SettingsManager.Instance.CurrentSettings.Match;
+
             ARegisterCamera += RegisterCamera;
             ARemoveCamera += RemoveCameras;
 
@@ -58,13 +66,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
 
         private IEnumerator Start()
         {
-            m_lastSetCameraMode = SettingsManager.Instance.CurrentSettings.Graphic.CameraMode;
-            //if (m_graphicUIStates == null)
-            //{
-            //    m_lastSetCameraMode = SettingsManager.Instance.CurrentSettings.Graphic.CameraMode;
-            //}
-            //else
-            //    m_lastSetCameraMode = m_graphicUIStates.SetCameraMode;
+            //m_lastSetCameraMode = SettingsManager.Instance.CurrentSettings.Graphic.CameraMode;
 
             yield return new WaitUntil(CamerasEqualPlayerCount);
 
@@ -79,19 +81,18 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                 UpdateCamRectDicts();
             }
             
-            SetCameraMode(m_lastSetCameraMode);
-
-            UpdateFullsizeRect();   //TODO: Disabling this at start, or not? Was disabled.
+            SetCameraMode(m_graphicData.CameraMode);
+            InitializeMatchUI?.Invoke();
         }
 
         private void Update()
         {
-            //Old: m_matchValues.PlayerSOData.Count
-            if (AvailableCameras.Count < SettingsManager.Instance.CurrentSettings.Match.PlayerCount)
+            if(AvailableCameras.Count < m_matchData.PlayerCount)
             {
-                Debug.LogError($"Not enough cameras available. Expected: {SettingsManager.Instance.CurrentSettings.Match.PlayerCount}, Available: {AvailableCameras.Count}");
+                //Debug.Log("Skipped, while available CamerCount is smaller than registered PlayerCount!");
                 return;
             }
+
             UpdateFullsizeRect();
         }
 
@@ -184,7 +185,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         #region Set Cameras and Rects (Old SetCameraRects.cs)
         private void SetCameraMode(int _cameraMode)
         {
-            ECameraModi eCamMode = (ECameraModi)m_lastSetCameraMode;
+            ECameraModi eCamMode = (ECameraModi)m_graphicData.CameraMode;
             switch ((ECameraModi)_cameraMode)
             {
                 case ECameraModi.SingleCam:
@@ -211,7 +212,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                     break;
                 }
                 default:    //Horizontal
-                    m_lastSetCameraMode = (int)ECameraModi.Horizontal;
+                    //m_lastSetCameraMode = (int)ECameraModi.Horizontal;
                     if (AvailableCameras[1] != null && eCamMode == ECameraModi.Horizontal)
                         SetCamerasHorizontal(AvailableCameras[0], AvailableCameras[1]);
                     break;
@@ -223,7 +224,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         /// </summary>
         private void UpdateFullsizeRect()
         {
-            ECameraModi eCamMode = (ECameraModi)m_lastSetCameraMode;
+            ECameraModi eCamMode = (ECameraModi)m_graphicData.CameraMode;
             switch (eCamMode)
             {
                 case ECameraModi.SingleCam:

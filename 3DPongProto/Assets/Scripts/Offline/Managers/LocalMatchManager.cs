@@ -80,7 +80,7 @@ namespace ThreeDeePongProto.Shared.Managers
         #region Actions
         public event Action<int, int> OnScoreChanged;               //Updates scoreTeam1, scoreTeam2 for subscribers
         public event Action<int> OnRoundChanged;                    //Updates currentRound for subscribers
-        public event Action OnMatchInitialized;                     //Tells MatchUserInterface to initialize it's UI.        
+
         public event Action<MatchResult, bool> OnLocalMatchEnd;     //Sends: MatchResult
         #endregion
 
@@ -91,31 +91,26 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void OnEnable()
         {
-            MenuManager.AEndInfiniteMatch += EndInfiniteMatch;      //TODO: MenuButton with public LM-ManagerScript-Method?
-
+            MenuManager.AEndInfiniteMatch += EndInfiniteMatch;
             UserInputManager.AChangeActiveActionMap += ToggleMatchPause;
+            PlayerInputManager.instance.onPlayerJoined += OnPlayerJoined;
         }
 
         private void OnDisable()
         {
+            MenuManager.AEndInfiniteMatch -= EndInfiniteMatch;
+            UserInputManager.AChangeActiveActionMap -= ToggleMatchPause;
             if (PlayerInputManager.instance != null)
                 PlayerInputManager.instance.onPlayerJoined -= OnPlayerJoined;
-
-            MenuManager.AEndInfiniteMatch -= EndInfiniteMatch;
 
             Ball.OnFirstServe -= OnMatchActive;
             Ball.OnHitPlayer -= SetLastTouch;
             Ball.OnHitGoalOne -= OnBallHitsTeam1Goal;
             Ball.OnHitGoalTwo -= OnBallHitsTeam2Goal;
-
-            UserInputManager.AChangeActiveActionMap -= ToggleMatchPause;
         }
 
         private void OnDestroy()
         {
-            if (PlayerInputManager.instance != null)
-                PlayerInputManager.instance.onPlayerJoined -= OnPlayerJoined;
-
             MenuManager.AEndInfiniteMatch -= EndInfiniteMatch;
 
             Ball.OnFirstServe -= OnMatchActive;
@@ -130,10 +125,9 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             var settingsManager = SettingsManager.Instance;
             var profileManager = PlayerProfileManager.Instance;
-            var playerInputManager = PlayerInputManager.instance;
 
             //Manager-Security-Checks
-            if (settingsManager == null || profileManager == null || playerInputManager == null)
+            if (settingsManager == null || profileManager == null)
             {
                 Debug.LogError("One or more required Manager were not found!");
                 //Optional: Load StartMenu-Scene.
@@ -143,13 +137,35 @@ namespace ThreeDeePongProto.Shared.Managers
             m_matchData = settingsManager.CurrentSettings.Match;
             m_playerProfiles = profileManager.PlayerProfiles;
 
-            playerInputManager.onPlayerJoined += OnPlayerJoined;
             Ball.OnFirstServe += OnMatchActive;
             Ball.OnHitPlayer += SetLastTouch;
             Ball.OnHitGoalOne += OnBallHitsTeam1Goal;
             Ball.OnHitGoalTwo += OnBallHitsTeam2Goal;
 
             SetupMatch();
+        }
+
+        private void OnPlayerJoined(PlayerInput _playerInput)
+        {
+            int playerIndex = _playerInput.playerIndex;
+
+            EPlayerLine line = m_matchData.PlayerPositions[playerIndex];
+            float zSide = (playerIndex % 2 == 0) ? -1f : 1f;
+            float halfFieldLength = m_matchData.FieldLength / 2f;
+            float lineDistance = (line == EPlayerLine.Backline) ? m_matchData.BacklineDistance : m_matchData.FrontlineDistance;
+            float zPos = zSide * (halfFieldLength - lineDistance); //Sets distance of players X-MoveLine.
+
+            Vector3 spawnPosition = new(0, _playerInput.transform.position.y + 0.5f, zPos);
+            //Quaternion spawnRotation = Quaternion.LookRotation(new Vector3(0, 0, -zSide));
+            Quaternion spawnRotation = Quaternion.Euler(0, zSide > 0 ? 180f : 0f, 0);
+
+            //PlayerBase position and rotation
+            _playerInput.transform.SetPositionAndRotation(spawnPosition, spawnRotation);
+            
+            //var avatar = _playerInput.GetComponentInChildren<CharacterMovement>();
+            //avatar.transform.localRotation = spawnRotation;
+            var rb = _playerInput.GetComponentInChildren<Rigidbody>();
+            rb.transform.localRotation = spawnRotation;
         }
 
         #region Custom-Methods        
@@ -168,7 +184,6 @@ namespace ThreeDeePongProto.Shared.Managers
             SpawnBall();
             UserInputManager.Instance.SpawnPlayersForMatch(m_matchData.PlayerCount);
 
-            OnMatchInitialized?.Invoke();
             OnScoreChanged?.Invoke(m_totalScoreTeam1, m_totalScoreTeam2);
             OnRoundChanged?.Invoke(m_currentRound);
         }
@@ -188,38 +203,6 @@ namespace ThreeDeePongProto.Shared.Managers
 
             Instantiate(m_ballPrefab, m_ballPopPos, Quaternion.Euler(0, 0, 0), m_prefabParent);
         }
-
-        #region Player-Setup
-        private void OnPlayerJoined(PlayerInput playerInput)
-        {
-            int playerIndex = playerInput.playerIndex;
-            GameObject playerObject = playerInput.gameObject;   //PlayerController position Vector3.zero.
-
-            PlayerProfileData profile = m_playerProfiles[playerIndex];
-            EPlayerLine line = m_matchData.PlayerPositions[playerIndex];
-
-            float zSide = (playerIndex % 2 == 0) ? -1f : 1f;
-            float halfFieldLength = m_matchData.FieldLength / 2f;
-            float lineDistance = (line == EPlayerLine.Backline) ? m_matchData.BacklineDistance : m_matchData.FrontlineDistance;
-            float zPos = zSide * (halfFieldLength - lineDistance); //Sets distance of players X-MoveLine.
-
-            Vector3 spawnPosition = new Vector3(0, 0.5f, zPos);
-            Quaternion spawnRotation = Quaternion.LookRotation(new Vector3(0, 0, -zSide));
-
-            playerObject.transform.SetPositionAndRotation(Vector3.zero, spawnRotation); //Old spawnPosition.
-            playerObject.name = profile.PlayerName;
-
-            //Send PlayerProfile data to the CharacterMainController.
-            if (playerObject.TryGetComponent<CharacterMainController>(out var controller))
-            {
-                controller.Initialize(profile, m_matchData);
-            }
-            else
-            {
-                Debug.LogError($"Could not find a CharacterMainController for Player {playerInput.playerIndex}!");
-            }
-        }
-        #endregion
 
         private void OnMatchActive()
         {

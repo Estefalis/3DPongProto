@@ -19,7 +19,7 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             base.Awake();
 
-            m_saveSystem = new SerializingData<GameSettingsData>(m_fileName);   //Initialize Save System.
+            m_saveSystem = new SerializingData<GameSettingsData>(m_fileName);   //StoreData Save System.
 
             LoadSettings();
         }

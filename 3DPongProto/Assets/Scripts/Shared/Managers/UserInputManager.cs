@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.InputActions;
+using ThreeDeePongProto.Shared.PlayerCharacter;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -44,9 +45,9 @@ namespace ThreeDeePongProto.Shared.Managers
         [SerializeField] private GameObject[] m_playerAvatarControls;
 
         [Header("References")]
-        /*[SerializeField]*/ private PlayerInputManager m_playerInputManager;
+        private PlayerInputManager m_playerInputManager;
         [SerializeField] private bool m_joinByDefault = true;
-        private /*static */PlayerInputActions m_centralInputActions;          //Old static!
+        private PlayerInputActions m_centralInputActions;
         private readonly InputAction[] m_selectPlayers = new InputAction[4];
 
         internal static string SetActionMap { get => m_lastSetActionMap; }
@@ -63,7 +64,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         internal static event Action<string> AChangeActiveActionMap;    //Announce scheme-switch, so PlayerInput components can react.
 
-        private const string m_keyboardMouseScheme = "KeyboardMouse";
+        private const string m_keyboardMouseScheme = "KeyboardMouse", m_keyboardID = "KeyboardPlayerID";
         private const string m_gamePadScheme = "Gamepad";
 
         protected override void Awake()
@@ -95,8 +96,8 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void OnEnable()
         {
-            m_playerInputManager.onPlayerJoined += HandlePlayerJoined;
-            m_playerInputManager.onPlayerLeft += HandlePlayerLeft;
+            m_playerInputManager.onPlayerJoined += OnPlayerJoined;
+            m_playerInputManager.onPlayerLeft += OnPlayerLeft;
 
             MenuManager.AReLoadScene += OnReLoadScene;
             InputSystem.onDeviceChange += OnDeviceChange;
@@ -106,8 +107,8 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void OnDisable()
         {
-            m_playerInputManager.onPlayerJoined -= HandlePlayerJoined;
-            m_playerInputManager.onPlayerLeft -= HandlePlayerLeft;
+            m_playerInputManager.onPlayerJoined -= OnPlayerJoined;
+            m_playerInputManager.onPlayerLeft -= OnPlayerLeft;
 
             MenuManager.AReLoadScene -= OnReLoadScene;
             InputSystem.onDeviceChange -= OnDeviceChange;
@@ -184,7 +185,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 {
                     Debug.Log($"Gamepad disconnected for Player {playerIndex}. Switching to Keyboard.");
                     //Switching to Fallback-Keyboard
-                    playerInput.SwitchCurrentControlScheme(m_keyboardMouseScheme, Keyboard.current, Mouse.current);
+                    playerInput.SwitchCurrentControlScheme($"{m_keyboardID}{playerIndex}", Keyboard.current, Mouse.current);
                 }
             }
         }
@@ -215,33 +216,50 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         #region None-CallbackContext_Subscription_Methods
-        private void HandlePlayerJoined(PlayerInput _playerInput)
+        private void OnPlayerJoined(PlayerInput _playerInput)
         {
+            //Keep the active playerCount!
             m_activePlayers.Add(_playerInput);
             int playerIndex = _playerInput.playerIndex;
 
-            //Get the playerDetails from the PlayerProfileManager.
+            //Get the playerProfile for each player from the PlayerProfileManager.
             PlayerProfileData profile = PlayerProfileManager.Instance.PlayerProfiles[playerIndex];
 
-            //Set the CharacterMainController parentObject.
-            _playerInput.gameObject.name = profile.PlayerName;
+            //Set name of the playerController gameObject.
+            _playerInput.gameObject.name = $"{profile.PlayerName}";
 
-            //Instantiate the visible part AvatarControls.
+            //Instantiate AvatarControls-Prefab gameObject.
+            GameObject avatarInstance = null;
             if (m_playerAvatarControls != null && playerIndex < m_playerAvatarControls.Length)
             {
-                Instantiate(m_playerAvatarControls[playerIndex], _playerInput.transform);
+                avatarInstance = Instantiate(m_playerAvatarControls[playerIndex], _playerInput.transform);
             }
 
-            //Save the original device for the Hot-plugging-Logic.
+            //Get CharacterMainController on the CharacterBase-Prefab gameObject.
+            if (avatarInstance != null && _playerInput.gameObject.TryGetComponent<CharacterMainController>(out var controller))
+            {
+                var controlData = SettingsManager.Instance.CurrentSettings.Control;
+                var matchData = SettingsManager.Instance.CurrentSettings.Match;
+
+                //Set Base-Prefab values.
+                controller.StoreData(controlData, matchData, profile);
+
+                var transformParent = LocalMatchManager.Instance.PrefabParent;
+                controller.transform.SetParent(transformParent);   //previous FindObjectOfType<LocalMatchManager>();
+            }
+            else
+                Debug.LogError($"Could not find CharacterMainController for Player {playerIndex}.");
+
+            //Keep track of original PlayerDevices set on start.
             m_originalPlayerDevices[playerIndex] = _playerInput.devices[0];
 
-            //Apply saved rebinds for the player.
+            //Apply potentially existing keybind overrides on players.
             RebindManager.Instance.ApplyOverridesToPlayer(_playerInput);
 
-            Debug.Log($"Player {playerIndex} ({profile.PlayerID}) joined with Device '{_playerInput.devices[0].displayName}'.");
+            //Debug.Log($"Player {playerIndex} ({profile.PlayerID}) joined with Device '{_playerInput.devices[0].displayName}'.");
         }
 
-        private void HandlePlayerLeft(PlayerInput _playerInput)
+        private void OnPlayerLeft(PlayerInput _playerInput)
         {
             m_activePlayers.Remove(_playerInput);
             m_originalPlayerDevices.Remove(_playerInput.playerIndex);
@@ -292,19 +310,19 @@ namespace ThreeDeePongProto.Shared.Managers
                 return;
 
             switch (_deviceChange)
-                {
-                    case InputDeviceChange.Disconnected:
-                    case InputDeviceChange.Removed:
-                        HandleDeviceDisconnect(gamepad);
-                        break;
+            {
+                case InputDeviceChange.Disconnected:
+                case InputDeviceChange.Removed:
+                    HandleDeviceDisconnect(gamepad);
+                    break;
 
-                    case InputDeviceChange.Reconnected:
-                    case InputDeviceChange.Added:
-                        HandleDeviceReconnect(gamepad);
-                        break;
-                    default:
-                        break;
-                }
+                case InputDeviceChange.Reconnected:
+                case InputDeviceChange.Added:
+                    HandleDeviceReconnect(gamepad);
+                    break;
+                default:
+                    break;
+            }
         }
         #endregion
 
@@ -323,7 +341,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 else
                 {
                     //Fallback-Keyboard.
-                    Debug.LogWarning($"No gamepad available. Assigning available Keyboard and Mouse to Player {_playerIndex + 1}.");
+                    //Debug.LogWarning($"No gamepad available. Assigning available Keyboard and Mouse to Player {_playerIndex + 1}.");
                 }
             }
 
@@ -396,8 +414,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
                 //Find the matching device and controlScheme for the player.
                 InputDevice[] devicesToPair = GetDevicesForPlayer(i);
-                string controlScheme = devicesToPair.Any(d => d is Gamepad) ? m_gamePadScheme : m_keyboardMouseScheme;
-
+                string controlScheme = devicesToPair.Any(d => d is Gamepad) ? m_gamePadScheme : $"{m_keyboardID}{i}";
                 //Spawn the player with it's assigned device.
                 m_playerInputManager.JoinPlayer(i, -1, controlScheme, devicesToPair);
             }
