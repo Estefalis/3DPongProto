@@ -36,9 +36,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private CameraManager m_cameraManager;
         private MatchSettingsData m_matchData;
 
-        //private const string m_keyboardMouseScheme = "KeyboardMouse"/*, m_keyboardSchemePID0 = "KeyboardPlayerID0", m_keyboardSchemePID1 = "KeyboardPlayerID1", m_keyboardSchemePID2 = "KeyboardPlayerID2", m_keyboardSchemePID3 = "KeyboardPlayerID3"*/, m_keyboardDevice = "Keyboard";
-        //private const string m_gamePadScheme = "Gamepad"/*, m_gamePadSchemePID0 = "GamepadPlayerID0", m_gamePadSchemePID1 = "GamepadPlayerID1", m_gamePadSchemePID2 = "GamepadPlayerID2", m_gamePadSchemePID3 = "GamepadPlayerID3"*/, m_gamepadDevice = "Gamepad";
-
         private int m_playerID;
 
         private void Awake()
@@ -88,7 +85,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         }
 
         #region Custom-Methods
-        //Interface. 1 Argument only!
         public void SetPlayerID(int _playerID)
         {
             m_playerID = _playerID;
@@ -148,12 +144,21 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         #endregion
 
         #region CallbackContext-Methods
+        /// <summary>
+        /// Current Zoom works with manual set playerID
+        /// </summary>
+        /// <param name="_scrollVector"></param>
+        /// <param name="_contextDevice"></param>
+        /// <param name="_playerID"></param>
         internal void Zoom(Vector2 _scrollVector, InputDevice _contextDevice, int _playerID)
         {
+            if (_playerID != m_playerID)
+                Debug.LogWarning("IDs from the CameraController and InputHandler do not match! Possible influence from outside!");
+
             bool allowScrollWheelZoom = MouseInGameWindow(m_mousePosition) && Application.isFocused;
             if (!allowScrollWheelZoom)
                 return;
-
+            //TODO: Entweder RuntimeFullsizeRect ohne '* 0.5f' oder PlayerInfoFenster Positionen anpassen!
             switch (_contextDevice)
             {
                 case Gamepad:

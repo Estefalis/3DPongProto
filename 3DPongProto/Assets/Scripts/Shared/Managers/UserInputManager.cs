@@ -48,7 +48,7 @@ namespace ThreeDeePongProto.Shared.Managers
         private PlayerInputManager m_playerInputManager;
         [SerializeField] private bool m_joinByDefault = true;
         private PlayerInputActions m_centralInputActions;
-        private readonly InputAction[] m_selectPlayers = new InputAction[4];
+        //private readonly InputAction[] m_selectPlayers = new InputAction[4];
 
         internal static string SetActionMap { get => m_lastSetActionMap; }
         private static string m_lastSetActionMap;
@@ -64,7 +64,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         internal static event Action<string> AChangeActiveActionMap;    //Announce scheme-switch, so PlayerInput components can react.
 
-        private const string m_keyboardMouseScheme = "KeyboardMouse", m_keyboardID = "KeyboardPlayerID";
+        private const string /*m_keyboardMouseScheme = "KeyboardMouse", */m_keyboardID = "KeyboardPlayerID";
         private const string m_gamePadScheme = "Gamepad";
 
         protected override void Awake()
@@ -79,16 +79,16 @@ namespace ThreeDeePongProto.Shared.Managers
             m_centralInputActions.PlayerActions.Disable();
             m_centralInputActions.UserInterface.Disable();
 
-            for (int p = 0; p < m_selectPlayers.Length; p++)
-            {
-                if (m_selectPlayers.Length > 0 && m_selectPlayers[p] != null)
-                {
-                    m_selectPlayers[p] = m_centralInputActions.PlayerActions.SelectPlayer1;
-                    m_selectPlayers[p] = m_centralInputActions.PlayerActions.SelectPlayer2;
-                    m_selectPlayers[p] = m_centralInputActions.PlayerActions.SelectPlayer3;
-                    m_selectPlayers[p] = m_centralInputActions.PlayerActions.SelectPlayer4;
-                }
-            }
+            //for (int p = 0; p < m_selectPlayers.Length; p++)
+            //{
+            //    if (m_selectPlayers.Length > 0 && m_selectPlayers[p] != null)
+            //    {
+            //        m_selectPlayers[p] = m_centralInputActions.PlayerActions.SelectPlayer1;
+            //        m_selectPlayers[p] = m_centralInputActions.PlayerActions.SelectPlayer2;
+            //        m_selectPlayers[p] = m_centralInputActions.PlayerActions.SelectPlayer3;
+            //        m_selectPlayers[p] = m_centralInputActions.PlayerActions.SelectPlayer4;
+            //    }
+            //}
 
             m_playerInputManager = GetComponent<PlayerInputManager>();
             SetUpPlayerInputManager(m_playerInputManager);
@@ -101,10 +101,14 @@ namespace ThreeDeePongProto.Shared.Managers
 
             MenuManager.AReLoadScene += OnReLoadScene;
             InputSystem.onDeviceChange += OnDeviceChange;
+            m_centralInputActions.PlayerActions.SelectPlayer1.performed += SetPlayerOne;
+            m_centralInputActions.PlayerActions.SelectPlayer2.performed += SetPlayerTwo;
+            m_centralInputActions.PlayerActions.SelectPlayer3.performed += SetPlayerThree;
+            m_centralInputActions.PlayerActions.SelectPlayer4.performed += SetPlayerFour;
 
-            EnablePlayerActionMap(true);
+            //EnablePlayerActionMap(true);
         }
-
+        
         private void OnDisable()
         {
             m_playerInputManager.onPlayerJoined -= OnPlayerJoined;
@@ -112,8 +116,12 @@ namespace ThreeDeePongProto.Shared.Managers
 
             MenuManager.AReLoadScene -= OnReLoadScene;
             InputSystem.onDeviceChange -= OnDeviceChange;
+            m_centralInputActions.PlayerActions.SelectPlayer1.performed -= SetPlayerOne;
+            m_centralInputActions.PlayerActions.SelectPlayer2.performed -= SetPlayerTwo;
+            m_centralInputActions.PlayerActions.SelectPlayer3.performed -= SetPlayerThree;
+            m_centralInputActions.PlayerActions.SelectPlayer4.performed -= SetPlayerFour;
 
-            EnablePlayerActionMap(false);
+            //EnablePlayerActionMap(false);
         }
 
         private void OnApplicationQuit()
@@ -121,19 +129,20 @@ namespace ThreeDeePongProto.Shared.Managers
             m_centralInputActions.Disable();
         }
 
-        private void Update()
-        {
-            if (m_centralInputActions == null)
-                return;
+        //private void Update()
+        //{
+        //    if (m_centralInputActions == null)
+        //        return;
 
-            for (int actionIndex = 0; actionIndex < m_selectPlayers.Length; actionIndex++)
-            {
-                if (m_selectPlayers[actionIndex] != null && m_selectPlayers[actionIndex].WasPressedThisFrame())
-                {
-                    SetFocusedKeyboardPlayer(actionIndex);
-                }
-            }
-        }
+        //    for (int actionIndex = 0; actionIndex < m_selectPlayers.Length; actionIndex++)
+        //    {
+        //        if (m_selectPlayers[actionIndex] != null && m_selectPlayers[actionIndex].WasPressedThisFrame())
+        //        {
+        //            Debug.Log($"Player {actionIndex+1} is set for Zoom.");
+        //            SetFocusedKeyboardPlayer(actionIndex);
+        //        }
+        //    }
+        //}
 
         #region PlayerInputManager-Configuration
         private void SetUpPlayerInputManager(PlayerInputManager _playerInputManager)
@@ -160,10 +169,10 @@ namespace ThreeDeePongProto.Shared.Managers
         #endregion
 
         #region Custom_Methods
-        private void SetFocusedKeyboardPlayer(int _newPlayerFocus)
+        private void SetFocusedKeyboardPlayer(int _playerFocusID)
         {
-            if (FocusedKeyboardPlayerID != _newPlayerFocus)
-                FocusedKeyboardPlayerID = _newPlayerFocus;
+            if (FocusedKeyboardPlayerID != _playerFocusID)
+                FocusedKeyboardPlayerID = _playerFocusID;
         }
 
         private void HandleDeviceDisconnect(Gamepad _disconnectedGamepad)
@@ -265,31 +274,31 @@ namespace ThreeDeePongProto.Shared.Managers
             m_originalPlayerDevices.Remove(_playerInput.playerIndex);
         }
 
-        private void EnablePlayerActionMap(bool _enable)
-        {
-            if (m_centralInputActions == null)
-                return;
+        //private void EnablePlayerActionMap(bool _enable)
+        //{
+        //    if (m_centralInputActions == null)
+        //        return;
 
-            for (int action = 0; action < m_selectPlayers.Length; action++)
-            {
-                if (m_selectPlayers.Length > 0 && m_selectPlayers[action] != null)
-                {
-                    switch (_enable)
-                    {
-                        case true:
-                        {
-                            m_selectPlayers[action].Enable();
-                            break;
-                        }
-                        case false:
-                        {
-                            m_selectPlayers[action].Disable();
-                            break;
-                        }
-                    }
-                }
-            }
-        }
+        //    for (int action = 0; action < m_selectPlayers.Length; action++)
+        //    {
+        //        if (m_selectPlayers.Length > 0 && m_selectPlayers[action] != null)
+        //        {
+        //            switch (_enable)
+        //            {
+        //                case true:
+        //                {
+        //                    m_selectPlayers[action].Enable();
+        //                    break;
+        //                }
+        //                case false:
+        //                {
+        //                    m_selectPlayers[action].Disable();
+        //                    break;
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Method to receive the buildIndex of the scene that shall be reloaded.
@@ -423,6 +432,26 @@ namespace ThreeDeePongProto.Shared.Managers
         public PlayerInputActions GetCentralActions()
         {
             return m_centralInputActions;
+        }
+
+        private void SetPlayerOne(InputAction.CallbackContext _callbackContext)
+        {
+            SetFocusedKeyboardPlayer(0);
+        }
+
+        private void SetPlayerTwo(InputAction.CallbackContext _callbackContext)
+        {
+            SetFocusedKeyboardPlayer(1);
+        }
+
+        private void SetPlayerThree(InputAction.CallbackContext _callbackContext)
+        {
+            SetFocusedKeyboardPlayer(2);
+        }
+
+        private void SetPlayerFour(InputAction.CallbackContext _callbackContext)
+        {
+            SetFocusedKeyboardPlayer(3);
         }
     }
 }

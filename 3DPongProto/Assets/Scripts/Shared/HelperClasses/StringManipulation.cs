@@ -85,26 +85,5 @@ namespace ThreeDeePongProto.Shared.HelperClasses
             }
             return paths.Aggregate(Path.Combine);
         }
-
-        #region Replaced
-        #region GetIndexAtStringEnd
-        ///// <summary>
-        ///// Returns int.MinValue, once the submitted digit amount hits the first none-int letter on TryParse. 0 = 1 digit.
-        ///// </summary>
-        ///// <param name="_source"></param>
-        ///// <param name="_digitsLikeIndexCount"></param>
-        ///// <returns></returns>
-        //internal static int GetIndexAtStringEnd(string _source, int _digitsLikeIndexCount = 0)
-        //{
-        //    string parseSlots = _source.Substring(_source.Length - (1 + _digitsLikeIndexCount));
-        //    bool returnSlots = int.TryParse(parseSlots, out int result);
-
-        //    if (returnSlots)
-        //        return result;
-        //    else
-        //        return int.MinValue;
-        //} 
-        #endregion
-        #endregion
     }
 }

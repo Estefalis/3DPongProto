@@ -54,10 +54,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             m_profileData = _playerProfile;
             m_isInitialized = true;
             m_playerID = _playerProfile.PlayerID;
-
-            //IProvidePlayerID[] idReceivers = GetComponentsInChildren<IProvidePlayerID>();
-            //foreach (var receiver in idReceivers)
-            //    receiver.SetPlayerID(m_playerID);
         }
 
         private void InitializeScripts()

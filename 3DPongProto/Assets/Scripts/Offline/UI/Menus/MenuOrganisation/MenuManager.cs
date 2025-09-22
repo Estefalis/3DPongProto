@@ -75,9 +75,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private string m_currentInputFieldContent = "";
         //private bool m_fieldIsInEditMode = false;
-        //[Header("Scriptable Objects")]
-        //[SerializeField] private MatchUIStates m_matchUIStates;
-        //[SerializeField] private MatchValues m_matchValues;
 
         private void Awake()
         {

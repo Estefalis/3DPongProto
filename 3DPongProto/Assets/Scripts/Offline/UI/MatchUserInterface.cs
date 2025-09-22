@@ -97,7 +97,7 @@ namespace ThreeDeePongProto.Offline.UI
                     m_playerNames[i].text = m_playerProfiles[i].PlayerName;
                 }
             }
-
+            
             //Set up initial scores and round display
             UpdateScoreDisplays(0, 0);
             UpdateRoundDisplay(1);

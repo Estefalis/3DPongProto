@@ -244,7 +244,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                 }
                 case ECameraModi.Quartet:
                 {
-                    RuntimeFullsizeRect = new Rect(0, 0, AvailableCameras[0].pixelRect.width + AvailableCameras[1].pixelRect.width, AvailableCameras[0].pixelRect.height + AvailableCameras[1].pixelRect.height);
+                    RuntimeFullsizeRect = new Rect(0, 0, AvailableCameras[0].pixelRect.width + AvailableCameras[1].pixelRect.width , AvailableCameras[0].pixelRect.height + AvailableCameras[1].pixelRect.height);
                     break;
                 }
                 default:    //Horizontal
