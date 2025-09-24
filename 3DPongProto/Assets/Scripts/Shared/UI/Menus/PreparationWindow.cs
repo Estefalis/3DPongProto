@@ -113,7 +113,7 @@ namespace ThreeDeePongProto.Shared.UI
         private void OnPlayerAmountChanged(int _dropdownIndex)
         {
             var graphicSettings = SettingsManager.Instance.CurrentSettings.Graphic;
-            graphicSettings.CameraMode = _dropdownIndex == 0 ? (int)ECameraModi.SingleCam : (_dropdownIndex == 1 ? (int)ECameraModi.Horizontal : (int)ECameraModi.Quartet);
+            graphicSettings.splitDdValue = _dropdownIndex == 0 ? (int)ECameraModi.SingleCam : (_dropdownIndex == 1 ? (int)ECameraModi.Horizontal : (int)ECameraModi.Quartet);
 
             m_matchData.PlayerCount = _dropdownIndex == 2 ? 4 : (_dropdownIndex == 1 ? 2 : 1);
             SettingsManager.Instance.SaveSettings();

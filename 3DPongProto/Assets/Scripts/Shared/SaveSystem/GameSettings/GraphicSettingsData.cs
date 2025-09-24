@@ -5,7 +5,7 @@ public class GraphicSettingsData
 {
     public int QualityLevelIndex = 2; //Medium Default.
     public bool FullScreenMode = true;
-    public int CameraMode = (int)ECameraModi.Horizontal; //2 Player Default.
+    public int splitDdValue = 1; //Horizontal as 2 Player Default. Old (int)ECameraModi.Horizontal.
 
     public float Brightness = 0.0f; //Post Exposure standard value 0.
     public bool UseDefBrightness = false;

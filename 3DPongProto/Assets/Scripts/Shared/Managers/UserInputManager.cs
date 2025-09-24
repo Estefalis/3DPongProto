@@ -48,14 +48,13 @@ namespace ThreeDeePongProto.Shared.Managers
         private PlayerInputManager m_playerInputManager;
         [SerializeField] private bool m_joinByDefault = true;
         private PlayerInputActions m_centralInputActions;
-        //private readonly InputAction[] m_selectPlayers = new InputAction[4];
 
         internal static string SetActionMap { get => m_lastSetActionMap; }
         private static string m_lastSetActionMap;
         internal static int FocusedKeyboardPlayerID { get; private set; } = 0; //Keep track of focused playerWindow. Standard PlayerID 0.
 
         #region Lists_and_Dictionaries
-        private List<PlayerInput> m_activePlayers = new();
+        private readonly List<PlayerInput> m_activePlayers = new();
         private readonly Dictionary<int, InputDevice> m_originalPlayerDevices = new();
 
         private List<PlayerProfileData> m_playerProfiles;
@@ -64,7 +63,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         internal static event Action<string> AChangeActiveActionMap;    //Announce scheme-switch, so PlayerInput components can react.
 
-        private const string /*m_keyboardMouseScheme = "KeyboardMouse", */m_keyboardID = "KeyboardPlayerID";
+        private const string m_keyboardID = "KeyboardPlayerID";
         private const string m_gamePadScheme = "Gamepad";
 
         protected override void Awake()
@@ -78,17 +77,6 @@ namespace ThreeDeePongProto.Shared.Managers
 
             m_centralInputActions.PlayerActions.Disable();
             m_centralInputActions.UserInterface.Disable();
-
-            //for (int p = 0; p < m_selectPlayers.Length; p++)
-            //{
-            //    if (m_selectPlayers.Length > 0 && m_selectPlayers[p] != null)
-            //    {
-            //        m_selectPlayers[p] = m_centralInputActions.PlayerActions.SelectPlayer1;
-            //        m_selectPlayers[p] = m_centralInputActions.PlayerActions.SelectPlayer2;
-            //        m_selectPlayers[p] = m_centralInputActions.PlayerActions.SelectPlayer3;
-            //        m_selectPlayers[p] = m_centralInputActions.PlayerActions.SelectPlayer4;
-            //    }
-            //}
 
             m_playerInputManager = GetComponent<PlayerInputManager>();
             SetUpPlayerInputManager(m_playerInputManager);
@@ -105,8 +93,6 @@ namespace ThreeDeePongProto.Shared.Managers
             m_centralInputActions.PlayerActions.SelectPlayer2.performed += SetPlayerTwo;
             m_centralInputActions.PlayerActions.SelectPlayer3.performed += SetPlayerThree;
             m_centralInputActions.PlayerActions.SelectPlayer4.performed += SetPlayerFour;
-
-            //EnablePlayerActionMap(true);
         }
         
         private void OnDisable()
@@ -120,29 +106,12 @@ namespace ThreeDeePongProto.Shared.Managers
             m_centralInputActions.PlayerActions.SelectPlayer2.performed -= SetPlayerTwo;
             m_centralInputActions.PlayerActions.SelectPlayer3.performed -= SetPlayerThree;
             m_centralInputActions.PlayerActions.SelectPlayer4.performed -= SetPlayerFour;
-
-            //EnablePlayerActionMap(false);
         }
 
         private void OnApplicationQuit()
         {
             m_centralInputActions.Disable();
         }
-
-        //private void Update()
-        //{
-        //    if (m_centralInputActions == null)
-        //        return;
-
-        //    for (int actionIndex = 0; actionIndex < m_selectPlayers.Length; actionIndex++)
-        //    {
-        //        if (m_selectPlayers[actionIndex] != null && m_selectPlayers[actionIndex].WasPressedThisFrame())
-        //        {
-        //            Debug.Log($"Player {actionIndex+1} is set for Zoom.");
-        //            SetFocusedKeyboardPlayer(actionIndex);
-        //        }
-        //    }
-        //}
 
         #region PlayerInputManager-Configuration
         private void SetUpPlayerInputManager(PlayerInputManager _playerInputManager)
@@ -273,32 +242,6 @@ namespace ThreeDeePongProto.Shared.Managers
             m_activePlayers.Remove(_playerInput);
             m_originalPlayerDevices.Remove(_playerInput.playerIndex);
         }
-
-        //private void EnablePlayerActionMap(bool _enable)
-        //{
-        //    if (m_centralInputActions == null)
-        //        return;
-
-        //    for (int action = 0; action < m_selectPlayers.Length; action++)
-        //    {
-        //        if (m_selectPlayers.Length > 0 && m_selectPlayers[action] != null)
-        //        {
-        //            switch (_enable)
-        //            {
-        //                case true:
-        //                {
-        //                    m_selectPlayers[action].Enable();
-        //                    break;
-        //                }
-        //                case false:
-        //                {
-        //                    m_selectPlayers[action].Disable();
-        //                    break;
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
 
         /// <summary>
         /// Method to receive the buildIndex of the scene that shall be reloaded.

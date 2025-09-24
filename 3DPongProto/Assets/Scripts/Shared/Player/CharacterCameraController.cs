@@ -23,7 +23,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         [Range(1.0f, 30.0f)]
         [SerializeField] private float m_smoothfactor;
         internal Rigidbody m_rigidbody;
-        private float m_maxSideMovement;
 
         [Header("Camera-Zoom")]
         [SerializeField, Min(0.01f)] private float m_minAbsLimit = 0.05f;
@@ -34,13 +33,11 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         internal Vector2 m_mousePosition;
 
         private CameraManager m_cameraManager;
-        private MatchSettingsData m_matchData;
 
-        private int m_playerID;
+        internal int m_playerID;
 
         private void Awake()
         {
-            m_matchData = SettingsManager.Instance.CurrentSettings.Match;
             m_cameraManager = FindObjectOfType<CameraManager>();
         }
 
@@ -50,22 +47,20 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 m_playerController.GetComponentInParent<CharacterMainController>();
 
             m_followCamera.transform.position = m_playerController.transform.position - new Vector3(m_desiredOffset.x, -m_desiredOffset.y, m_desiredOffset.z);
-            //m_followCamera.transform.position = new Vector3(m_rigidbody.transform.localPosition.x/* + m_desiredOffset.x*/, m_rigidbody.transform.localPosition.y + m_desiredOffset.y, m_rigidbody.transform.localPosition.z + -m_desiredOffset.z);
         }
 
         private void OnDisable()
         {
-            CameraManager.LetsRemoveCamera(m_followCamera, m_playerID);
+            CameraManager.Instance.RemoveCamera(m_followCamera);
             CharacterInputHandler.ASendMousePosition -= NewMousePosition;
         }
 
         private void Start()
         {
             //After Players are instantiated and the LocalMatchManager invokes the Event, the Camera can add itself to the availableCamera-List in the CameraManager.
-            CameraManager.LetsRegisterCamera(m_followCamera, m_playerID);
+            CameraManager.Instance.RegisterCamera(m_followCamera);
             CharacterInputHandler.ASendMousePosition += NewMousePosition;
 
-            //MaxSideMovement();
             //Saved vector to keep the playerCamera-startposition.
             CameraPositions(m_cameraManager.AvailableCameras[m_playerID]);
         }
@@ -89,11 +84,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             m_playerID = _playerID;
         }
-
-        //private void MaxSideMovement()
-        //{
-        //    m_maxSideMovement = m_matchData.FieldWidth * 0.5f - m_rigidbody.transform.localScale.x * 0.5f;
-        //}
 
         private void CameraPositions(Camera _camera)
         {
@@ -132,14 +122,10 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             m_mousePosition = _mousePosition;
         }
 
-        private bool MouseInGameWindow(Vector2 _mousePosition)
+        private bool IsMouseInGameWindow(Vector2 _mousePosition)
         {
-            Rect fullsizeRect = CameraManager.RuntimeFullsizeRect;
-            //x/yMin == (Rect.width - Rect.width) or (Rect.height - Rect.height). x/yMax == Rect.width or Rect.height.
-            bool mouseIsWithinWindow = _mousePosition.x > fullsizeRect.xMin && _mousePosition.x < fullsizeRect.xMax &&
-                _mousePosition.y > fullsizeRect.yMin && _mousePosition.y < fullsizeRect.yMax;
-
-            return mouseIsWithinWindow;
+            //Vector3 mousePosition = Input.mousePosition;
+            return _mousePosition.x >= 0 && _mousePosition.x < Screen.width && _mousePosition.y >= 0 && _mousePosition.y < Screen.height;
         }
         #endregion
 
@@ -155,10 +141,10 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (_playerID != m_playerID)
                 Debug.LogWarning("IDs from the CameraController and InputHandler do not match! Possible influence from outside!");
 
-            bool allowScrollWheelZoom = MouseInGameWindow(m_mousePosition) && Application.isFocused;
+            bool allowScrollWheelZoom = IsMouseInGameWindow(m_mousePosition) && Application.isFocused;
             if (!allowScrollWheelZoom)
                 return;
-            //TODO: Entweder RuntimeFullsizeRect ohne '* 0.5f' oder PlayerInfoFenster Positionen anpassen!
+
             switch (_contextDevice)
             {
                 case Gamepad:

@@ -41,16 +41,12 @@ namespace ThreeDeePongProto.Offline.UI
         #region Private State
         private bool m_isMatchActive = false;
         private float m_matchStartTime = 0f;
-        private MatchSettingsData m_matchData;
-        private GraphicSettingsData m_graphicData;
         private List<PlayerProfileData> m_playerProfiles;
-        readonly List<Transform> m_tempVisibleTransform = new();
+        [SerializeField] private List<Transform> m_tempVisibleTransform = new();
         #endregion
 
         private void OnEnable()
         {
-            m_graphicData = SettingsManager.Instance.CurrentSettings.Graphic;
-            m_matchData = SettingsManager.Instance.CurrentSettings.Match;
             m_playerProfiles = PlayerProfileManager.Instance.PlayerProfiles;
 
             if (LocalMatchManager.Instance != null)
@@ -67,7 +63,7 @@ namespace ThreeDeePongProto.Offline.UI
         {
             if (LocalMatchManager.Instance != null)
             {
-                CameraManager.InitializeMatchUI += InitializeUI;
+                CameraManager.InitializeMatchUI -= InitializeUI;
                 LocalMatchManager.Instance.OnScoreChanged -= UpdateScoreDisplays;
                 LocalMatchManager.Instance.OnRoundChanged -= UpdateRoundDisplay;
             }
@@ -85,25 +81,29 @@ namespace ThreeDeePongProto.Offline.UI
         /// <summary>
         /// Triggered once by the LocalMatchManager after all data is ready.
         /// </summary>
-        private void InitializeUI()
+        internal void InitializeUI()
         {
+            //Get the current Settings
+            var graphicData = SettingsManager.Instance.CurrentSettings.Graphic;
+            var matchData = SettingsManager.Instance.CurrentSettings.Match;
+
             //Set up player names and visibility
             for (int i = 0; i < m_playerDetailsParent.Count; i++)
             {
-                bool isPlayerActive = i < m_matchData.PlayerCount;
+                bool isPlayerActive = i < matchData.PlayerCount;
                 m_playerDetailsParent[i].gameObject.SetActive(isPlayerActive);
                 if (isPlayerActive)
                 {
                     m_playerNames[i].text = m_playerProfiles[i].PlayerName;
                 }
             }
-            
+
             //Set up initial scores and round display
             UpdateScoreDisplays(0, 0);
             UpdateRoundDisplay(1);
 
             //Position the UI elements based on the camera setup
-            PositionPlayerUI();
+            PositionPlayerUI(matchData.PlayerCount);
         }
 
         #region Event-Handler-Methods
@@ -116,7 +116,7 @@ namespace ThreeDeePongProto.Offline.UI
             //Team 2 consists of player(Indices) 1 and 3
             m_playerTotalPoints[1].text = $"Total: {_scoreTeam2}";
             m_playerTotalPoints[3].text = $"Total: {_scoreTeam2}";
-            
+
             m_pointsVsPoints.text = $"{_scoreTeam1} : {_scoreTeam2}";     //May move this in an extra method, should it be necessary.
         }
 
@@ -136,38 +136,119 @@ namespace ThreeDeePongProto.Offline.UI
         /// <summary>
         /// Handles the positioning of the player UI panels for your custom SplitScreen.
         /// </summary>
-        private void PositionPlayerUI()
+        private void PositionPlayerUI(int _playerCount)
         {
-            var runtimeRect = CameraManager.RuntimeFullsizeRect;
-
-            switch ((ECameraModi)m_graphicData.CameraMode)
+            var panelRects = new List<RectTransform>();
+            foreach (var panel in m_playerDetailsParent)
             {
-                case ECameraModi.SingleCam:
+                panelRects.Add(panel.GetComponent<RectTransform>());
+            }
+
+            switch (_playerCount)
+            {
+                case 1:
                 {
-                    m_playerDetailsParent[0].position = new Vector3(0, runtimeRect.height, 0);
+                    //SingleCam
+                    panelRects[0].anchorMin = new Vector2(0, 1);        //Left ScreenBorder, Upper ScreenBorder
+                    panelRects[0].anchorMax = new Vector2(0, 1);
+                    panelRects[0].pivot = new Vector2(0, 1);
+                    panelRects[0].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+
                     UpdateVisibleTransformList(m_playerDetailsParent[0]);
                     break;
                 }
-                case ECameraModi.Vertical:
+                case 2:
                 {
-                    m_playerDetailsParent[0].position = new Vector3(0 + m_playerInfoXPos, runtimeRect.height + m_playerInfoYPos, 0);
-                    m_playerDetailsParent[1].position = new Vector3(runtimeRect.width * 0.5f + m_playerInfoXPos, runtimeRect.height + m_playerInfoYPos, 0);
-                    UpdateVisibleTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1]);
+                    var graphCamMode = SettingsManager.Instance.CurrentSettings.Graphic.splitDdValue;
+                    switch (graphCamMode)
+                    {
+                        case 0:
+                        {
+                            //Vertical
+                            panelRects[0].anchorMin = new Vector2(0, 1);        //Left ScreenBorder, Upper ScreenBorder
+                            panelRects[0].anchorMax = new Vector2(0, 1);
+                            panelRects[0].pivot = new Vector2(0, 1);
+                            panelRects[0].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+
+                            panelRects[1].anchorMin = new Vector2(0.5f, 1);     //Middle ScreenWidth, Upper ScreenBorder
+                            panelRects[1].anchorMax = new Vector2(0.5f, 1);
+                            panelRects[1].pivot = new Vector2(0, 1);
+                            panelRects[1].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+
+                            UpdateVisibleTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1]);
+                            break;
+                        }
+                        default:
+                        case 1:
+                        {
+                            //Horizontal
+                            panelRects[0].anchorMin = new Vector2(0, 0.5f);     //Left ScreenBorder, Middle ScreenHeight
+                            panelRects[0].anchorMax = new Vector2(0, 0.5f);
+                            panelRects[0].pivot = new Vector2(0, 1);
+                            panelRects[0].anchoredPosition = new Vector2(m_playerInfoXPos, m_playerInfoYPos);
+
+                            panelRects[1].anchorMin = new Vector2(0, 1);        //Left ScreenBorder, Upper ScreenBorder
+                            panelRects[1].anchorMax = new Vector2(0, 1);
+                            panelRects[1].pivot = new Vector2(0, 1);
+                            panelRects[1].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+
+                            UpdateVisibleTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1]);
+                            break;
+                        }
+                    }
+
+                    ////Old Horizontal
+                    //panelRects[0].anchorMin = new Vector2(0, 0.5f);     //Left ScreenBorder, Middle ScreenHeight
+                    //panelRects[0].anchorMax = new Vector2(0, 0.5f);
+                    //panelRects[0].pivot = new Vector2(0, 1);
+                    //panelRects[0].anchoredPosition = new Vector2(m_playerInfoXPos, m_playerInfoYPos);
+
+                    //panelRects[1].anchorMin = new Vector2(0, 1);        //Left ScreenBorder, Upper ScreenBorder
+                    //panelRects[1].anchorMax = new Vector2(0, 1);
+                    //panelRects[1].pivot = new Vector2(0, 1);
+                    //panelRects[1].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+
+                    //UpdateVisibleTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1]);
                     break;
                 }
-                case ECameraModi.Horizontal:
+                //case ECameraModi.Vertical:
+                //{
+                //    //panelRects[0].anchorMin = new Vector2(0, 1);        //Left ScreenBorder, Upper ScreenBorder
+                //    //panelRects[0].anchorMax = new Vector2(0, 1);
+                //    //panelRects[0].pivot = new Vector2(0, 1);
+                //    //panelRects[0].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+
+                //    //panelRects[1].anchorMin = new Vector2(0.5f, 1);     //Middle ScreenWidth, Upper ScreenBorder
+                //    //panelRects[1].anchorMax = new Vector2(0.5f, 1);
+                //    //panelRects[1].pivot = new Vector2(0, 1);
+                //    //panelRects[1].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+
+                //    //UpdateVisibleTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1]);
+                //    break;
+                //}
+                case 4:
                 {
-                    m_playerDetailsParent[0].position = new Vector3(0 + m_playerInfoXPos, runtimeRect.height * 0.5f + m_playerInfoYPos, 0);
-                    m_playerDetailsParent[1].position = new Vector3(0 + m_playerInfoXPos, runtimeRect.height + m_playerInfoYPos, 0);
-                    UpdateVisibleTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1]);
-                    break;
-                }
-                case ECameraModi.Quartet:
-                {
-                    m_playerDetailsParent[0].position = new Vector3(0 + m_playerInfoXPos, runtimeRect.height * 0.5f + m_playerInfoYPos, 0);
-                    m_playerDetailsParent[1].position = new Vector3(runtimeRect.width * 0.5f + m_playerInfoXPos, runtimeRect.height * 0.5f + m_playerInfoYPos, 0);
-                    m_playerDetailsParent[2].position = new Vector3(0 + m_playerInfoXPos, runtimeRect.height + m_playerInfoYPos, 0);
-                    m_playerDetailsParent[3].position = new Vector3(runtimeRect.width * 0.5f + m_playerInfoXPos, runtimeRect.height + m_playerInfoYPos, 0);
+                    //Quartet
+                    panelRects[0].anchorMin = new Vector2(0, 0.5f);     //Left ScreenBorder, Middle ScreenHeight
+                    panelRects[0].anchorMax = new Vector2(0, 0.5f);
+                    panelRects[0].pivot = new Vector2(0, 1);
+                    panelRects[0].anchoredPosition = new Vector2(m_playerInfoXPos, m_playerInfoYPos);
+
+                    panelRects[1].anchorMin = new Vector2(0.5f, 0.5f);  //Middle ScreenWidth, Middle ScreenHeight
+                    panelRects[1].anchorMax = new Vector2(0.5f, 0.5f);
+                    panelRects[1].pivot = new Vector2(0, 1);
+                    panelRects[1].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+
+                    panelRects[2].anchorMin = new Vector2(0, 1);        //Left ScreenBorder, Upper ScreenBorder
+                    panelRects[2].anchorMax = new Vector2(0, 1);
+                    panelRects[2].pivot = new Vector2(0, 1);
+                    panelRects[2].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+
+                    panelRects[3].anchorMin = new Vector2(0.5f, 1);     //Middle ScreenWidth, Upper ScreenBorder
+                    panelRects[3].anchorMax = new Vector2(0.5f, 1);
+                    panelRects[3].pivot = new Vector2(0, 1);
+                    panelRects[3].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+
                     UpdateVisibleTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1], m_playerDetailsParent[2], m_playerDetailsParent[3]);
                     break;
                 }
@@ -181,17 +262,22 @@ namespace ThreeDeePongProto.Offline.UI
         {
             m_tempVisibleTransform.Clear();
             m_tempVisibleTransform.Add(_parent1);
-            m_tempVisibleTransform.Add(_parent2);
-            m_tempVisibleTransform.Add(_parent3);
-            m_tempVisibleTransform.Add(_parent4);
+            if (_parent2 != null)
+                m_tempVisibleTransform.Add(_parent2);
+            if (_parent3 != null)
+                m_tempVisibleTransform.Add(_parent3);
+            if (_parent4 != null)
+                m_tempVisibleTransform.Add(_parent4);
         }
 
         private void UpdatePlayerInfoVisibility()
         {
             for (int i = 0; i < m_playerDetailsParent.Count; i++)
             {
-                if (m_playerDetailsParent[i] == m_tempVisibleTransform[i])
+                if (m_tempVisibleTransform.Contains(m_playerDetailsParent[i].transform))
+                {
                     m_playerDetailsParent[i].gameObject.SetActive(true);
+                }
                 else
                     m_playerDetailsParent[i].gameObject.SetActive(false);
             }

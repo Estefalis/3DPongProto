@@ -79,7 +79,7 @@ namespace ThreeDeePongProto.Shared.Settings
         private void OnQualityChanged(int index) => m_graphicData.QualityLevelIndex = index;
         private void OnResolutionChanged(int index) => m_graphicData.ResolutionString = m_availableResolutions[index].ToString();
         private void OnFullScreenChanged(bool isOn) => m_graphicData.FullScreenMode = isOn;
-        private void OnCameraModeChanged(int index) => m_graphicData.CameraMode = index;
+        private void OnCameraModeChanged(int index) => m_graphicData.splitDdValue = index;
 
 
         #region Public Button Methods
@@ -179,8 +179,7 @@ namespace ThreeDeePongProto.Shared.Settings
         {
             //Get Data from the SettingsManager.
             int playerCount = SettingsManager.Instance.CurrentSettings.Match.PlayerCount;
-            ECameraModi savedCameraMode = (ECameraModi)m_graphicData.CameraMode;
-
+            m_screenSplitDropdown.interactable = playerCount == 2;
             m_screenSplitDropdown.ClearOptions();
             var options = new List<string>();
 
@@ -197,22 +196,16 @@ namespace ThreeDeePongProto.Shared.Settings
                 case 4:
                     options.Add(ECameraModi.Quartet.ToString());
                     break;
-                default: // Für 0 oder andere Fälle
+                default: //For 0 Player or any other cases
                     options.Add(ECameraModi.None.ToString());
                     break;
             }
 
             //Fill the dropdown with thew new options.
             m_screenSplitDropdown.AddOptions(options);
-
-            //Find the saveMode in the options list and set the _value.
-            int selectedIndex = options.IndexOf(savedCameraMode.ToString());
-
-            //Fallback: Find and set the first available Index as standard.
-            if (selectedIndex < 0)
-                selectedIndex = 0;
-
-            m_screenSplitDropdown.SetValueWithoutNotify(selectedIndex);
+            
+            int ddValue = playerCount == 2 ? m_graphicData.splitDdValue : 0;
+            m_screenSplitDropdown.SetValueWithoutNotify(ddValue);
             m_screenSplitDropdown.RefreshShownValue();
         }
 
@@ -240,12 +233,12 @@ namespace ThreeDeePongProto.Shared.Settings
         //Set by UI-SplitScreenDropdown.
         public void SetActiveCameras()
         {
-            m_graphicData.CameraMode = m_screenSplitDropdown.value;    //Previous ECameraModi.
+            m_graphicData.splitDdValue = m_screenSplitDropdown.value;    //Previous ECameraModi.
         }
 
         public void ApplyAndSave()
         {
-            //Apply System-Settinga.
+            //Apply System-Settings.
             QualitySettings.SetQualityLevel(m_graphicData.QualityLevelIndex);
             Screen.fullScreen = m_graphicData.FullScreenMode;
 

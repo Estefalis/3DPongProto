@@ -428,16 +428,16 @@ namespace ThreeDeePongProto.Shared.Settings
 
             m_backLineDds[0].ClearOptions();
             m_backLineDds[0].AddOptions(team1Options);
-
-            if (_playerCount < 2)
-                SettingsManager.Instance.CurrentSettings.Graphic.CameraMode = (int)ECameraModi.SingleCam;
+            //.splitDdValue = old .CameraMode.
+            //if (_playerCount < 2)
+            //    SettingsManager.Instance.CurrentSettings.Graphic.splitDdValue = (int)ECameraModi.SingleCam;
 
             if (isTwoPlayer)
             {
                 m_backLineDds[1].ClearOptions();
                 m_backLineDds[1].AddOptions(team2Options);
 
-                SettingsManager.Instance.CurrentSettings.Graphic.CameraMode = (int)ECameraModi.Horizontal;
+                //SettingsManager.Instance.CurrentSettings.Graphic.splitDdValue = (int)ECameraModi.Horizontal;
             }
 
             if (isFourPlayer)
@@ -449,7 +449,7 @@ namespace ThreeDeePongProto.Shared.Settings
                 m_frontLineDds[1].ClearOptions();
                 m_frontLineDds[1].AddOptions(team2Options);
 
-                SettingsManager.Instance.CurrentSettings.Graphic.CameraMode = (int)ECameraModi.Quartet;
+                SettingsManager.Instance.CurrentSettings.Graphic.splitDdValue = (int)ECameraModi.Quartet;
             }
 
             //Set Dropdown-Values based on Dictionary

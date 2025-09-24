@@ -27,12 +27,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private int m_playerID;
         private Vector2 m_rotationVector;   //Saved current rotationInput.
 
-        #region Actions_and_Functions
         internal static event Action<int> AKickBall;
         internal static event Action<Vector2> ASendMousePosition;
-        #endregion
-
-        //private PlayerProfileData m_playerProfile;
 
         private void OnEnable()
         {
@@ -383,11 +379,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             if (UserInputManager.SetActionMap == EInputActionMaps.PlayerActions.ToString())
                 UserInputManager.Instance.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
         }
-
-        //internal void StoreData(PlayerProfileData _playerProfile)
-        //{
-        //    m_playerProfile = _playerProfile;
-        //}
         #endregion
     }
 }
