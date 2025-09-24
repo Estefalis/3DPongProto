@@ -40,7 +40,6 @@ namespace ThreeDeePongProto.Offline.UI
 
         #region Private State
         private bool m_isMatchActive = false;
-        private float m_matchStartTime = 0f;
         private List<PlayerProfileData> m_playerProfiles;
         [SerializeField] private List<Transform> m_tempVisibleTransform = new();
         #endregion
@@ -84,16 +83,15 @@ namespace ThreeDeePongProto.Offline.UI
         internal void InitializeUI()
         {
             //Get the current Settings
-            var graphicData = SettingsManager.Instance.CurrentSettings.Graphic;
             var matchData = SettingsManager.Instance.CurrentSettings.Match;
 
             //Set up player names and visibility
             for (int i = 0; i < m_playerDetailsParent.Count; i++)
             {
                 bool isPlayerActive = i < matchData.PlayerCount;
-                m_playerDetailsParent[i].gameObject.SetActive(isPlayerActive);
                 if (isPlayerActive)
                 {
+                    m_playerDetailsParent[i].gameObject.SetActive(isPlayerActive);
                     m_playerNames[i].text = m_playerProfiles[i].PlayerName;
                 }
             }
@@ -128,7 +126,6 @@ namespace ThreeDeePongProto.Offline.UI
         private void OnMatchStarted()
         {
             m_isMatchActive = true;
-            m_matchStartTime = Time.time;
         }
         #endregion
 
@@ -196,36 +193,8 @@ namespace ThreeDeePongProto.Offline.UI
                             break;
                         }
                     }
-
-                    ////Old Horizontal
-                    //panelRects[0].anchorMin = new Vector2(0, 0.5f);     //Left ScreenBorder, Middle ScreenHeight
-                    //panelRects[0].anchorMax = new Vector2(0, 0.5f);
-                    //panelRects[0].pivot = new Vector2(0, 1);
-                    //panelRects[0].anchoredPosition = new Vector2(m_playerInfoXPos, m_playerInfoYPos);
-
-                    //panelRects[1].anchorMin = new Vector2(0, 1);        //Left ScreenBorder, Upper ScreenBorder
-                    //panelRects[1].anchorMax = new Vector2(0, 1);
-                    //panelRects[1].pivot = new Vector2(0, 1);
-                    //panelRects[1].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
-
-                    //UpdateVisibleTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1]);
                     break;
                 }
-                //case ECameraModi.Vertical:
-                //{
-                //    //panelRects[0].anchorMin = new Vector2(0, 1);        //Left ScreenBorder, Upper ScreenBorder
-                //    //panelRects[0].anchorMax = new Vector2(0, 1);
-                //    //panelRects[0].pivot = new Vector2(0, 1);
-                //    //panelRects[0].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
-
-                //    //panelRects[1].anchorMin = new Vector2(0.5f, 1);     //Middle ScreenWidth, Upper ScreenBorder
-                //    //panelRects[1].anchorMax = new Vector2(0.5f, 1);
-                //    //panelRects[1].pivot = new Vector2(0, 1);
-                //    //panelRects[1].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
-
-                //    //UpdateVisibleTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1]);
-                //    break;
-                //}
                 case 4:
                 {
                     //Quartet
@@ -274,12 +243,8 @@ namespace ThreeDeePongProto.Offline.UI
         {
             for (int i = 0; i < m_playerDetailsParent.Count; i++)
             {
-                if (m_tempVisibleTransform.Contains(m_playerDetailsParent[i].transform))
-                {
-                    m_playerDetailsParent[i].gameObject.SetActive(true);
-                }
-                else
-                    m_playerDetailsParent[i].gameObject.SetActive(false);
+                bool tranformMatch = m_tempVisibleTransform.Contains(m_playerDetailsParent[i].transform);
+                m_playerDetailsParent[i].gameObject.SetActive(tranformMatch);
             }
         }
 

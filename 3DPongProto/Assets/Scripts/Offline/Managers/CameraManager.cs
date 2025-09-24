@@ -92,6 +92,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                 }
                 case 4:
                 {
+                    //Four Player. Four Split
                     if (m_availableCameras.Count > 3)
                     {
                         m_availableCameras[0].gameObject.SetActive(true);
@@ -119,57 +120,6 @@ namespace ThreeDeePongProto.Offline.CameraSetup
                 }
             }
 
-            ////Apply the Layout based on the splitDdValue
-            //switch ((ECameraModi)graphicData.splitDdValue)
-            //{
-            //    case ECameraModi.SingleCam:
-            //        if (m_availableCameras.Count > 0)
-            //        {
-            //            m_availableCameras[0].gameObject.SetActive(true);
-            //            m_availableCameras[0].rect = new Rect(0, 0, 1, 1); //Fullscreen
-            //        }
-            //        break;
-
-            //    case ECameraModi.Horizontal: //Two Player. Horizontal split
-            //        if (m_availableCameras.Count > 1)
-            //        {
-            //            m_availableCameras[0].gameObject.SetActive(true);
-            //            m_availableCameras[0].rect = new Rect(0, 0, 1, 0.5f); //Lower half
-
-            //            m_availableCameras[1].gameObject.SetActive(true);
-            //            m_availableCameras[1].rect = new Rect(0, 0.5f, 1, 0.5f); //Upper half
-            //        }
-            //        break;
-
-            //    case ECameraModi.Vertical: //Two Player. Vertical split
-            //        if (m_availableCameras.Count > 1)
-            //        {
-            //            m_availableCameras[0].gameObject.SetActive(true);
-            //            m_availableCameras[0].rect = new Rect(0, 0, 0.5f, 1); //Left half
-
-            //            m_availableCameras[1].gameObject.SetActive(true);
-            //            m_availableCameras[1].rect = new Rect(0.5f, 0, 0.5f, 1); //Right half
-            //        }
-            //        break;
-
-            //    case ECameraModi.Quartet: //Four Player
-            //        if (m_availableCameras.Count > 3)
-            //        {
-            //            m_availableCameras[0].gameObject.SetActive(true);
-            //            m_availableCameras[0].rect = new Rect(0, 0, 0.5f, 0.5f); //Lower left (P1)
-
-            //            m_availableCameras[1].gameObject.SetActive(true);
-            //            m_availableCameras[1].rect = new Rect(0.5f, 0, 0.5f, 0.5f); //Lower right (P2)
-
-            //            m_availableCameras[2].gameObject.SetActive(true);
-            //            m_availableCameras[2].rect = new Rect(0, 0.5f, 0.5f, 0.5f); //Upper left (P3)
-
-            //            m_availableCameras[3].gameObject.SetActive(true);
-            //            m_availableCameras[3].rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f); //Upper right (P4)
-            //        }
-            //        break;
-            //}
-
             InitializeMatchUI?.Invoke();
         }
 
@@ -179,13 +129,7 @@ namespace ThreeDeePongProto.Offline.CameraSetup
         /// <returns></returns>
         private bool CamerasEqualPlayerCount()
         {
-            switch (AvailableCameras.Count == SettingsManager.Instance.CurrentSettings.Match.PlayerCount)
-            {
-                case true:
-                    return true;
-                case false:
-                    return false;
-            }
+            return AvailableCameras.Count == SettingsManager.Instance.CurrentSettings.Match.PlayerCount;
         }
 
         internal void RegisterCamera(Camera _camera)
