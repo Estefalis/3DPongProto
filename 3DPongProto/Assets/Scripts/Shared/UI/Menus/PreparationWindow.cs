@@ -19,18 +19,27 @@ namespace ThreeDeePongProto.Shared.UI
     public class PreparationWindow : MonoBehaviour
     {
         #region UI-References
-        [Header("UI-References")]
+        [Header("InputData and Devices")]
         //TODO: Add RoomName for Online Games. Lan games also, depending on setup and experience.
         [SerializeField] private TMP_InputField[] m_nameInputFields;
         [SerializeField] private Toggle[] m_keepNameToggles;
         [SerializeField] private Toggle[] m_deviceToggles;
-        [Space]
+
+        [Header("Navigation Logic")]
+        [SerializeField] private Selectable[] m_p1Selectables;              //NameInputFields, KeepNameToggles, DeviceToggles for P1
+        [SerializeField] private Selectable[] m_p2Selectables;              //NameInputFields, KeepNameToggles, DeviceToggles for P2
+        [SerializeField] private Selectable[] m_p3Selectables;              //NameInputFields, KeepNameToggles, DeviceToggles for P3
+        [SerializeField] private Selectable[] m_p4Selectables;              //NameInputFields, KeepNameToggles, DeviceToggles for P4
+        [SerializeField] private Selectable[] m_bottomLeftSelectables;      //PlayerDropdown, Start- & JoinButton.
+        [SerializeField] private Selectable[] m_bottomRightSelectables;     //Settings & BackButton.
+
+        [Header("Group Visibility")]
         [SerializeField] private Transform m_p2UIGroup;
         [SerializeField] private Transform m_addPlayerSlot;
-        [Space]
+        //[Space]
         [SerializeField] private TMP_Dropdown m_playerAmountDd;
-        [SerializeField] private Button m_startButton;
-        [SerializeField] private Button m_joinButton;
+        //[SerializeField] private Button m_startButton;
+        //[SerializeField] private Button m_joinButton;
 
         private MatchSettingsData m_matchData;
         private List<PlayerProfileData> m_playerProfiles;
@@ -67,6 +76,7 @@ namespace ThreeDeePongProto.Shared.UI
                 m_deviceToggles[i].SetIsOnWithoutNotify(profile.DefaultKeyboard);
             }
 
+            UpdateUINavigation(m_matchData.PlayerCount);
             UpdateUIVisibility(m_matchData.PlayerCount);
             ButtonValidation();
 
@@ -100,6 +110,105 @@ namespace ThreeDeePongProto.Shared.UI
         }
 
         #region UI-Setup
+        #region UI-Navigation
+        /// <summary>
+        /// Adapt Navigation dynamic to the _playerCount.
+        /// </summary>
+        private void UpdateUINavigation(int _playerCount)
+        {
+            switch (_playerCount)
+            {
+                case 1:
+                {
+                    //P1 to Start-Button
+                    foreach (Selectable selectable in m_p1Selectables)
+                        SetNavigationDown(selectable, m_bottomLeftSelectables[1]); //StartButton
+
+                    foreach (var selectable in m_bottomLeftSelectables)
+                        SetNavigationUp(selectable, m_p1Selectables[0]);
+                    foreach (var selectable in m_bottomRightSelectables)
+                        SetNavigationUp(selectable, m_p1Selectables[0]);
+                    break;
+                }
+                case 2:
+                {
+                    //P1 & P2 navigieren to Start-Button
+                    foreach (Selectable selectable in m_p1Selectables)
+                        SetNavigationDown(selectable, m_bottomLeftSelectables[1]);  //StartButton
+                    foreach (Selectable selectable in m_p2Selectables)
+                        SetNavigationDown(selectable, m_bottomRightSelectables[1]); //BackButton
+
+                    foreach (Selectable selectable in m_bottomLeftSelectables)
+                        SetNavigationUp(selectable, m_p1Selectables[0]);
+                    foreach (Selectable selectable in m_bottomRightSelectables)
+                        SetNavigationUp(selectable, m_p2Selectables[0]);
+                    break;
+                }
+                case 4:
+                {
+                    //Connect P1 <-> P2 and P3 <-> P4 vertical. (Already connected.)
+                    //LinkTwoColumns(m_p1Selectables, m_p2Selectables);
+                    //LinkTwoColumns(m_p3Selectables, m_p4Selectables);
+
+                    for (int i1 = 0; i1 < m_p1Selectables.Length; i1++)
+                        SetNavigationDown(m_p1Selectables[i1], m_p3Selectables[i1]);
+                    for (int i2 = 0; i2 < m_p2Selectables.Length; i2++)
+                        SetNavigationDown(m_p2Selectables[i2], m_p4Selectables[i2]);
+
+                    foreach (Selectable selectable in m_bottomLeftSelectables)
+                        SetNavigationUp(selectable, m_p3Selectables[0]);
+                    foreach (Selectable selectable in m_bottomRightSelectables)
+                        SetNavigationUp(selectable, m_p4Selectables[0]);
+                    break;
+                }
+            }
+        }
+
+        private void SetNavigationDown(Selectable from, Selectable to)
+        {
+            //Set the 'selectOnDown'-Navigation for each Element.
+            Navigation nav = from.navigation;
+            nav.selectOnDown = to;
+            from.navigation = nav;
+
+            #region Invsersed Navigation
+            //Navigation navTo = to.navigation;
+            //navTo.selectOnUp = from;
+            //to.navigation = navTo;
+            #endregion
+        }
+
+        private void SetNavigationUp(Selectable from, Selectable to)
+        {
+            var nav = from.navigation;
+            nav.selectOnUp = to;
+            from.navigation = nav;
+        }
+
+        /// <summary>
+        /// Connect the vertical Columns of the UI-Elements.
+        /// </summary>
+        private void LinkTwoColumns(Selectable[] topColumn, Selectable[] bottomColumn)
+        {
+            //Both columns require the identical amount of elements.
+            for (int i = 0; i < topColumn.Length; i++)
+            {
+                Selectable topElement = topColumn[i];
+                Selectable bottomElement = bottomColumn[i];
+
+                //Top -> Down -> Bottom
+                Navigation navTop = topElement.navigation;
+                navTop.selectOnDown = bottomElement;
+                topElement.navigation = navTop;
+
+                //Bottom -> Up -> Top
+                Navigation navBottom = bottomElement.navigation;
+                navBottom.selectOnUp = topElement;
+                bottomElement.navigation = navBottom;
+            }
+        }
+        #endregion
+
         /// <summary>
         /// Sets UI-Elements on/off, depending on the set playerAmount.
         /// </summary>
@@ -118,6 +227,7 @@ namespace ThreeDeePongProto.Shared.UI
             m_matchData.PlayerCount = _dropdownIndex == 2 ? 4 : (_dropdownIndex == 1 ? 2 : 1);
             SettingsManager.Instance.SaveSettings();
 
+            UpdateUINavigation(m_matchData.PlayerCount);
             UpdateUIVisibility(m_matchData.PlayerCount);
             ButtonValidation();
         }
@@ -157,8 +267,8 @@ namespace ThreeDeePongProto.Shared.UI
                 }
             }
 
-            m_startButton.interactable = allNamesValid;
-            m_joinButton.interactable = allNamesValid;
+            m_bottomLeftSelectables[1].interactable = allNamesValid;    //StartButton
+            m_bottomLeftSelectables[2].interactable = allNamesValid;    //JoinButton
         }
         #endregion
     }

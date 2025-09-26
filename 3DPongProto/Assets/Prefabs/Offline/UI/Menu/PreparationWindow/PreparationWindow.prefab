@@ -409,11 +409,15 @@ MonoBehaviour:
   - {fileID: 7255861642277448597}
   - {fileID: 4379602870534311235}
   - {fileID: 212327787535916695}
+  m_p1Selectables: []
+  m_p2Selectables: []
+  m_p3Selectables: []
+  m_p4Selectables: []
+  m_bottomLeftSelectables: []
+  m_bottomRightSelectables: []
   m_p2UIGroup: {fileID: 0}
   m_addPlayerSlot: {fileID: 0}
   m_playerAmountDd: {fileID: 7439924061004796375}
-  m_startButton: {fileID: 7130864335638351267}
-  m_joinButton: {fileID: 2764765568042519385}
 --- !u!1 &6144415440404816733
 GameObject:
   m_ObjectHideFlags: 0
@@ -3326,7 +3330,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 5214023195143008816}
+      objectReference: {fileID: 7130864335638351267}
     - target: {fileID: 3736958039244104987, guid: 02deb3495ee45624a9f5f16802f66c68,
         type: 3}
       propertyPath: m_Name
@@ -3991,7 +3995,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 5214023195143008816}
+      objectReference: {fileID: 7130864335638351267}
     - target: {fileID: 6320431802810898360, guid: 02deb3495ee45624a9f5f16802f66c68,
         type: 3}
       propertyPath: m_Name
@@ -4286,7 +4290,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 7130864335638351267}
+      objectReference: {fileID: 5214023195143008816}
     - target: {fileID: 8481641252655822703, guid: 02deb3495ee45624a9f5f16802f66c68,
         type: 3}
       propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.size
