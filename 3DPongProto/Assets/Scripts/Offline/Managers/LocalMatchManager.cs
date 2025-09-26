@@ -171,14 +171,8 @@ namespace ThreeDeePongProto.Shared.Managers
         #region Custom-Methods        
         private void SetupMatch()
         {
-            m_currentScoreTeam1 = 0;
-            m_totalScoreTeam1 = 0;
-            m_currentScoreTeam2 = 0;
-            m_totalScoreTeam2 = 0;
-            m_currentRound = 1;
-
-            m_matchIsActive = false;
             //Time.timeScale & m_gameIsPaused gets set by UserInputManager & ToggleMatchPause on ActionMap switch!
+            ResetMatchState();
 
             BuildPlayField();
             SpawnBall();
@@ -186,6 +180,17 @@ namespace ThreeDeePongProto.Shared.Managers
 
             OnScoreChanged?.Invoke(m_totalScoreTeam1, m_totalScoreTeam2);
             OnRoundChanged?.Invoke(m_currentRound);
+        }
+
+        private void ResetMatchState()
+        {
+            m_currentScoreTeam1 = 0;
+            m_totalScoreTeam1 = 0;
+            m_currentScoreTeam2 = 0;
+            m_totalScoreTeam2 = 0;
+            m_currentRound = 1;
+
+            m_matchIsActive = false;
         }
 
         private void BuildPlayField()

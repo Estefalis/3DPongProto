@@ -41,7 +41,7 @@ namespace ThreeDeePongProto.Offline.UI
         #region Private State
         private bool m_isMatchActive = false;
         private List<PlayerProfileData> m_playerProfiles;
-        [SerializeField] private List<Transform> m_tempVisibleTransform = new();
+        private readonly List<Transform> m_activePlayerTransform = new();
         #endregion
 
         private void OnEnable()
@@ -50,11 +50,11 @@ namespace ThreeDeePongProto.Offline.UI
 
             if (LocalMatchManager.Instance != null)
             {
-                CameraManager.InitializeMatchUI += InitializeUI;
                 LocalMatchManager.Instance.OnScoreChanged += UpdateScoreDisplays;
                 LocalMatchManager.Instance.OnRoundChanged += UpdateRoundDisplay;
             }
 
+            CameraManager.InitializeMatchUI += InitializeUI;
             Ball.OnFirstServe += OnMatchStarted;
         }
 
@@ -62,11 +62,11 @@ namespace ThreeDeePongProto.Offline.UI
         {
             if (LocalMatchManager.Instance != null)
             {
-                CameraManager.InitializeMatchUI -= InitializeUI;
                 LocalMatchManager.Instance.OnScoreChanged -= UpdateScoreDisplays;
                 LocalMatchManager.Instance.OnRoundChanged -= UpdateRoundDisplay;
             }
 
+            CameraManager.InitializeMatchUI -= InitializeUI;
             Ball.OnFirstServe -= OnMatchStarted;
         }
 
@@ -91,7 +91,7 @@ namespace ThreeDeePongProto.Offline.UI
                 bool isPlayerActive = i < matchData.PlayerCount;
                 if (isPlayerActive)
                 {
-                    m_playerDetailsParent[i].gameObject.SetActive(isPlayerActive);
+                    //m_playerDetailsParent[i].gameObject.SetActive(isPlayerActive);
                     m_playerNames[i].text = m_playerProfiles[i].PlayerName;
                 }
             }
@@ -138,7 +138,8 @@ namespace ThreeDeePongProto.Offline.UI
             var panelRects = new List<RectTransform>();
             foreach (var panel in m_playerDetailsParent)
             {
-                panelRects.Add(panel.GetComponent<RectTransform>());
+                //if (panelRects.Count < _playerCount)
+                    panelRects.Add(panel.GetComponent<RectTransform>());
             }
 
             switch (_playerCount)
@@ -151,7 +152,7 @@ namespace ThreeDeePongProto.Offline.UI
                     panelRects[0].pivot = new Vector2(0, 1);
                     panelRects[0].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
 
-                    UpdateVisibleTransformList(m_playerDetailsParent[0]);
+                    UpdatePlayerTransformList(m_playerDetailsParent[0]);
                     break;
                 }
                 case 2:
@@ -172,7 +173,7 @@ namespace ThreeDeePongProto.Offline.UI
                             panelRects[1].pivot = new Vector2(0, 1);
                             panelRects[1].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
 
-                            UpdateVisibleTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1]);
+                            UpdatePlayerTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1]);
                             break;
                         }
                         default:
@@ -189,7 +190,7 @@ namespace ThreeDeePongProto.Offline.UI
                             panelRects[1].pivot = new Vector2(0, 1);
                             panelRects[1].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
 
-                            UpdateVisibleTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1]);
+                            UpdatePlayerTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1]);
                             break;
                         }
                     }
@@ -218,7 +219,7 @@ namespace ThreeDeePongProto.Offline.UI
                     panelRects[3].pivot = new Vector2(0, 1);
                     panelRects[3].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
 
-                    UpdateVisibleTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1], m_playerDetailsParent[2], m_playerDetailsParent[3]);
+                    UpdatePlayerTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1], m_playerDetailsParent[2], m_playerDetailsParent[3]);
                     break;
                 }
             }
@@ -227,24 +228,34 @@ namespace ThreeDeePongProto.Offline.UI
         }
         #endregion
 
-        private void UpdateVisibleTransformList(Transform _parent1, Transform _parent2 = null, Transform _parent3 = null, Transform _parent4 = null)
+        private void UpdatePlayerTransformList(Transform _parent1, Transform _parent2 = null, Transform _parent3 = null, Transform _parent4 = null)
         {
-            m_tempVisibleTransform.Clear();
-            m_tempVisibleTransform.Add(_parent1);
+            m_activePlayerTransform.Clear();
+            m_activePlayerTransform.Add(_parent1);
             if (_parent2 != null)
-                m_tempVisibleTransform.Add(_parent2);
+                m_activePlayerTransform.Add(_parent2);
             if (_parent3 != null)
-                m_tempVisibleTransform.Add(_parent3);
+                m_activePlayerTransform.Add(_parent3);
             if (_parent4 != null)
-                m_tempVisibleTransform.Add(_parent4);
+                m_activePlayerTransform.Add(_parent4);
         }
 
         private void UpdatePlayerInfoVisibility()
         {
             for (int i = 0; i < m_playerDetailsParent.Count; i++)
             {
-                bool tranformMatch = m_tempVisibleTransform.Contains(m_playerDetailsParent[i].transform);
+                bool tranformMatch = m_activePlayerTransform.Contains(m_playerDetailsParent[i].transform);
                 m_playerDetailsParent[i].gameObject.SetActive(tranformMatch);
+
+                if (!tranformMatch)
+                {
+                    //If not used, move playerDetailParent ouf of the screen, below xMin & yMin.
+                    var parentRect = m_playerDetailsParent[i].GetComponent<RectTransform>();
+                    parentRect.anchorMin = new Vector2(0, 0);
+                    parentRect.anchorMax = new Vector2(0, 0);
+                    parentRect.pivot = new Vector2(0, 1);
+                    parentRect.anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+                }
             }
         }
 
