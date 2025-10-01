@@ -15,7 +15,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         internal CharacterInteractions m_playerInteractions { get; private set; }
         internal CharacterHealth m_playerHealth { get; private set; }
 
-        internal int m_playerID;
+        private int m_playerID;
         //private bool m_inputDisabled = false;
 
         private PlayerProfileData m_profileData;
@@ -60,7 +60,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         {
             if (!m_isInitialized)
             {
-                Debug.LogError("CharacterMainController wurde nie vom Manager initialisiert!", this);
+                Debug.LogError("CharacterMainController is not initialized!", this);
                 return;
             }
 

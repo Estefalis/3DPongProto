@@ -151,6 +151,21 @@ namespace ThreeDeePongProto.Shared.Settings
         private void OnGameModeChanged(int _dropdownIndex)
         {
             m_matchData.EGameMode = (EGameMode)_dropdownIndex;
+            switch (m_matchData.EGameMode)
+            {
+                case EGameMode.SuddenDeath:
+                    // Setze Runden und Punkte für Sudden Death auf 1
+                    m_matchData.RoundsToWin = 1;
+                    m_matchData.RoundPoints = 1;
+                    break;
+
+                case EGameMode.Infinite:
+                    // Setze die Werte auf 0, um den "Unendlich"-Status zu signalisieren
+                    m_matchData.RoundsToWin = 0;
+                    m_matchData.RoundPoints = 0;
+                    break;
+            }
+
             //Update UI, including '.interactable'-Settings.
             SetUIElements();
         }

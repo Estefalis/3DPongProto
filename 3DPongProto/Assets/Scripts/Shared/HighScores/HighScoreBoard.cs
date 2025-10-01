@@ -45,8 +45,6 @@ namespace ThreeDeePongProto.Shared.Highscores
 
         private readonly int m_maxRounds = 5;
         private readonly int m_maxPoints = 25;
-        //private int m_lastRound;
-        //private int m_lastPoints;
 
         //SaveData
         private HighScoreData m_highScoreData;
@@ -62,30 +60,28 @@ namespace ThreeDeePongProto.Shared.Highscores
 
         private void OnEnable()
         {
-            //Subscription to display HighScore on Game end.
-            if (LocalMatchManager.Instance != null)
-                LocalMatchManager.Instance.OnLocalMatchEnd += DisplayResult;
-
             if (!m_isMatchResult)
             {
                 m_currentFilterMode = EFilterMode.ShowAll;
                 RefreshDisplay();
             }
 
-            //m_currentFilterMode = EFilterMode.ShowAll;
-            //m_filterRoundsValue = 0;
-            //m_filterPointsValue = 0;
-
-            //AddListeners vorher separat?
-            //RefreshDisplay();
+            RefreshDisplay();     //AddListeners in RefreshDisplay() SetUIElements()
         }
 
         private void OnDisable()
         {
             if (LocalMatchManager.Instance != null)
-                LocalMatchManager.Instance.OnLocalMatchEnd -= DisplayResult;
+                LocalMatchManager.Instance.OnLocalMatchEnd -= DisplayHighScores;
 
             RemoveListeners();
+        }
+
+        private void Start()
+        {
+            //Subscription to display HighScore on Game end.
+            if (LocalMatchManager.Instance != null)
+                LocalMatchManager.Instance.OnLocalMatchEnd += DisplayHighScores;
         }
 
         private void AddListeners()
@@ -190,6 +186,7 @@ namespace ThreeDeePongProto.Shared.Highscores
 
         private void OnFilterModeChanged(int _dropdownIndex)
         {
+            //ShowAll = 0, InfiniteMatch = 1, SuddenDeath = 2, Normal = 3.
             m_currentFilterMode = (EFilterMode)_dropdownIndex;
 
             if (m_currentFilterMode == EFilterMode.ShowAll && m_isMatchResult)
@@ -225,7 +222,7 @@ namespace ThreeDeePongProto.Shared.Highscores
         /// </summary>
         /// <param name="_matchResult"></param>
         /// <param name="_isMatchResult"></param>
-        private void DisplayResult(MatchResult _matchResult, bool _isMatchResult)
+        private void DisplayHighScores(MatchResult _matchResult, bool _isMatchResult = false)
         {
             if (_isMatchResult == true)
             {
@@ -255,6 +252,7 @@ namespace ThreeDeePongProto.Shared.Highscores
 
             //First use MenuManager's <Transform-key, SelectObject-value> dict to activate the HighScoreBoard (Transform).
             m_menuManager.NextElement(m_listFrame);
+            //m_listFrame.gameObject.SetActive(true);
             //Then tell the UserInputManager to switch the active InputActionMap to UI to skip the MenuManager OnOpenMenu() Method.
             UserInputManager.Instance.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
 
@@ -273,7 +271,7 @@ namespace ThreeDeePongProto.Shared.Highscores
                 Destroy(child.gameObject);
 
             //Filtering & Sorting
-            List<HighScoreEntry> filteredScores = FilterScores(m_highScoreData.highScores); //TODO: FilterScore();?
+            List<HighScoreEntry> filteredScores = FilterScores(m_highScoreData.highScores);
             List<HighScoreEntry> sortedScores = SortScores(filteredScores);
 
             //Show final sortResult

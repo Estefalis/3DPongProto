@@ -38,8 +38,6 @@ namespace ThreeDeePongProto.Shared.UI
         [SerializeField] private Transform m_addPlayerSlot;
         //[Space]
         [SerializeField] private TMP_Dropdown m_playerAmountDd;
-        //[SerializeField] private Button m_startButton;
-        //[SerializeField] private Button m_joinButton;
 
         private MatchSettingsData m_matchData;
         private List<PlayerProfileData> m_playerProfiles;

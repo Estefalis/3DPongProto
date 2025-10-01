@@ -4101,9 +4101,6 @@ MonoBehaviour:
   - {fileID: 1409237156}
   - {fileID: 1409237155}
   - {fileID: 1409237154}
-  m_cursorLockMode: 0
-  m_showCursor: 1
-  m_hiddenFinishButton: {fileID: 0}
   m_uIDropdowns:
   - {fileID: 1409237153}
   - {fileID: 1983064936}
@@ -4119,6 +4116,11 @@ MonoBehaviour:
   - {fileID: 1983064933}
   - {fileID: 1983064931}
   - {fileID: 1983064937}
+  m_resumeButton: {fileID: 0}
+  m_quitButton: {fileID: 0}
+  m_hiddenFinishButton: {fileID: 0}
+  m_cursorLockMode: 0
+  m_showCursor: 1
 --- !u!1001 &240737787773209198
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7509,6 +7511,11 @@ PrefabInstance:
       objectReference: {fileID: 30571229}
     - target: {fileID: 1624911706974631277, guid: e5adf79f8c4f662418d398b152f0d82e,
         type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 1935493848}
+    - target: {fileID: 1624911706974631277, guid: e5adf79f8c4f662418d398b152f0d82e,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2136304140}
@@ -8930,6 +8937,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 55706955}
     m_Modifications:
+    - target: {fileID: 3017294011104358995, guid: eed1feb2bca952f4ea6362f44dd8d650,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 379379519}
     - target: {fileID: 3017294011104358995, guid: eed1feb2bca952f4ea6362f44dd8d650,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown

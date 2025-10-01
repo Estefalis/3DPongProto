@@ -54,17 +54,21 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] private Transform[] m_subPageTransforms;
         #endregion
 
+        [SerializeField] private TMP_Dropdown[] m_uIDropdowns;
+
+        [Header("Pause Menu Navigation")]
+        [SerializeField] private Button m_resumeButton;
+        [SerializeField] private Button m_quitButton;
+        [SerializeField] private Button m_hiddenFinishButton;
+        #endregion
+
         [Header("Mouse Cursor")]
         [SerializeField] private CursorLockMode m_cursorLockMode = CursorLockMode.Confined;
         [SerializeField] private bool m_showCursor = true;
 
         internal static GameObject LastSelectedGameObject { get => m_lastSelectedGameObject; }
         private static GameObject m_lastSelectedGameObject;
-        #endregion
 
-        [SerializeField] private Button m_hiddenFinishButton;
-
-        [SerializeField] private TMP_Dropdown[] m_uIDropdowns;
         private TMP_InputField m_lastSelectedInputField = null;
         private TMP_InputField m_activeInputField = null;
 
@@ -73,11 +77,13 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         internal static event Action AEndInfiniteMatch;         //LocalMatchManager ends an InfiniteMatch.
         #endregion
 
+        private MatchSettingsData m_matchData;
         private string m_currentInputFieldContent = "";
-        //private bool m_fieldIsInEditMode = false;
 
         private void Awake()
         {
+            m_matchData = SettingsManager.Instance.CurrentSettings.Match;
+
             Cursor.lockState = m_cursorLockMode;
             Cursor.visible = m_showCursor;
 
@@ -114,7 +120,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 m_inputActions.UserInterface.Submit.performed += OnSubmitInput;
             }
 
-            SettingsManager.Instance.OnSettingsChanged += HandleSettingsChanged;
             UserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
         }
 
@@ -124,7 +129,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_inputActions.UserInterface.Navigate.performed -= OnNavigationInput;
             m_inputActions.UserInterface.Submit.performed -= OnSubmitInput;
 
-            SettingsManager.Instance.OnSettingsChanged -= HandleSettingsChanged;
             UserInputManager.AChangeActiveActionMap -= OnChangeActiveActionMap;
         }
 
@@ -133,17 +137,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_playerInput = FindObjectOfType<PlayerInput>();
 
             if (m_hiddenFinishButton != null)
-                InVisibleButton(SettingsManager.Instance.CurrentSettings.Match.EGameMode == EGameMode.Infinite);
+            {
+                bool _infiniteMatch = m_matchData.EGameMode == EGameMode.Infinite;
+                m_hiddenFinishButton.gameObject.SetActive(_infiniteMatch);
+            }
         }
 
         private void Update()
         {
-            if (!Application.isFocused)  //TODO: Test, if Navigation still works, if game is not focused.
+            if (!Application.isFocused)
                 return;
 
             UpdateLastSelectedObject();
             HandleUIInteractions();
-            //HandleButtonPresses();
         }
 
         #region Prepare Navigation-Stack and (de-)activate Menu-Transforms to navigate.
@@ -258,6 +264,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 m_firstTransformElement.gameObject.SetActive(true);
                 SetNavigationGameObject(m_firstTransformElement);
             }
+
+            UpdatePauseMenuNavigation();
         }
 
         private void OnCloseMenu()
@@ -326,44 +334,15 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         if (m_lastSelectedInputField == null)
                         {
                             m_lastSelectedInputField = inputField;  //Save the latest selected TMP_InputField for later changes.
-#if UNITY_EDITOR
-                            //Debug.Log($"switch current IF: {m_lastSelectedInputField.name}.");
-#endif
                             m_lastSelectedInputField.image.color = m_lastSelectedInputField.colors.selectedColor;
                         }
-
-                        //switch (m_fieldIsInEditMode)
-                        //{
-                        //    case false:
-                        //    {
-                        //        ExitEditMode();
-                        //        break;
-                        //    }
-                        //    case true:
-                        //    {
-                        //        EnterEditMode();
-                        //        break;
-                        //    }
-                        //}
                         break;
                     }
                     case false: //GO is the TMP_InputField we just left.
                     {
                         if (m_lastSelectedInputField != null)
                         {
-#if UNITY_EDITOR
-                            //Debug.Log($"Left last {inputField.name} IF. Saved old IF Content: {m_currentInputFieldContent}");
-#endif
-                            //m_fieldIsInEditMode = false;
                             inputField.image.color = inputField.colors.normalColor;
-                            if (inputField.interactable)
-                                inputField.interactable = false;
-                            if (!inputField.enabled)
-                                inputField.enabled = true;
-                            //if (inputField.isFocused)
-                            //    inputField.DeactivateInputField();
-                            //if (m_currentInputFieldContent != string.Empty)
-                            //    m_currentInputFieldContent = string.Empty;  //m_currentInputFieldContent reset each time we leave an IF.
                             m_lastSelectedInputField = null;
                         }
                         break;
@@ -390,7 +369,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 //If nothing has a higher priority, navigate back.
                 if (m_activeElement.Count > 1)
                 {
-                    //Debug.Log("Should navigate back now.");
                     CloseToPreviousElement();
                 }
                 else if (SceneManager.GetActiveScene().buildIndex != (int)ESceneNames.StartMenu)
@@ -471,16 +449,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             return false;       //No active action prioritized.
         }
 
-        /// <summary>
-        /// Enables the hiden button, if Infinite GameMode is set.
-        /// </summary>
-        private void HandleSettingsChanged()
-        {
-            bool isInfinite = SettingsManager.Instance.CurrentSettings.Match.EGameMode == EGameMode.Infinite;
-            if (m_hiddenFinishButton != null)
-                m_hiddenFinishButton.gameObject.SetActive(isInfinite);
-        }
-
         private void ButtonTransition(GameObject _incomingGameObject)
         {
             if (!_incomingGameObject.TryGetComponent<Button>(out var button))   //Exclude none buttons.
@@ -557,24 +525,48 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             }
         }
 
-        private void InVisibleButton(bool _infiniteMatch)
+        /// <summary>
+        /// Adapt the Pause-Menu-Navigation to the current Gamemode.
+        /// </summary>
+        private void UpdatePauseMenuNavigation()
         {
-            switch (_infiniteMatch)
+            //Get the current EGameMode from the SettingsManager.
+            bool isInfiniteMode = m_matchData.EGameMode == EGameMode.Infinite;
+
+            //Get the navigation from the relevant Buttons.
+            Navigation resumeNav = m_resumeButton.navigation;
+            Navigation quitNav = m_quitButton.navigation;
+            Navigation endInfiniteNav = m_hiddenFinishButton.navigation;
+
+            //Adapt the Navigation to the current EGamemode.
+            if (isInfiniteMode)
             {
-                case true:
-                    m_hiddenFinishButton.gameObject.SetActive(true);
-                    break;
-                case false:
-                    m_hiddenFinishButton.gameObject.SetActive(false);
-                    break;
+                //Infinite-Mode: UI-Navigation loop between Resume and EndInfiniteMatch Buttons.
+                resumeNav.selectOnUp = m_hiddenFinishButton;
+                //Change Looping to ResumeButton to navigate down to the EndInfiniteMatch button.
+                quitNav.selectOnDown = m_hiddenFinishButton;
+                //Looping between Resume- and EndInfiniteMatch Buttons on Infinite-Mode.
+                endInfiniteNav.selectOnDown = m_resumeButton;
             }
+            else
+            {
+                //Normal Mode: Loop between Resume und Quit Buttons.
+                //ResumeButton loops to QuitButton.
+                resumeNav.selectOnUp = m_quitButton;
+                //And vise versa on QuitButton.
+                quitNav.selectOnDown = m_resumeButton;
+            }
+
+            //Apply the changed Navigation(s).
+            m_resumeButton.navigation = resumeNav;
+            m_quitButton.navigation = quitNav;
+            m_hiddenFinishButton.navigation = endInfiniteNav;
         }
         #endregion
 
         #region MenuButton_Methods
         public void ResumeGame()
         {
-            //AResumeTheGame?.Invoke();
             OnResumeTheGame();
         }
 
@@ -593,7 +585,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         public void EndInfiniteMatch()
         {
             AEndInfiniteMatch?.Invoke();    //Sends request to end infinite Matches. Skips HighScoreBoard while noone gained a point.
-            //m_navigationKey[0].gameObject.SetActive(false); ?
         }
 
         /// <summary>

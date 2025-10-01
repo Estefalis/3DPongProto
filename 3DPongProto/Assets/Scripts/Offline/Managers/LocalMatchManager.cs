@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.Highscores;
-using ThreeDeePongProto.Shared.PlayerCharacter;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -87,6 +86,8 @@ namespace ThreeDeePongProto.Shared.Managers
         private void Awake()
         {
             Instance = this;
+            m_lastTouchedPlayerT1 = string.Empty;
+            m_lastTouchedPlayerT2 = string.Empty;
         }
 
         private void OnEnable()
@@ -161,7 +162,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
             //PlayerBase position and rotation
             _playerInput.transform.SetPositionAndRotation(spawnPosition, spawnRotation);
-            
+
             //var avatar = _playerInput.GetComponentInChildren<CharacterMovement>();
             //avatar.transform.localRotation = spawnRotation;
             var rb = _playerInput.GetComponentInChildren<Rigidbody>();
@@ -217,7 +218,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         public void SetLastTouch(int _playerIndex)
         {
-            if (_playerIndex % 0 == 0)
+            if (_playerIndex % 2 == 0)
             {
                 //Team 1 Index 0 & Index 2.
                 m_lastTouchedPlayerT1 = m_playerProfiles[_playerIndex].PlayerName;
@@ -255,9 +256,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void CheckMatchConditions(string _winningPlayer, int _pointCount)
         {
-            Debug.Log($"{_winningPlayer} scored. Congratulations!");
-
-            bool roundIsOver = false;
+            bool roundIsOver;
             if (m_matchData.EGameMode == EGameMode.Infinite)
                 return;
 
@@ -274,10 +273,45 @@ namespace ThreeDeePongProto.Shared.Managers
             if (roundIsOver)
             {
                 if (m_currentRound >= m_matchData.RoundsToWin)
-                    ProcessMatchResult(_winningPlayer, _pointCount);
+                {
+                    if (_winningPlayer == string.Empty)
+                    {
+                        string fallbackPlayerName = GetFallbackPlayerName();
+                        ProcessMatchResult(fallbackPlayerName, _pointCount);
+                    }
+                    else
+                        ProcessMatchResult(_winningPlayer, _pointCount);
+                }
                 else
                     StartNextRound();
             }
+        }
+
+        private string GetFallbackPlayerName()
+        {
+            if (m_currentScoreTeam1 > m_currentScoreTeam2)
+            {
+                //Team 1 wins
+                m_infiniteWinner = (m_matchData.PlayerCount == 4)
+                    ? $"{m_playerProfiles[0].PlayerName} & {m_playerProfiles[2].PlayerName}"
+                    : m_playerProfiles[0].PlayerName;
+            }
+            else if (m_currentScoreTeam2 > m_currentScoreTeam1)
+            {
+                //Team 2 wins
+                m_infiniteWinner = (m_matchData.PlayerCount == 4)
+                    ? $"{m_playerProfiles[1].PlayerName} & {m_playerProfiles[3].PlayerName}"
+                    : m_playerProfiles[1].PlayerName;
+            }
+            else
+            {
+                //Draw
+                string team1Name = (m_matchData.PlayerCount == 4) ? $"{m_playerProfiles[0].PlayerName} & {m_playerProfiles[2].PlayerName}" : m_playerProfiles[0].PlayerName;
+                string team2Name = (m_matchData.PlayerCount == 4) ? $"{m_playerProfiles[1].PlayerName} & {m_playerProfiles[3].PlayerName}" : m_playerProfiles[1].PlayerName;
+                m_infiniteWinner = $"{team1Name} draw \nto {team2Name}";
+            }
+
+            return m_infiniteWinner;
         }
 
         private void StartNextRound()
@@ -295,15 +329,15 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             PauseMatch(false);
 
-            var matchResult = new MatchResult();
+            MatchResult matchResult = new();
             matchResult.WinnerName = _winningPlayer;
             matchResult.FinalScore = _finalScore;
             //TimeSpan playTimeSpan = TimeSpan.FromSeconds(Time.time - m_matchStartTime);
             matchResult.TotalPlayTime = Time.time - m_matchStartTime;
             //matchResult.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             matchResult.MatchWinDate = DateTime.UtcNow.Ticks;
-
             OnLocalMatchEnd?.Invoke(matchResult, true);    //isMatchResult
+            //m_highScoreBoard.DisplayHighScores(matchResult, true);    //Requires internal void.
         }
 
         /// <summary>

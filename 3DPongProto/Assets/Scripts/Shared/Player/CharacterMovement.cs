@@ -32,7 +32,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private bool m_isPushing, m_valueTaken = false;
 
         internal uint m_receivedUserID;
-        private int m_playerID;
+        internal int m_playerID;
 
         //Movement
         private Vector3 m_moveVector;

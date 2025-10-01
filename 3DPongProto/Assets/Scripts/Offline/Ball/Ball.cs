@@ -149,16 +149,16 @@ public class Ball : MonoBehaviour
         {
             //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
             PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
-            var player = _collision.gameObject.TryGetComponent(out CharacterMainController playerController);
-            OnHitPlayer?.Invoke(playerController.m_playerID);
+            var player = _collision.gameObject.GetComponentInParent<CharacterMovement>();
+            OnHitPlayer?.Invoke(player.m_playerID);
         }
 
         if (_collision.gameObject.CompareTag(m_teamPlayerTwo))
         {
             //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
             PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
-            var player = _collision.gameObject.TryGetComponent(out CharacterMainController playerController);
-            OnHitPlayer?.Invoke(playerController.m_playerID);
+            var player = _collision.gameObject.GetComponentInParent<CharacterMovement>();
+            OnHitPlayer?.Invoke(player.m_playerID);
         }
 
         if (_collision.gameObject.CompareTag(m_eastWall))
