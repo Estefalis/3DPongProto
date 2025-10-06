@@ -80,7 +80,7 @@ namespace ThreeDeePongProto.Shared.Managers
         public event Action<int, int> OnScoreChanged;               //Updates scoreTeam1, scoreTeam2 for subscribers
         public event Action<int> OnRoundChanged;                    //Updates currentRound for subscribers
 
-        public event Action<MatchResult, bool> OnLocalMatchEnd;     //Sends: MatchResult
+        public event Action<MatchResult> OnLocalMatchEnd;           //Sends: MatchResult
         #endregion
 
         private void Awake()
@@ -336,7 +336,7 @@ namespace ThreeDeePongProto.Shared.Managers
             matchResult.TotalPlayTime = Time.time - m_matchStartTime;
             //matchResult.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             matchResult.MatchWinDate = DateTime.UtcNow.Ticks;
-            OnLocalMatchEnd?.Invoke(matchResult, true);    //isMatchResult
+            OnLocalMatchEnd?.Invoke(matchResult);                       //isMatchResult
             //m_highScoreBoard.DisplayHighScores(matchResult, true);    //Requires internal void.
         }
 
@@ -347,7 +347,7 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             if (m_totalScoreTeam1 <= 0 || m_totalScoreTeam2 <= 0)
             {
-                Debug.Log("No points gained, yet Loading StartMenu.");    //Optional: PopUp-Window, to ask for playerResponse.
+                Debug.Log("No points gained, yet Loading StartMenu.");  //Optional: PopUp-Window, to ask for playerResponse.
                 m_menuManager.ReturnToMainMenu();
                 return;
             }
@@ -360,7 +360,7 @@ namespace ThreeDeePongProto.Shared.Managers
             matchResult.TotalPlayTime = Time.time - m_matchStartTime;
             matchResult.MatchWinDate = DateTime.UtcNow.Ticks;
 
-            OnLocalMatchEnd?.Invoke(matchResult, true);    //isMatchResult
+            OnLocalMatchEnd?.Invoke(matchResult);
         }
 
         /// <summary>

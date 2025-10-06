@@ -18,7 +18,7 @@ namespace ThreeDeePongProto.Shared.Highscores
         [SerializeField] private MenuManager m_menuManager;
 
         [Header("UI References")]
-        [SerializeField] private Transform m_listFrame;     //Disable Transform.
+        [SerializeField] private Transform m_listFrame;                 //Disable Transform.
         [SerializeField] private Transform m_contentParent;
         [SerializeField] private GameObject m_entryPrefab;
         [SerializeField] private GameObject m_noDataPrefab;
@@ -37,8 +37,8 @@ namespace ThreeDeePongProto.Shared.Highscores
         private ESortColumn m_currentSortColumn = ESortColumn.WinDate;
         private bool m_isSortAscending = false; //sort Low to High
 
-        //LastMatchConfig
-        private bool m_isMatchResult = false;   //isPostMatch
+        ////LastMatchConfig
+        private bool m_isMatchResult = false;   //isPostMatch Result
         private EGameMode m_lastGameMode;
         private int m_lastGameRounds;
         private int m_lastGamePoints;
@@ -60,11 +60,7 @@ namespace ThreeDeePongProto.Shared.Highscores
 
         private void OnEnable()
         {
-            if (!m_isMatchResult)
-            {
-                m_currentFilterMode = EFilterMode.ShowAll;
-                RefreshDisplay();
-            }
+            m_currentFilterMode = EFilterMode.Normal;
 
             RefreshDisplay();     //AddListeners in RefreshDisplay() SetUIElements()
         }
@@ -116,7 +112,7 @@ namespace ThreeDeePongProto.Shared.Highscores
 
             SetupFilterDropdown();
 
-            m_filterInteractable = !m_isMatchResult && (m_currentFilterMode == EFilterMode.Normal || m_currentFilterMode == EFilterMode.ShowAll);
+            m_filterInteractable = /*!m_isMatchResult && */(m_currentFilterMode == EFilterMode.Normal || m_currentFilterMode == EFilterMode.ShowAll);
             m_roundsDropdown.interactable = m_filterInteractable;
             m_maxPointsDropdown.interactable = m_filterInteractable;
 
@@ -189,8 +185,8 @@ namespace ThreeDeePongProto.Shared.Highscores
             //ShowAll = 0, InfiniteMatch = 1, SuddenDeath = 2, Normal = 3.
             m_currentFilterMode = (EFilterMode)_dropdownIndex;
 
-            if (m_currentFilterMode == EFilterMode.ShowAll && m_isMatchResult)
-                m_isMatchResult = false;
+            //if (m_currentFilterMode == EFilterMode.ShowAll && m_isMatchResult)
+            //    m_isMatchResult = false;
 
             m_filterRoundsValue = 0; // Zurücksetzen bei Modus-Wechsel
             m_filterPointsValue = 0;
@@ -200,8 +196,8 @@ namespace ThreeDeePongProto.Shared.Highscores
 
         private void OnRoundDropdownChanged(int _dropdownIndex)
         {
-            if (m_isMatchResult)
-                return;
+            //if (m_isMatchResult)
+            //    return;
 
             m_filterRoundsValue = _dropdownIndex;
             RefreshDisplay();
@@ -209,8 +205,8 @@ namespace ThreeDeePongProto.Shared.Highscores
 
         private void OnMaxPointDropdownChanged(int _dropdownIndex)
         {
-            if (m_isMatchResult)
-                return;
+            //if (m_isMatchResult)
+            //    return;
 
             m_filterPointsValue = _dropdownIndex;
             RefreshDisplay();
@@ -221,38 +217,33 @@ namespace ThreeDeePongProto.Shared.Highscores
         /// MatchResult true after Matches. Else false.
         /// </summary>
         /// <param name="_matchResult"></param>
-        /// <param name="_isMatchResult"></param>
-        private void DisplayHighScores(MatchResult _matchResult, bool _isMatchResult = false)
+        private void DisplayHighScores(MatchResult _matchResult)
         {
-            if (_isMatchResult == true)
+            //Creates a new entry out of the matchResult.
+            var matchSettings = SettingsManager.Instance.CurrentSettings.Match;
+            HighScoreEntry newEntry = new()
             {
-                //Creates a new entry out of the matchResult.
-                var matchSettings = SettingsManager.Instance.CurrentSettings.Match;
-                HighScoreEntry newEntry = new()
-                {
-                    WinningPlayerName = _matchResult.WinnerName,
-                    TotalPoints = _matchResult.FinalScore,
-                    TotalPlaytime = _matchResult.TotalPlayTime,
-                    MatchWinTimestamp = DateTime.UtcNow.Ticks,
-                    GameMode = matchSettings.EGameMode,
-                    RoundSetting = matchSettings.RoundsToWin,
-                    PointSetting = matchSettings.RoundPoints
-                };
+                WinningPlayerName = _matchResult.WinnerName,
+                TotalPoints = _matchResult.FinalScore,
+                TotalPlaytime = _matchResult.TotalPlayTime,
+                MatchWinTimestamp = DateTime.UtcNow.Ticks,
+                GameMode = matchSettings.EGameMode,
+                RoundSetting = matchSettings.RoundsToWin,
+                PointSetting = matchSettings.RoundPoints
+            };
 
-                //Add Entry to the list
-                m_highScoreData.highScores.Add(newEntry);
-                m_saveSystem.Save(m_highScoreData);
+            //Add Entry to the list
+            m_highScoreData.highScores.Add(newEntry);
+            m_saveSystem.Save(m_highScoreData);
 
-                m_lastGameMode = matchSettings.EGameMode;
-                m_lastGameRounds = matchSettings.RoundsToWin;
-                m_lastGamePoints = matchSettings.RoundPoints;
-            }
+            m_lastGameMode = matchSettings.EGameMode;
+            m_lastGameRounds = matchSettings.RoundsToWin;
+            m_lastGamePoints = matchSettings.RoundPoints;
 
-            m_isMatchResult = _isMatchResult;
+            m_isMatchResult = true;
 
             //First use MenuManager's <Transform-key, SelectObject-value> dict to activate the HighScoreBoard (Transform).
-            m_menuManager.NextElement(m_listFrame);
-            //m_listFrame.gameObject.SetActive(true);
+            m_menuManager.NextElement(m_listFrame);     //listFrame.gO.SetActive = true.
             //Then tell the UserInputManager to switch the active InputActionMap to UI to skip the MenuManager OnOpenMenu() Method.
             UserInputManager.Instance.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
 
@@ -290,36 +281,24 @@ namespace ThreeDeePongProto.Shared.Highscores
         #region Filtering_&_Sorting
         private List<HighScoreEntry> FilterScores(List<HighScoreEntry> _allScores)
         {
-            if (m_isMatchResult == true)
+            //SortOptions accessable outside of matches. To filter and display all HighScores.
+            IEnumerable<HighScoreEntry> filteredScores = _allScores;
+            EFilterMode selectedFilter = (EFilterMode)m_filterModeDropdown.value;
+
+            if (m_currentFilterMode != EFilterMode.ShowAll)
             {
-                //SortOption accessable right after Matches. To filter and display HighScore with these identical settings.
-                return _allScores.Where(s =>
-                    s.GameMode == m_lastGameMode &&
-                    s.RoundSetting == m_lastGameRounds &&
-                    s.PointSetting == m_lastGamePoints
-                ).ToList();
+                filteredScores = filteredScores.Where(s => s.GameMode == (EGameMode)m_currentFilterMode);
             }
-            else
+
+            if (m_currentFilterMode == EFilterMode.Normal || m_currentFilterMode == EFilterMode.ShowAll)
             {
-                //SortOptions accessable outside of matches. To filter and display all HighScores.
-                IEnumerable<HighScoreEntry> filteredScores = _allScores;
-                EFilterMode selectedFilter = (EFilterMode)m_filterModeDropdown.value;
-
-                if (m_currentFilterMode != EFilterMode.ShowAll)
-                {
-                    filteredScores = filteredScores.Where(s => s.GameMode == (EGameMode)m_currentFilterMode);
-                }
-
-                if (m_currentFilterMode == EFilterMode.Normal || m_currentFilterMode == EFilterMode.ShowAll)
-                {
-                    if (m_filterRoundsValue > 0)
-                        filteredScores = filteredScores.Where(s => s.RoundSetting == m_filterRoundsValue);
-                    if (m_filterPointsValue > 0)
-                        filteredScores = filteredScores.Where(s => s.PointSetting == m_filterPointsValue);
-                }
-
-                return filteredScores.ToList();
+                if (m_filterRoundsValue > 0)
+                    filteredScores = filteredScores.Where(s => s.RoundSetting == m_filterRoundsValue);
+                if (m_filterPointsValue > 0)
+                    filteredScores = filteredScores.Where(s => s.PointSetting == m_filterPointsValue);
             }
+
+            return filteredScores.ToList();
         }
 
         private List<HighScoreEntry> SortScores(List<HighScoreEntry> _highScores)
