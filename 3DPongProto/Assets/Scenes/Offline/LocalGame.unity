@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17905562, g: 0.21854803, b: 0.27339426, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -928,12 +927,11 @@ MonoBehaviour:
     type: 3}
   m_noDataPrefab: {fileID: 7876011991351949999, guid: 12f70dfacccaa6d448fd783e4a2a9277,
     type: 3}
-  m_sortButtons:
-  - {fileID: 8495242848815026583}
-  - {fileID: 8495242847623870524}
-  - {fileID: 751500666}
-  - {fileID: 8495242848570391909}
-  - {fileID: 8495242846854953137}
+  m_roundButton: {fileID: 8495242848815026583}
+  m_maxPointButton: {fileID: 8495242847623870524}
+  m_totalPointButton: {fileID: 751500666}
+  m_playtimeButton: {fileID: 8495242848570391909}
+  m_winDateButton: {fileID: 8495242846854953137}
   m_roundsDropdown: {fileID: 2446055331410395422}
   m_maxPointsDropdown: {fileID: 741551068115327129}
   m_filterModeDropdown: {fileID: 6102153783253618871}
@@ -5522,6 +5520,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0

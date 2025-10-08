@@ -337,7 +337,7 @@ namespace ThreeDeePongProto.Shared.Managers
             //matchResult.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             matchResult.MatchWinDate = DateTime.UtcNow.Ticks;
             OnLocalMatchEnd?.Invoke(matchResult);                       //isMatchResult
-            //m_highScoreBoard.DisplayHighScores(matchResult, true);    //Requires internal void.
+            //m_highScoreBoard.OnMatchEnded(matchResult, true);           //Requires internal void.
         }
 
         /// <summary>
