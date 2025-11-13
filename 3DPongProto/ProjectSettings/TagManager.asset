@@ -3,17 +3,28 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - PlayerCamera
+  - GoalOne
+  - GoalTwo
+  - WestWall
+  - EastWall
+  - Ball
+  - CenterLine
+  - TpOne
+  - TpTwo
+  - TpThree
+  - TpFour
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Ground
+  - Walls
+  - Ball
   - 
   - 
   - 

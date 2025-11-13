@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5fb24614f778d74e84f6d51abe4f095, type: 3}
+  m_Name: MatchUIStates
+  m_EditorClassIdentifier: 
+  EPlayerAmount: 1
+  eGameConnectModi: 0
+  RotationReset: 1
+  GameRuns: 0
+  InfiniteMatch: 0
+  LastRoundDdIndex: 5
+  LastMaxPointDdIndex: 1
+  MaxRounds: 5
+  MaxPoints: 25
+  FixRatio: 0
+  LastFieldWidthDdIndex: 0
+  LastFieldLengthDdIndex: 0
+  TPOneBacklineDdIndex: 0
+  TPTwoBacklineDdIndex: 0
+  TPOneFrontlineDdIndex: 1
+  TPTwoFrontlineDdIndex: 1

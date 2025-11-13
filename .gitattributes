@@ -1,3 +1,13 @@
+# === Rules for Line-Endings (EOL) ===
+# Force LF (Linux-Format) for all Text-Files.
+# Most important Fix for Windows to Linux.
+* text=auto eol=lf
+
+# Mark Unity-Text-Files explicit as Text with LF
+*.{cs,meta,unity,prefab,asset,txt,json,xml} text eol=lf
+
+# === Existing LFS-Rules follow after this ===
+
 # 3D models
 *.3dm filter=lfs diff=lfs merge=lfs -text
 *.3ds filter=lfs diff=lfs merge=lfs -text

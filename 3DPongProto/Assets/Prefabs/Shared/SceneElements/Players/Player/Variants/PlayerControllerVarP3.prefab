@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &1796240174370816781
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2647086753584012589, guid: efd7ee56e3f432a438cf295583530547,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -19
+      objectReference: {fileID: 0}
+    - target: {fileID: 2647086753925811378, guid: efd7ee56e3f432a438cf295583530547,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2647086753925811378, guid: efd7ee56e3f432a438cf295583530547,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2647086753925811378, guid: efd7ee56e3f432a438cf295583530547,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2647086753925811378, guid: efd7ee56e3f432a438cf295583530547,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2647086753925811379, guid: efd7ee56e3f432a438cf295583530547,
+        type: 3}
+      propertyPath: m_Name
+      value: PlayerControllerVarP3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2647086753925811379, guid: efd7ee56e3f432a438cf295583530547,
+        type: 3}
+      propertyPath: m_TagString
+      value: TpOne
+      objectReference: {fileID: 0}
+    - target: {fileID: 2647086753925811388, guid: efd7ee56e3f432a438cf295583530547,
+        type: 3}
+      propertyPath: m_playerID
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2647086753925811388, guid: efd7ee56e3f432a438cf295583530547,
+        type: 3}
+      propertyPath: m_playerId
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2647086753925811388, guid: efd7ee56e3f432a438cf295583530547,
+        type: 3}
+      propertyPath: m_playerSOData
+      value: 
+      objectReference: {fileID: 11400000, guid: 862bfec20d10c5049a46b7b03f906cd9,
+        type: 2}
+    - target: {fileID: 2647086753925811388, guid: efd7ee56e3f432a438cf295583530547,
+        type: 3}
+      propertyPath: m_controlUIStates
+      value: 
+      objectReference: {fileID: 11400000, guid: 6f1f5be09badd8a41a258137bec38537,
+        type: 2}
+    - target: {fileID: 2647086753925811388, guid: efd7ee56e3f432a438cf295583530547,
+        type: 3}
+      propertyPath: m_controlUIValues
+      value: 
+      objectReference: {fileID: 11400000, guid: 14003bf4faa01cd4ea4a72bb9ae959d9,
+        type: 2}
+    - target: {fileID: 2647086753925811388, guid: efd7ee56e3f432a438cf295583530547,
+        type: 3}
+      propertyPath: m_defaultFrontLineUp
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7955539610597703839, guid: efd7ee56e3f432a438cf295583530547,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d4484fdc396ee5847b39e5ba902fca12, type: 2}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: efd7ee56e3f432a438cf295583530547, type: 3}
