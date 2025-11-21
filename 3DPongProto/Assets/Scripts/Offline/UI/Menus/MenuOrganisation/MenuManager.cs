@@ -291,8 +291,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                             //1st check for TMP Input Field before replacing the latest selected FallBack-GameObject.
                             if (m_lastSelectedGameObject != null)
                                 InputFieldCheck(m_lastSelectedGameObject);
+
                             //Moment, when the previous saved GO is made equal to the selected Object from the eventSystem.
                             m_lastSelectedGameObject = m_eventSystem.currentSelectedGameObject;
+
                             //2nd has to be in the same frame, or it blinks!
                             ButtonTransition(m_lastSelectedGameObject);
                             break;
@@ -329,7 +331,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 //true == newest G0 from InputFieldCheck() || false == previous saved GO from UpdateLastSelectedObject().
                 switch (inputField.gameObject == m_eventSystem.currentSelectedGameObject)
                 {
-                    case true:  //GO is the newest, current selected Object AND a TMP_InputField.
+                    case true:  //GO is the newest, current selected Object AND a TMP_InputField. InputField's eventData activates itself in EditActivation.cs.
                     {
                         if (m_lastSelectedInputField == null)
                         {
@@ -338,10 +340,16 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                         }
                         break;
                     }
-                    case false: //GO is the TMP_InputField we just left.
+                    case false: //GO is the TMP_InputField we just left. Deactivate the old InputField, before setting current IF.
                     {
                         if (m_lastSelectedInputField != null)
                         {
+                            if(m_lastSelectedInputField.interactable)
+                                {
+                                    m_lastSelectedInputField.interactable = false;
+                                    m_lastSelectedInputField.DeactivateInputField();
+                                }
+                                
                             inputField.image.color = inputField.colors.normalColor;
                             m_lastSelectedInputField = null;
                         }
@@ -409,7 +417,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             {
                 //An InputField is selected and Edit-Mode shall get started
                 m_activeInputField = selectedField;
-                m_currentInputFieldContent = selectedField.text; // Text für "Cancel" merken
+                m_currentInputFieldContent = selectedField.text; // Text fï¿½r "Cancel" merken
                 m_activeInputField.interactable = true;
                 m_activeInputField.ActivateInputField();
             }
@@ -515,14 +523,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_eventSystem.SetSelectedGameObject(_gameObject);
             yield return null;
             _gameObject.TryGetComponent(out TMP_InputField inputField);
-            //TODO: Enable MouseClick-EditActivation on InputFields.
-            Debug.Log($"Enable MouseClick-EditActivation on InputFields.");
+            
             if (inputField)
-            {
                 m_activeInputField = inputField;
-                //m_activeInputField.interactable = true;
-                //m_activeInputField.ActivateInputField();
-            }
         }
 
         /// <summary>

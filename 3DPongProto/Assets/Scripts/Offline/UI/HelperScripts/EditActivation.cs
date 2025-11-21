@@ -21,8 +21,26 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (_eventData.button != PointerEventData.InputButton.Left)
                 return;
             
-            if (m_menuManager != null)
-                m_menuManager.ClickActivation(m_ownInputField.gameObject);
+            //Single-Click
+            if (_eventData.clickCount == 1)
+            {
+                //MenuManager deactivates the InputField by an internal stored variable.
+                if (EventSystem.current != null)
+                {
+                    EventSystem.current.SetSelectedGameObject(m_ownInputField.gameObject);
+                }
+            }
+            //Double-Click
+            else if (_eventData.clickCount >= 2)
+            {
+                m_ownInputField.interactable = true;
+                m_ownInputField.ActivateInputField();
+
+                if (m_menuManager != null)
+                {
+                    m_menuManager.ClickActivation(m_ownInputField.gameObject);
+                }
+            }
         }
     }
 }
