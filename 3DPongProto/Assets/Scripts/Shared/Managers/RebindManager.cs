@@ -353,7 +353,6 @@ namespace ThreeDeePongProto.Shared.Managers
             }
 
             IsRebinding = false;
-            Debug.Log($"IsRebinding: {IsRebinding}");
         }
 
         /// <summary>

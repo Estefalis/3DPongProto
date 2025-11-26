@@ -54,8 +54,6 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
             m_scrollViewController.m_scrollViewRect.scrollSensitivity = 0.0f;
             m_childrenNavigationSet = m_scrollViewController.ContentChildrenSet /*&& m_scrollViewController.m_ChildrenNavigationSet*/;
-
-            //TODO: Set m_childrenNavigationSet properly in ScrollViewController.
         }
 
         private void Update()
@@ -73,12 +71,6 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
             }
 
             TransitionProgress();
-
-            if (m_inProgress)
-            {
-                CalculateNormalizedPosition();
-                ApplyFinalPosition();
-            }
         }
 
         #region Scroll-Preparation
@@ -105,7 +97,6 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         private bool MouseIsInScrollView(Vector2 _mousePosition)
         {
-            //Thanks to CodeGPT!
             RectTransformUtility.ScreenPointToLocalPointInRectangle(m_scrollViewController.m_scrollViewRectTransform, _mousePosition, null, out Vector2 localMousePosition);
 
             Vector2 rectSize = m_scrollViewController.m_scrollViewRectTransform.rect.size;
@@ -260,7 +251,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
             Vector2 currentNormalizedPos = scrollRect.normalizedPosition;
             //Set targetPosition on currentPosition to start with.
             Vector2 targetNormalizedPos = currentNormalizedPos;
-
+            
             //Calculate normalized Y-position, to move the element into a visible position.
             if (scrollRect.vertical) //Vertical scrolling must be enabled.
             {
@@ -342,7 +333,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                     currentNormalizedY += normalizedDelta;
                 }
             }
-
+            
             return Mathf.Clamp01(currentNormalizedY);
         }
 
@@ -404,18 +395,24 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
         private void TransitionProgress()
         {
-            if (!m_inProgress)
-                return;
-
-            m_timeElapsed += Time.unscaledDeltaTime;
-            m_progress = m_duration > 0 ? m_timeElapsed / m_duration : 1.0f;
-
-            if (m_progress >= 1.0f)
+            if (m_inProgress)
             {
-                m_progress = 1.0f;
-                m_inProgress = false;
-                m_curNormalizedPos = m_normalizedPosTo;
-                ApplyFinalPosition();
+                m_timeElapsed += Time.unscaledDeltaTime;
+                m_progress = m_timeElapsed / m_duration;
+
+                if (m_progress >= 1.0f)
+                {
+                    m_progress = 1.0f;
+                    m_inProgress = false;
+
+                    m_curNormalizedPos = m_normalizedPosTo;
+                    ApplyFinalPosition();
+                }
+                else
+                {
+                    CalculateNormalizedPosition();
+                    ApplyFinalPosition();
+                }
             }
         }
 
@@ -426,24 +423,19 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
             //m_curNormalizedPos = Vector2.Lerp(m_normalizedPosFrom, m_normalizedPosTo, m_progress);
         }
 
-        private void ApplyFinalPosition()
-        {
-            if (m_scrollViewController.m_scrollViewRect != null)
-                m_scrollViewController.m_scrollViewRect.normalizedPosition = m_curNormalizedPos;
-        }
-
         private void NormalizedTransitionFromTo(Vector2 _normalizedPosFrom, Vector2 _normalizedPosTo, float _duration)
         {
+            //REQUIRES A RESOLUTION OF FULL HAD (1920 x 1080) IN UNITY! [Damn GlobalDefenseInitiative!]
             //Prevent micro movement.
-            if (Vector2.Distance(_normalizedPosFrom, _normalizedPosTo) < 0.001f)
+            if (!(Vector2.Distance(_normalizedPosFrom, _normalizedPosTo) > 0.0001f))
             {
                 m_curNormalizedPos = _normalizedPosTo;
                 ApplyFinalPosition();
-                m_inProgress = false;
+                ResetVariables();       //Clean Up
                 return;
             }
 
-            ResetVariables();
+            ResetVariables();           //Clean start
 
             m_normalizedPosFrom = _normalizedPosFrom;
             m_normalizedPosTo = _normalizedPosTo;
@@ -451,6 +443,12 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
 
             m_curNormalizedPos = _normalizedPosFrom;
             m_inProgress = true;
+        }
+
+        private void ApplyFinalPosition()
+        {
+            if (m_scrollViewController.m_scrollViewRect != null)
+                m_scrollViewController.m_scrollViewRect.normalizedPosition = m_curNormalizedPos;
         }
 
         private void ResetVariables()
