@@ -73,7 +73,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private TMP_InputField m_activeInputField = null;
 
         #region Actions_and_Functions
-        internal static event Action<int> AReLoadScene;         //UserInputManager with central SceneManager.LoadScene().
         internal static event Action AEndInfiniteMatch;         //LocalMatchManager ends an InfiniteMatch.
         #endregion
 
@@ -577,17 +576,30 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             var sceneIndex = SceneManager.GetActiveScene().buildIndex;
             UserInputManager.Instance.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
-            AReLoadScene?.Invoke(sceneIndex);
+            ReLoadScene(sceneIndex);
         }
 
         public void ReturnToMainMenu()
         {
-            AReLoadScene?.Invoke((int)ESceneNames.StartMenu);
+            ReLoadScene((int)ESceneNames.StartMenu);
         }
 
         public void EndInfiniteMatch()
         {
             AEndInfiniteMatch?.Invoke();    //Sends request to end infinite Matches. Skips HighScoreBoard while noone gained a point.
+        }
+
+        /// <summary>
+        /// Method to receive the buildIndex of the scene that shall be reloaded.
+        /// </summary>
+        /// <param name="_sceneIndex"></param>
+        private void ReLoadScene(int _sceneIndex)
+        {
+            if (_sceneIndex > 0) //Exclude BootScene with DDOL-Managers.
+            {
+                if (_sceneIndex < SceneManager.sceneCountInBuildSettings - 1)   //-1 marks last SceneIndex.
+                    SceneManager.LoadScene(_sceneIndex);
+            }
         }
 
         /// <summary>

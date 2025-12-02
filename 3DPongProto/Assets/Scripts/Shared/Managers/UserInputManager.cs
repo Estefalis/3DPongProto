@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ThreeDeePongProto.Offline.UI.Menu;
 using ThreeDeePongProto.Shared.InputActions;
 using ThreeDeePongProto.Shared.PlayerCharacter;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 internal enum ESceneNames
 {
@@ -36,6 +34,7 @@ internal enum EInputActionMaps
 
 namespace ThreeDeePongProto.Shared.Managers
 {
+    [RequireComponent(typeof(PlayerInputManager))]
     public class UserInputManager : PersistentSingleton<UserInputManager>
     {
         [Header("Player Spawning")]
@@ -44,9 +43,10 @@ namespace ThreeDeePongProto.Shared.Managers
         [Tooltip("Visual AvatarControls-Prefabs for Player 0-3.")]
         [SerializeField] private GameObject[] m_playerAvatarControls;
 
-        [Header("References")]
-        private PlayerInputManager m_playerInputManager;
+        [Header("Settings")]
         [SerializeField] private bool m_joinByDefault = true;
+        
+        private PlayerInputManager m_playerInputManager;
         private PlayerInputActions m_centralInputActions;
 
         internal static string SetActionMap { get => m_lastSetActionMap; }
@@ -55,10 +55,8 @@ namespace ThreeDeePongProto.Shared.Managers
 
         #region Lists_and_Dictionaries
         private readonly List<PlayerInput> m_activePlayers = new();
-        private readonly Dictionary<int, InputDevice> m_originalPlayerDevices = new();
-
-        private List<PlayerProfileData> m_playerProfiles;
         private List<InputDevice> m_availableGamepads;
+        private readonly Dictionary<int, InputDevice> m_originalPlayerDevices = new();
         #endregion
 
         internal static event Action<string> AChangeActiveActionMap;    //Announce scheme-switch, so PlayerInput components can react.
@@ -79,33 +77,39 @@ namespace ThreeDeePongProto.Shared.Managers
             m_centralInputActions.UserInterface.Disable();
 
             m_playerInputManager = GetComponent<PlayerInputManager>();
-            SetUpPlayerInputManager(m_playerInputManager);
+            SetUpPlayerInputManager();
         }
 
         private void OnEnable()
         {
-            m_playerInputManager.onPlayerJoined += OnPlayerJoined;
-            m_playerInputManager.onPlayerLeft += OnPlayerLeft;
+            if (m_playerInputManager != null)
+            {
+                m_playerInputManager.onPlayerJoined += OnPlayerJoined;
+                m_playerInputManager.onPlayerLeft += OnPlayerLeft;
+            }
 
-            MenuManager.AReLoadScene += OnReLoadScene;
             InputSystem.onDeviceChange += OnDeviceChange;
-            m_centralInputActions.PlayerActions.SelectPlayer1.performed += SetPlayerOne;
-            m_centralInputActions.PlayerActions.SelectPlayer2.performed += SetPlayerTwo;
-            m_centralInputActions.PlayerActions.SelectPlayer3.performed += SetPlayerThree;
-            m_centralInputActions.PlayerActions.SelectPlayer4.performed += SetPlayerFour;
+
+            m_centralInputActions.PlayerActions.SelectPlayer1.performed += _ => SetFocusedKeyboardPlayer(0);
+            m_centralInputActions.PlayerActions.SelectPlayer2.performed += _ => SetFocusedKeyboardPlayer(1);
+            m_centralInputActions.PlayerActions.SelectPlayer3.performed += _ => SetFocusedKeyboardPlayer(2);
+            m_centralInputActions.PlayerActions.SelectPlayer4.performed += _ => SetFocusedKeyboardPlayer(3);
         }
         
         private void OnDisable()
         {
-            m_playerInputManager.onPlayerJoined -= OnPlayerJoined;
-            m_playerInputManager.onPlayerLeft -= OnPlayerLeft;
+            if (m_playerInputManager != null)
+            {
+                m_playerInputManager.onPlayerJoined -= OnPlayerJoined;
+                m_playerInputManager.onPlayerLeft -= OnPlayerLeft;
+            }
 
-            MenuManager.AReLoadScene -= OnReLoadScene;
             InputSystem.onDeviceChange -= OnDeviceChange;
-            m_centralInputActions.PlayerActions.SelectPlayer1.performed -= SetPlayerOne;
-            m_centralInputActions.PlayerActions.SelectPlayer2.performed -= SetPlayerTwo;
-            m_centralInputActions.PlayerActions.SelectPlayer3.performed -= SetPlayerThree;
-            m_centralInputActions.PlayerActions.SelectPlayer4.performed -= SetPlayerFour;
+
+            m_centralInputActions.PlayerActions.SelectPlayer1.performed -= _ => SetFocusedKeyboardPlayer(0);
+            m_centralInputActions.PlayerActions.SelectPlayer2.performed -= _ => SetFocusedKeyboardPlayer(1);
+            m_centralInputActions.PlayerActions.SelectPlayer3.performed -= _ => SetFocusedKeyboardPlayer(2);
+            m_centralInputActions.PlayerActions.SelectPlayer4.performed -= _ => SetFocusedKeyboardPlayer(3);
         }
 
         private void OnApplicationQuit()
@@ -113,13 +117,12 @@ namespace ThreeDeePongProto.Shared.Managers
             m_centralInputActions.Disable();
         }
 
-        #region PlayerInputManager-Configuration
-        private void SetUpPlayerInputManager(PlayerInputManager _playerInputManager)
+        #region PlayerInputManager_Configuration
+        private void SetUpPlayerInputManager()
         {
-            if (_playerInputManager == null)
+            if (m_playerInputManager == null)
             {
-                PlayerInputManager playerInputManager = gameObject.AddComponent<PlayerInputManager>();
-                m_playerInputManager = playerInputManager;
+                m_playerInputManager = gameObject.AddComponent<PlayerInputManager>();
             }
 
             m_playerInputManager.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
@@ -137,209 +140,9 @@ namespace ThreeDeePongProto.Shared.Managers
         }
         #endregion
 
-        #region Custom_Methods
-        private void SetFocusedKeyboardPlayer(int _playerFocusID)
-        {
-            if (FocusedKeyboardPlayerID != _playerFocusID)
-                FocusedKeyboardPlayerID = _playerFocusID;
-        }
-
-        private void HandleDeviceDisconnect(Gamepad _disconnectedGamepad)
-        {
-            int playerIndex = -1;
-            foreach (var pair in m_originalPlayerDevices)
-            {
-                if (pair.Value.deviceId == _disconnectedGamepad.deviceId)
-                {
-                    playerIndex = pair.Key;
-                    break;
-                }
-            }
-
-            if (playerIndex != -1)
-            {
-                var playerInput = m_activePlayers.Find(p => p.playerIndex == playerIndex);
-                if (playerInput != null)
-                {
-                    Debug.Log($"Gamepad disconnected for Player {playerIndex}. Switching to Keyboard.");
-                    //Switching to Fallback-Keyboard
-                    playerInput.SwitchCurrentControlScheme($"{m_keyboardID}{playerIndex}", Keyboard.current, Mouse.current);
-                }
-            }
-        }
-
-        private void HandleDeviceReconnect(Gamepad _reconnectedGamepad)
-        {
-            int playerIndex = -1;
-            foreach (var pair in m_originalPlayerDevices)
-            {
-                if (pair.Value.deviceId == _reconnectedGamepad.deviceId)
-                {
-                    playerIndex = pair.Key;
-                    break;
-                }
-            }
-
-            if (playerIndex != -1)
-            {
-                var playerInput = m_activePlayers.Find(p => p.playerIndex == playerIndex);
-                // Prüfe, ob der Spieler aktuell wirklich ein anderes Gerät benutzt
-                if (playerInput != null && !playerInput.devices.Contains(_reconnectedGamepad))
-                {
-                    Debug.Log($"Gamepad reconnected for Player {playerIndex}.");
-                    playerInput.SwitchCurrentControlScheme(m_gamePadScheme, _reconnectedGamepad);
-                }
-            }
-        }
-        #endregion
-
-        #region None-CallbackContext_Subscription_Methods
-        private void OnPlayerJoined(PlayerInput _playerInput)
-        {
-            //Keep the active playerCount!
-            m_activePlayers.Add(_playerInput);
-            int playerIndex = _playerInput.playerIndex;
-
-            //Get the playerProfile for each player from the PlayerProfileManager.
-            PlayerProfileData profile = PlayerProfileManager.Instance.PlayerProfiles[playerIndex];
-
-            //Set name of the playerController gameObject.
-            _playerInput.gameObject.name = $"{profile.PlayerName}";
-
-            //Instantiate AvatarControls-Prefab gameObject.
-            GameObject avatarInstance = null;
-            if (m_playerAvatarControls != null && playerIndex < m_playerAvatarControls.Length)
-            {
-                avatarInstance = Instantiate(m_playerAvatarControls[playerIndex], _playerInput.transform);
-            }
-
-            //Get CharacterMainController on the CharacterBase-Prefab gameObject.
-            if (avatarInstance != null && _playerInput.gameObject.TryGetComponent<CharacterMainController>(out var controller))
-            {
-                var controlData = SettingsManager.Instance.CurrentSettings.Control;
-                var matchData = SettingsManager.Instance.CurrentSettings.Match;
-
-                //Set Base-Prefab values.
-                controller.StoreData(controlData, matchData, profile);
-
-                var transformParent = LocalMatchManager.Instance.PrefabParent;
-                controller.transform.SetParent(transformParent);   //previous FindObjectOfType<LocalMatchManager>();
-            }
-            else
-                Debug.LogError($"Could not find CharacterMainController for Player {playerIndex}.");
-
-            //Keep track of original PlayerDevices set on start.
-            m_originalPlayerDevices[playerIndex] = _playerInput.devices[0];
-
-            //Apply potentially existing keybind overrides on players.
-            RebindManager.Instance.ApplyOverridesToPlayer(_playerInput);
-
-            //Debug.Log($"Player {playerIndex} ({profile.PlayerID}) joined with Device '{_playerInput.devices[0].displayName}'.");
-        }
-
-        private void OnPlayerLeft(PlayerInput _playerInput)
-        {
-            m_activePlayers.Remove(_playerInput);
-            m_originalPlayerDevices.Remove(_playerInput.playerIndex);
-        }
-
-        /// <summary>
-        /// Method to receive the buildIndex of the scene that shall be reloaded.
-        /// </summary>
-        /// <param name="_sceneIndex"></param>
-        private void OnReLoadScene(int _sceneIndex)
-        {
-            if (_sceneIndex > 0) //Exclude BootScene with DDOL-Managers.
-            {
-                if (_sceneIndex < SceneManager.sceneCountInBuildSettings - 1)   //-1 marks last SceneIndex.
-                    SceneManager.LoadScene(_sceneIndex);
-            }
-        }
-
-        private void OnDeviceChange(InputDevice _inputDevice, InputDeviceChange _deviceChange)
-        {
-            if (_inputDevice is not Gamepad gamepad)
-                return;
-
-            switch (_deviceChange)
-            {
-                case InputDeviceChange.Disconnected:
-                case InputDeviceChange.Removed:
-                    HandleDeviceDisconnect(gamepad);
-                    break;
-
-                case InputDeviceChange.Reconnected:
-                case InputDeviceChange.Added:
-                    HandleDeviceReconnect(gamepad);
-                    break;
-                default:
-                    break;
-            }
-        }
-        #endregion
-
-        #region Delegate-Methods
-        private InputDevice[] GetDevicesForPlayer(int _playerIndex)
-        {
-            if (!m_playerProfiles[_playerIndex].DefaultKeyboard)
-            {
-                //The player prefers a gamepad. Check if one is available.
-                if (m_availableGamepads.Count > 0)
-                {
-                    var gamepad = m_availableGamepads[0];
-                    m_availableGamepads.RemoveAt(0); //And remove it from the list.
-                    return new InputDevice[] { gamepad };
-                }
-                else
-                {
-                    //Fallback-Keyboard.
-                    //Debug.LogWarning($"No gamepad available. Assigning available Keyboard and Mouse to Player {_playerIndex + 1}.");
-                }
-            }
-
-            return (Mouse.current != null) ? new InputDevice[] { Keyboard.current, Mouse.current }
-                                    : new InputDevice[] { Keyboard.current };  //Else return keyboard.
-        }
-        #endregion
-
-        #region Change_Action_Maps
-        /// <summary>
-        /// Switches ActionMaps, if the active actionMap isn't equal to the submitted one. But does not disable the old actionMaps!
-        /// </summary>
-        /// <param name="_actionMap"></param>
-        internal /*static */void ToggleActionMaps(string _actionMap)
-        {
-            if (m_lastSetActionMap == _actionMap)
-                return;
-
-            m_lastSetActionMap = _actionMap;
-
-            m_centralInputActions.asset.FindActionMap(_actionMap).Enable();
-            foreach (var map in m_centralInputActions.asset.actionMaps)
-            {
-                if (map.name != _actionMap)
-                {
-                    map.Disable();
-                }
-            }
-
-            //foreach (InputActionMap actionMap in m_centralInputActions.asset.actionMaps)
-            //{
-            //    if (actionMap.name != _actionMap)
-            //        actionMap.Disable();
-            //    else
-            //        actionMap.Enable();
-            //}
-
-            AChangeActiveActionMap?.Invoke(_actionMap);
-        }
-        #endregion
-
+        #region Spawn-Logic
         public void SpawnPlayersForMatch(int _playerCount)
         {
-            //Load current playerProfiles
-            m_playerProfiles = PlayerProfileManager.Instance.PlayerProfiles;
-
             //Create a new list of available Gamepads
             m_availableGamepads = new List<InputDevice>(Gamepad.all);
 
@@ -360,9 +163,7 @@ namespace ThreeDeePongProto.Shared.Managers
             {
                 //If the player already exists, skip the index.
                 if (m_activePlayers.Any(p => p.playerIndex == i))
-                {
                     continue;
-                }
 
                 //Find the matching device and controlScheme for the player.
                 InputDevice[] devicesToPair = GetDevicesForPlayer(i);
@@ -372,29 +173,213 @@ namespace ThreeDeePongProto.Shared.Managers
             }
         }
 
+        private InputDevice[] GetDevicesForPlayer(int _playerIndex)
+        {
+            //Load current playerProfiles
+            var m_playerProfiles = PlayerProfileManager.Instance.PlayerProfiles;    //Previous in SpawnPlayersForMatch().
+            
+            if (!m_playerProfiles[_playerIndex].DefaultKeyboard)
+            {
+                //The player prefers a gamepad. Check if one is available.
+                if (m_availableGamepads.Count > 0)
+                {
+                    var gamepad = m_availableGamepads[0];
+                    m_availableGamepads.RemoveAt(0); //And remove it from the list.
+                    return new InputDevice[] { gamepad };
+                }
+            }
+
+            //Fallback-Keyboard.
+            return (Mouse.current != null) ? new InputDevice[] { Keyboard.current, Mouse.current }
+                                    : new InputDevice[] { Keyboard.current };  //Else return keyboard.
+        }
+        #endregion
+
+        #region Player-Participation_Behavior
+        private void OnPlayerJoined(PlayerInput _playerInput)
+        {
+            //Keep the active playerCount!
+            m_activePlayers.Add(_playerInput);
+
+            int playerIndex = _playerInput.playerIndex;
+            //Get the playerProfile for each player from the PlayerProfileManager.
+            var playerProfile = PlayerProfileManager.Instance.PlayerProfiles[playerIndex];
+            //Set name of the playerController gameObject.
+            _playerInput.gameObject.name = $"{playerProfile.PlayerName}";
+
+            //Instantiate AvatarControls-Prefab gameObject.
+            GameObject avatarInstance = null;
+            if (m_playerAvatarControls != null && playerIndex < m_playerAvatarControls.Length)
+            {
+                avatarInstance = Instantiate(m_playerAvatarControls[playerIndex], _playerInput.transform);
+            }
+
+            //Get CharacterMainController on the CharacterBase-Prefab gameObject.
+            if (avatarInstance != null && _playerInput.gameObject.TryGetComponent<CharacterMainController>(out var controller))
+            {
+                var controlData = SettingsManager.Instance.CurrentSettings.Control;
+                var matchData = SettingsManager.Instance.CurrentSettings.Match;
+
+                //Set Base-Prefab values.
+                controller.StoreData(controlData, matchData, playerProfile);
+
+                var transformParent = LocalMatchManager.Instance.PrefabParent;
+                controller.transform.SetParent(transformParent);   //previous FindObjectOfType<LocalMatchManager>();
+            }
+            else
+                Debug.LogError($"Could not find CharacterMainController for Player {playerIndex}.");
+
+            //Keep track of original PlayerDevices set on start.
+            if (_playerInput.devices.Count > 0)
+                m_originalPlayerDevices[playerIndex] = _playerInput.devices[0];
+
+            //Apply potentially existing keybind overrides on players.
+            RebindManager.Instance.ApplyOverridesToPlayer(_playerInput);
+            #if UNITY_EDITOR
+            //Debug.Log($"Player {playerIndex} ({playerProfile.PlayerID}) joined with Device '{_playerInput.devices[0].displayName}'.");
+            #endif
+        }
+
+        private void OnPlayerLeft(PlayerInput _playerInput)
+        {
+            m_activePlayers.Remove(_playerInput);
+            m_originalPlayerDevices.Remove(_playerInput.playerIndex);
+        }
+        #endregion
+
+        #region Device_Hot-Plugging
+        private void OnDeviceChange(InputDevice _inputDevice, InputDeviceChange _deviceChange)
+        {
+            if (_inputDevice is not Gamepad gamepad)
+                return;
+
+            switch (_deviceChange)
+            {
+                case InputDeviceChange.Disconnected:
+                case InputDeviceChange.Removed:
+                    HandleDeviceDisconnect(gamepad);
+                    break;
+
+                case InputDeviceChange.Reconnected:
+                case InputDeviceChange.Added:
+                    HandleDeviceReconnect(gamepad);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void HandleDeviceDisconnect(Gamepad _disconnectedGamepad)
+        {
+            int playerIndex = -1;
+            
+            foreach (var pair in m_originalPlayerDevices)
+            {
+                if (pair.Value.deviceId == _disconnectedGamepad.deviceId)
+                {
+                    playerIndex = pair.Key;
+                    break;
+                }
+            }
+
+            if (playerIndex != -1)
+            {
+                var playerInput = m_activePlayers.Find(p => p.playerIndex == playerIndex);  //.Find or .FirstOrDefault.
+                if (playerInput != null)
+                {
+                    #if UNITY_EDITOR
+                    Debug.Log($"Gamepad disconnected for Player {playerIndex}. Switching to Keyboard.");
+                    #endif
+                    //Switching to Fallback-Keyboard
+                    playerInput.SwitchCurrentControlScheme($"{m_keyboardID}{playerIndex}", Keyboard.current, Mouse.current);
+                }
+            }
+            else
+            {
+                //Remove unused Gamepad from the List.
+                if (m_availableGamepads.Contains(_disconnectedGamepad))
+                {
+                    #if UNITY_EDITOR
+                    Debug.Log($"Removing unused Gamepad {_disconnectedGamepad.name} from the available Gamepad List!");
+                    #endif
+                    m_availableGamepads.Remove(_disconnectedGamepad);
+                }
+            }
+        }
+
+        private void HandleDeviceReconnect(Gamepad _reconnectedGamepad)
+        {
+            int playerIndex = -1;
+
+            foreach (var pair in m_originalPlayerDevices)
+            {
+                if (pair.Value.deviceId == _reconnectedGamepad.deviceId)
+                {
+                    playerIndex = pair.Key;
+                    break;
+                }
+            }
+
+            if (playerIndex != -1)
+            {
+                var playerInput = m_activePlayers.Find(p => p.playerIndex == playerIndex);  //.Find or .FirstOrDefault
+                //If the player currently runs on Keyboard-Fallback switch back.
+                if (playerInput != null && !playerInput.devices.Contains(_reconnectedGamepad))
+                {
+                    #if UNITY_EDITOR
+                    Debug.Log($"Gamepad for Player {playerIndex} reconnected.");
+                    #endif
+                    playerInput.SwitchCurrentControlScheme(m_gamePadScheme, _reconnectedGamepad);
+                }
+            }
+            else
+            {
+                //Add new Gamepad to List.
+                if (!m_availableGamepads.Contains(_reconnectedGamepad))
+                {
+                    #if UNITY_EDITOR
+                    Debug.Log($"New unused Gamepad {_reconnectedGamepad.name} added. Action required!");
+                    #endif
+                    m_availableGamepads.Add(_reconnectedGamepad);
+                }
+            }
+        }
+        #endregion
+
         public PlayerInputActions GetCentralActions()
         {
             return m_centralInputActions;
         }
 
-        private void SetPlayerOne(InputAction.CallbackContext _callbackContext)
+        #region Helper_Methods
+        /// <summary>
+        /// Switches ActionMaps, if the active actionMap isn't equal to the submitted one. But does not disable the old actionMaps!
+        /// </summary>
+        /// <param name="_actionMap"></param>
+        internal void ToggleActionMaps(string _actionMap)
         {
-            SetFocusedKeyboardPlayer(0);
+            if (m_lastSetActionMap == _actionMap)
+                return;
+
+            m_lastSetActionMap = _actionMap;
+
+            m_centralInputActions.asset.FindActionMap(_actionMap).Enable();
+            foreach (var map in m_centralInputActions.asset.actionMaps)
+            {
+                if (map.name != _actionMap)
+                {
+                    map.Disable();
+                }
+            }
+
+            AChangeActiveActionMap?.Invoke(_actionMap);
         }
 
-        private void SetPlayerTwo(InputAction.CallbackContext _callbackContext)
+        private void SetFocusedKeyboardPlayer(int _playerFocusID)
         {
-            SetFocusedKeyboardPlayer(1);
+            if (FocusedKeyboardPlayerID != _playerFocusID)
+                FocusedKeyboardPlayerID = _playerFocusID;
         }
-
-        private void SetPlayerThree(InputAction.CallbackContext _callbackContext)
-        {
-            SetFocusedKeyboardPlayer(2);
-        }
-
-        private void SetPlayerFour(InputAction.CallbackContext _callbackContext)
-        {
-            SetFocusedKeyboardPlayer(3);
-        }
+        #endregion
     }
 }
