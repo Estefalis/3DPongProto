@@ -707,54 +707,6 @@ Transform:
   - {fileID: 2136304135}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &246225490
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 246225492}
-  - component: {fileID: 246225491}
-  m_Layer: 0
-  m_Name: RebindManagerONDEVELOPMENT
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &246225491
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 246225490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35d241aa72480de4d8dd0d99e4343621, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_mainActionAsset: {fileID: -944628639613478452, guid: 10bcd34be915850428dc91a0ac6c1a9f,
-    type: 3}
-  m_targetActionMap: PlayerActions
-  m_useEncryption: 0
---- !u!4 &246225492
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 246225490}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &267146333
 GameObject:
   m_ObjectHideFlags: 0
@@ -843,6 +795,7 @@ GameObject:
   - component: {fileID: 330585546}
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
+  - component: {fileID: 330585547}
   m_Layer: 0
   m_Name: MainMenuCamera
   m_TagString: MainCamera
@@ -868,7 +821,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -924,6 +877,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &330585547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!224 &379379518 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8979487322202819460, guid: e5adf79f8c4f662418d398b152f0d82e,
@@ -2014,120 +2011,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1303007592
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1303007594}
-  - component: {fileID: 1303007595}
-  m_Layer: 0
-  m_Name: RebindManagerContainsIcons
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1303007594
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1303007592}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1303007595
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1303007592}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee4c483baa7cdd247933f3ee59c439a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_pS:
-    triangleNorth: {fileID: 0}
-    crossSouth: {fileID: 0}
-    squareWest: {fileID: 0}
-    circleEast: {fileID: 0}
-    startOptions: {fileID: 0}
-    createShare: {fileID: 0}
-    shoulderL1LB: {fileID: 0}
-    shoulderR1RB: {fileID: 0}
-    triggerL2LT: {fileID: 0}
-    triggerR2RT: {fileID: 0}
-    dpad: {fileID: 0}
-    dpadX: {fileID: 0}
-    dpadY: {fileID: 0}
-    dpadUp: {fileID: 0}
-    dpadDown: {fileID: 0}
-    dpadLeft: {fileID: 0}
-    dpadRight: {fileID: 0}
-    leftStick: {fileID: 0}
-    leftStickLeft: {fileID: 0}
-    leftStickRight: {fileID: 0}
-    lStickLeftRight: {fileID: 0}
-    leftStickUp: {fileID: 0}
-    leftStickDown: {fileID: 0}
-    lStickUpDown: {fileID: 0}
-    rightStick: {fileID: 0}
-    rightStickLeft: {fileID: 0}
-    rightStickRight: {fileID: 0}
-    rStickLeftRight: {fileID: 0}
-    rightStickUp: {fileID: 0}
-    rightStickDown: {fileID: 0}
-    rStickUpDown: {fileID: 0}
-    lStickClickL3: {fileID: 0}
-    rStickClickR3: {fileID: 0}
-    touchpadPress: {fileID: 0}
-  m_xBox:
-    triangleNorth: {fileID: 0}
-    crossSouth: {fileID: 0}
-    squareWest: {fileID: 0}
-    circleEast: {fileID: 0}
-    startOptions: {fileID: 0}
-    createShare: {fileID: 0}
-    shoulderL1LB: {fileID: 0}
-    shoulderR1RB: {fileID: 0}
-    triggerL2LT: {fileID: 0}
-    triggerR2RT: {fileID: 0}
-    dpad: {fileID: 0}
-    dpadX: {fileID: 0}
-    dpadY: {fileID: 0}
-    dpadUp: {fileID: 0}
-    dpadDown: {fileID: 0}
-    dpadLeft: {fileID: 0}
-    dpadRight: {fileID: 0}
-    leftStick: {fileID: 0}
-    leftStickLeft: {fileID: 0}
-    leftStickRight: {fileID: 0}
-    lStickLeftRight: {fileID: 0}
-    leftStickUp: {fileID: 0}
-    leftStickDown: {fileID: 0}
-    lStickUpDown: {fileID: 0}
-    rightStick: {fileID: 0}
-    rightStickLeft: {fileID: 0}
-    rightStickRight: {fileID: 0}
-    rStickLeftRight: {fileID: 0}
-    rightStickUp: {fileID: 0}
-    rightStickDown: {fileID: 0}
-    rStickUpDown: {fileID: 0}
-    lStickClickL3: {fileID: 0}
-    rStickClickR3: {fileID: 0}
-    touchpadPress: {fileID: 0}
 --- !u!1 &1313286940
 GameObject:
   m_ObjectHideFlags: 0
@@ -2396,6 +2279,21 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2136304140}
+    - target: {fileID: 8353611481393597798, guid: 430c392282a61bb4482c69a3b60f8b8e,
+        type: 3}
+      propertyPath: m_upTarget
+      value: 
+      objectReference: {fileID: 145697964}
+    - target: {fileID: 8353611482134224006, guid: 430c392282a61bb4482c69a3b60f8b8e,
+        type: 3}
+      propertyPath: m_upTarget
+      value: 
+      objectReference: {fileID: 145697964}
+    - target: {fileID: 8353611482611971555, guid: 430c392282a61bb4482c69a3b60f8b8e,
+        type: 3}
+      propertyPath: m_upTarget
+      value: 
+      objectReference: {fileID: 145697964}
     - target: {fileID: 8379406576618758392, guid: 430c392282a61bb4482c69a3b60f8b8e,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -9030,5 +8928,3 @@ SceneRoots:
   - {fileID: 975557202}
   - {fileID: 1805932208}
   - {fileID: 1587075786}
-  - {fileID: 246225492}
-  - {fileID: 1303007594}

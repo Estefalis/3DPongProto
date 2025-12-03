@@ -55,20 +55,25 @@ namespace ThreeDeePongProto.Shared.Managers
 
         #region Lists_and_Dictionaries
         private readonly List<PlayerInput> m_activePlayers = new();
-        private List<InputDevice> m_availableGamepads;
+        private List<InputDevice> m_availableGamepads = new();
         private readonly Dictionary<int, InputDevice> m_originalPlayerDevices = new();
         #endregion
 
-        internal static event Action<string> AChangeActiveActionMap;    //Announce scheme-switch, so PlayerInput components can react.
+        internal static event Action<string> AChangeActiveActionMap;        //Announce scheme-switch, so PlayerInput components can react.
 
         private const string m_keyboardID = "KeyboardPlayerID";
         private const string m_gamePadScheme = "Gamepad";
+
+        internal string DefaultDeviceName { get => m_iconDisplayName; }
+        private string m_iconDisplayName;
+        private readonly string m_defaultDeviceName = "PS5 Controller";     //Standard, if no gamepad is connected.
 
         protected override void Awake()
         {
             base.Awake();
 
             m_lastSetActionMap = "";
+            m_iconDisplayName = m_defaultDeviceName;
 
             m_centralInputActions ??= new();     //Old if (m_centralInputActions == null)
             m_centralInputActions.Enable();
@@ -144,7 +149,9 @@ namespace ThreeDeePongProto.Shared.Managers
         public void SpawnPlayersForMatch(int _playerCount)
         {
             //Create a new list of available Gamepads
-            m_availableGamepads = new List<InputDevice>(Gamepad.all);
+            m_availableGamepads.Clear();
+            foreach(var gamepad in Gamepad.all)
+                m_availableGamepads.Add(gamepad);
 
             //Remove Gamepads that are already used by Players in the game.
             foreach (var player in m_activePlayers)
@@ -184,6 +191,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 if (m_availableGamepads.Count > 0)
                 {
                     var gamepad = m_availableGamepads[0];
+                    m_iconDisplayName = m_availableGamepads[0].displayName;          //Update controllerType to display gamepadIcons in Settings.
                     m_availableGamepads.RemoveAt(0); //And remove it from the list.
                     return new InputDevice[] { gamepad };
                 }
@@ -288,7 +296,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 if (playerInput != null)
                 {
                     #if UNITY_EDITOR
-                    Debug.Log($"Gamepad disconnected for Player {playerIndex}. Switching to Keyboard.");
+                    // Debug.Log($"Gamepad {_disconnectedGamepad.displayName} disconnected for Player {playerIndex}. Switching to Keyboard.");
                     #endif
                     //Switching to Fallback-Keyboard
                     playerInput.SwitchCurrentControlScheme($"{m_keyboardID}{playerIndex}", Keyboard.current, Mouse.current);
@@ -300,11 +308,16 @@ namespace ThreeDeePongProto.Shared.Managers
                 if (m_availableGamepads.Contains(_disconnectedGamepad))
                 {
                     #if UNITY_EDITOR
-                    Debug.Log($"Removing unused Gamepad {_disconnectedGamepad.name} from the available Gamepad List!");
+                    // Debug.Log($"Removing unused Gamepad {_disconnectedGamepad.displayName} from the available Gamepad List!");
                     #endif
                     m_availableGamepads.Remove(_disconnectedGamepad);
                 }
             }
+
+            if (Gamepad.all.Count == 0)
+                m_iconDisplayName = m_defaultDeviceName;
+            else
+                m_iconDisplayName = Gamepad.all[0].displayName;
         }
 
         private void HandleDeviceReconnect(Gamepad _reconnectedGamepad)
@@ -327,9 +340,10 @@ namespace ThreeDeePongProto.Shared.Managers
                 if (playerInput != null && !playerInput.devices.Contains(_reconnectedGamepad))
                 {
                     #if UNITY_EDITOR
-                    Debug.Log($"Gamepad for Player {playerIndex} reconnected.");
+                    // Debug.Log($"Gamepad {_reconnectedGamepad.displayName} for Player {playerIndex} reconnected.");
                     #endif
                     playerInput.SwitchCurrentControlScheme(m_gamePadScheme, _reconnectedGamepad);
+                    var defaultDevice = _reconnectedGamepad.displayName;
                 }
             }
             else
@@ -338,11 +352,13 @@ namespace ThreeDeePongProto.Shared.Managers
                 if (!m_availableGamepads.Contains(_reconnectedGamepad))
                 {
                     #if UNITY_EDITOR
-                    Debug.Log($"New unused Gamepad {_reconnectedGamepad.name} added. Action required!");
+                    // Debug.Log($"New unused Gamepad {_reconnectedGamepad.displayName} added. Action required!");
                     #endif
                     m_availableGamepads.Add(_reconnectedGamepad);
                 }
             }
+
+            m_iconDisplayName = _reconnectedGamepad.displayName;
         }
         #endregion
 

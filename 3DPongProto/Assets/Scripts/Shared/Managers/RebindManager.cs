@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ThreeDeePongProto.Shared.UI;
 
 namespace ThreeDeePongProto.Shared.Managers
 {
@@ -13,6 +14,11 @@ namespace ThreeDeePongProto.Shared.Managers
         [SerializeField] private InputActionAsset m_mainActionAsset;
         [SerializeField] private string m_targetActionMap = "PlayerActions";
         [SerializeField] private bool m_useEncryption = false;
+
+        [Header("Gamepad Icons")]
+        [SerializeField] private GamepadIcons m_pS;
+        [SerializeField] private GamepadIcons m_xBox;
+        [SerializeField] private GamepadIcons m_genericGamepad;
 
         public event Action OnRebindComplete;
         public event Action OnRebindCanceled;
@@ -33,6 +39,8 @@ namespace ThreeDeePongProto.Shared.Managers
         private const string m_keyboardAnyKey = "<Keyboard>/anyKey";
         private const string m_gamepadAnyKey = "<Gamepad>/<Button>";
         #endregion
+
+        private const string m_ps5Device = "PS5", m_ps4Device = "PS4", m_xBoxDevice = "xBox", m_xInputDevice = "XInput";
 
         #region Serialization        
         private IPersistentData<OverrideSaveData> m_saveSystem; //The single, unified save system for all originalBinding overrides.
@@ -105,7 +113,7 @@ namespace ThreeDeePongProto.Shared.Managers
             IsRebinding = true;
         }
 
-        #region Shared_Logic
+        #region Rebind_Logic
         /// <summary>
         /// Called when the interactive rebinding process is successfully completed.
         /// </summary>
@@ -368,5 +376,49 @@ namespace ThreeDeePongProto.Shared.Managers
             IsRebinding = false;
         }
         #endregion
+
+        public Sprite GetGamepadIcon(string _controlPath)
+        {
+            string deviceName = UserInputManager.Instance.DefaultDeviceName;
+            if (deviceName.Contains(m_ps5Device) || deviceName.Contains(m_ps4Device))
+                return m_pS.GetGamepadSprite(_controlPath);
+
+            if (deviceName.Contains(m_xInputDevice) || deviceName.Contains(m_xBoxDevice))
+                return m_xBox.GetGamepadSprite(_controlPath);
+
+            //Generic Gamepad Fallback. Or failed checks.
+            return m_genericGamepad.GetGamepadSprite(_controlPath);
+        }
+
+        /// <summary>
+        /// Returns the effective ControlPath.
+        /// </summary>
+        public string GetEffectivePath(string _actionName, int _bindingIndex, int _playerIndex)
+        {
+            //1. Check for playerSpecific overrides.
+            var playerOverride = m_overrideData.bindingOverrides.FirstOrDefault(x =>
+                x.playerIndex == _playerIndex &&
+                x.actionName == _actionName &&
+                x.bindingIndex == _bindingIndex);
+
+            if (playerOverride != null) return playerOverride.overridePath;
+
+            //2. Check for global overrides.
+            var globalOverride = m_overrideData.bindingOverrides.FirstOrDefault(x =>
+                x.playerIndex == -1 &&
+                x.actionName == _actionName &&
+                x.bindingIndex == _bindingIndex);
+
+            if (globalOverride != null) return globalOverride.overridePath;
+
+            //3. StandardPath the the asset.
+            InputAction action = m_mainActionAsset.FindAction(_actionName);
+            if (action != null && _bindingIndex < action.bindings.Count)
+            {
+                return action.bindings[_bindingIndex].effectivePath;
+            }
+
+            return null;
+        }
     }
 }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using ThreeDeePongProto.Shared.HelperClasses;
+//using ThreeDeePongProto.Shared.HelperClasses; //Filled-Debug
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -51,10 +51,12 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         [SerializeField] private float m_scrollSensitivity = 10.0f;
         [SerializeField] internal bool m_loopNavigation = false;
 
+        #region Filled-Debug
         //[Header("Filled Debug")]
         //[SerializeField] private Vector2 m_maskedScrollWindow;      //Fix (masked) Width & Height
         //[SerializeField] private Vector2 m_fullContentWindow;       //Full Width & Height.
         //[SerializeField] private Vector2Int m_gridSize;
+        #endregion
 
         internal int ConstraintCount { get => m_constraintCount; }
         private int m_constraintCount;
@@ -177,12 +179,14 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                     break;
             }
 
+            #region Filled-Debug
             //if (m_contentFillType == EContentFillType.Filled)
             //{
             //    m_maskedScrollWindow = new Vector2(m_scrollViewRectTransform.rect.width, m_scrollViewRectTransform.rect.height);
             //    m_fullContentWindow = new Vector2(m_scrollViewContent.rect.width, m_scrollViewContent.rect.height);   //.x - .width, .y - .height.
             //    m_gridSize = CustomGridLayoutSetup.GetGridSize(m_gridSettings);
             //}
+            #endregion
         }
 
         private void SetContentFillType()

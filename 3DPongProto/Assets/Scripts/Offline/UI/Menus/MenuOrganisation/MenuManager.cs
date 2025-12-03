@@ -428,8 +428,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         /// <returns>True, if an action is currently handled, else false.</returns>
         private bool HandleHighPriorityCancelActions()
         {
-            if (RebindManager.Instance != null &&
-       (RebindManager.Instance.IsRebinding || RebindManager.Instance.WasJustCancelled))
+            if (RebindManager.Instance != null && (RebindManager.Instance.IsRebinding || RebindManager.Instance.WasJustCancelled))
                 return true;        //Block Cancel-Action. Rebind-Cancel-Action has priority before Menu-Back-Navigation.
 
             //Check for opened Dropdowns. Dropdown-References required!

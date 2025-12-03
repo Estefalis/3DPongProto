@@ -42,81 +42,46 @@ namespace ThreeDeePongProto.Shared.UI
         public Sprite touchpadPress;
         //public Sprite home;
 
-        public Sprite GetGamepadSprite(string controlPath)
+        public Sprite GetGamepadSprite(string _controlPath)
         {
-            // From the input system, we get the path of the control on device. So we can just
-            // map from that to the sprites we have for gamepads.
-            return controlPath switch
-            {
-                "<Gamepad>/buttonNorth" => triangleNorth,
-                "<Gamepad>/buttonSouth" => crossSouth,
-                "<Gamepad>/buttonWest" => squareWest,
-                "<Gamepad>/buttonEast" => circleEast,
-                "<Gamepad>/start" => startOptions,
-                "<Gamepad>/select" => createShare,
-                "<Gamepad>/leftTrigger" => triggerL2LT,
-                "<Gamepad>/rightTrigger" => triggerR2RT,
-                "<Gamepad>/leftShoulder" => shoulderL1LB,
-                "<Gamepad>/rightShoulder" => shoulderR1RB,
-                "<Gamepad>/dpad" => dpad,
-                "<Gamepad>/dpad/x" => dpadX,
-                "<Gamepad>/dpad/y" => dpadY,
-                "<Gamepad>/dpad/up" => dpadUp,
-                "<Gamepad>/dpad/down" => dpadDown,
-                "<Gamepad>/dpad/left" => dpadLeft,
-                "<Gamepad>/dpad/right" => dpadRight,
-                "<Gamepad>/leftStick" => leftStick,
-                "<Gamepad>/leftStick/x" => lStickLeftRight,
-                "<Gamepad>/leftStick/left" => leftStickLeft,
-                "<Gamepad>/leftStick/right" => leftStickRight,
-                "<Gamepad>/leftStick/y" => lStickUpDown,
-                "<Gamepad>/leftStick/up" => leftStickUp,
-                "<Gamepad>/leftStick/down" => leftStickDown,
-                "<Gamepad>/rightStick" => rightStick,
-                "<Gamepad>/rightStick/x" => rStickLeftRight,
-                "<Gamepad>/rightStick/left" => rightStickLeft,
-                "<Gamepad>/rightStick/right" => rightStickRight,
-                "<Gamepad>/rightStick/y" => rStickUpDown,
-                "<Gamepad>/rightStick/up" => rightStickUp,
-                "<Gamepad>/rightStick/down" => rightStickDown,
-                "<Gamepad>/leftStickPress" => lStickClickL3,
-                "<Gamepad>/rightStickPress" => rStickClickR3,
-                _ => null,
-            };
-        }
+            if (_controlPath.EndsWith("/buttonNorth")) return triangleNorth;
+            if (_controlPath.EndsWith("/buttonSouth")) return crossSouth;
+            if (_controlPath.EndsWith("/buttonWest")) return squareWest;
+            if (_controlPath.EndsWith("/buttonEast")) return circleEast;
 
-        public Sprite GetDualShockGamepadSprite(string controlPath)
-        {
-            // From the input system, we get the path of the control on device. So we can just
-            // map from that to the sprites we have for gamepads.
-            switch (controlPath)
-            {
-                case "<DualShockGamepad>/touchpadButton":
-                    return touchpadPress;
-                default:
-                    return null;
-            }
-        }
+            if (_controlPath.EndsWith("/start")) return startOptions;
+            if (_controlPath.EndsWith("/select")) return createShare;
 
-        public Sprite GetDualSenseGamepadHIDSprite(string controlPath)
-        {
-            // From the input system, we get the path of the control on device. So we can just
-            // map from that to the sprites we have for gamepads.
-            switch (controlPath)
-            {
-                case "<DualSenseGamepadHID>/leftTriggerButton":
-                    return triggerL2LT;
-                case "<DualSenseGamepadHID>/rightTriggerButton":
-                    return triggerR2RT;
-                case "<DualSenseGamepadHID>/touchpadButton":
-                    return touchpadPress;
-                //case "<DualSenseGamepadHID>/systemButton":
-                //    return home;  //Disabled for ControlRebinds.
-                //case "<DualSenseGamepadHID>/micButton":
-                //    return dpad;  //Disabled for ControlRebinds. (And no icon available at the moment.)
-                default:
-                    return null;
-            }
+            if (_controlPath.EndsWith("/leftTrigger")) return triggerL2LT;
+            if (_controlPath.EndsWith("/rightTrigger")) return triggerR2RT;
+            if (_controlPath.EndsWith("/leftShoulder")) return shoulderL1LB;
+            if (_controlPath.EndsWith("/rightShoulder")) return shoulderR1RB;
+
+            if (_controlPath.EndsWith("/dpad")) return dpad;
+            if (_controlPath.EndsWith("/dpad/up")) return dpadUp;
+            if (_controlPath.EndsWith("/dpad/down")) return dpadDown;
+            if (_controlPath.EndsWith("/dpad/left")) return dpadLeft;
+            if (_controlPath.EndsWith("/dpad/right")) return dpadRight;
+
+            if (_controlPath.EndsWith("/leftStick")) return leftStick;
+            if (_controlPath.EndsWith("/leftStick/x")) return lStickLeftRight;
+            if (_controlPath.EndsWith("/leftStick/left")) return leftStickLeft;
+            if (_controlPath.EndsWith("/leftStick/right")) return leftStickRight;
+            if (_controlPath.EndsWith("/leftStick/y")) return lStickUpDown;
+            if (_controlPath.EndsWith("/leftStick/up")) return leftStickUp;
+            if (_controlPath.EndsWith("/leftStick/down")) return leftStickDown;
+            if (_controlPath.EndsWith("/leftStickPress")) return lStickClickL3;
+
+            if (_controlPath.EndsWith("/rightStick")) return rightStick;
+            if (_controlPath.EndsWith("/rightStick/x")) return rStickLeftRight;
+            if (_controlPath.EndsWith("/rightStick/left")) return rightStickLeft;
+            if (_controlPath.EndsWith("/rightStick/right")) return rightStickRight;
+            if (_controlPath.EndsWith("/rightStick/y")) return rStickUpDown;
+            if (_controlPath.EndsWith("/rightStick/up")) return rightStickUp;
+            if (_controlPath.EndsWith("/rightStick/down")) return rightStickDown;
+            if (_controlPath.EndsWith("/rightStickPress")) return rStickClickR3;
+            else
+            return null;
         }
     }
 }

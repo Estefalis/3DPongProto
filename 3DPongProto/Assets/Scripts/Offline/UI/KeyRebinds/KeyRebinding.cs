@@ -129,22 +129,35 @@ namespace ThreeDeePongProto.Shared.Rebinding
 
             string actionName = m_inputActionReference.action.name;
 
-            //The RebindManager is now the single source of truth for display strings.
+            //1. Get a Fallback text.
             string displayString = RebindManager.Instance.GetBindingDisplayString(
                 actionName,
                 m_selectedBindingIndex,
                 m_isGlobalBinding ? -1 : m_playerIndex //Pass -1 or another invalid index for global
             );
 
+            //2. Get the IconPath.
+            string effectivePath = RebindManager.Instance.GetEffectivePath(
+                actionName,
+                m_selectedBindingIndex,
+                m_isGlobalBinding ? -1 : m_playerIndex
+            );
+
+            //3. Try to get an Icon.
+            Sprite icon = null;
+            if (!string.IsNullOrEmpty(effectivePath))
+            {
+                //Only get an icon, if it is a Gamepad path.
+                if (effectivePath.Contains("Gamepad") || effectivePath.Contains("Joystick"))
+                {
+                    icon = RebindManager.Instance.GetGamepadIcon(effectivePath);
+                }
+            }
+            
             m_rebindButtonText.text = displayString;
 
-            //TODO: Add Logic for updating the gamepad icon image here.
-            //if (m_buttonImage != null && m_buttonImage.gameObject.activeInHierarchy)
-            //{
-            //    Image buttonImage = m_buttonImage.GetComponent<Image>();
-            //    buttonImage.sprite = RebindManagerSP.GetControllerIcons(m_controlScheme, RebindManagerSP.GetEffectiveBindingPath(m_actionName, m_bindingIndex));
-            //    m_buttonImage.sprite = buttonImage.sprite;
-            //}
+            if(icon != null && m_buttonImage != null && m_buttonImage.gameObject.activeInHierarchy)
+                m_buttonImage.sprite = icon;
         }
 
         /// <summary>

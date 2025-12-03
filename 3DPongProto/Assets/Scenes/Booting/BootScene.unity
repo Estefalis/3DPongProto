@@ -230,6 +230,7 @@ GameObject:
   m_Component:
   - component: {fileID: 495539383}
   - component: {fileID: 495539382}
+  - component: {fileID: 495539384}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -314,6 +315,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &495539384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 495539381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &668475759
 GameObject:
   m_ObjectHideFlags: 0
@@ -435,6 +459,76 @@ MonoBehaviour:
     type: 3}
   m_targetActionMap: PlayerActions
   m_useEncryption: 0
+  m_pS:
+    triangleNorth: {fileID: 21300000, guid: ef777ca7e49ce7b4181aa11dfc3eb009, type: 3}
+    crossSouth: {fileID: 21300000, guid: 0c803c782b4eaf248bd9269523985833, type: 3}
+    squareWest: {fileID: 21300000, guid: 2b6a79869624e9a4799d30c995fa3ce0, type: 3}
+    circleEast: {fileID: 21300000, guid: ce516948196d0d044bcd554ba81396f5, type: 3}
+    startOptions: {fileID: 0}
+    createShare: {fileID: 21300000, guid: 36dc6dcdc738a064b8a0643f3172c8b0, type: 3}
+    shoulderL1LB: {fileID: 21300000, guid: ef8e6c0221af81746b5c7525e250eed6, type: 3}
+    shoulderR1RB: {fileID: 21300000, guid: 78c808a6628b0b04ba564dd00b7e8e73, type: 3}
+    triggerL2LT: {fileID: 21300000, guid: a3326ae3812256b40b01c295a3e7b842, type: 3}
+    triggerR2RT: {fileID: 21300000, guid: d3219ff5fe71c014c883c6efaeae8dda, type: 3}
+    dpad: {fileID: 21300000, guid: 729cf4af74f09ab438b24e383a7b0bd6, type: 3}
+    dpadX: {fileID: 21300000, guid: 729cf4af74f09ab438b24e383a7b0bd6, type: 3}
+    dpadY: {fileID: 21300000, guid: 729cf4af74f09ab438b24e383a7b0bd6, type: 3}
+    dpadUp: {fileID: 21300000, guid: 15c834e7a50ae114dae6738a0034e2bb, type: 3}
+    dpadDown: {fileID: 21300000, guid: eb587e8327171794ca2f916b6e0d346f, type: 3}
+    dpadLeft: {fileID: 21300000, guid: 577517829198561438bdc4fab4875b25, type: 3}
+    dpadRight: {fileID: 21300000, guid: 8a08a076f99e34c479c496709b79980d, type: 3}
+    leftStick: {fileID: 21300000, guid: fe3f78926de6cde4da10bedaccfbc7b7, type: 3}
+    leftStickLeft: {fileID: 21300000, guid: 62844e4b62da1b24e81da90115232aee, type: 3}
+    leftStickRight: {fileID: 21300000, guid: af4faa9873f9bb1479dd08af736cef37, type: 3}
+    lStickLeftRight: {fileID: 21300000, guid: ee3e886ef42be4b498055d197a7ac5a5, type: 3}
+    leftStickUp: {fileID: 21300000, guid: 1c3ade8820d181e479dff5a726abb24e, type: 3}
+    leftStickDown: {fileID: 21300000, guid: 1955bab1ff6d85646a070de3d2e8556e, type: 3}
+    lStickUpDown: {fileID: 21300000, guid: 6a574cc2a25b88c45a4e76991c70adf1, type: 3}
+    rightStick: {fileID: 21300000, guid: 50b657146122b5c47be78b98eb61dd7e, type: 3}
+    rightStickLeft: {fileID: 21300000, guid: 728d189dda2348b45a95f127194ec25c, type: 3}
+    rightStickRight: {fileID: 21300000, guid: 9802ff8c4c676c048bb1249ad39ec505, type: 3}
+    rStickLeftRight: {fileID: 21300000, guid: 18b6f49b2df42564aa4e2dc391e8aa30, type: 3}
+    rightStickUp: {fileID: 21300000, guid: 7f83352bd37435e4c90e80bc2e7803eb, type: 3}
+    rightStickDown: {fileID: 21300000, guid: 1b6604f7051eeb3418fe8d9cdb2c7319, type: 3}
+    rStickUpDown: {fileID: 21300000, guid: 02ded67335f478748b398542f70090a1, type: 3}
+    lStickClickL3: {fileID: 21300000, guid: 008b95908284a194589e5452a20734d0, type: 3}
+    rStickClickR3: {fileID: 21300000, guid: 5437c3e92b1065d49b4cb052882a88ce, type: 3}
+    touchpadPress: {fileID: 21300000, guid: 782c4dbc597926a4cb2621c8972170cd, type: 3}
+  m_xBox:
+    triangleNorth: {fileID: 0}
+    crossSouth: {fileID: 0}
+    squareWest: {fileID: 0}
+    circleEast: {fileID: 0}
+    startOptions: {fileID: 0}
+    createShare: {fileID: 0}
+    shoulderL1LB: {fileID: 0}
+    shoulderR1RB: {fileID: 0}
+    triggerL2LT: {fileID: 0}
+    triggerR2RT: {fileID: 0}
+    dpad: {fileID: 0}
+    dpadX: {fileID: 0}
+    dpadY: {fileID: 0}
+    dpadUp: {fileID: 0}
+    dpadDown: {fileID: 0}
+    dpadLeft: {fileID: 0}
+    dpadRight: {fileID: 0}
+    leftStick: {fileID: 0}
+    leftStickLeft: {fileID: 0}
+    leftStickRight: {fileID: 0}
+    lStickLeftRight: {fileID: 0}
+    leftStickUp: {fileID: 0}
+    leftStickDown: {fileID: 0}
+    lStickUpDown: {fileID: 0}
+    rightStick: {fileID: 0}
+    rightStickLeft: {fileID: 0}
+    rightStickRight: {fileID: 0}
+    rStickLeftRight: {fileID: 0}
+    rightStickUp: {fileID: 0}
+    rightStickDown: {fileID: 0}
+    rStickUpDown: {fileID: 0}
+    lStickClickL3: {fileID: 0}
+    rStickClickR3: {fileID: 0}
+    touchpadPress: {fileID: 0}
 --- !u!4 &901376908
 Transform:
   m_ObjectHideFlags: 0

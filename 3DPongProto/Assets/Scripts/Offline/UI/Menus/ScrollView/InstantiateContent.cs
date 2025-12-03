@@ -13,6 +13,8 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
         [Header("Prefab Instantiation")]
         [SerializeField] internal GameObject m_spawnPrefab = null;
         [SerializeField] private int m_createChildAmount = 5;
+        [SerializeField] private Selectable m_upTarget;
+        [SerializeField] private Selectable m_downTarget;
 
         internal void SpawnContentChildren()
         {
@@ -93,6 +95,25 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
                             newNav.selectOnRight = GetGridNavigation(i, Vector2Int.right, scrollControllerList, loopOption);
                         }
 
+                        if(i == 0)
+                            {
+                                //Move up/left out of the scrollView on first button index.
+                                Navigation upTrgtNav = m_upTarget.navigation;       //Category Button
+                                newNav.selectOnUp = m_upTarget;                     //Adding selectOnUp entry to newNav
+                                // newNav.selectOnLeft = m_upTarget;                   //Same with upTarget, if wanted
+                                upTrgtNav.selectOnDown = currentSelectable;         //Category Button to Index
+                                m_upTarget.navigation = upTrgtNav;
+                            }
+                            
+                        if(i == scrollControllerList.Count - 1)
+                            {
+                                //Move down/right out of the scrollView on last button index.
+                                Navigation dwnTrgtNav = m_downTarget.navigation;    //Back Button
+                                newNav.selectOnDown = m_downTarget;                 //Adding selectOnDown entry to newNav
+                                // newNav.selectOnRight = m_downTarget;                //Same with downTarget, if wanted
+                                dwnTrgtNav.selectOnUp = currentSelectable;          //Back Button to Index
+                                m_downTarget.navigation = dwnTrgtNav;
+                            }
                         break;
                     }
                 }

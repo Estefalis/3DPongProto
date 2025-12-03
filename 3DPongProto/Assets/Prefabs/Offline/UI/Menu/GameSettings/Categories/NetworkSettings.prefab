@@ -69,7 +69,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7239219511578844769}
   - component: {fileID: 7239219511578844775}
-  - component: {fileID: 7239219511578844768}
   m_Layer: 5
   m_Name: TestScrollViews
   m_TagString: Untagged
@@ -96,8 +95,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 40}
-  m_SizeDelta: {x: 0, y: -80}
+  m_AnchoredPosition: {x: 0, y: 35}
+  m_SizeDelta: {x: 0, y: -70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7239219511578844775
 CanvasRenderer:
@@ -107,36 +106,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7239219511578844770}
   m_CullTransparentMesh: 1
---- !u!114 &7239219511578844768
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7239219511578844770}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &8140988846067725963
 GameObject:
   m_ObjectHideFlags: 0
@@ -605,6 +574,8 @@ MonoBehaviour:
   m_spawnPrefab: {fileID: 9022728904379417136, guid: 8f6288d1944edf94fb9ff13723d57525,
     type: 3}
   m_createChildAmount: 5
+  m_upTarget: {fileID: 0}
+  m_downTarget: {fileID: 0}
 --- !u!1 &8140988846358551756
 GameObject:
   m_ObjectHideFlags: 0
@@ -883,6 +854,8 @@ MonoBehaviour:
   m_spawnPrefab: {fileID: 9022728904379417136, guid: c4d387aef11262042a66ad7b05ae8a4c,
     type: 3}
   m_createChildAmount: 5
+  m_upTarget: {fileID: 0}
+  m_downTarget: {fileID: 0}
 --- !u!1 &8140988846695799796
 GameObject:
   m_ObjectHideFlags: 0
@@ -1740,6 +1713,8 @@ MonoBehaviour:
   m_spawnPrefab: {fileID: 9022728904379417136, guid: c4d387aef11262042a66ad7b05ae8a4c,
     type: 3}
   m_createChildAmount: 5
+  m_upTarget: {fileID: 0}
+  m_downTarget: {fileID: 0}
 --- !u!1 &8140988847333195502
 GameObject:
   m_ObjectHideFlags: 0

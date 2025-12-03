@@ -27,7 +27,6 @@
   <Project Path="Unity.Burst.CodeGen.csproj" />
   <Project Path="Unity.RenderPipeline.Universal.ShaderLibrary.csproj" />
   <Project Path="Unity.TextMeshPro.csproj" />
-  <Project Path="Unity.InputSystem.RebindingUI.csproj" />
   <Project Path="Unity.InputSystem.TestFramework.csproj" />
   <Project Path="Unity.VSCode.Editor.csproj" />
   <Project Path="Unity.Toolchain.Linux-x86_64.csproj" />
