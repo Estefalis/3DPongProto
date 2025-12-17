@@ -5,7 +5,7 @@ using ThreeDeePongProto.Shared.Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
-//using UnityEngine.Rendering.Universal;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public enum ECameraModi
@@ -30,19 +30,23 @@ namespace ThreeDeePongProto.Shared.Settings
         [SerializeField] private Slider m_brightnessSlider;
         [SerializeField] private TextMeshProUGUI m_brightnessText;
         [SerializeField] private Toggle m_brightnessToggle;
-        //[SerializeField] private Volume m_globalVolume; //URP.
+        [SerializeField] private Volume m_globalVolume; //URP.
 
         [SerializeField, Range(0.1f, 10.0f)] private float m_adjustSliderStep = 1.0f;
 
         private List<Resolution> m_availableResolutions = new();
-        //private readonly float m_defaultBrightness = 0.0001f;
 
         private GraphicSettingsData m_graphicData;
 
         private void OnEnable()
         {
+            if (m_globalVolume == null)
+                m_globalVolume = FindObjectsOfType<Volume>().FirstOrDefault(v => v.isGlobal);
+
             m_graphicData = SettingsManager.Instance.CurrentSettings.Graphic;
             SettingsManager.Instance.OnSettingsChanged += SetUIElements;
+
+            ApplyBrightness();
             SetUIElements();    //Includes AddListeners();
         }
 
@@ -92,8 +96,8 @@ namespace ThreeDeePongProto.Shared.Settings
             //SettingsManager valueChanges only.
             m_graphicData.Brightness = _value;
 
-            //Slider > minValue = toggle value is false.
-            if (m_graphicData.UseDefBrightness && _value > m_brightnessSlider.minValue)
+            //SliderMovement = toggle value is false.
+            if (m_graphicData.UseDefBrightness /*&& _value > m_brightnessSlider.minValue*/)
                 m_graphicData.UseDefBrightness = false;
 
             SetUIElements();
@@ -107,7 +111,7 @@ namespace ThreeDeePongProto.Shared.Settings
             {
                 //Save current brightness before seting it to defaultValue.
                 m_graphicData.BrightnessBeforeDefault = m_graphicData.Brightness;
-                m_graphicData.Brightness = m_brightnessSlider.minValue;
+                m_graphicData.Brightness = 0.0f;
             }
             else
             {
@@ -122,10 +126,15 @@ namespace ThreeDeePongProto.Shared.Settings
 
         private void ApplyBrightness()
         {
-            //if (m_globalVolume != null && m_globalVolume.profile.TryGet<ColorAdjustments>(out var colorAdjustments))
-            //{
-            //    colorAdjustments.postExposure.value = m_graphicData.Brightness;
-            //}
+            if (m_globalVolume == null)
+            {
+                m_globalVolume = FindObjectsOfType<Volume>().FirstOrDefault(v => v.isGlobal);
+            }
+
+            if (m_globalVolume != null && m_globalVolume.profile.TryGet<ColorAdjustments>(out var colorAdjustments))
+            {
+               colorAdjustments.postExposure.value = m_graphicData.Brightness;
+            }
         }
 
         private void SetUIElements()
@@ -141,7 +150,12 @@ namespace ThreeDeePongProto.Shared.Settings
 
             m_brightnessToggle.isOn = m_graphicData.UseDefBrightness;
             m_brightnessSlider.value = m_graphicData.Brightness;
-            m_brightnessText.text = $"{m_brightnessSlider.value:P0}";
+            #region Alternative Strings
+            // m_brightnessText.text = $"{m_brightnessSlider.value:P0}";
+            // m_brightnessText.text = $"{m_brightnessSlider.value:F2}";
+            // m_brightnessText.text = $"{m_brightnessSlider.value:F2} EV"; //Exposure Values.
+            m_brightnessText.text = m_brightnessSlider.value.ToString("+0.00;-0.00;0.00");
+            #endregion
 
             //Resolution & SplitScreen
             SetResolutionDropdown();
@@ -242,12 +256,20 @@ namespace ThreeDeePongProto.Shared.Settings
             QualitySettings.SetQualityLevel(m_graphicData.QualityLevelIndex);
             Screen.fullScreen = m_graphicData.FullScreenMode;
 
+            //Required convertion, if using refreshRateRatio. Borderless Windows vs. Window.
+            FullScreenMode screenMode = m_graphicData.FullScreenMode ? FullScreenMode.FullScreenWindow : FullScreenMode.Windowed;
+
             //Find and set the saved resolution.
             Resolution resToSet = m_availableResolutions.Find(r => r.ToString() == m_graphicData.ResolutionString);
-            Screen.SetResolution(resToSet.width, resToSet.height, m_graphicData.FullScreenMode);
+            //Fallback, if string fails.
+            if (resToSet.width == 0)
+                resToSet = Screen.currentResolution;
+            Screen.SetResolution(resToSet.width, resToSet.height, screenMode, resToSet.refreshRateRatio);
 
             //Save settings permanently.
             SettingsManager.Instance.SaveSettings();
+
+            ApplyBrightness();
         }
 
         //Public method for the general ResetButton of GraphicSettings.

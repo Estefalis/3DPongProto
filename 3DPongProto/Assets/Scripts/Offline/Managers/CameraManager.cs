@@ -8,18 +8,16 @@ using UnityEngine;
 
 namespace ThreeDeePongProto.Offline.CameraSetup
 {
-    public class CameraManager : MonoBehaviour
+    public class CameraManager : PersistentSingleton<CameraManager>
     {
-        public static CameraManager Instance { get; private set; }
-
         public List<Camera> AvailableCameras { get => m_availableCameras; }
         [SerializeField] private List<Camera> m_availableCameras = new();
 
         public static event Action InitializeMatchUI;       //Tells MatchUserInterface to initialize it's UI.     
 
-        private void Awake()
+        protected override void Awake()
         {
-            Instance = this;
+            base.Awake();
         }
 
         private IEnumerator Start()

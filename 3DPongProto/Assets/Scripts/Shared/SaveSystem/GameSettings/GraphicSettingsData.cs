@@ -9,7 +9,7 @@ public class GraphicSettingsData
 
     public float Brightness = 0.0f; //Post Exposure standard value 0.
     public bool UseDefBrightness = false;
-    public float BrightnessBeforeDefault = 0.0001f;
+    public float BrightnessBeforeDefault = 0.0f;
 
     public string ResolutionString = "";    //Robust on Hardware-Changes ("1920x1080@144hz"). Previous SelectedResolutionIndex.
 }
