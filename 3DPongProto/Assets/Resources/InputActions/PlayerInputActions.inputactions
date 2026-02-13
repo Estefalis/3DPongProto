@@ -757,7 +757,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "MouseChange",
+                    "name": "CursorVisibility",
                     "type": "PassThrough",
                     "id": "0bb7d71c-d2ca-4306-97c2-94604f827669",
                     "expectedControlType": "Vector2",
@@ -1016,7 +1016,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3",
-                    "action": "MouseChange",
+                    "action": "CursorVisibility",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1027,7 +1027,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "MouseChange",
+                    "action": "CursorVisibility",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

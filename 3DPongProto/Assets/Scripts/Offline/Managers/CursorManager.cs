@@ -56,13 +56,13 @@ namespace ThreeDeePongProto.Shared.Managers
         void OnEnable()
         {
             m_inputActions.UserInterface.Navigate.performed += NavByUiButtons;
-            m_inputActions.UserInterface.MouseChange.performed += CrosshairChange;
+            m_inputActions.UserInterface.CursorVisibility.performed += CrosshairChange;
         }
 
         void OnDisable()
         {
             m_inputActions.UserInterface.Navigate.performed -= NavByUiButtons;
-            m_inputActions.UserInterface.MouseChange.performed -= CrosshairChange;
+            m_inputActions.UserInterface.CursorVisibility.performed -= CrosshairChange;
         }
 
         private void Start()
