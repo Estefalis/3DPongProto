@@ -15,16 +15,6 @@ internal enum ESceneNames
     NetGame = 4
 }
 
-internal enum EPlayerMenuControl
-{
-    None,
-    SpecificPlayer,
-    FirstPlayer,
-    LastPlayer,
-    EachPlayer,
-    HostPlayer,
-}
-
 internal enum EInputActionMaps
 {
     None,
@@ -51,7 +41,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         internal static string SetActionMap { get => m_lastSetActionMap; }
         private static string m_lastSetActionMap;
-        internal static int FocusedKeyboardPlayerID { get; private set; } = 0; //Keep track of focused playerWindow. Standard PlayerID 0.
+        internal static int FocusedKeyboardPlayerID { get; private set; } = 0;  //Keep track of focused playerWindow. Standard PlayerID 0.
 
         #region Lists_and_Dictionaries
         private readonly List<PlayerInput> m_activePlayers = new();
@@ -59,7 +49,7 @@ namespace ThreeDeePongProto.Shared.Managers
         private readonly Dictionary<int, InputDevice> m_originalPlayerDevices = new();
         #endregion
 
-        internal static event Action<string> AChangeActiveActionMap;        //Announce scheme-switch, so PlayerInput components can react.
+        internal static event Action<string> AChangeActiveActionMap;            //Announce scheme-switch, so PlayerInput components can react.
 
         private const string m_keyboardID = "KeyboardPlayerID";
         private const string m_gamePadScheme = "Gamepad";

@@ -19,9 +19,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         Alpha,
         Color
     }
-
+        
     public class MenuManager : MonoBehaviour
-    {
+    {        
         private PlayerInputActions m_inputActions;
         private InputActionMap m_uiActionMap;
 
@@ -62,10 +62,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] private Button m_hiddenFinishButton;
         #endregion
 
-        [Header("Mouse Cursor")]
-        [SerializeField] private CursorLockMode m_cursorLockMode = CursorLockMode.Confined;
-        [SerializeField] private bool m_showCursor = true;
-
         internal static GameObject LastSelectedGameObject { get => m_lastSelectedGameObject; }
         private static GameObject m_lastSelectedGameObject;
 
@@ -82,9 +78,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void Awake()
         {
             m_matchData = SettingsManager.Instance.CurrentSettings.Match;
-
-            Cursor.lockState = m_cursorLockMode;
-            Cursor.visible = m_showCursor;
 
             var centralInputAction = UserInputManager.Instance.GetCentralActions();
             if (centralInputAction == null)
@@ -112,11 +105,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnEnable()
         {
+            m_inputActions.UserInterface.Submit.performed += OnSubmitInput;
             if (!m_navigationKey[0].gameObject.activeInHierarchy)
             {
                 //Navigation and Submit work in Scenes without PlayerInput components. This if-test prevents doubled performed actions.
                 m_inputActions.UserInterface.Navigate.performed += OnNavigationInput;
-                m_inputActions.UserInterface.Submit.performed += OnSubmitInput;
             }
 
             UserInputManager.AChangeActiveActionMap += OnChangeActiveActionMap;
@@ -293,9 +286,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
                             //Moment, when the previous saved GO is made equal to the selected Object from the eventSystem.
                             m_lastSelectedGameObject = m_eventSystem.currentSelectedGameObject;
+                            //CallbackContext-OnNavigationInput sets new selected GameObject!
 
                             //2nd has to be in the same frame, or it blinks!
-                            ButtonTransition(m_lastSelectedGameObject);
+                            if(m_lastSelectedGameObject.TryGetComponent(out Button button))
+                                CategoryButtonTransition(button);
                             break;
                         }
                         case false:
@@ -382,17 +377,18 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 {
                     OnResumeTheGame();  //Resume back to the game in GameScene.
                 }
+                Debug.Log($"{uiActions.Cancel.activeControl.device.name} pressed OnCancel.");
             }
 
             //SUBMIT-Logic
             if (uiActions.Submit.WasPressedThisFrame())
             {
                 //Blocks the Submit-Logic, if actions like KeyRebinding or Dropdowns have priority.
-                if ((RebindManager.Instance != null && RebindManager.Instance.IsRebinding)/* || IsAnyDropdownOpen()*/)
+                if (RebindManager.Instance != null && RebindManager.Instance.IsRebinding/* || IsAnyDropdownOpen()*/)
                 {
                     return;
                 }
-
+                
                 //Else process the InputField-Logic.
                 HandleInputFieldSubmit();
             }
@@ -404,9 +400,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         private void HandleInputFieldSubmit()
         {
             var currentSelected = m_eventSystem.currentSelectedGameObject;
-
+            
             if (m_activeInputField != null)
             {
+                Debug.Log($"{currentSelected} in if.");
                 //End Edit-Mode while being in an InputField
                 m_activeInputField.interactable = false;
                 m_activeInputField.DeactivateInputField();
@@ -414,6 +411,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             }
             else if (currentSelected != null && currentSelected.TryGetComponent<TMP_InputField>(out var selectedField))
             {
+                Debug.Log($"{currentSelected} in else if.");
                 //An InputField is selected and Edit-Mode shall get started
                 m_activeInputField = selectedField;
                 m_currentInputFieldContent = selectedField.text; // Text f�r "Cancel" merken
@@ -455,15 +453,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             return false;       //No active action prioritized.
         }
 
-        private void ButtonTransition(GameObject _incomingGameObject)
+        private void CategoryButtonTransition(Button _incomingButton)
         {
-            if (!_incomingGameObject.TryGetComponent<Button>(out var button))   //Exclude none buttons.
-                return;
-
-            if (m_categoryButtons.Contains(button))                             //Only act, if button is in array.
-            {
-                CategorySwitch(button);
-            }
+            if(m_categoryButtons.Contains(_incomingButton))         //Only act, if button is in array.
+                CategorySwitch(_incomingButton);
         }
 
         private void NavigateToNextObject(Vector2 _navigationVector)
@@ -669,10 +662,10 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         {
             if (!Application.isFocused)
                 return;
-
+            
             if (m_playerInput == null && !m_uiActionMap.enabled)    //Only pass in GameScenes if PauseMenu is opened and PlayerInputs exist.
                 return;
-
+            
             if (_callbackContext.control.device is Keyboard)        //Because Keyboard works (currently).
                 return;
 
@@ -690,6 +683,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (_callbackContext.control.device is Keyboard)        //Because Keyboard works (currently).
                 return;
 
+            // if (CursorManager.Instance != null && CursorManager.Instance.IsCursorActive)
+            // {
+            //     Debug.Log("Get current highlighted Object and set it as m_lastSelectedGameObject.");
+            //     return; 
+            // }
+            
             if (_callbackContext.ReadValueAsButton())
                 ExecuteEvents.Execute(m_lastSelectedGameObject, new BaseEventData(m_eventSystem), ExecuteEvents.submitHandler);
         }

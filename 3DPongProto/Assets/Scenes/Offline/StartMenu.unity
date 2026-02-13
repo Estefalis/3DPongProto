@@ -3955,8 +3955,6 @@ MonoBehaviour:
   m_resumeButton: {fileID: 0}
   m_quitButton: {fileID: 0}
   m_hiddenFinishButton: {fileID: 0}
-  m_cursorLockMode: 0
-  m_showCursor: 1
 --- !u!1001 &240737787773209198
 PrefabInstance:
   m_ObjectHideFlags: 0

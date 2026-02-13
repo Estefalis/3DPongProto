@@ -3,6 +3,22 @@
     "name": "PlayerInputActions",
     "maps": [
         {
+            "name": "InitialAnyKeyOption",
+            "id": "afcb4ede-4584-458b-aa54-277231cd9b82",
+            "actions": [
+                {
+                    "name": "PressToContinue",
+                    "type": "Button",
+                    "id": "53b88330-433d-499d-92c1-058a0ccff355",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": []
+        },
+        {
             "name": "PlayerActions",
             "id": "526c9e06-ccf1-4cdc-8f6c-76780cdabe0a",
             "actions": [
@@ -55,7 +71,7 @@
                     "name": "KickBall",
                     "type": "Button",
                     "id": "1637802a-7a64-4501-b2dc-90018ecdf3d7",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -672,7 +688,7 @@
                     "name": "Submit",
                     "type": "Button",
                     "id": "bad25697-7888-45b7-9b5c-83eade88e255",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -681,7 +697,7 @@
                     "name": "Cancel",
                     "type": "Button",
                     "id": "0a6b9d65-f440-4e13-bd61-dde0898d9501",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -732,22 +748,22 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "CursorVisibility",
+                    "name": "CloseGameMenu",
                     "type": "Button",
-                    "id": "43e61106-20c5-460e-9808-fcbc8d998ff2",
-                    "expectedControlType": "Button",
+                    "id": "93bd3d6a-dfbd-481a-9dba-edb23f65a905",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "CloseGameMenu",
-                    "type": "Button",
-                    "id": "93bd3d6a-dfbd-481a-9dba-edb23f65a905",
-                    "expectedControlType": "Button",
+                    "name": "MouseChange",
+                    "type": "PassThrough",
+                    "id": "0bb7d71c-d2ca-4306-97c2-94604f827669",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -929,17 +945,6 @@
                 },
                 {
                     "name": "",
-                    "id": "ef7e9e7a-4407-474b-afc5-bbef55d712bc",
-                    "path": "<VirtualMouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Point",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "7faf2df8-c148-492f-a455-600e113bccaf",
                     "path": "<Mouse>/scroll",
                     "interactions": "",
@@ -968,17 +973,6 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse;KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3",
                     "action": "RightClick",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f19800cf-60cf-4674-828a-51761963696d",
-                    "path": "<Gamepad>/select",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "CursorVisibility",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1017,32 +1011,27 @@
                 },
                 {
                     "name": "",
-                    "id": "35867239-96a7-47c9-aaac-57c2c04dd5a6",
-                    "path": "<Gamepad>/buttonSouth",
+                    "id": "22445aa3-904b-4c8b-b114-8402adeaf413",
+                    "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Gamepad",
-                    "action": "LeftClick",
+                    "groups": ";KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3",
+                    "action": "MouseChange",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b13008b1-1e90-4859-baf5-e4a2f95e018d",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "MouseChange",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
             ]
-        },
-        {
-            "name": "InitialAnyKeyOption",
-            "id": "afcb4ede-4584-458b-aa54-277231cd9b82",
-            "actions": [
-                {
-                    "name": "PressToContinue",
-                    "type": "Button",
-                    "id": "53b88330-433d-499d-92c1-058a0ccff355",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": []
         }
     ],
     "controlSchemes": [

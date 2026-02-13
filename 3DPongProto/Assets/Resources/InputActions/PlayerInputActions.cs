@@ -91,6 +91,22 @@ namespace ThreeDeePongProto.Shared.InputActions
     ""name"": ""PlayerInputActions"",
     ""maps"": [
         {
+            ""name"": ""InitialAnyKeyOption"",
+            ""id"": ""afcb4ede-4584-458b-aa54-277231cd9b82"",
+            ""actions"": [
+                {
+                    ""name"": ""PressToContinue"",
+                    ""type"": ""Button"",
+                    ""id"": ""53b88330-433d-499d-92c1-058a0ccff355"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": []
+        },
+        {
             ""name"": ""PlayerActions"",
             ""id"": ""526c9e06-ccf1-4cdc-8f6c-76780cdabe0a"",
             ""actions"": [
@@ -143,7 +159,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""name"": ""KickBall"",
                     ""type"": ""Button"",
                     ""id"": ""1637802a-7a64-4501-b2dc-90018ecdf3d7"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -760,7 +776,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""name"": ""Submit"",
                     ""type"": ""Button"",
                     ""id"": ""bad25697-7888-45b7-9b5c-83eade88e255"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -769,7 +785,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""name"": ""Cancel"",
                     ""type"": ""Button"",
                     ""id"": ""0a6b9d65-f440-4e13-bd61-dde0898d9501"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -820,22 +836,22 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""CursorVisibility"",
+                    ""name"": ""CloseGameMenu"",
                     ""type"": ""Button"",
-                    ""id"": ""43e61106-20c5-460e-9808-fcbc8d998ff2"",
-                    ""expectedControlType"": ""Button"",
+                    ""id"": ""93bd3d6a-dfbd-481a-9dba-edb23f65a905"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""CloseGameMenu"",
-                    ""type"": ""Button"",
-                    ""id"": ""93bd3d6a-dfbd-481a-9dba-edb23f65a905"",
-                    ""expectedControlType"": ""Button"",
+                    ""name"": ""MouseChange"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""0bb7d71c-d2ca-4306-97c2-94604f827669"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -1017,17 +1033,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": """",
-                    ""id"": ""ef7e9e7a-4407-474b-afc5-bbef55d712bc"",
-                    ""path"": ""<VirtualMouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Point"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""7faf2df8-c148-492f-a455-600e113bccaf"",
                     ""path"": ""<Mouse>/scroll"",
                     ""interactions"": """",
@@ -1056,17 +1061,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse;KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
                     ""action"": ""RightClick"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f19800cf-60cf-4674-828a-51761963696d"",
-                    ""path"": ""<Gamepad>/select"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""CursorVisibility"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1105,32 +1099,27 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": """",
-                    ""id"": ""35867239-96a7-47c9-aaac-57c2c04dd5a6"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""id"": ""22445aa3-904b-4c8b-b114-8402adeaf413"",
+                    ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""LeftClick"",
+                    ""groups"": "";KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
+                    ""action"": ""MouseChange"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b13008b1-1e90-4859-baf5-e4a2f95e018d"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""MouseChange"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
             ]
-        },
-        {
-            ""name"": ""InitialAnyKeyOption"",
-            ""id"": ""afcb4ede-4584-458b-aa54-277231cd9b82"",
-            ""actions"": [
-                {
-                    ""name"": ""PressToContinue"",
-                    ""type"": ""Button"",
-                    ""id"": ""53b88330-433d-499d-92c1-058a0ccff355"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": []
         }
     ],
     ""controlSchemes"": [
@@ -1216,6 +1205,9 @@ namespace ThreeDeePongProto.Shared.InputActions
         }
     ]
 }");
+            // InitialAnyKeyOption
+            m_InitialAnyKeyOption = asset.FindActionMap("InitialAnyKeyOption", throwIfNotFound: true);
+            m_InitialAnyKeyOption_PressToContinue = m_InitialAnyKeyOption.FindAction("PressToContinue", throwIfNotFound: true);
             // PlayerActions
             m_PlayerActions = asset.FindActionMap("PlayerActions", throwIfNotFound: true);
             m_PlayerActions_Move = m_PlayerActions.FindAction("Move", throwIfNotFound: true);
@@ -1241,18 +1233,15 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_UserInterface_LeftClick = m_UserInterface.FindAction("LeftClick", throwIfNotFound: true);
             m_UserInterface_MiddleClick = m_UserInterface.FindAction("MiddleClick", throwIfNotFound: true);
             m_UserInterface_RightClick = m_UserInterface.FindAction("RightClick", throwIfNotFound: true);
-            m_UserInterface_CursorVisibility = m_UserInterface.FindAction("CursorVisibility", throwIfNotFound: true);
             m_UserInterface_CloseGameMenu = m_UserInterface.FindAction("CloseGameMenu", throwIfNotFound: true);
-            // InitialAnyKeyOption
-            m_InitialAnyKeyOption = asset.FindActionMap("InitialAnyKeyOption", throwIfNotFound: true);
-            m_InitialAnyKeyOption_PressToContinue = m_InitialAnyKeyOption.FindAction("PressToContinue", throwIfNotFound: true);
+            m_UserInterface_MouseChange = m_UserInterface.FindAction("MouseChange", throwIfNotFound: true);
         }
 
         ~@PlayerInputActions()
         {
+            UnityEngine.Debug.Assert(!m_InitialAnyKeyOption.enabled, "This will cause a leak and performance issues, PlayerInputActions.InitialAnyKeyOption.Disable() has not been called.");
             UnityEngine.Debug.Assert(!m_PlayerActions.enabled, "This will cause a leak and performance issues, PlayerInputActions.PlayerActions.Disable() has not been called.");
             UnityEngine.Debug.Assert(!m_UserInterface.enabled, "This will cause a leak and performance issues, PlayerInputActions.UserInterface.Disable() has not been called.");
-            UnityEngine.Debug.Assert(!m_InitialAnyKeyOption.enabled, "This will cause a leak and performance issues, PlayerInputActions.InitialAnyKeyOption.Disable() has not been called.");
         }
 
         /// <summary>
@@ -1324,6 +1313,102 @@ namespace ThreeDeePongProto.Shared.InputActions
         {
             return asset.FindBinding(bindingMask, out action);
         }
+
+        // InitialAnyKeyOption
+        private readonly InputActionMap m_InitialAnyKeyOption;
+        private List<IInitialAnyKeyOptionActions> m_InitialAnyKeyOptionActionsCallbackInterfaces = new List<IInitialAnyKeyOptionActions>();
+        private readonly InputAction m_InitialAnyKeyOption_PressToContinue;
+        /// <summary>
+        /// Provides access to input actions defined in input action map "InitialAnyKeyOption".
+        /// </summary>
+        public struct InitialAnyKeyOptionActions
+        {
+            private @PlayerInputActions m_Wrapper;
+
+            /// <summary>
+            /// Construct a new instance of the input action map wrapper class.
+            /// </summary>
+            public InitialAnyKeyOptionActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+            /// <summary>
+            /// Provides access to the underlying input action "InitialAnyKeyOption/PressToContinue".
+            /// </summary>
+            public InputAction @PressToContinue => m_Wrapper.m_InitialAnyKeyOption_PressToContinue;
+            /// <summary>
+            /// Provides access to the underlying input action map instance.
+            /// </summary>
+            public InputActionMap Get() { return m_Wrapper.m_InitialAnyKeyOption; }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+            public void Enable() { Get().Enable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+            public void Disable() { Get().Disable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+            public bool enabled => Get().enabled;
+            /// <summary>
+            /// Implicitly converts an <see ref="InitialAnyKeyOptionActions" /> to an <see ref="InputActionMap" /> instance.
+            /// </summary>
+            public static implicit operator InputActionMap(InitialAnyKeyOptionActions set) { return set.Get(); }
+            /// <summary>
+            /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <param name="instance">Callback instance.</param>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+            /// </remarks>
+            /// <seealso cref="InitialAnyKeyOptionActions" />
+            public void AddCallbacks(IInitialAnyKeyOptionActions instance)
+            {
+                if (instance == null || m_Wrapper.m_InitialAnyKeyOptionActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_InitialAnyKeyOptionActionsCallbackInterfaces.Add(instance);
+                @PressToContinue.started += instance.OnPressToContinue;
+                @PressToContinue.performed += instance.OnPressToContinue;
+                @PressToContinue.canceled += instance.OnPressToContinue;
+            }
+
+            /// <summary>
+            /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <remarks>
+            /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+            /// </remarks>
+            /// <seealso cref="InitialAnyKeyOptionActions" />
+            private void UnregisterCallbacks(IInitialAnyKeyOptionActions instance)
+            {
+                @PressToContinue.started -= instance.OnPressToContinue;
+                @PressToContinue.performed -= instance.OnPressToContinue;
+                @PressToContinue.canceled -= instance.OnPressToContinue;
+            }
+
+            /// <summary>
+            /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="InitialAnyKeyOptionActions.UnregisterCallbacks(IInitialAnyKeyOptionActions)" />.
+            /// </summary>
+            /// <seealso cref="InitialAnyKeyOptionActions.UnregisterCallbacks(IInitialAnyKeyOptionActions)" />
+            public void RemoveCallbacks(IInitialAnyKeyOptionActions instance)
+            {
+                if (m_Wrapper.m_InitialAnyKeyOptionActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            /// <summary>
+            /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+            /// </summary>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+            /// </remarks>
+            /// <seealso cref="InitialAnyKeyOptionActions.AddCallbacks(IInitialAnyKeyOptionActions)" />
+            /// <seealso cref="InitialAnyKeyOptionActions.RemoveCallbacks(IInitialAnyKeyOptionActions)" />
+            /// <seealso cref="InitialAnyKeyOptionActions.UnregisterCallbacks(IInitialAnyKeyOptionActions)" />
+            public void SetCallbacks(IInitialAnyKeyOptionActions instance)
+            {
+                foreach (var item in m_Wrapper.m_InitialAnyKeyOptionActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_InitialAnyKeyOptionActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        /// <summary>
+        /// Provides a new <see cref="InitialAnyKeyOptionActions" /> instance referencing this action map.
+        /// </summary>
+        public InitialAnyKeyOptionActions @InitialAnyKeyOption => new InitialAnyKeyOptionActions(this);
 
         // PlayerActions
         private readonly InputActionMap m_PlayerActions;
@@ -1564,8 +1649,8 @@ namespace ThreeDeePongProto.Shared.InputActions
         private readonly InputAction m_UserInterface_LeftClick;
         private readonly InputAction m_UserInterface_MiddleClick;
         private readonly InputAction m_UserInterface_RightClick;
-        private readonly InputAction m_UserInterface_CursorVisibility;
         private readonly InputAction m_UserInterface_CloseGameMenu;
+        private readonly InputAction m_UserInterface_MouseChange;
         /// <summary>
         /// Provides access to input actions defined in input action map "UserInterface".
         /// </summary>
@@ -1610,13 +1695,13 @@ namespace ThreeDeePongProto.Shared.InputActions
             /// </summary>
             public InputAction @RightClick => m_Wrapper.m_UserInterface_RightClick;
             /// <summary>
-            /// Provides access to the underlying input action "UserInterface/CursorVisibility".
-            /// </summary>
-            public InputAction @CursorVisibility => m_Wrapper.m_UserInterface_CursorVisibility;
-            /// <summary>
             /// Provides access to the underlying input action "UserInterface/CloseGameMenu".
             /// </summary>
             public InputAction @CloseGameMenu => m_Wrapper.m_UserInterface_CloseGameMenu;
+            /// <summary>
+            /// Provides access to the underlying input action "UserInterface/MouseChange".
+            /// </summary>
+            public InputAction @MouseChange => m_Wrapper.m_UserInterface_MouseChange;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1667,12 +1752,12 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @RightClick.started += instance.OnRightClick;
                 @RightClick.performed += instance.OnRightClick;
                 @RightClick.canceled += instance.OnRightClick;
-                @CursorVisibility.started += instance.OnCursorVisibility;
-                @CursorVisibility.performed += instance.OnCursorVisibility;
-                @CursorVisibility.canceled += instance.OnCursorVisibility;
                 @CloseGameMenu.started += instance.OnCloseGameMenu;
                 @CloseGameMenu.performed += instance.OnCloseGameMenu;
                 @CloseGameMenu.canceled += instance.OnCloseGameMenu;
+                @MouseChange.started += instance.OnMouseChange;
+                @MouseChange.performed += instance.OnMouseChange;
+                @MouseChange.canceled += instance.OnMouseChange;
             }
 
             /// <summary>
@@ -1708,12 +1793,12 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @RightClick.started -= instance.OnRightClick;
                 @RightClick.performed -= instance.OnRightClick;
                 @RightClick.canceled -= instance.OnRightClick;
-                @CursorVisibility.started -= instance.OnCursorVisibility;
-                @CursorVisibility.performed -= instance.OnCursorVisibility;
-                @CursorVisibility.canceled -= instance.OnCursorVisibility;
                 @CloseGameMenu.started -= instance.OnCloseGameMenu;
                 @CloseGameMenu.performed -= instance.OnCloseGameMenu;
                 @CloseGameMenu.canceled -= instance.OnCloseGameMenu;
+                @MouseChange.started -= instance.OnMouseChange;
+                @MouseChange.performed -= instance.OnMouseChange;
+                @MouseChange.canceled -= instance.OnMouseChange;
             }
 
             /// <summary>
@@ -1747,102 +1832,6 @@ namespace ThreeDeePongProto.Shared.InputActions
         /// Provides a new <see cref="UserInterfaceActions" /> instance referencing this action map.
         /// </summary>
         public UserInterfaceActions @UserInterface => new UserInterfaceActions(this);
-
-        // InitialAnyKeyOption
-        private readonly InputActionMap m_InitialAnyKeyOption;
-        private List<IInitialAnyKeyOptionActions> m_InitialAnyKeyOptionActionsCallbackInterfaces = new List<IInitialAnyKeyOptionActions>();
-        private readonly InputAction m_InitialAnyKeyOption_PressToContinue;
-        /// <summary>
-        /// Provides access to input actions defined in input action map "InitialAnyKeyOption".
-        /// </summary>
-        public struct InitialAnyKeyOptionActions
-        {
-            private @PlayerInputActions m_Wrapper;
-
-            /// <summary>
-            /// Construct a new instance of the input action map wrapper class.
-            /// </summary>
-            public InitialAnyKeyOptionActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-            /// <summary>
-            /// Provides access to the underlying input action "InitialAnyKeyOption/PressToContinue".
-            /// </summary>
-            public InputAction @PressToContinue => m_Wrapper.m_InitialAnyKeyOption_PressToContinue;
-            /// <summary>
-            /// Provides access to the underlying input action map instance.
-            /// </summary>
-            public InputActionMap Get() { return m_Wrapper.m_InitialAnyKeyOption; }
-            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
-            public void Enable() { Get().Enable(); }
-            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
-            public void Disable() { Get().Disable(); }
-            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
-            public bool enabled => Get().enabled;
-            /// <summary>
-            /// Implicitly converts an <see ref="InitialAnyKeyOptionActions" /> to an <see ref="InputActionMap" /> instance.
-            /// </summary>
-            public static implicit operator InputActionMap(InitialAnyKeyOptionActions set) { return set.Get(); }
-            /// <summary>
-            /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
-            /// </summary>
-            /// <param name="instance">Callback instance.</param>
-            /// <remarks>
-            /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
-            /// </remarks>
-            /// <seealso cref="InitialAnyKeyOptionActions" />
-            public void AddCallbacks(IInitialAnyKeyOptionActions instance)
-            {
-                if (instance == null || m_Wrapper.m_InitialAnyKeyOptionActionsCallbackInterfaces.Contains(instance)) return;
-                m_Wrapper.m_InitialAnyKeyOptionActionsCallbackInterfaces.Add(instance);
-                @PressToContinue.started += instance.OnPressToContinue;
-                @PressToContinue.performed += instance.OnPressToContinue;
-                @PressToContinue.canceled += instance.OnPressToContinue;
-            }
-
-            /// <summary>
-            /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
-            /// </summary>
-            /// <remarks>
-            /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
-            /// </remarks>
-            /// <seealso cref="InitialAnyKeyOptionActions" />
-            private void UnregisterCallbacks(IInitialAnyKeyOptionActions instance)
-            {
-                @PressToContinue.started -= instance.OnPressToContinue;
-                @PressToContinue.performed -= instance.OnPressToContinue;
-                @PressToContinue.canceled -= instance.OnPressToContinue;
-            }
-
-            /// <summary>
-            /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="InitialAnyKeyOptionActions.UnregisterCallbacks(IInitialAnyKeyOptionActions)" />.
-            /// </summary>
-            /// <seealso cref="InitialAnyKeyOptionActions.UnregisterCallbacks(IInitialAnyKeyOptionActions)" />
-            public void RemoveCallbacks(IInitialAnyKeyOptionActions instance)
-            {
-                if (m_Wrapper.m_InitialAnyKeyOptionActionsCallbackInterfaces.Remove(instance))
-                    UnregisterCallbacks(instance);
-            }
-
-            /// <summary>
-            /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
-            /// </summary>
-            /// <remarks>
-            /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
-            /// </remarks>
-            /// <seealso cref="InitialAnyKeyOptionActions.AddCallbacks(IInitialAnyKeyOptionActions)" />
-            /// <seealso cref="InitialAnyKeyOptionActions.RemoveCallbacks(IInitialAnyKeyOptionActions)" />
-            /// <seealso cref="InitialAnyKeyOptionActions.UnregisterCallbacks(IInitialAnyKeyOptionActions)" />
-            public void SetCallbacks(IInitialAnyKeyOptionActions instance)
-            {
-                foreach (var item in m_Wrapper.m_InitialAnyKeyOptionActionsCallbackInterfaces)
-                    UnregisterCallbacks(item);
-                m_Wrapper.m_InitialAnyKeyOptionActionsCallbackInterfaces.Clear();
-                AddCallbacks(instance);
-            }
-        }
-        /// <summary>
-        /// Provides a new <see cref="InitialAnyKeyOptionActions" /> instance referencing this action map.
-        /// </summary>
-        public InitialAnyKeyOptionActions @InitialAnyKeyOption => new InitialAnyKeyOptionActions(this);
         private int m_GamepadSchemeIndex = -1;
         /// <summary>
         /// Provides access to the input control scheme.
@@ -1907,6 +1896,21 @@ namespace ThreeDeePongProto.Shared.InputActions
                 if (m_KeyboardPlayerID3SchemeIndex == -1) m_KeyboardPlayerID3SchemeIndex = asset.FindControlSchemeIndex("KeyboardPlayerID3");
                 return asset.controlSchemes[m_KeyboardPlayerID3SchemeIndex];
             }
+        }
+        /// <summary>
+        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "InitialAnyKeyOption" which allows adding and removing callbacks.
+        /// </summary>
+        /// <seealso cref="InitialAnyKeyOptionActions.AddCallbacks(IInitialAnyKeyOptionActions)" />
+        /// <seealso cref="InitialAnyKeyOptionActions.RemoveCallbacks(IInitialAnyKeyOptionActions)" />
+        public interface IInitialAnyKeyOptionActions
+        {
+            /// <summary>
+            /// Method invoked when associated input action "PressToContinue" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnPressToContinue(InputAction.CallbackContext context);
         }
         /// <summary>
         /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "PlayerActions" which allows adding and removing callbacks.
@@ -2071,34 +2075,19 @@ namespace ThreeDeePongProto.Shared.InputActions
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnRightClick(InputAction.CallbackContext context);
             /// <summary>
-            /// Method invoked when associated input action "CursorVisibility" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-            /// </summary>
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-            void OnCursorVisibility(InputAction.CallbackContext context);
-            /// <summary>
             /// Method invoked when associated input action "CloseGameMenu" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>
             /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnCloseGameMenu(InputAction.CallbackContext context);
-        }
-        /// <summary>
-        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "InitialAnyKeyOption" which allows adding and removing callbacks.
-        /// </summary>
-        /// <seealso cref="InitialAnyKeyOptionActions.AddCallbacks(IInitialAnyKeyOptionActions)" />
-        /// <seealso cref="InitialAnyKeyOptionActions.RemoveCallbacks(IInitialAnyKeyOptionActions)" />
-        public interface IInitialAnyKeyOptionActions
-        {
             /// <summary>
-            /// Method invoked when associated input action "PressToContinue" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// Method invoked when associated input action "MouseChange" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>
             /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-            void OnPressToContinue(InputAction.CallbackContext context);
+            void OnMouseChange(InputAction.CallbackContext context);
         }
     }
 }
