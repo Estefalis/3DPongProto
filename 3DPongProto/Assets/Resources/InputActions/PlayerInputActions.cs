@@ -845,7 +845,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""CursorVisibility"",
+                    ""name"": ""CursorMovement"",
                     ""type"": ""PassThrough"",
                     ""id"": ""0bb7d71c-d2ca-4306-97c2-94604f827669"",
                     ""expectedControlType"": ""Vector2"",
@@ -1104,7 +1104,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
-                    ""action"": ""CursorVisibility"",
+                    ""action"": ""CursorMovement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1115,7 +1115,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""CursorVisibility"",
+                    ""action"": ""CursorMovement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1234,7 +1234,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_UserInterface_MiddleClick = m_UserInterface.FindAction("MiddleClick", throwIfNotFound: true);
             m_UserInterface_RightClick = m_UserInterface.FindAction("RightClick", throwIfNotFound: true);
             m_UserInterface_CloseGameMenu = m_UserInterface.FindAction("CloseGameMenu", throwIfNotFound: true);
-            m_UserInterface_CursorVisibility = m_UserInterface.FindAction("CursorVisibility", throwIfNotFound: true);
+            m_UserInterface_CursorMovement = m_UserInterface.FindAction("CursorMovement", throwIfNotFound: true);
         }
 
         ~@PlayerInputActions()
@@ -1650,7 +1650,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         private readonly InputAction m_UserInterface_MiddleClick;
         private readonly InputAction m_UserInterface_RightClick;
         private readonly InputAction m_UserInterface_CloseGameMenu;
-        private readonly InputAction m_UserInterface_CursorVisibility;
+        private readonly InputAction m_UserInterface_CursorMovement;
         /// <summary>
         /// Provides access to input actions defined in input action map "UserInterface".
         /// </summary>
@@ -1699,9 +1699,9 @@ namespace ThreeDeePongProto.Shared.InputActions
             /// </summary>
             public InputAction @CloseGameMenu => m_Wrapper.m_UserInterface_CloseGameMenu;
             /// <summary>
-            /// Provides access to the underlying input action "UserInterface/CursorVisibility".
+            /// Provides access to the underlying input action "UserInterface/CursorMovement".
             /// </summary>
-            public InputAction @CursorVisibility => m_Wrapper.m_UserInterface_CursorVisibility;
+            public InputAction @CursorMovement => m_Wrapper.m_UserInterface_CursorMovement;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1755,9 +1755,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @CloseGameMenu.started += instance.OnCloseGameMenu;
                 @CloseGameMenu.performed += instance.OnCloseGameMenu;
                 @CloseGameMenu.canceled += instance.OnCloseGameMenu;
-                @CursorVisibility.started += instance.OnCursorVisibility;
-                @CursorVisibility.performed += instance.OnCursorVisibility;
-                @CursorVisibility.canceled += instance.OnCursorVisibility;
+                @CursorMovement.started += instance.OnCursorMovement;
+                @CursorMovement.performed += instance.OnCursorMovement;
+                @CursorMovement.canceled += instance.OnCursorMovement;
             }
 
             /// <summary>
@@ -1796,9 +1796,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @CloseGameMenu.started -= instance.OnCloseGameMenu;
                 @CloseGameMenu.performed -= instance.OnCloseGameMenu;
                 @CloseGameMenu.canceled -= instance.OnCloseGameMenu;
-                @CursorVisibility.started -= instance.OnCursorVisibility;
-                @CursorVisibility.performed -= instance.OnCursorVisibility;
-                @CursorVisibility.canceled -= instance.OnCursorVisibility;
+                @CursorMovement.started -= instance.OnCursorMovement;
+                @CursorMovement.performed -= instance.OnCursorMovement;
+                @CursorMovement.canceled -= instance.OnCursorMovement;
             }
 
             /// <summary>
@@ -2082,12 +2082,12 @@ namespace ThreeDeePongProto.Shared.InputActions
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnCloseGameMenu(InputAction.CallbackContext context);
             /// <summary>
-            /// Method invoked when associated input action "CursorVisibility" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// Method invoked when associated input action "CursorMovement" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>
             /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-            void OnCursorVisibility(InputAction.CallbackContext context);
+            void OnCursorMovement(InputAction.CallbackContext context);
         }
     }
 }

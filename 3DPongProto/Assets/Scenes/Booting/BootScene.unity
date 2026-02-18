@@ -1013,7 +1013,7 @@ MonoBehaviour:
   m_gamepadCursorImage: {fileID: 575667030}
   m_cursorSpeed: 1000
   m_deadzone: 0.15
-  m_hideCursorOnTyping: 1
+  m_currentMode: 0
 --- !u!4 &2011105295
 Transform:
   m_ObjectHideFlags: 0
