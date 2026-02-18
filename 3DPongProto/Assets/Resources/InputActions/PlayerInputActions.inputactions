@@ -757,7 +757,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "CursorMovement",
+                    "name": "PadCursorMove",
                     "type": "PassThrough",
                     "id": "0bb7d71c-d2ca-4306-97c2-94604f827669",
                     "expectedControlType": "Vector2",
@@ -1011,23 +1011,12 @@
                 },
                 {
                     "name": "",
-                    "id": "22445aa3-904b-4c8b-b114-8402adeaf413",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3",
-                    "action": "CursorMovement",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "b13008b1-1e90-4859-baf5-e4a2f95e018d",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "CursorMovement",
+                    "action": "PadCursorMove",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

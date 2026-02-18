@@ -845,7 +845,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""CursorMovement"",
+                    ""name"": ""PadCursorMove"",
                     ""type"": ""PassThrough"",
                     ""id"": ""0bb7d71c-d2ca-4306-97c2-94604f827669"",
                     ""expectedControlType"": ""Vector2"",
@@ -1099,23 +1099,12 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": """",
-                    ""id"": ""22445aa3-904b-4c8b-b114-8402adeaf413"",
-                    ""path"": ""<Mouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3"",
-                    ""action"": ""CursorMovement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""b13008b1-1e90-4859-baf5-e4a2f95e018d"",
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""CursorMovement"",
+                    ""action"": ""PadCursorMove"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1234,7 +1223,7 @@ namespace ThreeDeePongProto.Shared.InputActions
             m_UserInterface_MiddleClick = m_UserInterface.FindAction("MiddleClick", throwIfNotFound: true);
             m_UserInterface_RightClick = m_UserInterface.FindAction("RightClick", throwIfNotFound: true);
             m_UserInterface_CloseGameMenu = m_UserInterface.FindAction("CloseGameMenu", throwIfNotFound: true);
-            m_UserInterface_CursorMovement = m_UserInterface.FindAction("CursorMovement", throwIfNotFound: true);
+            m_UserInterface_PadCursorMove = m_UserInterface.FindAction("PadCursorMove", throwIfNotFound: true);
         }
 
         ~@PlayerInputActions()
@@ -1650,7 +1639,7 @@ namespace ThreeDeePongProto.Shared.InputActions
         private readonly InputAction m_UserInterface_MiddleClick;
         private readonly InputAction m_UserInterface_RightClick;
         private readonly InputAction m_UserInterface_CloseGameMenu;
-        private readonly InputAction m_UserInterface_CursorMovement;
+        private readonly InputAction m_UserInterface_PadCursorMove;
         /// <summary>
         /// Provides access to input actions defined in input action map "UserInterface".
         /// </summary>
@@ -1699,9 +1688,9 @@ namespace ThreeDeePongProto.Shared.InputActions
             /// </summary>
             public InputAction @CloseGameMenu => m_Wrapper.m_UserInterface_CloseGameMenu;
             /// <summary>
-            /// Provides access to the underlying input action "UserInterface/CursorMovement".
+            /// Provides access to the underlying input action "UserInterface/PadCursorMove".
             /// </summary>
-            public InputAction @CursorMovement => m_Wrapper.m_UserInterface_CursorMovement;
+            public InputAction @PadCursorMove => m_Wrapper.m_UserInterface_PadCursorMove;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1755,9 +1744,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @CloseGameMenu.started += instance.OnCloseGameMenu;
                 @CloseGameMenu.performed += instance.OnCloseGameMenu;
                 @CloseGameMenu.canceled += instance.OnCloseGameMenu;
-                @CursorMovement.started += instance.OnCursorMovement;
-                @CursorMovement.performed += instance.OnCursorMovement;
-                @CursorMovement.canceled += instance.OnCursorMovement;
+                @PadCursorMove.started += instance.OnPadCursorMove;
+                @PadCursorMove.performed += instance.OnPadCursorMove;
+                @PadCursorMove.canceled += instance.OnPadCursorMove;
             }
 
             /// <summary>
@@ -1796,9 +1785,9 @@ namespace ThreeDeePongProto.Shared.InputActions
                 @CloseGameMenu.started -= instance.OnCloseGameMenu;
                 @CloseGameMenu.performed -= instance.OnCloseGameMenu;
                 @CloseGameMenu.canceled -= instance.OnCloseGameMenu;
-                @CursorMovement.started -= instance.OnCursorMovement;
-                @CursorMovement.performed -= instance.OnCursorMovement;
-                @CursorMovement.canceled -= instance.OnCursorMovement;
+                @PadCursorMove.started -= instance.OnPadCursorMove;
+                @PadCursorMove.performed -= instance.OnPadCursorMove;
+                @PadCursorMove.canceled -= instance.OnPadCursorMove;
             }
 
             /// <summary>
@@ -2082,12 +2071,12 @@ namespace ThreeDeePongProto.Shared.InputActions
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnCloseGameMenu(InputAction.CallbackContext context);
             /// <summary>
-            /// Method invoked when associated input action "CursorMovement" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// Method invoked when associated input action "PadCursorMove" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>
             /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-            void OnCursorMovement(InputAction.CallbackContext context);
+            void OnPadCursorMove(InputAction.CallbackContext context);
         }
     }
 }
