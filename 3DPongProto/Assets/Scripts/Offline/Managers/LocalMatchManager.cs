@@ -92,14 +92,14 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void OnEnable()
         {
-            MenuManager.AEndInfiniteMatch += EndInfiniteMatch;
+            MenuManager.AEndInfiniteMatch += EndInfiniteMatch;      //TODO: Change to MenuInput.cs.
             UserInputManager.AChangeActiveActionMap += ToggleMatchPause;
             PlayerInputManager.instance.onPlayerJoined += OnPlayerJoined;
         }
 
         private void OnDisable()
         {
-            MenuManager.AEndInfiniteMatch -= EndInfiniteMatch;
+            MenuManager.AEndInfiniteMatch -= EndInfiniteMatch;      //TODO: Change to MenuInput.cs.
             UserInputManager.AChangeActiveActionMap -= ToggleMatchPause;
             if (PlayerInputManager.instance != null)
                 PlayerInputManager.instance.onPlayerJoined -= OnPlayerJoined;

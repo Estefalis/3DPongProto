@@ -27,6 +27,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private PlayerInput m_playerInput;
 
+        [SerializeField] internal MenuNavigation m_menuNavigation;
+        [SerializeField] internal MenuInput m_menuInput;
+
         [SerializeField] internal EventSystem m_eventSystem;
 
         #region MenuNavigation
@@ -53,6 +56,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         //Simply just to (de-)activate the corresponding Transforms for each Settings-Category.
         [SerializeField] private Transform[] m_subPageTransforms;
         #endregion
+        #endregion
 
         [SerializeField] private TMP_Dropdown[] m_uIDropdowns;
 
@@ -60,9 +64,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         [SerializeField] private Button m_resumeButton;
         [SerializeField] private Button m_quitButton;
         [SerializeField] private Button m_hiddenFinishButton;
-        #endregion
 
-        internal static GameObject LastSelectedGameObject { get => m_lastSelectedGameObject; }
+        internal static GameObject LastSelectedGameObject { get => /*MenuNavigation.*/m_lastSelectedGameObject; }
         private static GameObject m_lastSelectedGameObject;
 
         private TMP_InputField m_lastSelectedInputField = null;
@@ -95,7 +98,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 UserInputManager.Instance.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
             else
                 UserInputManager.Instance.ToggleActionMaps(EInputActionMaps.PlayerActions.ToString());
-
+            
             m_lastSelectedGameObject = null;
             m_targetNavigationElement.Clear();
 
@@ -369,7 +372,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 }
 
                 //If nothing has a higher priority, navigate back.
-                if (m_activeElement.Count > 1)
+                if (m_activeElement.Count >= 1)
                 {
                     CloseToPreviousElement();
                 }
@@ -679,16 +682,19 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
             if (m_playerInput == null && !m_uiActionMap.enabled)    //Only pass in GameScenes if PauseMenu is opened and PlayerInputs exist.
                 return;
-
-            if (_callbackContext.control.device is Keyboard)        //Because Keyboard works (currently).
-                return;
-
-            // if (CursorManager.Instance != null && CursorManager.Instance.IsCursorActive)
-            // {
-            //     Debug.Log("Get current highlighted Object and set it as m_lastSelectedGameObject.");
-            //     return; 
-            // }
             
+            // if (_callbackContext.control.device is Keyboard)        //Because Keyboard works (currently).
+            // {
+            //     Debug.Log("Keyboard pressed!");
+            //     return;
+            // }
+                
+            // if(_callbackContext.control.device is Gamepad)
+            // {
+            //     Debug.Log("Gamepad pressed!");
+            //     return;
+            // }
+                
             if (_callbackContext.ReadValueAsButton())
                 ExecuteEvents.Execute(m_lastSelectedGameObject, new BaseEventData(m_eventSystem), ExecuteEvents.submitHandler);
         }

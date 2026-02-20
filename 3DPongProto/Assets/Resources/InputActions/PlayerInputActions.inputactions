@@ -89,7 +89,7 @@
                     "name": "OpenGameMenu",
                     "type": "Button",
                     "id": "10c55572-7a33-47de-aec8-fe3fe0adbad2",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -98,7 +98,7 @@
                     "name": "CursorVisibility",
                     "type": "Button",
                     "id": "acc02fc3-ae13-4b92-9014-16d11745dfe7",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -901,11 +901,11 @@
                 },
                 {
                     "name": "",
-                    "id": "b7d0e008-37c7-4aaa-8793-972221db9dda",
+                    "id": "7dde1e41-bc61-435f-b6d6-7c86774eacba",
                     "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Gamepad",
+                    "groups": "",
                     "action": "Submit",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1005,6 +1005,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardPlayerID0;KeyboardPlayerID1;KeyboardPlayerID2;KeyboardPlayerID3",
+                    "action": "LeftClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6c013537-bd94-41e3-aeed-85a7ad685f27",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
                     "action": "LeftClick",
                     "isComposite": false,
                     "isPartOfComposite": false

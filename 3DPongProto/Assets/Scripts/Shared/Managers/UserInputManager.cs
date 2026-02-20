@@ -377,7 +377,7 @@ namespace ThreeDeePongProto.Shared.Managers
                     map.Disable();
                 }
             }
-
+            
             AChangeActiveActionMap?.Invoke(_actionMap);
         }
 

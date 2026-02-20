@@ -38,7 +38,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
                 if (m_menuManager != null)
                 {
-                    m_menuManager.ClickActivation(m_ownInputField.gameObject);
+                    m_menuManager.ClickActivation(m_ownInputField.gameObject);      //TODO: Change to MenuInput.cs!
                 }
             }
         }

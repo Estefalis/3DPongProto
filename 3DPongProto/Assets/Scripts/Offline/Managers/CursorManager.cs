@@ -32,17 +32,18 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             base.Awake();
             m_inputActions = UserInputManager.Instance.GetCentralActions();
-            m_cursorMovement = m_inputActions.UserInterface.PadCursorMove;
+            m_inputActions.Disable();
+            // m_cursorMovement = m_inputActions.UserInterface.PadCursorMove;
         }
 
         void OnEnable()
         {
-            m_inputActions.UserInterface.Navigate.performed += NavByUiButtons;
+            // m_inputActions.UserInterface.Navigate.performed += NavByUiButtons;
         }
 
         void OnDisable()
         {
-            m_inputActions.UserInterface.Navigate.performed -= NavByUiButtons;
+            // m_inputActions.UserInterface.Navigate.performed -= NavByUiButtons;
         }
 
         private void Start()
@@ -61,7 +62,7 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             if (Mouse.current == null) return;                                                          //Mouse-check.
             m_mouseMovement = Mouse.current.delta.magnitude > m_deadzone;
-            Vector2 actionInput = m_cursorMovement.ReadValue<Vector2>();
+            Vector2 actionInput = m_inputActions.UserInterface.PadCursorMove.ReadValue<Vector2>();
             m_gamepadMovement = actionInput.sqrMagnitude > m_deadzone * m_deadzone;
             var blocked = m_mouseMovement && m_gamepadMovement;
             
@@ -78,10 +79,14 @@ namespace ThreeDeePongProto.Shared.Managers
             if(m_mouseMovement && m_currentMode != ECursorMode.HardwareMouse)
                 SetCursorMode(ECursorMode.HardwareMouse);
 
-
             if (m_currentMode != ECursorMode.GamepadStick || blocked) return;
 
             if (actionInput.magnitude < m_deadzone * m_deadzone) return;                                //Reduce performance-cost.
+
+            if (m_inputActions.UserInterface.Navigate.WasPressedThisFrame() && m_currentMode != ECursorMode.HideOnNavigate)
+            {
+                SetCursorMode(ECursorMode.HideOnNavigate);
+            }
 
             Vector2 currentMousePos = Mouse.current.position.ReadValue();                               //Get current mouse-position.
             Vector2 newPos = currentMousePos + (m_baseSpeed * m_potency * Time.unscaledDeltaTime * actionInput);  //Calculate new position.
@@ -124,14 +129,12 @@ namespace ThreeDeePongProto.Shared.Managers
             }
         }
 
-        #region CallbackContext
-        private void NavByUiButtons(InputAction.CallbackContext _callbackContext)
-        {
-            if(_callbackContext.action.WasPerformedThisFrame() && m_currentMode != ECursorMode.HideOnNavigate)
-            {
-                SetCursorMode(ECursorMode.HideOnNavigate);
-            }
-        }
-        #endregion
+        // #region CallbackContext
+        // private void NavByUiButtons(InputAction.CallbackContext _callbackContext)
+        // {
+        //     if(_callbackContext.action.WasPerformedThisFrame() && m_currentMode != ECursorMode.HideOnNavigate)
+        //         SetCursorMode(ECursorMode.HideOnNavigate);
+        // }
+        // #endregion
     }
 }
