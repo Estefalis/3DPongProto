@@ -380,7 +380,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 {
                     OnResumeTheGame();  //Resume back to the game in GameScene.
                 }
-                Debug.Log($"{uiActions.Cancel.activeControl.device.name} pressed OnCancel.");
+                Debug.Log($"OnCancel pressed on highest UI-Level. Command ignored!");
             }
 
             //SUBMIT-Logic
@@ -683,20 +683,29 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (m_playerInput == null && !m_uiActionMap.enabled)    //Only pass in GameScenes if PauseMenu is opened and PlayerInputs exist.
                 return;
             
-            // if (_callbackContext.control.device is Keyboard)        //Because Keyboard works (currently).
-            // {
-            //     Debug.Log("Keyboard pressed!");
-            //     return;
-            // }
+            if (_callbackContext.control.device is Keyboard)        //Because Keyboard works (currently).
+            {
+                Debug.Log("Keyboard pressed!");
+                return;
+            }
                 
             // if(_callbackContext.control.device is Gamepad)
             // {
             //     Debug.Log("Gamepad pressed!");
             //     return;
             // }
-                
+            
+            bool isCursorMode = CursorManager.Instance != null && CursorManager.Instance.IsCursorActive;
+        
+            if (isCursorMode)
+            {
+                return; 
+            }
+        
             if (_callbackContext.ReadValueAsButton())
+            {
                 ExecuteEvents.Execute(m_lastSelectedGameObject, new BaseEventData(m_eventSystem), ExecuteEvents.submitHandler);
+            }
         }
         #endregion
     }

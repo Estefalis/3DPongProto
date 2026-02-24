@@ -989,11 +989,11 @@ namespace ThreeDeePongProto.Shared.InputActions
                 },
                 {
                     ""name"": """",
-                    ""id"": ""7dde1e41-bc61-435f-b6d6-7c86774eacba"",
+                    ""id"": ""ca7f6122-6a2f-4002-abfb-714a45624cb2"",
                     ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""Submit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false

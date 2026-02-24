@@ -24,7 +24,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         [SerializeField] private ECursorMode m_currentMode = ECursorMode.HardwareMouse;
 
-        // public bool IsCursorActive => m_currentMode == ECursorMode.GamepadStick || m_currentMode == ECursorMode.HardwareMouse;
+        public bool IsCursorActive => m_currentMode == ECursorMode.GamepadStick || m_currentMode == ECursorMode.HardwareMouse;
         private bool m_gamepadMovement = false, m_mouseMovement = false;
 
         protected override void Awake()
@@ -103,21 +103,50 @@ namespace ThreeDeePongProto.Shared.Managers
                 {
                     Cursor.visible = true;
                     Cursor.lockState = CursorLockMode.None;
+                    SetGamepadSouthFunction(true);
                     break;
                 }
                 case ECursorMode.HideOnNavigate:
                 {
                     Cursor.visible = false;
                     Cursor.lockState = CursorLockMode.Locked;
+                    SetGamepadSouthFunction(false);
                     break;
                 }
                 case ECursorMode.Blocked:
                 {
                     Cursor.visible = false;
                     // Mouse.current.WarpCursorPosition(Vector2.zero);
+                    SetGamepadSouthFunction(false);
                     break;
                 }
                 default: break;
+            }
+        }
+
+        private void SetGamepadSouthFunction(bool _asLeftClick)
+        {
+            string targetPath = "<Gamepad>/buttonSouth";
+
+            //Reference Action.
+            InputAction submitAction = m_inputActions.UserInterface.Submit;
+            InputAction clickAction = m_inputActions.UserInterface.LeftClick;
+
+            //Find Indices.
+            int submitIndex = submitAction.bindings.IndexOf(x => x.path == targetPath);
+            int clickIndex = clickAction.bindings.IndexOf(x => x.path == targetPath);
+
+            if (_asLeftClick)
+            {
+                //Overrides for Click-Action.
+                if (submitIndex != -1) submitAction.ApplyBindingOverride(submitIndex, "");          //Deactivate Submit.
+                if (clickIndex != -1) clickAction.ApplyBindingOverride(clickIndex, targetPath);     //Activate Click.
+            }
+            else
+            {
+                //Overrides for Submit-Action.
+                if (clickIndex != -1) clickAction.ApplyBindingOverride(clickIndex, "");             //Deactovate Click.
+                if (submitIndex != -1) submitAction.ApplyBindingOverride(submitIndex, targetPath);  //Activate Submit.
             }
         }
 
