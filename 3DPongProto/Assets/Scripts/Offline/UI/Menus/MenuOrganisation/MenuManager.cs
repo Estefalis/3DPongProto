@@ -27,8 +27,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private PlayerInput m_playerInput;
 
-        [SerializeField] internal MenuNavigation m_menuNavigation;
-        [SerializeField] internal MenuInput m_menuInput;
+        // [SerializeField] internal MenuNavigation m_menuNavigation;
+        // [SerializeField] internal MenuInput m_menuInput;
 
         [SerializeField] internal EventSystem m_eventSystem;
 
