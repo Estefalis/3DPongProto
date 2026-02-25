@@ -31,7 +31,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8583228379627027331}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -147,6 +146,7 @@ GameObject:
   - component: {fileID: 8583228379627027334}
   - component: {fileID: 8583228379627027329}
   - component: {fileID: 8583228379627027328}
+  - component: {fileID: -5092863315739816473}
   m_Layer: 5
   m_Name: ReduceButton
   m_TagString: Untagged
@@ -168,7 +168,6 @@ RectTransform:
   m_Children:
   - {fileID: 8583228379009358570}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -269,3 +268,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &-5092863315739816473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8583228379627027330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f22c18cc33f40580da868fddef661997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

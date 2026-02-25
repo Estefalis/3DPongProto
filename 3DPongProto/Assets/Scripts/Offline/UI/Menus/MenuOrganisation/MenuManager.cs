@@ -669,10 +669,11 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (m_playerInput == null && !m_uiActionMap.enabled)    //Only pass in GameScenes if PauseMenu is opened and PlayerInputs exist.
                 return;
             
-            if (_callbackContext.control.device is Keyboard)        //Because Keyboard works (currently).
+            if(_callbackContext.action.WasReleasedThisFrame())      //The _callbackContext gets triggered multiple times. .started, .performed, .canceled.
                 return;
-
-            NavigateToNextObject(_callbackContext.ReadValue<Vector2>());
+            
+            if(_callbackContext.action.WasPerformedThisFrame())
+                NavigateToNextObject(_callbackContext.ReadValue<Vector2>());
         }
 
         private void OnSubmitInput(InputAction.CallbackContext _callbackContext)
@@ -683,18 +684,15 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (m_playerInput == null && !m_uiActionMap.enabled)    //Only pass in GameScenes if PauseMenu is opened and PlayerInputs exist.
                 return;
             
-            if (_callbackContext.control.device is Keyboard)        //Because Keyboard works (currently).
-            {
-                Debug.Log("Keyboard pressed!");
+            if(_callbackContext.action.WasReleasedThisFrame())      //The _callbackContext gets triggered multiple times. .started, .performed, .canceled.
                 return;
-            }
             
-            bool isCursorMode = CursorManager.Instance != null && CursorManager.Instance.IsCursorActive;
+            // bool isCursorMode = CursorManager.Instance != null && CursorManager.Instance.IsCursorActive;
         
-            if (isCursorMode)
-            {
-                return; 
-            }
+            // if (isCursorMode)
+            // {
+            //     return; 
+            // }
 
             /*var isStartMenu = SceneManager.GetActiveScene().buildIndex == (int)ESceneNames.StartMenu;
             bool isCursorMode = CursorManager.Instance != null && CursorManager.Instance.IsCursorActive;
@@ -705,9 +703,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             }*/
         
             if (_callbackContext.ReadValueAsButton())
-            {
                 ExecuteEvents.Execute(m_lastSelectedGameObject, new BaseEventData(m_eventSystem), ExecuteEvents.submitHandler);
-            }
         }
         #endregion
     }
