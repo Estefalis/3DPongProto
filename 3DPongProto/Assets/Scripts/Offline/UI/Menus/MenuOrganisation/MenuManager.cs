@@ -663,14 +663,16 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #region CallbackContext-Subscription_Methods
         private void OnNavigationInput(InputAction.CallbackContext _callbackContext)
         {
-            if (!Application.isFocused)
-                return;
-            
+            if (!Application.isFocused) return;
+
             if (m_playerInput == null && !m_uiActionMap.enabled)    //Only pass in GameScenes if PauseMenu is opened and PlayerInputs exist.
                 return;
             
-            if(_callbackContext.action.WasReleasedThisFrame())      //The _callbackContext gets triggered multiple times. .started, .performed, .canceled.
+            //StartMenu- and GameScene need to get handled different, because players handle inputAction-Inputs different!
+            if(_callbackContext.action.WasReleasedThisFrame()) //Ignore the actionPhase '.canceled'.
                 return;
+
+            // if(_callbackContext.performed) return;                  //In gameScenes reoccuting trigger from multiple player need to be blocked.
             
             if(_callbackContext.action.WasPerformedThisFrame())
                 NavigateToNextObject(_callbackContext.ReadValue<Vector2>());
@@ -681,28 +683,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (!Application.isFocused)
                 return;
 
-            if (m_playerInput == null && !m_uiActionMap.enabled)    //Only pass in GameScenes if PauseMenu is opened and PlayerInputs exist.
+            if (m_playerInput == null && !m_uiActionMap.enabled)                        //Only pass in GameScenes if PauseMenu is opened and PlayerInputs exist.
                 return;
             
-            if(_callbackContext.action.WasReleasedThisFrame())      //The _callbackContext gets triggered multiple times. .started, .performed, .canceled.
+            if(_callbackContext.action.WasReleasedThisFrame())                          //Ignore the actionPhase '.canceled'.
                 return;
             
-            // bool isCursorMode = CursorManager.Instance != null && CursorManager.Instance.IsCursorActive;
-        
-            // if (isCursorMode)
-            // {
-            //     return; 
-            // }
-
-            /*var isStartMenu = SceneManager.GetActiveScene().buildIndex == (int)ESceneNames.StartMenu;
-            bool isCursorMode = CursorManager.Instance != null && CursorManager.Instance.IsCursorActive;
-            if(_callbackContext.control.device is Gamepad && isCursorMode && isStartMenu)
-            {
-                Debug.Log("Gamepad pressed!");
-                return;
-            }*/
-        
-            if (_callbackContext.ReadValueAsButton())
+            var isStartMenu = SceneManager.GetActiveScene().buildIndex == (int)ESceneNames.StartMenu;
+            if (_callbackContext.ReadValueAsButton() && !isStartMenu)
                 ExecuteEvents.Execute(m_lastSelectedGameObject, new BaseEventData(m_eventSystem), ExecuteEvents.submitHandler);
         }
         #endregion
