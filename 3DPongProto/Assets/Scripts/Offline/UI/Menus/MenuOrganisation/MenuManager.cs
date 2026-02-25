@@ -688,12 +688,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 Debug.Log("Keyboard pressed!");
                 return;
             }
-                
-            // if(_callbackContext.control.device is Gamepad)
-            // {
-            //     Debug.Log("Gamepad pressed!");
-            //     return;
-            // }
             
             bool isCursorMode = CursorManager.Instance != null && CursorManager.Instance.IsCursorActive;
         
@@ -701,6 +695,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             {
                 return; 
             }
+
+            /*var isStartMenu = SceneManager.GetActiveScene().buildIndex == (int)ESceneNames.StartMenu;
+            bool isCursorMode = CursorManager.Instance != null && CursorManager.Instance.IsCursorActive;
+            if(_callbackContext.control.device is Gamepad && isCursorMode && isStartMenu)
+            {
+                Debug.Log("Gamepad pressed!");
+                return;
+            }*/
         
             if (_callbackContext.ReadValueAsButton())
             {
