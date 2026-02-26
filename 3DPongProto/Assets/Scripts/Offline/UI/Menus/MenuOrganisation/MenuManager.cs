@@ -464,6 +464,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void NavigateToNextObject(Vector2 _navigationVector)
         {
+            if(m_activeInputField != null) return;
+            
             Selectable nextSelectable = null;
 
             if (_navigationVector.y != 0)
@@ -663,19 +665,27 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #region CallbackContext-Subscription_Methods
         private void OnNavigationInput(InputAction.CallbackContext _callbackContext)
         {
+            int first = -1;                                             //1st: _callbackContext.canceled resets first variable every time.
+            
             if (!Application.isFocused) return;
 
-            if (m_playerInput == null && !m_uiActionMap.enabled)    //Only pass in GameScenes if PauseMenu is opened and PlayerInputs exist.
+            if (m_playerInput == null && !m_uiActionMap.enabled)        //Only pass in GameScenes if PauseMenu is opened and PlayerInputs exist.
                 return;
             
             //StartMenu- and GameScene need to get handled different, because players handle inputAction-Inputs different!
             if(_callbackContext.action.WasReleasedThisFrame()) //Ignore the actionPhase '.canceled'.
                 return;
-
-            // if(_callbackContext.performed) return;                  //In gameScenes reoccuting trigger from multiple player need to be blocked.
             
-            if(_callbackContext.action.WasPerformedThisFrame())
-                NavigateToNextObject(_callbackContext.ReadValue<Vector2>());
+            if(_callbackContext.action.WasPerformedThisFrame())         
+            {
+                //2nd: Check fo initial state.
+                if(first == -1)
+                {
+                    //3rd: Initial state is no more. And repeat after _callbackContext.canceled.
+                    first++;
+                    NavigateToNextObject(_callbackContext.ReadValue<Vector2>());                    
+                }
+            }
         }
 
         private void OnSubmitInput(InputAction.CallbackContext _callbackContext)
@@ -689,6 +699,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if(_callbackContext.action.WasReleasedThisFrame())                          //Ignore the actionPhase '.canceled'.
                 return;
             
+            //Limit Execution to GameScene(s) with Playinput components from players.
             var isStartMenu = SceneManager.GetActiveScene().buildIndex == (int)ESceneNames.StartMenu;
             if (_callbackContext.ReadValueAsButton() && !isStartMenu)
                 ExecuteEvents.Execute(m_lastSelectedGameObject, new BaseEventData(m_eventSystem), ExecuteEvents.submitHandler);
