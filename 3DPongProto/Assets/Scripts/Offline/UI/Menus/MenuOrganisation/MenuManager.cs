@@ -111,7 +111,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_inputActions.UserInterface.Submit.performed += OnSubmitInput;
             if (!m_navigationKey[0].gameObject.activeInHierarchy)
             {
-                //Navigation and Submit work in Scenes without PlayerInput components. This if-test prevents doubled performed actions.
+                //if-check prevents doubled performed actions.
                 m_inputActions.UserInterface.Navigate.performed += OnNavigationInput;
             }
 
@@ -120,7 +120,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnDisable()    //Copy content into 'OnDestroy()', if needed.
         {
-            //TODO: Make clear, if un-subscriptions also need a if-condition like subscription above.
             m_inputActions.UserInterface.Navigate.performed -= OnNavigationInput;
             m_inputActions.UserInterface.Submit.performed -= OnSubmitInput;
 
@@ -464,7 +463,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void NavigateToNextObject(Vector2 _navigationVector)
         {
-            if(m_activeInputField != null) return;
+            foreach (var dropdown in m_uIDropdowns)
+            if (dropdown.IsExpanded) return;
             
             Selectable nextSelectable = null;
 
@@ -665,10 +665,8 @@ namespace ThreeDeePongProto.Offline.UI.Menu
         #region CallbackContext-Subscription_Methods
         private void OnNavigationInput(InputAction.CallbackContext _callbackContext)
         {
-            int first = -1;                                             //1st: _callbackContext.canceled resets first variable every time.
-            
             if (!Application.isFocused) return;
-
+            
             if (m_playerInput == null && !m_uiActionMap.enabled)        //Only pass in GameScenes if PauseMenu is opened and PlayerInputs exist.
                 return;
             
@@ -676,15 +674,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if(_callbackContext.action.WasReleasedThisFrame()) //Ignore the actionPhase '.canceled'.
                 return;
             
+            if(_callbackContext.control.device is Gamepad)
+                return;
+            
             if(_callbackContext.action.WasPerformedThisFrame())         
             {
-                //2nd: Check fo initial state.
-                if(first == -1)
-                {
-                    //3rd: Initial state is no more. And repeat after _callbackContext.canceled.
-                    first++;
-                    NavigateToNextObject(_callbackContext.ReadValue<Vector2>());                    
-                }
+                NavigateToNextObject(_callbackContext.ReadValue<Vector2>());
             }
         }
 
@@ -696,7 +691,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (m_playerInput == null && !m_uiActionMap.enabled)                        //Only pass in GameScenes if PauseMenu is opened and PlayerInputs exist.
                 return;
             
-            if(_callbackContext.action.WasReleasedThisFrame())                          //Ignore the actionPhase '.canceled'.
+            if(_callbackContext.action.WasReleasedThisFrame())                          //Ignore the actionPhase '.canceled'. BtnSth in LeftClick also.
                 return;
             
             //Limit Execution to GameScene(s) with Playinput components from players.
