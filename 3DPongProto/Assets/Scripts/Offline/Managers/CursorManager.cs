@@ -30,8 +30,7 @@ namespace ThreeDeePongProto.Shared.Managers
         protected override void Awake()
         {
             base.Awake();
-            m_inputActions = UserInputManager.Instance.GetCentralActions();
-            m_inputActions.Disable();
+            m_inputActions = UserInputManager.Instance.GetCentralActions(); //UserInputManager switches ActionMaps in ToggleActionMaps-Method.
         }
 
         void OnEnable()

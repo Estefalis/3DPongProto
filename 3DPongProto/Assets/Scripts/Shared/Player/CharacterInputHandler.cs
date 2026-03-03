@@ -21,8 +21,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private InputActionMap m_uiMap, m_playerMap;
 
         private const string m_moveString = "Move", m_rotateString = "Rotate", m_pushString = "Push", m_resetString = "ResetRotation", m_zoomString = "Zoom";
-        private const string m_kickBallString = "KickBall", m_cursorString = "CursorVisibility", m_openGameMenuString = "OpenGameMenu", m_mousePositionString = "MousePosition";
-
+        private const string m_kickBallString = "KickBall", m_openGameMenuString = "OpenGameMenu", m_mousePositionString = "MousePosition";
         internal List<InputBinding> m_playerBindings = new();
         private int m_playerID;
         private Vector2 m_rotationVector;   //Saved current rotationInput.
@@ -217,20 +216,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                         case InputActionPhase.Performed:
                         {
                             OnKickBall(_callbackContext);
-                            break;
-                        }
-                        default:
-                            break;
-                    }
-                    break;
-                }
-                case m_cursorString:
-                {
-                    switch (_callbackContext.action.phase)
-                    {
-                        case InputActionPhase.Performed:
-                        {
-                            Debug.Log("OnCursorVisibility not implemented, yet.");
                             break;
                         }
                         default:
