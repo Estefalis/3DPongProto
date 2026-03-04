@@ -354,11 +354,13 @@ namespace ThreeDeePongProto.Shared.Managers
 
             PauseMatch(true);
 
-            var matchResult = new MatchResult();
-            matchResult.FinalScore = GetHigherPlayerScore(m_totalScoreTeam1, m_totalScoreTeam2);
-            matchResult.WinnerName = m_infiniteWinner;  //WinnerName AFTER FinalScore, because atm it gets set in GetHigherPlayerScore.
-            matchResult.TotalPlayTime = Time.time - m_matchStartTime;
-            matchResult.MatchWinDate = DateTime.UtcNow.Ticks;
+            var matchResult = new MatchResult
+            {
+                FinalScore = GetHigherPlayerScore(m_totalScoreTeam1, m_totalScoreTeam2),
+                WinnerName = m_infiniteWinner,  //WinnerName AFTER FinalScore, because atm it gets set in GetHigherPlayerScore.
+                TotalPlayTime = Time.time - m_matchStartTime,
+                MatchWinDate = DateTime.UtcNow.Ticks
+            };
 
             OnLocalMatchEnd?.Invoke(matchResult);
         }

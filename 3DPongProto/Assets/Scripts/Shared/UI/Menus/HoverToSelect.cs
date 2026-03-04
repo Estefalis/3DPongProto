@@ -8,7 +8,7 @@ public class HoverToSelect : MonoBehaviour, IPointerEnterHandler
     {
         //Ignore same Object.
         if (EventSystem.current.currentSelectedGameObject == gameObject) return;
-        Debug.Log("Select should be triggered.");
+        
         //Inform EventSystem about the selected Object.
         EventSystem.current.SetSelectedGameObject(gameObject);
     }

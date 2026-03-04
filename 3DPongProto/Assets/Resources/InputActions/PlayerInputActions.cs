@@ -1113,7 +1113,7 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""id"": ""b13008b1-1e90-4859-baf5-e4a2f95e018d"",
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone(min=0.25)"",
                     ""groups"": "";Gamepad"",
                     ""action"": ""PadCursorMove"",
                     ""isComposite"": false,

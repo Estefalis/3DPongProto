@@ -204,6 +204,7 @@ namespace ThreeDeePongProto.Shared.Managers
             var playerProfile = PlayerProfileManager.Instance.PlayerProfiles[playerIndex];
             //Set name of the playerController gameObject.
             _playerInput.gameObject.name = $"{playerProfile.PlayerName}";
+            _playerInput.neverAutoSwitchControlSchemes = true;
 
             //Instantiate AvatarControls-Prefab gameObject.
             GameObject avatarInstance = null;
