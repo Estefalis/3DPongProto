@@ -48,10 +48,10 @@ namespace ThreeDeePongProto.Shared.Settings
         [SerializeField] private Transform m_zoomGroup;             //Last group above playerButtons.
         private List<Selectable> m_zoomSelectables = new();
 
-        [SerializeField] private Selectable[] m_lastKbSelectable;
-        [SerializeField] private Selectable[] m_lastGpSelectable;
-        [SerializeField] private Button m_resetButton;
-        [SerializeField] private Button m_backButton;
+        [SerializeField] private Selectable[] m_lastKbSelectable;   //ScrollView 1-4
+        [SerializeField] private Selectable[] m_lastGpSelectable;   //ScrollView 1-4
+        [SerializeField] private Button m_resetButton;              //Reset to Defalut Button
+        [SerializeField] private Button m_backButton;               //Rebind to BackButton
         #endregion
 
         [Header("Key Rebind")]

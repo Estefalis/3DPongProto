@@ -35,7 +35,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
         [Header("Settings")]
         [SerializeField] private bool m_joinByDefault = true;
-        [SerializeField] private InputActionAsset m_originalActionAsset;
+        // [SerializeField] private InputActionAsset m_originalActionAsset;
         
         private PlayerInputManager m_playerInputManager;
         private PlayerInputActions m_centralInputActions;
@@ -203,9 +203,10 @@ namespace ThreeDeePongProto.Shared.Managers
             int playerIndex = _playerInput.playerIndex;
             //Get the playerProfile for each player from the PlayerProfileManager.
             var playerProfile = PlayerProfileManager.Instance.PlayerProfiles[playerIndex];
-            //Seting the original Asset, enables Hover-,Select- and Click actions on Mouse.Current, even if Player1 has gamepad paired. 
+            #region Prevent Clone Change
             //InputActionAsset clonedAsset = Instantiate(m_originalActionAsset);
-            _playerInput.actions = m_originalActionAsset;
+            // _playerInput.actions = m_originalActionAsset;
+            #endregion
             //Set name of the playerController gameObject.
             _playerInput.gameObject.name = $"{playerProfile.PlayerName}";
             _playerInput.neverAutoSwitchControlSchemes = true;
