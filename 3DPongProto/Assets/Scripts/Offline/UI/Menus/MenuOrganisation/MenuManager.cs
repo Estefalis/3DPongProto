@@ -670,11 +670,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             if (m_playerInput == null && !m_uiActionMap.enabled)        //Only pass in GameScenes if PauseMenu is opened and PlayerInputs exist.
                 return;
             
-            // //StartMenu- and GameScene need to get handled different, because players handle inputAction-Inputs different!
-            // if(_callbackContext.action.WasReleasedThisFrame()) //Ignore the actionPhase '.canceled'.
-            //     return;
-            
-            if(_callbackContext.control.device is Gamepad)              //It works. Don't ask why! <(o.o)>
+            if(_callbackContext.control.device is Keyboard)              //It works. Don't ask why! <(o.o)>
                 return;
             
             if(_callbackContext.action.WasPerformedThisFrame())         

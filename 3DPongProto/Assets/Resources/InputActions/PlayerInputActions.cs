@@ -1131,11 +1131,6 @@ namespace ThreeDeePongProto.Shared.InputActions
                     ""devicePath"": ""<Gamepad>"",
                     ""isOptional"": false,
                     ""isOR"": false
-                },
-                {
-                    ""devicePath"": ""<VirtualMouse>"",
-                    ""isOptional"": true,
-                    ""isOR"": false
                 }
             ]
         },

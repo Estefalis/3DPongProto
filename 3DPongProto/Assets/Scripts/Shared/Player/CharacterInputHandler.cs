@@ -124,6 +124,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         #region CallbackContext_Methods
         private void HandleActionTriggered(InputAction.CallbackContext _callbackContext)
         {
+            //Ggf. Dictionary mit ID als Key und Index der InputActionAsset-Bindings als Value, um Inputs zu lenken?
             switch (_callbackContext.action.name)
             {
                 case m_moveString:
