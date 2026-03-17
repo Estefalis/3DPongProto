@@ -452,7 +452,7 @@ GameObject:
   - component: {fileID: 6304651649903133954}
   - component: {fileID: 3019872429764238070}
   m_Layer: 0
-  m_Name: KeyboardButtons
+  m_Name: Keyboard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -580,7 +580,7 @@ GameObject:
   - component: {fileID: 2754475469812011997}
   - component: {fileID: 4866482981422885960}
   m_Layer: 0
-  m_Name: GamepadButtons
+  m_Name: Gamepad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

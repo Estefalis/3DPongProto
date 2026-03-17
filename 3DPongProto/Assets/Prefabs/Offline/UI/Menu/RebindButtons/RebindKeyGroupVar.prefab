@@ -484,6 +484,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3083569179067027620, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_Name
+      value: Keyboard
+      objectReference: {fileID: 0}
     - target: {fileID: 3139322597922871632, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
       propertyPath: m_inputBinding.m_Id
@@ -553,6 +558,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4597541153308630154, guid: 773a22e837edd1f418ad1c7478891320,
+        type: 3}
+      propertyPath: m_Name
+      value: Gamepad
       objectReference: {fileID: 0}
     - target: {fileID: 5202953337551828031, guid: 773a22e837edd1f418ad1c7478891320,
         type: 3}
