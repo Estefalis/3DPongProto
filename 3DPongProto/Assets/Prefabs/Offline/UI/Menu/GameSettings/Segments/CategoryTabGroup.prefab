@@ -113,7 +113,7 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -123,7 +123,7 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -133,7 +133,7 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 65
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -173,12 +173,12 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 413.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -32.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -205,6 +205,11 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
       objectReference: {fileID: 1037425182724354067}
+    - target: {fileID: 6525955388403712573, guid: 5e47f57762464a64e807b41421d37e77,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ThreeDeePongProto.Offline.UI.Menu.MenuNavigation, Assembly-CSharp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -269,7 +274,7 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -279,7 +284,7 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -289,7 +294,7 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 65
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -329,12 +334,12 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 136
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -32.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -375,6 +380,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: CategorySwitch
+      objectReference: {fileID: 0}
+    - target: {fileID: 6525955388403712573, guid: 5e47f57762464a64e807b41421d37e77,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ThreeDeePongProto.Offline.UI.Menu.MenuNavigation, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -445,7 +455,7 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -455,7 +465,7 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -465,7 +475,7 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 65
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -505,12 +515,12 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1245.2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -32.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -536,6 +546,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6525955388403712573, guid: 5e47f57762464a64e807b41421d37e77,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ThreeDeePongProto.Offline.UI.Menu.MenuNavigation, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -606,7 +621,7 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -616,7 +631,7 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -626,7 +641,7 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 65
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -666,12 +681,12 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 690.6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -32.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -698,6 +713,11 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
       objectReference: {fileID: 3370736242798330068}
+    - target: {fileID: 6525955388403712573, guid: 5e47f57762464a64e807b41421d37e77,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ThreeDeePongProto.Offline.UI.Menu.MenuNavigation, Assembly-CSharp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -767,7 +787,7 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -777,7 +797,7 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -787,7 +807,7 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 65
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -827,12 +847,12 @@ PrefabInstance:
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 967.89996
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -32.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
@@ -859,6 +879,11 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
       objectReference: {fileID: 1717300281362901578}
+    - target: {fileID: 6525955388403712573, guid: 5e47f57762464a64e807b41421d37e77,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ThreeDeePongProto.Offline.UI.Menu.MenuNavigation, Assembly-CSharp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

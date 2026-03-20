@@ -59,6 +59,7 @@ namespace ThreeDeePongProto.Shared.UI
 
         private void SetUIElements()
         {
+            if(m_playerAmountDd == null) return;    //TODO: Remove once LAN- and Net-Games are set.
             RemoveListeners();
 
             //Set PlayerAmount-Dropdown
@@ -96,6 +97,7 @@ namespace ThreeDeePongProto.Shared.UI
 
         private void RemoveListeners()
         {
+            if(m_playerAmountDd == null) return;    //TODO: Remove once LAN- and Net-Games are set.
             m_playerAmountDd.onValueChanged.RemoveListener(OnPlayerAmountChanged);
 
             for (int i = 0; i < 4; i++)

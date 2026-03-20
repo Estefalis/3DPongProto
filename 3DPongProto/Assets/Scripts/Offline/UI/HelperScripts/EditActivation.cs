@@ -8,12 +8,14 @@ namespace ThreeDeePongProto.Offline.UI.Menu
     public class EditActivation : MonoBehaviour, IPointerClickHandler
     {
         private TMP_InputField m_ownInputField;
-        private MenuManager m_menuManager;
+        // private MenuManager m_menuManager;
+        private MenuInput m_menuInput;
 
         private void Awake()
         {
             m_ownInputField = GetComponent<TMP_InputField>();
-            m_menuManager = FindObjectOfType<MenuManager>();
+            // m_menuManager = FindObjectOfType<MenuManager>();
+            m_menuInput = FindObjectOfType<MenuInput>();
         }
 
         public void OnPointerClick(PointerEventData _eventData)
@@ -24,7 +26,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             //Single-Click
             if (_eventData.clickCount == 1)
             {
-                //MenuManager deactivates the InputField by an internal stored variable.
+                //MenuManager/MenuInput deactivates the InputField by an internal stored variable.
                 if (EventSystem.current != null)
                 {
                     EventSystem.current.SetSelectedGameObject(m_ownInputField.gameObject);
@@ -36,9 +38,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                 m_ownInputField.interactable = true;
                 m_ownInputField.ActivateInputField();
 
-                if (m_menuManager != null)
+                if (m_menuInput != null)
                 {
-                    m_menuManager.ClickActivation(m_ownInputField.gameObject);      //TODO: Change to MenuInput.cs!
+                    m_menuInput.ClickActivation(m_ownInputField.gameObject);
                 }
             }
         }

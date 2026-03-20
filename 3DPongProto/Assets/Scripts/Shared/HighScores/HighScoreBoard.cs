@@ -14,7 +14,8 @@ namespace ThreeDeePongProto.Shared.Highscores
         private enum EFilterMode { InfiniteMatch, SuddenDeath, Normal }
         private enum ESortColumn { Rounds, Points, TotalPoints, Playtime, WinDate }
 
-        [SerializeField] private MenuManager m_menuManager;
+        // [SerializeField] private MenuManager m_menuManager;
+        [SerializeField] private MenuNavigation m_menuNavigation;
 
         [Header("Hierarchy References")]
         [SerializeField] private Transform m_listFrame;                 //Disable Transform.
@@ -235,7 +236,7 @@ namespace ThreeDeePongProto.Shared.Highscores
             m_isSortAscending = false;
 
             //First use MenuManager's <Transform-key, SelectObject-value> dict to activate the HighScoreBoard (Transform).
-            m_menuManager.NextElement(m_listFrame);     //listFrame.gO.SetActive = true.
+            m_menuNavigation.NextElement(m_listFrame);     //listFrame.gO.SetActive = true.
             //Then tell the UserInputManager to switch the active InputActionMap to UI to skip the MenuManager OnOpenMenu() Method.
             UserInputManager.Instance.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
 

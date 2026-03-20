@@ -61,7 +61,7 @@ namespace ThreeDeePongProto.Shared.UI.Menu.ScrollViews
             if (!m_childrenNavigationSet)
                 return;
 
-            m_lastSelectedObject = MenuManager.LastSelectedGameObject;
+            m_lastSelectedObject = MenuNavigation.m_lastSelectedGameObject;
             SetScrollTarget();      //AutoScroll with keyboard, gamepad, etc and ScrollCalculations.
 
             if (m_inputActions != null && m_inputActions.UserInterface.enabled)
