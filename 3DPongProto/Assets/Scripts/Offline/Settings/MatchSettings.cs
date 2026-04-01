@@ -14,8 +14,8 @@ namespace ThreeDeePongProto.Shared.Settings
     {
         #region UI References
         [Header("Game Mode")]
-        [SerializeField] private Toggle m_obstacleToggle;
         [SerializeField] private TMP_Dropdown m_gameModeDropdown;
+        [SerializeField] private Toggle m_obstacleToggle;
         [SerializeField] private bool m_isNormalMode = true;
 
         [Header("Rounds and Points")]
@@ -54,12 +54,18 @@ namespace ThreeDeePongProto.Shared.Settings
         [Space]
 
         private const int m_maxPlayers = 4;
-        private const int m_maxRounds = 5, m_maxPointsEachRound = 25;
+        private int m_maxRounds, m_maxPointsEachRound;
         private const int m_minFieldWidth = 25, m_maxFieldWidth = 30;
         private const int m_minFieldLength = 50, m_maxFieldLength = 60;
         private const string m_player1 = "Player 1", m_player2 = "Player 2", m_player3 = "Player 3", m_player4 = "Player 4";
 
         private MatchSettingsData m_matchData;
+
+        private void Awake()
+        {
+            m_maxRounds = SettingsManager.Instance.MaxRounds;
+            m_maxPointsEachRound = SettingsManager.Instance.MaxRoundPoints;
+        }
 
         private void OnEnable()
         {
@@ -81,12 +87,12 @@ namespace ThreeDeePongProto.Shared.Settings
         {
             //Game-Modi
             m_gameModeDropdown.onValueChanged.AddListener(OnGameModeChanged);
-            //Obstacle-Option
-            m_obstacleToggle.onValueChanged.AddListener(OnObstacleToggleChanged);
             //Rounds
             m_roundsDropdown.onValueChanged.AddListener(OnRoundDropdownChanged);
             //PointSetting
             m_maxPointsDropdown.onValueChanged.AddListener(OnMaxPointDropdownChanged);
+            //Obstacle-Option
+            m_obstacleToggle.onValueChanged.AddListener(OnObstacleToggleChanged);
             //Set fixField ratio
             m_fixRatioToggle.onValueChanged.AddListener(OnRatioToggleChanged);
             //Field-Width
@@ -111,12 +117,12 @@ namespace ThreeDeePongProto.Shared.Settings
         {
             //Game-Modi
             m_gameModeDropdown.onValueChanged.RemoveListener(OnGameModeChanged);
-            //Obstacle-Option
-            m_obstacleToggle.onValueChanged.RemoveListener(OnObstacleToggleChanged);
             //Rounds
             m_roundsDropdown.onValueChanged.RemoveListener(OnRoundDropdownChanged);
             //PointSetting
             m_maxPointsDropdown.onValueChanged.RemoveListener(OnMaxPointDropdownChanged);
+            //Obstacle-Option
+            m_obstacleToggle.onValueChanged.RemoveListener(OnObstacleToggleChanged);
             //Set fixField ratio
             m_fixRatioToggle.onValueChanged.RemoveListener(OnRatioToggleChanged);
             //Field-Width
@@ -153,26 +159,23 @@ namespace ThreeDeePongProto.Shared.Settings
             m_matchData.EGameMode = (EGameMode)_dropdownIndex;
             switch (m_matchData.EGameMode)
             {
+                case EGameMode.Normal:
                 case EGameMode.SuddenDeath:
-                    // Setze Runden und Punkte für Sudden Death auf 1
-                    m_matchData.RoundsToWin = 1;
-                    m_matchData.RoundPoints = 1;
-                    break;
-
+                    {
+                        m_matchData.RoundsToWin = 1;
+                        m_matchData.RoundPoints = 1;
+                        break;
+                    }
                 case EGameMode.Infinite:
-                    // Setze die Werte auf 0, um den "Unendlich"-Status zu signalisieren
-                    m_matchData.RoundsToWin = 0;
-                    m_matchData.RoundPoints = 0;
-                    break;
+                    {
+                        m_matchData.RoundsToWin = 0;
+                        m_matchData.RoundPoints = 0;
+                        break;
+                    }                        
             }
 
             //Update UI, including '.interactable'-Settings.
             SetUIElements();
-        }
-
-        private void OnObstacleToggleChanged(bool _isOn)
-        {
-            m_matchData.ObstaclesEnabled = _isOn;
         }
 
         /// <summary>
@@ -193,6 +196,11 @@ namespace ThreeDeePongProto.Shared.Settings
         {
             if (m_isNormalMode)
                 m_matchData.RoundPoints = _dropdownIndex;
+        }
+
+        private void OnObstacleToggleChanged(bool _isOn)
+        {
+            m_matchData.ObstaclesEnabled = _isOn;
         }
 
         private void OnWidthDropdownChanged(int _dropdownValue)

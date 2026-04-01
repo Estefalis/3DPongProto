@@ -4,21 +4,16 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// Indices set equal to the desired amount of players participating in matches of int 2 and/or 4.
-/// </summary>
-public enum EPlayerAmount
-{
-    One = 1,
-    Two = 2,
-    Four = 4
-}
-
 namespace ThreeDeePongProto.Shared.UI
 {
     public class PreparationWindow : MonoBehaviour
     {
         #region UI-References
+        [Header("Match-Details")]
+        [SerializeField] private TMP_Dropdown m_gameModeDropdown;
+        [SerializeField] private TMP_Dropdown m_roundsDropdown;
+        [SerializeField] private TMP_Dropdown m_maxPointsDropdown;
+
         [Header("InputData and Devices")]
         //TODO: Add RoomName for Online Games. Lan games also, depending on setup and experience.
         [SerializeField] private TMP_InputField[] m_nameInputFields;
@@ -43,24 +38,43 @@ namespace ThreeDeePongProto.Shared.UI
         private List<PlayerProfileData> m_playerProfiles;
         #endregion
 
+        private int m_maxRounds, m_maxPointsEachRound;
+
+        private void Awake()
+        {
+            m_maxRounds = SettingsManager.Instance.MaxRounds;
+            m_maxPointsEachRound = SettingsManager.Instance.MaxRoundPoints;
+        }
 
         private void OnEnable()
         {
             m_matchData = SettingsManager.Instance.CurrentSettings.Match;
             m_playerProfiles = PlayerProfileManager.Instance.PlayerProfiles;
 
+            SettingsManager.Instance.OnSettingsChanged += SetUIElements;
             SetUIElements();
         }
 
         private void OnDisable()
         {
+            SettingsManager.Instance.OnSettingsChanged -= SetUIElements;
             RemoveListeners();
+            SettingsManager.Instance.SaveSettings();
         }
 
         private void SetUIElements()
         {
             if(m_playerAmountDd == null) return;    //TODO: Remove once LAN- and Net-Games are set.
             RemoveListeners();
+
+            m_gameModeDropdown.SetValueWithoutNotify((int)m_matchData.EGameMode);
+
+            var isNormalMode = m_matchData.EGameMode == EGameMode.Normal;
+            m_roundsDropdown.interactable = isNormalMode;
+            m_maxPointsDropdown.interactable = isNormalMode;
+
+            SetupRoundsDropdown();
+            SetupMaxPointsDropdown();
 
             //Set PlayerAmount-Dropdown
             int playerCountIndex = m_matchData.PlayerCount == 4 ? 2 : (m_matchData.PlayerCount == 2 ? 1 : 0);
@@ -84,6 +98,9 @@ namespace ThreeDeePongProto.Shared.UI
 
         private void AddListeners()
         {
+            m_gameModeDropdown.onValueChanged.AddListener(OnGameModeChanged);
+            m_roundsDropdown.onValueChanged.AddListener(OnRoundDropdownChanged);
+            m_maxPointsDropdown.onValueChanged.AddListener(OnMaxPointDropdownChanged);
             m_playerAmountDd.onValueChanged.AddListener(OnPlayerAmountChanged);
 
             for (int i = 0; i < 4; i++)
@@ -97,6 +114,9 @@ namespace ThreeDeePongProto.Shared.UI
 
         private void RemoveListeners()
         {
+            m_gameModeDropdown.onValueChanged.RemoveListener(OnGameModeChanged);
+            m_roundsDropdown.onValueChanged.RemoveListener(OnRoundDropdownChanged);
+            m_maxPointsDropdown.onValueChanged.RemoveListener(OnMaxPointDropdownChanged);
             if(m_playerAmountDd == null) return;    //TODO: Remove once LAN- and Net-Games are set.
             m_playerAmountDd.onValueChanged.RemoveListener(OnPlayerAmountChanged);
 
@@ -110,6 +130,30 @@ namespace ThreeDeePongProto.Shared.UI
         }
 
         #region UI-Setup
+        private void SetupRoundsDropdown()
+        {
+            m_roundsDropdown.ClearOptions();
+            var roundsDdList = new List<string> { "\u221E" };
+
+            for (int i = 1; i <= m_maxRounds; i++)
+                roundsDdList.Add(i.ToString());
+
+            m_roundsDropdown.AddOptions(roundsDdList);
+            m_roundsDropdown.SetValueWithoutNotify(m_matchData.EGameMode == EGameMode.Infinite ? 0 : (m_matchData.EGameMode == EGameMode.SuddenDeath ? 1 : m_matchData.RoundsToWin));
+        }
+
+        private void SetupMaxPointsDropdown()
+        {
+            m_maxPointsDropdown.ClearOptions();
+            var maxPointsDdList = new List<string> { "\u221E" };
+
+            for (int i = 1; i <= m_maxPointsEachRound; i++)
+                maxPointsDdList.Add(i.ToString());
+
+            m_maxPointsDropdown.AddOptions(maxPointsDdList);
+            m_maxPointsDropdown.SetValueWithoutNotify(m_matchData.EGameMode == EGameMode.Infinite ? 0 : (m_matchData.EGameMode == EGameMode.SuddenDeath ? 1 : m_matchData.RoundPoints));
+        }
+
         #region UI-Navigation
         /// <summary>
         /// Adapt Navigation dynamic to the _playerCount.
@@ -218,6 +262,51 @@ namespace ThreeDeePongProto.Shared.UI
             m_addPlayerSlot.gameObject.SetActive(_playerAmount == 4);
         }
         #endregion
+
+        private void OnGameModeChanged(int _dropdownIndex)
+        {
+            m_matchData.EGameMode = (EGameMode)_dropdownIndex;
+            switch (m_matchData.EGameMode)
+            {
+                case EGameMode.Normal:
+                case EGameMode.SuddenDeath:
+                    {
+                        m_matchData.RoundsToWin = 1;
+                        m_matchData.RoundPoints = 1;
+                        break;
+                    }
+                case EGameMode.Infinite:
+                    {
+                        m_matchData.RoundsToWin = 0;
+                        m_matchData.RoundPoints = 0;
+                        break;
+                    }
+                default: break;
+            }
+
+            //Update UI, including '.interactable'-Settings.
+            SetUIElements();
+        }
+
+        /// <summary>
+        /// Listener-Method to set round-values, only while the corresponding dropdown is interactable.
+        /// </summary>
+        /// <param name="_toggle"></param>
+        private void OnRoundDropdownChanged(int _dropdownIndex)
+        {
+            if (m_matchData.EGameMode == EGameMode.Normal)
+                m_matchData.RoundsToWin = _dropdownIndex;
+        }
+
+        /// <summary>
+        /// Listener-Method to set maxPoint-values, only while the corresponding dropdown is interactable.
+        /// </summary>
+        /// <param name="_toggle"></param>
+        private void OnMaxPointDropdownChanged(int _dropdownIndex)
+        {
+            if (m_matchData.EGameMode == EGameMode.Normal)
+                m_matchData.RoundPoints = _dropdownIndex;
+        }
 
         private void OnPlayerAmountChanged(int _dropdownIndex)
         {

@@ -8,6 +8,10 @@ namespace ThreeDeePongProto.Shared.Managers
         //Holds the currently active game settings to access via SettingsManager.Instance.CurrentSettings.
         public GameSettingsData CurrentSettings { get; private set; }
 
+        public int MaxRounds { get => m_maxRounds; }
+        public int MaxRoundPoints { get => m_maxPointsEachRound; }
+        private const int m_maxRounds = 5, m_maxPointsEachRound = 25;
+
         private static readonly string m_fileName = "gameSettings.json";
         private const string m_volume = "Volume", m_graphic = "Graphic", m_control = "Control", m_match = "Match", m_network = "Network";
 
