@@ -171,7 +171,8 @@ namespace ThreeDeePongProto.Shared.Settings
                         m_matchData.RoundsToWin = 0;
                         m_matchData.RoundPoints = 0;
                         break;
-                    }                        
+                    }
+                default: break;
             }
 
             //Update UI, including '.interactable'-Settings.

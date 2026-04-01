@@ -129,7 +129,7 @@ namespace ThreeDeePongProto.Offline.UI.Menu
                     //Resume back to the game in GameScene.
                     m_menuManager.ResumeTheGame();
                 }
-                Debug.Log($"{uiActions.Cancel.activeControl.device.name} pressed OnCancel.");
+                Debug.Log($"Skipping OnCancel. Arrived on highest Menu-Level.");
             }
 
             //SUBMIT-Logic

@@ -13,8 +13,7 @@ namespace ThreeDeePongProto.Shared.Highscores
     {
         private enum EFilterMode { InfiniteMatch, SuddenDeath, Normal }
         private enum ESortColumn { Rounds, Points, TotalPoints, Playtime, WinDate }
-
-        // [SerializeField] private MenuManager m_menuManager;
+        
         [SerializeField] private MenuNavigation m_menuNavigation;
 
         [Header("Hierarchy References")]
@@ -57,6 +56,9 @@ namespace ThreeDeePongProto.Shared.Highscores
 
         private void Awake()
         {
+            if(m_menuNavigation == null)
+                m_menuNavigation = FindObjectOfType<MenuNavigation>();
+
             m_saveSystem = new SerializingData<HighScoreData>(m_fileName, m_subFolder);
             m_highScoreData = m_saveSystem.Load();
         }
@@ -70,8 +72,8 @@ namespace ThreeDeePongProto.Shared.Highscores
 
                 //Set Filter-State.
                 m_currentFilterMode = (EFilterMode)lastMatchConfig.EGameMode;
-                m_filterRoundsValue = lastMatchConfig.RoundsToWin;  //m_lastGameRounds?
-                m_filterPointsValue = lastMatchConfig.RoundPoints;  //m_lastGamePoints?
+                m_filterRoundsValue = lastMatchConfig.RoundsToWin;  //m_lastGameRounds
+                m_filterPointsValue = lastMatchConfig.RoundPoints;  //m_lastGamePoints
             }
 
             RefreshDisplay();
@@ -91,6 +93,8 @@ namespace ThreeDeePongProto.Shared.Highscores
             //Subscription to display HighScore on Game end.
             if (LocalMatchManager.Instance != null)
                 LocalMatchManager.Instance.OnLocalMatchEnd += OnMatchEnded;
+
+                SetUIElements();
         }
 
         private void AddListeners()
@@ -123,7 +127,7 @@ namespace ThreeDeePongProto.Shared.Highscores
         {
             SetupFilterDropdown();
 
-            m_sortDropdownsActive = m_currentFilterMode == EFilterMode.Normal && !m_isMatchResult;
+            m_sortDropdownsActive = m_currentFilterMode == EFilterMode.Normal;
             m_roundsDropdown.interactable = m_sortDropdownsActive;
             m_maxPointsDropdown.interactable = m_sortDropdownsActive;
 
@@ -155,7 +159,7 @@ namespace ThreeDeePongProto.Shared.Highscores
                 roundsDdList.Add(i.ToString());
 
             m_roundsDropdown.AddOptions(roundsDdList);
-            m_roundsDropdown.SetValueWithoutNotify(m_isMatchResult ? m_filterRoundsValue : (int)m_currentFilterMode);
+            m_roundsDropdown.SetValueWithoutNotify(m_isMatchResult ? (int)m_currentFilterMode : m_filterRoundsValue);
         }
 
         private void SetupMaxPointsDropdown()
@@ -167,7 +171,7 @@ namespace ThreeDeePongProto.Shared.Highscores
                 maxPointsDdList.Add(i.ToString());
 
             m_maxPointsDropdown.AddOptions(maxPointsDdList);
-            m_maxPointsDropdown.SetValueWithoutNotify(m_isMatchResult ? m_filterPointsValue : (int)m_currentFilterMode);
+            m_maxPointsDropdown.SetValueWithoutNotify(m_isMatchResult ? (int)m_currentFilterMode : m_filterPointsValue);
         }
         #endregion
 
@@ -199,7 +203,9 @@ namespace ThreeDeePongProto.Shared.Highscores
 
         private void OnFilterModeChanged(int _dropdownIndex)
         {
-            m_isMatchResult = false;
+            if(m_isMatchResult)
+                m_isMatchResult = false;
+
             m_currentFilterMode = (EFilterMode)_dropdownIndex;
 
             RefreshDisplay();
@@ -280,7 +286,6 @@ namespace ThreeDeePongProto.Shared.Highscores
         private List<HighScoreEntry> FilterScores()
         {
             IEnumerable<HighScoreEntry> filteredScores = m_highScoreData.highScores;
-            EFilterMode selectedFilter = (EFilterMode)m_filterModeDropdown.value;
 
             if (m_isMatchResult)
             {
