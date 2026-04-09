@@ -1311,21 +1311,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5118861579932345939, guid: 1a7161f3bbd73ca5c863610f2e9eb387,
-        type: 3}
-      propertyPath: m_text
-      value: Restart
-      objectReference: {fileID: 0}
     - target: {fileID: 5736221093941003749, guid: 1a7161f3bbd73ca5c863610f2e9eb387,
         type: 3}
       propertyPath: m_menuNavigation
       value: 
       objectReference: {fileID: 2136304141}
-    - target: {fileID: 5822915698718778449, guid: 1a7161f3bbd73ca5c863610f2e9eb387,
-        type: 3}
-      propertyPath: m_text
-      value: Back
-      objectReference: {fileID: 0}
     - target: {fileID: 7229353374079749944, guid: 1a7161f3bbd73ca5c863610f2e9eb387,
         type: 3}
       propertyPath: m_Name
@@ -2671,11 +2661,6 @@ PrefabInstance:
       propertyPath: m_inputActionReference
       value: 
       objectReference: {fileID: 1364556965}
-    - target: {fileID: 5109989634475465323, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_Name
-      value: PlayerAmountDdMatch
-      objectReference: {fileID: 0}
     - target: {fileID: 5256973822159031578, guid: 430c392282a61bb4482c69a3b60f8b8e,
         type: 3}
       propertyPath: m_inputActionReference
@@ -2961,16 +2946,6 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
       objectReference: {fileID: 145697968}
-    - target: {fileID: 8998905234871421725, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8998905234871421725, guid: 430c392282a61bb4482c69a3b60f8b8e,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 9032873114401519313, guid: 430c392282a61bb4482c69a3b60f8b8e,
         type: 3}
       propertyPath: m_inputActionReference
