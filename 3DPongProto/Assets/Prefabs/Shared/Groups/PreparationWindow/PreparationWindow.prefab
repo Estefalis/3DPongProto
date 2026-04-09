@@ -938,7 +938,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 8789292055992389474}
+      objectReference: {fileID: 2286280265192405600}
     - target: {fileID: 3089160374736543274, guid: 5d0f7b8e4c6898c32bc8f73bde6a18cd,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
@@ -1540,7 +1540,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 2496912208875762415}
+      objectReference: {fileID: 8885618665306752543}
     - target: {fileID: 1438757758739989101, guid: 02deb3495ee45624a9f5f16802f66c68,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -1625,7 +1625,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 2496912208875762415}
+      objectReference: {fileID: 8885618665306752543}
     - target: {fileID: 3497740955404285262, guid: 02deb3495ee45624a9f5f16802f66c68,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -1635,7 +1635,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 2496912208875762415}
+      objectReference: {fileID: 8885618665306752543}
     - target: {fileID: 3728939440325865721, guid: 02deb3495ee45624a9f5f16802f66c68,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -1850,7 +1850,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 2496912208875762415}
+      objectReference: {fileID: 8885618665306752543}
     - target: {fileID: 6195954649481119227, guid: 02deb3495ee45624a9f5f16802f66c68,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -1860,7 +1860,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 2496912208875762415}
+      objectReference: {fileID: 8885618665306752543}
     - target: {fileID: 6253760020767604812, guid: 02deb3495ee45624a9f5f16802f66c68,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -2065,7 +2065,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 2496912208875762415}
+      objectReference: {fileID: 8885618665306752543}
     - target: {fileID: 8481641252655822703, guid: 02deb3495ee45624a9f5f16802f66c68,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -2196,7 +2196,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 2496912208875762415}
+      objectReference: {fileID: 8885618665306752543}
     - target: {fileID: 191651573622431225, guid: 8f6288d1944edf94fb9ff13723d57525,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
@@ -2367,7 +2367,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 2496912208875762415}
+      objectReference: {fileID: 8885618665306752543}
     - target: {fileID: 191651573622431225, guid: 8f6288d1944edf94fb9ff13723d57525,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
@@ -3324,7 +3324,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 2496912208875762415}
+      objectReference: {fileID: 8885618665306752543}
     - target: {fileID: 191651573622431225, guid: 8f6288d1944edf94fb9ff13723d57525,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
@@ -3638,7 +3638,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 2496912208875762415}
+      objectReference: {fileID: 8885618665306752543}
     - target: {fileID: 191651573622431225, guid: 8f6288d1944edf94fb9ff13723d57525,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnRight

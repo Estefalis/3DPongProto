@@ -58,8 +58,9 @@ namespace ThreeDeePongProto.Shared.UI
         private void OnDisable()
         {
             SettingsManager.Instance.OnSettingsChanged -= SetUIElements;
-            RemoveListeners();
             SettingsManager.Instance.SaveSettings();
+            if(m_playerAmountDd == null) return;    //TODO: Remove once LAN- and Net-Games are set.
+            RemoveListeners();
         }
 
         private void SetUIElements()
