@@ -25,7 +25,6 @@ namespace ThreeDeePongProto.Shared.Managers
     public class LocalMatchManager : MonoBehaviour
     {
         [SerializeField] private MenuManager m_menuManager;
-        // [SerializeField] private MenuNavigation m_menuNavigation;
         public static LocalMatchManager Instance { get; private set; }
 
         [Header("Scene & Prefab References")]
@@ -93,14 +92,14 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void OnEnable()
         {
-            MenuManager.AEndInfiniteMatch += EndInfiniteMatch;      //TODO: Change to MenuInput.cs.
+            MenuManager.AEndInfiniteMatch += EndInfiniteMatch;
             UserInputManager.AChangeActiveActionMap += ToggleMatchPause;
             PlayerInputManager.instance.onPlayerJoined += OnPlayerJoined;
         }
 
         private void OnDisable()
         {
-            MenuManager.AEndInfiniteMatch -= EndInfiniteMatch;      //TODO: Change to MenuInput.cs.
+            MenuManager.AEndInfiniteMatch -= EndInfiniteMatch;
             UserInputManager.AChangeActiveActionMap -= ToggleMatchPause;
             if (PlayerInputManager.instance != null)
                 PlayerInputManager.instance.onPlayerJoined -= OnPlayerJoined;

@@ -15,8 +15,6 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         [SerializeField] internal EventSystem m_eventSystem;
 
-        // internal static GameObject LastSelectedGameObject { get => MenuNavigation.m_lastSelectedGameObject; }
-
         #region Actions_and_Functions
         internal static event Action AEndInfiniteMatch;         //LocalMatchManager ends an InfiniteMatch.
         #endregion

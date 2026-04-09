@@ -30,6 +30,9 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void Awake()
         {
+            if(m_resumeButton != null)
+                m_resumeButton.interactable = true;
+
             if(m_menuManager == null)
                 m_menuManager = GetComponent<MenuManager>();
 
@@ -50,6 +53,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnEnable()
         {
+            if(m_resumeButton != null)
+            {
+                MenuManager.AEndInfiniteMatch += ResumeStateInfinite;
+                LocalMatchManager.Instance.OnLocalMatchEnd += ResumeStateLocal;
+            }
+
             m_inputActions.UserInterface.Submit.performed += OnSubmitInput;
             if (!m_menuNavigation.m_navigationKey[0].gameObject.activeInHierarchy)
             {
@@ -60,6 +69,12 @@ namespace ThreeDeePongProto.Offline.UI.Menu
 
         private void OnDisable()    //Copy content into 'OnDestroy()', if needed.
         {
+            if(m_resumeButton != null)
+            {
+                MenuManager.AEndInfiniteMatch -= ResumeStateInfinite;
+                LocalMatchManager.Instance.OnLocalMatchEnd -= ResumeStateLocal;
+            }
+
             m_inputActions.UserInterface.Navigate.performed -= OnNavigationInput;
             m_inputActions.UserInterface.Submit.performed -= OnSubmitInput;
         }
@@ -256,6 +271,16 @@ namespace ThreeDeePongProto.Offline.UI.Menu
             m_resumeButton.navigation = resumeNav;
             m_quitButton.navigation = quitNav;
             m_hiddenFinishButton.navigation = endInfiniteNav;
+        }
+
+        private void ResumeStateInfinite ()
+        {
+            m_resumeButton.interactable = false;
+        }
+
+        private void ResumeStateLocal(MatchResult _matchResult)
+        {
+            m_resumeButton.interactable = false;
         }
         #endregion
 
