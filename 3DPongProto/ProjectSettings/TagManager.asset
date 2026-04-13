@@ -10,11 +10,12 @@ TagManager:
   - WestWall
   - EastWall
   - Ball
-  - CenterLine
   - TpOne
   - TpTwo
   - TpThree
   - TpFour
+  - MiddleLine
+  - CenterLine
   layers:
   - Default
   - TransparentFX
@@ -25,7 +26,7 @@ TagManager:
   - Ground
   - Walls
   - Ball
-  - 
+  - MiddleLine
   - 
   - 
   - 
