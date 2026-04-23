@@ -671,7 +671,7 @@ GameObject:
   - component: {fileID: 4330780921839964492}
   - component: {fileID: 647162920365255763}
   m_Layer: 9
-  m_Name: Plane
+  m_Name: MiddleLine
   m_TagString: MiddleLine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

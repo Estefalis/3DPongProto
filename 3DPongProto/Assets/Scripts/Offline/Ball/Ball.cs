@@ -4,25 +4,24 @@ using ThreeDeePongProto.Shared.Managers;
 using ThreeDeePongProto.Shared.PlayerCharacter;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody), typeof(AudioSource))]
 public class Ball : MonoBehaviour
 {
-    #region #region SerializeField-Member-Variables
+    #region Core-Settings
     [SerializeField] private Rigidbody m_rigidbody;
-    [SerializeField] private float m_impulseForce;
+    [SerializeField] private float m_initialSpeed = 10.0f;
     [SerializeField, Min(25.0f)] private float m_offWallAngle = 25.0f;
     [SerializeField, Min(0.1f)] private float m_offPaddleAngle = 0.1f;
-    //[SerializeField] float m_onContactAddUp = 1.10f;
     #endregion
+    //TODO: Implementing a system to dynamically add or reduce ball speed, depending the objects that got hit. Including a min- and max-Speed limit.
 
-    #region Script-References
+    #region References
     private LocalMatchManager m_matchManager;
     [SerializeField] private AudioSource m_ballAudioSource;
-    private int m_trackId = 0, m_firstPlayerID = -1;
-    #endregion
-
-    #region #region Non-SerializeField-Member-Variables
     private Vector3 m_ballPopPosition;
     private Quaternion m_ballPopRotation;
+    private int m_trackId = 0, m_firstPlayerID = -1;
+    #endregion
 
     private readonly string m_goalOne = "GoalOne";
     private readonly string m_goalTwo = "GoalTwo";
@@ -30,15 +29,13 @@ public class Ball : MonoBehaviour
     private readonly string m_teamPlayerTwo = "TpTwo";
     private readonly string m_eastWall = "EastWall";
     private readonly string m_westWall = "WestWall";
-    #endregion
 
     #region Actions
     public static event Action OnHitGoalOne, OnHitGoalTwo;  //LocalMatchManager updates MatchUserInterface with OnScoreChanged.
     public static event Action<int> OnHitPlayer;            //LocalMatchManager keep track of Players hit by Ball for goal-notifications.
-    public static event Action OnFirstServe;        //LocalMatchManager saves MatchStartTime and sets 'MatchHasStarted'-Bool to true.
-
-    //TODO: Audioplay-Structure: (Emitter, AudioSourceSettings (Diegetic/NonDiegetic), Track-ID (if not random), RandomBool);
+    public static event Action OnFirstServe;                //LocalMatchManager saves MatchStartTime and sets 'MatchHasStarted'-Bool to true.
     public static event Action<ESoundEmittingObjects, EAudioType, int, bool> PlaySpecificAudio;
+    //TODO: Audioplay-Structure: (Emitter, AudioSourceSettings (Diegetic/NonDiegetic), Track-ID (if not random), RandomBool);
     #endregion
 
     private void Awake()
@@ -55,18 +52,16 @@ public class Ball : MonoBehaviour
         m_ballPopRotation = m_rigidbody.rotation;
     }
 
+    private void OnEnable()
+    {
+        AudioManager.LetsRegisterAudioSources(m_ballAudioSource);
+        CharacterInputHandler.AKickBall += BallStart;
+    }
+
     private void OnDisable()
     {
         AudioManager.LetsRemoveAudioSources(m_ballAudioSource);
-
         CharacterInputHandler.AKickBall -= BallStart;
-    }
-
-    private void Start()
-    {
-        AudioManager.LetsRegisterAudioSources(m_ballAudioSource);
-
-        CharacterInputHandler.AKickBall += BallStart;
     }
 
     private void ResetBall()
@@ -80,8 +75,10 @@ public class Ball : MonoBehaviour
 
     private void BallStart(int _masterID)
     {
-        int firstPlayerID = -1;                 //Limits the Force on Ball to be applied only once. Or to first Player, on '_masterID == 0'.
-        if (!m_matchManager.GameIsPaused && m_firstPlayerID == firstPlayerID/*&& _masterID == 0*/)
+        int firstPlayerID = -1;
+
+        //Garanty to only apply the force on the ball only once.
+        if (!m_matchManager.GameIsPaused && m_firstPlayerID == firstPlayerID)
         {
             m_firstPlayerID = _masterID;
             if (!m_matchManager.MatchIsActive)
@@ -93,7 +90,7 @@ public class Ball : MonoBehaviour
 
     private void ApplyForceOnBall()
     {
-        if (m_rigidbody.velocity != Vector3.zero)   //Only apply force on the ball, if it stand still( in the middle of the field).
+        if (m_rigidbody.velocity != Vector3.zero)   //Only apply force on the ball, if it stand still (in the middle of the field).
             return;
 
         int sideChoice;
@@ -116,7 +113,7 @@ public class Ball : MonoBehaviour
             _ => new Vector3(transform.eulerAngles.x, UnityEngine.Random.Range(0 + m_offPaddleAngle, 90 - m_offWallAngle), transform.eulerAngles.z),
         };
 
-        m_rigidbody.AddRelativeForce(transform.forward * m_impulseForce, ForceMode.Impulse);
+        m_rigidbody.AddRelativeForce(transform.forward * m_initialSpeed, ForceMode.Impulse);
 
         //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
         PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);   //BallstartSound
@@ -172,11 +169,5 @@ public class Ball : MonoBehaviour
             //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
             PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.Diegetic, m_trackId, false);
         }
-
-        //TODO: PlayerCharacter 1 & 2, if AdditionalSpeed (m_onContactAddUp) shall be applied?
-        //if (_collision.gameObject.CompareTag("PlayerCharacter"))
-        //{
-        //    m_rigidbody.AddForce(_collision.GetContact(0).normal * m_onContactAddUp, ForceMode.Impulse);
-        //}
     }
 }

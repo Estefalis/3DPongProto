@@ -55,7 +55,7 @@ namespace ThreeDeePongProto.Offline.UI
             }
 
             CameraManager.InitializeMatchUI += InitializeUI;
-            Ball.OnFirstServe += OnMatchStarted;
+            BallController.OnFirstServe += OnMatchStarted;
         }
 
         private void OnDisable()
@@ -67,7 +67,7 @@ namespace ThreeDeePongProto.Offline.UI
             }
 
             CameraManager.InitializeMatchUI -= InitializeUI;
-            Ball.OnFirstServe -= OnMatchStarted;
+            BallController.OnFirstServe -= OnMatchStarted;
         }
 
         private void Update()

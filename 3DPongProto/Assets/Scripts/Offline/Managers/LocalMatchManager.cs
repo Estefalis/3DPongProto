@@ -51,7 +51,6 @@ namespace ThreeDeePongProto.Shared.Managers
         private int m_currentScoreTeam2, m_totalScoreTeam2;
         private int m_currentRound;
         private string m_lastTouchedPlayerT1, m_lastTouchedPlayerT2, m_infiniteWinner;
-        //private CharacterMainController m_lastTouchTeam1, m_lastTouchTeam2;
 
         private float m_matchStartTime, m_ballYPos;
 
@@ -95,6 +94,11 @@ namespace ThreeDeePongProto.Shared.Managers
             MenuManager.AEndInfiniteMatch += EndInfiniteMatch;
             UserInputManager.AChangeActiveActionMap += ToggleMatchPause;
             PlayerInputManager.instance.onPlayerJoined += OnPlayerJoined;
+
+            BallController.OnFirstServe += OnMatchActive;
+            BallController.OnHitPlayer += SetLastTouch;
+            BallController.OnHitGoalOne += OnBallHitsTeam1Goal;
+            BallController.OnHitGoalTwo += OnBallHitsTeam2Goal;
         }
 
         private void OnDisable()
@@ -104,20 +108,20 @@ namespace ThreeDeePongProto.Shared.Managers
             if (PlayerInputManager.instance != null)
                 PlayerInputManager.instance.onPlayerJoined -= OnPlayerJoined;
 
-            Ball.OnFirstServe -= OnMatchActive;
-            Ball.OnHitPlayer -= SetLastTouch;
-            Ball.OnHitGoalOne -= OnBallHitsTeam1Goal;
-            Ball.OnHitGoalTwo -= OnBallHitsTeam2Goal;
+            BallController.OnFirstServe -= OnMatchActive;
+            BallController.OnHitPlayer -= SetLastTouch;
+            BallController.OnHitGoalOne -= OnBallHitsTeam1Goal;
+            BallController.OnHitGoalTwo -= OnBallHitsTeam2Goal;
         }
 
         private void OnDestroy()
         {
             MenuManager.AEndInfiniteMatch -= EndInfiniteMatch;
 
-            Ball.OnFirstServe -= OnMatchActive;
-            Ball.OnHitPlayer -= SetLastTouch;
-            Ball.OnHitGoalOne -= OnBallHitsTeam1Goal;
-            Ball.OnHitGoalTwo -= OnBallHitsTeam2Goal;
+            BallController.OnFirstServe -= OnMatchActive;
+            BallController.OnHitPlayer -= SetLastTouch;
+            BallController.OnHitGoalOne -= OnBallHitsTeam1Goal;
+            BallController.OnHitGoalTwo -= OnBallHitsTeam2Goal;
 
             UserInputManager.AChangeActiveActionMap -= ToggleMatchPause;
         }
@@ -138,11 +142,6 @@ namespace ThreeDeePongProto.Shared.Managers
             m_matchData = settingsManager.CurrentSettings.Match;
             m_playerProfiles = profileManager.PlayerProfiles;
 
-            Ball.OnFirstServe += OnMatchActive;
-            Ball.OnHitPlayer += SetLastTouch;
-            Ball.OnHitGoalOne += OnBallHitsTeam1Goal;
-            Ball.OnHitGoalTwo += OnBallHitsTeam2Goal;
-
             SetupMatch();
         }
 
@@ -162,9 +161,7 @@ namespace ThreeDeePongProto.Shared.Managers
 
             //PlayerBase position and rotation
             _playerInput.transform.SetPositionAndRotation(spawnPosition, spawnRotation);
-
-            //var avatar = _playerInput.GetComponentInChildren<CharacterMovement>();
-            //avatar.transform.localRotation = spawnRotation;
+            
             var rb = _playerInput.GetComponentInChildren<Rigidbody>();
             rb.transform.localRotation = spawnRotation;
         }
