@@ -1994,6 +1994,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6378569749293626236, guid: 74f751241b73100469bd63ab0c97f0eb,
+        type: 3}
+      propertyPath: m_text
+      value: Field Scale [Meters]
+      objectReference: {fileID: 0}
     - target: {fileID: 6962440508631500700, guid: 74f751241b73100469bd63ab0c97f0eb,
         type: 3}
       propertyPath: m_AnchorMax.y

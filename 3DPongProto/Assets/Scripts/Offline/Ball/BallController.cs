@@ -113,7 +113,7 @@ public class BallController : MonoBehaviour
 
         m_currentSpeedTarget = m_initialSpeed;
         m_rigidbody.velocity = serveDirection * m_currentSpeedTarget;
-
+        
         //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
         PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);    //BallstartSound
     }
@@ -194,9 +194,11 @@ public class BallController : MonoBehaviour
         {
             PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.Diegetic, m_trackId, false);
             
-            // Optional: You could slightly decrease speed here if you want friction
-            // m_currentSpeedTarget *= 0.98f; 
+            m_currentSpeedTarget *= 0.99f; //Wall friction.
         }
+        #if UNITY_EDITOR
+        Debug.Log($"Rb velocity: {m_rigidbody.velocity} | Limit: {m_currentSpeedTarget}");
+        #endif
     }
     #endregion
 }

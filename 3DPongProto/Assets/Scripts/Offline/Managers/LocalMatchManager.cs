@@ -35,8 +35,7 @@ namespace ThreeDeePongProto.Shared.Managers
         [SerializeField] private HighScoreBoard m_highScoreBoard;
 
         #region Game Rules & Constants
-        private const float m_playGroundWidthScale = 0.1f;
-        private const float m_playGroundLengthScale = 0.1f;
+        private const float m_playGroundWidthScale = 0.1f, m_playGroundLengthScale = 0.1f, m_middleLineScale = 0.00025f; //Conversion from int to variable float.
         public static readonly Vector3 DEFAULT_PADDLE_SCALE = new Vector3(3.5f, 1.0f, 0.5f);
         #endregion
 
@@ -193,6 +192,8 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void BuildPlayField()
         {
+            if(m_playGround == null) return;    //Plus warning.
+
             m_playGround.GetComponent<Transform>();
             m_playGround.transform.localScale = new Vector3(m_matchData.FieldWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_matchData.FieldLength * m_playGroundLengthScale);
 
