@@ -194,7 +194,7 @@ public class BallController : MonoBehaviour
         {
             PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.Diegetic, m_trackId, false);
             
-            m_currentSpeedTarget *= 0.99f; //Wall friction.
+            m_currentSpeedTarget *= 0.98f; //Wall friction.
         }
         #if UNITY_EDITOR
         Debug.Log($"Rb velocity: {m_rigidbody.velocity} | Limit: {m_currentSpeedTarget}");

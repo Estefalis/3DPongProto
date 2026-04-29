@@ -30,7 +30,7 @@ namespace ThreeDeePongProto.Shared.Managers
         [Header("Scene & Prefab References")]
         [SerializeField] private string m_NPCName = "Some Test-NPC";    //TODO: Implement NPC for solo play!
         [SerializeField] private Transform m_prefabParent;
-        [SerializeField] private GameObject m_playGround;
+        [SerializeField] private PlaygroundSetup m_playGroundPrefab;
         [SerializeField] private GameObject m_ballPrefab;
         [SerializeField] private HighScoreBoard m_highScoreBoard;
 
@@ -92,7 +92,7 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             MenuManager.AEndInfiniteMatch += EndInfiniteMatch;
             UserInputManager.AChangeActiveActionMap += ToggleMatchPause;
-            PlayerInputManager.instance.onPlayerJoined += OnPlayerJoined;
+            // PlayerInputManager.instance.onPlayerJoined += OnPlayerJoined;
 
             BallController.OnFirstServe += OnMatchActive;
             BallController.OnHitPlayer += SetLastTouch;
@@ -104,8 +104,8 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             MenuManager.AEndInfiniteMatch -= EndInfiniteMatch;
             UserInputManager.AChangeActiveActionMap -= ToggleMatchPause;
-            if (PlayerInputManager.instance != null)
-                PlayerInputManager.instance.onPlayerJoined -= OnPlayerJoined;
+            // if (PlayerInputManager.instance != null)
+            //     PlayerInputManager.instance.onPlayerJoined -= OnPlayerJoined;
 
             BallController.OnFirstServe -= OnMatchActive;
             BallController.OnHitPlayer -= SetLastTouch;
@@ -144,26 +144,26 @@ namespace ThreeDeePongProto.Shared.Managers
             SetupMatch();
         }
 
-        private void OnPlayerJoined(PlayerInput _playerInput)
-        {
-            int playerIndex = _playerInput.playerIndex;
+        // private void OnPlayerJoined(PlayerInput _playerInput)
+        // {
+        //     // int playerIndex = _playerInput.playerIndex;
 
-            EPlayerLine line = m_matchData.PlayerPositions[playerIndex];
-            float zSide = (playerIndex % 2 == 0) ? -1f : 1f;
-            float halfFieldLength = m_matchData.FieldLength / 2f;
-            float lineDistance = (line == EPlayerLine.Backline) ? m_matchData.BacklineDistance : m_matchData.FrontlineDistance;
-            float zPos = zSide * (halfFieldLength - lineDistance); //Sets distance of players X-MoveLine.
+        //     // EPlayerLine line = m_matchData.PlayerPositions[playerIndex];
+        //     // float zSide = (playerIndex % 2 == 0) ? -1f : 1f;
+        //     // float halfFieldLength = m_matchData.FieldLength / 2f;
+        //     // float lineDistance = (line == EPlayerLine.Backline) ? m_matchData.BacklineDistance : m_matchData.FrontlineDistance;
+        //     // float zPos = zSide * (halfFieldLength - lineDistance); //Sets distance of players X-MoveLine.
 
-            Vector3 spawnPosition = new(0, _playerInput.transform.position.y + 0.5f, zPos);
-            //Quaternion spawnRotation = Quaternion.LookRotation(new Vector3(0, 0, -zSide));
-            Quaternion spawnRotation = Quaternion.Euler(0, zSide > 0 ? 180f : 0f, 0);
+        //     // Vector3 spawnPosition = new(0, _playerInput.transform.position.y + 0.5f, zPos);
+        //     // //Quaternion spawnRotation = Quaternion.LookRotation(new Vector3(0, 0, -zSide));
+        //     // Quaternion spawnRotation = Quaternion.Euler(0, zSide > 0 ? 180f : 0f, 0);
 
-            //PlayerBase position and rotation
-            _playerInput.transform.SetPositionAndRotation(spawnPosition, spawnRotation);
+        //     // //PlayerBase position and rotation
+        //     // _playerInput.transform.SetPositionAndRotation(spawnPosition, spawnRotation);
             
-            var rb = _playerInput.GetComponentInChildren<Rigidbody>();
-            rb.transform.localRotation = spawnRotation;
-        }
+        //     // var rb = _playerInput.GetComponentInChildren<Rigidbody>();
+        //     // rb.transform.localRotation = spawnRotation;
+        // }
 
         #region Custom-Methods        
         private void SetupMatch()
@@ -192,12 +192,17 @@ namespace ThreeDeePongProto.Shared.Managers
 
         private void BuildPlayField()
         {
-            if(m_playGround == null) return;    //Plus warning.
+            if(m_playGroundPrefab == null) 
+            {
+                Debug.LogWarning("Playground Prefab is missing!");
+                return;
+            }
 
-            m_playGround.GetComponent<Transform>();
-            m_playGround.transform.localScale = new Vector3(m_matchData.FieldWidth * m_playGroundWidthScale, m_playGround.transform.localScale.y, m_matchData.FieldLength * m_playGroundLengthScale);
-
-            Instantiate(m_playGround, Vector3.zero, Quaternion.Euler(0, 0, 0), m_prefabParent);
+            //Create a copy of the Playfield.
+            PlaygroundSetup spawnedPlayground = Instantiate(m_playGroundPrefab, Vector3.zero, Quaternion.identity, m_prefabParent);
+        
+            //Scale the copy.
+            spawnedPlayground.SetScale(m_matchData.FieldWidth, m_matchData.FieldLength);
         }
 
         private void SpawnBall()

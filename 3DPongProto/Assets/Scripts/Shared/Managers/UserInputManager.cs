@@ -28,8 +28,11 @@ namespace ThreeDeePongProto.Shared.Managers
     public class UserInputManager : PersistentSingleton<UserInputManager>
     {
         [Header("Player Spawning")]
-        [Tooltip("PlayerControllerBase with PlayerInputManager.")]
-        [SerializeField] private GameObject m_playerController;
+        //PlayerInputManager spawns the PlayerControllerBase!!!
+        #region Previous Clone Change
+        // [Tooltip("PlayerControllerBase with PlayerInputManager.")]
+        // [SerializeField] private GameObject m_playerController;
+        #endregion
         [Tooltip("Visual AvatarControls-Prefabs for Player 0-3.")]
         [SerializeField] private GameObject[] m_playerAvatarControls;
 
@@ -203,7 +206,7 @@ namespace ThreeDeePongProto.Shared.Managers
             int playerIndex = _playerInput.playerIndex;
             //Get the playerProfile for each player from the PlayerProfileManager.
             var playerProfile = PlayerProfileManager.Instance.PlayerProfiles[playerIndex];
-            #region Prevent Clone Change
+            #region Previous Clone Change
             //InputActionAsset clonedAsset = Instantiate(m_originalActionAsset);
             // _playerInput.actions = m_originalActionAsset;
             #endregion
@@ -215,7 +218,7 @@ namespace ThreeDeePongProto.Shared.Managers
             GameObject avatarInstance = null;
             if (m_playerAvatarControls != null && playerIndex < m_playerAvatarControls.Length)
             {
-                avatarInstance = Instantiate(m_playerAvatarControls[playerIndex], _playerInput.transform);
+                avatarInstance = Instantiate(m_playerAvatarControls[playerIndex], _playerInput.transform);  //Wiring AvatarControls onto Parent-GameObject!
             }
 
             //Get CharacterMainController on the CharacterBase-Prefab gameObject.
@@ -228,7 +231,7 @@ namespace ThreeDeePongProto.Shared.Managers
                 controller.StoreData(controlData, matchData, playerProfile);
 
                 var transformParent = LocalMatchManager.Instance.PrefabParent;
-                controller.transform.SetParent(transformParent);   //previous FindObjectOfType<LocalMatchManager>();
+                controller.transform.SetParent(transformParent);   //Player becomes a child of the Playfield-ParentObject.
             }
             else
                 Debug.LogError($"Could not find CharacterMainController for Player {playerIndex}.");

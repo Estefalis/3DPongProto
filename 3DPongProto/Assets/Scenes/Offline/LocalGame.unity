@@ -2119,7 +2119,7 @@ MonoBehaviour:
   m_menuManager: {fileID: 1008670894}
   m_NPCName: Some Test-NPC
   m_prefabParent: {fileID: 1061313409}
-  m_playGround: {fileID: 5980709644925271523, guid: 81c764eba9528904fa09f522c6f6fba7,
+  m_playGroundPrefab: {fileID: 2526250431307522382, guid: 81c764eba9528904fa09f522c6f6fba7,
     type: 3}
   m_ballPrefab: {fileID: 3504575717850183147, guid: 9d7ade183afbd1840b3e2bdce92d679f,
     type: 3}

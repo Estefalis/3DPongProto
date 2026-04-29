@@ -150,7 +150,7 @@ namespace ThreeDeePongProto.Offline.UI
                     panelRects[0].anchorMin = new Vector2(0, 1);        //Left ScreenBorder, Upper ScreenBorder
                     panelRects[0].anchorMax = new Vector2(0, 1);
                     panelRects[0].pivot = new Vector2(0, 1);
-                    panelRects[0].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+                    panelRects[0].anchoredPosition = new Vector2(m_playerInfoXPos, m_playerInfoYPos);
 
                     UpdatePlayerTransformList(m_playerDetailsParent[0]);
                     break;
@@ -166,12 +166,12 @@ namespace ThreeDeePongProto.Offline.UI
                             panelRects[0].anchorMin = new Vector2(0, 1);        //Left ScreenBorder, Upper ScreenBorder
                             panelRects[0].anchorMax = new Vector2(0, 1);
                             panelRects[0].pivot = new Vector2(0, 1);
-                            panelRects[0].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+                            panelRects[0].anchoredPosition = new Vector2(m_playerInfoXPos, m_playerInfoYPos);
 
                             panelRects[1].anchorMin = new Vector2(0.5f, 1);     //Middle ScreenWidth, Upper ScreenBorder
                             panelRects[1].anchorMax = new Vector2(0.5f, 1);
                             panelRects[1].pivot = new Vector2(0, 1);
-                            panelRects[1].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+                            panelRects[1].anchoredPosition = new Vector2(m_playerInfoXPos, m_playerInfoYPos);
 
                             UpdatePlayerTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1]);
                             break;
@@ -188,7 +188,7 @@ namespace ThreeDeePongProto.Offline.UI
                             panelRects[1].anchorMin = new Vector2(0, 1);        //Left ScreenBorder, Upper ScreenBorder
                             panelRects[1].anchorMax = new Vector2(0, 1);
                             panelRects[1].pivot = new Vector2(0, 1);
-                            panelRects[1].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+                            panelRects[1].anchoredPosition = new Vector2(m_playerInfoXPos, m_playerInfoYPos);
 
                             UpdatePlayerTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1]);
                             break;
@@ -207,17 +207,17 @@ namespace ThreeDeePongProto.Offline.UI
                     panelRects[1].anchorMin = new Vector2(0.5f, 0.5f);  //Middle ScreenWidth, Middle ScreenHeight
                     panelRects[1].anchorMax = new Vector2(0.5f, 0.5f);
                     panelRects[1].pivot = new Vector2(0, 1);
-                    panelRects[1].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+                    panelRects[1].anchoredPosition = new Vector2(m_playerInfoXPos, m_playerInfoYPos);
 
                     panelRects[2].anchorMin = new Vector2(0, 1);        //Left ScreenBorder, Upper ScreenBorder
                     panelRects[2].anchorMax = new Vector2(0, 1);
                     panelRects[2].pivot = new Vector2(0, 1);
-                    panelRects[2].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+                    panelRects[2].anchoredPosition = new Vector2(m_playerInfoXPos, m_playerInfoYPos);
 
                     panelRects[3].anchorMin = new Vector2(0.5f, 1);     //Middle ScreenWidth, Upper ScreenBorder
                     panelRects[3].anchorMax = new Vector2(0.5f, 1);
                     panelRects[3].pivot = new Vector2(0, 1);
-                    panelRects[3].anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+                    panelRects[3].anchoredPosition = new Vector2(m_playerInfoXPos, m_playerInfoYPos);
 
                     UpdatePlayerTransformList(m_playerDetailsParent[0], m_playerDetailsParent[1], m_playerDetailsParent[2], m_playerDetailsParent[3]);
                     break;
@@ -254,7 +254,7 @@ namespace ThreeDeePongProto.Offline.UI
                     parentRect.anchorMin = new Vector2(0, 0);
                     parentRect.anchorMax = new Vector2(0, 0);
                     parentRect.pivot = new Vector2(0, 1);
-                    parentRect.anchoredPosition = new Vector2(m_playerInfoXPos, -m_playerInfoYPos);
+                    parentRect.anchoredPosition = new Vector2(m_playerInfoXPos, m_playerInfoYPos);
                 }
             }
         }
