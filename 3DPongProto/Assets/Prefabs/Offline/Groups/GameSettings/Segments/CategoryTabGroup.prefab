@@ -417,6 +417,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5422136370439484}
     m_Modifications:
+    - target: {fileID: 13572963959602353, guid: 5e47f57762464a64e807b41421d37e77,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1248839017405345501, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_text
@@ -539,6 +544,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6525955388403712573, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6525955388403712573, guid: 5e47f57762464a64e807b41421d37e77,
+        type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
       objectReference: {fileID: 3370736242798330068}
@@ -549,26 +559,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6525955388403712573, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6525955388403712573, guid: 5e47f57762464a64e807b41421d37e77,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: ThreeDeePongProto.Offline.UI.Menu.MenuNavigation, Assembly-CSharp
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2876521248047291139, guid: 5e47f57762464a64e807b41421d37e77, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e47f57762464a64e807b41421d37e77, type: 3}
---- !u!114 &1717300281362901578 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6525955388403712573, guid: 5e47f57762464a64e807b41421d37e77,
-    type: 3}
-  m_PrefabInstance: {fileID: 5568078995004188791}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &9062446637494637731 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3495230280766389460, guid: 5e47f57762464a64e807b41421d37e77,
@@ -878,7 +882,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 1717300281362901578}
+      objectReference: {fileID: 0}
     - target: {fileID: 6525955388403712573, guid: 5e47f57762464a64e807b41421d37e77,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
