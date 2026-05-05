@@ -21,7 +21,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         [SerializeField] private ELerpCategory m_elerpCategory = ELerpCategory.FloatZ;
 
         [Header("Rotation")]
-        //[SerializeField, Range(1.0f, 5.0f)] private float m_rotationSpeed = 2.5f;
         [SerializeField] private float m_maxRotationAngle = 45.0f; //Maximum angle (�45 degrees).
 
         [Header("Push")]
@@ -53,8 +52,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         private Quaternion m_initialRbRotation;
 
         //Positioning & Scale
-        private float m_goalLineDistance;
-        private EPlayerLine m_linePosition;
+        private EPlayerLine m_linePosition;     //Option for potential resets or movment-limitation on Z-axis.
+        // private float m_goalLineDistance;
         private Vector3 m_paddleScale;
 
         private CharacterMainController m_characterController;
@@ -100,10 +99,6 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             m_paddleScale = LocalMatchManager.DEFAULT_PADDLE_SCALE;
             m_maxPushDistance = LocalMatchManager.Instance.MaxPushDistance;
 
-            var adjustedPushTarget = m_initialRbRotation.y != 0 ? m_rigidbody.transform.position.z - m_maxPushDistance : m_rigidbody.transform.position.z + m_maxPushDistance;
-            //Sets PushTarget Position with 'm_maxPushDistance'.
-            m_pushTarget.transform.position = new Vector3(0.0f, m_pushTarget.transform.position.y, adjustedPushTarget);
-
             if (m_audioSource != null)
                 AudioManager.LetsRegisterAudioSources(m_audioSource);
         }
@@ -138,10 +133,8 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         internal void Initialize(ControlSettingsData _controlData, MatchSettingsData _matchData, PlayerProfileData _playerProfile)
         {
             m_playerID = _playerProfile.PlayerID;
-            m_linePosition = _matchData.PlayerPositions[m_playerID];
-            m_goalLineDistance = (m_linePosition == EPlayerLine.Frontline)
-                ? _matchData.FrontlineDistance
-                : _matchData.BacklineDistance;
+            // m_linePosition = _matchData.PlayerPositions[m_playerID];
+            // m_goalLineDistance = (m_linePosition == EPlayerLine.Frontline) ? _matchData.FrontlineDistance : _matchData.BacklineDistance;
 
             m_moveSpeedX = _controlData.MoveSpeedX;
             m_rotationSpeedY = _controlData.RotSpeedY;
@@ -183,7 +176,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         /// <summary>
         /// Clamps the paddlemMovement on it's 'localPosition.x' and the calculated movementRange based on paddleWidth and fieldWidth.
-        /// Also clamps the desired minimal and maximal moveDistance on the zAxis based on m_goalLineDistance and m_maxPushDistance to the playerGoals.
+        /// Can also be used to clamp playerMovement on Z-axis, if required.
         /// </summary>
         public void ClampMoveRange()
         {
@@ -223,6 +216,11 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 m_characterController.transform.SetPositionAndRotation(spawnPosition, spawnRotation);
             
             m_rigidbody.transform.localRotation = spawnRotation;
+            // m_rigidbody.transform.parent.localRotation = spawnRotation;
+
+            var adjustedPushTarget = spawnRotation.y != 0 ? m_rigidbody.transform.position.z - m_maxPushDistance : m_rigidbody.transform.position.z + m_maxPushDistance;
+            //Sets PushTarget Position with 'm_maxPushDistance'.
+            m_pushTarget.transform.position = new Vector3(0.0f, m_pushTarget.transform.position.y, adjustedPushTarget);
         }
 
         private void HandleRotation()
@@ -276,55 +274,55 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
 
         private IEnumerator HandlePush()
         {
-            if (m_receivedUserID == m_characterController.m_playerInputHandler.m_playerInput.user.id && !m_valueTaken)
+            if (m_receivedUserID != m_characterController.m_playerInputHandler.m_playerInput.user.id || m_valueTaken)
+            yield break;
+        
+            Vector3 rbStartPosition = m_rigidbody.transform.position;
+            m_rbPushStartPos = rbStartPosition;
+
+            Vector3 pushTargetPosition = m_pushTarget.transform.position;
+            m_xPosDifference = pushTargetPosition.x - rbStartPosition.x;
+
+            m_valueTaken = true;
+            float progress = 0.0f;
+
+            while (progress < m_maxPushDistance)
             {
-                Vector3 rbStartPosition = m_rigidbody.transform.position;
-                m_rbPushStartPos = rbStartPosition;
+                progress += Time.fixedDeltaTime * m_pushSpeed / m_pushDuration;
 
-                Vector3 pushTargetPosition = m_pushTarget.transform.position;
-                m_xPosDifference = pushTargetPosition.x - rbStartPosition.x;
-
-                m_valueTaken = true;
-                float progress = 0.0f;
-
-                while (progress < m_maxPushDistance)
+                switch (m_elerpCategory)
                 {
-                    progress += Time.fixedDeltaTime * m_pushSpeed / m_pushDuration;
-
-                    switch (m_elerpCategory)
+                    case ELerpCategory.FloatZ:
                     {
-                        case ELerpCategory.FloatZ:
-                        {
-                            float newZ = Mathf.Lerp(rbStartPosition.z, pushTargetPosition.z, progress);
+                        float newZ = Mathf.Lerp(rbStartPosition.z, pushTargetPosition.z, progress);
 
-                            m_rigidbody.transform.position = new Vector3(rbStartPosition.x, rbStartPosition.y, newZ);
-                            break;
-                        }
-                        case ELerpCategory.FloatXAndZ:
-                        {
-                            //float adjustedX = Mathf.Lerp(rbStartPosition.x, rbStartPosition.x + xDifference, progress);
-                            float newX = Mathf.Lerp(rbStartPosition.x, Mathf.Lerp(rbStartPosition.x, rbStartPosition.x + m_xPosDifference, progress), progress);
-                            float newZ = Mathf.Lerp(rbStartPosition.z, pushTargetPosition.z, progress);
-
-                            m_rigidbody.transform.position = new Vector3(newX, rbStartPosition.y, newZ);
-                            break;
-                        }
-                        case ELerpCategory.Vector3: //until further changes.
-                        {
-                            Vector3 pushVector = Vector3.Lerp(rbStartPosition, pushTargetPosition, progress);
-                            m_rigidbody.transform.position = pushVector;
-                            break;
-                        }
-                        case ELerpCategory.None:
-                        default:
-                            break;
+                        m_rigidbody.transform.position = new Vector3(rbStartPosition.x, rbStartPosition.y, newZ);
+                        break;
                     }
+                    case ELerpCategory.FloatXAndZ:
+                    {
+                        //float adjustedX = Mathf.Lerp(rbStartPosition.x, rbStartPosition.x + xDifference, progress);
+                        float newX = Mathf.Lerp(rbStartPosition.x, Mathf.Lerp(rbStartPosition.x, rbStartPosition.x + m_xPosDifference, progress), progress);
+                        float newZ = Mathf.Lerp(rbStartPosition.z, pushTargetPosition.z, progress);
 
-                    yield return null;
+                        m_rigidbody.transform.position = new Vector3(newX, rbStartPosition.y, newZ);
+                        break;
+                    }
+                    case ELerpCategory.Vector3: //until further changes.
+                    {
+                        Vector3 pushVector = Vector3.Lerp(rbStartPosition, pushTargetPosition, progress);
+                        m_rigidbody.transform.position = pushVector;
+                        break;
+                    }
+                    case ELerpCategory.None:
+                    default:
+                        break;
                 }
 
-                StartCoroutine(HandleRetreat());
+                yield return null;
             }
+
+            StartCoroutine(HandleRetreat());
         }
 
         private IEnumerator HandleRetreat()
@@ -376,20 +374,18 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
         public void SetPlayerID(int _playerID)
         {
             m_playerID = _playerID;
-            SetPlayerRotation(/*m_playerID*/);
+            SetPlayerRotation();
         }
 
         /// <summary>
         /// Rotations of top parent Transform and Rigidbody need to be adjusted to move correct, depending on positive or negative Z-values.
         /// </summary>
         /// <param name="_playerId"></param>
-        private void SetPlayerRotation(/*int _playerId*/)
+        private void SetPlayerRotation()
         {
-            //Quaternion playerRotation = (_playerId % 2 == 0) ? Quaternion.Euler(0, 0, 0) : Quaternion.Euler(0, 180, 0);
-            //m_initialRbRotation = playerRotation;
             m_initialRbRotation = m_rigidbody.transform.localRotation;  //rbLocalPos set by OnPlayerJoined in LocalMatchManager.
             gameObject.transform.position = m_characterController.transform.position;
-            m_rigidbody.transform.SetPositionAndRotation(/*m_playerController.*/transform.position, m_initialRbRotation);
+            m_rigidbody.transform.SetPositionAndRotation(transform.position, m_initialRbRotation);
         }
 
         internal void ResetPlayerRotation(int _receivedID)
@@ -398,8 +394,7 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
                 return;
 
             m_currentYRotationOffset = 0.0f;
-            //m_rigidbody.transform.localRotation = m_initialRbRotation;
-            m_rigidbody.MoveRotation(m_initialRbRotation);
+            m_rigidbody.MoveRotation(m_initialRbRotation);      //m_rigidbody.transform.localRotation = m_initialRbRotation;
         }
 
         private void ResetPlayerRotationOnGoal()
@@ -407,10 +402,10 @@ namespace ThreeDeePongProto.Shared.PlayerCharacter
             switch (m_matchSettingsData.RotationReset)
             {
                 case true:
-                    m_rigidbody.transform.localRotation = m_initialRbRotation;
-                    break;
+                m_rigidbody.MoveRotation(m_initialRbRotation);  //Former m_rigidbody.transform.localRotation = m_initialRbRotation;
+                break;
                 case false:
-                    break;
+                break;
             }
         }
     }

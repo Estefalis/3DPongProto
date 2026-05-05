@@ -9,7 +9,7 @@ public class PlaygroundSetup : MonoBehaviour
 
     public void SetScale(float _fieldWidth, float _fieldLength)
     {
-        if(m_playGround == null) return;    //Plus warning.
+        if(m_playGround == null) return;    //Place for a potential warning.
         {
             //Scale the playfield.
             transform.localScale = new Vector3(_fieldWidth * m_fieldWidthScale, transform.localScale.y, _fieldLength * m_fieldLengthScale);

@@ -105,16 +105,16 @@ public class BallController : MonoBehaviour
     {
         if (m_rigidbody.velocity != Vector3.zero) return;
 
-        // Determine a random direction, avoiding straight horizontal/vertical
+        //Determine a random direction, avoiding straight horizontal/vertical.
         float randomAngle = GetRandomServeAngle();
         
-        // Convert angle to a direction vector (assuming Y is up, playing on X/Z plane)
+        //Convert angle to a direction vector (assuming Y is up, playing on X/Z plane).
         Vector3 serveDirection = new Vector3(Mathf.Sin(randomAngle * Mathf.Deg2Rad), 0, Mathf.Cos(randomAngle * Mathf.Deg2Rad));
 
         m_currentSpeedTarget = m_initialSpeed;
         m_rigidbody.velocity = serveDirection * m_currentSpeedTarget;
         
-        //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);
+        //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);.
         PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);    //BallstartSound
     }
 

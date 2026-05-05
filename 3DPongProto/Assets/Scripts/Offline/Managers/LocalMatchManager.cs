@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ThreeDeePongProto.Offline.UI.Menu;
-using ThreeDeePongProto.Shared.Highscores;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public enum EGameConnectionModi
 {
@@ -28,15 +26,13 @@ namespace ThreeDeePongProto.Shared.Managers
         public static LocalMatchManager Instance { get; private set; }
 
         [Header("Scene & Prefab References")]
-        [SerializeField] private string m_NPCName = "Some Test-NPC";    //TODO: Implement NPC for solo play!
+        //TODO: Implement NPC for solo play!
         [SerializeField] private Transform m_prefabParent;
         [SerializeField] private PlaygroundSetup m_playGroundPrefab;
         [SerializeField] private GameObject m_ballPrefab;
-        [SerializeField] private HighScoreBoard m_highScoreBoard;
 
         #region Game Rules & Constants
-        private const float m_playGroundWidthScale = 0.1f, m_playGroundLengthScale = 0.1f, m_middleLineScale = 0.00025f; //Conversion from int to variable float.
-        public static readonly Vector3 DEFAULT_PADDLE_SCALE = new Vector3(3.5f, 1.0f, 0.5f);
+        public static readonly Vector3 DEFAULT_PADDLE_SCALE = new(3.5f, 1.0f, 0.5f);    //CharacterMovement gets its default scale at start.
         #endregion
 
         #region Private-States
@@ -92,7 +88,6 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             MenuManager.AEndInfiniteMatch += EndInfiniteMatch;
             UserInputManager.AChangeActiveActionMap += ToggleMatchPause;
-            // PlayerInputManager.instance.onPlayerJoined += OnPlayerJoined;
 
             BallController.OnFirstServe += OnMatchActive;
             BallController.OnHitPlayer += SetLastTouch;
@@ -104,8 +99,6 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             MenuManager.AEndInfiniteMatch -= EndInfiniteMatch;
             UserInputManager.AChangeActiveActionMap -= ToggleMatchPause;
-            // if (PlayerInputManager.instance != null)
-            //     PlayerInputManager.instance.onPlayerJoined -= OnPlayerJoined;
 
             BallController.OnFirstServe -= OnMatchActive;
             BallController.OnHitPlayer -= SetLastTouch;
@@ -144,27 +137,6 @@ namespace ThreeDeePongProto.Shared.Managers
             SetupMatch();
         }
 
-        // private void OnPlayerJoined(PlayerInput _playerInput)
-        // {
-        //     // int playerIndex = _playerInput.playerIndex;
-
-        //     // EPlayerLine line = m_matchData.PlayerPositions[playerIndex];
-        //     // float zSide = (playerIndex % 2 == 0) ? -1f : 1f;
-        //     // float halfFieldLength = m_matchData.FieldLength / 2f;
-        //     // float lineDistance = (line == EPlayerLine.Backline) ? m_matchData.BacklineDistance : m_matchData.FrontlineDistance;
-        //     // float zPos = zSide * (halfFieldLength - lineDistance); //Sets distance of players X-MoveLine.
-
-        //     // Vector3 spawnPosition = new(0, _playerInput.transform.position.y + 0.5f, zPos);
-        //     // //Quaternion spawnRotation = Quaternion.LookRotation(new Vector3(0, 0, -zSide));
-        //     // Quaternion spawnRotation = Quaternion.Euler(0, zSide > 0 ? 180f : 0f, 0);
-
-        //     // //PlayerBase position and rotation
-        //     // _playerInput.transform.SetPositionAndRotation(spawnPosition, spawnRotation);
-            
-        //     // var rb = _playerInput.GetComponentInChildren<Rigidbody>();
-        //     // rb.transform.localRotation = spawnRotation;
-        // }
-
         #region Custom-Methods        
         private void SetupMatch()
         {
@@ -199,8 +171,7 @@ namespace ThreeDeePongProto.Shared.Managers
             }
 
             //Create a copy of the Playfield.
-            PlaygroundSetup spawnedPlayground = Instantiate(m_playGroundPrefab, Vector3.zero, Quaternion.identity, m_prefabParent);
-        
+            PlaygroundSetup spawnedPlayground = Instantiate(m_playGroundPrefab, Vector3.zero, Quaternion.identity, m_prefabParent);        
             //Scale the copy.
             spawnedPlayground.SetScale(m_matchData.FieldWidth, m_matchData.FieldLength);
         }
@@ -225,13 +196,11 @@ namespace ThreeDeePongProto.Shared.Managers
             {
                 //Team 1 Index 0 & Index 2.
                 m_lastTouchedPlayerT1 = m_playerProfiles[_playerIndex].PlayerName;
-                //m_lastTouchTeam1 = _playerIndex;
             }
             else
             {
                 //Team 2 Index 1 & Index 3
                 m_lastTouchedPlayerT2 = m_playerProfiles[_playerIndex].PlayerName;
-                //m_lastTouchTeam2 = _playerIndex;
             }
         }
 
@@ -332,15 +301,17 @@ namespace ThreeDeePongProto.Shared.Managers
         {
             PauseMatch(false);
 
-            MatchResult matchResult = new();
-            matchResult.WinnerName = _winningPlayer;
-            matchResult.FinalScore = _finalScore;
-            //TimeSpan playTimeSpan = TimeSpan.FromSeconds(Time.time - m_matchStartTime);
-            matchResult.TotalPlayTime = Time.time - m_matchStartTime;
-            //matchResult.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-            matchResult.MatchWinDate = DateTime.UtcNow.Ticks;
+            MatchResult matchResult = new()
+            {
+                WinnerName = _winningPlayer,
+                FinalScore = _finalScore,
+                //TimeSpan playTimeSpan = TimeSpan.FromSeconds(Time.time - m_matchStartTime);
+                TotalPlayTime = Time.time - m_matchStartTime,
+                //matchResult.MatchWinDate = $"{DateTime.Today.ToShortDateString()}\n" + string.Format("{0:00}:{1:00}:{2:00}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                MatchWinDate = DateTime.UtcNow.Ticks
+            };
+
             OnLocalMatchEnd?.Invoke(matchResult);                       //isMatchResult
-            //m_highScoreBoard.OnMatchEnded(matchResult, true);           //Requires internal void.
         }
 
         /// <summary>
