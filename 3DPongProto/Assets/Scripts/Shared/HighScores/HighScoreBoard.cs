@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ThreeDeePongProto.Offline.UI.Menu;
@@ -65,16 +66,13 @@ namespace ThreeDeePongProto.Shared.Highscores
 
         private void OnEnable()
         {
-            if (!m_isMatchResult)
-            {
-                //Get settings from the last Match.
-                var lastMatchConfig = SettingsManager.Instance.CurrentSettings.Match;
+            //Get settings from the last Match.
+            var lastMatchConfig = SettingsManager.Instance.CurrentSettings.Match;
 
-                //Set Filter-State.
-                m_currentFilterMode = (EFilterMode)lastMatchConfig.EGameMode;
-                m_filterRoundsValue = lastMatchConfig.RoundsToWin;  //m_lastGameRounds
-                m_filterPointsValue = lastMatchConfig.RoundPoints;  //m_lastGamePoints
-            }
+            //Set Filter-State.
+            m_currentFilterMode = (EFilterMode)lastMatchConfig.EGameMode;
+            m_filterRoundsValue = lastMatchConfig.RoundsToWin;  //m_lastGameRounds
+            m_filterPointsValue = lastMatchConfig.RoundPoints;  //m_lastGamePoints
 
             RefreshDisplay();
             AddListeners();
@@ -159,7 +157,7 @@ namespace ThreeDeePongProto.Shared.Highscores
                 roundsDdList.Add(i.ToString());
 
             m_roundsDropdown.AddOptions(roundsDdList);
-            m_roundsDropdown.SetValueWithoutNotify(m_isMatchResult ? (int)m_currentFilterMode : m_filterRoundsValue);
+            m_roundsDropdown.SetValueWithoutNotify(m_filterRoundsValue);
         }
 
         private void SetupMaxPointsDropdown()
@@ -171,7 +169,7 @@ namespace ThreeDeePongProto.Shared.Highscores
                 maxPointsDdList.Add(i.ToString());
 
             m_maxPointsDropdown.AddOptions(maxPointsDdList);
-            m_maxPointsDropdown.SetValueWithoutNotify(m_isMatchResult ? (int)m_currentFilterMode : m_filterPointsValue);
+            m_maxPointsDropdown.SetValueWithoutNotify(m_filterPointsValue);
         }
         #endregion
 
@@ -241,12 +239,24 @@ namespace ThreeDeePongProto.Shared.Highscores
             m_currentSortColumn = ESortColumn.WinDate;
             m_isSortAscending = false;
 
-            //First use MenuManager's <Transform-key, SelectObject-value> dict to activate the HighScoreBoard (Transform).
-            m_menuNavigation.NextElement(m_listFrame);     //listFrame.gO.SetActive = true.
+            // //First use MenuManager's <Transform-key, SelectObject-value> dict to activate the HighScoreBoard (Transform).
+            // m_menuNavigation.NextElement(m_listFrame);     //listFrame.gO.SetActive = true.
             //Then tell the UserInputManager to switch the active InputActionMap to UI to skip the MenuManager OnOpenMenu() Method.
             UserInputManager.Instance.ToggleActionMaps(EInputActionMaps.UserInterface.ToString());
-
+            
+            StartCoroutine(DelayButtonSelection());
             RefreshDisplay();
+        }
+
+        /// <summary>
+        /// Avoids a conflict with the recently opened and set PauseMenu-gameObject.
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator DelayButtonSelection()
+        {
+            yield return null;
+            //First use MenuManager's <Transform-key, SelectObject-value> dict to activate the HighScoreBoard (Transform).
+            m_menuNavigation.NextElement(m_listFrame);     //listFrame.gO.SetActive = true.
         }
 
         /// <summary>
