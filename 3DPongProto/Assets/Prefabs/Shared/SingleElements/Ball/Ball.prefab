@@ -192,14 +192,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce14d075411b559fea91663ec677e864, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ballAudioSource: {fileID: 3504575717850183148}
   m_rigidbody: {fileID: 3504575717850183151}
   m_initialSpeed: 10
-  m_offWallAngle: 25
+  m_minBallSpeed: 10
+  m_maxBallSpeed: 40
   m_offPaddleAngle: 0.1
-  m_minSpeed: 10
-  m_maxSpeed: 40
+  m_offWallAngle: 25
   m_paddleMomentumTransfer: 0.5
-  m_ballAudioSource: {fileID: 3504575717850183148}
+  m_wallFriction: 0.975
 --- !u!1 &4668597926238917242
 GameObject:
   m_ObjectHideFlags: 0

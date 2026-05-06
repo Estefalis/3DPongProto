@@ -9369,11 +9369,6 @@ PrefabInstance:
       objectReference: {fileID: 2136304141}
     - target: {fileID: 3017294011104358995, guid: eed1feb2bca952f4ea6362f44dd8d650,
         type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ThreeDeePongProto.Offline.UI.Menu.MenuNavigation, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 3017294011104358995, guid: eed1feb2bca952f4ea6362f44dd8d650,
-        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
       objectReference: {fileID: 703546890}
@@ -9386,11 +9381,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4886054133260651706, guid: eed1feb2bca952f4ea6362f44dd8d650,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4886054133260651706, guid: eed1feb2bca952f4ea6362f44dd8d650,
         type: 3}
@@ -9486,6 +9476,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ConnectModi
+      objectReference: {fileID: 0}
+    - target: {fileID: 6454268745051850757, guid: eed1feb2bca952f4ea6362f44dd8d650,
+        type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4279176975
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

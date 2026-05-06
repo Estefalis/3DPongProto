@@ -9,33 +9,32 @@ public class BallController : MonoBehaviour
 {
     #region Core Settings
     [Header("Core Settings")]
+    [SerializeField] private AudioSource m_ballAudioSource;
     [SerializeField] private Rigidbody m_rigidbody;
-    [SerializeField] private float m_initialSpeed = 10.0f;
-    [SerializeField, Min(25.0f)] private float m_offWallAngle = 25.0f;
+    [SerializeField, Range(10.0f, 40.0f)] private float m_initialSpeed = 10.0f;
+    [SerializeField, Min(10.0f)] private float m_minBallSpeed = 10.0f;
+    [SerializeField] private float m_maxBallSpeed = 40f;
     [SerializeField, Min(0.1f)] private float m_offPaddleAngle = 0.1f;
+    [SerializeField, Min(25.0f)] private float m_offWallAngle = 25.0f;
     #endregion
 
-    #region Dynamic Physics Settings
-    [Header("Dynamic Physics")]
-    [SerializeField] private float m_minSpeed = 10f;
-    [SerializeField] private float m_maxSpeed = 40f;
-    [SerializeField, Tooltip("How much of the paddle's speed transfers to the ball")] 
-    private float m_paddleMomentumTransfer = 0.5f;
-    
-    private float m_currentSpeedTarget; //The current target speed the ball is trying to maintain.
+    #region Friction and Acceleration
+    [Header("Friction and Acceleration")]
+    [SerializeField, Range(0f, 1f)] private float m_paddleMomentumTransfer = 0.5f;
+    [SerializeField] private float m_wallFriction = 0.975f;
     #endregion
 
     #region References
     private LocalMatchManager m_matchManager;
-    [SerializeField] private AudioSource m_ballAudioSource;
     private Vector3 m_ballPopPosition;
     private Quaternion m_ballPopRotation;
     private int m_trackId = 0, m_firstPlayerID = -1;
+    private float m_currentSpeedTarget; //The current target speed the ball is trying to maintain.
     #endregion
 
     #region Actions
     public static event Action OnHitGoalOne, OnHitGoalTwo;  //LocalMatchManager updates MatchUserInterface with OnScoreChanged.
-    public static event Action<int> OnHitPlayer;            //LocalMatchManager keep track of Players hit by Ball for goal-notifications.
+    public static event Action<int> OnHitPlayer;            //LocalMatchManager keeps track of Players hit by Ball for goal-notifications.
     public static event Action OnFirstServe;                //LocalMatchManager saves MatchStartTime and sets 'MatchHasStarted'-Bool to true.
     public static event Action<ESoundEmittingObjects, EAudioType, int, bool> PlaySpecificAudio;
     //TODO: Audioplay-Structure: (Emitter, AudioSourceSettings (Diegetic/NonDiegetic), Track-ID (if not random), RandomBool);
@@ -109,7 +108,7 @@ public class BallController : MonoBehaviour
         float randomAngle = GetRandomServeAngle();
         
         //Convert angle to a direction vector (assuming Y is up, playing on X/Z plane).
-        Vector3 serveDirection = new Vector3(Mathf.Sin(randomAngle * Mathf.Deg2Rad), 0, Mathf.Cos(randomAngle * Mathf.Deg2Rad));
+        Vector3 serveDirection = new(Mathf.Sin(randomAngle * Mathf.Deg2Rad), 0, Mathf.Cos(randomAngle * Mathf.Deg2Rad));
 
         m_currentSpeedTarget = m_initialSpeed;
         m_rigidbody.velocity = serveDirection * m_currentSpeedTarget;
@@ -135,7 +134,7 @@ public class BallController : MonoBehaviour
     private void EnforceSpeedLimits()
     {
         //Clamp the target speed between the defined min- and max-value.
-        m_currentSpeedTarget = Mathf.Clamp(m_currentSpeedTarget, m_minSpeed, m_maxSpeed);
+        m_currentSpeedTarget = Mathf.Clamp(m_currentSpeedTarget, m_minBallSpeed, m_maxBallSpeed);
 
         //Force the Rigidbody to maintain this exact speed along its current trajectory.
         m_rigidbody.velocity = m_rigidbody.velocity.normalized * m_currentSpeedTarget;
@@ -171,34 +170,43 @@ public class BallController : MonoBehaviour
         //On Paddles.
         if (hitObject.CompareTag("TpOne") || hitObject.CompareTag("TpTwo"))
         {
-            PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
-            
-            //Try to get the player script.
-            if (hitObject.transform.parent.TryGetComponent<CharacterMovement>(out var player))
-            {
-                OnHitPlayer?.Invoke(player.m_playerID);
-                
-                // --- DYNAMIC ACCELERATION LOGIC ---
-                //Try to get the paddle's Rigidbody to read its velocity.
-                if (player.TryGetComponent<Rigidbody>(out var playerRb))
-                {
-                    float paddleSpeed = playerRb.velocity.magnitude;
-                    
-                    //Add a portion of the paddle's speed to the ball's target speed.
-                    m_currentSpeedTarget += paddleSpeed * m_paddleMomentumTransfer;
-                }
-            }
+            HandlePlayerCollision(_collision);
         }
         //On Walls.
         else if (hitObject.CompareTag("EastWall") || hitObject.CompareTag("WestWall"))
         {
-            PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.Diegetic, m_trackId, false);
-            
-            m_currentSpeedTarget *= 0.98f; //Wall friction.
+            ApplyWallFriction();
         }
         #if UNITY_EDITOR
         Debug.Log($"Rb velocity: {m_rigidbody.velocity} | Limit: {m_currentSpeedTarget}");
         #endif
+    }
+
+    private void HandlePlayerCollision(Collision _collision)
+    {
+        PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.NonDiegetic, m_trackId, false);
+
+        if(_collision.transform.parent.TryGetComponent<CharacterMovement>(out var player))
+        {
+            OnHitPlayer?.Invoke(player.m_playerID);
+
+            if (player.TryGetComponent<Rigidbody>(out var playerRb))
+            {
+                //Get players velocity.
+                float playerImpact = playerRb.velocity.magnitude;
+                //Increase BallSpeed based on playerImpact.
+                m_currentSpeedTarget += playerImpact * m_paddleMomentumTransfer;
+                Debug.Log($"BallSpeed after hitting a Player: {m_rigidbody.velocity}");                
+            }
+        }
+    }
+
+    private void ApplyWallFriction()
+    {
+        PlaySpecificAudio?.Invoke(ESoundEmittingObjects.Ball, EAudioType.Diegetic, m_trackId, false);
+            
+        m_currentSpeedTarget *= m_wallFriction;
+        Debug.Log($"BallSpeed after hitting a wall: {m_rigidbody.velocity}");
     }
     #endregion
 }
