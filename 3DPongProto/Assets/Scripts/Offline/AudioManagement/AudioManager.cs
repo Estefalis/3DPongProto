@@ -28,7 +28,7 @@ namespace ThreeDeePongProto.Shared.AudioManagement
         Player
     }
 
-    public class AudioManager : MonoBehaviour
+    public class AudioManager : PersistentSingleton<AudioManager>
     {
         [SerializeField] private AudioMixer m_masterAudioMixer;
         [SerializeField] private AudioMixerGroup m_bGMAudioMixer;
@@ -66,8 +66,10 @@ namespace ThreeDeePongProto.Shared.AudioManagement
 
         private EAudioType m_audioType;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+            
             m_ActionRegisterAudioSource += AddIncomingAudioSource;
             m_ActionRemoveAudioSource += RemoveAddedAudioSources;
 
@@ -166,9 +168,9 @@ namespace ThreeDeePongProto.Shared.AudioManagement
             //return _audioSource;
         }
 
-        //private void SetupCustomAudio(AudioSource _audioSource)
-        //{
+        private void SetupCustomAudio(AudioSource _audioSource)
+        {
 
-        //}
+        }
     }
 }

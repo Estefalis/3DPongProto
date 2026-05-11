@@ -21,7 +21,7 @@ public class BallController : MonoBehaviour
     #region Friction and Acceleration
     [Header("Friction and Acceleration")]
     [SerializeField, Range(0f, 1f)] private float m_paddleMomentumTransfer = 0.5f;
-    [SerializeField] private float m_speedDecayRate = 0.5f;
+    [SerializeField] private float m_speedDecayRate = 0.25f;
     [SerializeField] private float m_wallFriction = 0.975f;
     #endregion
 
@@ -142,6 +142,8 @@ public class BallController : MonoBehaviour
         {
             //reduce the ballSpeed over time and
             m_currentSpeedTarget -= m_speedDecayRate * Time.fixedDeltaTime;
+            ////ALTERNATIVE
+            //m_currentSpeedTarget = Mathf.Lerp(m_currentSpeedTarget, m_initialBaseSpeed, Time.fixedDeltaTime * m_speedDecayRate);
 
             //keep the ballSpeed from falling lower than the initialBaseSpeed.
             m_currentSpeedTarget = Mathf.Max(m_currentSpeedTarget, m_initialBaseSpeed);
