@@ -11,7 +11,7 @@ public class BallController : MonoBehaviour
     [Header("Core Settings")]
     [SerializeField] private AudioSource m_ballAudioSource;
     [SerializeField] private Rigidbody m_rigidbody;
-    [SerializeField, Range(10.0f, 40.0f)] private float m_initialSpeed = 10.0f;
+    [SerializeField, Range(10.0f, 40.0f)] private float m_initialBaseSpeed = 12.5f;
     [SerializeField, Min(10.0f)] private float m_minBallSpeed = 10.0f;
     [SerializeField] private float m_maxBallSpeed = 40f;
     [SerializeField, Min(0.1f)] private float m_offPaddleAngle = 0.1f;
@@ -21,6 +21,7 @@ public class BallController : MonoBehaviour
     #region Friction and Acceleration
     [Header("Friction and Acceleration")]
     [SerializeField, Range(0f, 1f)] private float m_paddleMomentumTransfer = 0.5f;
+    [SerializeField] private float m_speedDecayRate = 0.5f;
     [SerializeField] private float m_wallFriction = 0.975f;
     #endregion
 
@@ -70,7 +71,10 @@ public class BallController : MonoBehaviour
     {
         //STRICTLY limit Ball-GameObjects velocity to defined min- and max-values. But only, if the ball is actually moving.
         if (m_rigidbody.velocity.sqrMagnitude > 0.1f)
+        {
+            ApplySpeedDecay();
             EnforceSpeedLimits();
+        }
     }
 
     #region State Management
@@ -81,7 +85,7 @@ public class BallController : MonoBehaviour
         m_rigidbody.position = m_ballPopPosition;
         m_rigidbody.rotation = m_ballPopRotation;
         m_firstPlayerID = -1;
-        m_currentSpeedTarget = m_initialSpeed; //Reset target speed to the startValue.
+        m_currentSpeedTarget = m_initialBaseSpeed; //Reset target speed to the startValue.
     }
 
 
@@ -110,7 +114,7 @@ public class BallController : MonoBehaviour
         //Convert angle to a direction vector (assuming Y is up, playing on X/Z plane).
         Vector3 serveDirection = new(Mathf.Sin(randomAngle * Mathf.Deg2Rad), 0, Mathf.Cos(randomAngle * Mathf.Deg2Rad));
 
-        m_currentSpeedTarget = m_initialSpeed;
+        m_currentSpeedTarget = m_initialBaseSpeed;
         m_rigidbody.velocity = serveDirection * m_currentSpeedTarget;
         
         //In AudioManager: (AudioType, EAudioType 2D/3D, List/Array-ID, Track-ID (if not random), SpatialBlend, RandomBool);.
@@ -131,6 +135,19 @@ public class BallController : MonoBehaviour
     #endregion
 
     #region Physics & Collision Logic
+    private void ApplySpeedDecay()
+    {
+        //Whenever the current ballSpeed gets higher than the targetSpeed,...
+        if (m_currentSpeedTarget > m_initialBaseSpeed)
+        {
+            //reduce the ballSpeed over time and
+            m_currentSpeedTarget -= m_speedDecayRate * Time.fixedDeltaTime;
+
+            //keep the ballSpeed from falling lower than the initialBaseSpeed.
+            m_currentSpeedTarget = Mathf.Max(m_currentSpeedTarget, m_initialBaseSpeed);
+        }
+    }
+
     private void EnforceSpeedLimits()
     {
         //Clamp the target speed between the defined min- and max-value.
